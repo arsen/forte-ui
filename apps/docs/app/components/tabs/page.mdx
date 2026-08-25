@@ -121,7 +121,8 @@ Every property below is declared on `Tabs.Root`, which is also why an ancestor i
 
 | Property | Controls | Default |
 | :-- | :-- | :-- |
-| `--pui-tabs-radius` | Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail | `var(--pui-radius-control)` |
+| `--pui-tabs-radius` | Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail, capped by the row below | `var(--pui-radius-control)` |
+| `--pui-tabs-radius-line` | The cap on those two corners. A `line` tab's other two are square, and CSS only shrinks an oversized radius to fit the corners sharing its edge — so without a cap a full-round radius rounds one all the way across the tab's height and leaves a tombstone rather than a tab | `min(var(--pui-tabs-radius), calc(var(--pui-tabs-height) / 2))` |
 | `--pui-tabs-gap` | Space between adjacent tabs in the strip | `var(--pui-space-1)` |
 | `--pui-tabs-content-gap` | Space between the strip and the panel | `var(--pui-space-4)` |
 | `--pui-tabs-height` | Height of a tab | `var(--pui-control-h-md)` |
