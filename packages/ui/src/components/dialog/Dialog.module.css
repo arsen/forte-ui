@@ -24,25 +24,26 @@
  *     reverses smoothly instead of snapping.
  *   - Same shape both ways — rise + grow in, sink + shrink out — so an
  *     interrupted open simply runs back down the path it came up. The
- *     entrance rides a spring (`--pui-ease-spring-snappy`) over ~400ms,
- *     because arriving is the moment that has to read as a surface settling
- *     into place.
+ *     entrance rides a spring (`--pui-ease-spring-snappy`), and the exit is
+ *     shorter still, because a dismissal the user already decided on has
+ *     nothing left to show them. Both durations are the ones the anchored
+ *     popups use — see the knobs.
  *   - On the way OUT the curves are split per property, and the split is the
  *     whole reason the exit reads as motion at all. Two failure modes sit on
  *     either side of it, and both look like "there is no exit animation":
  *
  *       Decelerate the geometry (`--pui-ease-standard`, or any ease-out) and
  *       the popup covers 88% of its travel in the first half, then crawls —
- *       0.08px over the final 40ms — while it is still fading down from 68%
- *       opacity. The movement ENDS well before the element does, so the
- *       dialog appears to freeze mid-flight and then get yanked out of the
- *       DOM.
+ *       under a quarter-pixel across the entire final quarter of the gesture
+ *       — while it is still fading down from 68% opacity. The movement ENDS
+ *       well before the element does, so the dialog appears to freeze
+ *       mid-flight and then get yanked out of the DOM.
  *
  *       Accelerate it (`--pui-ease-exit`, the obvious reading of "ease out of
  *       the way") and the opposite happens: about one pixel of travel while
  *       the popup is still opaque, with the rest spent after it has faded.
  *
- *     So the geometry runs `linear` — 1.33px per 40ms, uniform, still moving
+ *     So the geometry runs `linear` — a uniform 2px per 40ms, still moving
  *     on the frame it disappears. An easing curve implies arrival somewhere,
  *     and an exit never arrives: it is cut short by its own removal. The
  *     opacity meanwhile runs on `--pui-ease-exit`, holding around 0.75
@@ -68,14 +69,16 @@
      * can reach it. */
     --pui-dialog-backdrop-z-index: 39;
 
-    /* `.pui-scrim` clears in `--pui-duration-fast` on a fast-starting curve,
+    /* `.pui-scrim` clears on `--pui-ease-standard`, a fast-starting curve,
      * which is right for a bare overlay but wrong here: the page behind
      * would snap back to full brightness while the dialog is still leaving,
      * and the eye follows the big brightness change rather than the popup.
-     * These match the popup's exit instead. Same knobs, declared separately,
-     * because the popup's cannot reach a sibling; set them through
+     * These match the popup's exit instead — same length, same curve. Keep
+     * them in step with `--pui-dialog-exit-duration` /
+     * `--pui-dialog-exit-fade-ease` below; they are declared separately
+     * because the popup's cannot reach a sibling. Set them through
      * `backdropClassName`. */
-    --pui-dialog-backdrop-exit-duration: var(--pui-duration-normal);
+    --pui-dialog-backdrop-exit-duration: var(--pui-duration-fast);
     --pui-dialog-backdrop-exit-ease: var(--pui-ease-exit);
 
     /* Restated from `.pui-scrim` so the @supports override below has an
@@ -179,11 +182,24 @@
      * nothing. */
     --pui-dialog-enter-travel: var(--pui-travel-md);
     --pui-dialog-enter-scale: var(--pui-scale-enter);
-    --pui-dialog-enter-duration: var(--pui-duration-spring-snappy);
+    /* `normal`, not `--pui-duration-spring-snappy`. The rule elsewhere is to
+     * pair a spring easing with its own settle time, and that rule is about
+     * not CROPPING the curve — a 400ms spring cut off at 240ms stops
+     * mid-bounce. Running the whole curve compressed is a different thing:
+     * every stop still plays, overshoot included, just faster. This is the
+     * pairing the anchored popups already use (`Select`'s popup, the `Tabs`
+     * indicator), and matching it is the point — at 400ms a dialog opened
+     * from a `Button` read as noticeably heavier than the `Select` opened
+     * from the control beside it. */
+    --pui-dialog-enter-duration: var(--pui-duration-normal);
     --pui-dialog-enter-ease: var(--pui-ease-spring-snappy);
     --pui-dialog-exit-travel: var(--pui-travel-md);
     --pui-dialog-exit-scale: calc(1 - 0.05 * var(--pui-motion-ok));
-    --pui-dialog-exit-duration: var(--pui-duration-normal);
+    /* Shorter than the entrance, and deliberately so: an arrival has to
+     * read as a surface settling into place, while a dismissal is something
+     * the user has already decided on and only needs confirming. `fast` is
+     * what every other popup in the set exits on. */
+    --pui-dialog-exit-duration: var(--pui-duration-fast);
     /* `linear` on purpose, and the one place in the library that wants it —
      * see the note at the top of the file. Nothing eases toward a resting
      * place here, because the popup is removed rather than arriving. */
@@ -220,10 +236,10 @@
       1 - var(--pui-dialog-nested-scale-step) * var(--pui-motion-ok) *
         var(--nested-dialogs, 0)
     );
-    /* Opacity is deliberately much shorter than the transform: the surface
-     * is fully legible a sixth of a second in and the spring finishes
-     * settling behind readable content, instead of the whole dialog spending
-     * 400ms half-transparent. */
+    /* Opacity is deliberately shorter than the transform: the surface is
+     * fully legible a sixth of a second in and the spring finishes settling
+     * behind readable content, instead of the whole dialog spending the
+     * entrance half-transparent. */
     transition:
       opacity var(--pui-duration-fast) var(--pui-ease-standard),
       transform var(--pui-dialog-enter-duration) var(--pui-dialog-enter-ease),
