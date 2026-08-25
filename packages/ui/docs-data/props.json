@@ -1,4 +1,97 @@
 {
+  "AccordionRoot": {
+    "name": "AccordionRoot",
+    "description": "Groups the items and owns which of them are open.\n\n`value` and `defaultValue` are **arrays**, even with `multiple` left off —\na single-open accordion is the array-of-one case, and `[]` is the legal\n\"everything closed\" value. Items with no `value` of their own are given a\ngenerated one, so pass `value` on the items you intend to address.\n\nBase UI's deprecated `orientation` and `loopFocus` props are not forwarded.\nThe APG dropped roving focus for accordions, so neither one affects\nanything any more, and this component styles the vertical stack only.\n\nThe `Value` generic is what an item's `value` is, defaulting to `any` as it\ndoes in Base UI — items accept anything hashable, and most sets mix nothing.\nName it (`<Accordion.Root<string> …>`) to have `value`, `defaultValue` and\n`onValueChange` checked against one type.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "variant",
+        "type": "AccordionVariant",
+        "required": false,
+        "defaultValue": "divided",
+        "description": "How much visual weight the set carries. `\"divided\"` is a flat list with a\nhairline between rows; `\"contained\"` turns every item into a separated\ncard. Both are the same parts with different knobs — nothing moves."
+      }
+    ]
+  },
+  "AccordionItem": {
+    "name": "AccordionItem",
+    "description": "One header/panel pair. Give it a `value` to address it from `Root`'s\n`value` / `defaultValue`; without one Base UI generates an opaque id that\nnothing else can name.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AccordionHeader": {
+    "name": "AccordionHeader",
+    "description": "The heading that labels the panel. Renders an `<h3>`, which is the right\nlevel surprisingly rarely — pass `render={<h2 />}` (or whichever level sits\none below the surrounding section's heading) so the page outline stays\nordered. It exists to carry `role=\"heading\"` and its level; the trigger\ninside it is what the user presses.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AccordionTrigger": {
+    "name": "AccordionTrigger",
+    "description": "The button that opens and closes the panel. Renders a `<button>` and must\nsit inside an `Accordion.Header`.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--pui-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ChevronDownIcon />",
+        "description": "The affordance at the inline-end of the row. Defaults to a chevron that\nrotates when the panel opens. Pass your own node to replace it — it is\nwrapped in the same rotating, `aria-hidden` box, so a plus or a caret\nneeds no extra wiring — or `null` to drop it entirely."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the label box that wraps `children`.\nApplied after the internal styles."
+      }
+    ]
+  },
+  "AccordionPanel": {
+    "name": "AccordionPanel",
+    "description": "The collapsible region. Base UI measures it and publishes the result as\n`--accordion-panel-height`, which the stylesheet transitions.\n\n`children` goes inside an inner box, and that box is where all the padding\nlives. Padding on the collapsing element itself would still paint at\n`height: 0` — the padding box survives a zero content box — so a closed\npanel would leave a band of empty space under every row. The inner box also\ngives the content something to fade and slide on while the outer one is\nbusy animating its height.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "contentClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the inner element that holds the padding and\nthe content. Applied after the internal styles."
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",

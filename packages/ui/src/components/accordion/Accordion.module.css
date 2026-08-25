@@ -1,0 +1,333 @@
+/*
+ * Accordion
+ *
+ * A stack of rows that each reveal a panel. Two treatments, same parts:
+ *
+ *   data-variant="divided"    flat list, a hairline between rows
+ *   data-variant="contained"  every item is a separated card
+ *
+ * The height animation is the load-bearing part. Base UI measures the panel
+ * and publishes the result on the element as --accordion-panel-height (already
+ * a px value while the transition runs, then `auto` once it settles, so the
+ * content can reflow afterwards). The stylesheet consumes it directly and
+ * transitions `height` between that and 0.
+ *
+ * Three things about that are worth knowing before editing this file:
+ *
+ *   - It is a transition on [data-starting-style] / [data-ending-style], not a
+ *     keyframe animation, so closing a panel while it is still opening
+ *     reverses from wherever it has got to instead of snapping.
+ *   - Base UI decides which of the two it is dealing with by reading the
+ *     panel's COMPUTED transition-duration and animation-name. A duration of
+ *     exactly 0s reads as "no transition" and the measure-and-animate path is
+ *     skipped entirely — which is a second reason the duration tokens bottom
+ *     out at 1ms and never at 0s. Declaring both a transition and a keyframe
+ *     animation here would earn a console warning and the transition would
+ *     win; do not add one.
+ *   - There is deliberately no `display` declaration on .panel. Base UI hides
+ *     a kept-mounted panel with the `hidden` attribute, and with
+ *     `hiddenUntilFound` it uses `hidden="until-found"`, whose whole point is
+ *     that the UA hides it with `content-visibility` so find-in-page can still
+ *     reach the text. Any author `display` beats the UA's [hidden] rule and
+ *     would either leave every panel open or break find-in-page.
+ *
+ * No prefers-reduced-motion block, here or anywhere else in a component file:
+ * the travel token collapses to 0px and the durations shorten on their own.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on Accordion.Root itself, so an
+     * ancestor's value is only ever inherited and never wins. Re-skin one
+     * accordion by setting these on the root element (an unlayered consumer
+     * rule beats this layer whatever its specificity); re-skin every accordion
+     * by re-pointing the global tokens they resolve to. */
+
+    /* Item */
+    --pui-accordion-gap: 0px;
+    --pui-accordion-item-radius: 0px;
+    --pui-accordion-item-bg: transparent;
+    --pui-accordion-item-border-width: 0px;
+    --pui-accordion-item-border-color: var(--pui-color-border-muted);
+    /* The hairline BETWEEN rows, which is a different line from the card
+     * outline above — `divided` has only the first, `contained` only the
+     * second, and they are never both visible at once. */
+    --pui-accordion-divider-width: 1px;
+    --pui-accordion-divider-color: var(--pui-color-border-muted);
+
+    /* Trigger */
+    --pui-accordion-trigger-px: var(--pui-space-3);
+    --pui-accordion-trigger-py: var(--pui-space-3);
+    /* Minimum space between the label and the icon, so a label long enough to
+     * fill the row still cannot run into it. */
+    --pui-accordion-trigger-gap: var(--pui-space-4);
+    --pui-accordion-trigger-bg: transparent;
+    /* One step up from whatever the row sits on: the page (gray-1) in
+     * `divided`, the card (gray-2) in `contained` — see the variant block.
+     * Unlike Tabs, the fill is not optional here. A row is a click target the
+     * width of the container, and a colour change confined to the label would
+     * claim only the label is pressable. */
+    --pui-accordion-trigger-bg-hover: var(--pui-color-panel);
+    --pui-accordion-trigger-color: var(--pui-color-foreground);
+    --pui-accordion-trigger-font-size: var(--pui-font-size-2);
+    --pui-accordion-trigger-font-weight: var(--pui-font-weight-medium);
+
+    /* Icon. `-subtle` is 3.73:1 — below the floor for text, fine for a
+     * non-text indicator (SC 1.4.11), and `prefers-contrast: more` promotes
+     * it anyway. It is never the only cue: `aria-expanded` and the panel
+     * itself say the same thing. */
+    --pui-accordion-icon-color: var(--pui-color-foreground-subtle);
+    --pui-accordion-icon-color-open: var(--pui-color-foreground);
+    --pui-accordion-icon-rotate: 180deg;
+
+    /* Panel. No block-start padding knob: the trigger's own bottom padding
+     * already separates the two, and adding one on top of it double-spaces
+     * every open row. Set `padding-block-start` through `contentClassName` if
+     * the panel is given a background of its own. */
+    --pui-accordion-panel-px: var(--pui-accordion-trigger-px);
+    --pui-accordion-panel-pb: var(--pui-space-4);
+    --pui-accordion-panel-color: var(--pui-color-foreground-muted);
+    --pui-accordion-panel-font-size: var(--pui-font-size-2);
+
+    /* One duration and one curve for the height and the content's slide, so
+     * the two cannot drift apart. Deliberately NOT a spring: an overshooting
+     * curve on `height` pushes the panel past its own content and flashes a
+     * band of empty background under the last line before settling back, and
+     * the springs that do not overshoot are only slower ease-outs. */
+    --pui-accordion-duration: var(--pui-duration-normal);
+    --pui-accordion-ease: var(--pui-ease-standard);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-accordion-gap);
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  /* Contained: the rows separate into cards. Everything below is a knob the
+   * defaults above already declared — no rule in this file knows the variant
+   * exists except this block and the divider. */
+  .root[data-variant="contained"] {
+    --pui-accordion-gap: var(--pui-space-2);
+    --pui-accordion-item-radius: var(--pui-radius-surface);
+    --pui-accordion-item-bg: var(--pui-color-panel);
+    --pui-accordion-item-border-width: 1px;
+    --pui-accordion-trigger-bg-hover: var(--pui-color-panel-hover);
+  }
+
+  /* Item ------------------------------------------------------------------- */
+  .item {
+    box-sizing: border-box;
+    /* The one declaration that makes the corners work. It clips the trigger's
+     * hover fill and the panel to the card's curve, so neither has to know
+     * the radius, and it is why the trigger's focus ring is inset — an outset
+     * ring inside a clipping box gets cropped. */
+    overflow: hidden;
+    border: var(--pui-accordion-item-border-width) solid
+      var(--pui-accordion-item-border-color);
+    border-radius: var(--pui-accordion-item-radius);
+    background-color: var(--pui-accordion-item-bg);
+  }
+
+  /* Between rows only, never around the set: a rule above the first row and
+   * below the last would read as a box the list does not otherwise have, and
+   * `contained` draws a real border instead. Scoped to the variant rather than
+   * zeroing the width in `contained`, because this selector is more specific
+   * than `.item` and a 0px value here would delete the card's own top border.
+   *
+   * The second `.item` is deliberately unqualified — the pair is what matters,
+   * and both carry the same variant. */
+  .item[data-variant="divided"] + .item {
+    border-block-start: var(--pui-accordion-divider-width) solid
+      var(--pui-accordion-divider-color);
+  }
+
+  /* Applied to the whole item, not just the trigger: a disabled item that
+   * happens to be open would otherwise show fully-enabled body text under a
+   * greyed-out header. `opacity` is the non-forced-colors treatment only —
+   * the generic `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y,
+   * ordered after this one) restores `opacity: 1` and paints GrayText, so the
+   * 55% cannot survive into HCM and read as enabled. */
+  .item[data-disabled] {
+    opacity: 0.55;
+  }
+
+  /* Header ------------------------------------------------------------------
+   * A heading element, so the UA margin has to go. `display: flex` leaves the
+   * trigger no sliver of the row to poke out from behind, which is why the
+   * header sets no cursor of its own — there is nothing left of it to hover. */
+  .header {
+    box-sizing: border-box;
+    display: flex;
+    margin: 0;
+  }
+
+  /* Trigger ----------------------------------------------------------------- */
+  .trigger {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--pui-accordion-trigger-gap);
+    width: 100%;
+    min-height: var(--pui-target-min);
+    padding: var(--pui-accordion-trigger-py) var(--pui-accordion-trigger-px);
+    margin: 0;
+    border: 0;
+    /* The item's clip already gives the hover fill the card's shape, so this
+     * radius exists for the focus ring: an inset ring follows the element's
+     * OWN corners, and a square ring inside a rounded card has its corners
+     * shaved off by that same clip. Matching the card fixes it. */
+    border-radius: var(--pui-accordion-item-radius);
+
+    background-color: var(--pui-accordion-trigger-bg);
+    color: var(--pui-accordion-trigger-color);
+
+    font-family: inherit;
+    font-size: var(--pui-accordion-trigger-font-size);
+    font-weight: var(--pui-accordion-trigger-font-weight);
+    line-height: var(--pui-line-height-normal);
+    text-align: start;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition: background-color var(--pui-duration-fast)
+      var(--pui-ease-standard);
+  }
+
+  /* Open, the row's bottom edge is the seam with the panel rather than the
+   * bottom of the card, and a ring curving away from a surface it is touching
+   * reads as a chip that has come unstuck — the same reason a `line` Tab keeps
+   * its rail-side corners square. Nothing flickers when this flips: at the
+   * moment the panel is still 0px tall, the seam IS the bottom of the card,
+   * and the item's clip rounds these corners right back off. */
+  .trigger[data-panel-open] {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]) {
+      background-color: var(--pui-accordion-trigger-bg-hover);
+    }
+  }
+
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Owns the flexible column, so a long label wraps inside the row instead of
+   * pushing the icon out of it. A flex row rather than a plain box: an icon
+   * passed alongside the text lines up on `--pui-control-gap` without a
+   * wrapper, exactly as it does inside a Tab. */
+  .label {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--pui-control-gap);
+    min-width: 0;
+  }
+
+  /* Icon --------------------------------------------------------------------
+   * `rotate` as its own property, not through the `transform` shorthand, so
+   * nothing else the consumer puts on this box has to share one slot with it.
+   *
+   * The angle is NOT multiplied by --pui-motion-ok. Under reduced motion the
+   * chevron still has to end up pointing the other way — it is the state, and
+   * only the trip between the two states is motion. The duration collapses on
+   * its own, so the flip becomes instantaneous rather than absent. */
+  .icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-accordion-icon-color);
+    rotate: 0deg;
+    /* Spring easing paired with its own duration token — a shorter one
+     * truncates the curve mid-bounce and reads as a stutter. */
+    transition:
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      rotate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  .trigger[data-panel-open] .icon {
+    color: var(--pui-accordion-icon-color-open);
+    rotate: var(--pui-accordion-icon-rotate);
+  }
+
+  /* Panel ------------------------------------------------------------------
+   * Padding lives on .content, never here: a padding box survives a zero
+   * content box, so padding on the collapsing element would leave a band of
+   * space under every closed row. */
+  .panel {
+    box-sizing: border-box;
+    height: var(--accordion-panel-height);
+    overflow: hidden;
+    color: var(--pui-accordion-panel-color);
+    font-size: var(--pui-accordion-panel-font-size);
+    line-height: var(--pui-line-height-normal);
+    transition: height var(--pui-accordion-duration)
+      var(--pui-accordion-ease);
+  }
+
+  .panel[data-starting-style],
+  .panel[data-ending-style] {
+    height: 0;
+  }
+
+  /* The content settles into place while the panel is still growing, which is
+   * what stops the text from looking pasted in at full opacity behind a
+   * moving edge. It starts slightly high and drops back: the panel clips it
+   * from below, so travelling downward is the direction that reads as being
+   * uncovered. --pui-travel-sm is 0px under reduced motion, leaving the fade
+   * — which is the part that helps there. */
+  .content {
+    padding: 0 var(--pui-accordion-panel-px) var(--pui-accordion-panel-pb);
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-accordion-duration) var(--pui-accordion-ease);
+  }
+
+  .panel[data-starting-style] .content,
+  .panel[data-ending-style] .content {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--pui-travel-sm));
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so it
+ * beats everything above by layer alone — no `!important`, no specificity
+ * inflation.
+ *
+ * What patterns.css already handles, and must not be restated here:
+ *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is
+ *     the only reliable disabled cue once opacity stops being honoured.
+ *   - `.pui-focus-ring:focus-visible` becomes a Highlight outline.
+ *
+ * What is accordion-specific: both of the lines that separate rows. Their
+ * colour comes from a token, and a token resolves to a colour forced-colors
+ * then replaces with its own — which is fine for the divider, and not fine
+ * for the card, whose border is the only thing left holding the shape once
+ * shadows and backgrounds are stripped. Pinning both to CanvasText makes the
+ * two variants read the same way they do normally.
+ *
+ * Nothing paints Highlight. An open row is not a selected row — the chevron's
+ * rotation is geometry, so it survives forced colors untouched and goes on
+ * saying which rows are open.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .item {
+      border-color: CanvasText;
+    }
+
+    .item[data-variant="divided"] + .item {
+      border-block-start-color: CanvasText;
+    }
+  }
+}

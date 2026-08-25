@@ -17,6 +17,7 @@ const NAV: NavGroup[] = [
   {
     title: "Components",
     items: [
+      { title: "Accordion", href: "/components/accordion" },
       { title: "Button", href: "/components/button" },
       { title: "Checkbox", href: "/components/checkbox" },
       { title: "Dialog", href: "/components/dialog" },

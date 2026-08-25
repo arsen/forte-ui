@@ -1,0 +1,197 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Accordion",
+  description:
+    "A stack of headings that each reveal a panel, with the open/close height animated in pure CSS.",
+};
+
+# Accordion
+
+An accordion hides a list of sections behind their own headings and reveals one at a time. Reach for it when the reader needs the *titles* more than the bodies — a FAQ, a settings screen with rarely-used groups, a log of steps where only the failing one matters. If the reader has to compare two sections, or search the page for a phrase that lives inside one, leave the content on the page instead: collapsed panels are unmounted by default, so neither the eye nor `⌘F` can reach them.
+
+<DemoBlock id="accordion/basic" />
+
+## Import
+
+```tsx
+import { Accordion } from "@dofortech/pretty-ui";
+```
+
+`Accordion` is a namespace of five parts: `Accordion.Root`, `Accordion.Item`, `Accordion.Header`, `Accordion.Trigger` and `Accordion.Panel`. The nesting is fixed — an `Item` holds a `Header` and a `Panel`, and the `Trigger` goes inside the `Header`:
+
+```tsx
+<Accordion.Root>
+  <Accordion.Item value="one">
+    <Accordion.Header>
+      <Accordion.Trigger>Heading</Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Panel>Body</Accordion.Panel>
+  </Accordion.Item>
+</Accordion.Root>
+```
+
+The `Header` looks like a wrapper worth skipping, and it is not: it is the `<h3>` that puts the section into the page's heading outline, which is how a screen-reader user jumps between sections without tabbing through every trigger. The `Trigger` inside it is the button.
+
+<Callout kind="note">
+  Because it is a real heading, a global `h1–h6` rule in your app applies to it. pretty-ui zeroes the margin, but that declaration lives in `@layer pretty-ui.components` and yields to your unlayered CSS by design — so a typographic reset with `h3 { margin-block: 2rem }` opens a gap above every row. Exclude the accordion from that rule, or set `margin: 0` back on `Accordion.Header`.
+</Callout>
+
+Which panels are open is a **list**, on `Accordion.Root`, even when only one may be open at a time: `defaultValue={["shipping"]}` uncontrolled, or `value` plus `onValueChange` controlled. `[]` means everything is closed.
+
+<Callout kind="warn">
+  Give every `Accordion.Item` a `value`. Without one Base UI generates an internal id, which works until the moment you want to open a panel from code — and then there is no name to open it by.
+</Callout>
+
+## Examples
+
+### Divided
+
+The default `variant="divided"` is the demo at the top of this page: no box around the set, a hairline between rows, and a hover fill the full width of the row. Use it when the accordion *is* the page — a FAQ, a long settings column — where a border round every row would add a second grid to read.
+
+### Contained
+
+`variant="contained"` separates the rows into cards: each item gets a border, a surface and a radius, and a gap opens up between them. Use it when the accordion sits among other content and needs an edge of its own.
+
+<DemoBlock id="accordion/contained" />
+
+The variant is set once on `Accordion.Root` and reaches the items, triggers and panels through context, so a mismatched pair — contained cards with divided hairlines between them — is not a state that can be expressed.
+
+### Several panels at once
+
+`multiple` on `Accordion.Root` lets any number of panels be open together, and `defaultValue` then usually names more than one. Without it, opening a panel closes the one before it.
+
+<DemoBlock id="accordion/multiple" />
+
+### Controlled
+
+Pass `value` and `onValueChange` to own the state — which is what "expand all" needs, since it is a state change no trigger produced.
+
+<DemoBlock id="accordion/controlled" />
+
+`onValueChange` also receives an event details object whose `reason` is `'trigger-press'` for a user's click or key press, so a change your own code made can be told apart from one the user made.
+
+### Disabled item
+
+`disabled` on an `Accordion.Item` stops it opening. The trigger stays in the tab order — a control a keyboard user cannot reach is a control they cannot discover the existence of — but pressing it does nothing, and the whole item is dimmed rather than just its heading, so an item that was left open does not show fully-enabled body text under a greyed-out header.
+
+<DemoBlock id="accordion/disabled-item" />
+
+`disabled` on `Accordion.Root` does the same to every item at once.
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], description: "Moves focus to the next trigger, or out of the accordion past the last one. Every trigger is an ordinary tab stop." },
+  { keys: ["Shift", "Tab"], description: "Moves focus to the previous trigger." },
+  { keys: ["Enter"], description: "Opens the focused panel, or closes it if it is already open." },
+  { keys: ["Space"], description: "Opens the focused panel, or closes it if it is already open." },
+]} />
+
+There are deliberately no arrow-key semantics. The APG [dropped roving focus for accordions](https://github.com/w3c/aria-practices/pull/3434) — a heading followed by its content is document structure, not a composite widget, and making Tab skip past the triggers cost more than the arrow keys gained. Base UI still accepts `orientation` and `loopFocus` for compatibility, but neither does anything any more, so this component does not forward them.
+
+Each `Accordion.Header` renders an `<h3>` carrying a `<button>` with `aria-expanded` and an `aria-controls` pointing at its panel; the panel is a `role="region"` labelled by its trigger. `<h3>` is right only if the accordion sits under an `<h2>` — pass `render={<h2 />}` (or whichever level fits) to keep the outline ordered:
+
+```tsx
+<Accordion.Header render={<h2 />}>
+  <Accordion.Trigger>Billing</Accordion.Trigger>
+</Accordion.Header>
+```
+
+<Callout kind="a11y">
+  Keep the trigger's text as its accessible name. The chevron is `aria-hidden`, and `aria-expanded` already announces open and closed — so a heading that reads "Details" needs no extra "show/hide" wording, and an icon-only trigger has no name at all.
+</Callout>
+
+A closed panel is removed from the DOM. Two props change that, and they answer different questions:
+
+- `keepMounted` on `Accordion.Root` or `Accordion.Panel` leaves it mounted and hidden, which is what you want when a panel holds scroll position or a half-filled form that should survive being closed.
+- `hiddenUntilFound` hides it with `hidden="until-found"` instead, so the browser's own find-in-page can search the text and open the panel when it matches. It implies `keepMounted`. Use it for reference content — documentation, terms, a long FAQ — where a reader hunting for a phrase reasonably expects `⌘F` to find it.
+
+Under forced colors both dividing lines are pinned to `CanvasText`, since a card whose border was replaced by a system colour is the only thing still holding the shape once shadows and backgrounds are stripped. Nothing paints `Highlight`: an open row is not a selected row, and the chevron's rotation is geometry, so it survives that mode untouched and goes on saying which rows are open. Disabled items are painted `GrayText` rather than relying on opacity, which forced colors does not honour.
+
+### Motion
+
+The height animation runs without a frame of JavaScript. Base UI measures the panel and publishes the result on the element as `--accordion-panel-height` — a `px` value while the transition runs, then `auto` once it settles, so the content can reflow afterwards. The stylesheet consumes it directly:
+
+```css
+.panel {
+  height: var(--accordion-panel-height);
+  overflow: hidden;
+  transition: height var(--pui-accordion-duration) var(--pui-accordion-ease);
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  height: 0;
+}
+```
+
+It is a transition rather than a keyframe animation on purpose: closing a panel while it is still opening reverses from wherever it has got to instead of snapping back to full height first. Base UI works out which of the two it is dealing with by reading the panel's *computed* `transition-duration` — a duration of exactly `0s` reads as "no transition" and the measure-and-animate path is skipped entirely, which is one more reason the library's duration tokens bottom out at `1ms` and never at zero.
+
+The panel's padding is not on the panel. A padding box survives a zero content box, so padding on the collapsing element would leave a band of empty space under every closed row; it lives on an inner element instead, which is also what gives the content something of its own to move on. It starts a little high and at zero opacity and settles as the panel grows — travelling *downward*, because the panel clips from below and that is the direction that reads as being uncovered.
+
+The chevron flips on a spring (`--pui-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--pui-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
+
+There is no `prefers-reduced-motion` block in the accordion stylesheet, and none anywhere else in a component file. The tokens do it: `--pui-duration-normal` collapses from 240ms to 120ms and `--pui-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
+
+## Theming
+
+Every property below is declared on `Accordion.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Accordion.Root` itself, through its `className` or an inline `style`. To move every accordion at once, re-point the global tokens in the Default column instead: `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
+
+| Property | Controls | Default |
+| :-- | :-- | :-- |
+| `--pui-accordion-gap` | Space between items | `0px` |
+| `--pui-accordion-item-radius` | Corner radius of an item. The trigger takes the same radius, so its focus ring follows the card rather than being shaved by the card's own clip — squaring off its bottom two corners while the panel is open | `0px` |
+| `--pui-accordion-item-bg` | Background of an item | `transparent` |
+| `--pui-accordion-item-border-width` | Border around an item (the `contained` card) | `0px` |
+| `--pui-accordion-item-border-color` | Colour of that border | `var(--pui-color-border-muted)` |
+| `--pui-accordion-divider-width` | Thickness of the hairline between rows (`divided` only) | `1px` |
+| `--pui-accordion-divider-color` | Colour of that hairline | `var(--pui-color-border-muted)` |
+| `--pui-accordion-trigger-px` | Inline padding of a row | `var(--pui-space-3)` |
+| `--pui-accordion-trigger-py` | Block padding of a row | `var(--pui-space-3)` |
+| `--pui-accordion-trigger-gap` | Minimum space between the label and the icon | `var(--pui-space-4)` |
+| `--pui-accordion-trigger-bg` | Row background at rest | `transparent` |
+| `--pui-accordion-trigger-bg-hover` | Row background on hover — one step up from whatever the row sits on | `var(--pui-color-panel)` |
+| `--pui-accordion-trigger-color` | Heading colour | `var(--pui-color-foreground)` |
+| `--pui-accordion-trigger-font-size` | Heading size | `var(--pui-font-size-2)` |
+| `--pui-accordion-trigger-font-weight` | Heading weight | `var(--pui-font-weight-medium)` |
+| `--pui-accordion-icon-color` | Chevron colour when closed | `var(--pui-color-foreground-subtle)` |
+| `--pui-accordion-icon-color-open` | Chevron colour when open | `var(--pui-color-foreground)` |
+| `--pui-accordion-icon-rotate` | How far the chevron turns when the panel opens | `180deg` |
+| `--pui-accordion-panel-px` | Inline padding of the panel content | `var(--pui-accordion-trigger-px)` |
+| `--pui-accordion-panel-pb` | Block-end padding of the panel content. There is no block-start knob — the trigger's own bottom padding already separates the two | `var(--pui-space-4)` |
+| `--pui-accordion-panel-color` | Body text colour | `var(--pui-color-foreground-muted)` |
+| `--pui-accordion-panel-font-size` | Body text size | `var(--pui-font-size-2)` |
+| `--pui-accordion-duration` | Length of the height change, and of the content's slide | `var(--pui-duration-normal)` |
+| `--pui-accordion-ease` | Curve for both. Deliberately not a spring: overshooting `height` flashes a band of empty background under the last line before settling | `var(--pui-ease-standard)` |
+
+`variant="contained"` is itself implemented by overriding five of these on the root — `--pui-accordion-gap`, `--pui-accordion-item-radius`, `--pui-accordion-item-bg`, `--pui-accordion-item-border-width` and `--pui-accordion-trigger-bg-hover`. Setting them yourself on a contained accordion still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+
+The parts also expose their state as data attributes — `data-variant`, `data-open`, `data-panel-open`, `data-disabled`, `data-index` — so a Tailwind arbitrary variant such as `data-[panel-open]:...` can target them without a wrapper element.
+
+## API reference
+
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `Accordion.Root` also takes `value`, `defaultValue`, `onValueChange`, `multiple`, `disabled`, `keepMounted` and `hiddenUntilFound`; `Accordion.Item` takes `value`, `disabled` and `onOpenChange`; `Accordion.Panel` takes `keepMounted` and `hiddenUntilFound`. All five parts take `render` for changing the underlying element.
+
+### Accordion.Root
+
+<PropTable component="AccordionRoot" />
+
+### Accordion.Item
+
+<PropTable component="AccordionItem" />
+
+### Accordion.Header
+
+<PropTable component="AccordionHeader" />
+
+### Accordion.Trigger
+
+<PropTable component="AccordionTrigger" />
+
+### Accordion.Panel
+
+<PropTable component="AccordionPanel" />
