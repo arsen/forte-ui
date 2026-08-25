@@ -46,6 +46,59 @@ const DEFAULTS: ThemeConfig = {
   motion: "default",
 };
 
+/** Shape written to localStorage. `root` duplicates what `configToAttrs`
+ *  derives, because the pre-paint script in the root layout has to apply it
+ *  without loading the colour maths — see `noFlashScript`. */
+type StoredStudio = {
+  config: ThemeConfig;
+  applyToSite: boolean;
+  root: { vars: Record<string, string>; data: Record<string, string> };
+};
+
+const STORAGE_KEY = "pui-studio";
+
+/** Storage is user-editable and survives across deploys, so nothing read back
+ *  is trusted: every field falls back to its default. */
+function readStored(): { config: ThemeConfig; applyToSite: boolean } | null {
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null; // storage can be disabled outright
+  }
+  if (!raw) return null;
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== "object") return null;
+
+  const { config, applyToSite } = parsed as Partial<StoredStudio>;
+  if (!config || typeof config !== "object") return null;
+  const c = config as Record<string, unknown>;
+
+  const hex = (v: unknown, fallback: string) =>
+    typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v) ? v : fallback;
+  const oneOf = <T extends string>(v: unknown, options: readonly T[], fallback: T) =>
+    options.includes(v as T) ? (v as T) : fallback;
+
+  return {
+    config: {
+      seed: hex(c.seed, DEFAULTS.seed),
+      secondary: hex(c.secondary, DEFAULTS.secondary),
+      tint:
+        typeof c.tint === "number" && c.tint >= 0 && c.tint <= 1 ? c.tint : DEFAULTS.tint,
+      radius: oneOf(c.radius, RADIUS, DEFAULTS.radius),
+      density: oneOf(c.density, DENSITY, DEFAULTS.density),
+      motion: oneOf(c.motion, MOTION, DEFAULTS.motion),
+    },
+    applyToSite: applyToSite === true,
+  };
+}
+
 /** Style + attributes that realise a config. Applied to a scoped preview, or
  *  to the document root when "apply to site" is on. */
 function configToAttrs(cfg: ThemeConfig) {
@@ -116,6 +169,10 @@ export function ThemeStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULTS);
   const [applyToSite, setApplyToSite] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
+  // The stored config cannot seed useState: the server renders the defaults,
+  // so reading storage during the first render would mismatch on hydration.
+  // Everything that touches the document waits for this to flip.
+  const [restored, setRestored] = React.useState(false);
 
   const set = <K extends keyof ThemeConfig>(k: K, v: ThemeConfig[K]) =>
     setCfg((c) => ({ ...c, [k]: v }));
@@ -136,12 +193,45 @@ export function ThemeStudio() {
     return contrast(oklchToLinear(step11).rgb, oklchToLinear({ l: 0.994, c: 0, h: 0 }).rgb);
   }, [seedO]);
 
-  const attrs = configToAttrs(cfg);
+  const attrs = React.useMemo(() => configToAttrs(cfg), [cfg]);
+
+  React.useEffect(() => {
+    const stored = readStored();
+    if (stored) {
+      setCfg(stored.config);
+      setApplyToSite(stored.applyToSite);
+    }
+    setRestored(true);
+  }, []);
+
+  // Persist on every change, so the studio is where you left it — and, when
+  // "apply to site" is on, so is the rest of the docs.
+  React.useEffect(() => {
+    if (!restored) return;
+    const payload: StoredStudio = {
+      config: cfg,
+      applyToSite,
+      root: {
+        vars: attrs.style as Record<string, string>,
+        data: {
+          ...(attrs["data-pui-radius"] ? { radius: attrs["data-pui-radius"] } : {}),
+          ...(attrs["data-pui-density"] ? { density: attrs["data-pui-density"] } : {}),
+          ...(attrs["data-pui-motion"] ? { motion: attrs["data-pui-motion"] } : {}),
+        },
+      },
+    };
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    } catch { /* private mode or a full quota: the session still works */ }
+  }, [restored, cfg, applyToSite, attrs]);
 
   // Mirror onto <html> so the entire site — header, sidebar, prose, code —
   // re-themes live. That is the demonstration: the docs are built from the
   // same tokens the library ships.
   React.useEffect(() => {
+    // Before the restore lands, the root may already carry the stored theme
+    // from the pre-paint script; clearing it here would flash the defaults.
+    if (!restored) return;
     const root = document.documentElement;
     const keys = ["--pui-accent-seed", "--pui-secondary-seed", "--pui-neutral-tint", "--pui-color-on-primary", "--pui-color-on-secondary"];
     const dataKeys = ["puiRadius", "puiDensity", "puiMotion"] as const;
@@ -156,7 +246,7 @@ export function ThemeStudio() {
     root.dataset.puiDensity = attrs["data-pui-density"] ?? "";
     root.dataset.puiMotion = attrs["data-pui-motion"] ?? "";
     dataKeys.forEach((k) => { if (!root.dataset[k]) delete root.dataset[k]; });
-  }, [applyToSite, attrs]);
+  }, [restored, applyToSite, attrs]);
 
   React.useEffect(() => {
     if (!copied) return;
