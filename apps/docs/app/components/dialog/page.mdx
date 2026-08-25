@@ -111,19 +111,19 @@ The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui
 | `--pui-dialog-nested-duration` | How long the parent takes to retreat under a child | `var(--pui-duration-spring-precise)` |
 | `--pui-dialog-enter-travel` | How far the popup rises as it opens | `var(--pui-travel-md)` (`var(--pui-travel-page)` when `size="fullscreen"`) |
 | `--pui-dialog-enter-scale` | Scale the popup grows from | `var(--pui-scale-enter)` (`1` when `size="fullscreen"`) |
-| `--pui-dialog-enter-duration` | Length of the opening gesture | `var(--pui-duration-spring-snappy)` |
+| `--pui-dialog-enter-duration` | Length of the opening gesture | `var(--pui-duration-normal)` |
 | `--pui-dialog-enter-ease` | Curve of the opening gesture | `var(--pui-ease-spring-snappy)` |
 | `--pui-dialog-exit-travel` | How far the popup sinks as it closes | `var(--pui-travel-md)` (`var(--pui-travel-page)` when `size="fullscreen"`) |
 | `--pui-dialog-exit-scale` | Scale the popup shrinks to | `calc(1 - 0.05 * var(--pui-motion-ok))` (`1` when `size="fullscreen"`) |
-| `--pui-dialog-exit-duration` | Length of the closing gesture | `var(--pui-duration-normal)` |
+| `--pui-dialog-exit-duration` | Length of the closing gesture | `var(--pui-duration-fast)` |
 | `--pui-dialog-exit-ease` | Curve the closing *geometry* runs on | `linear` |
 | `--pui-dialog-exit-fade-ease` | Curve the closing *fade* runs on | `var(--pui-ease-exit)` |
-| `--pui-dialog-backdrop-exit-duration` | How long the scrim takes to clear; set through `backdropClassName` | `var(--pui-duration-normal)` |
+| `--pui-dialog-backdrop-exit-duration` | How long the scrim takes to clear; set through `backdropClassName` | `var(--pui-duration-fast)` |
 | `--pui-dialog-backdrop-exit-ease` | Curve the scrim clears on; set through `backdropClassName` | `var(--pui-ease-exit)` |
 
 ### Motion
 
-The dialog opens and closes with the *same* gesture in opposite directions — it rises 8px and grows from `0.95` on the way in, sinks 8px and shrinks to `0.95` on the way out — so an open that gets interrupted halfway simply runs back down the path it came up. Opening rides a spring for about 400ms, because that is the moment the surface has to read as arriving and settling.
+The dialog opens and closes with the *same* gesture in opposite directions — it rises 8px and grows from `0.95` on the way in, sinks 8px and shrinks to `0.95` on the way out — so an open that gets interrupted halfway simply runs back down the path it came up. Opening rides a spring over `--pui-duration-normal` — the same 240ms the anchored popups take — because the dialog should not feel heavier to open than the `Select` sitting next to it. Closing runs shorter still, on `--pui-duration-fast`: an arrival has to read as a surface settling into place, while a dismissal the user already decided on only needs confirming.
 
 Closing is where the curves stop being interchangeable, and the exit geometry is `linear` on purpose — the one place in the library that wants it. Two rules are in tension, and easing curves can only satisfy one at a time:
 
