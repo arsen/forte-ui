@@ -9,6 +9,16 @@
  */
 import type { ComponentType } from "react";
 
+import d_accordion_basic from "./accordion/basic";
+import d_accordion_basic_src from "./accordion/basic?raw";
+import d_accordion_contained from "./accordion/contained";
+import d_accordion_contained_src from "./accordion/contained?raw";
+import d_accordion_controlled from "./accordion/controlled";
+import d_accordion_controlled_src from "./accordion/controlled?raw";
+import d_accordion_disabled_item from "./accordion/disabled-item";
+import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
+import d_accordion_multiple from "./accordion/multiple";
+import d_accordion_multiple_src from "./accordion/multiple?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
 import d_button_icon_only from "./button/icon-only";
@@ -81,6 +91,11 @@ import d_tooltip_with_provider from "./tooltip/with-provider";
 import d_tooltip_with_provider_src from "./tooltip/with-provider?raw";
 
 export type DemoId =
+  | "accordion/basic"
+  | "accordion/contained"
+  | "accordion/controlled"
+  | "accordion/disabled-item"
+  | "accordion/multiple"
   | "button/as-link"
   | "button/icon-only"
   | "button/loading"
@@ -120,6 +135,11 @@ export type DemoId =
 export type Demo = { Component: ComponentType; source: string; file: string };
 
 const REGISTRY: Record<DemoId, Demo> = {
+  "accordion/basic": { Component: d_accordion_basic, source: d_accordion_basic_src, file: "accordion/basic.tsx" },
+  "accordion/contained": { Component: d_accordion_contained, source: d_accordion_contained_src, file: "accordion/contained.tsx" },
+  "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
+  "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
+  "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },

@@ -5,6 +5,16 @@
 // "@dofortech/pretty-ui"` directly inside a React Server Component without
 // having to wrap it — which is the import everyone writes first.
 
+export { Accordion } from "./components/accordion";
+export type {
+  AccordionVariant,
+  AccordionRootProps,
+  AccordionItemProps,
+  AccordionHeaderProps,
+  AccordionTriggerProps,
+  AccordionPanelProps,
+} from "./components/accordion";
+
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
 

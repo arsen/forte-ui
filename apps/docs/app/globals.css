@@ -218,7 +218,15 @@ a {
   max-width: 48rem;
 }
 
-.prose h1 {
+/* Child combinator, not descendant: an MDX heading is always a direct child of
+ * `.prose`, and a demo can now render headings of its own — every
+ * `Accordion.Header` is an `<h3>`. These rules are unlayered, so they beat the
+ * library's own `margin: 0` whatever its specificity (that is the point of
+ * shipping inside `@layer pretty-ui.*`), and a demo accordion would inherit a
+ * 2rem gap above every row. Scoping the headings to the top level leaves the
+ * demo frame alone. The paragraph and list rules below stay descendant-scoped
+ * on purpose — callouts and table cells do want them. */
+.prose > h1 {
   margin: 0 0 var(--pui-space-3);
   font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
   font-weight: var(--pui-font-weight-bold);
@@ -226,7 +234,7 @@ a {
   line-height: 1.1;
 }
 
-.prose h2 {
+.prose > h2 {
   margin: var(--pui-space-8) 0 var(--pui-space-3);
   font-size: var(--pui-font-size-6);
   font-weight: var(--pui-font-weight-semibold);
@@ -234,7 +242,7 @@ a {
   scroll-margin-top: 5rem;
 }
 
-.prose h3 {
+.prose > h3 {
   margin: var(--pui-space-6) 0 var(--pui-space-2);
   font-size: var(--pui-font-size-4);
   font-weight: var(--pui-font-weight-semibold);
@@ -280,15 +288,15 @@ a {
 
 /* Anchored headings reveal their link on hover, but keyboard users get it on
  * focus too — hover-only affordances are unreachable without a pointer. */
-.prose :is(h2, h3) > a {
+.prose > :is(h2, h3) > a {
   opacity: 0;
   margin-inline-start: var(--pui-space-2);
   color: var(--pui-color-foreground-subtle);
   transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
 }
 
-.prose :is(h2, h3):hover > a,
-.prose :is(h2, h3) > a:focus-visible {
+.prose > :is(h2, h3):hover > a,
+.prose > :is(h2, h3) > a:focus-visible {
   opacity: 1;
 }
 
