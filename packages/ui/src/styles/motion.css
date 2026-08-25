@@ -18,11 +18,17 @@
  *    decide when a popup may unmount, and an infinite animation's promise
  *    never settles — the popup would stay in the DOM forever. Put spinners on
  *    an inner child instead.
+ *
+ * The defaults below sit on ':root' alone, unlike the colour ramps, which are
+ * restated on '.pui-theme' / '[data-pui-theme]'. A ramp must be restated
+ * because it is DERIVED from a seed a scope can override; these are literals,
+ * so a scope has nothing to re-derive — and restating them would let every
+ * theme scope re-declare the defaults on top of a 'data-pui-motion' inherited
+ * from an ancestor. Inheritance carries the setting into a scope; a scope that
+ * wants its own motion sets 'data-pui-motion' and wins on the blocks below.
  */
 @layer pretty-ui.tokens {
-  :root,
-  .pui-theme,
-  [data-pui-theme] {
+  :root {
     --pui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
     --pui-ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
     --pui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
@@ -32,9 +38,7 @@
     --pui-ease-spring-precise: linear(0, 0.0669, 0.2055, 0.3587, 0.5002, 0.6201, 0.7165, 0.7915, 0.8483, 0.8907, 0.9219, 0.9445, 0.9608, 0.9725, 0.9807, 0.9866, 0.9907, 0.9935, 0.9955, 0.9969, 0.9979, 0.9985, 0.999);
   }
 
-  :root,
-  .pui-theme,
-  [data-pui-theme] {
+  :root {
     --pui-motion-ok: 1;
     --pui-motion-off: 0;
 
@@ -64,9 +68,7 @@
 
   /* The OS preference. Geometry off, durations shortened rather than removed. */
   @media (prefers-reduced-motion: reduce) {
-    :root,
-    .pui-theme,
-    [data-pui-theme] {
+    :root {
       --pui-motion-ok: 0;
       --pui-motion-off: 1;
 

@@ -32,7 +32,10 @@
  *
  * Scoping: apply `.pui-theme` or `data-pui-theme` to any element to re-theme
  * just that subtree. The ramps are re-declared on those selectors precisely so
- * this works; overriding the seed on an arbitrary element does not.
+ * this works; overriding the seed on an arbitrary element does not. The
+ * `data-pui-*` switches need no such hook — put one on any element and it
+ * applies to that element and everything under it, including nested
+ * `.pui-theme` scopes, until a descendant sets its own.
  *
  * ---------------------------------------------------------------------------
  * Overriding
