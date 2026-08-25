@@ -381,9 +381,12 @@ pnpm dev                                    # then look at it
 ```
 
 Check it in the docs demo frame with light **and** dark, LTR **and** RTL, and
-the reduced-motion toggle. `apps/docs/app/motion-lab/` is a scratch page for
-comparing motion options side by side; it is not linked from the sidebar and is
-not a deliverable.
+the reduced-motion toggle — the frame has a control for each.
+
+A scratch page under `apps/docs/app/` is a fine way to compare motion options
+side by side while you work, but it is not a deliverable: delete it in the same
+PR that ships the decision, the way `motion-lab/` went out with the Dialog exit
+in #8.
 
 ---
 
