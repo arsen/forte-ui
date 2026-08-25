@@ -35,10 +35,16 @@
    * the forced-colors treatment. Only the iOS correction is component-local.
    * ---------------------------------------------------------------------- */
   .backdrop {
+    /* One below the viewport's 40, and declared locally because the backdrop
+     * is the viewport's SIBLING inside the portal — nothing on the viewport
+     * can reach it. */
+    --pui-dialog-backdrop-z-index: 39;
+
     /* Restated from `.pui-scrim` so the @supports override below has an
      * explicit default to flip, and so the class always exists in the
      * stylesheet regardless of at-rule handling. */
     position: fixed;
+    z-index: var(--pui-dialog-backdrop-z-index);
   }
 
   /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
@@ -59,9 +65,22 @@
    * ---------------------------------------------------------------------- */
   .viewport {
     --pui-dialog-viewport-padding: var(--pui-space-4);
+    /* Stacking is not optional here. `position: fixed` alone leaves the
+     * viewport at `z-index: auto`, which paints in the same band as every
+     * other positioned-but-unstacked box on the page — and DOM order only
+     * decides ties INSIDE a band. Any element with a positive z-index (a
+     * sticky header, a tab panel, an app's own overlay) is in a higher band
+     * and covers the dialog no matter that the portal comes last in <body>.
+     *
+     * 40, one band below the 50 the anchored popups use, so a Select or a
+     * Tooltip opened INSIDE a dialog is above it whichever order the two
+     * portals happen to land in. Re-point the knob to slot the dialog into an
+     * app's own scale; `viewportClassName` reaches it. */
+    --pui-dialog-z-index: 40;
 
     box-sizing: border-box;
     position: fixed;
+    z-index: var(--pui-dialog-z-index);
     inset: 0;
     display: flex;
     padding: var(--pui-dialog-viewport-padding);

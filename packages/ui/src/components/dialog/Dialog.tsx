@@ -203,7 +203,11 @@ export interface DialogPopupProps
   backdropClassName?: string;
   /**
    * Additional class name(s) for the scrollable viewport that positions the
-   * popup. Use it to change alignment (e.g. pin the dialog to the top).
+   * popup. Use it to change alignment (e.g. pin the dialog to the top), or to
+   * re-point `--pui-dialog-z-index` — it defaults to 40, one band under the
+   * anchored popups, so a `Select` or `Tooltip` inside a dialog stays above
+   * it. The backdrop reads `--pui-dialog-backdrop-z-index` (39) from
+   * `backdropClassName`, since it is the viewport's sibling.
    */
   viewportClassName?: string;
   /**

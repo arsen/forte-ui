@@ -33,7 +33,7 @@ Each `Tabs.Tab` is paired with the `Tabs.Panel` that carries the same `value`. T
 
 ### Line
 
-The default `variant="line"` is the demo at the top of this page: a rail under the strip, with a 2px underline that slides along it. Use it for page- or section-level navigation, where the tabs sit above a large body of content.
+The default `variant="line"` is the demo at the top of this page: a rail under the strip, with a 2px underline that slides along it. A line tab is flush with the rail, so its hover fill is rounded only on the two corners away from it — rounding all four would leave the fill curving off a line it is touching. Use it for page- or section-level navigation, where the tabs sit above a large body of content.
 
 ### Pill
 
@@ -87,7 +87,7 @@ The parts carry their own roles and relationships: `Tabs.List` is a `tablist`, e
   Give every `Tabs.List` an `aria-label` (or `aria-labelledby` pointing at a visible heading). Nothing else names the `tablist`, so without it a screen reader announces an unnamed group of tabs — and a page with two tab strips gives no way to tell them apart. All the demos on this page do this.
 </Callout>
 
-Hidden panels are removed from the DOM by default. `keepMounted` on `Tabs.Panel` keeps them mounted instead — set it when a panel holds scroll position or an uncommitted form that should survive a round trip, or when you want the exit transition to play out. A kept-mounted panel is given the `hidden` attribute and `display: none`, and its tab index drops to `-1`, so its content stays out of the tab order and out of the accessibility tree while it is not the active panel.
+Hidden panels are removed from the DOM by default. `keepMounted` on `Tabs.Panel` keeps them mounted instead — set it when a panel holds scroll position or an uncommitted form that should survive a round trip. A kept-mounted panel is given the `hidden` attribute and `display: none`, and its tab index drops to `-1`, so its content stays out of the tab order and out of the accessibility tree while it is not the active panel.
 
 Under forced colors the indicator paints `Highlight` explicitly rather than letting its background be replaced, so a pill and its label stay a matched pair; a `line` active tab instead keeps a transparent background and `CanvasText` text, because an opaque fill would cover the 2px bar that is the cue. The rail becomes `CanvasText`, and disabled tabs are painted `GrayText` rather than relying on opacity, which is not honoured in that mode.
 
@@ -111,7 +111,9 @@ It is a `transition` rather than a keyframe animation on purpose. A transition c
 
 Panels move too. `Tabs.Root` publishes `data-activation-direction` naming where the new tab sits relative to the old one, and the incoming panel starts offset by `--pui-travel-md` on that side and slides back to rest as it fades in.
 
-Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--pui-duration-move` collapses to `1ms` and `--pui-travel-md` to `0px`, so the indicator jumps to the new tab and the panel cross-fades in place. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
+Only ever one panel is readable. `Tabs.Root` is a grid and every `Tabs.Panel` is placed in the same cell, so the outgoing panel — which Base UI keeps mounted until its exit transition ends — overlaps the incoming one instead of being laid out beneath it, and the component never grows to fit both and snaps back. The outgoing panel is also taken out of flow for those frames, so the cell is sized by the incoming panel alone. Its exit is a cut rather than a fade: a panel has no background of its own, so two panels fading past each other would leave both sets of text legible at once.
+
+Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--pui-duration-move` collapses to `1ms` and `--pui-travel-md` to `0px`, so the indicator jumps to the new tab and the panel fades in place without travelling. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
 
 ## Theming
 
@@ -119,7 +121,7 @@ Every property below is declared on `Tabs.Root`, which is also why an ancestor i
 
 | Property | Controls | Default |
 | :-- | :-- | :-- |
-| `--pui-tabs-radius` | Corner radius of a tab, and of the panel | `var(--pui-radius-control)` |
+| `--pui-tabs-radius` | Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail | `var(--pui-radius-control)` |
 | `--pui-tabs-gap` | Space between adjacent tabs in the strip | `var(--pui-space-1)` |
 | `--pui-tabs-content-gap` | Space between the strip and the panel | `var(--pui-space-4)` |
 | `--pui-tabs-height` | Height of a tab | `var(--pui-control-h-md)` |
