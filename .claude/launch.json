@@ -4,8 +4,8 @@
     {
       "name": "docs",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@dofortech/pretty-ui-docs", "exec", "next", "dev", "-p", "3210"],
-      "port": 3210
+      "runtimeArgs": ["--filter", "@dofortech/pretty-ui-docs", "exec", "next", "dev"],
+      "autoPort": true
     }
   ]
 }
