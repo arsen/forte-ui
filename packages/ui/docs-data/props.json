@@ -258,6 +258,13 @@
         "description": "Keep the portal — and therefore the popup — in the DOM while the dialog\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
       },
       {
+        "name": "origin",
+        "type": "DialogOrigin",
+        "required": false,
+        "defaultValue": "trigger",
+        "description": "Where the open and close scale grows from.\n\n`\"trigger\"` aims it at the centre of the button that opened the dialog, so\nthe surface reads as growing out of that button and collapsing back into\nit. `\"center\"` keeps the centred gesture.\n\n`\"trigger\"` falls back to the centred gesture on its own whenever there is\nno trigger to aim at — a dialog opened programmatically or through\n`defaultOpen` — and is ignored for `size=\"fullscreen\"`, where a sheet\ncovering the screen has no meaningful point to grow from."
+      },
+      {
         "name": "size",
         "type": "DialogSize",
         "required": false,

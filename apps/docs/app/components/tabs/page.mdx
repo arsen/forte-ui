@@ -33,7 +33,7 @@ Each `Tabs.Tab` is paired with the `Tabs.Panel` that carries the same `value`. T
 
 ### Line
 
-The default `variant="line"` is the demo at the top of this page: a rail under the strip, with a 2px underline that slides along it. A line tab is flush with the rail, so its hover fill is rounded only on the two corners away from it — rounding all four would leave the fill curving off a line it is touching. Use it for page- or section-level navigation, where the tabs sit above a large body of content.
+The default `variant="line"` is the demo at the top of this page: a rail under the strip, with a 2px underline that slides along it. A line tab is flush with the rail, so it is rounded only on the two corners away from it — rounding all four would leave its focus ring curving off a line it is touching. Hovering a tab brightens its label and icon; neither variant paints a fill behind it. Use it for page- or section-level navigation, where the tabs sit above a large body of content.
 
 ### Pill
 
@@ -121,7 +121,8 @@ Every property below is declared on `Tabs.Root`, which is also why an ancestor i
 
 | Property | Controls | Default |
 | :-- | :-- | :-- |
-| `--pui-tabs-radius` | Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail | `var(--pui-radius-control)` |
+| `--pui-tabs-radius` | Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail, capped by the row below | `var(--pui-radius-control)` |
+| `--pui-tabs-radius-line` | The cap on those two corners. A `line` tab's other two are square, and CSS only shrinks an oversized radius to fit the corners sharing its edge — so without a cap a full-round radius rounds one all the way across the tab's height and leaves a tombstone rather than a tab | `min(var(--pui-tabs-radius), calc(var(--pui-tabs-height) / 2))` |
 | `--pui-tabs-gap` | Space between adjacent tabs in the strip | `var(--pui-space-1)` |
 | `--pui-tabs-content-gap` | Space between the strip and the panel | `var(--pui-space-4)` |
 | `--pui-tabs-height` | Height of a tab | `var(--pui-control-h-md)` |
@@ -136,13 +137,13 @@ Every property below is declared on `Tabs.Root`, which is also why an ancestor i
 | `--pui-tabs-tab-color` | Label colour of an inactive tab | `var(--pui-color-foreground-muted)` |
 | `--pui-tabs-tab-color-hover` | Label colour on hover | `var(--pui-color-foreground)` |
 | `--pui-tabs-tab-color-active` | Label colour of the active tab | `var(--pui-color-primary-text)` |
-| `--pui-tabs-tab-bg-hover` | Tab background on hover | `var(--pui-color-panel-hover)` |
+| `--pui-tabs-tab-bg-hover` | Tab background on hover — `transparent` in both variants, since hover is carried by the label colour alone; set it to opt a fill back in | `transparent` |
 | `--pui-tabs-indicator-color` | Fill of the sliding indicator | `var(--pui-color-primary)` |
 | `--pui-tabs-indicator-size` | Thickness of the indicator bar (line variant only) | `2px` |
 | `--pui-tabs-indicator-radius` | Corner radius of the indicator | `var(--pui-radius-pill)` |
 | `--pui-tabs-panel-padding` | Padding inside the panel | `0px` |
 
-`variant="pill"` is itself implemented by overriding six of these on the root — `--pui-tabs-list-bg`, `--pui-tabs-list-padding`, `--pui-tabs-list-radius`, `--pui-tabs-indicator-color`, `--pui-tabs-indicator-radius` and `--pui-tabs-tab-bg-hover`. Setting them yourself on a pill tab set still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+`variant="pill"` is itself implemented by overriding five of these on the root — `--pui-tabs-list-bg`, `--pui-tabs-list-padding`, `--pui-tabs-list-radius`, `--pui-tabs-indicator-color` and `--pui-tabs-indicator-radius`. Setting them yourself on a pill tab set still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 
 The parts also expose their state as data attributes — `data-variant`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction` — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
 

@@ -30,6 +30,20 @@
      * this layer whatever its specificity); re-skin every tab set by
      * re-pointing the global tokens they resolve to. */
     --pui-tabs-radius: var(--pui-radius-control);
+    /* Same radius, capped at half the tab's height, for the two corners a line
+     * tab actually rounds. Its other two are square (see the Tab section), and
+     * CSS only shrinks an oversized radius to fit the corners SHARING its edge
+     * — with the opposite corner at 0 the rounded one is free to eat the whole
+     * height rather than half of it, so an uncapped pill preset
+     * (--pui-radius-control: 9999px) turned every line tab into a tombstone:
+     * a semicircular focus ring (and hover fill, for a consumer who has set
+     * --pui-tabs-tab-bg-hover back on). The cap is the largest radius
+     * that still leaves a flat edge between the pair, and it holds for both
+     * orientations — the pair straddles the block-start edge horizontally and
+     * the inline-start edge vertically, but the height is what constrains it
+     * either way. Derived, not fixed, so `none` stays square and the default
+     * and `soft` presets stay exactly as they were. */
+    --pui-tabs-radius-line: min(var(--pui-tabs-radius), calc(var(--pui-tabs-height) / 2));
     --pui-tabs-gap: var(--pui-space-1);
     --pui-tabs-content-gap: var(--pui-space-4);
     --pui-tabs-height: var(--pui-control-h-md);
@@ -48,7 +62,13 @@
     --pui-tabs-tab-color: var(--pui-color-foreground-muted);
     --pui-tabs-tab-color-hover: var(--pui-color-foreground);
     --pui-tabs-tab-color-active: var(--pui-color-primary-text);
-    --pui-tabs-tab-bg-hover: var(--pui-color-panel-hover);
+    /* Hover is a colour change on the label and its icon, in BOTH variants:
+     * the tabs are the only interactive thing in the strip, so a fill adds no
+     * information the text colour has not already given — and in the line
+     * variant it also puts a second, differently-shaped box behind a tab that
+     * the indicator is already about to underline. Left as a token rather than
+     * dropped so a consumer who does want a fill can set it back. */
+    --pui-tabs-tab-bg-hover: transparent;
 
     /* Indicator */
     --pui-tabs-indicator-color: var(--pui-color-primary);
@@ -128,7 +148,6 @@
     --pui-tabs-list-radius: var(--pui-radius-4);
     --pui-tabs-indicator-color: var(--pui-color-primary-soft);
     --pui-tabs-indicator-radius: var(--pui-radius-control);
-    --pui-tabs-tab-bg-hover: transparent;
   }
 
   /* Strip ------------------------------------------------------------------
@@ -207,12 +226,17 @@
   }
 
   /* A line tab sits flush on the rail, so its rail-side corners are square:
-   * rounding them leaves the hover fill curving away from a line it is
-   * touching, which reads as a chip that has come unstuck rather than a tab
-   * attached to the strip. The other two corners keep the radius, which is
-   * also the shape the indicator's underline meets. A pill tab is a free
-   * floating shape inside a padded strip and stays rounded all round. */
+   * rounding them leaves the focus ring (or an authored hover fill) curving
+   * away from a line it is touching, which reads as a chip that has come
+   * unstuck rather than a tab attached to the strip. The other two corners
+   * keep the radius — capped at half the tab's height, because the square pair
+   * is what lets an uncapped one round away the whole edge (see
+   * --pui-tabs-radius-line) — which is also the shape the indicator's
+   * underline meets. A pill tab is a free floating shape inside a padded strip
+   * and stays rounded all round. */
   .tab[data-variant="line"] {
+    border-start-start-radius: var(--pui-tabs-radius-line);
+    border-start-end-radius: var(--pui-tabs-radius-line);
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
@@ -220,7 +244,7 @@
   /* Vertical moves the rail to the inline-end edge, so the square pair moves
    * with it — and the block-end-start corner rounds back off. */
   .tab[data-variant="line"][data-orientation="vertical"] {
-    border-end-start-radius: var(--pui-tabs-radius);
+    border-end-start-radius: var(--pui-tabs-radius-line);
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }

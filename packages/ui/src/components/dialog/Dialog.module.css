@@ -14,12 +14,40 @@
  * is the styling anchor and carries the `--pui-dialog-*` knobs.
  *
  * Motion notes, all load-bearing:
- *   - No `prefers-reduced-motion` block. `--pui-travel-md` collapses to 0px
- *     and `--pui-scale-enter` to 1, so the geometry disappears on its own and
- *     the opacity fade — the part reduced-motion users actually want — stays.
+ *   - No `prefers-reduced-motion` block. The travel tokens collapse to 0px
+ *     and `--pui-scale-enter` to 1, the exit scale is gated on
+ *     `--pui-motion-ok`, and the spring durations shorten — so the geometry
+ *     disappears on its own and the opacity fade, the part reduced-motion
+ *     users actually want, stays.
  *   - Enter/exit is done with transitions on [data-starting-style] /
  *     [data-ending-style], never keyframes: closing a dialog mid-open
  *     reverses smoothly instead of snapping.
+ *   - Same shape both ways — rise + grow in, sink + shrink out — so an
+ *     interrupted open simply runs back down the path it came up. The
+ *     entrance rides a spring (`--pui-ease-spring-snappy`) over ~400ms,
+ *     because arriving is the moment that has to read as a surface settling
+ *     into place.
+ *   - On the way OUT the curves are split per property, and the split is the
+ *     whole reason the exit reads as motion at all. Two failure modes sit on
+ *     either side of it, and both look like "there is no exit animation":
+ *
+ *       Decelerate the geometry (`--pui-ease-standard`, or any ease-out) and
+ *       the popup covers 88% of its travel in the first half, then crawls —
+ *       0.08px over the final 40ms — while it is still fading down from 68%
+ *       opacity. The movement ENDS well before the element does, so the
+ *       dialog appears to freeze mid-flight and then get yanked out of the
+ *       DOM.
+ *
+ *       Accelerate it (`--pui-ease-exit`, the obvious reading of "ease out of
+ *       the way") and the opposite happens: about one pixel of travel while
+ *       the popup is still opaque, with the rest spent after it has faded.
+ *
+ *     So the geometry runs `linear` — 1.33px per 40ms, uniform, still moving
+ *     on the frame it disappears. An easing curve implies arrival somewhere,
+ *     and an exit never arrives: it is cut short by its own removal. The
+ *     opacity meanwhile runs on `--pui-ease-exit`, holding around 0.75
+ *     through the midpoint, so the surface stays legible for the part of the
+ *     journey the eye actually reads.
  *   - Nothing here animates `infinite`. Base UI awaits
  *     `Promise.all(popup.getAnimations().map(a => a.finished))` before
  *     unmounting the popup, and an infinite animation never settles.
@@ -40,11 +68,26 @@
      * can reach it. */
     --pui-dialog-backdrop-z-index: 39;
 
+    /* `.pui-scrim` clears in `--pui-duration-fast` on a fast-starting curve,
+     * which is right for a bare overlay but wrong here: the page behind
+     * would snap back to full brightness while the dialog is still leaving,
+     * and the eye follows the big brightness change rather than the popup.
+     * These match the popup's exit instead. Same knobs, declared separately,
+     * because the popup's cannot reach a sibling; set them through
+     * `backdropClassName`. */
+    --pui-dialog-backdrop-exit-duration: var(--pui-duration-normal);
+    --pui-dialog-backdrop-exit-ease: var(--pui-ease-exit);
+
     /* Restated from `.pui-scrim` so the @supports override below has an
      * explicit default to flip, and so the class always exists in the
      * stylesheet regardless of at-rule handling. */
     position: fixed;
     z-index: var(--pui-dialog-backdrop-z-index);
+  }
+
+  .backdrop[data-ending-style] {
+    transition-duration: var(--pui-dialog-backdrop-exit-duration);
+    transition-timing-function: var(--pui-dialog-backdrop-exit-ease);
   }
 
   /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
@@ -123,6 +166,29 @@
      * the scale step is gated on --pui-motion-ok for the same reason. */
     --pui-dialog-nested-offset: var(--pui-travel-lg);
     --pui-dialog-nested-scale-step: 0.04;
+    /* The parent's retreat is a layout move, not a pop: `spring-precise` is
+     * the one spring in the set with no overshoot, so the surface settles
+     * under the child instead of bouncing beneath it. */
+    --pui-dialog-nested-duration: var(--pui-duration-spring-precise);
+
+    /* Enter/exit gesture. Broken out into knobs so an app can retune the
+     * feel — or flatten it entirely — without restating the transition.
+     * `--pui-dialog-exit-scale` is written as a calc against --pui-motion-ok
+     * rather than a literal so it lands on exactly 1 under reduced motion;
+     * multiplying a scale by `ok` instead would collapse the popup to
+     * nothing. */
+    --pui-dialog-enter-travel: var(--pui-travel-md);
+    --pui-dialog-enter-scale: var(--pui-scale-enter);
+    --pui-dialog-enter-duration: var(--pui-duration-spring-snappy);
+    --pui-dialog-enter-ease: var(--pui-ease-spring-snappy);
+    --pui-dialog-exit-travel: var(--pui-travel-md);
+    --pui-dialog-exit-scale: calc(1 - 0.05 * var(--pui-motion-ok));
+    --pui-dialog-exit-duration: var(--pui-duration-normal);
+    /* `linear` on purpose, and the one place in the library that wants it —
+     * see the note at the top of the file. Nothing eases toward a resting
+     * place here, because the popup is removed rather than arriving. */
+    --pui-dialog-exit-ease: linear;
+    --pui-dialog-exit-fade-ease: var(--pui-ease-exit);
 
     box-sizing: border-box;
     position: relative;
@@ -154,25 +220,70 @@
       1 - var(--pui-dialog-nested-scale-step) * var(--pui-motion-ok) *
         var(--nested-dialogs, 0)
     );
+    /* Opacity is deliberately much shorter than the transform: the surface
+     * is fully legible a sixth of a second in and the spring finishes
+     * settling behind readable content, instead of the whole dialog spending
+     * 400ms half-transparent. */
     transition:
-      opacity var(--pui-duration-normal) var(--pui-ease-standard),
-      transform var(--pui-duration-normal) var(--pui-ease-emphasized),
-      translate var(--pui-duration-normal) var(--pui-ease-standard),
-      scale var(--pui-duration-normal) var(--pui-ease-standard);
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-dialog-enter-duration) var(--pui-dialog-enter-ease),
+      translate var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise),
+      scale var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise);
   }
 
   /* Rises into place from below and grows to full size. */
   .popup[data-starting-style] {
     opacity: 0;
-    transform: translateY(var(--pui-travel-md)) scale(var(--pui-scale-enter));
+    transform: translateY(var(--pui-dialog-enter-travel))
+      scale(var(--pui-dialog-enter-scale));
   }
 
-  /* Leaves by expanding slightly — the opposite gesture, so an interrupted
-   * open reverses instead of continuing. */
+  /* Retraces the entrance — sinks back down and shrinks — so the dialog reads
+   * as being put away rather than blinking out, and an open interrupted
+   * halfway just continues back along the same path.
+   *
+   * The whole `transition` is restated rather than just its duration,
+   * because the geometry and the fade need DIFFERENT curves here — uniform
+   * movement against a hold-then-drop fade. See the note at the top of the
+   * file; getting this wrong in either direction reads as no exit at all.
+   * The nested `translate`/`scale` are folded in on the same timing — while
+   * the popup is leaving, its nested offset has no reason to outlive it. */
   .popup[data-ending-style] {
     opacity: 0;
-    transform: scale(var(--pui-scale-exit));
-    transition-timing-function: var(--pui-ease-exit);
+    transform: translateY(var(--pui-dialog-exit-travel))
+      scale(var(--pui-dialog-exit-scale));
+    transition:
+      opacity var(--pui-dialog-exit-duration) var(--pui-dialog-exit-fade-ease),
+      transform var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease),
+      translate var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease),
+      scale var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease);
+  }
+
+  /* Trigger origin ---------------------------------------------------------
+   * When a trigger opened the dialog, the popup scales from THAT point rather
+   * than from its own centre, so it reads as growing out of the button that
+   * opened it and collapsing back into it. `Dialog.Popup` measures the trigger
+   * and writes the two offsets in px, relative to the popup's top-left corner;
+   * JS does nothing but measure, and every duration, curve and scale stays
+   * here where it can still be overridden.
+   *
+   * The travel drops to 0 and the scales go deeper than the centred ones. With
+   * the origin off-centre the scale IS the movement — every point slides
+   * toward the origin as the popup shrinks, and the further away the origin,
+   * the more of that scale is expressed as translation — so a separate
+   * translate would only fight it. Both scales stay gated on --pui-motion-ok,
+   * so reduced motion still lands on a plain fade.
+   * ---------------------------------------------------------------------- */
+  .popup[data-origin] {
+    --pui-dialog-enter-travel: 0px;
+    --pui-dialog-enter-scale: calc(1 - 0.15 * var(--pui-motion-ok));
+    --pui-dialog-exit-travel: 0px;
+    --pui-dialog-exit-scale: calc(1 - 0.1 * var(--pui-motion-ok));
+
+    /* The fallback keeps the centred gesture if the attribute is ever present
+     * without the offsets — a consumer copying the selector, say. */
+    transform-origin: var(--pui-dialog-origin-x, 50%)
+      var(--pui-dialog-origin-y, 50%);
   }
 
   /* Nested dialogs ---------------------------------------------------------
@@ -189,7 +300,10 @@
     background-color: var(--pui-scrim-color);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+    /* Ramps in over the same window as the parent's retreat, so the dim and
+     * the push read as one movement. */
+    transition: opacity var(--pui-dialog-nested-duration)
+      var(--pui-ease-standard);
   }
 
   .popup[data-nested-dialog-open]::after {
@@ -209,9 +323,16 @@
     --pui-dialog-max-inline-size: 48rem;
   }
 
+  /* A fullscreen sheet has no visible edges for a scale to work against —
+   * shrinking it just pulls the content away from a screen it is supposed to
+   * fill — so it travels further and doesn't scale at all. */
   .popup[data-size="fullscreen"] {
     --pui-dialog-max-inline-size: 100%;
     --pui-dialog-radius: 0px;
+    --pui-dialog-enter-travel: var(--pui-travel-page);
+    --pui-dialog-enter-scale: 1;
+    --pui-dialog-exit-travel: var(--pui-travel-page);
+    --pui-dialog-exit-scale: 1;
     min-block-size: 100%;
   }
 

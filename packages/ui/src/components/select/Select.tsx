@@ -36,7 +36,15 @@ function CaretUpDownIcon(props: React.ComponentProps<"svg">) {
       {...props}
       style={{ display: "block", ...props.style }}
     >
-      <path d="M11 10H5l3 3.5zm0-4H5l3-3.5z" />
+      {/* Two paths, not one, so the pair can spread apart while the popup is
+       * open — see `.caret` in the stylesheet. `data-direction` says which is
+       * which; the class is only a styling hook. */}
+      <path className={styles.caret} data-direction="up" d="M11 6H5l3-3.5z" />
+      <path
+        className={styles.caret}
+        data-direction="down"
+        d="M11 10H5l3 3.5z"
+      />
     </svg>
   );
 }
