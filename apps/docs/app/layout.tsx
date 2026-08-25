@@ -13,7 +13,11 @@ export const metadata: Metadata = {
 
 // Runs before first paint so the page never flashes the wrong theme. Kept
 // deliberately tiny and inlined — an external script would defeat the purpose.
-const noFlashScript = `(function(){try{var t=localStorage.getItem('pui-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`;
+// Two things are restored: the light/dark mode, and a Theme Studio config the
+// user chose to apply site-wide. The studio stores its resolved variables
+// alongside the config precisely so this stays a dumb replay with no colour
+// maths in the critical path.
+const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('pui-theme');if(t==='light'||t==='dark'){r.setAttribute('data-theme',t);}var s=JSON.parse(localStorage.getItem('pui-studio')||'null');if(s&&s.applyToSite&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-pui-'+d,s.root.data[d]);}}}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
