@@ -269,7 +269,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the scrollable viewport that positions the\npopup. Use it to change alignment (e.g. pin the dialog to the top)."
+        "description": "Additional class name(s) for the scrollable viewport that positions the\npopup. Use it to change alignment (e.g. pin the dialog to the top), or to\nre-point `--pui-dialog-z-index` — it defaults to 40, one band under the\nanchored popups, so a `Select` or `Tooltip` inside a dialog stays above\nit. The backdrop reads `--pui-dialog-backdrop-z-index` (39) from\n`backdropClassName`, since it is the viewport's sibling."
       }
     ]
   },

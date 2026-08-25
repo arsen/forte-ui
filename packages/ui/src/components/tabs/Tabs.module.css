@@ -68,6 +68,15 @@
      * the panels overlap instead of stacking, and the cell is sized by the
      * incoming panel alone. */
     position: relative;
+    /* `position: relative` alone does NOT open a stacking context — it needs a
+     * z-index, and the root deliberately has none so it stays wherever the
+     * page puts it. `isolation` opens one without that side effect, which
+     * keeps the z-indexes below (tab over indicator, incoming panel over
+     * outgoing) private to the component. Without it they are promoted into
+     * the ROOT stacking context, where a `z-index: 1` tab panel outranks every
+     * portalled overlay sitting at `z-index: auto` — a dialog opened from
+     * inside a tab panel would be painted over by the tab strip. */
+    isolation: isolate;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     /* `minmax(0, 1fr)` on the panel row, not `auto`: in an auto-height root the
