@@ -2,12 +2,17 @@
  * pretty-ui semantic tokens, geometry, and motion.
  * The colour *ramps* are generated — see tokens.color.css / scripts/ramp.mjs.
  *
- * Every block here is declared on `:root, .pui-theme, [data-pui-theme]`, not
+ * Most blocks here are declared on `:root, .pui-theme, [data-pui-theme]`, not
  * on `:root` alone. That repetition is load-bearing: a `var()` inside an
  * unregistered custom property is substituted at the element where the
  * property is DECLARED, so a subtree that only overrides `--pui-accent-seed`
  * would keep the root's already-resolved values. Restating the derivations on
  * the scope selectors is what makes per-subtree theming work at all.
+ *
+ * The exception is the radius and density defaults, which sit on `:root`
+ * alone — they are what the `data-pui-*` presets rewrite, so restating them on
+ * every scope would have each scope shadow a preset inherited from an
+ * ancestor. See the comment above that block; motion.css does the same.
  */
 @layer pretty-ui.tokens {
   :root {
@@ -193,21 +198,6 @@
     --pui-space-7: 2.5rem;
     --pui-space-8: 3rem;
 
-    /* Radius scale */
-    --pui-radius-1: 0.125rem;
-    --pui-radius-2: 0.25rem;
-    --pui-radius-3: 0.375rem;
-    --pui-radius-4: 0.5rem;
-    --pui-radius-5: 0.75rem;
-    --pui-radius-6: 1rem;
-    --pui-radius-full: 9999px;
-
-    /* Semantic radius — what components consume, so a preset can retarget
-     * the whole library by rewriting three values instead of seven. */
-    --pui-radius-control: var(--pui-radius-4);
-    --pui-radius-surface: var(--pui-radius-5);
-    --pui-radius-pill: var(--pui-radius-full);
-
     /* Typography */
     --pui-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
       "Helvetica Neue", Arial, sans-serif;
@@ -254,6 +244,43 @@
     /* Hit targets — SC 2.5.8 (AA) and 2.5.5 (AAA) */
     --pui-target-min: 24px;
     --pui-target-comfortable: 44px;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Radius and density defaults, on `:root` ALONE.
+   *
+   * Everything above is restated on `.pui-theme` / `[data-pui-theme]` because
+   * it is DERIVED from a seed a scope can override, and a `var()` inside an
+   * unregistered custom property is substituted where it is declared. These
+   * two groups are different: they are the values the `data-pui-radius` and
+   * `data-pui-density` presets below rewrite. Restating them on the scope
+   * selectors would mean every theme scope re-declares the DEFAULTS on top of
+   * a preset inherited from an ancestor — `.pui-theme` (0,1,0) and
+   * `[data-pui-radius="pill"]` (0,1,0) tie on specificity, and the scope wins
+   * because it matches the nearer element. A docs demo frame inside a page
+   * themed to `pill` would silently snap back to the default radius.
+   *
+   * So: inheritance carries a preset into a scope, and a scope that wants its
+   * own geometry says so with its own `data-pui-radius` / `data-pui-density`,
+   * which then wins on the blocks below. The cost is that overriding a raw
+   * `--pui-space-*` or `--pui-radius-*` on a subtree no longer re-derives the
+   * semantic values — that is what the presets are for.
+   * --------------------------------------------------------------------- */
+  :root {
+    /* Radius scale */
+    --pui-radius-1: 0.125rem;
+    --pui-radius-2: 0.25rem;
+    --pui-radius-3: 0.375rem;
+    --pui-radius-4: 0.5rem;
+    --pui-radius-5: 0.75rem;
+    --pui-radius-6: 1rem;
+    --pui-radius-full: 9999px;
+
+    /* Semantic radius — what components consume, so a preset can retarget
+     * the whole library by rewriting three values instead of seven. */
+    --pui-radius-control: var(--pui-radius-4);
+    --pui-radius-surface: var(--pui-radius-5);
+    --pui-radius-pill: var(--pui-radius-full);
 
     /* Density: control metrics. Comfortable is the default. */
     --pui-control-h-sm: 1.75rem;
@@ -271,7 +298,13 @@
    * unregistered property containing var() freezes at its declaring element,
    * so `calc(8px * var(--pui-radius-factor))` on :root would never re-derive
    * inside a scoped subtree. There are only three presets — literals are both
-   * simpler and correct. */
+   * simpler and correct.
+   *
+   * Each preset restates the WHOLE scale, the way every state block in
+   * motion.css does, so a preset is a complete statement rather than a patch
+   * on whatever it inherited. `none` zeroes the scale itself, so a nested
+   * `soft` that only re-pointed `--pui-radius-control` at `--pui-radius-5`
+   * would resolve it against its ancestor's zero and stay square. */
   [data-pui-radius="none"] {
     --pui-radius-1: 0;
     --pui-radius-2: 0;
@@ -286,13 +319,29 @@
   }
 
   [data-pui-radius="soft"] {
+    --pui-radius-1: 0.125rem;
+    --pui-radius-2: 0.25rem;
+    --pui-radius-3: 0.375rem;
+    --pui-radius-4: 0.5rem;
+    --pui-radius-5: 0.75rem;
+    --pui-radius-6: 1rem;
+    --pui-radius-full: 9999px;
     --pui-radius-control: var(--pui-radius-5);
     --pui-radius-surface: var(--pui-radius-6);
+    --pui-radius-pill: var(--pui-radius-full);
   }
 
   [data-pui-radius="pill"] {
+    --pui-radius-1: 0.125rem;
+    --pui-radius-2: 0.25rem;
+    --pui-radius-3: 0.375rem;
+    --pui-radius-4: 0.5rem;
+    --pui-radius-5: 0.75rem;
+    --pui-radius-6: 1rem;
+    --pui-radius-full: 9999px;
     --pui-radius-control: var(--pui-radius-full);
     --pui-radius-surface: var(--pui-radius-6);
+    --pui-radius-pill: var(--pui-radius-full);
   }
 
   /* Density presets. `compact` `sm` lands at exactly 24px — the SC 2.5.8

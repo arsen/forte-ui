@@ -7,7 +7,20 @@ import { fileURLToPath } from "node:url";
 import { DURATIONS, GEOMETRY, EASINGS, SPRING_DURATIONS } from "./motion.mjs";
 
 const OUT = fileURLToPath(new URL("../src/styles/motion.css", import.meta.url));
-const SCOPE = [":root", ".pui-theme", "[data-pui-theme]"];
+
+/** The defaults are declared on `:root` ALONE — deliberately not on
+ *  `.pui-theme` / `[data-pui-theme]` the way the colour ramps are.
+ *
+ *  A ramp has to be restated on every scope selector because it is derived
+ *  from a seed the scope may override. Motion tokens are literals, so a scope
+ *  has nothing to re-derive — and restating them there would make every theme
+ *  scope re-declare the defaults, which beats the value inherited from an
+ *  ancestor carrying `data-pui-motion`. That is exactly the docs' arrangement:
+ *  a `.pui-theme` demo frame inside a page whose <html> has been set to
+ *  "reduce" would silently animate at full speed. Leaving the scopes alone
+ *  lets inheritance carry the setting in, while a scope that wants its own
+ *  motion still says so with `data-pui-motion` and wins on the blocks below. */
+const ROOT = [":root"];
 
 /** `:root[data-pui-motion="x"]` scores (0,2,0) and beats the base `:root`
  *  (0,1,0). A bare `[data-pui-motion="x"]` — needed so the control also works
@@ -50,14 +63,22 @@ const css = `/**
  *    decide when a popup may unmount, and an infinite animation's promise
  *    never settles — the popup would stay in the DOM forever. Put spinners on
  *    an inner child instead.
+ *
+ * The defaults below sit on ':root' alone, unlike the colour ramps, which are
+ * restated on '.pui-theme' / '[data-pui-theme]'. A ramp must be restated
+ * because it is DERIVED from a seed a scope can override; these are literals,
+ * so a scope has nothing to re-derive — and restating them would let every
+ * theme scope re-declare the defaults on top of a 'data-pui-motion' inherited
+ * from an ancestor. Inheritance carries the setting into a scope; a scope that
+ * wants its own motion sets 'data-pui-motion' and wins on the blocks below.
  */
 @layer pretty-ui.tokens {
-${EASINGS.length ? `  :root,\n  .pui-theme,\n  [data-pui-theme] {\n${EASINGS.map((e) => decl(`ease-${e.name}`, e.value)).join("\n")}\n  }\n` : ""}
-${stateBlock(SCOPE, { durationKey: "base", geometryKey: "full", motionOk: "1" })}
+${EASINGS.length ? `  :root {\n${EASINGS.map((e) => decl(`ease-${e.name}`, e.value)).join("\n")}\n  }\n` : ""}
+${stateBlock(ROOT, { durationKey: "base", geometryKey: "full", motionOk: "1" })}
 
   /* The OS preference. Geometry off, durations shortened rather than removed. */
   @media (prefers-reduced-motion: reduce) {
-${stateBlock(SCOPE, { durationKey: "reduce", geometryKey: "reduced", motionOk: "0" })
+${stateBlock(ROOT, { durationKey: "reduce", geometryKey: "reduced", motionOk: "0" })
     .split("\n").map((l) => (l ? `  ${l}` : l)).join("\n")}
   }
 

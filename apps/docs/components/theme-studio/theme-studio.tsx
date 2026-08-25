@@ -343,9 +343,20 @@ function Choice<T extends string>({
   return (
     <section className={styles.group}>
       <h3 className={styles.groupTitle}>{label}</h3>
-      {/* A radiogroup rather than buttons: arrow keys move between options and
-        * the selected state is announced, which a row of buttons would not do. */}
-      <div className={styles.segmented} role="radiogroup" aria-label={label}>
+      {/* A radiogroup rather than a Tabs strip: these pick a setting, they do
+        * not switch between panels, so arrow keys move between options and the
+        * selection is announced as a radio rather than a tab. The sliding
+        * thumb is Tabs' indicator idea reused — see the stylesheet; the count
+        * and the active index are all the CSS needs to place it. */}
+      <div
+        className={styles.segmented}
+        role="radiogroup"
+        aria-label={label}
+        style={{
+          "--seg-count": options.length,
+          "--seg-index": options.indexOf(value),
+        } as React.CSSProperties}
+      >
         {options.map((o) => (
           <button
             key={o}
@@ -359,6 +370,9 @@ function Choice<T extends string>({
             {o}
           </button>
         ))}
+        {/* The thumb. Absolutely positioned, so its place in the DOM is free —
+          * it sits last, after the options it decorates. */}
+        <span className={styles.segmentIndicator} aria-hidden="true" />
       </div>
     </section>
   );

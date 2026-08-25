@@ -142,17 +142,65 @@
   accent-color: var(--pui-color-primary);
 }
 
-/* Segmented control ------------------------------------------------------- */
+/* Segmented control -------------------------------------------------------
+ * A radiogroup, not a tab strip — arrow keys move between options and the
+ * selection is announced — but it borrows Tabs' indicator: the thumb is a
+ * separate element that SLIDES, so switching option reads as one movement
+ * rather than two fills swapping.
+ *
+ * Tabs can measure its tabs at runtime; this cannot, so the geometry is
+ * arithmetic instead. Every segment is an equal `1fr` track, which makes the
+ * thumb's width `(track − gutters) / count` and its offset `index` steps of
+ * its own width plus one gap. `--seg-count` and `--seg-index` come in from the
+ * component. `--pui-duration-move` is the same token Tabs uses for a
+ * positional move with no travel-token equivalent, and it collapses to 1ms
+ * under reduced motion, so this file needs no media query of its own.
+ * ------------------------------------------------------------------------ */
 .segmented {
-  display: flex;
-  gap: 2px;
-  padding: 2px;
+  --seg-gap: 2px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--seg-count), minmax(0, 1fr));
+  gap: var(--seg-gap);
+  padding: var(--seg-gap);
   border-radius: var(--pui-radius-3);
   background-color: var(--pui-color-panel-active);
 }
 
+/* Absolutely positioned rather than a grid item: an explicitly placed grid
+ * item would occupy the first cell and push the auto-placed segments along by
+ * one. Its containing block is the strip's PADDING box, so `100%` below is the
+ * padded width and only the gaps have to be subtracted. */
+.segmentIndicator {
+  position: absolute;
+  z-index: 0;
+  inset-block: var(--seg-gap);
+  inset-inline-start: var(--seg-gap);
+  width: calc(
+    (100% - 2 * var(--seg-gap) - (var(--seg-count) - 1) * var(--seg-gap)) /
+    var(--seg-count)
+  );
+  border-radius: calc(var(--pui-radius-3) - 1px);
+  background-color: var(--pui-color-background);
+  box-shadow: var(--pui-shadow-1);
+  /* The percentage is the thumb's OWN width, so one step is exactly one
+   * segment plus the gap between them. */
+  translate: calc(var(--seg-index) * (100% + var(--seg-gap)));
+  pointer-events: none;
+  transition: translate var(--pui-duration-move) var(--pui-ease-spring-snappy);
+}
+
+/* `translate` is physical, so the steps have to be mirrored by hand; the
+ * indicator is inside the docs' RTL demo scope on some pages. */
+[dir="rtl"] .segmentIndicator {
+  translate: calc(-1 * var(--seg-index) * (100% + var(--seg-gap)));
+}
+
 .segment {
-  flex: 1;
+  /* Above the thumb, so it slides behind the label the way a pill tab does. */
+  position: relative;
+  z-index: 1;
   min-height: var(--pui-target-min);
   padding: var(--pui-space-1);
   border: 0;
@@ -163,15 +211,34 @@
   font-size: var(--pui-font-size-1);
   text-transform: capitalize;
   cursor: pointer;
-  transition:
-    background-color var(--pui-duration-fast) var(--pui-ease-standard),
-    color var(--pui-duration-fast) var(--pui-ease-standard);
+  transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+}
+
+/* Gated the way Tabs gates its own hover: on a touch screen `:hover` sticks
+ * to the last thing tapped. */
+@media (hover: hover) {
+  .segment:hover:not([data-active]) {
+    color: var(--pui-color-foreground);
+  }
 }
 
 .segment[data-active] {
-  background-color: var(--pui-color-background);
   color: var(--pui-color-foreground);
-  box-shadow: var(--pui-shadow-1);
+}
+
+/* The thumb is the only thing marking the selection, and a background is
+ * replaced by a system colour under forced colours — so it paints Highlight
+ * explicitly, exactly as Tabs' indicator does. */
+@media (forced-colors: active) {
+  .segmentIndicator {
+    forced-color-adjust: none;
+    background-color: Highlight;
+  }
+
+  .segment[data-active] {
+    forced-color-adjust: none;
+    color: HighlightText;
+  }
 }
 
 /* Readout ----------------------------------------------------------------- */
