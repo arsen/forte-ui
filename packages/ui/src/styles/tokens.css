@@ -19,6 +19,33 @@
     color-scheme: light dark;
   }
 
+  /* ------------------------------------------------------------------------
+   * Direction
+   *
+   * `--pui-direction` is the sign of the inline axis, for the handful of
+   * places that must move something with `translate`/`transform`, which have
+   * no logical form and always run along the physical x axis. A component
+   * multiplies its own positive travel by it; nothing else here needs to know
+   * about direction, because every other placement uses logical properties.
+   *
+   * Keyed on the `dir` ATTRIBUTE, and deliberately not on `:dir()`: with this
+   * package's CSS targets, `:dir()` is lowered at build time into a list of
+   * `:lang()` selectors, which follows the document *language* rather than the
+   * `dir` attribute — so the rule would quietly stop matching in the published
+   * stylesheet while still working in source.
+   *
+   * Both directions are declared, and the value is inherited rather than read
+   * off an ancestor selector, so the NEAREST `dir` ancestor wins: an LTR
+   * island inside an RTL page gets 1 back, at any nesting depth.
+   * --------------------------------------------------------------------- */
+  [dir="ltr"] {
+    --pui-direction: 1;
+  }
+
+  [dir="rtl"] {
+    --pui-direction: -1;
+  }
+
   /* Forcing a mode opts out of the OS preference. */
   [data-theme="light"] {
     color-scheme: light;

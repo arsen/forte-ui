@@ -48,3 +48,15 @@
   inherits: true;
   initial-value: 0;
 }
+
+/* The sign of the inline axis: 1 in LTR, -1 in RTL. It exists because
+ * `translate` and `transform` have no logical form — a component that has to
+ * move something along the inline axis multiplies its (always positive)
+ * distance by this. Set in tokens.css from the `dir` attribute; registering it
+ * here gives every component a working default even when a rule for the
+ * current direction never matched. */
+@property --pui-direction {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}

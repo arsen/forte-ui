@@ -62,6 +62,18 @@
         var(--pui-switch-padding) - 2 * var(--pui-switch-border-width)
     );
 
+    /* The travel above is a distance, not a direction: everything that places
+     * the thumb is logical (`inline-size`, `padding`, `flex-start`) except the
+     * `translate` that moves it, which has no logical form and always runs
+     * along the physical x axis. So the sign is kept separate — RTL flips it
+     * and `--pui-switch-travel` stays a plain positive length a consumer can
+     * override without thinking about direction.
+     *
+     * `--pui-direction` comes from the nearest `dir` attribute (tokens.css);
+     * the literal fallback keeps the switch correct in LTR for anyone who
+     * loads a component stylesheet without theme.css. */
+    --pui-switch-direction: var(--pui-direction, 1);
+
     box-sizing: border-box;
     position: relative;
     display: inline-flex;
@@ -177,7 +189,7 @@
    * the note at the top of this file. Reduced motion shortens the duration
    * above; it must not delete the distance. */
   .thumb[data-checked] {
-    translate: var(--pui-switch-travel) 0;
+    translate: calc(var(--pui-switch-travel) * var(--pui-switch-direction)) 0;
   }
 
   /* Checkmark ------------------------------------------------------------- */
