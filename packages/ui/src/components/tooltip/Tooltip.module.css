@@ -27,17 +27,22 @@
   /* ------------------------------------------------------------------------
    * Trigger
    *
-   * Almost unstyled on purpose: the trigger is usually an existing control
-   * (`render={<Button />}`, an icon button, a link) and a reset here would
-   * fight whatever it is composed with. `Trigger.disabled` disables the
-   * TOOLTIP, not the element — it never sets the `disabled` attribute — so it
-   * must not be dimmed like a disabled control. It is still clickable, and
-   * showing it as disabled would be a lie. `data-trigger-disabled` is exposed
-   * purely as a styling hook for consumers who want more.
+   * Deliberately carries NO rules at all, so `styles.trigger` resolves to
+   * undefined and no class reaches the DOM. The trigger is usually an existing
+   * control (`render={<Button />}`, an icon button, a link) and anything set
+   * here would fight whatever it is composed with — its cursor included.
+   *
+   * `Trigger.disabled` disables the TOOLTIP, not the element: it never sets the
+   * `disabled` attribute, so the trigger is still clickable and must not be
+   * dimmed, or given an inert cursor, like a disabled control. There used to be
+   * a `.trigger[data-trigger-disabled] { cursor: default }` here, and it did
+   * exactly that — at (0,2,0) it outranked Button's (0,1,0) `.root` in the same
+   * layer, so `<Tooltip.Trigger render={<Button />} disabled>` silently lost its
+   * pointer and read as dead.
+   *
+   * `data-trigger-disabled` remains on the element purely as a styling hook for
+   * consumers who want more.
    * --------------------------------------------------------------------- */
-  .trigger[data-trigger-disabled] {
-    cursor: default;
-  }
 
   /* ------------------------------------------------------------------------
    * Positioner

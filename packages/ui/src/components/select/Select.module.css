@@ -118,6 +118,10 @@
 
     -webkit-user-select: none;
     user-select: none;
+    /* Pointer, deliberately unlike a native <select>'s arrow. Every control in
+     * this library that performs an action shows a pointer, and the trigger is
+     * not a <select> in any other respect — matching that one convention would
+     * make the control users open most often the only one that looks inert. */
     cursor: pointer;
     /* Deliberately no press squash. `:active` is the only hook a Select
      * trigger has for one (`data-pressed` is derived from `open`, not from the
@@ -647,7 +651,9 @@
     line-height: var(--pui-line-height-normal);
     -webkit-user-select: none;
     user-select: none;
-    cursor: default;
+    /* Choosing an option is an action; see the trigger for why this diverges
+     * from a native listbox. */
+    cursor: pointer;
     transition:
       background-color var(--pui-duration-fast) var(--pui-ease-standard),
       color var(--pui-duration-fast) var(--pui-ease-standard);
