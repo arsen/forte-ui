@@ -10,8 +10,10 @@
  *
  * There is deliberately no `prefers-reduced-motion` block here. The motion
  * tokens already collapse their own geometry — `--pui-scale-press` becomes
- * exactly 1 and `--pui-travel-xs` becomes 0px — so this file gets correct
- * reduced-motion behaviour without knowing that reduced motion exists.
+ * exactly 1 — and the two consumer-facing motion slots are multiplied by
+ * `--pui-motion-ok` where they are used, so even a hard-coded override
+ * collapses. This file gets correct reduced-motion behaviour without knowing
+ * that reduced motion exists.
  */
 @layer pretty-ui.components {
   .root {
@@ -27,6 +29,24 @@
     --pui-button-height: var(--pui-control-h-md);
     --pui-button-padding-x: var(--pui-control-px-md);
     --pui-button-font-size: var(--pui-font-size-2);
+
+    /* Motion slots. Hover geometry is identity by default: a button's hover
+     * cue is colour, which is the one channel that cannot move the hit box or
+     * knock the button out of line with the controls beside it.
+     *
+     * Opt back into geometry on one button by setting `--pui-button-*`, or on
+     * every button by setting the `--pui-control-hover-*` escape hatch on a
+     * root/theme scope — those are deliberately left undefined so the fallback
+     * below is what normally applies:
+     *   :root { --pui-control-hover-lift: var(--pui-travel-xs); }
+     *   :root { --pui-control-hover-scale: 1.02; }
+     *
+     * Literal values are safe in either slot: both are multiplied by
+     * `--pui-motion-ok` at the point of use, so they collapse to identity
+     * under reduced motion without the consumer having to know that. */
+    --pui-button-hover-lift: var(--pui-control-hover-lift, 0px);
+    --pui-button-hover-scale: var(--pui-control-hover-scale, 1);
+    --pui-button-press-scale: var(--pui-scale-press);
 
     /* Colour slots, filled in per tone + variant below. */
     --pui-button-bg: transparent;
@@ -76,11 +96,14 @@
      * at different speeds without fighting over one shorthand. */
     translate: 0 0;
     scale: 1;
+    /* `box-shadow` is deliberately absent. The focus ring is drawn as an
+     * `outline` plus a `box-shadow` halo, and `outline` is not transitioned —
+     * animating only half of it makes the ring assemble itself in two stages
+     * on every Tab press. Both halves now land on the same frame. */
     transition:
       background-color var(--pui-duration-fast) var(--pui-ease-standard),
       border-color var(--pui-duration-fast) var(--pui-ease-standard),
       color var(--pui-duration-fast) var(--pui-ease-standard),
-      box-shadow var(--pui-duration-fast) var(--pui-ease-standard),
       translate var(--pui-duration-fast) var(--pui-ease-standard),
       scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
   }
@@ -89,15 +112,21 @@
   @media (hover: hover) {
     .root:hover:not([data-disabled]) {
       background-color: var(--pui-button-bg-hover);
-      /* Collapses to 0px under reduced motion, so the lift simply stops. */
-      translate: 0 calc(-1 * var(--pui-travel-xs));
+      /* `--pui-motion-ok` is 1 normally and 0 under reduced motion, so both
+       * of these fall back to identity without a media query in this file.
+       * Note the lift moves the hit box: at rest against the pointer's edge a
+       * non-zero lift can hover-off the button and oscillate, which is why the
+       * shipped default is 0. */
+      translate: 0
+        calc(-1 * var(--pui-button-hover-lift) * var(--pui-motion-ok));
+      scale: calc(1 + (var(--pui-button-hover-scale) - 1) * var(--pui-motion-ok));
     }
   }
 
   .root:active:not([data-disabled]) {
     background-color: var(--pui-button-bg-active);
     translate: 0 0;
-    scale: var(--pui-scale-press);
+    scale: var(--pui-button-press-scale);
     /* Snap in, spring out: pressing should feel immediate. */
     transition-duration: var(--pui-duration-instant);
   }
