@@ -108,8 +108,45 @@ The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui
 | `--pui-dialog-max-inline-size` | Maximum popup width; what the `size` prop sets | `32rem` (`24rem` sm, `48rem` lg, `100%` fullscreen) |
 | `--pui-dialog-nested-offset` | How far each nested dialog pushes its parent down | `var(--pui-travel-lg)` |
 | `--pui-dialog-nested-scale-step` | How much each nested dialog shrinks its parent | `0.04` |
+| `--pui-dialog-nested-duration` | How long the parent takes to retreat under a child | `var(--pui-duration-spring-precise)` |
+| `--pui-dialog-enter-travel` | How far the popup rises as it opens | `var(--pui-travel-md)` (`var(--pui-travel-page)` when `size="fullscreen"`) |
+| `--pui-dialog-enter-scale` | Scale the popup grows from | `var(--pui-scale-enter)` (`1` when `size="fullscreen"`) |
+| `--pui-dialog-enter-duration` | Length of the opening gesture | `var(--pui-duration-spring-snappy)` |
+| `--pui-dialog-enter-ease` | Curve of the opening gesture | `var(--pui-ease-spring-snappy)` |
+| `--pui-dialog-exit-travel` | How far the popup sinks as it closes | `var(--pui-travel-md)` (`var(--pui-travel-page)` when `size="fullscreen"`) |
+| `--pui-dialog-exit-scale` | Scale the popup shrinks to | `calc(1 - 0.05 * var(--pui-motion-ok))` (`1` when `size="fullscreen"`) |
+| `--pui-dialog-exit-duration` | Length of the closing gesture | `var(--pui-duration-normal)` |
+| `--pui-dialog-exit-ease` | Curve the closing *geometry* runs on | `linear` |
+| `--pui-dialog-exit-fade-ease` | Curve the closing *fade* runs on | `var(--pui-ease-exit)` |
+| `--pui-dialog-backdrop-exit-duration` | How long the scrim takes to clear; set through `backdropClassName` | `var(--pui-duration-normal)` |
+| `--pui-dialog-backdrop-exit-ease` | Curve the scrim clears on; set through `backdropClassName` | `var(--pui-ease-exit)` |
 
-Motion is handled by the global tokens: `--pui-travel-md` collapses to `0px` and `--pui-scale-enter` to `1` under reduced motion, so the movement disappears and the fade remains. There is no component-level `prefers-reduced-motion` override to fight.
+### Motion
+
+The dialog opens and closes with the *same* gesture in opposite directions — it rises 8px and grows from `0.95` on the way in, sinks 8px and shrinks to `0.95` on the way out — so an open that gets interrupted halfway simply runs back down the path it came up. Opening rides a spring for about 400ms, because that is the moment the surface has to read as arriving and settling.
+
+Closing is where the curves stop being interchangeable, and the exit geometry is `linear` on purpose — the one place in the library that wants it. Two rules are in tension, and easing curves can only satisfy one at a time:
+
+1. **Movement is only visible while the thing moving is still opaque.** So the fade takes `--pui-ease-exit`, which holds around `0.75` opacity through the midpoint rather than dropping away immediately.
+2. **The movement must not finish before the element does.** An exit does not arrive anywhere — it is cut short when the popup unmounts — and an easing curve is a statement about arriving.
+
+Break rule 1 (put an accelerating curve on the geometry, the obvious reading of "ease out of the way") and the popup travels about one pixel while it is still opaque, spending the rest after it has faded. Break rule 2 (put a decelerating curve on it) and the popup covers 88% of its travel in the first half, then crawls 0.08px through the final 40ms while still fading down from 68% opacity — it appears to freeze mid-flight and then get yanked out of the DOM. Both read as "there is no exit animation", for opposite reasons.
+
+`linear` satisfies both: a uniform 1.33px per 40ms, still moving on the frame it disappears.
+
+The scrim is part of the same gesture: it holds for the popup's full exit rather than `--pui-duration-fast`, because a page snapping back to full brightness underneath a still-leaving dialog is a much larger visual event than the dialog itself, and the eye follows it instead.
+
+A `size="fullscreen"` sheet has no visible edges for a scale to work against, so it drops the scale entirely and travels further instead.
+
+#### Growing out of the trigger
+
+By default the popup scales from the centre of the button that opened it rather than from its own centre, so it reads as growing out of that button and collapsing back into it. `Dialog.Popup` finds the trigger through the `aria-controls` Base UI already puts on it, measures it, and writes the offset into `--pui-dialog-origin-x` / `--pui-dialog-origin-y`. Nothing else moves into JavaScript: every duration, curve and scale stays in the stylesheet.
+
+When the origin is off-centre the scale *is* the movement — every point in the popup slides toward the origin as it shrinks — so the separate translate drops to zero and the scale goes deeper (`0.85` in, `0.9` out) to compensate. The origin is clamped to one popup-width and one popup-height outside the box. Past that the effect stops reading as "it grew out of the button" and starts reading as the dialog being flung in from off-screen, because the further the origin sits from the popup, the more of the scale is expressed as translation.
+
+Set `origin="center"` to keep the centred gesture. It also falls back to centred on its own whenever there is nothing to aim at — a dialog opened programmatically or through `defaultOpen` — and it is skipped for `size="fullscreen"`, where a sheet covering the screen has no meaningful point to grow from.
+
+Reduced motion needs no work from you: the travel tokens collapse to `0px`, `--pui-scale-enter` to `1`, `--pui-dialog-exit-scale` resolves to exactly `1` through `--pui-motion-ok`, and the durations shorten — leaving the fade, which is the part reduced-motion users still want. There is no component-level `prefers-reduced-motion` override to fight.
 
 ## API reference
 

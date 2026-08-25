@@ -21,6 +21,7 @@ import styles from "./Dialog.module.css";
 
 export type DialogSize = "sm" | "md" | "lg" | "fullscreen";
 export type DialogFooterAlign = "start" | "center" | "end" | "between";
+export type DialogOrigin = "trigger" | "center";
 
 /* -------------------------------------------------------------------------
  * Root
@@ -160,6 +161,165 @@ export const AlertDialogTrigger = React.forwardRef(
  * Popup
  * ---------------------------------------------------------------------- */
 
+/** Marks a popup that has been aimed at its trigger; the stylesheet keys off it. */
+const ORIGIN_ATTR = "data-origin";
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * The trigger that opened this popup, or `null` when there isn't one — a
+ * dialog opened programmatically, through `defaultOpen`, or from a detached
+ * handle whose trigger has since unmounted.
+ *
+ * Base UI points every trigger at its popup with `aria-controls`, so the
+ * relationship is already in the DOM and needs no extra wiring. `CSS.escape`
+ * because the id is generated and is not guaranteed to be a bare identifier.
+ */
+function findTrigger(popup: HTMLElement): HTMLElement | null {
+  const id = popup.id;
+  if (!id) {
+    return null;
+  }
+  const selector = `[aria-controls="${typeof CSS !== "undefined" && CSS.escape ? CSS.escape(id) : id}"]`;
+  return popup.ownerDocument.querySelector<HTMLElement>(selector);
+}
+
+/**
+ * The popup's *layout* box.
+ *
+ * `getBoundingClientRect()` reports the box after transforms, and at the
+ * moment this runs the popup is sitting in its starting style — scaled down
+ * and offset. That is precisely the transform whose origin is being computed,
+ * so measuring through it would feed the result back into itself.
+ *
+ * Transitions are suppressed around the measurement because
+ * `getBoundingClientRect()` forces a style flush: without it the browser sees
+ * `transform` change to `none` and back as two separate style changes and
+ * starts a transition toward each.
+ */
+function measureLayoutRect(el: HTMLElement): DOMRect {
+  const { transition, transform } = el.style;
+  el.style.transition = "none";
+  el.style.transform = "none";
+  const rect = el.getBoundingClientRect();
+  el.style.transform = transform;
+  // Flush the restored transform while transitions are still off, so it is the
+  // value the enter transition starts from rather than something to animate to.
+  void el.offsetHeight;
+  el.style.transition = transition;
+  return rect;
+}
+
+/**
+ * Points the popup's `transform-origin` at the centre of the trigger that
+ * opened it, in pixels relative to the popup's top-left corner.
+ *
+ * Only measurement happens here — every duration, curve and scale stays in the
+ * stylesheet, where it remains overridable and where reduced motion already
+ * neutralises it.
+ *
+ * The origin is clamped to one popup-width/height outside the box on each
+ * side. Past that the scale stops reading as "it grew out of the button" and
+ * starts reading as the dialog being flung across the screen, because the
+ * further the origin is from the popup, the more of the scale is expressed as
+ * translation.
+ */
+function aimAtTrigger(el: HTMLElement): void {
+  const trigger = findTrigger(el);
+  if (trigger == null) {
+    el.removeAttribute(ORIGIN_ATTR);
+    return;
+  }
+
+  const t = trigger.getBoundingClientRect();
+  // A trigger that is display:none or has been scrolled out of a collapsed
+  // container measures as an empty box; aiming at it would put the origin in
+  // the top-left of the viewport.
+  if (t.width === 0 && t.height === 0) {
+    el.removeAttribute(ORIGIN_ATTR);
+    return;
+  }
+
+  const p = measureLayoutRect(el);
+  if (p.width === 0 || p.height === 0) {
+    el.removeAttribute(ORIGIN_ATTR);
+    return;
+  }
+
+  const x = clamp(t.left + t.width / 2 - p.left, -p.width, p.width * 2);
+  const y = clamp(t.top + t.height / 2 - p.top, -p.height, p.height * 2);
+
+  el.style.setProperty("--pui-dialog-origin-x", `${Math.round(x)}px`);
+  el.style.setProperty("--pui-dialog-origin-y", `${Math.round(y)}px`);
+  el.setAttribute(ORIGIN_ATTR, "");
+}
+
+/**
+ * Returns a ref callback for the popup that keeps its transform origin aimed
+ * at the trigger.
+ *
+ * A ref callback and not an effect, for two reasons. The popup element does
+ * not exist when `Dialog.Popup` mounts — Base UI's `Portal` renders nothing
+ * until the dialog opens — so an effect on this component would run once at
+ * page load against a null ref and never fire again when the element finally
+ * appeared. And the measurement has to land before the browser paints the
+ * starting style, or the first frame is drawn from the centre and the dialog
+ * visibly jumps; ref callbacks run during commit, ahead of paint.
+ *
+ * A `keepMounted` popup keeps the same element across opens, so the callback
+ * alone would only aim it once. Watching for Base UI re-applying
+ * `[data-starting-style]` re-aims it on every subsequent open, and covers the
+ * case where the trigger has moved in between.
+ *
+ * The observer is torn down from the callback itself rather than from an
+ * effect cleanup: React 18 ignores a function returned from a ref callback,
+ * and this package supports React 18.
+ */
+function useTriggerOrigin(
+  enabled: boolean,
+): (node: HTMLDivElement | null) => void {
+  const observerRef = React.useRef<MutationObserver | null>(null);
+
+  React.useEffect(
+    () => () => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+    },
+    [],
+  );
+
+  return React.useCallback(
+    (node: HTMLDivElement | null) => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+
+      if (node == null) {
+        return;
+      }
+      if (!enabled) {
+        node.removeAttribute(ORIGIN_ATTR);
+        return;
+      }
+
+      aimAtTrigger(node);
+
+      const observer = new MutationObserver(() => {
+        if (node.hasAttribute("data-starting-style")) {
+          aimAtTrigger(node);
+        }
+      });
+      observer.observe(node, {
+        attributes: true,
+        attributeFilter: ["data-starting-style"],
+      });
+      observerRef.current = observer;
+    },
+    [enabled],
+  );
+}
+
 export interface DialogPopupProps
   extends Omit<BaseDialogPopupProps, "className"> {
   /**
@@ -211,6 +371,20 @@ export interface DialogPopupProps
    */
   viewportClassName?: string;
   /**
+   * Where the open and close scale grows from.
+   *
+   * `"trigger"` aims it at the centre of the button that opened the dialog, so
+   * the surface reads as growing out of that button and collapsing back into
+   * it. `"center"` keeps the centred gesture.
+   *
+   * `"trigger"` falls back to the centred gesture on its own whenever there is
+   * no trigger to aim at — a dialog opened programmatically or through
+   * `defaultOpen` — and is ignored for `size="fullscreen"`, where a sheet
+   * covering the screen has no meaningful point to grow from.
+   * @default "trigger"
+   */
+  origin?: DialogOrigin;
+  /**
    * Additional class name(s) for the popup itself. Applied after the internal
    * styles so consumer utilities (e.g. Tailwind) win without needing
    * `!important`.
@@ -241,12 +415,30 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
       forceBackdrop = false,
       backdropClassName,
       viewportClassName,
+      origin = "trigger",
       className,
       children,
       ...props
     },
     ref,
   ) {
+    const aimOrigin = useTriggerOrigin(
+      origin === "trigger" && size !== "fullscreen",
+    );
+    // The origin hook needs the popup element, and so may the consumer, so the
+    // two refs are merged rather than one shadowing the other.
+    const popupRef = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        aimOrigin(node);
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref != null) {
+          ref.current = node;
+        }
+      },
+      [ref, aimOrigin],
+    );
+
     return (
       <BaseDialog.Portal keepMounted={keepMounted} container={container}>
         {backdrop ? (
@@ -260,7 +452,7 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
           className={clsx(styles.viewport, viewportClassName)}
         >
           <BaseDialog.Popup
-            ref={ref}
+            ref={popupRef}
             // The popup is programmatically focused when the dialog opens by
             // touch, and that focus is keyboard-visible when it opens by
             // keyboard — so it needs a real ring, not the UA default.
