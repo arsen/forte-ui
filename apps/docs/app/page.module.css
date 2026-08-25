@@ -1,0 +1,154 @@
+.hero {
+  padding: var(--pui-space-8) 0 var(--pui-space-7);
+  max-width: 46rem;
+}
+
+.title {
+  margin: 0 0 var(--pui-space-4);
+  font-size: clamp(2.25rem, 1.2rem + 3.6vw, 3.75rem);
+  font-weight: var(--pui-font-weight-bold);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+/* Decorative: `background-clip: text` produces no visible text at all once
+ * forced-colors strips the gradient, so the fallback colour must be set first
+ * and the clip applied only where a gradient will actually paint. */
+.gradient {
+  color: var(--pui-color-primary-text);
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  @media not (forced-colors: active) {
+    .gradient {
+      background: linear-gradient(100deg, var(--pui-accent-11), var(--pui-secondary-9) 70%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  }
+}
+
+.lead {
+  margin: 0 0 var(--pui-space-5);
+  font-size: var(--pui-font-size-4);
+  line-height: 1.6;
+  color: var(--pui-color-foreground-muted);
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pui-space-3);
+  margin-bottom: var(--pui-space-6);
+}
+
+.themer {
+  padding-top: var(--pui-space-5);
+  border-top: 1px solid var(--pui-color-border-muted);
+}
+
+.section {
+  padding-block: var(--pui-space-8);
+  border-top: 1px solid var(--pui-color-border-muted);
+}
+
+.h2 {
+  margin: 0 0 var(--pui-space-3);
+  font-size: var(--pui-font-size-6);
+  font-weight: var(--pui-font-weight-semibold);
+  letter-spacing: var(--pui-letter-spacing-tight);
+}
+
+.body {
+  margin: 0 0 var(--pui-space-4);
+  max-width: 42rem;
+  color: var(--pui-color-foreground-muted);
+  text-wrap: pretty;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--pui-space-6);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ramps {
+  display: grid;
+  gap: var(--pui-space-4);
+}
+
+.rampBlock {
+  display: grid;
+  gap: var(--pui-space-2);
+}
+
+.rampLabel {
+  margin: 0;
+  font-size: var(--pui-font-size-1);
+  font-weight: var(--pui-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pui-color-foreground-subtle);
+}
+
+.ramp {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2px;
+  height: 3rem;
+  border-radius: var(--pui-radius-3);
+  overflow: hidden;
+}
+
+.ramp span {
+  display: block;
+  /* Colour is the entire content of a swatch — keep it in forced-colors. */
+  forced-color-adjust: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--pui-space-4);
+}
+
+.card {
+  padding: var(--pui-surface-p);
+  border: 1px solid var(--pui-color-border-muted);
+  border-radius: var(--pui-radius-surface);
+  background-color: var(--pui-color-panel);
+  transition:
+    border-color var(--pui-duration-fast) var(--pui-ease-standard),
+    translate var(--pui-duration-fast) var(--pui-ease-standard);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    border-color: var(--pui-color-primary-border);
+    translate: 0 calc(-1 * var(--pui-travel-xs));
+  }
+}
+
+.cardTitle {
+  margin: 0 0 var(--pui-space-2);
+  font-size: var(--pui-font-size-3);
+  font-weight: var(--pui-font-weight-semibold);
+}
+
+.cardBody {
+  margin: 0;
+  font-size: var(--pui-font-size-2);
+  line-height: 1.6;
+  color: var(--pui-color-foreground-muted);
+  text-wrap: pretty;
+}

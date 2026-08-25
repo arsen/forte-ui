@@ -1,0 +1,1092 @@
+{
+  "Button": {
+    "name": "Button",
+    "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "focusableWhenDisabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true while `loading`, otherwise false",
+        "description": "Keep the button focusable while it is disabled. A native `disabled`\nbutton is blurred by the browser, which drops focus to `<body>` and loses\nthe user's place in the tab order — and takes `aria-busy` and\n`loadingLabel` out of earshot with it. Left unset, this turns itself on\nfor the duration of `loading` so the busy state is actually announced;\npass it explicitly to override."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the button to fill the width of its container."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon. Enforces the 24px\nminimum hit target from WCAG SC 2.5.8. Always pair with `aria-label`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show a busy indicator and block interaction. The label keeps its space so\nthe button cannot resize mid-interaction."
+      },
+      {
+        "name": "loadingLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Loading",
+        "description": "Announced to assistive technology while `loading` is true. Without it, a\nscreen reader user gets no signal that anything is happening."
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+      },
+      {
+        "name": "tone",
+        "type": "ButtonTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "required": false,
+        "defaultValue": "solid",
+        "description": "How much visual weight the button carries."
+      }
+    ]
+  },
+  "Checkbox": {
+    "name": "Checkbox",
+    "description": "A checkbox built on Base UI's unstyled `Checkbox` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Root`.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-indeterminate`, `data-disabled`, `data-readonly`, and the `Field`\nvalidity attributes) on both the root and the indicator, and every visual\ndecision is a `--pui-checkbox-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[indeterminate]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "Whether the checkbox is currently ticked. Pairs with `onCheckedChange` for\na controlled checkbox; use `defaultChecked` for an uncontrolled one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the checkbox starts ticked when uncontrolled."
+      },
+      {
+        "name": "indeterminate",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Mixed state: neither ticked nor unticked. Renders a dash instead of a\ntick and sets `data-indeterminate` on both the root and the indicator.\nIndependent of `checked` — a checkbox that is indeterminate submits\nwhatever `checked` says it submits."
+      },
+      {
+        "name": "indicatorClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the indicator — the element that holds the\ntick. Applied after the internal styles."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Set to `true` when `render` replaces the root with a real `<button>`.\nThe root is a `<span>` by default so that an enclosing `<label>` stays\nvalid HTML; for the sibling-label pattern (`<label htmlFor>` + `id`) pass\n`nativeButton render={<button />}` instead. With `nativeButton`, `id`\nlands on the root element rather than on the hidden input."
+      },
+      {
+        "name": "parent",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Marks this checkbox as the one that controls every other checkbox in the\ngroup. Only works inside a `CheckboxGroup` that has been given `value`\nand `allValues`; outside one it does nothing at all. The group drives the\nindeterminate state when only some children are ticked."
+      },
+      {
+        "name": "size",
+        "type": "CheckboxSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the box. The tick scales with it, so the mark keeps its optical\nweight at every size."
+      },
+      {
+        "name": "tone",
+        "type": "CheckboxTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the checked fill draws from. Inside a\n`Field.Root` an invalid field overrides this with the danger palette, so\na validation error always reads as an error."
+      }
+    ]
+  },
+  "CheckboxGroup": {
+    "name": "CheckboxGroup",
+    "description": "Shared state for a series of `Checkbox`es, built on Base UI's\n`CheckboxGroup` primitive.\n\nThe group has no implicit accessible name — give it `aria-labelledby`\npointing at a heading, or render it as a `Fieldset.Root` with a\n`Fieldset.Legend`.",
+    "props": [
+      {
+        "name": "allValues",
+        "type": "string[]",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "Values of *all* checkboxes in the group, ticked or not. Needed only for a\nparent checkbox: it is how the group knows the difference between \"some\"\nand \"all\" and therefore when the parent is indeterminate."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "Values of the checkboxes that start ticked when uncontrolled."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disables every checkbox in the group."
+      },
+      {
+        "name": "orientation",
+        "type": "CheckboxGroupOrientation",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Direction the checkboxes are laid out in. Horizontal groups wrap."
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "Values of the checkboxes that are ticked. Pairs with `onValueChange` for\na controlled group; use `defaultValue` for an uncontrolled one. Required\nif any child uses the `parent` prop."
+      }
+    ]
+  },
+  "DialogTrigger": {
+    "name": "DialogTrigger",
+    "description": "A button that opens the dialog.\n\nRenders a `<button>`. Pass `render={<Button />}` to compose it with a\nstyled button — the trigger's own neutral styling steps aside when `render`\nis present, so the two never fight over the cascade.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AlertDialogTrigger": {
+    "name": "AlertDialogTrigger",
+    "description": "A button that opens the alert dialog.\n\nRenders a `<button>`. Identical to `Dialog.Trigger` except that it accepts\nan `AlertDialog` handle.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DialogPopup": {
+    "name": "DialogPopup",
+    "description": "The dialog surface, together with the three wrappers it always needs:\n`Portal` → `Backdrop` + `Viewport` → `Popup`. Collapsing them into one\ncomponent keeps the common case to a single element while leaving every\nBase UI `Popup` prop (`initialFocus`, `finalFocus`, `render`, …) available.\n\n`Title`, `Description` and `Close` must be rendered *inside* this component:\nthat is what auto-wires `aria-labelledby` / `aria-describedby`, and a close\nbutton outside the popup is unreachable to touch screen-reader users.\n\nThe same component serves `AlertDialog` — Base UI's alert dialog re-exports\nthese exact parts.",
+    "props": [
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Render the scrim behind the popup. Turn it off for a non-modal dialog\nthat should leave the page visibly usable."
+      },
+      {
+        "name": "backdropClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup itself. Applied after the internal\nstyles so consumer utilities (e.g. Tailwind) win without needing\n`!important`."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Element the portal renders into. Defaults to `document.body`; set it when\nthe dialog must live inside a specific stacking or shadow root."
+      },
+      {
+        "name": "forceBackdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render the backdrop even when this dialog is nested inside another one.\nBase UI suppresses nested backdrops by default — the parent dims itself\nthrough `[data-nested-dialog-open]` instead — so only set this when a\nnested dialog genuinely needs its own scrim."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep the portal — and therefore the popup — in the DOM while the dialog\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
+      },
+      {
+        "name": "size",
+        "type": "DialogSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Maximum width of the popup. `\"fullscreen\"` drops the radius and the\nviewport padding and lets the surface fill the screen, which is the\nusual mobile treatment for a long form."
+      },
+      {
+        "name": "viewportClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the scrollable viewport that positions the\npopup. Use it to change alignment (e.g. pin the dialog to the top)."
+      }
+    ]
+  },
+  "DialogTitle": {
+    "name": "DialogTitle",
+    "description": "The dialog's accessible name.\n\nRenders an `<h2>`. Inside `Dialog.Popup` it is wired up as the popup's\n`aria-labelledby` automatically; every dialog should have one.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DialogDescription": {
+    "name": "DialogDescription",
+    "description": "A short explanation of what the dialog is for.\n\nRenders a `<p>`. Inside `Dialog.Popup` it becomes the popup's\n`aria-describedby`, so it is announced after the title.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DialogClose": {
+    "name": "DialogClose",
+    "description": "A button that closes the dialog.\n\nRenders a `<button>`. Keep it inside `Dialog.Popup`: in a modal dialog the\nrest of the page is inert, and a touch screen-reader user has no other way\nout. Pass `render={<Button />}` to compose it with a styled button — the\nclose button's own neutral styling steps aside when `render` is present.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon — the corner \"×\"\ntreatment. Enforces the 24px minimum hit target from WCAG SC 2.5.8.\nAlways pair with `aria-label`, since there is no text to announce."
+      }
+    ]
+  },
+  "DialogFooter": {
+    "name": "DialogFooter",
+    "description": "The action row at the bottom of a dialog.\n\nA plain `<div>` — not a Base UI part — that supplies the standard spacing\nand alignment for the confirm/cancel buttons. In a `size=\"fullscreen\"`\ndialog it sinks to the bottom edge.",
+    "props": [
+      {
+        "name": "align",
+        "type": "DialogFooterAlign",
+        "required": false,
+        "defaultValue": "end",
+        "description": "How the actions are distributed along the footer. `\"between\"` is the\npattern for a destructive action pushed away from the safe one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SelectLabel": {
+    "name": "SelectLabel",
+    "description": "A visible label wired to the trigger. This is the preferred way to give a\nselect its accessible name — Base UI renders a `<div>` and associates it\nwith `aria-labelledby`, so clicking it focuses the trigger without opening\nthe popup. When no visible label is rendered, put `aria-label` on\n`<Select.Trigger>` instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SelectTrigger": {
+    "name": "SelectTrigger",
+    "description": "The button that opens the popup. Renders a native `<button>`.\n\nGive it `<Select.Value>` and `<Select.Icon>` as children. It must have an\naccessible name: either render a `<Select.Label>` inside the same\n`<Select.Root>`, or pass `aria-label` here. In development the trigger\nwarns once if it ends up with neither.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the trigger to fill the width of its container."
+      },
+      {
+        "name": "size",
+        "type": "SelectSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the trigger. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+      },
+      {
+        "name": "variant",
+        "type": "SelectVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the trigger carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance."
+      }
+    ]
+  },
+  "SelectValue": {
+    "name": "SelectValue",
+    "description": "The selected item's label inside the trigger. Renders a `<span>`.\n\nBy default this renders the raw `value`. Pass `items` to `<Select.Root>` to\nrender the matching label instead, or pass a function as `children` to\nformat it yourself.\n\nA `placeholder` cannot be cleared by the user once a value is chosen. If the\nselection has to be clearable from the popup, render an item whose value is\n`null` instead of using `placeholder`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SelectIcon": {
+    "name": "SelectIcon",
+    "description": "The affordance that marks the trigger as a select. Renders a `<span>`, and\ncarries `data-popup-open` so it can react to the popup's state.\n\nPurely decorative — the trigger's own role and `aria-expanded` are what\nreach assistive technology.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<CaretUpDownIcon />",
+        "description": "Icon to render. Defaults to a caret pair, which stays correct whichever\nside the popup ends up on — including `alignItemWithTrigger` mode, where\nit opens over the trigger and has no side at all."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SelectPopup": {
+    "name": "SelectPopup",
+    "description": "The floating surface holding the list of items.\n\nThis one part renders the whole floating half of Base UI's anatomy —\n`Portal` → (`Backdrop`) → `Positioner` → `Popup` → `ScrollUpArrow` +\n`List` + `ScrollDownArrow` — because those elements are meaningless apart\nand each one has a job the styles depend on: the positioner owns\n`--anchor-width` and `--available-height`, the popup owns the surface, and\nthe list owns scrolling (which is what the scroll arrows measure).",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "\"center\"",
+        "description": "How the popup aligns along the chosen side. Ignored while\n`alignItemWithTrigger` is in effect."
+      },
+      {
+        "name": "alignItemWithTrigger",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the popup overlaps the trigger so the selected item's text lines\nup with the trigger's value text. While this is active `data-side` is\n`\"none\"` on both the positioner and the popup, `side`/`align`/`sideOffset`\nare ignored, and the enter/exit transition is suppressed. Base UI also\ndisables it automatically for touch input and when the viewport is too\ntight, in which case ordinary side placement takes over."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Extra offset in pixels along the alignment axis. Ignored while\n`alignItemWithTrigger` is in effect."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a dimming layer behind the popup. Off by default — a select is a\nmenu, not a dialog — but useful on small screens where the popup covers\nmost of the page."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The items, separators and groups to render. They are placed inside\n`<Select.List>`, which is the element that actually scrolls."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup surface. Applied after the\ninternal styles so consumer utilities win without needing `!important`."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space to keep between the popup and the edge of its collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Render the popup into a different container instead of `<body>`."
+      },
+      {
+        "name": "finalFocus",
+        "type": "boolean | RefObject<HTMLElement | null> | ((closeType: InteractionType) => boolean | void | HTMLElement | null)",
+        "required": false,
+        "defaultValue": "the trigger",
+        "description": "Where focus goes when the popup closes. There is no `initialFocus`\ncounterpart on a select popup — Base UI always moves focus to the\nhighlighted item on open."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. Use this for `z-index` or a `min-height` that\ntunes how often `alignItemWithTrigger` falls back."
+      },
+      {
+        "name": "scrollArrows",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Render the hover-to-scroll arrows at the top and bottom of the list. They\nare a pointer convenience only: Base UI does not render them for touch\ninput, and the list scrolls by wheel, drag, keyboard and typeahead\nregardless, so no item is ever reachable only through them."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "\"bottom\"",
+        "description": "Which side of the trigger the popup opens on. Ignored while\n`alignItemWithTrigger` is in effect."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "4",
+        "description": "Gap in pixels between the trigger and the popup. Ignored while\n`alignItemWithTrigger` is in effect."
+      }
+    ]
+  },
+  "SelectItem": {
+    "name": "SelectItem",
+    "description": "One option in the popup. Renders a `<div>` with `role=\"option\"`.\n\n`data-highlighted` is the focus analogue here: Base UI moves real DOM focus\nbetween items with a roving tabindex, and (with `highlightItemOnHover`,\nwhich is on by default) pointer hover sets the same attribute. Because the\nlist is a clipping scroll container, the focus ring is applied inset via\n`data-focus-inset` so `overflow` cannot crop it.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item's label. Rendered inside `<Select.ItemText>`, which is what\n`<Select.Value>` mirrors in the trigger and what typeahead matches on."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the item ignores user interaction. Disabled items stay in the\nlist and stay announced; typeahead skips them."
+      },
+      {
+        "name": "indicator",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<CheckIcon />",
+        "description": "What marks the item as selected. Rendered inside\n`<Select.ItemIndicator>`, which only mounts while the item is selected."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Plain-text label used for typeahead when `children` is not a string."
+      },
+      {
+        "name": "value",
+        "type": "unknown",
+        "required": false,
+        "defaultValue": "null",
+        "description": "The value this item selects. `null` is a legitimate value and is how you\noffer a \"clear the selection\" row inside the list."
+      }
+    ]
+  },
+  "SelectGroup": {
+    "name": "SelectGroup",
+    "description": "Groups related items under a heading. Renders a `<div>` with\n`role=\"group\"`; Base UI associates it with the `<Select.GroupLabel>` inside\nit automatically, so the heading is announced with its members.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SelectGroupLabel": {
+    "name": "SelectGroupLabel",
+    "description": "The heading for a `<Select.Group>`. Renders a `<div>`, indented past the\nindicator column so its text lines up with the item text rather than with\nthe check marks.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SelectSeparator": {
+    "name": "SelectSeparator",
+    "description": "A divider between groups of items. Renders a `<div>` with\n`role=\"separator\"`, so it is exposed to assistive technology rather than\nbeing a purely visual line.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "Orientation",
+        "required": false,
+        "defaultValue": "\"horizontal\"",
+        "description": "Orientation of the rule. A select list is vertical, so the separator\nbetween two groups runs horizontally."
+      }
+    ]
+  },
+  "Switch": {
+    "name": "Switch",
+    "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--pui-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the track. Applied after the internal styles\nso consumer utilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "The id of the hidden `<input>` element — or of the root element when\n`nativeButton` is `true`. Point a sibling `<label htmlFor>` at whichever\nof the two your `nativeButton` setting produces."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the rendered element is a native `<button>`. Base UI defaults\nthis to `false` here — the opposite of trigger-style parts — because the\nroot renders a `<span>` so that an enclosing `<label>` stays valid HTML.\n\nSet it (together with `render={<button />}`) for the sibling-label\n`htmlFor`/`id` pattern. Note that it also moves `id`: with `nativeButton`\nthe `id` lands on the root element, otherwise on the hidden input."
+      },
+      {
+        "name": "size",
+        "type": "SwitchSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the switch. Track, thumb and travel distance all scale together,\nso the thumb always lands flush against the end of the track."
+      },
+      {
+        "name": "stateIcon",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Draw a checkmark inside the thumb while the switch is on.\n\nThis is the switch's non-positional state cue, and it is why the default\nis `true`: a user who cannot perceive the thumb sliding still gets a\nglyph appearing. Turning it off leaves colour as the only cue that does\nnot depend on noticing movement."
+      },
+      {
+        "name": "thumbClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the thumb, for the same reason."
+      }
+    ]
+  },
+  "TabsRoot": {
+    "name": "TabsRoot",
+    "description": "Groups the tab strip and its panels.\n\nNote the Base UI default: `defaultValue` is `0`, an *index*, not the first\ntab's string value. With string values and no `defaultValue`, Base UI emits\nan automatic `onValueChange` with reason `'initial'` to correct itself, so\nalways pass `defaultValue` (or `value`) pointing at an **enabled** tab —\nduring server rendering a disabled first tab is not skipped. `null` is a\nlegal \"nothing active\" value and is deliberately not normalised away.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "variant",
+        "type": "TabsVariant",
+        "required": false,
+        "defaultValue": "line",
+        "description": "Which indicator treatment the tab strip uses. `\"line\"` draws a rail with a\nsliding underline; `\"pill\"` draws a filled pill that slides behind the\nactive tab. Both are the same indicator element moved by the same CSS\nvariables — only the geometry differs."
+      }
+    ]
+  },
+  "TabsList": {
+    "name": "TabsList",
+    "description": "The tab strip. Must contain the `Indicator`, which is positioned against\nthis element — the stylesheet gives it `position: relative` for exactly that\nreason.",
+    "props": [
+      {
+        "name": "activateOnFocus",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether arrow-key focus also activates the tab it lands on. Left `false`\nso arrow keys only move focus and activation happens on Enter or Space —\nautomatic activation loads every panel the user arrows past, which is\nhostile when a panel fetches data."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "loopFocus",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether arrow-key focus wraps from the last tab back to the first."
+      }
+    ]
+  },
+  "TabsTab": {
+    "name": "TabsTab",
+    "description": "One tab button. Its `value` must match the `value` of exactly one `Panel`;\nthat pairing is what wires up `aria-controls`/`aria-labelledby`, so both\nsides are required.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "TabsIndicator": {
+    "name": "TabsIndicator",
+    "description": "The sliding marker. Base UI publishes the active tab's geometry on this\nelement as `--active-tab-left` / `--active-tab-top` / `--active-tab-width` /\n`--active-tab-height` (already px values, consumed directly, never wrapped\nin `calc()` as raw numbers) and the stylesheet turns those into a `translate`\n+ size transition.\n\nRenders inside `Tabs.List`, never outside it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "renderBeforeHydration",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether to emit a tiny inline script that positions the indicator before\nReact hydrates. Defaults to `true` here rather than Base UI's `false`:\nwithout it a server-rendered tab strip shows no indicator at all until\nhydration finishes, which reads as a broken selection."
+      }
+    ]
+  },
+  "TabsPanel": {
+    "name": "TabsPanel",
+    "description": "The content region for one tab. Base UI gives it `tabIndex={0}` so keyboard\nusers can reach the content directly after the strip — which is why it\ncarries the focus ring as well as the Tab does.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the panel stays in the DOM while hidden. Required if you want the\nexit transition to play, or if the panel holds scroll position or\nuncommitted form state that should survive a round trip."
+      }
+    ]
+  },
+  "TooltipProvider": {
+    "name": "TooltipProvider",
+    "description": "Shares one hover delay across every tooltip beneath it. Renders no DOM\nelement.\n\nMount it once near the root of the app. Without it each tooltip waits out\nits own delay, so sweeping across a toolbar feels sticky.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The subtree that shares this delay."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How long to wait before closing a tooltip, in milliseconds."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "600",
+        "description": "How long to wait before opening a tooltip, in milliseconds. Applies to\nevery tooltip below this provider; an individual `Tooltip.Trigger` can\nstill override it."
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "required": false,
+        "defaultValue": "400",
+        "description": "Grouping window, in milliseconds. If one tooltip closes and another opens\nwithin this window, the second one appears instantly instead of waiting\nout `delay` again — which is what makes a row of icon buttons feel like a\nsingle toolbar rather than a series of separate waits."
+      }
+    ]
+  },
+  "TooltipRoot": {
+    "name": "TooltipRoot",
+    "description": "Groups one tooltip's trigger and popup. Renders no DOM element, so it takes\nno `className`, `style` or `ref`.",
+    "props": [
+      {
+        "name": "actionsRef",
+        "type": "RefObject<TooltipRootActions | null>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Imperative escape hatch. `unmount()` forces the popup out of the DOM (use\nit when an exit animation is driven externally); `close()` closes the\ntooltip."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | PayloadChildRenderFunction<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "The trigger and popup for this tooltip. May also be a render function\nreceiving `{ payload }` from the trigger that opened the tooltip."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the tooltip is open when it first mounts. For a controlled\ntooltip use `open` instead."
+      },
+      {
+        "name": "defaultTriggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The initially attached trigger id. Pairs with `defaultOpen` the way\n`triggerId` pairs with `open`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether this tooltip is disabled. Disables the tooltip only — the trigger\nelement stays fully interactive and does not receive the `disabled`\nattribute."
+      },
+      {
+        "name": "disableHoverablePopup",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the popup can be hovered without closing. Off by default: a\ntooltip is not meant to hold interactive content, and a hoverable popup\ngets in the way of the content beneath it."
+      },
+      {
+        "name": "handle",
+        "type": "TooltipHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates this tooltip with detached triggers created through\n`Tooltip.createHandle()`, so one popup can serve several triggers that\nlive elsewhere in the tree."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean, eventDetails: TooltipRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the tooltip wants to open or close. The second argument\ncarries the reason (`'trigger-hover'`, `'trigger-focus'`,\n`'trigger-press'`, `'outside-press'`, `'escape-key'`, `'disabled'`,\n`'imperative-action'`, `'none'`) and can `cancel()` the change."
+      },
+      {
+        "name": "onOpenChangeComplete",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called after the open or close transition has finished. Use this rather\nthan a timer when work has to wait for the popup to actually leave."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the tooltip is currently open. Pass this together with\n`onOpenChange` to control the tooltip."
+      },
+      {
+        "name": "trackCursorAxis",
+        "type": "\"none\" | \"both\" | \"x\" | \"y\"",
+        "required": false,
+        "defaultValue": "\"none\"",
+        "description": "Which axis the tooltip follows the cursor on. `'both'` turns it into a\ncursor-tracking label; combine with `side=\"bottom\"` for the usual feel."
+      },
+      {
+        "name": "triggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The trigger the tooltip is attached to, for controlled multi-trigger\nsetups. There is no separate `onTriggerIdChange` — derive the new id from\n`eventDetails.trigger` inside `onOpenChange`."
+      }
+    ]
+  },
+  "TooltipTrigger": {
+    "name": "TooltipTrigger",
+    "description": "The element the tooltip is attached to. Renders a `<button>`.\n\n**This trigger must carry its own accessible name.** The tooltip is a\nvisual affordance only — see the note on {@link Tooltip} — so an icon-only\ntrigger needs an `aria-label` that closely matches the tooltip's text.\nScreen reader users get the `aria-label` and nothing else.\n\nUnlike `Popover.Trigger` and `Menu.Trigger`, this part has **no\n`nativeButton` prop**; it always renders button semantics. Compose it with\nan existing control through `render` instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How long to wait before closing, in milliseconds."
+      },
+      {
+        "name": "closeOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether clicking the trigger closes the tooltip. Leave it on for triggers\nthat do something on click — the tooltip has served its purpose by then\nand would otherwise sit over the result."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "600",
+        "description": "How long to wait before opening, in milliseconds. Overrides the\nprovider's `delay` for this trigger only."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops this trigger from opening the tooltip. It does **not** apply the\n`disabled` attribute to the element, so the button stays focusable and\nclickable; style the difference from `data-trigger-disabled`. To disable\nthe control itself, pass `disabled` through `render`."
+      },
+      {
+        "name": "handle",
+        "type": "TooltipHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates a detached trigger with a `Tooltip.Root` that carries the same\nhandle, created once outside render with `Tooltip.createHandle()`."
+      },
+      {
+        "name": "payload",
+        "type": "Payload",
+        "required": false,
+        "defaultValue": null,
+        "description": "Data handed to the tooltip when this trigger opens it, so one popup can\nrender different content per trigger."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Forwarded to the underlying element."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, TooltipTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component —\n`render={<Button variant=\"ghost\" />}` is the common case. Note there is\nno `nativeButton` prop on this part: it always renders button semantics."
+      }
+    ]
+  },
+  "TooltipPopup": {
+    "name": "TooltipPopup",
+    "description": "The tooltip surface. Renders the portal, the positioner and the popup in\none part, so the common case is a single element in consumer markup.\n\nKeep the content to a short visual label. Anything a user must read to\noperate the UI belongs in the page or in a `Popover` — see {@link Tooltip}.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "center",
+        "description": "How the tooltip lines up with the trigger along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Shifts the tooltip along the alignment axis, in pixels, or a function\nreturning one."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The element the tooltip positions against, when it should not be the\ntrigger."
+      },
+      {
+        "name": "arrowPadding",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Minimum distance, in pixels, the arrow keeps from the tooltip's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "How the tooltip reacts when it would overflow the boundary — whether it\nflips, shifts, or stays put."
+      },
+      {
+        "name": "collisionBoundary",
+        "type": "Boundary",
+        "required": false,
+        "defaultValue": "\"clipping-ancestors\"",
+        "description": "The boundary the tooltip tries to stay inside of."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space, in pixels, kept between the tooltip and the collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the portal renders. Defaults to `document.body`; point it at a\ncontainer when the tooltip has to live inside a specific stacking or\nshadow root."
+      },
+      {
+        "name": "disableAnchorTracking",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the tooltip re-measuring the anchor on scroll and resize. Cheaper,\nbut the tooltip drifts if the anchor moves."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the portal in the DOM while the tooltip is closed."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner element, which owns\nplacement and `z-index`. Use it to re-stack a single tooltip."
+      },
+      {
+        "name": "positionMethod",
+        "type": "\"absolute\" | \"fixed\"",
+        "required": false,
+        "defaultValue": "\"absolute\"",
+        "description": "Whether the tooltip is positioned with `position: absolute` or\n`position: fixed`."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "top",
+        "description": "Which side of the trigger to place the tooltip on. Flips automatically to\navoid collisions. `\"inline-start\"` / `\"inline-end\"` follow writing\ndirection."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap between trigger and tooltip, in pixels, or a function returning one.\nWhen an `Arrow` is rendered this must exceed the arrow's height or the\narrow will overlap the trigger; the default leaves room for the default\narrow."
+      },
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the tooltip glued to the trigger while it scrolls out of view\ninstead of letting it detach."
+      }
+    ]
+  },
+  "TooltipArrow": {
+    "name": "TooltipArrow",
+    "description": "The wedge pointing back at the trigger. Render it as the first child of\n`Tooltip.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot\nfail that way.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--pui-tooltip-bg`, so a custom skin usually needs nothing here."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  }
+}

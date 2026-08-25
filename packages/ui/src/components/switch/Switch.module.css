@@ -1,0 +1,248 @@
+/*
+ * Switch
+ *
+ * Three things about this file are deliberate and easy to undo by accident.
+ *
+ * 1. The thumb's travel is NOT multiplied by `--pui-motion-ok`.
+ *    Everywhere else in the library, positional movement is decoration and
+ *    gets collapsed by a travel token. Here the thumb's position IS the
+ *    state — a switch whose thumb never moves is a switch with no visible
+ *    on/off difference except colour. So the distance stays constant and only
+ *    the *feel* is reduced: the transition rides `--pui-duration-spring-snappy`,
+ *    which drops from 400ms to 120ms under reduced motion, flattening the
+ *    spring's overshoot into what reads as an instant jump.
+ *
+ * 2. Because "it moved" must never be the only signal, three non-positional
+ *    cues change with it: the track fill (neutral -> primary), the thumb fill
+ *    (subtle -> on-primary) and a checkmark that fades in. Any one of them
+ *    identifies the state on its own.
+ *
+ * 3. There is no `prefers-reduced-motion` block. The motion tokens already
+ *    collapse their own geometry and shorten their own durations; a local
+ *    query would only be able to make that worse.
+ *
+ * Unchecked colours come from `--pui-color-foreground-subtle` (gray-10,
+ * measured 3.73:1 against the page). It is banned for text and exactly right
+ * here: it is what gives the track boundary and the thumb their SC 1.4.11
+ * non-text contrast. Checked colours ride `--pui-color-on-primary`, which the
+ * theme picks for contrast against `--pui-color-primary`, so the thumb and
+ * its checkmark stay legible for any accent seed.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared on the switch element itself, so a value set
+     * on an ancestor is only INHERITED and loses to this declaration. To
+     * re-skin one switch, set them on the switch via `className` — an
+     * unlayered consumer rule beats `@layer pretty-ui.components` at any
+     * specificity — or an inline `style`. To move every switch at once,
+     * re-point the global tokens on the right-hand side below, which this
+     * file only reads and never re-declares. */
+    --pui-switch-track-width: 2.25rem;
+    --pui-switch-track-height: 1.25rem;
+    --pui-switch-thumb-size: 0.875rem;
+    --pui-switch-padding: 0.125rem;
+    --pui-switch-border-width: 1px;
+    --pui-switch-radius: var(--pui-radius-pill);
+
+    /* Colour slots, swapped wholesale by [data-checked] below. */
+    --pui-switch-track-bg: var(--pui-color-panel);
+    --pui-switch-track-bg-hover: var(--pui-color-panel-hover);
+    --pui-switch-track-border: var(--pui-color-foreground-subtle);
+    --pui-switch-thumb-bg: var(--pui-color-foreground-subtle);
+    --pui-switch-thumb-fg: var(--pui-color-panel);
+    --pui-switch-thumb-shadow: var(--pui-shadow-1);
+
+    /* Derived, so a consumer who resizes the track gets the right travel for
+     * free and the thumb still lands flush against the far end. Declared on
+     * the same element as the four inputs it reads — an unregistered custom
+     * property is substituted where it is DECLARED, so deriving it on an
+     * ancestor would freeze it at the ancestor's values. */
+    --pui-switch-travel: calc(
+      var(--pui-switch-track-width) - var(--pui-switch-thumb-size) - 2 *
+        var(--pui-switch-padding) - 2 * var(--pui-switch-border-width)
+    );
+
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-start;
+    inline-size: var(--pui-switch-track-width);
+    block-size: var(--pui-switch-track-height);
+    padding: var(--pui-switch-padding);
+    margin: 0;
+    border: var(--pui-switch-border-width) solid var(--pui-switch-track-border);
+    border-radius: var(--pui-switch-radius);
+    background-color: var(--pui-switch-track-bg);
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    /* The root is the focusable element (Base UI puts tabindex on the span and
+     * parks the hidden input at tabindex -1), so it also owns the focus ring
+     * and must not show a second UA outline. */
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  .root[data-checked] {
+    --pui-switch-track-bg: var(--pui-color-primary);
+    --pui-switch-track-bg-hover: var(--pui-color-primary-hover);
+    --pui-switch-track-border: var(--pui-color-primary);
+    --pui-switch-thumb-bg: var(--pui-color-on-primary);
+    --pui-switch-thumb-fg: var(--pui-color-primary);
+  }
+
+  @media (hover: hover) {
+    .root:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-switch-track-bg-hover);
+    }
+  }
+
+  .root:active:not([data-disabled], [data-readonly]) .thumb {
+    /* Collapses to exactly 1 under reduced motion, so the squash simply
+     * stops happening while the travel keeps working. */
+    scale: var(--pui-scale-press);
+    transition-duration: var(--pui-duration-instant);
+  }
+
+  /* A readonly switch still reads its value out; it just cannot be flipped. */
+  .root[data-readonly] {
+    cursor: default;
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Inside a Field.Root, an invalid switch borrows the danger boundary. The
+   * track fill is left alone so it does not collide with the checked fill. */
+  .root[data-invalid] {
+    --pui-switch-track-border: var(--pui-color-danger-border);
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  .root[data-size="sm"] {
+    --pui-switch-track-width: 1.75rem;
+    --pui-switch-track-height: 1rem;
+    /* Every size keeps thumb == track-height - 2*border - 2*padding, so the
+     * thumb fills the track vertically and the derived travel is exact. */
+    --pui-switch-thumb-size: 0.625rem;
+  }
+
+  .root[data-size="md"] {
+    --pui-switch-track-width: 2.25rem;
+    --pui-switch-track-height: 1.25rem;
+    --pui-switch-thumb-size: 0.875rem;
+  }
+
+  .root[data-size="lg"] {
+    --pui-switch-track-width: 2.75rem;
+    --pui-switch-track-height: 1.5rem;
+    --pui-switch-thumb-size: 1.125rem;
+  }
+
+  /* Thumb ----------------------------------------------------------------- */
+  .thumb {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--pui-switch-thumb-size);
+    block-size: var(--pui-switch-thumb-size);
+    border-radius: var(--pui-radius-full);
+    background-color: var(--pui-switch-thumb-bg);
+    color: var(--pui-switch-thumb-fg);
+    box-shadow: var(--pui-switch-thumb-shadow);
+
+    /* `translate` and `scale` are animated as independent properties rather
+     * than through one `transform`, so the press squash can run at its own
+     * speed without fighting the travel for the shorthand. */
+    translate: 0 0;
+    scale: 1;
+    transition:
+      translate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy),
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* No `* var(--pui-motion-ok)` here, and that omission is the point — see
+   * the note at the top of this file. Reduced motion shortens the duration
+   * above; it must not delete the distance. */
+  .thumb[data-checked] {
+    translate: var(--pui-switch-travel) 0;
+  }
+
+  /* Checkmark ------------------------------------------------------------- */
+  .icon {
+    inline-size: 100%;
+    block-size: 100%;
+    opacity: 0;
+    scale: var(--pui-scale-enter);
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  /* Opacity is never gated on the motion tokens, so this cue survives intact
+   * when `--pui-scale-enter` has collapsed to 1 and the pop is gone. */
+  .thumb[data-checked] .icon {
+    opacity: 1;
+    scale: 1;
+  }
+
+  /* Forced colours -------------------------------------------------------- */
+  /* Background alone cannot carry the state here: the UA repaints author
+   * colours from system keywords, and it assigns them from NATIVE element
+   * semantics — a <span role="switch"> is given nothing. So the track states
+   * are separated on three axes at once (fill, border, and the thumb's own
+   * fill plus its checkmark), and every colour is a system keyword. */
+}
+
+/**
+ * Accessibility overrides.
+ *
+ * `pretty-ui.a11y` is ordered AFTER `pretty-ui.components`, so these win by
+ * layer alone. Leaving them in the components layer would put them BEHIND the
+ * global forced-colors rules in patterns.css — which would repaint the checked
+ * thumb `Highlight` on an already-`Highlight` track and make it vanish.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .root {
+      background-color: Canvas;
+      border-color: CanvasText;
+    }
+
+    .root[data-checked] {
+      background-color: Highlight;
+      border-color: Highlight;
+    }
+
+    .thumb {
+      background-color: CanvasText;
+      color: Canvas;
+      box-shadow: none;
+    }
+
+    .thumb[data-checked] {
+      background-color: HighlightText;
+      color: Highlight;
+    }
+    .root[data-disabled] {
+      opacity: 1;
+      border-color: GrayText;
+    }
+
+    .root[data-disabled] .thumb {
+      background-color: GrayText;
+    }
+  }
+}

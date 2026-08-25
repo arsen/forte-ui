@@ -1,0 +1,55 @@
+.wrap {
+  margin: var(--pui-space-4) 0;
+  border: 1px solid var(--pui-color-border-muted);
+  border-radius: var(--pui-radius-surface);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--pui-font-size-2);
+}
+
+.table th,
+.table td {
+  padding: var(--pui-space-2) var(--pui-space-3);
+  text-align: start;
+  vertical-align: top;
+  border-bottom: 1px solid var(--pui-color-border-muted);
+}
+
+.table thead th {
+  background-color: var(--pui-color-panel);
+  font-weight: var(--pui-font-weight-semibold);
+  white-space: nowrap;
+}
+
+.table tbody tr:last-child td,
+.table tbody tr:last-child th {
+  border-bottom: none;
+}
+
+.nameCell {
+  font-weight: var(--pui-font-weight-normal);
+  white-space: nowrap;
+}
+
+.nameCell code {
+  font-family: var(--pui-font-mono);
+  font-size: 0.9em;
+  color: var(--pui-color-primary-text);
+}
+
+.required {
+  color: var(--pui-color-danger-text);
+  margin-inline-start: 2px;
+}
+
+.type {
+  font-family: var(--pui-font-mono);
+  font-size: 0.85em;
+  color: var(--pui-color-foreground-muted);
+  /* Long unions must wrap rather than force the whole table wide. */
+  overflow-wrap: anywhere;
+}

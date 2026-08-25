@@ -1,0 +1,313 @@
+/*
+ * Checkbox / CheckboxGroup
+ *
+ * Two axes, same shape as Button:
+ *   data-size   how big the painted box is (sm/md/lg)
+ *   data-tone   which semantic colour set the checked fill draws from
+ *
+ * The tick is drawn on, not faded in: the SVG paths carry `pathLength="1"`,
+ * so `stroke-dashoffset` runs 1 → 0 over a DURATION token. That distinction
+ * matters. A mark animated with `--pui-travel-*` or `--pui-scale-*` would
+ * collapse to nothing under reduced motion, and the tick is information, not
+ * decoration — it is the only thing separating "on" from "off" for anyone who
+ * cannot rely on the fill colour. Durations are only shortened, never removed,
+ * so the mark still draws (in ~120ms) when motion is reduced.
+ *
+ * There is deliberately no `prefers-reduced-motion` block here; the tokens
+ * already collapse their own geometry.
+ *
+ * `data-indeterminate` is styled everywhere `data-checked` is. Base UI sets it
+ * on BOTH the root and the indicator, and the two states are not mutually
+ * exclusive — a parent checkbox in a CheckboxGroup is indeterminate while
+ * unchecked, so anything that must show a tick has to exclude it explicitly.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared on the checkbox element itself, so a value set
+     * on an ancestor is only INHERITED and loses to this declaration. To
+     * re-skin one checkbox, set them on the checkbox via `className` — an
+     * unlayered consumer rule beats `@layer pretty-ui.components` at any
+     * specificity — or an inline `style`. To move every checkbox at once,
+     * re-point the global tokens on the right-hand side below, which this
+     * file only reads and never re-declares. */
+    --pui-checkbox-size: 1rem;
+    --pui-checkbox-radius: var(--pui-radius-2);
+    --pui-checkbox-border-width: 1px;
+    /* Unitless: SVG user units inside the 16-unit viewBox, so the stroke
+     * scales with the box instead of thinning out at larger sizes. */
+    --pui-checkbox-mark-width: 2;
+    --pui-checkbox-duration: var(--pui-duration-fast);
+    /* The draw-in. A duration, never a travel/scale token. */
+    --pui-checkbox-draw-duration: var(--pui-duration-normal);
+
+    /* Colour slots, filled in per tone below. */
+    --pui-checkbox-bg: var(--pui-color-background);
+    --pui-checkbox-bg-hover: var(--pui-color-panel-hover);
+    --pui-checkbox-border-color: var(--pui-color-border);
+    --pui-checkbox-border-color-hover: var(--pui-color-border-strong);
+    --pui-checkbox-fill: var(--pui-color-primary);
+    --pui-checkbox-fill-hover: var(--pui-color-primary-hover);
+    --pui-checkbox-mark-color: var(--pui-color-on-primary);
+
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--pui-checkbox-size);
+    block-size: var(--pui-checkbox-size);
+    padding: 0;
+    margin: 0;
+    border: var(--pui-checkbox-border-width) solid
+      var(--pui-checkbox-border-color);
+    border-radius: var(--pui-checkbox-radius);
+    background-color: var(--pui-checkbox-bg);
+    /* The marks stroke with currentColor, so this is the tick colour. */
+    color: var(--pui-checkbox-mark-color);
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-checkbox-duration) var(--pui-ease-standard),
+      border-color var(--pui-checkbox-duration) var(--pui-ease-standard),
+      color var(--pui-checkbox-duration) var(--pui-ease-standard);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  @media (hover: hover) {
+    .root:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-checkbox-bg-hover);
+      border-color: var(--pui-checkbox-border-color-hover);
+    }
+
+    .root[data-checked]:hover:not([data-disabled], [data-readonly]),
+    .root[data-indeterminate]:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-checkbox-fill-hover);
+      border-color: transparent;
+    }
+  }
+
+  .root[data-checked],
+  .root[data-indeterminate] {
+    background-color: var(--pui-checkbox-fill);
+    /* Not `none`: transparent is NOT preserved under forced-colors, so this
+     * border keeps the box outlined there while staying invisible normally. */
+    border-color: transparent;
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .root[data-readonly] {
+    cursor: default;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  /* The painted box stays small on purpose; `.pui-target` on the root carries
+   * the 24px minimum hit area (SC 2.5.8) in a pseudo-element instead. */
+  .root[data-size="sm"] {
+    --pui-checkbox-size: 0.875rem;
+    --pui-checkbox-radius: var(--pui-radius-1);
+    --pui-checkbox-mark-width: 2.25;
+  }
+
+  .root[data-size="md"] {
+    --pui-checkbox-size: 1rem;
+    --pui-checkbox-radius: var(--pui-radius-2);
+    --pui-checkbox-mark-width: 2;
+  }
+
+  .root[data-size="lg"] {
+    --pui-checkbox-size: 1.25rem;
+    --pui-checkbox-radius: var(--pui-radius-3);
+    --pui-checkbox-mark-width: 1.75;
+  }
+
+  /* Tones ----------------------------------------------------------------- */
+  .root[data-tone="secondary"] {
+    --pui-checkbox-fill: var(--pui-color-secondary);
+    --pui-checkbox-fill-hover: var(--pui-color-secondary-hover);
+    --pui-checkbox-mark-color: var(--pui-color-on-secondary);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-checkbox-fill: var(--pui-color-danger);
+    --pui-checkbox-fill-hover: var(--pui-color-danger-hover);
+    --pui-checkbox-mark-color: var(--pui-color-on-danger);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-checkbox-fill: var(--pui-gray-12);
+    --pui-checkbox-fill-hover: var(--pui-gray-11);
+    --pui-checkbox-mark-color: var(--pui-gray-1);
+  }
+
+  /* Validity -------------------------------------------------------------- */
+  /* Inside a Field.Root, an invalid field outranks the tone: a validation
+   * failure must not be able to look like a brand-coloured success. Equal
+   * specificity to the tone rules, so this block has to stay after them. */
+  .root[data-invalid] {
+    --pui-checkbox-border-color: var(--pui-color-danger-border);
+    --pui-checkbox-border-color-hover: var(--pui-color-danger);
+    --pui-checkbox-fill: var(--pui-color-danger);
+    --pui-checkbox-fill-hover: var(--pui-color-danger-hover);
+    --pui-checkbox-mark-color: var(--pui-color-on-danger);
+  }
+
+  /* Indicator ------------------------------------------------------------- */
+  /* Kept mounted (see Checkbox.tsx) and hidden by opacity rather than
+   * `display: none`. A display change would cancel the enter transition
+   * outright — a box that is not rendered has no style to transition from. */
+  .indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 100%;
+    /* Clicks belong to the root (or the enclosing label), never to the tick. */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--pui-checkbox-duration) var(--pui-ease-standard);
+  }
+
+  .indicator[data-checked],
+  .indicator[data-indeterminate] {
+    opacity: 1;
+  }
+
+  /* Enter and exit are transitions, not keyframes, so unticking mid-draw
+   * reverses smoothly instead of snapping. */
+  .indicator[data-starting-style],
+  .indicator[data-ending-style] {
+    opacity: 0;
+  }
+
+  .svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    /* A round cap overshoots the viewBox by half a stroke at the tips. */
+    overflow: visible;
+  }
+
+  /* Marks ----------------------------------------------------------------- */
+  /* Every rule below is deliberately (0,3,0) so that document order decides
+   * the winner. Adding a `:not()` to any of them would silently outrank the
+   * starting/ending-style reset at the bottom and kill the draw-in. */
+  .mark {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: var(--pui-checkbox-mark-width);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    /* pathLength="1" on the element makes both of these fractions of the whole
+     * stroke: 1 = fully retracted, 0 = fully drawn. */
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--pui-checkbox-draw-duration)
+      var(--pui-ease-standard);
+  }
+
+  .indicator[data-checked] .check {
+    stroke-dashoffset: 0;
+  }
+
+  /* Checked *and* indeterminate is a legal combination; the mixed state wins,
+   * so the tick retracts and the dash takes over. */
+  .indicator[data-indeterminate] .check {
+    stroke-dashoffset: 1;
+  }
+
+  .indicator[data-indeterminate] .dash {
+    stroke-dashoffset: 0;
+  }
+
+  /* Mounting already-checked (a `defaultChecked` box, or a checked box being
+   * revealed) starts retracted and draws in from here. */
+  .indicator[data-starting-style] .mark,
+  .indicator[data-ending-style] .mark {
+    stroke-dashoffset: 1;
+  }
+
+  /* Group ----------------------------------------------------------------- */
+  .group {
+    --pui-checkbox-group-gap: var(--pui-space-2);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-checkbox-group-gap);
+  }
+
+  .group[data-orientation="horizontal"] {
+    --pui-checkbox-group-gap: var(--pui-space-4);
+
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* Forced colours ---------------------------------------------------------- */
+/* Top-level `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so
+ * everything here beats the rules above by layer alone — no `!important`, no
+ * padded selectors. Specificity still decides between rules *inside* this
+ * block, including against the global forced-colors rules in patterns.css.
+ *
+ * The UA derives system colours from native element semantics, and the root is
+ * a <span> with role="checkbox" — it gets nothing automatically, so the
+ * keywords are assigned here. The generic `[data-disabled]` remedy in
+ * patterns.css (GrayText + opacity: 1) applies through `:where()`, i.e. at zero
+ * specificity, so the `.root` rules below would outrank its colours; the ones
+ * this component actually needs are restated, and `opacity: 1` — which nothing
+ * here competes with — is left to the global rule. */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .root {
+      border-color: CanvasText;
+      background-color: Canvas;
+    }
+
+    .root[data-checked],
+    .root[data-indeterminate] {
+      background-color: Highlight;
+      border-color: Highlight;
+    }
+
+    /* Disabled outranks checked by document order at equal specificity, which
+     * is the whole fix: the global rules would otherwise combine a Highlight
+     * fill (from [data-checked]) with a GrayText mark, and those two keywords
+     * are not a guaranteed pair — in High Contrast Black it is GrayText
+     * #3FF23F on Highlight #1AEBFF. Of the two ways out, keeping the Highlight
+     * fill and stroking the mark HighlightText would leave "disabled" resting
+     * on the 1px border alone (and put GrayText against Highlight there
+     * instead), so the fill drops back to Canvas: GrayText on Canvas is a
+     * guaranteed pair, the tick stays legible, and GrayText everywhere reads
+     * unambiguously as disabled. Losing the fill costs nothing, because on a
+     * checkbox the tick — not the fill — is what carries "checked" (see the
+     * header comment); a disabled box still shows its mark. */
+    .root[data-disabled] {
+      background-color: Canvas;
+      border-color: GrayText;
+    }
+
+    /* Indeterminate is not one of the states patterns.css recognises
+     * (aria-checked is "mixed", and there is no [data-indeterminate] there), so
+     * the mark colour for the mixed state has to be set here. */
+    .indicator {
+      color: HighlightText;
+    }
+
+    /* The indicator carries the state attributes too, so the global
+     * `[data-checked] { background-color: Highlight }` paints it over the root
+     * fill; and its `color: HighlightText` outranks the zero-specificity
+     * disabled remedy. Both are corrected here in one place — the marks stroke
+     * with currentColor, so this is what makes the tick GrayText. */
+    .root[data-disabled] .indicator {
+      background-color: Canvas;
+      color: GrayText;
+    }
+  }
+}

@@ -1,0 +1,166 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Switch",
+  description:
+    "An on/off control that applies its change immediately, with a thumb that keeps moving under reduced motion.",
+};
+
+# Switch
+
+Use a switch for a setting that takes effect the moment it is flipped — notification preferences, feature toggles, anything with no Save button. If the value is only meaningful once a form is submitted, or the user is picking several things from a list, use a checkbox instead. A switch still submits with a form when you give it a `name`; it renders a hidden checkbox input beside the visible control.
+
+<DemoBlock id="switch/basic" />
+
+## Import
+
+```tsx
+import { Switch } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sizes
+
+`size` scales the track, the thumb and the distance the thumb travels together, so the thumb always lands flush against the end of the track. The painted track is 16px tall at `sm`, 20px at `md` and 24px at `lg`; the component grows the hit area to a 24×24px minimum without changing the painted box, so even `sm` meets SC 2.5.8.
+
+<DemoBlock id="switch/sizes" />
+
+### Disabled
+
+`disabled` blocks interaction and drops the whole control to 55% opacity. Both states stay distinguishable while disabled — put the reason in visible text next to the switch, because a disabled switch is skipped by <kbd>Tab</kbd> and cannot show a tooltip to a keyboard user.
+
+<DemoBlock id="switch/disabled" />
+
+### Settings list
+
+A list of settings usually needs a description under each label, which is more text than belongs inside an accessible name. Point `aria-describedby` at the description and label the switch with a sibling `<label htmlFor>` — that pattern needs `nativeButton` and `render={<button />}`, because `htmlFor` only resolves to a labelable element and, with `nativeButton`, `id` lands on the root button rather than on the hidden input. The rendered button gets `type="button"`, so it will not submit a surrounding form.
+
+<DemoBlock id="switch/settings-list" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus to the switch. The root element is the focus target; the hidden checkbox is parked at tabindex -1 and never receives focus.",
+    },
+    { keys: ["Space"], description: "Toggles the switch." },
+    {
+      keys: ["Enter"],
+      description:
+        "Toggles the switch. A native checkbox ignores Enter — Base UI's button emulation handles it here, and with nativeButton the browser does.",
+    },
+  ]}
+/>
+
+Base UI renders the root with `role="switch"` and `aria-checked`, so the state reaches assistive technology as text regardless of what the pixels do. The checkmark inside the thumb is `aria-hidden` — it is a visual cue only, and announcing it would duplicate `aria-checked`.
+
+<Callout kind="a11y">
+
+A switch renders no text of its own, so you have to supply the name. The simplest correct pattern
+is an enclosing `<label>`, which works because the root renders a `<span>` rather than a
+`<button>`:
+
+```tsx
+<label>
+  <Switch /> Email notifications
+</label>
+```
+
+For a sibling label, set `nativeButton` and render a real button — and point `htmlFor` at the
+root, since `nativeButton` moves `id` there from the hidden input:
+
+```tsx
+<label htmlFor="notify">Email notifications</label>
+<Switch id="notify" nativeButton render={<button />} />
+```
+
+For a native button *inside* a wrapping label, use the `render` callback, so the hidden input is
+placed outside the label and the HTML stays valid:
+
+```tsx
+<Switch
+  nativeButton
+  render={(buttonProps) => (
+    <label>
+      <button {...buttonProps} /> Email notifications
+    </label>
+  )}
+/>
+```
+
+If none of these fit, pass `aria-label`. A switch with no name is announced as just "switch, on".
+
+</Callout>
+
+`readOnly` is not the same as `disabled`: a read-only switch stays focusable and still reads its
+value out, it just cannot be flipped. Use it for a value the user is allowed to inspect but not
+change. `disabled` takes the control out of the tab order instead — as `aria-disabled` plus
+`tabindex="-1"` on the default span, or the native `disabled` attribute when you set `nativeButton`.
+
+The unchecked track border and thumb are drawn with `--pui-color-foreground-subtle`, measured at
+3.73:1 against the page — above the 3:1 that SC 1.4.11 asks of non-text controls. In forced-colours
+mode the two states are separated on three axes at once (track fill, track border, and the thumb's
+own fill plus its checkmark), all from system keywords, because a `<span role="switch">` gets no
+automatic system colours from the UA. The disabled state overrides its own opacity there and uses
+`GrayText` instead, since forced colours does not touch `opacity` and a 55% control would otherwise
+keep full system contrast and read as enabled.
+
+### Motion under `prefers-reduced-motion`
+
+The thumb still moves when reduced motion is requested, and that is deliberate. Everywhere else in
+this library a positional animation is decoration and collapses to zero distance under the motion
+tokens. Here the thumb's position **is** the state — a switch whose thumb never moves is a switch
+with no visible on/off difference except colour. So the travel is never multiplied by
+`--pui-motion-ok`. What changes is the feel: the transition rides `--pui-duration-spring-snappy`,
+which drops from 400ms to 120ms, flattening the spring's overshoot into what reads as an instant
+jump rather than a glide.
+
+Movement is never the only signal either. The track fill, the thumb fill and the checkmark all
+change with the state, and each identifies it on its own — which is what makes it safe to shorten
+the animation without losing information. The checkmark's opacity in particular is not gated on any
+motion token, so it survives intact when the pop that accompanies it has collapsed. Setting
+`stateIcon={false}` removes that cue and leaves colour as the only non-positional one; the state
+still reaches assistive technology, but sighted users lose a fallback. Use the **Reduced motion**
+control under any demo above to see the difference.
+
+## Theming
+
+Every property below is declared on the switch's own root element. That means setting one on an
+ancestor has no effect — the element's own declaration wins over an inherited value. Override them
+on the switch itself, through the `className` prop (an unlayered rule beats the library's
+`@layer pretty-ui.components`, whatever its specificity) or an inline `style`.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-switch-track-width` | Track width, and the input the travel distance is derived from. | `2.25rem` (`sm` `1.75rem`, `lg` `2.75rem`) |
+| `--pui-switch-track-height` | Track height. | `1.25rem` (`sm` `1rem`, `lg` `1.5rem`) |
+| `--pui-switch-thumb-size` | Thumb width and height. | `0.875rem` (`sm` `0.625rem`, `lg` `1.125rem`) |
+| `--pui-switch-padding` | Inset between the track and the thumb. | `0.125rem` |
+| `--pui-switch-border-width` | Track border width. | `1px` |
+| `--pui-switch-radius` | Track corner radius. | `var(--pui-radius-pill)` |
+| `--pui-switch-track-bg` | Track fill. | `var(--pui-color-panel)`, swapped to `var(--pui-color-primary)` when checked |
+| `--pui-switch-track-bg-hover` | Track fill on hover, on pointer devices only. | `var(--pui-color-panel-hover)`, swapped to `var(--pui-color-primary-hover)` when checked |
+| `--pui-switch-track-border` | Track border colour. | `var(--pui-color-foreground-subtle)`, `var(--pui-color-primary)` when checked, `var(--pui-color-danger-border)` when invalid inside a field |
+| `--pui-switch-thumb-bg` | Thumb fill. | `var(--pui-color-foreground-subtle)`, swapped to `var(--pui-color-on-primary)` when checked |
+| `--pui-switch-thumb-fg` | Checkmark colour. | `var(--pui-color-panel)`, swapped to `var(--pui-color-primary)` when checked |
+| `--pui-switch-thumb-shadow` | Thumb shadow. | `var(--pui-shadow-1)` |
+| `--pui-switch-travel` | Distance the thumb moves when checked. | `calc(track-width - thumb-size - 2 * padding - 2 * border-width)` |
+
+`--pui-switch-travel` is derived from the four size properties above it, so resizing the track is
+enough to keep the thumb landing flush against the far end — you rarely want to set it by hand.
+
+## API reference
+
+The table lists the props `Switch` adds. Everything else on Base UI's `Switch.Root` passes straight
+through: `checked`, `defaultChecked`, `onCheckedChange`, `name`, `value`, `uncheckedValue`,
+`disabled`, `readOnly`, `required`, `form`, `inputRef`, `render` and `style`. The component renders
+`Switch.Root` and `Switch.Thumb` for you, so there are no sub-parts to compose.
+
+<PropTable component="Switch" />

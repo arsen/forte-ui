@@ -1,0 +1,354 @@
+/*
+ * Tabs
+ *
+ * The indicator is the whole point of this file. Base UI measures the active
+ * tab and publishes its geometry on the Indicator element as
+ * --active-tab-left / --active-tab-top / --active-tab-width /
+ * --active-tab-height (already px values — they are consumed directly and
+ * never wrapped in calc() as raw numbers). Everything else here just decides
+ * what shape that moving box has:
+ *
+ *   data-variant="line"  a thin bar pinned to the strip's rail edge
+ *   data-variant="pill"  a filled pill the size of the whole tab
+ *
+ * Both are the same element moved the same way, so switching variants cannot
+ * desynchronise the motion.
+ *
+ * Movement is a transition on `translate` + size rather than a keyframe
+ * animation: a transition can be interrupted, so clicking a third tab while
+ * the indicator is still travelling to the second retargets smoothly instead
+ * of snapping. --pui-duration-move exists for exactly this kind of positional
+ * move that has no travel-token equivalent; it collapses to 1ms (never 0s)
+ * under reduced motion, so there is deliberately no prefers-reduced-motion
+ * block in this file.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. They are declared here, on Tabs.Root itself, so an
+     * ancestor's value is only inherited and never wins. Re-skin one tab set
+     * by setting these on the root element (an unlayered consumer rule beats
+     * this layer whatever its specificity); re-skin every tab set by
+     * re-pointing the global tokens they resolve to. */
+    --pui-tabs-radius: var(--pui-radius-control);
+    --pui-tabs-gap: var(--pui-space-1);
+    --pui-tabs-content-gap: var(--pui-space-4);
+    --pui-tabs-height: var(--pui-control-h-md);
+    --pui-tabs-padding-x: var(--pui-control-px-md);
+    --pui-tabs-font-size: var(--pui-font-size-2);
+    --pui-tabs-font-weight: var(--pui-font-weight-medium);
+
+    /* Strip */
+    --pui-tabs-list-bg: transparent;
+    --pui-tabs-list-padding: 0px;
+    --pui-tabs-list-radius: 0px;
+    --pui-tabs-rail-width: 1px;
+    --pui-tabs-rail-color: var(--pui-color-border-muted);
+
+    /* Tab label */
+    --pui-tabs-tab-color: var(--pui-color-foreground-muted);
+    --pui-tabs-tab-color-hover: var(--pui-color-foreground);
+    --pui-tabs-tab-color-active: var(--pui-color-primary-text);
+    --pui-tabs-tab-bg-hover: var(--pui-color-panel-hover);
+
+    /* Indicator */
+    --pui-tabs-indicator-color: var(--pui-color-primary);
+    --pui-tabs-indicator-size: 2px;
+    --pui-tabs-indicator-radius: var(--pui-radius-pill);
+
+    /* Panel */
+    --pui-tabs-panel-padding: 0px;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-tabs-content-gap);
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  .root[data-orientation="vertical"] {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  /* The pill treatment turns the strip into a segmented control: the rail
+   * disappears, the strip itself gets the surface, and the indicator grows
+   * from a bar into a filled block behind the label. */
+  .root[data-variant="pill"] {
+    --pui-tabs-list-bg: var(--pui-color-panel);
+    --pui-tabs-list-padding: var(--pui-space-1);
+    --pui-tabs-list-radius: var(--pui-radius-4);
+    --pui-tabs-indicator-color: var(--pui-color-primary-soft);
+    --pui-tabs-indicator-radius: var(--pui-radius-control);
+    --pui-tabs-tab-bg-hover: transparent;
+  }
+
+  /* Strip ------------------------------------------------------------------
+   * position: relative is load-bearing, not cosmetic: it makes the List the
+   * containing block the Indicator is measured against. Without it the
+   * indicator positions itself against some ancestor and lands nowhere near
+   * the active tab. */
+  .list {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--pui-tabs-gap);
+    padding: var(--pui-tabs-list-padding);
+    border-radius: var(--pui-tabs-list-radius);
+    background-color: var(--pui-tabs-list-bg);
+  }
+
+  .list[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* A real border rather than an inset box-shadow: box-shadow is forced to
+   * `none` in forced-colors mode, and the rail is what tells you where the
+   * strip ends. The indicator sits inside the padding box, so it rides on top
+   * of this line instead of being pushed off by it. */
+  .list[data-variant="line"] {
+    border-block-end: var(--pui-tabs-rail-width) solid var(--pui-tabs-rail-color);
+  }
+
+  .list[data-variant="line"][data-orientation="vertical"] {
+    border-block-end: 0;
+    border-inline-end: var(--pui-tabs-rail-width) solid var(--pui-tabs-rail-color);
+  }
+
+  /* Tab --------------------------------------------------------------------- */
+  .tab {
+    box-sizing: border-box;
+    /* Stacked above the indicator so a pill slides *behind* the label. */
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-control-gap);
+    height: var(--pui-tabs-height);
+    min-height: var(--pui-target-min);
+    padding-inline: var(--pui-tabs-padding-x);
+    margin: 0;
+    border: 0;
+    border-radius: var(--pui-tabs-radius);
+
+    background-color: transparent;
+    color: var(--pui-tabs-tab-color);
+
+    font-family: inherit;
+    font-size: var(--pui-tabs-font-size);
+    font-weight: var(--pui-tabs-font-weight);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .tab[data-orientation="vertical"] {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  @media (hover: hover) {
+    .tab:hover:not([data-disabled]):not([data-active]) {
+      color: var(--pui-tabs-tab-color-hover);
+      background-color: var(--pui-tabs-tab-bg-hover);
+    }
+  }
+
+  .tab[data-active] {
+    color: var(--pui-tabs-tab-color-active);
+  }
+
+  /* `opacity` is only the non-forced-colors treatment. Under forced colors the
+   * generic `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y, which
+   * is ordered after this one) restores `opacity: 1` and paints GrayText, so
+   * the 55% alpha here cannot survive into HCM and read as enabled. Nothing
+   * tab-specific is needed for it below. */
+  .tab[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Indicator ---------------------------------------------------------------
+   * Default geometry is horizontal + line: a bar the width of the active tab,
+   * pinned to the rail edge, translated along the inline axis. */
+  .indicator {
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 0;
+    inset-block-start: auto;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    translate: var(--active-tab-left);
+    width: var(--active-tab-width);
+    height: var(--pui-tabs-indicator-size);
+    border-radius: var(--pui-tabs-indicator-radius);
+    background-color: var(--pui-tabs-indicator-color);
+    /* Purely decorative — clicks belong to the tab underneath it. */
+    pointer-events: none;
+    /* width and height are both listed so one rule covers both orientations;
+     * only one of them actually changes in either. */
+    transition-property: translate, width, height;
+    transition-duration: var(--pui-duration-move);
+    transition-timing-function: var(--pui-ease-spring-snappy);
+  }
+
+  /* Vertical line: the bar rides the inline-end edge, against the rail, and
+   * travels on the block axis instead. */
+  .indicator[data-orientation="vertical"] {
+    inset-block-start: 0;
+    inset-block-end: auto;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    translate: 0 var(--active-tab-top);
+    width: var(--pui-tabs-indicator-size);
+    height: var(--active-tab-height);
+  }
+
+  /* Pill: same element, same transition, but it takes the full size of the
+   * active tab and therefore moves on both axes — the cross-axis offset
+   * matters here because the strip has padding. */
+  .indicator[data-variant="pill"],
+  .indicator[data-variant="pill"][data-orientation="vertical"] {
+    inset-block-start: 0;
+    inset-block-end: auto;
+    inset-inline-start: 0;
+    inset-inline-end: auto;
+    translate: var(--active-tab-left) var(--active-tab-top);
+    width: var(--active-tab-width);
+    height: var(--active-tab-height);
+  }
+
+  /* Deliberately no `display` declaration anywhere on .indicator: Base UI sets
+   * the `hidden` attribute until the first measurement lands, and any explicit
+   * display would beat the UA's [hidden] rule and flash an unpositioned bar at
+   * the start of the strip. */
+
+  /* Panel -------------------------------------------------------------------
+   * Enter/exit are transitions on [data-starting-style] / [data-ending-style]
+   * rather than keyframes, so switching tabs mid-transition reverses cleanly.
+   * The panel slides in from the side it was activated from, which is what
+   * makes the strip and the content read as one movement. */
+  .panel {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: var(--pui-tabs-panel-padding);
+    border-radius: var(--pui-tabs-radius);
+    color: var(--pui-color-foreground);
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+    translate: 0 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-duration-normal) var(--pui-ease-spring-snappy);
+  }
+
+  .panel[data-starting-style],
+  .panel[data-ending-style] {
+    opacity: 0;
+  }
+
+  /* data-activation-direction names where the *new* tab sits relative to the
+   * old one, so the incoming panel starts on that side and travels back to
+   * rest. The travel tokens collapse to 0px under reduced motion, leaving the
+   * opacity fade — which is the part reduced-motion users benefit from. */
+  .panel[data-starting-style][data-activation-direction="right"] {
+    translate: var(--pui-travel-md) 0;
+  }
+
+  .panel[data-starting-style][data-activation-direction="left"] {
+    translate: calc(-1 * var(--pui-travel-md)) 0;
+  }
+
+  .panel[data-starting-style][data-activation-direction="down"] {
+    translate: 0 var(--pui-travel-md);
+  }
+
+  .panel[data-starting-style][data-activation-direction="up"] {
+    translate: 0 calc(-1 * var(--pui-travel-md));
+  }
+
+  .panel[data-ending-style] {
+    transition-timing-function: var(--pui-ease-exit);
+  }
+
+  /* Required whenever keepMounted is set: Base UI keeps the element in the
+   * DOM with the `hidden` attribute, and `display: flex`/`block` from any
+   * consumer rule would otherwise leave every panel visible at once. */
+  .panel[hidden] {
+    display: none;
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * This block is in `pretty-ui.a11y`, ordered after `pretty-ui.components`, so
+ * it beats every rule above by layer alone — no `!important`, no specificity
+ * inflation.
+ *
+ * What patterns.css already does globally, and must not be restated here:
+ *   - `[aria-selected="true"]` (Base UI puts it on every Tab) paints the
+ *     Highlight / HighlightText pair on the ACTIVE TAB ITSELF, so the tab's
+ *     label is HighlightText over Highlight rather than CanvasText over it.
+ *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is the
+ *     only reliable disabled cue since `opacity` is not forced.
+ *   - `.pui-focus-ring:focus-visible` becomes a Highlight outline.
+ *
+ * What is tab-specific:
+ *   - The indicator's background would be replaced with a system colour and
+ *     vanish, so it opts out and paints Highlight explicitly — matching the
+ *     tab's own Highlight, which is what keeps a pill and its label one pair
+ *     even though the tab (z-index: 1) paints over the indicator (z-index: 0).
+ *   - The global svg rule covers `[data-checked]` / `[data-highlighted]` but
+ *     not `aria-selected`, so an icon inside the active tab needs pairing. Bare
+ *     `svg` rather than `.pui-icon`: this is a CSS Module, so a global pattern
+ *     class written here would be hashed into a local one and match nothing —
+ *     and `.pui-icon` already paints `currentColor`, which is the paired colour
+ *     the tab itself carries. The rule exists for icons that declare their own
+ *     fill/stroke, which forced-colors would otherwise push to CanvasText.
+ *   - variant="line" must NOT become a filled Highlight block: the underline is
+ *     the cue, and an opaque tab background — forced or authored — would cover
+ *     the 2px bar it sits on top of. Opting the active line tab out keeps its
+ *     background genuinely transparent (`transparent` is otherwise replaced
+ *     with a system colour) and pins its own contrast to CanvasText on Canvas.
+ *     HighlightText is wrong there: with no Highlight behind it, it collapses
+ *     into Canvas in High Contrast Black.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .indicator {
+      forced-color-adjust: none;
+      background-color: Highlight;
+    }
+
+    .list[data-variant="line"] {
+      border-color: CanvasText;
+    }
+
+    .tab[data-active] :where(svg) {
+      fill: HighlightText;
+      stroke: HighlightText;
+    }
+
+    .tab[data-variant="line"][data-active] {
+      forced-color-adjust: none;
+      background-color: transparent;
+      color: CanvasText;
+    }
+
+    .tab[data-variant="line"][data-active] :where(svg) {
+      fill: CanvasText;
+      stroke: CanvasText;
+    }
+  }
+}

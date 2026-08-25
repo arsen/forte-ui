@@ -1,0 +1,58 @@
+{
+  "name": "@dofortech/pretty-ui",
+  "version": "0.0.0",
+  "description": "A React UI component library built on Base UI, styled with CSS Modules and a themeable CSS-variable design system.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist",
+    "docs-data"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme.css": "./dist/styles/theme.css",
+    "./styles/*": "./dist/styles/*",
+    "./package.json": "./package.json",
+    "./docs-data/props.json": "./docs-data/props.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "tokens": "node scripts/build-tokens.mjs && node scripts/build-motion.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "build": "pnpm run tokens && pnpm run docgen && vite build",
+    "dev": "vite build --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/check-contrast.mjs --fine",
+    "clean": "rm -rf dist .turbo",
+    "docgen": "node scripts/docgen.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.6.0",
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "glob": "^13.0.6",
+    "react": "^19.2.7",
+    "react-docgen-typescript": "^2.4.0",
+    "react-dom": "^19.2.7",
+    "typescript": "~5.9.3",
+    "vite": "^8.1.5",
+    "vite-plugin-dts": "^5.0.3",
+    "vite-plugin-lib-inject-css": "^2.2.2"
+  }
+}

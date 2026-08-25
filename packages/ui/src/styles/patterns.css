@@ -1,0 +1,218 @@
+/**
+ * Reusable pattern classes.
+ *
+ * These are plain global class names (not CSS Modules) because components and
+ * consumers both need to apply them, and because the forced-colors rules below
+ * have to reach every surface the library renders.
+ */
+@layer pretty-ui.patterns {
+  /* ------------------------------------------------------------------------
+   * Focus ring
+   *
+   * `outline` carries the ring rather than `box-shadow` because outline
+   * follows border-radius, honours outline-offset, is not clipped by an
+   * ancestor's overflow:hidden, and — decisively — survives forced-colors
+   * mode, where box-shadow is forced to `none`. The box-shadow here only
+   * fills the offset gap with the contrasting second tone.
+   * --------------------------------------------------------------------- */
+  .pui-focus-ring:focus-visible,
+  .pui-focus-ring-within:has(:focus-visible) {
+    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
+    outline-offset: var(--pui-focus-ring-offset);
+    box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+  }
+
+  /* Inside a clipping context — list rows, tab strips, select items — an
+   * outward ring would be cut off. Invert it. */
+  .pui-focus-ring[data-focus-inset]:focus-visible {
+    outline-offset: calc(-1 * var(--pui-focus-ring-width) - 1px);
+    box-shadow: inset 0 0 0
+      calc(var(--pui-focus-ring-width) + var(--pui-focus-ring-offset))
+      var(--pui-focus-ring-outer);
+  }
+
+  /* SC 2.4.11 Focus Not Obscured: keep a focused control from scrolling to
+   * rest underneath sticky chrome. Apps should also set scroll-padding-block
+   * on their scroll container to match their header height. */
+  :where(.pui-focus-ring, .pui-focus-ring-within) {
+    scroll-margin: var(--pui-space-5, 1.5rem);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Hit target — SC 2.5.8 (24x24 minimum)
+   * Grows the interactive area without changing the visual box.
+   * --------------------------------------------------------------------- */
+  .pui-target {
+    position: relative;
+  }
+
+  .pui-target::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    width: max(100%, var(--pui-target-min));
+    height: max(100%, var(--pui-target-min));
+  }
+
+  /* ------------------------------------------------------------------------
+   * Scrim
+   * --------------------------------------------------------------------- */
+  .pui-scrim {
+    position: fixed;
+    inset: 0;
+    background-color: var(--pui-scrim-color);
+    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .pui-scrim[data-starting-style],
+  .pui-scrim[data-ending-style] {
+    opacity: 0;
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) and (prefers-contrast: no-preference) {
+      .pui-scrim {
+        backdrop-filter: blur(var(--pui-scrim-blur));
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * Floating surface
+   *
+   * The transparent border is deliberate and load-bearing. `transparent` is
+   * NOT preserved in forced-colors mode — it is replaced with a system colour.
+   * So a border that is invisible normally becomes the visible boundary that
+   * keeps a popup from dissolving into the page once shadows are stripped.
+   * --------------------------------------------------------------------- */
+  .pui-hc-surface {
+    border: 1px solid transparent;
+  }
+
+  .pui-icon {
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Visually hidden, still announced.
+   *
+   * `display: none` and `visibility: hidden` remove content from the
+   * accessibility tree as well as from paint, which is the opposite of what
+   * is wanted here. The clip-path + 1px box technique keeps the text in the
+   * tree. `white-space: nowrap` prevents a long string collapsing to one
+   * character per line, which some screen readers then read letter by letter.
+   * --------------------------------------------------------------------- */
+  .pui-visually-hidden:not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Opt out only where colour IS the information — a swatch, a chart key.
+   * This also disables the automatic text backplate, so anything inside must
+   * supply its own contrast and its own boundary. */
+  .pui-preserve-color {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+  }
+}
+
+/**
+ * Accessibility overrides.
+ *
+ * These live in `pretty-ui.a11y`, which is ordered AFTER `pretty-ui.components`,
+ * so they beat component CSS by layer order alone — no specificity games, and
+ * no `!important`. See layers.css for why that ordering is load-bearing.
+ */
+@layer pretty-ui.a11y {
+  /* ------------------------------------------------------------------------
+   * Forced colors (Windows High Contrast)
+   *
+   * The UA assigns system colours from NATIVE element semantics, not ARIA — a
+   * <div role="button"> gets no ButtonText. Base UI builds most parts from
+   * div/span, so the library has to assign the keywords itself.
+   * --------------------------------------------------------------------- */
+  @media (forced-colors: active) {
+    .pui-hc-surface {
+      border-color: CanvasText;
+      background-color: Canvas;
+      color: CanvasText;
+    }
+
+    /* The :not() is load-bearing. Without it, an element that is BOTH selected
+     * and disabled — a disabled Select item that happens to be the current
+     * value, a disabled active Tab — matches this rule at (0,1,0) and beats the
+     * zero-specificity disabled remedy below, so it paints as fully selected
+     * and never turns GrayText. Excluding disabled here makes the two rules
+     * cover disjoint sets instead of competing. */
+    :is(
+      .pui-hc-selected,
+      [data-selected],
+      [data-checked],
+      [data-highlighted],
+      [aria-selected="true"],
+      [aria-checked="true"]
+    ):not([data-disabled], [aria-disabled="true"], :disabled) {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    :is(.pui-hc-selected, [data-checked], [data-highlighted], [aria-selected="true"]):not(
+      [data-disabled], [aria-disabled="true"], :disabled
+    ) :where(svg, .pui-icon) {
+      fill: HighlightText;
+      stroke: HighlightText;
+    }
+
+    /* `opacity` is NOT overridden by forced-colors, so a 55%-opacity disabled
+     * control keeps full system-colour contrast and still reads as enabled.
+     * GrayText at full opacity is the only reliable disabled signal. */
+    :where([data-disabled], [aria-disabled="true"], :disabled) {
+      color: GrayText;
+      border-color: GrayText;
+      opacity: 1;
+    }
+
+    :where([data-disabled], [aria-disabled="true"], :disabled) :where(svg, .pui-icon) {
+      fill: GrayText;
+      stroke: GrayText;
+    }
+
+    .pui-focus-ring:focus-visible,
+    .pui-focus-ring-within:has(:focus-visible) {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+
+    /* Purely decorative and gradient-dependent — hide rather than show a
+     * meaningless system-coloured block. */
+    .pui-hc-decorative {
+      display: none;
+    }
+
+    .pui-scrim {
+      background-color: Canvas;
+      backdrop-filter: none;
+      opacity: 1;
+    }
+
+    .pui-link {
+      color: LinkText;
+      text-decoration: underline;
+    }
+
+    /* The invisible hit-target expander would otherwise paint. */
+    .pui-target::after {
+      display: none;
+    }
+  }
+}

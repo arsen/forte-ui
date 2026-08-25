@@ -1,0 +1,282 @@
+/*
+ * Button
+ *
+ * Two independent axes rather than an exploding variant list:
+ *   data-variant  how much the button asserts itself (solid/soft/outline/ghost)
+ *   data-tone     which semantic colour set it draws from (primary/secondary/
+ *                 danger/neutral)
+ * Every combination works because each tone only has to define six colour
+ * slots; the variants decide which slots become background, text and border.
+ *
+ * There is deliberately no `prefers-reduced-motion` block here. The motion
+ * tokens already collapse their own geometry — `--pui-scale-press` becomes
+ * exactly 1 and `--pui-travel-xs` becomes 0px — so this file gets correct
+ * reduced-motion behaviour without knowing that reduced motion exists.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. They are declared here, on the button element itself,
+     * so an ancestor's value is only inherited and never wins. Re-skin one
+     * button by setting these on the button (an unlayered consumer rule beats
+     * this layer whatever its specificity); re-skin every button by
+     * re-pointing the global tokens they resolve to. */
+    --pui-button-radius: var(--pui-radius-control);
+    --pui-button-font-weight: var(--pui-font-weight-medium);
+    --pui-button-gap: var(--pui-control-gap);
+    --pui-button-border-width: 1px;
+    --pui-button-height: var(--pui-control-h-md);
+    --pui-button-padding-x: var(--pui-control-px-md);
+    --pui-button-font-size: var(--pui-font-size-2);
+
+    /* Colour slots, filled in per tone + variant below. */
+    --pui-button-bg: transparent;
+    --pui-button-bg-hover: transparent;
+    --pui-button-bg-active: transparent;
+    --pui-button-fg: var(--pui-color-foreground);
+    --pui-button-border-color: transparent;
+
+    /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
+    --pui-button-tone-solid: var(--pui-color-primary);
+    --pui-button-tone-solid-hover: var(--pui-color-primary-hover);
+    --pui-button-tone-solid-active: var(--pui-color-primary-active);
+    --pui-button-tone-on-solid: var(--pui-color-on-primary);
+    --pui-button-tone-soft: var(--pui-color-primary-soft);
+    --pui-button-tone-soft-hover: var(--pui-color-primary-soft-hover);
+    --pui-button-tone-soft-active: var(--pui-color-primary-soft-active);
+    --pui-button-tone-text: var(--pui-color-primary-text);
+    --pui-button-tone-border: var(--pui-color-primary-border);
+
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-button-gap);
+    height: var(--pui-button-height);
+    padding-inline: var(--pui-button-padding-x);
+    margin: 0;
+    border: var(--pui-button-border-width) solid var(--pui-button-border-color);
+    border-radius: var(--pui-button-radius);
+
+    background-color: var(--pui-button-bg);
+    color: var(--pui-button-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-button-font-size);
+    font-weight: var(--pui-button-font-weight);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+    text-decoration: none;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    /* `translate` and `scale` are animated as independent properties rather
+     * than through `transform`, so hover-lift and press-squash can transition
+     * at different speeds without fighting over one shorthand. */
+    translate: 0 0;
+    scale: 1;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      box-shadow var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-duration-fast) var(--pui-ease-standard),
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  @media (hover: hover) {
+    .root:hover:not([data-disabled]) {
+      background-color: var(--pui-button-bg-hover);
+      /* Collapses to 0px under reduced motion, so the lift simply stops. */
+      translate: 0 calc(-1 * var(--pui-travel-xs));
+    }
+  }
+
+  .root:active:not([data-disabled]) {
+    background-color: var(--pui-button-bg-active);
+    translate: 0 0;
+    scale: var(--pui-scale-press);
+    /* Snap in, spring out: pressing should feel immediate. */
+    transition-duration: var(--pui-duration-instant);
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  .root[data-full-width] {
+    width: 100%;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  .root[data-size="sm"] {
+    --pui-button-height: var(--pui-control-h-sm);
+    --pui-button-padding-x: var(--pui-control-px-sm);
+    --pui-button-font-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="md"] {
+    --pui-button-height: var(--pui-control-h-md);
+    --pui-button-padding-x: var(--pui-control-px-md);
+    --pui-button-font-size: var(--pui-font-size-2);
+  }
+
+  .root[data-size="lg"] {
+    --pui-button-height: var(--pui-control-h-lg);
+    --pui-button-padding-x: var(--pui-control-px-lg);
+    --pui-button-font-size: var(--pui-font-size-3);
+  }
+
+  /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width. */
+  .root[data-icon-only] {
+    --pui-button-padding-x: 0;
+    aspect-ratio: 1;
+    min-inline-size: max(var(--pui-button-height), var(--pui-target-min));
+  }
+
+  /* Tones ----------------------------------------------------------------- */
+  .root[data-tone="secondary"] {
+    --pui-button-tone-solid: var(--pui-color-secondary);
+    --pui-button-tone-solid-hover: var(--pui-color-secondary-hover);
+    --pui-button-tone-solid-active: var(--pui-color-secondary-active);
+    --pui-button-tone-on-solid: var(--pui-color-on-secondary);
+    --pui-button-tone-soft: var(--pui-color-secondary-soft);
+    --pui-button-tone-soft-hover: var(--pui-color-secondary-soft-hover);
+    --pui-button-tone-soft-active: var(--pui-color-secondary-soft-active);
+    --pui-button-tone-text: var(--pui-color-secondary-text);
+    --pui-button-tone-border: var(--pui-color-secondary-border);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-button-tone-solid: var(--pui-color-danger);
+    --pui-button-tone-solid-hover: var(--pui-color-danger-hover);
+    --pui-button-tone-solid-active: var(--pui-color-danger-hover);
+    --pui-button-tone-on-solid: var(--pui-color-on-danger);
+    --pui-button-tone-soft: var(--pui-danger-3);
+    --pui-button-tone-soft-hover: var(--pui-danger-3);
+    --pui-button-tone-soft-active: var(--pui-danger-7);
+    --pui-button-tone-text: var(--pui-color-danger-text);
+    --pui-button-tone-border: var(--pui-color-danger-border);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-button-tone-solid: var(--pui-gray-12);
+    --pui-button-tone-solid-hover: var(--pui-gray-11);
+    --pui-button-tone-solid-active: var(--pui-gray-10);
+    --pui-button-tone-on-solid: var(--pui-gray-1);
+    --pui-button-tone-soft: var(--pui-gray-3);
+    --pui-button-tone-soft-hover: var(--pui-gray-4);
+    --pui-button-tone-soft-active: var(--pui-gray-5);
+    --pui-button-tone-text: var(--pui-color-foreground);
+    --pui-button-tone-border: var(--pui-color-border);
+  }
+
+  /* Variants -------------------------------------------------------------- */
+  .root[data-variant="solid"] {
+    --pui-button-bg: var(--pui-button-tone-solid);
+    --pui-button-bg-hover: var(--pui-button-tone-solid-hover);
+    --pui-button-bg-active: var(--pui-button-tone-solid-active);
+    --pui-button-fg: var(--pui-button-tone-on-solid);
+  }
+
+  .root[data-variant="soft"] {
+    --pui-button-bg: var(--pui-button-tone-soft);
+    --pui-button-bg-hover: var(--pui-button-tone-soft-hover);
+    --pui-button-bg-active: var(--pui-button-tone-soft-active);
+    --pui-button-fg: var(--pui-button-tone-text);
+  }
+
+  .root[data-variant="outline"] {
+    --pui-button-bg: transparent;
+    --pui-button-bg-hover: var(--pui-button-tone-soft);
+    --pui-button-bg-active: var(--pui-button-tone-soft-hover);
+    --pui-button-fg: var(--pui-button-tone-text);
+    --pui-button-border-color: var(--pui-button-tone-border);
+  }
+
+  .root[data-variant="ghost"] {
+    --pui-button-bg: transparent;
+    --pui-button-bg-hover: var(--pui-button-tone-soft);
+    --pui-button-bg-active: var(--pui-button-tone-soft-hover);
+    --pui-button-fg: var(--pui-button-tone-text);
+  }
+
+  .root[data-tone="neutral"][data-variant="ghost"],
+  .root[data-tone="neutral"][data-variant="outline"] {
+    --pui-button-bg-hover: var(--pui-color-panel-hover);
+    --pui-button-bg-active: var(--pui-color-panel-active);
+  }
+
+  /* Loading --------------------------------------------------------------- */
+  /* The label stays in the layout and is only hidden from paint, so the
+   * button cannot change width when it starts loading — a resize under the
+   * user's cursor is both jarring and a reliable source of misclicks. */
+  .content {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pui-button-gap);
+    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .root[data-loading] .content {
+    opacity: 0;
+  }
+
+  .spinner {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    width: 1em;
+    height: 1em;
+    border-radius: var(--pui-radius-full);
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    /* Deliberately on this child, never on a popup part: Base UI awaits
+     * getAnimations() on the popup ELEMENT to decide when it may unmount, and
+     * an infinite animation's promise never settles. Descendants are not
+     * inspected, so a loading button inside a Dialog is safe. */
+    /* Both animations always run; the tokens decide which one is VISIBLE.
+     * Normally spin-turn is 1turn (it rotates) and pulse-dip is 1 (the pulse
+     * is a no-op). Under reduced motion those invert: spin-turn becomes 0turn
+     * so the ring holds still, and pulse-dip becomes 0.45 so a gentle opacity
+     * pulse takes over as the "busy" cue. Neither duration is ever collapsed —
+     * a 1ms loop would be a flashing hazard under WCAG 2.3.1. */
+    animation:
+      pui-button-spin var(--pui-duration-loop-spin) linear infinite,
+      pui-button-pulse var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
+  }
+
+  @keyframes pui-button-spin {
+    to {
+      rotate: var(--pui-spin-turn);
+    }
+  }
+
+  @keyframes pui-button-pulse {
+    50% {
+      opacity: var(--pui-pulse-dip);
+    }
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* `transparent` is NOT preserved under forced-colors: it is replaced with a
+     * system colour. The spinner's gap — the whole reason the rotation reads as
+     * motion — would fill in and leave a solid ring that appears static.
+     * Painting the gap `Canvas` keeps it reading as a gap against the surface. */
+    .spinner {
+      border-color: CanvasText;
+      border-top-color: Canvas;
+    }
+  }
+}

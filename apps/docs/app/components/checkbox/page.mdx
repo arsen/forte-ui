@@ -1,0 +1,225 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Checkbox",
+  description:
+    "A checkbox for options that stand on their own, with a mixed state, group support and a parent checkbox that ticks its children.",
+};
+
+# Checkbox
+
+Use a checkbox for an option that stands on its own: a setting the user turns on
+or off, or one of several answers they can pick at the same time. If the choices
+are mutually exclusive, use radios; if the change applies the moment it is
+flipped rather than when a form is submitted, a `Switch` reads better.
+
+<DemoBlock id="checkbox/basic" />
+
+`Checkbox` renders a `<span>` with `role="checkbox"` and a hidden `<input>` next
+to it. That means it carries no accessible name of its own — the enclosing
+`<label>` above is what gives it one, and every example on this page keeps that
+pattern.
+
+## Import
+
+```tsx
+import { Checkbox, CheckboxGroup } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sizes
+
+`size` sets the painted box — `0.875rem`, `1rem` or `1.25rem`. The mark scales
+with the box, and its stroke width is retuned at each size so the tick keeps
+the same optical weight rather than turning heavy on the small box and spindly
+on the large one. The clickable area does not shrink with the box: a
+pseudo-element on the root holds the hit target at 24×24px minimum
+(WCAG SC 2.5.8), so a `sm` checkbox is no harder to hit than an `lg` one.
+
+<DemoBlock id="checkbox/sizes" />
+
+### Groups
+
+`CheckboxGroup` holds the checked values for a series of checkboxes in one
+array. Give each `Checkbox` a `value`, then use `defaultValue` for an
+uncontrolled group or `value` plus `onValueChange` for a controlled one. Set
+`orientation="horizontal"` to lay the items out in a row instead; horizontal
+groups wrap.
+
+<DemoBlock id="checkbox/group" />
+
+Grouping is a state and labelling convenience, not a keyboard mode: every
+checkbox in the group stays its own tab stop, exactly as a run of native
+checkboxes would.
+
+### Indeterminate and parent checkboxes
+
+`indeterminate` puts the checkbox in a mixed state — neither ticked nor
+unticked. The mark becomes a dash instead of a tick, `aria-checked` becomes
+`"mixed"`, and `data-indeterminate` appears on both the root and the indicator,
+so either can be targeted from CSS (`data-[indeterminate]:…` in Tailwind).
+
+The usual source of a mixed state is a parent checkbox that summarises its
+children. Add `parent` to the summarising checkbox and the group works out the
+mixed state for you.
+
+<DemoBlock id="checkbox/indeterminate" />
+
+<Callout kind="warn">
+  `parent` only does something inside a `CheckboxGroup` that is **controlled**
+  (`value` and `onValueChange`) **and** given `allValues` — the full list of
+  child values, ticked or not, which is how the group tells "some" apart from
+  "all". Outside a group, or without `allValues`, the prop is ignored and you
+  get a plain checkbox.
+</Callout>
+
+Three details worth knowing about a parent checkbox:
+
+- Activating it while it is mixed ticks every child. Activating it again unticks
+  them all. A third activation restores the partial selection it started from.
+- It is left out of form submission: Base UI drops the `name` on a parent
+  checkbox, so only the children submit values.
+- Its `aria-controls` is built from ids the group generates for the children, so
+  do not pass your own `id` to a child checkbox inside a parent group — it
+  breaks the association.
+
+`indeterminate` and `checked` are independent. A checkbox can be both, and when
+it is, the mixed state wins visually (the tick retracts, the dash draws in)
+while the hidden input still submits whatever `checked` says.
+
+### Disabled
+
+`disabled` dims the box, blocks pointer and keyboard interaction, and sets
+`aria-disabled`. Style the label text yourself — the prop only reaches the
+control, not the words next to it.
+
+<DemoBlock id="checkbox/disabled" />
+
+<Callout kind="a11y">
+  A disabled checkbox is removed from the tab order (`tabindex="-1"`), so
+  someone tabbing through the form never lands on it and may not learn the
+  option exists. If the option needs to stay discoverable — locked by a plan,
+  set by an administrator, valid but not editable right now — use `readOnly`
+  instead. A read-only checkbox stays focusable, announces `aria-readonly`, and
+  ignores clicks and Space.
+</Callout>
+
+`CheckboxGroup` also takes `disabled`, which disables every checkbox inside it.
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus to the checkbox. Each checkbox is its own tab stop, including inside a CheckboxGroup.",
+    },
+    {
+      keys: ["Space"],
+      description:
+        "Toggles the focused checkbox. On a parent checkbox it drives the whole group — all, none, then back to the earlier partial selection.",
+    },
+    {
+      keys: ["Enter"],
+      description:
+        "Does not toggle. Inside a form it submits the form, matching a native checkbox.",
+    },
+  ]}
+/>
+
+The root exposes `role="checkbox"` and `aria-checked` — `true`, `false`, or
+`"mixed"` while indeterminate. The `<input>` beside it is `aria-hidden` and
+exists to carry the value into form submission, so `name`, `value`, `required`
+and `form` behave as they would on a native checkbox.
+
+<Callout kind="a11y">
+  The checkbox has no accessible name until you give it one. Pick one of:
+
+  - wrap it in a `<label>` (the simplest, and what these demos do);
+  - pair it with a sibling `<label htmlFor>` and pass `nativeButton render={<button />}` so the `id` lands on a real button; or
+  - put it inside a `Field.Root` with a `Field.Label`.
+
+  A bare `<Checkbox />` with visible text next to it is not labelled — screen
+  readers announce it as an unnamed checkbox.
+</Callout>
+
+<Callout kind="a11y">
+  `CheckboxGroup` renders a `role="group"` with no name of its own. Point
+  `aria-labelledby` at the element holding the group's heading text (as in the
+  group demo above), or render the group as a `Fieldset.Root` with a
+  `Fieldset.Legend`. Without a name, the grouping is invisible to assistive
+  technology and the checkboxes read as unrelated.
+</Callout>
+
+**Motion.** The mark is drawn on rather than faded in: both paths carry
+`pathLength="1"`, and the stylesheet animates `stroke-dashoffset` from `1` to
+`0` over `--pui-checkbox-draw-duration`. That choice matters for reduced
+motion. The tick is information — for anyone who cannot rely on the fill colour
+it is the only thing separating on from off — so it must never be animated with
+a travel or scale token that collapses to zero. Under
+`prefers-reduced-motion: reduce` the library only shortens the durations
+(`--pui-duration-normal` drops from 240ms to 120ms), so the mark still appears;
+it just draws faster.
+
+Under forced colours, the box paints with `Canvas`/`CanvasText`, a checked or
+mixed box with `Highlight`, and a disabled one with `GrayText` on `Canvas` —
+the tick stays visible in every state.
+
+## Theming
+
+Every visual decision is a custom property declared on the checkbox root. Set
+them on the checkbox itself — through `className` or an inline `style` — rather
+than on an ancestor: the component declares its own defaults on the root
+element, and an element's own declaration beats an inherited value.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-checkbox-size` | Width and height of the painted box. `size="sm"` sets `0.875rem`, `size="lg"` sets `1.25rem`. | `1rem` |
+| `--pui-checkbox-radius` | Corner radius of the box. | `var(--pui-radius-2)` |
+| `--pui-checkbox-border-width` | Border width. | `1px` |
+| `--pui-checkbox-mark-width` | Stroke width of the tick and dash. Unitless on purpose — the value is in SVG user units inside a 16-unit viewBox, so the stroke scales with the box instead of thinning out at larger sizes. `size` retunes it: `2.25` for `sm`, `1.75` for `lg`. | `2` |
+| `--pui-checkbox-duration` | Colour transitions on the box and the fade of the indicator. | `var(--pui-duration-fast)` |
+| `--pui-checkbox-draw-duration` | How long the mark takes to draw in and out. | `var(--pui-duration-normal)` |
+| `--pui-checkbox-bg` | Fill while unchecked. | `var(--pui-color-background)` |
+| `--pui-checkbox-bg-hover` | Fill on hover while unchecked. | `var(--pui-color-panel-hover)` |
+| `--pui-checkbox-border-color` | Border colour while unchecked. | `var(--pui-color-border)` |
+| `--pui-checkbox-border-color-hover` | Border colour on hover while unchecked. | `var(--pui-color-border-strong)` |
+| `--pui-checkbox-fill` | Fill while checked or indeterminate. | `var(--pui-color-primary)` |
+| `--pui-checkbox-fill-hover` | Fill on hover while checked or indeterminate. | `var(--pui-color-primary-hover)` |
+| `--pui-checkbox-mark-color` | Colour of the tick and dash — it becomes the root's `color`, and the marks stroke with `currentColor`. | `var(--pui-color-on-primary)` |
+
+`CheckboxGroup` declares one property of its own:
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-checkbox-group-gap` | Gap between items in the group. | `var(--pui-space-2)`, or `var(--pui-space-4)` when `orientation="horizontal"` |
+
+The three `-hover` values only ever apply on devices that report hover support,
+so a touch device never sticks in a hover colour after a tap.
+
+`tone` reassigns `--pui-checkbox-fill`, `--pui-checkbox-fill-hover` and
+`--pui-checkbox-mark-color`. Inside a `Field.Root`, an invalid field overrides
+those and the border colours with the danger palette, so a validation failure
+never renders in a brand colour.
+
+## API reference
+
+### Checkbox
+
+<PropTable component="Checkbox" />
+
+Anything Base UI's `Checkbox.Root` accepts passes through as well — including
+`name`, `value`, `uncheckedValue`, `onCheckedChange`, `disabled`, `readOnly`,
+`required`, `form`, `inputRef` and `render`.
+
+### CheckboxGroup
+
+<PropTable component="CheckboxGroup" />
+
+`onValueChange`, `render` and the rest of Base UI's `CheckboxGroup` props pass
+through unchanged.

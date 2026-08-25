@@ -1,0 +1,50 @@
+.root {
+  margin: var(--pui-space-5) 0;
+  border: 1px solid var(--pui-color-border-muted);
+  border-radius: var(--pui-radius-surface);
+  overflow: hidden;
+  background-color: var(--pui-color-panel);
+}
+
+.tabs {
+  display: block;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pui-space-3);
+  padding-inline: var(--pui-space-3);
+  border-bottom: 1px solid var(--pui-color-border-muted);
+}
+
+.list {
+  gap: var(--pui-space-1);
+}
+
+.tab {
+  font-size: var(--pui-font-size-2);
+}
+
+.indicator {
+  /* The library's Tabs.Indicator already positions and animates itself from
+   * Base UI's --active-tab-* variables; nothing to add here. */
+}
+
+.title {
+  font-family: var(--pui-font-mono);
+  font-size: var(--pui-font-size-1);
+  color: var(--pui-color-foreground-subtle);
+}
+
+.panel {
+  display: block;
+}
+
+/* The code panel supplies its own bordered figure, which would double up on
+ * the shell's border. */
+.panel > figure {
+  border: 0;
+  border-radius: 0;
+}

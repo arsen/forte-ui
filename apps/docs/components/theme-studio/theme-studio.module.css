@@ -1,0 +1,320 @@
+.studio {
+  display: grid;
+  grid-template-columns: 19rem minmax(0, 1fr);
+  gap: var(--pui-space-5);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .studio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.controls {
+  display: grid;
+  gap: var(--pui-space-5);
+  padding: var(--pui-space-5);
+  border: 1px solid var(--pui-color-border-muted);
+  border-radius: var(--pui-radius-surface);
+  background-color: var(--pui-color-panel);
+  position: sticky;
+  top: 4.5rem;
+  max-height: calc(100dvh - 6rem);
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .controls {
+    position: static;
+    max-height: none;
+  }
+}
+
+.group {
+  display: grid;
+  gap: var(--pui-space-2);
+}
+
+.groupTitle {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+  font-size: var(--pui-font-size-1);
+  font-weight: var(--pui-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pui-color-foreground-subtle);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--pui-font-size-1);
+  font-weight: var(--pui-font-weight-normal);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--pui-color-foreground-muted);
+}
+
+/* Presets ----------------------------------------------------------------- */
+.presets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pui-space-1);
+}
+
+.preset {
+  display: flex;
+  align-items: center;
+  gap: var(--pui-space-2);
+  min-height: var(--pui-target-min);
+  padding: var(--pui-space-1) var(--pui-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--pui-radius-3);
+  background: transparent;
+  color: var(--pui-color-foreground-muted);
+  font: inherit;
+  font-size: var(--pui-font-size-2);
+  cursor: pointer;
+  transition:
+    background-color var(--pui-duration-fast) var(--pui-ease-standard),
+    border-color var(--pui-duration-fast) var(--pui-ease-standard),
+    color var(--pui-duration-fast) var(--pui-ease-standard);
+}
+
+.preset:hover {
+  background-color: var(--pui-color-panel-hover);
+  color: var(--pui-color-foreground);
+}
+
+.preset[data-active] {
+  border-color: var(--pui-color-primary-border);
+  background-color: var(--pui-color-primary-soft);
+  color: var(--pui-color-primary-text);
+}
+
+/* The swatch IS the information here, so it opts out of forced-colors
+ * substitution and supplies its own boundary. */
+.presetSwatch {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  border-radius: var(--pui-radius-full);
+  background: linear-gradient(135deg, var(--swatch) 50%, var(--swatch2) 50%);
+  forced-color-adjust: none;
+  border: 1px solid CanvasText;
+}
+
+/* Colour fields ----------------------------------------------------------- */
+.colorField {
+  display: grid;
+  grid-template-columns: 5rem 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: var(--pui-space-2);
+  font-size: var(--pui-font-size-2);
+  color: var(--pui-color-foreground-muted);
+}
+
+.colorSwatch {
+  inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0;
+  border: 1px solid var(--pui-color-border);
+  border-radius: var(--pui-radius-3);
+  background: none;
+  cursor: pointer;
+}
+
+.colorText {
+  min-width: 0;
+  padding: var(--pui-space-1) var(--pui-space-2);
+  border: 1px solid var(--pui-color-border);
+  border-radius: var(--pui-radius-3);
+  background-color: var(--pui-color-background);
+  color: var(--pui-color-foreground);
+  font-family: var(--pui-font-mono);
+  font-size: var(--pui-font-size-2);
+}
+
+.slider {
+  inline-size: 100%;
+  accent-color: var(--pui-color-primary);
+}
+
+/* Segmented control ------------------------------------------------------- */
+.segmented {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--pui-radius-3);
+  background-color: var(--pui-color-panel-active);
+}
+
+.segment {
+  flex: 1;
+  min-height: var(--pui-target-min);
+  padding: var(--pui-space-1);
+  border: 0;
+  border-radius: calc(var(--pui-radius-3) - 1px);
+  background: transparent;
+  color: var(--pui-color-foreground-muted);
+  font: inherit;
+  font-size: var(--pui-font-size-1);
+  text-transform: capitalize;
+  cursor: pointer;
+  transition:
+    background-color var(--pui-duration-fast) var(--pui-ease-standard),
+    color var(--pui-duration-fast) var(--pui-ease-standard);
+}
+
+.segment[data-active] {
+  background-color: var(--pui-color-background);
+  color: var(--pui-color-foreground);
+  box-shadow: var(--pui-shadow-1);
+}
+
+/* Readout ----------------------------------------------------------------- */
+.readout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--pui-space-1) var(--pui-space-2);
+  margin: 0;
+  font-size: var(--pui-font-size-2);
+}
+
+.readout dt {
+  color: var(--pui-color-foreground-muted);
+}
+
+.readout dd {
+  margin: 0;
+  text-align: end;
+}
+
+.ratio {
+  font-family: var(--pui-font-mono);
+  font-size: var(--pui-font-size-1);
+  white-space: nowrap;
+}
+
+.ratio b {
+  display: inline-block;
+  min-width: 2.4em;
+  margin-inline-start: var(--pui-space-1);
+  padding: 0 0.35em;
+  border-radius: var(--pui-radius-2);
+  text-align: center;
+}
+
+.ratio[data-level="AAA"] b,
+.ratio[data-level="AA"] b {
+  background-color: color-mix(in oklab, var(--pui-color-success) 22%, transparent);
+  color: var(--pui-color-success-text);
+}
+
+.ratio[data-level="Fail"] b {
+  background-color: color-mix(in oklab, var(--pui-color-danger) 22%, transparent);
+  color: var(--pui-color-danger-text);
+}
+
+.warning {
+  margin: 0;
+  padding: var(--pui-space-2);
+  border-radius: var(--pui-radius-3);
+  font-size: var(--pui-font-size-1);
+  line-height: 1.45;
+}
+
+.warning[data-level="warn"] {
+  background-color: var(--pui-color-danger-soft);
+  color: var(--pui-color-danger-text);
+}
+
+.warning[data-level="info"] {
+  background-color: var(--pui-color-panel-active);
+  color: var(--pui-color-foreground-muted);
+}
+
+.applyRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--pui-space-2);
+  align-items: start;
+  font-size: var(--pui-font-size-2);
+}
+
+.applyRow span {
+  display: grid;
+  gap: 2px;
+}
+
+/* Preview ----------------------------------------------------------------- */
+.previewCol {
+  display: grid;
+  gap: var(--pui-space-4);
+}
+
+.preview {
+  display: grid;
+  gap: var(--pui-space-4);
+  padding: var(--pui-surface-p);
+  border: 1px solid var(--pui-color-border-muted);
+  border-radius: var(--pui-radius-surface);
+  background-color: var(--pui-color-background);
+  color: var(--pui-color-foreground);
+}
+
+.previewRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pui-space-3);
+  align-items: center;
+}
+
+.ramp {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2px;
+  height: 2.25rem;
+  border-radius: var(--pui-radius-3);
+  overflow: hidden;
+}
+
+.ramp span {
+  display: block;
+  /* Colour is the entire content — keep it in forced-colors mode. */
+  forced-color-adjust: none;
+}
+
+.output {
+  margin: 0;
+  border: 1px solid var(--pui-color-border-muted);
+  border-radius: var(--pui-radius-surface);
+  overflow: hidden;
+  background-color: var(--pui-color-panel);
+}
+
+.outputTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pui-space-3);
+  padding: var(--pui-space-2) var(--pui-space-3);
+  border-bottom: 1px solid var(--pui-color-border-muted);
+  font-size: var(--pui-font-size-1);
+  font-weight: var(--pui-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pui-color-foreground-subtle);
+}
+
+.outputCode {
+  margin: 0;
+  padding: var(--pui-space-4);
+  overflow-x: auto;
+  font-family: var(--pui-font-mono);
+  font-size: var(--pui-font-size-2);
+  line-height: 1.6;
+  color: var(--pui-color-foreground);
+}

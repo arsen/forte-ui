@@ -1,0 +1,51 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build",
+        "^docgen"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**"
+      ]
+    },
+    "dev": {
+      "dependsOn": [
+        "^build"
+      ],
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "clean": {
+      "cache": false
+    },
+    "docgen": {
+      "outputs": [
+        "docs-data/**"
+      ]
+    },
+    "tokens": {
+      "outputs": [
+        "src/styles/tokens.color.css",
+        "src/styles/motion.css"
+      ]
+    },
+    "test": {
+      "dependsOn": []
+    }
+  }
+}

@@ -1,0 +1,236 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Tooltip",
+  description:
+    "A short visual label that appears when a sighted mouse or keyboard user hovers or focuses a control.",
+};
+
+# Tooltip
+
+A short label that appears next to a control on hover or keyboard focus. Reach
+for it when an icon-only button needs a name for sighted users, or when a dense
+toolbar has no room for visible text. Whatever it says has to be available
+somewhere else too — read the warning below before you reach for one.
+
+<DemoBlock id="tooltip/basic" />
+
+<Callout kind="warn">
+
+**A tooltip is visual only.** Three consequences, all of them load-bearing:
+
+- **Screen readers never announce it.** Nothing inside `Tooltip.Popup` reaches
+  assistive technology. The trigger's own accessible name is all a screen
+  reader user gets.
+- **It does not open on touch.** Base UI disables tooltips for touch input
+  entirely: there is no discoverable way to reveal one before tapping, iOS has
+  no equivalent affordance, and on Android long-press collides with the
+  browser's context menu.
+- **So important information must never live only in a tooltip.** If a user who
+  never sees the popup could not operate or understand the UI, the text belongs
+  inline, or in a popover.
+
+</Callout>
+
+Deciding between a tooltip and a popover comes down to the **purpose of the
+trigger**. If the trigger's purpose *is* to open the popup — the little "i" info
+icon is the usual case — it is a popover, not a tooltip, and its content has to
+be reachable by touch and by assistive technology. pretty-ui does not wrap a
+popover yet; use Base UI's `Popover` from `@base-ui/react/popover` with
+`openOnHover` on its trigger. If the trigger's purpose is unrelated to the popup,
+and the popup merely labels the control, it is a tooltip.
+
+For transient feedback such as "Copied!", reach for Base UI's `Toast` with its
+anchoring instead — unlike a tooltip, it is announced.
+
+## Import
+
+```tsx
+import { Tooltip } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sides
+
+`side` on `Tooltip.Popup` picks the edge the tooltip opens from, and `align`
+moves it along that edge. Both are hints: the tooltip flips to the opposite side
+when it would overflow the collision boundary, which is why the `left` and
+`right` tooltips below may land elsewhere in a narrow frame. Alongside the four
+physical sides, `"inline-start"` and `"inline-end"` follow writing direction
+instead of staying pinned to a physical edge.
+
+<DemoBlock id="tooltip/placement" />
+
+### Shared delay across a toolbar
+
+`Tooltip.Provider` gives every tooltip beneath it one delay, and one grouping
+window. Once the first tooltip in the group is showing, sweeping to a neighbour
+opens the next one instantly instead of waiting out the delay again — that is
+what makes a row of icon buttons feel like a single toolbar. That instant-open
+window lasts `timeout` milliseconds (400 by default) after a tooltip closes;
+come back later than that and the next one waits out the delay again. Mount one
+provider near the root of your app — the one below is scoped to the demo so its
+400 ms delay is the value you are seeing.
+
+<DemoBlock id="tooltip/with-provider" />
+
+### Tuning the delay
+
+`delay` is how long the pointer must rest on the trigger before the tooltip
+opens, in milliseconds; `closeDelay` is how long it lingers after the pointer
+leaves. Set them on `Tooltip.Provider` for a whole subtree, or on an individual
+`Tooltip.Trigger` to override the provider for that one trigger. `delay={0}`
+opens on contact.
+
+<DemoBlock id="tooltip/delay" />
+
+Note that neither delay applies to the keyboard: focusing a trigger opens its
+tooltip immediately.
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus to the trigger, which opens the tooltip immediately. Only keyboard focus opens it — a trigger focused by a mouse click does not, because the trigger must match :focus-visible.",
+    },
+    {
+      keys: ["Esc"],
+      description:
+        "Closes the tooltip. Focus stays on the trigger, and that same focus will not reopen it; focus has to leave and come back.",
+    },
+    {
+      keys: ["Enter"],
+      description:
+        "Activates the trigger. The tooltip closes on activation unless you pass closeOnClick={false}.",
+    },
+    {
+      keys: ["Space"],
+      description:
+        "Same as Enter. Tooltip.Trigger always renders a button, and has no nativeButton prop to opt out.",
+    },
+  ]}
+/>
+
+Tabbing away from the trigger closes the tooltip. The popup is rendered with
+`tabindex="-1"`, so it never enters the tab order and nothing inside it can be
+reached with the keyboard — one more reason to keep it to a short label rather
+than anything a user has to act on.
+
+The popup carries no `role="tooltip"`, and the trigger is not wired to it with
+`aria-describedby`. That is deliberate rather than an omission to patch: the
+popup is portalled and unmounted while closed, so the reference would dangle.
+Treat the tooltip as decoration and label the trigger properly instead.
+
+<Callout kind="a11y">
+
+**Every icon-only trigger needs its own `aria-label`, and it must closely match
+the tooltip's text.** The tooltip labels the control for people who can see it;
+the `aria-label` labels the same control for everyone else. If they disagree, a
+sighted user and a screen reader user are looking at two different buttons —
+and voice-control users, who speak the accessible name aloud, will say the word
+they can see.
+
+```tsx
+<Tooltip.Trigger aria-label="Archive conversation">
+  <ArchiveIcon />
+</Tooltip.Trigger>
+<Tooltip.Popup>Archive conversation</Tooltip.Popup>
+```
+
+Keep `aria-hidden="true"` on the icon's own `<svg>`, as the demos above do, so
+the glyph cannot compete with the label.
+
+</Callout>
+
+Two more things to get right. Because the tooltip never opens on touch, the icon
+on an icon-only trigger has to carry its meaning on its own for mobile users —
+pick a conventional glyph, not a clever one. And `Tooltip.Root`'s `disabled` and
+`Tooltip.Trigger`'s `disabled` disable the *tooltip*, not the control: neither
+sets the `disabled` attribute, so the button stays focusable and clickable. Only
+`data-trigger-disabled` changes. To disable the control, pass `disabled` through
+`render`.
+
+In forced-colors mode the popup's shadow is stripped by the browser, so the
+component carries a transparent border that becomes the visible system-coloured
+boundary, and the arrow is drawn as two SVG paths rather than the traditional
+CSS-border triangle, which would degrade into a filled rectangle. Reduced-motion
+is handled by the motion tokens: the enter/exit transition collapses to a plain
+opacity fade with no travel and no scale.
+
+## Theming
+
+Every value below is a custom property you can override. `--pui-tooltip-z-index`
+is declared on the positioner; all the others are declared on the popup.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-tooltip-z-index` | Stacking order of the positioner | `50` |
+| `--pui-tooltip-bg` | Popup and arrow fill | `var(--pui-gray-12)` |
+| `--pui-tooltip-fg` | Text colour | `var(--pui-gray-1)` |
+| `--pui-tooltip-radius` | Corner radius | `var(--pui-radius-2)` |
+| `--pui-tooltip-padding-block` | Top and bottom padding | `var(--pui-space-1)` |
+| `--pui-tooltip-padding-inline` | Left and right padding | `var(--pui-space-2)` |
+| `--pui-tooltip-font-size` | Text size, and the `em` basis the arrow is sized from | `var(--pui-font-size-1)` |
+| `--pui-tooltip-font-weight` | Text weight | `var(--pui-font-weight-medium)` |
+| `--pui-tooltip-shadow` | Popup shadow (removed in forced-colors mode) | `var(--pui-shadow-2)` |
+| `--pui-tooltip-max-width` | Width cap, further clamped to the space the positioner reports as available | `18rem` |
+| `--pui-tooltip-travel` | How far the popup slides in from, per side | `var(--pui-travel-sm)` |
+| `--pui-tooltip-arrow-width` | Arrow base width | `1em` |
+| `--pui-tooltip-arrow-height` | Arrow height, and the distance it is pushed out from the popup | `0.5em` |
+
+The stylesheet also computes `--pui-tooltip-enter-x` and `--pui-tooltip-enter-y`
+from `--pui-tooltip-travel` and the resolved `data-side`. They are internal;
+change `--pui-tooltip-travel` instead.
+
+Where you set these matters. Every popup property is declared on the popup's own
+element, so setting one on an ancestor, on `:root` or on a theme scope has no
+effect — the element's own declaration wins over an inherited value. Override
+them on the popup itself, by passing `className` to `Tooltip.Popup` (an
+unlayered rule beats the library's `@layer pretty-ui.components`, whatever its
+specificity). The portal makes the ancestor route doubly useless: the popup
+renders on `document.body`, so nothing above the *trigger* is an ancestor of it
+in the first place.
+
+To re-skin every tooltip at once, re-point the global tokens the defaults
+resolve to — `--pui-gray-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-font-*`,
+`--pui-shadow-*`, `--pui-travel-sm`. The popup only reads those and never
+re-declares them, so a value set on `:root` or a theme scope does reach it. The
+three knobs with literal defaults — `--pui-tooltip-max-width`,
+`--pui-tooltip-arrow-width` and `--pui-tooltip-arrow-height` — have no global
+token behind them, so those can only be changed on the popup itself.
+
+`--pui-tooltip-z-index` is declared on the positioner, not the popup, so
+restacking a single tooltip goes through `positionerClassName` rather than
+`className`.
+
+## API reference
+
+### Tooltip.Provider
+
+<PropTable component="TooltipProvider" />
+
+### Tooltip.Root
+
+<PropTable component="TooltipRoot" />
+
+### Tooltip.Trigger
+
+<PropTable component="TooltipTrigger" />
+
+### Tooltip.Popup
+
+Renders the portal, the positioner and the popup as one part, so its props are
+drawn from all three.
+
+<PropTable component="TooltipPopup" />
+
+### Tooltip.Arrow
+
+<PropTable component="TooltipArrow" />

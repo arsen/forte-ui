@@ -1,1 +1,144 @@
 # pretty-ui
+
+An accessible React component library built on [Base UI](https://base-ui.com),
+styled with CSS Modules and a design system that rebuilds itself around a single
+colour.
+
+```bash
+npm install @dofortech/pretty-ui
+```
+
+```tsx
+import "@dofortech/pretty-ui/theme.css";
+import { Button } from "@dofortech/pretty-ui";
+
+export function Example() {
+  return <Button tone="danger">Delete</Button>;
+}
+```
+
+## Theming
+
+One variable re-skins everything:
+
+```css
+:root {
+  --pui-accent-seed: #6d43d4;
+}
+```
+
+All twelve accent steps, the brand-tinted neutrals, and a readable text colour
+for solid fills derive from it — in both light and dark mode, with no JavaScript
+and no build step. It works through CSS relative colour syntax:
+
+```css
+--pui-accent-3: oklch(from var(--pui-accent-seed) 0.954 min(0.043, calc(c * 0.17)) h);
+```
+
+Also available: `--pui-secondary-seed`, `--pui-neutral-tint` (how much brand hue
+bleeds into the greys), and `data-pui-radius` / `data-pui-density` /
+`data-pui-motion` / `data-theme` attributes.
+
+Scoping works too — put `.pui-theme` or `data-pui-theme` on any element to
+re-theme just that subtree. The ramps are re-declared on those selectors
+specifically so this works; overriding the seed on an arbitrary element does
+not, because a `var()` inside a custom property is substituted where the
+property is *declared*.
+
+## Contrast is measured, not asserted
+
+`pnpm --filter @dofortech/pretty-ui test` sweeps **119,108 in-gamut seeds** and
+asserts every pair the ramp promises. Current floors:
+
+| Pair | Minimum | Requirement |
+| :-- | --: | :-- |
+| Text on a solid fill | 4.50:1 | 4.5 (SC 1.4.3) |
+| Accent text on app background | 5.42:1 | 4.5 |
+| High-contrast text on background | 10.82:1 | 7 (AAA) |
+| Neutral body text | 5.81:1 | 4.5 |
+
+Picking black or white text for an arbitrary fill is harder than it looks: the
+crossover is not a fixed lightness, because OKLCH weights the channels
+differently from WCAG relative luminance. It rises for pinks and purples and
+falls for greens. A first-order hue correction tracks it closely enough to clear
+AA on its own, and `contrast-color()` supersedes it where supported.
+
+Supported seed envelope: lightness 0.45–0.90, chroma 0.02–0.30, inside sRGB.
+The Theme Studio warns when a colour falls outside it.
+
+## Motion
+
+Pure CSS. No animation library, so nothing is added to your bundle.
+
+Enter and exit transitions use Base UI's `[data-starting-style]` /
+`[data-ending-style]`, which means they are **interruptible** — close a dialog
+while it is still opening and it reverses smoothly instead of snapping. Spring
+curves are real damped-harmonic-oscillator solutions sampled into `linear()`
+easings, resolved at author time.
+
+Reduced motion is handled once, in the token layer, so no component stylesheet
+contains a media query:
+
+- Geometry tokens (`--pui-travel-*`, `--pui-scale-*`) collapse; durations
+  shorten rather than disappearing, because an opacity fade is the part that
+  helps.
+- Scales interpolate toward `1`, never toward `0`.
+- Where movement carries *information* — the Switch thumb's position, the
+  Checkbox mark — it still moves, and a non-positional cue backs it up.
+- Durations never reach `0s`: at exactly zero no transition object is created,
+  so `transitionend` never fires and code awaiting it deadlocks.
+
+## Accessibility
+
+Beyond what Base UI provides:
+
+- **Focus rings are two-tone** — a dark inner and light outer ring that contrast
+  with each other, so one boundary always clears 3:1 whatever is behind the
+  control. Carried by `outline`, which follows `border-radius`, is not clipped
+  by `overflow: hidden`, and survives forced-colors mode where shadows are
+  stripped.
+- **Forced colors (Windows High Contrast)** is handled in a dedicated cascade
+  layer ordered *after* components, so the overrides win by layer order rather
+  than by specificity games. Disabled controls resolve to `GrayText` at full
+  opacity, because forced-colors does not override `opacity`.
+- **`prefers-contrast`** and **`prefers-reduced-transparency`** retune tokens.
+- **Target size** meets SC 2.5.8 (24×24) even for icon-only controls.
+
+## Overriding
+
+Everything ships inside `@layer pretty-ui.*`, which loses to unlayered author
+CSS — your rules and utility classes win without `!important`.
+
+The flip side is a documented opt-out: an unlayered `transition` or
+`--pui-motion-ok: 1` in your app will also defeat the library's reduced-motion
+handling.
+
+Note that component knobs such as `--pui-button-radius` are declared on the
+component's own root element, so they must be set **on that element** (through
+`className` or `style`), not on an ancestor — an element's own declaration beats
+an inherited value. The global `--pui-color-*` / `--pui-radius-*` /
+`--pui-space-*` tokens the knobs resolve to *are* inherited, so those can be
+re-pointed from `:root` or a theme scope.
+
+## Repository
+
+```
+packages/ui     the library — Vite build, CSS Modules, generated token CSS
+apps/docs       the documentation site — Next.js 16, MDX, Shiki
+```
+
+```bash
+pnpm dev         # docs site at :3000
+pnpm build       # everything
+pnpm typecheck
+pnpm --filter @dofortech/pretty-ui test   # the contrast harness
+```
+
+Conventions for adding a component are in
+[packages/ui/CONTRIBUTING.md](packages/ui/CONTRIBUTING.md), including the
+complete token inventory. Each rule there exists because breaking it causes a
+specific, usually silent, bug.
+
+## License
+
+MIT

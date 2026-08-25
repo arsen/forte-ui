@@ -1,0 +1,119 @@
+/**
+ * Accessibility responses.
+ *
+ * Everything here retunes TOKENS rather than restyling components, so a
+ * component stylesheet never needs its own `@media` block and cannot forget
+ * one. Adding a component gets this behaviour for free.
+ *
+ * Covered: focus appearance, prefers-contrast, prefers-reduced-transparency,
+ * forced-colors, and the parts of reduced motion that tokens provably cannot
+ * reach. (The reduced-motion token overrides themselves live in motion.css.)
+ */
+@layer pretty-ui.tokens {
+  :root,
+  .pui-theme,
+  [data-pui-theme] {
+    --pui-focus-ring-width: 2px;
+    --pui-focus-ring-offset: 2px;
+
+    /* Two tones that contrast with EACH OTHER, not with the page. That is the
+     * whole trick: whatever sits behind the control, one of the ring's two
+     * boundaries still clears the 3:1 that SC 1.4.11 requires. A single-tone
+     * accent-coloured ring cannot promise that — the previous
+     * `--pui-color-focus-ring: var(--pui-accent-9)` measured 2.61:1 on a light
+     * background and failed outright, while passing comfortably in dark mode,
+     * which is exactly how it went unnoticed. */
+    --pui-focus-ring-inner: light-dark(oklch(0.240 0 0), oklch(0.995 0 0));
+    --pui-focus-ring-outer: light-dark(oklch(0.995 0 0), oklch(0.178 0 0));
+
+    /* Retained so existing overrides keep working. */
+    --pui-color-focus-ring: var(--pui-focus-ring-inner);
+  }
+
+  /* ------------------------------------------------------------------------
+   * prefers-contrast
+   *
+   * Note: `prefers-contrast: custom` also matches forced-colors users. Do not
+   * stack a `more` override on top of the forced-colors block below — the two
+   * will fight, and forced-colors should win.
+   * --------------------------------------------------------------------- */
+  @media (prefers-contrast: more) {
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-color-foreground-muted: var(--pui-gray-12);
+      /* Promotes the 3.73:1 subtle tier to 5.82:1, making it safe for text. */
+      --pui-color-foreground-subtle: var(--pui-gray-11);
+      --pui-color-border: var(--pui-gray-12);
+      --pui-color-border-muted: var(--pui-gray-11);
+      --pui-color-border-strong: var(--pui-gray-12);
+      --pui-focus-ring-width: 3px;
+      --pui-shadow-1: none;
+      --pui-shadow-2: none;
+      --pui-shadow-3: none;
+      --pui-shadow-4: none;
+      --pui-scrim-color: light-dark(oklch(0 0 0 / 0.7), oklch(0 0 0 / 0.85));
+    }
+  }
+
+  @media (prefers-contrast: less) {
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-color-border: var(--pui-gray-6);
+      --pui-color-foreground-muted: var(--pui-gray-10);
+    }
+  }
+
+  /* Not Baseline — Firefox does not ship it. Pure enhancement: scrim
+   * legibility must never depend on this query having matched. */
+  @media (prefers-reduced-transparency: reduce) {
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-scrim-color: light-dark(oklch(0.242 0 0), oklch(0.100 0 0));
+      --pui-scrim-blur: 0px;
+      --pui-glass-alpha: 1;
+    }
+  }
+}
+
+/**
+ * The parts of reduced motion that no token can reach.
+ */
+@layer pretty-ui.patterns {
+  @media (prefers-reduced-motion: reduce) {
+    /* `animation-duration` is IGNORED on a scroll or view progress timeline,
+     * so no duration token can stop a parallax. The timeline itself has to be
+     * detached. This selector is a net, not a guarantee — it only catches
+     * inline styles and the opt-in class. The real protection is the
+     * authoring convention: wrap scroll-driven work in
+     *   @media (prefers-reduced-motion: no-preference)
+     *   @supports (animation-timeline: view()) { ... }
+     * and never gate visibility on it. */
+    :where([style*="animation-timeline"], .pui-scroll-anim) {
+      animation-timeline: none !important;
+      animation-name: none !important;
+    }
+
+    :where(html, body, .pui-scroll) {
+      scroll-behavior: auto;
+    }
+
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation-duration: 1ms;
+      animation-delay: 0s;
+    }
+  }
+
+  :where([data-pui-motion="reduce"], [data-pui-motion="off"]) {
+    scroll-behavior: auto;
+  }
+
+  /* The view-transition overlay otherwise swallows clicks for its duration. */
+  ::view-transition {
+    pointer-events: none;
+  }
+}

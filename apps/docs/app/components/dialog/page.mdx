@@ -1,0 +1,152 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Dialog",
+  description:
+    "A modal surface that takes focus until it is dismissed, plus an alert dialog for decisions that must be answered.",
+};
+
+# Dialog
+
+A dialog puts a surface on top of the page and keeps focus inside it until it closes. Reach for it when a task needs the user's whole attention and belongs off the main flow — editing a record, confirming something irreversible, reading terms before accepting them. If the content can live on the page, leave it on the page: a dialog costs the user their place.
+
+`Dialog.Popup` collapses Base UI's `Portal` → `Backdrop` + `Viewport` → `Popup` into one element, so the common case is four parts deep, not seven. `AlertDialog` shares every part except `Root` and `Trigger`.
+
+<DemoBlock id="dialog/basic" />
+
+`Dialog.Root` owns the open state, `Dialog.Trigger` opens it, and everything the user sees goes inside `Dialog.Popup`. `Dialog.Footer` lays out the action row; the two `Dialog.Close` buttons there are composed with `Button` through `render`, so the user gets a cancel and a confirm that both dismiss the dialog.
+
+`Root` renders no DOM element, so it takes no `className`, `style` or `ref` — style the popup instead. It forwards every Base UI root prop: `open`, `defaultOpen`, `onOpenChange`, `onOpenChangeComplete`, `modal`, `disablePointerDismissal`, `actionsRef`, `handle`, `triggerId` and `defaultTriggerId`.
+
+## Import
+
+```tsx
+import { Dialog, AlertDialog } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Destructive confirmation
+
+Use `AlertDialog` when the user has to answer before anything else happens. It is always modal and never closes on an outside press — there is deliberately no `modal` or `disablePointerDismissal` prop on `AlertDialog.Root`. Escape still closes it, so a dialog that offers no `AlertDialog.Close` would be dismissible by keyboard and by nothing else. Always give it at least one.
+
+`Dialog.Footer align="between"` pushes the safe action away from the destructive one, which makes a mis-aimed click far less likely.
+
+<DemoBlock id="dialog/alert" />
+
+### Sizes
+
+`size` on `Dialog.Popup` sets the maximum width: `sm` (24rem), `md` (32rem, the default), `lg` (48rem) and `fullscreen`. Fullscreen drops the corner radius and the viewport padding, lets the surface fill the screen, and sinks the footer to the bottom edge — the usual mobile treatment for a long form. The popup is always `inline-size: 100%` up to that maximum, so every size shrinks to fit a narrow screen on its own.
+
+<DemoBlock id="dialog/sizes" />
+
+### Nested dialogs
+
+A dialog opened from inside another one stacks: the parent slides down by `--pui-dialog-nested-offset` per level, shrinks by `--pui-dialog-nested-scale-step`, and dims itself. Base UI drives this through the `--nested-dialogs` counter and the `[data-nested-dialog-open]` attribute, and suppresses the child's backdrop so the parent stays visible behind it rather than being scrimmed twice. Pass `forceBackdrop` to a nested `Dialog.Popup` if it genuinely needs its own scrim.
+
+Escape closes the topmost dialog only, so a nested dialog steps back to its parent rather than dismissing the whole stack.
+
+<DemoBlock id="dialog/nested" />
+
+### Long content
+
+Scrolling happens on the viewport that wraps the popup, not inside the popup. A tall dialog therefore scrolls as a whole, its top edge stays reachable, and a press in the empty space around it still counts as an outside press — so pointer dismissal keeps working. `overscroll-behavior: contain` stops a scroll that reaches the end of the dialog from chaining to the page behind it.
+
+Style that scroll container with `viewportClassName` — for example to pin a dialog to the top of a tall screen instead of centring it.
+
+<DemoBlock id="dialog/scrollable" />
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Space"], description: "Opens the dialog when the trigger is focused. Closes it when a Close button is focused." },
+  { keys: ["Enter"], description: "Opens the dialog when the trigger is focused. Closes it when a Close button is focused." },
+  { keys: ["Esc"], description: "Requests close on the topmost dialog, including an alert dialog, and returns focus to the trigger." },
+  { keys: ["Tab"], description: "Moves to the next focusable element inside the popup, looping at the end while the dialog is modal." },
+  { keys: ["Shift + Tab"], description: "Moves to the previous focusable element inside the popup, looping at the start." },
+]} />
+
+`Dialog.Title` renders an `<h2>` and becomes the popup's `aria-labelledby`; `Dialog.Description` renders a `<p>` and becomes its `aria-describedby`. Both are wired up automatically — but only because they are rendered inside `Dialog.Popup`. Move either one outside and the popup silently loses that association.
+
+When the dialog is modal (the default, and the only option for `AlertDialog`), focus is trapped inside the popup, page scroll is locked, and the rest of the document is made inert. On open, focus moves to the first tabbable element in the popup — except when the dialog was opened by touch, where the popup itself is focused so the virtual keyboard does not spring up. On close, focus returns to the trigger. Override either end with `initialFocus` and `finalFocus` on `Dialog.Popup`.
+
+<Callout kind="a11y">
+Render `Dialog.Close` **inside** `Dialog.Popup`. In a modal dialog everything outside the popup is inert, so a close button placed elsewhere is unreachable — for a touch screen-reader user, who has no Escape key, it is the only way out. Escape and the backdrop are not substitutes for a visible, targetable close control.
+</Callout>
+
+<Callout kind="a11y">
+Give every dialog a `Dialog.Title`. If the design has no room for a visible one, put an `aria-label` on `Dialog.Popup` instead — a dialog with no accessible name is announced as just "dialog".
+</Callout>
+
+<Callout kind="a11y">
+`Dialog.Close iconOnly` has no text to announce, so it needs an `aria-label` (`aria-label="Close"`). The `iconOnly` styling already enforces the 24px minimum hit target from WCAG SC 2.5.8.
+</Callout>
+
+The popup itself carries a focus ring, because it is the element that receives focus on a touch-opened or keyboard-opened dialog. In forced-colors mode its shadow is stripped by the OS, so it also draws a border to keep its boundary visible.
+
+## Theming
+
+Every property below is declared on the element it styles — all but the first on the popup, `--pui-dialog-viewport-padding` on the scroll container around it. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect. The popup is portalled to `<body>` as well, so an ancestor of the trigger could not reach it in any case.
+
+Set the popup's knobs on the popup itself, through `className` on `Dialog.Popup` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. `--pui-dialog-viewport-padding` goes through `viewportClassName`.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every dialog.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-dialog-viewport-padding` | Gap between the popup and the edge of the screen | `var(--pui-space-4)` (`0px` when `size="fullscreen"`) |
+| `--pui-dialog-bg` | Popup background | `var(--pui-color-overlay)` |
+| `--pui-dialog-fg` | Popup text colour | `var(--pui-color-foreground)` |
+| `--pui-dialog-radius` | Corner radius | `var(--pui-radius-surface)` (`0px` when `size="fullscreen"`) |
+| `--pui-dialog-padding` | Padding inside the popup | `var(--pui-surface-p)` |
+| `--pui-dialog-gap` | Vertical gap between the popup's children | `var(--pui-space-4)` |
+| `--pui-dialog-shadow` | Popup shadow | `var(--pui-shadow-4)` |
+| `--pui-dialog-font-size` | Base font size inside the popup | `var(--pui-font-size-2)` |
+| `--pui-dialog-max-inline-size` | Maximum popup width; what the `size` prop sets | `32rem` (`24rem` sm, `48rem` lg, `100%` fullscreen) |
+| `--pui-dialog-nested-offset` | How far each nested dialog pushes its parent down | `var(--pui-travel-lg)` |
+| `--pui-dialog-nested-scale-step` | How much each nested dialog shrinks its parent | `0.04` |
+
+Motion is handled by the global tokens: `--pui-travel-md` collapses to `0px` and `--pui-scale-enter` to `1` under reduced motion, so the movement disappears and the fade remains. There is no component-level `prefers-reduced-motion` override to fight.
+
+## API reference
+
+### Dialog.Trigger
+
+<PropTable component="DialogTrigger" />
+
+Pass `render={<Button />}` to compose the trigger with a styled button. Its own neutral styling steps aside when `render` is present, so the two never fight over the cascade. Every Base UI trigger prop (`handle`, `payload`, `nativeButton`, `id`, `style`) is forwarded.
+
+### AlertDialog.Trigger
+
+<PropTable component="AlertDialogTrigger" />
+
+### Dialog.Popup
+
+<PropTable component="DialogPopup" />
+
+`initialFocus`, `finalFocus`, `render` and the rest of Base UI's `Popup` props are forwarded unchanged. `keepMounted` keeps the portal in the DOM while the dialog is closed, which is what you need when something inside must survive a close — an iframe, a media element, uncommitted form state.
+
+### Dialog.Title
+
+<PropTable component="DialogTitle" />
+
+### Dialog.Description
+
+<PropTable component="DialogDescription" />
+
+### Dialog.Close
+
+<PropTable component="DialogClose" />
+
+### Dialog.Footer
+
+<PropTable component="DialogFooter" />
+
+`Dialog.Footer` is not a Base UI part — it is a `<div>` with the standard action-row spacing — so it takes every ordinary `<div>` prop.
+
+### Dialog.Root and AlertDialog.Root
+
+Neither root renders a DOM element, so neither accepts `className`, `style` or `ref`, and neither appears in the generated tables above. `Dialog.Root` forwards Base UI's root props unchanged; `AlertDialog.Root` forwards the same set minus `modal` and `disablePointerDismissal`. Both namespaces also expose `createHandle()` for driving a dialog from triggers rendered outside its `Root`.

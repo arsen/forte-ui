@@ -1,0 +1,56 @@
+.frame {
+  /* `container-type: inline-size` lets demos respond to the frame rather than
+   * the viewport, so a preview narrowed by the RTL/controls strip still shows
+   * its true responsive behaviour. */
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pui-space-3);
+  min-height: 8rem;
+  padding: var(--pui-space-6);
+  background-color: var(--pui-color-background);
+  color: var(--pui-color-foreground);
+}
+
+.frame[data-theme] {
+  border-radius: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pui-space-1);
+  padding: var(--pui-space-2) var(--pui-space-3);
+  border-top: 1px solid var(--pui-color-border-muted);
+  background-color: var(--pui-color-panel);
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pui-space-1);
+  min-height: var(--pui-target-min);
+  padding: var(--pui-space-1) var(--pui-space-2);
+  border: 0;
+  border-radius: var(--pui-radius-2);
+  background: transparent;
+  color: var(--pui-color-foreground-muted);
+  font: inherit;
+  font-size: var(--pui-font-size-1);
+  cursor: pointer;
+  transition:
+    background-color var(--pui-duration-fast) var(--pui-ease-standard),
+    color var(--pui-duration-fast) var(--pui-ease-standard);
+}
+
+.control:hover {
+  background-color: var(--pui-color-panel-hover);
+  color: var(--pui-color-foreground);
+}
+
+.control[data-active] {
+  background-color: var(--pui-color-primary-soft);
+  color: var(--pui-color-primary-text);
+}

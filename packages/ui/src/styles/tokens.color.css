@@ -1,0 +1,223 @@
+/**
+ * GENERATED FILE — do not edit by hand.
+ * Source of truth: packages/ui/scripts/ramp.mjs
+ * Regenerate with:  pnpm --filter @dofortech/pretty-ui tokens
+ */
+
+@layer pretty-ui.tokens {
+  /* -----------------------------------------------------------------------
+   * Layer 0 — fallback for engines without relative colour syntax.
+   * Hue cannot be extracted without it, so we mix toward white/black instead.
+   * Degraded but coherent, and it keeps a brand seed recognisable.
+   * --------------------------------------------------------------------- */
+  :root,
+  .pui-theme,
+  [data-pui-theme] {
+    --pui-accent-1: color-mix(in oklab, var(--pui-accent-seed) 3%, white);
+    --pui-accent-2: color-mix(in oklab, var(--pui-accent-seed) 6%, white);
+    --pui-accent-3: color-mix(in oklab, var(--pui-accent-seed) 12%, white);
+    --pui-accent-4: color-mix(in oklab, var(--pui-accent-seed) 18%, white);
+    --pui-accent-5: color-mix(in oklab, var(--pui-accent-seed) 25%, white);
+    --pui-accent-6: color-mix(in oklab, var(--pui-accent-seed) 33%, white);
+    --pui-accent-7: color-mix(in oklab, var(--pui-accent-seed) 45%, white);
+    --pui-accent-8: color-mix(in oklab, var(--pui-accent-seed) 62%, white);
+    --pui-accent-9: var(--pui-accent-seed);
+    --pui-accent-10: color-mix(in oklab, var(--pui-accent-seed) 92%, black);
+    --pui-accent-11: color-mix(in oklab, var(--pui-accent-seed) 65%, black);
+    --pui-accent-12: color-mix(in oklab, var(--pui-accent-seed) 30%, black);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-accent-1: color-mix(in oklab, var(--pui-accent-seed) 8%, #0a0a0b);
+      --pui-accent-2: color-mix(in oklab, var(--pui-accent-seed) 12%, #0a0a0b);
+      --pui-accent-3: color-mix(in oklab, var(--pui-accent-seed) 22%, #0a0a0b);
+      --pui-accent-4: color-mix(in oklab, var(--pui-accent-seed) 30%, #0a0a0b);
+      --pui-accent-5: color-mix(in oklab, var(--pui-accent-seed) 38%, #0a0a0b);
+      --pui-accent-6: color-mix(in oklab, var(--pui-accent-seed) 48%, #0a0a0b);
+      --pui-accent-7: color-mix(in oklab, var(--pui-accent-seed) 62%, #0a0a0b);
+      --pui-accent-8: color-mix(in oklab, var(--pui-accent-seed) 80%, #0a0a0b);
+      --pui-accent-10: color-mix(in oklab, var(--pui-accent-seed) 88%, white);
+      --pui-accent-11: color-mix(in oklab, var(--pui-accent-seed) 55%, white);
+      --pui-accent-12: color-mix(in oklab, var(--pui-accent-seed) 22%, white);
+    }
+  }
+  :root,
+  .pui-theme,
+  [data-pui-theme] {
+    --pui-secondary-1: color-mix(in oklab, var(--pui-secondary-seed) 3%, white);
+    --pui-secondary-2: color-mix(in oklab, var(--pui-secondary-seed) 6%, white);
+    --pui-secondary-3: color-mix(in oklab, var(--pui-secondary-seed) 12%, white);
+    --pui-secondary-4: color-mix(in oklab, var(--pui-secondary-seed) 18%, white);
+    --pui-secondary-5: color-mix(in oklab, var(--pui-secondary-seed) 25%, white);
+    --pui-secondary-6: color-mix(in oklab, var(--pui-secondary-seed) 33%, white);
+    --pui-secondary-7: color-mix(in oklab, var(--pui-secondary-seed) 45%, white);
+    --pui-secondary-8: color-mix(in oklab, var(--pui-secondary-seed) 62%, white);
+    --pui-secondary-9: var(--pui-secondary-seed);
+    --pui-secondary-10: color-mix(in oklab, var(--pui-secondary-seed) 92%, black);
+    --pui-secondary-11: color-mix(in oklab, var(--pui-secondary-seed) 65%, black);
+    --pui-secondary-12: color-mix(in oklab, var(--pui-secondary-seed) 30%, black);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-secondary-1: color-mix(in oklab, var(--pui-secondary-seed) 8%, #0a0a0b);
+      --pui-secondary-2: color-mix(in oklab, var(--pui-secondary-seed) 12%, #0a0a0b);
+      --pui-secondary-3: color-mix(in oklab, var(--pui-secondary-seed) 22%, #0a0a0b);
+      --pui-secondary-4: color-mix(in oklab, var(--pui-secondary-seed) 30%, #0a0a0b);
+      --pui-secondary-5: color-mix(in oklab, var(--pui-secondary-seed) 38%, #0a0a0b);
+      --pui-secondary-6: color-mix(in oklab, var(--pui-secondary-seed) 48%, #0a0a0b);
+      --pui-secondary-7: color-mix(in oklab, var(--pui-secondary-seed) 62%, #0a0a0b);
+      --pui-secondary-8: color-mix(in oklab, var(--pui-secondary-seed) 80%, #0a0a0b);
+      --pui-secondary-10: color-mix(in oklab, var(--pui-secondary-seed) 88%, white);
+      --pui-secondary-11: color-mix(in oklab, var(--pui-secondary-seed) 55%, white);
+      --pui-secondary-12: color-mix(in oklab, var(--pui-secondary-seed) 22%, white);
+    }
+  }
+  :root,
+  .pui-theme,
+  [data-pui-theme] {
+    --pui-gray-1: light-dark(oklch(0.994 0 0), oklch(0.178 0 0));
+    --pui-gray-2: light-dark(oklch(0.982 0 0), oklch(0.213 0 0));
+    --pui-gray-3: light-dark(oklch(0.957 0 0), oklch(0.252 0 0));
+    --pui-gray-4: light-dark(oklch(0.935 0 0), oklch(0.284 0 0));
+    --pui-gray-5: light-dark(oklch(0.914 0 0), oklch(0.314 0 0));
+    --pui-gray-6: light-dark(oklch(0.891 0 0), oklch(0.350 0 0));
+    --pui-gray-7: light-dark(oklch(0.858 0 0), oklch(0.401 0 0));
+    --pui-gray-8: light-dark(oklch(0.797 0 0), oklch(0.487 0 0));
+    --pui-gray-9: light-dark(oklch(0.646 0 0), oklch(0.537 0 0));
+    --pui-gray-10: light-dark(oklch(0.610 0 0), oklch(0.585 0 0));
+    --pui-gray-11: light-dark(oklch(0.503 0 0), oklch(0.770 0 0));
+    --pui-gray-12: light-dark(oklch(0.242 0 0), oklch(0.949 0 0));
+  }
+
+  /* -----------------------------------------------------------------------
+   * Layer 1 — the real ramps.
+   * The @supports test uses a LITERAL colour on purpose: a test containing
+   * var() reports true unconditionally and would never guard anything.
+   * light-dark() needs no separate guard — relative colour syntax shipped
+   * later than light-dark() in every engine, so passing this test implies it.
+   * --------------------------------------------------------------------- */
+  @supports (color: oklch(from red l c h)) {
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-accent-1: light-dark(
+        oklch(from var(--pui-accent-seed) 0.993 min(0.010, calc(c * 0.04)) h),
+        oklch(from var(--pui-accent-seed) 0.178 min(0.018, calc(c * 0.10)) h));
+      --pui-accent-2: light-dark(
+        oklch(from var(--pui-accent-seed) 0.978 min(0.022, calc(c * 0.09)) h),
+        oklch(from var(--pui-accent-seed) 0.213 min(0.028, calc(c * 0.14)) h));
+      --pui-accent-3: light-dark(
+        oklch(from var(--pui-accent-seed) 0.954 min(0.043, calc(c * 0.17)) h),
+        oklch(from var(--pui-accent-seed) 0.271 min(0.060, calc(c * 0.32)) h));
+      --pui-accent-4: light-dark(
+        oklch(from var(--pui-accent-seed) 0.930 min(0.062, calc(c * 0.25)) h),
+        oklch(from var(--pui-accent-seed) 0.313 min(0.084, calc(c * 0.45)) h));
+      --pui-accent-5: light-dark(
+        oklch(from var(--pui-accent-seed) 0.899 min(0.078, calc(c * 0.33)) h),
+        oklch(from var(--pui-accent-seed) 0.363 min(0.098, calc(c * 0.53)) h));
+      --pui-accent-6: light-dark(
+        oklch(from var(--pui-accent-seed) 0.860 min(0.092, calc(c * 0.42)) h),
+        oklch(from var(--pui-accent-seed) 0.424 min(0.104, calc(c * 0.56)) h));
+      --pui-accent-7: light-dark(
+        oklch(from var(--pui-accent-seed) 0.810 min(0.110, calc(c * 0.52)) h),
+        oklch(from var(--pui-accent-seed) 0.503 min(0.112, calc(c * 0.60)) h));
+      --pui-accent-8: light-dark(
+        oklch(from var(--pui-accent-seed) 0.745 min(0.140, calc(c * 0.66)) h),
+        oklch(from var(--pui-accent-seed) 0.606 min(0.130, calc(c * 0.70)) h));
+      --pui-accent-9: var(--pui-accent-seed);
+      --pui-accent-10: light-dark(
+        oklch(from var(--pui-accent-seed) clamp(0.30, calc(l - 0.035), 0.95) c h),
+        oklch(from var(--pui-accent-seed) clamp(0.30, calc(l + 0.05), 0.93) min(0.17, calc(c * 0.90)) h));
+      --pui-accent-11: light-dark(
+        oklch(from var(--pui-accent-seed) clamp(0.32, calc(l - 0.09), 0.490) min(0.15, calc(c * 0.80)) h),
+        oklch(from var(--pui-accent-seed) clamp(0.76, calc(l + 0.16), 0.92) min(0.14, calc(c * 0.72)) h));
+      --pui-accent-12: light-dark(
+        oklch(from var(--pui-accent-seed) clamp(0.20, calc(l * 0.5), 0.34) min(0.09, calc(c * 0.50)) h),
+        oklch(from var(--pui-accent-seed) clamp(0.88, calc(l + 0.28), 0.96) min(0.065, calc(c * 0.34)) h));
+    }
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-secondary-1: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.993 min(0.010, calc(c * 0.04)) h),
+        oklch(from var(--pui-secondary-seed) 0.178 min(0.018, calc(c * 0.10)) h));
+      --pui-secondary-2: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.978 min(0.022, calc(c * 0.09)) h),
+        oklch(from var(--pui-secondary-seed) 0.213 min(0.028, calc(c * 0.14)) h));
+      --pui-secondary-3: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.954 min(0.043, calc(c * 0.17)) h),
+        oklch(from var(--pui-secondary-seed) 0.271 min(0.060, calc(c * 0.32)) h));
+      --pui-secondary-4: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.930 min(0.062, calc(c * 0.25)) h),
+        oklch(from var(--pui-secondary-seed) 0.313 min(0.084, calc(c * 0.45)) h));
+      --pui-secondary-5: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.899 min(0.078, calc(c * 0.33)) h),
+        oklch(from var(--pui-secondary-seed) 0.363 min(0.098, calc(c * 0.53)) h));
+      --pui-secondary-6: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.860 min(0.092, calc(c * 0.42)) h),
+        oklch(from var(--pui-secondary-seed) 0.424 min(0.104, calc(c * 0.56)) h));
+      --pui-secondary-7: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.810 min(0.110, calc(c * 0.52)) h),
+        oklch(from var(--pui-secondary-seed) 0.503 min(0.112, calc(c * 0.60)) h));
+      --pui-secondary-8: light-dark(
+        oklch(from var(--pui-secondary-seed) 0.745 min(0.140, calc(c * 0.66)) h),
+        oklch(from var(--pui-secondary-seed) 0.606 min(0.130, calc(c * 0.70)) h));
+      --pui-secondary-9: var(--pui-secondary-seed);
+      --pui-secondary-10: light-dark(
+        oklch(from var(--pui-secondary-seed) clamp(0.30, calc(l - 0.035), 0.95) c h),
+        oklch(from var(--pui-secondary-seed) clamp(0.30, calc(l + 0.05), 0.93) min(0.17, calc(c * 0.90)) h));
+      --pui-secondary-11: light-dark(
+        oklch(from var(--pui-secondary-seed) clamp(0.32, calc(l - 0.09), 0.490) min(0.15, calc(c * 0.80)) h),
+        oklch(from var(--pui-secondary-seed) clamp(0.76, calc(l + 0.16), 0.92) min(0.14, calc(c * 0.72)) h));
+      --pui-secondary-12: light-dark(
+        oklch(from var(--pui-secondary-seed) clamp(0.20, calc(l * 0.5), 0.34) min(0.09, calc(c * 0.50)) h),
+        oklch(from var(--pui-secondary-seed) clamp(0.88, calc(l + 0.28), 0.96) min(0.065, calc(c * 0.34)) h));
+    }
+    :root,
+    .pui-theme,
+    [data-pui-theme] {
+      --pui-gray-1: light-dark(
+        oklch(from var(--pui-accent-seed) 0.994 min(calc(0.002 * var(--pui-neutral-tint)), calc(c * 0.02)) h),
+        oklch(from var(--pui-accent-seed) 0.178 min(calc(0.004 * var(--pui-neutral-tint)), calc(c * 0.03)) h));
+      --pui-gray-2: light-dark(
+        oklch(from var(--pui-accent-seed) 0.982 min(calc(0.004 * var(--pui-neutral-tint)), calc(c * 0.03)) h),
+        oklch(from var(--pui-accent-seed) 0.213 min(calc(0.006 * var(--pui-neutral-tint)), calc(c * 0.04)) h));
+      --pui-gray-3: light-dark(
+        oklch(from var(--pui-accent-seed) 0.957 min(calc(0.006 * var(--pui-neutral-tint)), calc(c * 0.04)) h),
+        oklch(from var(--pui-accent-seed) 0.252 min(calc(0.009 * var(--pui-neutral-tint)), calc(c * 0.05)) h));
+      --pui-gray-4: light-dark(
+        oklch(from var(--pui-accent-seed) 0.935 min(calc(0.008 * var(--pui-neutral-tint)), calc(c * 0.05)) h),
+        oklch(from var(--pui-accent-seed) 0.284 min(calc(0.011 * var(--pui-neutral-tint)), calc(c * 0.06)) h));
+      --pui-gray-5: light-dark(
+        oklch(from var(--pui-accent-seed) 0.914 min(calc(0.009 * var(--pui-neutral-tint)), calc(c * 0.05)) h),
+        oklch(from var(--pui-accent-seed) 0.314 min(calc(0.012 * var(--pui-neutral-tint)), calc(c * 0.06)) h));
+      --pui-gray-6: light-dark(
+        oklch(from var(--pui-accent-seed) 0.891 min(calc(0.01 * var(--pui-neutral-tint)), calc(c * 0.06)) h),
+        oklch(from var(--pui-accent-seed) 0.350 min(calc(0.013 * var(--pui-neutral-tint)), calc(c * 0.07)) h));
+      --pui-gray-7: light-dark(
+        oklch(from var(--pui-accent-seed) 0.858 min(calc(0.011 * var(--pui-neutral-tint)), calc(c * 0.06)) h),
+        oklch(from var(--pui-accent-seed) 0.401 min(calc(0.014 * var(--pui-neutral-tint)), calc(c * 0.07)) h));
+      --pui-gray-8: light-dark(
+        oklch(from var(--pui-accent-seed) 0.797 min(calc(0.012 * var(--pui-neutral-tint)), calc(c * 0.07)) h),
+        oklch(from var(--pui-accent-seed) 0.487 min(calc(0.014 * var(--pui-neutral-tint)), calc(c * 0.07)) h));
+      --pui-gray-9: light-dark(
+        oklch(from var(--pui-accent-seed) 0.646 min(calc(0.01 * var(--pui-neutral-tint)), calc(c * 0.06)) h),
+        oklch(from var(--pui-accent-seed) 0.537 min(calc(0.012 * var(--pui-neutral-tint)), calc(c * 0.06)) h));
+      --pui-gray-10: light-dark(
+        oklch(from var(--pui-accent-seed) 0.610 min(calc(0.008 * var(--pui-neutral-tint)), calc(c * 0.05)) h),
+        oklch(from var(--pui-accent-seed) 0.585 min(calc(0.01 * var(--pui-neutral-tint)), calc(c * 0.05)) h));
+      --pui-gray-11: light-dark(
+        oklch(from var(--pui-accent-seed) 0.503 min(calc(0.006 * var(--pui-neutral-tint)), calc(c * 0.04)) h),
+        oklch(from var(--pui-accent-seed) 0.770 min(calc(0.007 * var(--pui-neutral-tint)), calc(c * 0.04)) h));
+      --pui-gray-12: light-dark(
+        oklch(from var(--pui-accent-seed) 0.242 min(calc(0.004 * var(--pui-neutral-tint)), calc(c * 0.03)) h),
+        oklch(from var(--pui-accent-seed) 0.949 min(calc(0.005 * var(--pui-neutral-tint)), calc(c * 0.03)) h));
+    }
+  }
+}

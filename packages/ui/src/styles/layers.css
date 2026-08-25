@@ -1,0 +1,39 @@
+/**
+ * pretty-ui cascade layers
+ * ---------------------------------------------------------------------------
+ * MUST be the first pretty-ui stylesheet the browser sees. `@layer` statements
+ * fix the order at first appearance, so declaring all six up-front means the
+ * order never depends on which component happens to load first.
+ *
+ * Every layer here loses to *unlayered* author CSS. That is the point: a
+ * consumer can override anything we ship without `!important`.
+ *
+ *   reset       optional box-sizing normalisation
+ *   tokens      design tokens, and the media queries that retune them
+ *   patterns    reusable global classes (.pui-focus-ring, .pui-hc-surface, ...)
+ *   components  per-component CSS Modules
+ *   a11y        accessibility overrides that must beat component CSS
+ *   overrides   reserved for the consumer, last among our layers
+ *
+ * ---------------------------------------------------------------------------
+ * Why `a11y` sits AFTER `components`
+ * ---------------------------------------------------------------------------
+ * Layer order outranks specificity completely: a (0,0,0) selector in a later
+ * layer beats a (0,1,0) selector in an earlier one. So an accessibility rule
+ * placed in `patterns` — before `components` — can never win against ordinary
+ * component CSS, no matter how it is written.
+ *
+ * That bites hardest in forced-colors mode. `opacity` is one of the few
+ * properties forced-colors does NOT override, so a component's
+ * `[data-disabled] { opacity: 0.55 }` survives, and if the `GrayText` remedy
+ * sits in an earlier layer it is discarded — leaving a disabled control at
+ * full system-colour contrast, reading as enabled.
+ *
+ * Putting those overrides in `a11y` makes them win by layer order alone, with
+ * no specificity games, while the whole library still yields to the app.
+ * Component files that need their own forced-colors handling must therefore
+ * open `@layer pretty-ui.a11y` rather than nesting the media query inside
+ * their `pretty-ui.components` block.
+ */
+@layer pretty-ui.reset, pretty-ui.tokens, pretty-ui.patterns, pretty-ui.components,
+  pretty-ui.a11y, pretty-ui.overrides;

@@ -1,0 +1,148 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Button",
+  description:
+    "A button built on Base UI's Button primitive, with independent variant and tone axes, a loading state that keeps focus, and square icon-only sizing.",
+};
+
+# Button
+
+Use a Button for anything that happens in the page — submitting a form, opening a dialog, starting a request. Its appearance is set by two independent props: `variant` is how loud the button is, `tone` is which colour set it draws from. Everything else the component adds on top of Base UI is about states you would otherwise have to wire yourself: a loading state that blocks double submits without losing focus, and square icon-only sizing that holds a 24px hit target.
+
+<DemoBlock id="button/variants" />
+
+## Import
+
+```tsx
+import { Button } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Tones
+
+`variant` and `tone` combine freely, and all sixteen pairs are defined. That means emphasis and meaning stay separate decisions: `tone="danger" variant="solid"` is the destructive action you want people to find, while `tone="danger" variant="outline"` is the same meaning at low emphasis — the right shape for a delete sitting among other row actions.
+
+<DemoBlock id="button/tones" />
+
+### Sizes
+
+`size` sets the height, horizontal padding and font size. The values come from the control tokens, so the ambient `data-pui-density` setting moves them too: `size="sm"` is 28px tall by default and exactly 24px under `data-pui-density="compact"`, which is the SC 2.5.8 floor — the density scale deliberately stops there. `fullWidth` is separate from size — it stretches the button to its container, for stacked forms and mobile action bars.
+
+<DemoBlock id="button/sizes" />
+
+### Loading
+
+`loading` shows a spinner, hides the label from paint while keeping its width so the button cannot resize under the pointer, sets `aria-busy`, and blocks activation. Use it for the span of one request, and pair it with a `loadingLabel` that names the operation.
+
+<DemoBlock id="button/loading" />
+
+<Callout kind="note">
+  Base UI does not infer a button's `type` from its position in a form. A Button renders `type="button"` unless you pass `type="submit"` yourself.
+</Callout>
+
+<Callout kind="warn">
+  `loading` blocks the button, not the form. Keeping the button focusable means it cannot carry the DOM `disabled` attribute — the rendered markup is `aria-disabled="true"` with no `disabled` — so activation is blocked inside Base UI's own click and key handlers. Anything that submits without going through those handlers (`form.requestSubmit()`, a second submit control, your own key handling) is unaffected. Guard the submit handler too, as the demo does with an early return.
+</Callout>
+
+### Icon-only
+
+`iconOnly` drops the horizontal padding, makes the button square with `aspect-ratio: 1`, and floors its width at `--pui-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
+
+<DemoBlock id="button/icon-only" />
+
+<Callout kind="a11y">
+  An icon-only button has no text, so it has no accessible name unless you give it one. Always pass `aria-label`, and write it as the action, not the icon: "Delete document", not "Trash".
+</Callout>
+
+### Rendering as another element
+
+`render` replaces the rendered tag, and `nativeButton={false}` tells Base UI the replacement is not a `<button>` so it supplies button semantics itself — `role="button"` plus Enter and Space activation. For an anchor that genuinely navigates, pass `role="link"` back so the element keeps the semantics its behaviour actually matches.
+
+<DemoBlock id="button/as-link" />
+
+<Callout kind="a11y">
+  Base UI's own guidance is that links should not be rendered as buttons, and the reason is concrete: with an `<a href>`, Base UI deliberately leaves activation to the browser, so Enter navigates but Space scrolls the page instead of activating. A `role="button"` element that ignores Space is a button in name only. Passing `role="link"` — as the demo does — keeps the anchor announced and operated as a link, and the Button is then only supplying the styling.
+</Callout>
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus to the button. A loading button stays in the tab order, so focus is never dropped mid-request.",
+    },
+    {
+      keys: ["Enter"],
+      description:
+        "Activates the button. On a nativeButton={false} element, Base UI calls onClick on key down.",
+    },
+    {
+      keys: ["Space"],
+      description:
+        "Activates the button on release, matching native button behaviour.",
+    },
+  ]}
+/>
+
+The focus ring is an `outline`, not a `box-shadow`, so it follows the button's border radius and survives forced-colors mode, where box shadows are stripped.
+
+Two disabled states behave differently, and the difference matters. A plain `disabled` button is removed from the tab order: a keyboard or screen reader user tabbing through the page never lands on it, so any explanation of why it is unavailable has to live somewhere they will actually reach. A `loading` button keeps `focusableWhenDisabled` on for the duration, which is what stops the browser from blurring it — focus stays put, and `aria-busy` and `loadingLabel` stay on the element the user is still on. You can pass `focusableWhenDisabled` explicitly to get the same reachability for an ordinary disabled button.
+
+<Callout kind="a11y">
+  `tone` is colour, and colour alone is not a message (WCAG SC 1.4.1). A red button and a grey button must still be distinguishable by their labels — "Delete project" and "Cancel", not two buttons both labelled "OK".
+</Callout>
+
+<Callout kind="a11y">
+  `loadingLabel` defaults to the English string "Loading". It is read out by assistive technology, so pass a translated, specific value in any localised app — "Saving notification settings" tells someone far more than "Loading" does.
+</Callout>
+
+## Theming
+
+Every property below is declared on the button's own root element. That means setting one on `:root`, on a theme class or on a wrapper has no effect — the element's own declaration wins over an inherited value. Override them on the button itself, through the `className` prop (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. To move every button at once, re-point the global tokens in the Default column instead — `--pui-color-*`, `--pui-radius-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope. State is exposed on data attributes — `data-variant`, `data-tone`, `data-size`, `data-loading`, `data-icon-only`, `data-full-width`, `data-disabled` — which is also what Tailwind arbitrary variants like `data-[variant=solid]:…` target.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-button-radius` | Corner radius | `var(--pui-radius-control)` |
+| `--pui-button-font-weight` | Label weight | `var(--pui-font-weight-medium)` |
+| `--pui-button-gap` | Space between icon and label | `var(--pui-control-gap)` |
+| `--pui-button-border-width` | Border thickness (only `outline` gives it a colour) | `1px` |
+| `--pui-button-height` | Button height; reassigned by `size` | `var(--pui-control-h-md)` |
+| `--pui-button-padding-x` | Horizontal padding; reassigned by `size`, and `0` when `iconOnly` | `var(--pui-control-px-md)` |
+| `--pui-button-font-size` | Label size; reassigned by `size` | `var(--pui-font-size-2)` |
+| `--pui-button-bg` | Resting background; filled in by `variant` | `transparent` |
+| `--pui-button-bg-hover` | Hover background | `transparent` |
+| `--pui-button-bg-active` | Pressed background | `transparent` |
+| `--pui-button-fg` | Label and icon colour | `var(--pui-color-foreground)` |
+| `--pui-button-border-color` | Border colour | `transparent` |
+| `--pui-button-tone-solid` | Tone's solid fill | `var(--pui-color-primary)` |
+| `--pui-button-tone-solid-hover` | Tone's solid fill on hover | `var(--pui-color-primary-hover)` |
+| `--pui-button-tone-solid-active` | Tone's solid fill when pressed | `var(--pui-color-primary-active)` |
+| `--pui-button-tone-on-solid` | Text colour on the solid fill | `var(--pui-color-on-primary)` |
+| `--pui-button-tone-soft` | Tone's tinted fill, and the hover wash for `outline` and `ghost` | `var(--pui-color-primary-soft)` |
+| `--pui-button-tone-soft-hover` | Tinted fill on hover | `var(--pui-color-primary-soft-hover)` |
+| `--pui-button-tone-soft-active` | Tinted fill when pressed | `var(--pui-color-primary-soft-active)` |
+| `--pui-button-tone-text` | Label colour for `soft`, `outline` and `ghost` | `var(--pui-color-primary-text)` |
+| `--pui-button-tone-border` | Border colour for `outline` | `var(--pui-color-primary-border)` |
+
+The two groups are layered: `variant` decides which of the `--pui-button-tone-*` values become the background, text and border slots, and `tone` decides what those values are. To restyle a whole tone, override the `tone` properties; to restyle one button, override the slots directly.
+
+```css
+.checkout-cta {
+  --pui-button-radius: var(--pui-radius-full);
+  --pui-button-tone-solid: var(--pui-color-secondary);
+  --pui-button-tone-on-solid: var(--pui-color-on-secondary);
+}
+```
+
+## API reference
+
+<PropTable component="Button" />
+
+The table above is generated from the component's TypeScript source. Button also forwards everything Base UI's `Button` accepts — `render`, `nativeButton`, `disabled` — along with the usual `<button>` attributes such as `type`, `form`, `onClick` and any `aria-*` prop.

@@ -1,0 +1,538 @@
+/*
+ * Select
+ *
+ * Five surfaces, one component: Label, Trigger (Value + Icon), the floating
+ * Popup, the scrolling List, and the Items inside it. Each of those is its own
+ * "root" for the purposes of the token convention, because the popup is
+ * portalled to <body> and therefore does NOT inherit anything declared on the
+ * trigger. Knobs are declared at the top of the rule that owns the surface.
+ *
+ * Three things about this file are load-bearing and easy to undo by accident:
+ *
+ *   1. `alignItemWithTrigger` (Base UI's default) makes the popup OVERLAP the
+ *      trigger so the selected item's text lands on the trigger's value text.
+ *      While that mode is active `data-side` is the literal string "none" on
+ *      BOTH the Positioner and the Popup, and every other positioning prop is
+ *      ignored. Any [data-side] rule has to answer for "none", and the enter/
+ *      exit transition has to be suppressed there — animating a popup that is
+ *      already sitting on top of its trigger reads as a glitch, not a reveal.
+ *
+ *   2. Enter/exit is transitions on [data-starting-style]/[data-ending-style],
+ *      never keyframes. A transition can be cancelled mid-flight, so reopening
+ *      while closing reverses instead of snapping. There is also no `infinite`
+ *      animation anywhere on the Popup or Positioner elements: Base UI awaits
+ *      getAnimations() on those exact elements to decide when to unmount, and
+ *      an infinite animation's promise never settles.
+ *
+ *   3. There is deliberately no `prefers-reduced-motion` block. The motion
+ *      tokens collapse their own geometry — `--pui-scale-enter` becomes 1 and
+ *      `--pui-travel-xs` becomes 0px — so consuming them is already correct.
+ */
+@layer pretty-ui.components {
+  /* Label ------------------------------------------------------------------
+   * Renders a <div>, not a <label>; Base UI wires it to the trigger with
+   * aria-labelledby, so clicking it focuses the trigger without opening. */
+  .label {
+    --pui-select-label-fg: var(--pui-color-foreground);
+    --pui-select-label-font-size: var(--pui-font-size-2);
+    --pui-select-label-font-weight: var(--pui-font-weight-medium);
+    --pui-select-label-gap: var(--pui-space-1);
+
+    display: block;
+    margin-block-end: var(--pui-select-label-gap);
+    color: var(--pui-select-label-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-select-label-font-size);
+    font-weight: var(--pui-select-label-font-weight);
+    line-height: var(--pui-line-height-tight);
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+
+  .label[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+  }
+
+  /* Trigger ---------------------------------------------------------------- */
+  .trigger {
+    /* Component tokens. They are declared HERE, on the trigger, so an
+     * ancestor's value is only inherited and loses to these. Consumers set
+     * them on the trigger itself (`className` on `Select.Trigger`, whose rule
+     * is unlayered and so beats this layer) or re-point the global tokens
+     * below, which this file only ever reads. */
+    --pui-select-trigger-height: var(--pui-control-h-md);
+    --pui-select-trigger-padding-x: var(--pui-control-px-md);
+    --pui-select-trigger-font-size: var(--pui-font-size-2);
+    --pui-select-trigger-gap: var(--pui-control-gap);
+    --pui-select-trigger-radius: var(--pui-radius-control);
+    --pui-select-trigger-border-width: 1px;
+
+    /* Colour slots, filled in per variant below. */
+    --pui-select-trigger-bg: var(--pui-color-background);
+    --pui-select-trigger-bg-hover: var(--pui-color-panel-hover);
+    --pui-select-trigger-bg-active: var(--pui-color-panel-active);
+    --pui-select-trigger-fg: var(--pui-color-foreground);
+    --pui-select-trigger-border-color: var(--pui-color-border);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--pui-select-trigger-gap);
+    height: var(--pui-select-trigger-height);
+    padding-inline: var(--pui-select-trigger-padding-x);
+    margin: 0;
+    border: var(--pui-select-trigger-border-width) solid
+      var(--pui-select-trigger-border-color);
+    border-radius: var(--pui-select-trigger-radius);
+
+    background-color: var(--pui-select-trigger-bg);
+    color: var(--pui-select-trigger-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-select-trigger-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    line-height: var(--pui-line-height-tight);
+    text-align: start;
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-select-trigger-bg-hover);
+    }
+  }
+
+  /* `data-pressed` covers keyboard activation too, which `:active` misses. */
+  .trigger[data-pressed]:not([data-disabled]),
+  .trigger[data-popup-open] {
+    background-color: var(--pui-select-trigger-bg-active);
+    transition-duration: var(--pui-duration-instant);
+  }
+
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Read-only still shows the value and can still be opened for reading, so
+   * it must not look disabled — only inert. */
+  .trigger[data-readonly] {
+    --pui-select-trigger-bg: var(--pui-color-panel);
+    cursor: default;
+  }
+
+  /* Only the boundary changes. Recolouring the value text as well would make
+   * the user's own answer look like the error message. */
+  .trigger[data-invalid] {
+    --pui-select-trigger-border-color: var(--pui-color-danger-border);
+  }
+
+  .trigger[data-full-width] {
+    display: flex;
+    width: 100%;
+  }
+
+  /* Sizes */
+  .trigger[data-size="sm"] {
+    --pui-select-trigger-height: var(--pui-control-h-sm);
+    --pui-select-trigger-padding-x: var(--pui-control-px-sm);
+    --pui-select-trigger-font-size: var(--pui-font-size-1);
+  }
+
+  .trigger[data-size="md"] {
+    --pui-select-trigger-height: var(--pui-control-h-md);
+    --pui-select-trigger-padding-x: var(--pui-control-px-md);
+    --pui-select-trigger-font-size: var(--pui-font-size-2);
+  }
+
+  .trigger[data-size="lg"] {
+    --pui-select-trigger-height: var(--pui-control-h-lg);
+    --pui-select-trigger-padding-x: var(--pui-control-px-lg);
+    --pui-select-trigger-font-size: var(--pui-font-size-3);
+  }
+
+  /* Variants */
+  .trigger[data-variant="outline"] {
+    --pui-select-trigger-bg: var(--pui-color-background);
+    --pui-select-trigger-border-color: var(--pui-color-border);
+  }
+
+  .trigger[data-variant="soft"] {
+    --pui-select-trigger-bg: var(--pui-color-panel);
+    --pui-select-trigger-border-color: transparent;
+  }
+
+  .trigger[data-variant="ghost"] {
+    --pui-select-trigger-bg: transparent;
+    --pui-select-trigger-border-color: transparent;
+  }
+
+  /* Value ------------------------------------------------------------------
+   * Owns the flexible column so a long label truncates rather than pushing
+   * the icon out of the trigger. */
+  .value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3 applies
+   * with no exemption, and it is often the only thing naming the control. So
+   * `-muted` (5.82:1), not `-subtle` (3.73:1, non-text only). It still reads
+   * lighter than a chosen value, which uses `--pui-color-foreground`. */
+  .value[data-placeholder] {
+    color: var(--pui-color-foreground-muted);
+  }
+
+  /* Icon ------------------------------------------------------------------- */
+  .icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-color-foreground-subtle);
+    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .trigger[data-popup-open] .icon {
+    color: var(--pui-color-foreground);
+  }
+
+  /* Backdrop ---------------------------------------------------------------
+   * Opt-in. Geometry and the fade come from `.pui-scrim`; this only owns
+   * stacking, so the two cannot disagree. */
+  .backdrop {
+    /* One below the positioner's 50, and declared locally because the
+     * backdrop is the positioner's SIBLING inside the portal — nothing on the
+     * positioner can reach it. */
+    --pui-select-backdrop-z-index: 49;
+
+    z-index: var(--pui-select-backdrop-z-index);
+  }
+
+  /* Positioner -------------------------------------------------------------
+   * `min-height` is the tuning knob for the alignItemWithTrigger fallback:
+   * Base UI reads it off the computed style and, if the popup cannot be at
+   * least that tall while keeping the selected item's text over the trigger's
+   * value text, gives up and places the popup on a side instead. A SMALLER
+   * value falls back less often; Base UI's own default when the property is
+   * unset is 100px. Roughly two and a half rows keeps the aligned mode
+   * slightly more often than that, and scales with density.
+   *
+   * `pointer-events` matters because of that min-height. In fallback mode
+   * Base UI clears the inline styles it wrote here, so the positioner's box
+   * can end up taller than the popup inside it — with `modal={false}` that
+   * invisible remainder would swallow clicks meant for the page. Base UI
+   * never hit-tests the positioner itself, so switching it off and back on
+   * for the popup is free. */
+  .positioner {
+    --pui-select-z-index: 50;
+    --pui-select-positioner-min-height: calc(var(--pui-control-h-md) * 2.5);
+
+    z-index: var(--pui-select-z-index);
+    min-height: var(--pui-select-positioner-min-height);
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Popup ------------------------------------------------------------------ */
+  .popup {
+    /* Surface knobs. */
+    --pui-select-popup-bg: var(--pui-color-overlay);
+    --pui-select-popup-fg: var(--pui-color-foreground);
+    --pui-select-popup-radius: var(--pui-radius-surface);
+    --pui-select-popup-shadow: var(--pui-shadow-4);
+    /* Extra width claimed in alignItemWithTrigger mode, so the item text can
+     * sit over the trigger's value text while the check indicator and the
+     * end padding still have room outside the trigger's box. */
+    --pui-select-popup-overhang: var(--pui-space-5);
+
+    /* Layout knobs shared by List, Item and GroupLabel. They live here
+     * because the group label has to indent past the check indicator to line
+     * its text up with the item text, and it is not an Item descendant. */
+    --pui-select-item-px: var(--pui-space-3);
+    --pui-select-item-gap: var(--pui-control-gap);
+    --pui-select-item-indicator-size: var(--pui-space-4);
+
+    box-sizing: border-box;
+    /* The scroll arrows are absolutely positioned by Base UI (an inline
+     * style), so this element has to be their containing block. */
+    position: relative;
+    /* Restores what `.positioner` switched off; see the note there. */
+    pointer-events: auto;
+    min-width: var(--anchor-width);
+    /* Required: the popup may never grow past the space Base UI measured
+     * between the anchor and the viewport edge. */
+    max-height: var(--available-height);
+    border-radius: var(--pui-select-popup-radius);
+    background-color: var(--pui-select-popup-bg);
+    /* With a transparent 1px border from `.pui-hc-surface`, padding-box
+     * stops the background bleeding under it. */
+    background-clip: padding-box;
+    color: var(--pui-select-popup-fg);
+    box-shadow: var(--pui-select-popup-shadow);
+    transform-origin: var(--transform-origin);
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-duration-fast) var(--pui-ease-emphasized);
+  }
+
+  .popup[data-starting-style] {
+    opacity: 0;
+    transform: scale(var(--pui-scale-enter));
+  }
+
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: scale(var(--pui-scale-exit));
+    transition-timing-function: var(--pui-ease-exit);
+  }
+
+  /* alignItemWithTrigger is active. The popup is already over the trigger, so
+   * scaling it in would look like a glitch; a 1px settle is the whole effect.
+   * `transition: none` is safe here — Base UI's unmount check resolves an
+   * empty getAnimations() list immediately. */
+  .popup[data-side="none"] {
+    min-width: calc(var(--anchor-width) + var(--pui-select-popup-overhang));
+    opacity: 1;
+    transform: translateY(1px);
+    transition: none;
+  }
+
+  /* List -------------------------------------------------------------------
+   * The List owns scrolling, not the Popup. This is what the scroll arrows
+   * measure, and `overflow-y: auto` here is why Items need
+   * `data-focus-inset` — an outward focus ring would be cropped.
+   *
+   * `border-radius: inherit` matters: because the List clips, the radius is
+   * what keeps a highlighted first/last row from squaring off the popup's
+   * corners. `scroll-padding-block` keeps a keyboard-focused row from coming
+   * to rest underneath a scroll arrow (SC 2.4.11). */
+  .list {
+    --pui-select-list-padding-y: var(--pui-space-1);
+
+    box-sizing: border-box;
+    position: relative;
+    max-height: var(--available-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-block: var(--pui-select-list-padding-y);
+    border-radius: inherit;
+    scroll-padding-block: var(--pui-space-5);
+  }
+
+  /* Scroll arrows ----------------------------------------------------------
+   * A pointer affordance only. They are NOT rendered for touch input and are
+   * hidden once the list cannot scroll further, so they must never be the
+   * only route to an item — the List above scrolls by wheel, drag, keyboard
+   * and typeahead on its own, and every item stays reachable without them.
+   * They are aria-hidden by Base UI for exactly that reason. */
+  .scrollArrow {
+    --pui-select-scroll-arrow-size: var(--pui-space-5);
+
+    box-sizing: border-box;
+    /* `position: absolute` arrives as an inline style from Base UI. */
+    inset-inline: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--pui-select-scroll-arrow-size);
+    background-color: var(--pui-select-popup-bg);
+    color: var(--pui-color-foreground-muted);
+    cursor: default;
+    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .scrollArrow[data-starting-style],
+  .scrollArrow[data-ending-style] {
+    opacity: 0;
+  }
+
+  .scrollArrow[data-direction="up"] {
+    top: 0;
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+  }
+
+  .scrollArrow[data-direction="down"] {
+    bottom: 0;
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+  }
+
+  /* An invisible extension of the hover area. In alignItemWithTrigger mode
+   * the popup sits over the trigger, so the pointer is often already past the
+   * arrow when the list needs to scroll; reaching one arrow-height beyond the
+   * popup edge catches it. */
+  .scrollArrow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .scrollArrow[data-side="none"][data-direction="up"]::before {
+    top: -100%;
+  }
+
+  .scrollArrow[data-side="none"][data-direction="down"]::before {
+    bottom: -100%;
+  }
+
+  /* Item -------------------------------------------------------------------
+   * `data-highlighted` is the focus analogue: Base UI moves real DOM focus
+   * with a roving tabindex, so an item is both `:focus-visible` (ring) and
+   * `[data-highlighted]` (fill) at once. Pointer hover sets the same
+   * attribute, which is why there is no separate `:hover` rule. */
+  .item {
+    --pui-select-item-fg: var(--pui-color-foreground);
+    --pui-select-item-bg-highlighted: var(--pui-color-primary-soft);
+    --pui-select-item-fg-highlighted: var(--pui-color-primary-text);
+    --pui-select-item-fg-selected: var(--pui-color-primary-text);
+    --pui-select-item-font-size: var(--pui-font-size-2);
+
+    box-sizing: border-box;
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--pui-select-item-indicator-size) 1fr;
+    align-items: center;
+    gap: var(--pui-select-item-gap);
+    min-height: var(--pui-target-min);
+    padding-block: var(--pui-list-item-py);
+    padding-inline: var(--pui-select-item-px);
+    color: var(--pui-select-item-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-select-item-font-size);
+    line-height: var(--pui-line-height-normal);
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .item[data-selected] {
+    color: var(--pui-select-item-fg-selected);
+    font-weight: var(--pui-font-weight-medium);
+  }
+
+  .item[data-highlighted] {
+    background-color: var(--pui-select-item-bg-highlighted);
+    color: var(--pui-select-item-fg-highlighted);
+  }
+
+  .item[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+
+  /* Item indicator --------------------------------------------------------- */
+  .itemIndicator {
+    grid-column-start: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      scale var(--pui-duration-fast) var(--pui-ease-emphasized);
+  }
+
+  .itemIndicator[data-starting-style],
+  .itemIndicator[data-ending-style] {
+    opacity: 0;
+    scale: var(--pui-scale-enter);
+  }
+
+  .itemText {
+    grid-column-start: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Group ------------------------------------------------------------------
+   * The label indents past the indicator column so its text baseline lines up
+   * with the item text rather than the check marks. */
+  .group {
+    display: block;
+  }
+
+  .groupLabel {
+    box-sizing: border-box;
+    padding-block: var(--pui-list-item-py);
+    padding-inline-start: calc(
+      var(--pui-select-item-px) + var(--pui-select-item-indicator-size) +
+        var(--pui-select-item-gap)
+    );
+    padding-inline-end: var(--pui-select-item-px);
+    /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
+     * non-text only. The semibold weight and font-size-1 already carry the
+     * hierarchy, so nothing is lost by meeting contrast here. */
+    color: var(--pui-color-foreground-muted);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Separator -------------------------------------------------------------- */
+  .separator {
+    margin-block: var(--pui-space-1);
+    margin-inline: var(--pui-select-item-px);
+    block-size: 1px;
+    background-color: var(--pui-color-border-muted);
+  }
+
+  .separator[data-orientation="vertical"] {
+    margin-block: var(--pui-space-1);
+    margin-inline: var(--pui-space-1);
+    block-size: auto;
+    inline-size: 1px;
+    align-self: stretch;
+  }
+}
+
+/* Forced colors (Windows High Contrast) -------------------------------------
+ * This block is in `pretty-ui.a11y`, which is ordered after
+ * `pretty-ui.components`, so it beats the rules above by layer alone — no
+ * `!important`, no specificity inflation.
+ *
+ * Almost everything is already handled globally by patterns.css: the generic
+ * `[data-disabled]` rule there restores `opacity: 1` and paints GrayText
+ * (which is what makes a disabled trigger, item or label distinguishable,
+ * since `opacity` is NOT forced), and the generic `[data-highlighted]` rule
+ * paints the Highlight/HighlightText pair plus svg fill/stroke — which is the
+ * only cue a pointer user gets, because `highlightItemOnHover` is on by
+ * default. Do not restate either of those here.
+ *
+ * What is left is select-specific: a DESCENDANT that declares its own author
+ * colour does not inherit the trigger's GrayText — its own declaration wins
+ * and is then forced to CanvasText, i.e. full contrast, i.e. it reads as
+ * enabled. The trigger's icon and its placeholder are exactly that case.
+ * ------------------------------------------------------------------------ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .trigger[data-disabled] .icon,
+    .trigger[data-disabled] .value[data-placeholder] {
+      color: GrayText;
+    }
+  }
+}

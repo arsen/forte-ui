@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@dofortech/pretty-ui-docs", "exec", "next", "dev", "-p", "3210"],
+      "port": 3210
+    }
+  ]
+}

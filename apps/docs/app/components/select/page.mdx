@@ -1,0 +1,242 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Select",
+  description:
+    "A button that opens a list of options and writes the chosen one back into its own label — the styled counterpart to a native <select>.",
+};
+
+# Select
+
+Reach for Select when a value comes from a short, fixed set of options and the
+user picks exactly one: a time zone, a plan, a deploy region. It renders a
+button that opens a listbox, keeps the chosen label in the trigger, and submits
+through a hidden input when it sits in a form. It has typeahead but no
+filtering — for lists long enough to need a search field, use Combobox instead.
+
+<DemoBlock id="select/basic" />
+
+Pass `items` to `<Select.Root>` so `<Select.Value>` renders the option's label
+instead of the raw value — without it the trigger above would read
+`Europe/London`. The popup opens over the trigger with the selected row's text
+sitting on the trigger's text; that is `alignItemWithTrigger`, on by default,
+and Base UI drops back to ordinary below-the-trigger placement for touch input
+or when the viewport is too tight.
+
+## Import
+
+```tsx
+import { Select } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Labelling
+
+`<Select.Label>` is the labelling pattern to reach for. It renders a `<div>`
+wired to the trigger with `aria-labelledby`, so clicking it focuses the trigger
+without opening the popup.
+
+<DemoBlock id="select/with-label" />
+
+### Grouped options
+
+`<Select.Group>` renders `role="group"` and takes its accessible name from the
+`<Select.GroupLabel>` inside it, so screen readers announce the heading along
+with its members. The group label is indented past the check-mark column so its
+text lines up with the item text.
+
+<DemoBlock id="select/grouped" />
+
+### Sizes
+
+`size` sets the trigger's height, inline padding and font size — nothing else.
+The popup is unaffected: items keep their own type scale and their
+`--pui-target-min` (24px) minimum row height whatever size the trigger is.
+
+<DemoBlock id="select/sizes" />
+
+### Variants
+
+`variant` changes only how much weight the trigger carries: `outline` reads as
+a form control, `soft` as a filled field, `ghost` as an inline affordance.
+
+<DemoBlock id="select/variants" />
+
+### Disabled items
+
+A disabled item stays in the list and stays announced, so the option remains
+discoverable — it just cannot be chosen. Typeahead skips it, matching what a
+native `<select>` does. Say in the item's own text why it is unavailable;
+greying alone tells the user nothing.
+
+<DemoBlock id="select/disabled-items" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    { keys: ["Enter"], description: "With the trigger focused, opens the popup and highlights the selected item. With the popup open, selects the highlighted item and closes." },
+    { keys: ["Space"], description: "Same as Enter, except while typeahead is mid-word, where it types a space instead of selecting." },
+    { keys: ["Arrow Down"], description: "Opens the popup from the trigger; moves the highlight down one item once open." },
+    { keys: ["Arrow Up"], description: "Opens the popup from the trigger; moves the highlight up one item once open." },
+    { keys: ["Home"], description: "Highlights the first item." },
+    { keys: ["End"], description: "Highlights the last item." },
+    { keys: ["A–Z"], description: "Typeahead. With the popup open, highlights the first item whose text matches what you type; with it closed, it changes the value directly, like a native select. Disabled items are skipped and the buffer resets 750ms after the last keystroke." },
+    { keys: ["Esc"], description: "Closes the popup without changing the value and returns focus to the trigger." },
+  ]}
+/>
+
+The highlight does not wrap: Arrow Down on the last item and Arrow Up on the
+first stay put rather than cycling.
+
+`data-highlighted` is the focus analogue for items. Base UI moves real DOM
+focus between options with a roving tabindex, so the highlighted item is the
+focused element, and pointer hover sets the same attribute (`highlightItemOnHover`
+on `<Select.Root>`, on by default — set it to `false` if you need CSS `:hover`
+to be distinguishable from the focused state). Style rows off
+`[data-highlighted]` rather than `:hover`, or keyboard users get no highlight
+at all.
+
+The scroll arrows at the top and bottom of a long popup are a pointer
+convenience only. Base UI does not render them for touch input, marks them
+`aria-hidden`, and hides them once the list cannot scroll further — the list
+itself scrolls by wheel, drag, keyboard and typeahead, so no item is ever
+reachable only through an arrow. Turning them off with `scrollArrows={false}`
+removes nothing but the affordance.
+
+<Callout kind="a11y">
+  Every select needs an accessible name, and this is the part that gets missed.
+  Render a `<Select.Label>` inside the same `<Select.Root>`, or — when the
+  design has no visible label, as in the time-zone example above — put
+  `aria-label` on `<Select.Trigger>`. In development the trigger logs a console
+  warning when it ends up with neither.
+</Callout>
+
+<Callout kind="a11y">
+  `<Select.Value placeholder="…">` cannot be cleared by the user once a value
+  is chosen — there is no route back to the empty state from inside the popup.
+  If the selection has to be clearable, render an item with `value={null}`
+  instead of relying on a placeholder.
+</Callout>
+
+## Theming
+
+Every `--pui-select-*` property below is declared on the surface that owns it,
+and an element's own declaration beats an inherited value — so setting one on
+`:root`, on a theme scope or on any ancestor has no effect. The popup is
+portalled to `<body>` as well, so an ancestor of the *trigger* is not even in
+its tree. Set each property on the part that declares it, through that part's
+`className` (an unlayered rule beats the library's `@layer pretty-ui.components`,
+whatever its specificity) or an inline `style`:
+
+- `Select.Label` declares the four `label-*` properties.
+- `Select.Trigger` declares every `trigger-*` property.
+- `Select.Popup` declares the `popup-*` properties plus `--pui-select-item-px`,
+  `--pui-select-item-gap` and `--pui-select-item-indicator-size` — the layout
+  knobs the list, the items and the group labels read but never redeclare, so
+  the popup is the right place to set them.
+- `positionerClassName` reaches `--pui-select-z-index` and
+  `--pui-select-positioner-min-height`, and nothing else: those two are the only
+  properties declared on the positioner.
+- `Select.Item` declares `--pui-select-item-fg`,
+  `--pui-select-item-bg-highlighted`, `--pui-select-item-fg-highlighted`,
+  `--pui-select-item-fg-selected` and `--pui-select-item-font-size`.
+- `--pui-select-backdrop-z-index`, `--pui-select-list-padding-y` and
+  `--pui-select-scroll-arrow-size` are declared on the backdrop, the list and
+  the scroll arrows — elements `Select.Popup` renders internally and exposes no
+  class name for, so they cannot be retargeted from outside.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*`, `--pui-space-*` — are the exception: the component only reads
+those and never redeclares them, so re-pointing them on `:root` or on a theme
+scope does re-skin every select.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-select-label-fg` | Label text colour | `var(--pui-color-foreground)` |
+| `--pui-select-label-font-size` | Label font size | `var(--pui-font-size-2)` |
+| `--pui-select-label-font-weight` | Label font weight | `var(--pui-font-weight-medium)` |
+| `--pui-select-label-gap` | Space between label and trigger | `var(--pui-space-1)` |
+| `--pui-select-trigger-height` | Trigger height (reset per `size`) | `var(--pui-control-h-md)` |
+| `--pui-select-trigger-padding-x` | Trigger inline padding (reset per `size`) | `var(--pui-control-px-md)` |
+| `--pui-select-trigger-font-size` | Trigger font size (reset per `size`) | `var(--pui-font-size-2)` |
+| `--pui-select-trigger-gap` | Gap between value and icon | `var(--pui-control-gap)` |
+| `--pui-select-trigger-radius` | Trigger corner radius | `var(--pui-radius-control)` |
+| `--pui-select-trigger-border-width` | Trigger border width | `1px` |
+| `--pui-select-trigger-bg` | Trigger background (reset per `variant`) | `var(--pui-color-background)` |
+| `--pui-select-trigger-bg-hover` | Trigger background on hover | `var(--pui-color-panel-hover)` |
+| `--pui-select-trigger-bg-active` | Trigger background while pressed or open | `var(--pui-color-panel-active)` |
+| `--pui-select-trigger-fg` | Trigger text colour | `var(--pui-color-foreground)` |
+| `--pui-select-trigger-border-color` | Trigger border colour (reset per `variant`) | `var(--pui-color-border)` |
+| `--pui-select-backdrop-z-index` | Stacking of the optional `backdrop` layer | `49` |
+| `--pui-select-z-index` | Stacking of the positioner | `50` |
+| `--pui-select-positioner-min-height` | How tall the popup must be able to get before `alignItemWithTrigger` falls back to side placement — smaller falls back less often | `calc(var(--pui-control-h-md) * 2.5)` |
+| `--pui-select-popup-bg` | Popup surface colour | `var(--pui-color-overlay)` |
+| `--pui-select-popup-fg` | Popup text colour | `var(--pui-color-foreground)` |
+| `--pui-select-popup-radius` | Popup corner radius | `var(--pui-radius-surface)` |
+| `--pui-select-popup-shadow` | Popup shadow | `var(--pui-shadow-4)` |
+| `--pui-select-popup-overhang` | Extra width the popup claims past the trigger in `alignItemWithTrigger` mode | `var(--pui-space-5)` |
+| `--pui-select-item-px` | Inline padding shared by items and group labels | `var(--pui-space-3)` |
+| `--pui-select-item-gap` | Gap between the indicator column and the item text | `var(--pui-control-gap)` |
+| `--pui-select-item-indicator-size` | Width of the check-mark column | `var(--pui-space-4)` |
+| `--pui-select-list-padding-y` | Block padding inside the scrolling list | `var(--pui-space-1)` |
+| `--pui-select-scroll-arrow-size` | Height of a scroll arrow | `var(--pui-space-5)` |
+| `--pui-select-item-fg` | Item text colour | `var(--pui-color-foreground)` |
+| `--pui-select-item-bg-highlighted` | Background of the highlighted item | `var(--pui-color-primary-soft)` |
+| `--pui-select-item-fg-highlighted` | Text colour of the highlighted item | `var(--pui-color-primary-text)` |
+| `--pui-select-item-fg-selected` | Text colour of the selected item | `var(--pui-color-primary-text)` |
+| `--pui-select-item-font-size` | Item font size | `var(--pui-font-size-2)` |
+
+## API reference
+
+### Select.Root
+
+Groups every part and owns the value and open state. It renders no DOM element,
+so it takes neither `className` nor `ref`, and it forwards Base UI's own
+`Select.Root` props unchanged — including `value`, `defaultValue`,
+`onValueChange`, `items`, `multiple`, `name`, `disabled`, `readOnly`,
+`required`, `modal` and `highlightItemOnHover`. Both generics are preserved, so
+`<Select.Root<Theme>>` types `onValueChange` and `defaultValue` for you.
+
+### Select.Label
+
+<PropTable component="SelectLabel" />
+
+### Select.Trigger
+
+<PropTable component="SelectTrigger" />
+
+### Select.Value
+
+<PropTable component="SelectValue" />
+
+### Select.Icon
+
+<PropTable component="SelectIcon" />
+
+### Select.Popup
+
+Renders the whole floating half of the anatomy — portal, optional backdrop,
+positioner, popup, scroll arrows and the scrolling list — as one part.
+
+<PropTable component="SelectPopup" />
+
+### Select.Item
+
+<PropTable component="SelectItem" />
+
+### Select.Group
+
+<PropTable component="SelectGroup" />
+
+### Select.GroupLabel
+
+<PropTable component="SelectGroupLabel" />
+
+### Select.Separator
+
+<PropTable component="SelectSeparator" />

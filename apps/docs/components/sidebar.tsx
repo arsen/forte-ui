@@ -1,0 +1,58 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+
+type NavItem = { title: string; href: string; badge?: string };
+type NavGroup = { title: string; items: NavItem[] };
+
+const NAV: NavGroup[] = [
+  {
+    title: "Getting started",
+    items: [
+      { title: "Introduction", href: "/" },
+      { title: "Theme Studio", href: "/theme" },
+    ],
+  },
+  {
+    title: "Components",
+    items: [
+      { title: "Button", href: "/components/button" },
+      { title: "Checkbox", href: "/components/checkbox" },
+      { title: "Dialog", href: "/components/dialog" },
+      { title: "Select", href: "/components/select" },
+      { title: "Switch", href: "/components/switch" },
+      { title: "Tabs", href: "/components/tabs" },
+      { title: "Tooltip", href: "/components/tooltip" },
+    ],
+  },
+];
+
+export function Sidebar() {
+  const pathname = usePathname();
+
+  return (
+    <aside className="sidebar">
+      <nav aria-label="Documentation">
+        {NAV.map((group) => (
+          <div key={group.title} className="navGroup">
+            <p className="navGroupTitle">{group.title}</p>
+            {group.items.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={active ? "navLink navLinkActive" : "navLink"}
+                  aria-current={active ? "page" : undefined}
+                >
+                  {item.title}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
+      </nav>
+    </aside>
+  );
+}

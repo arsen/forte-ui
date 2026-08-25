@@ -1,0 +1,169 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Tabs",
+  description:
+    "Switch between panels of related content in the same place, with an indicator that slides in pure CSS.",
+};
+
+# Tabs
+
+Tabs put several views of the same subject in one place and show one at a time. Reach for them when the panels are peers — sections of a settings screen, ranges of one report — and when the reader can afford to lose sight of the other panels. If the content needs to be compared side by side, or if switching changes what the page *is* rather than what it *shows*, use links and separate routes instead.
+
+<DemoBlock id="tabs/line" />
+
+## Import
+
+```tsx
+import { Tabs } from "@dofortech/pretty-ui";
+```
+
+`Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list.
+
+Each `Tabs.Tab` is paired with the `Tabs.Panel` that carries the same `value`. That pairing is not cosmetic — it is what generates the `aria-controls` and `aria-labelledby` attributes linking the two, so every tab needs a panel with a matching value and every panel needs a tab. `value` can be any string or number; `Tabs.Root` takes `defaultValue` (uncontrolled) or `value` plus `onValueChange` (controlled).
+
+<Callout kind="warn">
+  Base UI's `defaultValue` is `0` — an *index*, not the first tab's string value. If you use string values, always pass an explicit `defaultValue` (or `value`) naming an **enabled** tab. A disabled first tab is skipped in the browser but not during server rendering, so leaving it implicit produces a server/client mismatch.
+</Callout>
+
+## Examples
+
+### Line
+
+The default `variant="line"` is the demo at the top of this page: a rail under the strip, with a 2px underline that slides along it. Use it for page- or section-level navigation, where the tabs sit above a large body of content.
+
+### Pill
+
+`variant="pill"` turns the strip into a segmented control: the rail disappears, the list itself takes a surface, and the indicator grows into a filled block that slides *behind* the active label. Use it for small, mutually exclusive choices inside a larger view — a date range, a unit toggle.
+
+<DemoBlock id="tabs/pill" />
+
+The variant is set once on `Tabs.Root` and reaches the list, tabs and indicator through context. There is deliberately no way to express a mismatched pair such as a pill list with a line indicator.
+
+### Vertical
+
+`orientation="vertical"` on `Tabs.Root` stacks the tabs down the side and puts the panel beside them. The rail moves to the inline-end edge, the indicator travels on the block axis, and the arrow keys that drive the strip change from Left/Right to Up/Down.
+
+<DemoBlock id="tabs/vertical" />
+
+### With icons
+
+A tab lays out its children in a row with `--pui-control-gap` between them, so an icon needs no wrapper or extra class.
+
+<DemoBlock id="tabs/with-icons" />
+
+<Callout kind="a11y">
+  Mark decorative icons `aria-hidden="true"` and keep the text label — an icon-only tab has no accessible name, and the label is also what the indicator measures its width against. If you must drop the visible text, put it back with `aria-label` on the `Tabs.Tab`.
+</Callout>
+
+### Disabled tab
+
+`disabled` on a `Tabs.Tab` prevents activation. The tab stays in the strip and stays reachable: arrow keys still land on it and Home/End still count it, but Enter and Space do nothing. That is intentional — a disabled control a keyboard user cannot reach is a control they cannot discover the existence of.
+
+<DemoBlock id="tabs/disabled-tab" />
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], description: "Moves focus into the strip, landing on the active tab, and then out of the strip to the active panel. The strip is a single tab stop — the other tabs are reached with the arrow keys." },
+  { keys: ["ArrowRight"], description: "Horizontal orientation: moves focus to the next tab, wrapping to the first at the end." },
+  { keys: ["ArrowLeft"], description: "Horizontal orientation: moves focus to the previous tab, wrapping to the last at the start." },
+  { keys: ["ArrowDown"], description: "Vertical orientation: moves focus to the next tab, wrapping to the first at the end." },
+  { keys: ["ArrowUp"], description: "Vertical orientation: moves focus to the previous tab, wrapping to the last at the start." },
+  { keys: ["Home"], description: "Moves focus to the first tab in the strip." },
+  { keys: ["End"], description: "Moves focus to the last tab in the strip." },
+  { keys: ["Enter"], description: "Activates the focused tab and shows its panel." },
+  { keys: ["Space"], description: "Activates the focused tab and shows its panel." },
+]} />
+
+Arrow keys move focus only. Activation is a separate, explicit act — `activateOnFocus` on `Tabs.List` defaults to `false`. Automatic activation would mount every panel the user arrows past, which is hostile when a panel fetches data on mount. Set `activateOnFocus` to `true` only when the panels are cheap and already loaded. Wrapping can be turned off with `loopFocus={false}`.
+
+The parts carry their own roles and relationships: `Tabs.List` is a `tablist`, each `Tabs.Tab` is a `tab` with `aria-selected` and an `aria-controls` pointing at its panel, and each `Tabs.Panel` is a `tabpanel` labelled by its tab. Panels are focusable — Base UI gives the visible panel `tabIndex={0}` — so a keyboard user presses Tab once more from the strip to reach the content, and a panel containing only non-interactive text can still be scrolled and read.
+
+<Callout kind="a11y">
+  Give every `Tabs.List` an `aria-label` (or `aria-labelledby` pointing at a visible heading). Nothing else names the `tablist`, so without it a screen reader announces an unnamed group of tabs — and a page with two tab strips gives no way to tell them apart. All the demos on this page do this.
+</Callout>
+
+Hidden panels are removed from the DOM by default. `keepMounted` on `Tabs.Panel` keeps them mounted instead — set it when a panel holds scroll position or an uncommitted form that should survive a round trip, or when you want the exit transition to play out. A kept-mounted panel is given the `hidden` attribute and `display: none`, and its tab index drops to `-1`, so its content stays out of the tab order and out of the accessibility tree while it is not the active panel.
+
+Under forced colors the indicator paints `Highlight` explicitly rather than letting its background be replaced, so a pill and its label stay a matched pair; a `line` active tab instead keeps a transparent background and `CanvasText` text, because an opaque fill would cover the 2px bar that is the cue. The rail becomes `CanvasText`, and disabled tabs are painted `GrayText` rather than relying on opacity, which is not honoured in that mode.
+
+### Motion
+
+The indicator slides without a single frame of JavaScript. Base UI measures the active tab and publishes its geometry on the indicator element as CSS custom properties — `--active-tab-left`, `--active-tab-top`, `--active-tab-width`, `--active-tab-height`, all already in `px`. The stylesheet consumes them directly:
+
+```css
+.indicator {
+  translate: var(--active-tab-left);
+  width: var(--active-tab-width);
+  transition-property: translate, width, height;
+  transition-duration: var(--pui-duration-move);
+  transition-timing-function: var(--pui-ease-spring-snappy);
+}
+```
+
+The measurement runs once per change (and on resize, via a `ResizeObserver`); the movement itself is a CSS transition, so no JavaScript runs per frame and there is no animation library in the bundle. Both variants and both orientations are the same element carrying the same transition — only the geometry differs, so switching variant cannot desynchronise the motion.
+
+It is a `transition` rather than a keyframe animation on purpose. A transition can be interrupted: clicking a third tab while the indicator is still travelling to the second retargets smoothly from wherever it is, instead of snapping back and restarting.
+
+Panels move too. `Tabs.Root` publishes `data-activation-direction` naming where the new tab sits relative to the old one, and the incoming panel starts offset by `--pui-travel-md` on that side and slides back to rest as it fades in.
+
+Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--pui-duration-move` collapses to `1ms` and `--pui-travel-md` to `0px`, so the indicator jumps to the new tab and the panel cross-fades in place. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
+
+## Theming
+
+Every property below is declared on `Tabs.Root`, which is also why an ancestor is the wrong place to set one: the root element's own declaration wins over the inherited value. Override them on `Tabs.Root` itself, through its `className` or an inline `style`. To move every tab set at once, re-point the global tokens in the Default column instead — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
+
+| Property | Controls | Default |
+| :-- | :-- | :-- |
+| `--pui-tabs-radius` | Corner radius of a tab, and of the panel | `var(--pui-radius-control)` |
+| `--pui-tabs-gap` | Space between adjacent tabs in the strip | `var(--pui-space-1)` |
+| `--pui-tabs-content-gap` | Space between the strip and the panel | `var(--pui-space-4)` |
+| `--pui-tabs-height` | Height of a tab | `var(--pui-control-h-md)` |
+| `--pui-tabs-padding-x` | Inline padding inside a tab | `var(--pui-control-px-md)` |
+| `--pui-tabs-font-size` | Tab label size | `var(--pui-font-size-2)` |
+| `--pui-tabs-font-weight` | Tab label weight | `var(--pui-font-weight-medium)` |
+| `--pui-tabs-list-bg` | Background of the strip | `transparent` |
+| `--pui-tabs-list-padding` | Padding inside the strip | `0px` |
+| `--pui-tabs-list-radius` | Corner radius of the strip | `0px` |
+| `--pui-tabs-rail-width` | Thickness of the rail (line variant only) | `1px` |
+| `--pui-tabs-rail-color` | Colour of the rail (line variant only) | `var(--pui-color-border-muted)` |
+| `--pui-tabs-tab-color` | Label colour of an inactive tab | `var(--pui-color-foreground-muted)` |
+| `--pui-tabs-tab-color-hover` | Label colour on hover | `var(--pui-color-foreground)` |
+| `--pui-tabs-tab-color-active` | Label colour of the active tab | `var(--pui-color-primary-text)` |
+| `--pui-tabs-tab-bg-hover` | Tab background on hover | `var(--pui-color-panel-hover)` |
+| `--pui-tabs-indicator-color` | Fill of the sliding indicator | `var(--pui-color-primary)` |
+| `--pui-tabs-indicator-size` | Thickness of the indicator bar (line variant only) | `2px` |
+| `--pui-tabs-indicator-radius` | Corner radius of the indicator | `var(--pui-radius-pill)` |
+| `--pui-tabs-panel-padding` | Padding inside the panel | `0px` |
+
+`variant="pill"` is itself implemented by overriding six of these on the root — `--pui-tabs-list-bg`, `--pui-tabs-list-padding`, `--pui-tabs-list-radius`, `--pui-tabs-indicator-color`, `--pui-tabs-indicator-radius` and `--pui-tabs-tab-bg-hover`. Setting them yourself on a pill tab set still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+
+The parts also expose their state as data attributes — `data-variant`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction` — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
+
+## API reference
+
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `Tabs.Root` also takes `value`, `defaultValue`, `onValueChange` and `orientation`; `Tabs.Tab` takes `value` (required) and `disabled`; `Tabs.Panel` takes `value` (required). All five parts take `render` for changing the underlying element.
+
+### Tabs.Root
+
+<PropTable component="TabsRoot" />
+
+### Tabs.List
+
+<PropTable component="TabsList" />
+
+### Tabs.Tab
+
+<PropTable component="TabsTab" />
+
+### Tabs.Indicator
+
+<PropTable component="TabsIndicator" />
+
+### Tabs.Panel
+
+<PropTable component="TabsPanel" />

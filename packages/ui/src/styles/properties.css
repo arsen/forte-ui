@@ -1,0 +1,50 @@
+/**
+ * Registered custom properties
+ * ---------------------------------------------------------------------------
+ * `@property` must live at the top level of the stylesheet — it is NOT affected
+ * by (and cannot be nested inside) `@layer`.
+ *
+ * Registering `--pui-accent-seed` is the single highest-value declaration in
+ * this file. An *unregistered* custom property holding a malformed colour makes
+ * every token derived from it "invalid at computed-value time": the whole ramp
+ * silently falls back to inheriting `color`, with no console error and no
+ * visual clue beyond a page that has quietly lost its palette. Registering the
+ * seed with a typed syntax and an initial value contains that failure to the
+ * one bad declaration — the other eleven steps keep working.
+ *
+ * Registration also makes these properties animatable, which is what lets the
+ * theme picker cross-fade between palettes instead of snapping.
+ */
+
+@property --pui-accent-seed {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.55 0.14 247);
+}
+
+@property --pui-secondary-seed {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: oklch(0.58 0.15 305);
+}
+
+/* 0 = pure grey, 1 = a hue-matched sliver of the brand in every neutral. */
+@property --pui-neutral-tint {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* 1 = geometry (travel, scale, spin) allowed. 0 = suppressed. */
+@property --pui-motion-ok {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/* Always (1 - motion-ok). Lets a rule fade *in* a non-motion cue. */
+@property --pui-motion-off {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}

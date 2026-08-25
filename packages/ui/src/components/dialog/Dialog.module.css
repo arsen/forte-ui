@@ -1,0 +1,329 @@
+/*
+ * Dialog / AlertDialog
+ *
+ * One stylesheet serves both. Base UI's `alert-dialog` entry point re-exports
+ * the *same* Backdrop / Viewport / Popup / Title / Description / Close
+ * components as `dialog` — only Root and Trigger differ — so the parts a
+ * consumer sees are identical and so are their styles.
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Root  →  Portal  →  Backdrop
+ *                    →  Viewport  →  Popup  →  Title / Description / Close
+ *
+ * `Root` renders no DOM element, so there is no `.root` rule here; the popup
+ * is the styling anchor and carries the `--pui-dialog-*` knobs.
+ *
+ * Motion notes, all load-bearing:
+ *   - No `prefers-reduced-motion` block. `--pui-travel-md` collapses to 0px
+ *     and `--pui-scale-enter` to 1, so the geometry disappears on its own and
+ *     the opacity fade — the part reduced-motion users actually want — stays.
+ *   - Enter/exit is done with transitions on [data-starting-style] /
+ *     [data-ending-style], never keyframes: closing a dialog mid-open
+ *     reverses smoothly instead of snapping.
+ *   - Nothing here animates `infinite`. Base UI awaits
+ *     `Promise.all(popup.getAnimations().map(a => a.finished))` before
+ *     unmounting the popup, and an infinite animation never settles.
+ *   - Dialog has no positioner, so Base UI exposes no `--transform-origin`
+ *     here (that variable belongs to anchored popups like Select and
+ *     Tooltip). The scale therefore grows from the popup's centre, which is
+ *     the right origin for a centred surface anyway.
+ */
+@layer pretty-ui.components {
+  /* Backdrop ---------------------------------------------------------------
+   * `.pui-scrim` already supplies position/inset, the scrim colour, the
+   * optional blur, the fade transition and the starting/ending opacity, plus
+   * the forced-colors treatment. Only the iOS correction is component-local.
+   * ---------------------------------------------------------------------- */
+  .backdrop {
+    /* Restated from `.pui-scrim` so the @supports override below has an
+     * explicit default to flip, and so the class always exists in the
+     * stylesheet regardless of at-rule handling. */
+    position: fixed;
+  }
+
+  /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
+   * element keeps painting against the *large* viewport, leaving an
+   * unscrimmed strip along one edge. Absolute positioning tracks the visible
+   * viewport instead. The @supports test is the standard iOS/WebKit sniff. */
+  @supports (-webkit-touch-callout: none) {
+    .backdrop {
+      position: absolute;
+    }
+  }
+
+  /* Viewport ---------------------------------------------------------------
+   * A fixed, scrollable container. Owning the scroll here rather than on the
+   * popup gives "outside scroll" behaviour: a tall dialog scrolls as a whole
+   * instead of trapping its own body, and a press anywhere in the empty space
+   * is still an outside press, so pointer dismissal keeps working.
+   * ---------------------------------------------------------------------- */
+  .viewport {
+    --pui-dialog-viewport-padding: var(--pui-space-4);
+
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    padding: var(--pui-dialog-viewport-padding);
+    overflow-y: auto;
+    /* Keep a scroll gesture that reaches the end of the dialog from chaining
+     * to the page behind it. */
+    overscroll-behavior: contain;
+  }
+
+  .viewport[data-size="fullscreen"] {
+    --pui-dialog-viewport-padding: 0px;
+  }
+
+  /* While the popup animates out it is still painted and still on top; without
+   * this a click aimed at the page underneath lands on the viewport instead. */
+  .viewport[data-ending-style] {
+    pointer-events: none;
+  }
+
+  /* Popup ------------------------------------------------------------------ */
+  .popup {
+    /* Component tokens. They are declared HERE, on the popup, so an ancestor's
+     * value is only inherited and loses to these — and the popup is portalled
+     * to <body> anyway, so an ancestor of the trigger is not even in the tree.
+     * Consumers set them on the popup itself (`className` on `Dialog.Popup`,
+     * whose rule is unlayered and so beats this layer) or re-point the global
+     * tokens below, which this file only ever reads. */
+    --pui-dialog-bg: var(--pui-color-overlay);
+    --pui-dialog-fg: var(--pui-color-foreground);
+    --pui-dialog-radius: var(--pui-radius-surface);
+    --pui-dialog-padding: var(--pui-surface-p);
+    --pui-dialog-gap: var(--pui-space-4);
+    --pui-dialog-shadow: var(--pui-shadow-4);
+    --pui-dialog-font-size: var(--pui-font-size-2);
+    /* No width token exists in the inventory (widths are layout, not theme),
+     * so the size scale lives in these knobs and is overridable per app. */
+    --pui-dialog-max-inline-size: 32rem;
+    /* How far each nested dialog pushes its parent down, and how much it
+     * shrinks it. The travel token collapses to 0px under reduced motion;
+     * the scale step is gated on --pui-motion-ok for the same reason. */
+    --pui-dialog-nested-offset: var(--pui-travel-lg);
+    --pui-dialog-nested-scale-step: 0.04;
+
+    box-sizing: border-box;
+    position: relative;
+    /* `margin: auto` rather than the viewport's `align-items: center`: a
+     * centred flex item that outgrows its scroll container gets its top edge
+     * clipped and unreachable, auto margins do not. */
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-dialog-gap);
+    inline-size: 100%;
+    max-inline-size: var(--pui-dialog-max-inline-size);
+    padding: var(--pui-dialog-padding);
+    border-radius: var(--pui-dialog-radius);
+
+    background-color: var(--pui-dialog-bg);
+    color: var(--pui-dialog-fg);
+    box-shadow: var(--pui-dialog-shadow);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-dialog-font-size);
+    line-height: var(--pui-line-height-normal);
+
+    /* Nested stacking, driven by Base UI's --nested-dialogs counter. Animated
+     * as independent `translate`/`scale` properties so the enter/exit
+     * `transform` below can compose with them instead of overwriting them. */
+    translate: 0 calc(var(--pui-dialog-nested-offset) * var(--nested-dialogs, 0));
+    scale: calc(
+      1 - var(--pui-dialog-nested-scale-step) * var(--pui-motion-ok) *
+        var(--nested-dialogs, 0)
+    );
+    transition:
+      opacity var(--pui-duration-normal) var(--pui-ease-standard),
+      transform var(--pui-duration-normal) var(--pui-ease-emphasized),
+      translate var(--pui-duration-normal) var(--pui-ease-standard),
+      scale var(--pui-duration-normal) var(--pui-ease-standard);
+  }
+
+  /* Rises into place from below and grows to full size. */
+  .popup[data-starting-style] {
+    opacity: 0;
+    transform: translateY(var(--pui-travel-md)) scale(var(--pui-scale-enter));
+  }
+
+  /* Leaves by expanding slightly — the opposite gesture, so an interrupted
+   * open reverses instead of continuing. */
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: scale(var(--pui-scale-exit));
+    transition-timing-function: var(--pui-ease-exit);
+  }
+
+  /* Nested dialogs ---------------------------------------------------------
+   * Base UI does not render a child dialog's Backdrop unless `forceRender`
+   * is set, so the parent dims itself instead. The overlay is always present
+   * at zero opacity: a pseudo-element created at the moment the attribute
+   * appears would have no start value to transition from.
+   * ---------------------------------------------------------------------- */
+  .popup::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--pui-scrim-color);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .popup[data-nested-dialog-open]::after {
+    opacity: 1;
+  }
+
+  /* Sizes ------------------------------------------------------------------ */
+  .popup[data-size="sm"] {
+    --pui-dialog-max-inline-size: 24rem;
+  }
+
+  .popup[data-size="md"] {
+    --pui-dialog-max-inline-size: 32rem;
+  }
+
+  .popup[data-size="lg"] {
+    --pui-dialog-max-inline-size: 48rem;
+  }
+
+  .popup[data-size="fullscreen"] {
+    --pui-dialog-max-inline-size: 100%;
+    --pui-dialog-radius: 0px;
+    min-block-size: 100%;
+  }
+
+  /* Content ---------------------------------------------------------------- */
+  .title {
+    margin: 0;
+    font-size: var(--pui-font-size-4);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    letter-spacing: var(--pui-letter-spacing-tight);
+    color: var(--pui-color-foreground);
+  }
+
+  .description {
+    margin: 0;
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+    /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body copy. */
+    color: var(--pui-color-foreground-muted);
+  }
+
+  /* A description belongs to the title above it, so it sits closer than the
+   * popup's own rhythm. Done by pulling the description up rather than by
+   * introducing a header part, so the anatomy stays exactly Base UI's. */
+  .title + .description {
+    margin-block-start: calc(var(--pui-space-1) - var(--pui-dialog-gap));
+  }
+
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--pui-control-gap);
+    margin-block-start: var(--pui-space-1);
+  }
+
+  .footer[data-align="start"] {
+    justify-content: flex-start;
+  }
+
+  .footer[data-align="center"] {
+    justify-content: center;
+  }
+
+  .footer[data-align="end"] {
+    justify-content: flex-end;
+  }
+
+  .footer[data-align="between"] {
+    justify-content: space-between;
+  }
+
+  /* A fullscreen dialog has spare height; pin the actions to the bottom edge
+   * instead of leaving them floating under the content. */
+  .popup[data-size="fullscreen"] .footer {
+    margin-block-start: auto;
+  }
+
+  /* Trigger and Close ------------------------------------------------------
+   * A modest neutral button so an unstyled `<Dialog.Trigger>Open</...>` does
+   * not fall back to the UA's grey chrome. Both parts drop these styles
+   * entirely when the consumer passes `render` (typically our own `<Button>`),
+   * because two full button styles on one element resolve by source order
+   * inside the same cascade layer — which is not something a consumer can
+   * predict or fix.
+   * ---------------------------------------------------------------------- */
+  .trigger,
+  .close {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-control-gap);
+    height: var(--pui-control-h-md);
+    padding-inline: var(--pui-control-px-md);
+    margin: 0;
+    border: 1px solid var(--pui-color-border);
+    border-radius: var(--pui-radius-control);
+
+    background-color: var(--pui-color-panel);
+    color: var(--pui-color-foreground);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]),
+    .close:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+    }
+  }
+
+  .trigger:active:not([data-disabled]),
+  .close:active:not([data-disabled]) {
+    background-color: var(--pui-color-panel-active);
+  }
+
+  .trigger[data-disabled],
+  .close[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Icon-only close: square, quiet, and never smaller than the 24px hit
+   * target from SC 2.5.8. Always needs an `aria-label`. */
+  .close[data-icon-only] {
+    padding-inline: 0;
+    aspect-ratio: 1;
+    min-inline-size: max(var(--pui-control-h-md), var(--pui-target-min));
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--pui-color-foreground-muted);
+  }
+
+  @media (hover: hover) {
+    .close[data-icon-only]:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+      color: var(--pui-color-foreground);
+    }
+  }
+}

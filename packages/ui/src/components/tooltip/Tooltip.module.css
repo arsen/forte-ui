@@ -1,0 +1,275 @@
+/*
+ * Tooltip
+ *
+ * Three styled parts: the Positioner (a bare stacking context), the Popup
+ * (the surface) and the Arrow. Provider and Root render no DOM element at all,
+ * so there is nothing to style there.
+ *
+ * There is deliberately no `prefers-reduced-motion` block here. The motion
+ * tokens already collapse their own geometry — `--pui-travel-sm` becomes 0px
+ * and `--pui-scale-enter` becomes exactly 1 — so the enter/exit transition
+ * degrades to a pure opacity fade without this file knowing that reduced
+ * motion exists.
+ *
+ * Two Base UI constraints are load-bearing in this file:
+ *
+ *  - Enter/exit runs on TRANSITIONS keyed off [data-starting-style] /
+ *    [data-ending-style], never on keyframes. A transition can be cancelled
+ *    mid-flight, so a tooltip that closes while it is still opening reverses
+ *    smoothly instead of snapping.
+ *
+ *  - Nothing here animates infinitely. Base UI awaits
+ *    Promise.all(popup.getAnimations().map(a => a.finished)) before it
+ *    unmounts the popup, and an infinite animation's promise never settles —
+ *    the tooltip would stay in the DOM forever.
+ */
+@layer pretty-ui.components {
+  /* ------------------------------------------------------------------------
+   * Trigger
+   *
+   * Almost unstyled on purpose: the trigger is usually an existing control
+   * (`render={<Button />}`, an icon button, a link) and a reset here would
+   * fight whatever it is composed with. `Trigger.disabled` disables the
+   * TOOLTIP, not the element — it never sets the `disabled` attribute — so it
+   * must not be dimmed like a disabled control. It is still clickable, and
+   * showing it as disabled would be a lie. `data-trigger-disabled` is exposed
+   * purely as a styling hook for consumers who want more.
+   * --------------------------------------------------------------------- */
+  .trigger[data-trigger-disabled] {
+    cursor: default;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Positioner
+   *
+   * Base UI writes position/top/left as inline styles; the only thing left to
+   * decide here is stacking. There is no z-index token in the inventory, so
+   * the literal lives behind a component knob and can be re-pointed at an
+   * app's own scale without forking.
+   * --------------------------------------------------------------------- */
+  .positioner {
+    --pui-tooltip-z-index: 50;
+
+    z-index: var(--pui-tooltip-z-index);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Popup
+   * --------------------------------------------------------------------- */
+  .popup {
+    /* Component tokens. Declared here, on the popup itself, so an ancestor's
+     * value is only inherited and loses to these. To re-skin the tooltip, set
+     * them on this element through `className` on `Tooltip.Popup` — an
+     * unlayered consumer rule beats `pretty-ui.components` whatever its
+     * specificity — or re-point the global tokens on the right-hand side,
+     * which the popup only reads and never re-declares. */
+    --pui-tooltip-bg: var(--pui-gray-12);
+    --pui-tooltip-fg: var(--pui-gray-1);
+    --pui-tooltip-radius: var(--pui-radius-2);
+    --pui-tooltip-padding-block: var(--pui-space-1);
+    --pui-tooltip-padding-inline: var(--pui-space-2);
+    --pui-tooltip-font-size: var(--pui-font-size-1);
+    --pui-tooltip-font-weight: var(--pui-font-weight-medium);
+    --pui-tooltip-shadow: var(--pui-shadow-2);
+    --pui-tooltip-max-width: 18rem;
+    --pui-tooltip-travel: var(--pui-travel-sm);
+    /* Sized in `em` so the arrow tracks --pui-tooltip-font-size. Declared
+     * here rather than on .arrow so a consumer can retune both parts from one
+     * place; .arrow reads them with the same values as fallbacks. */
+    --pui-tooltip-arrow-width: 1em;
+    --pui-tooltip-arrow-height: 0.5em;
+
+    /* Enter/exit displacement, resolved per side just below. Defaults to the
+     * `side="top"` case because that is Base UI's default side. */
+    --pui-tooltip-enter-x: 0px;
+    --pui-tooltip-enter-y: var(--pui-tooltip-travel);
+
+    box-sizing: border-box;
+    /* The Arrow is positioned against this box. */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* --available-width is published by the Positioner and inherited here. It
+     * is absent for the first frame, hence the fallback: a bare min() with an
+     * unset var is invalid at computed-value time and would drop the cap. */
+    max-width: min(var(--pui-tooltip-max-width), var(--available-width, 100vw));
+    padding-block: var(--pui-tooltip-padding-block);
+    padding-inline: var(--pui-tooltip-padding-inline);
+    border-radius: var(--pui-tooltip-radius);
+
+    background-color: var(--pui-tooltip-bg);
+    color: var(--pui-tooltip-fg);
+    /* Stripped entirely in forced-colors mode — which is exactly why the
+     * element also carries .pui-hc-surface for its boundary. */
+    box-shadow: var(--pui-tooltip-shadow);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-tooltip-font-size);
+    font-weight: var(--pui-tooltip-font-weight);
+    line-height: var(--pui-line-height-tight);
+    letter-spacing: var(--pui-letter-spacing-normal);
+    text-align: start;
+
+    /* Grow out of the trigger rather than out of the popup's own centre.
+     * --transform-origin is published by the Positioner and points back at
+     * the anchor. */
+    transform-origin: var(--transform-origin);
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Directional rise: the popup starts a few pixels nearer the trigger and
+   * settles outward. `inline-start`/`inline-end` are legal `data-side` values
+   * as well as physical ones, so both are mapped. :dir() lives inside :is(),
+   * whose argument list is forgiving — an engine without :dir() support drops
+   * only that one branch and the physical sides keep working. */
+  .popup[data-side="top"] {
+    --pui-tooltip-enter-x: 0px;
+    --pui-tooltip-enter-y: var(--pui-tooltip-travel);
+  }
+
+  .popup[data-side="bottom"] {
+    --pui-tooltip-enter-x: 0px;
+    --pui-tooltip-enter-y: calc(-1 * var(--pui-tooltip-travel));
+  }
+
+  .popup:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    --pui-tooltip-enter-x: var(--pui-tooltip-travel);
+    --pui-tooltip-enter-y: 0px;
+  }
+
+  .popup:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    --pui-tooltip-enter-x: calc(-1 * var(--pui-tooltip-travel));
+    --pui-tooltip-enter-y: 0px;
+  }
+
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: translate(var(--pui-tooltip-enter-x), var(--pui-tooltip-enter-y))
+      scale(var(--pui-scale-enter));
+  }
+
+  /* Leaving should feel quicker to get out of the way than arriving. */
+  .popup[data-ending-style] {
+    transition-timing-function: var(--pui-ease-exit);
+  }
+
+  /* Base UI sets data-instant when the open/close was NOT the result of the
+   * hover delay — an adjacent grouped tooltip taking over, a dismissal, a
+   * focus jump. Animating those looks broken, so the transition is dropped
+   * for exactly those cases. Without this, tooltips animate when they
+   * shouldn't. */
+  .popup[data-instant],
+  .arrow[data-instant] {
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Arrow
+   *
+   * An SVG, never a CSS-border triangle. In forced-colors mode all four
+   * border colours are forced to CanvasText, so the classic
+   * `border: 6px solid transparent` triangle renders as a filled RECTANGLE.
+   * Two flat paths cannot fail that way, and they let the outline be given
+   * its own system colour below.
+   *
+   * Offsets follow from the geometry: the unrotated box is
+   * width x height, so pushing it out by `height` on the block axis, or by
+   * (width + height) / 2 on the inline axis after a quarter turn, lands its
+   * base flush against the popup edge.
+   * --------------------------------------------------------------------- */
+  .arrow {
+    display: block;
+    position: relative;
+    width: var(--pui-tooltip-arrow-width, 1em);
+    height: var(--pui-tooltip-arrow-height, 0.5em);
+  }
+
+  .arrow[data-side="top"] {
+    bottom: calc(-1 * var(--pui-tooltip-arrow-height, 0.5em));
+    rotate: 180deg;
+  }
+
+  .arrow[data-side="bottom"] {
+    top: calc(-1 * var(--pui-tooltip-arrow-height, 0.5em));
+    rotate: 0deg;
+  }
+
+  .arrow:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    right: calc(
+      -0.5 *
+        (
+          var(--pui-tooltip-arrow-width, 1em) +
+            var(--pui-tooltip-arrow-height, 0.5em)
+        )
+    );
+    rotate: 90deg;
+  }
+
+  .arrow:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    left: calc(
+      -0.5 *
+        (
+          var(--pui-tooltip-arrow-width, 1em) +
+            var(--pui-tooltip-arrow-height, 0.5em)
+        )
+    );
+    rotate: -90deg;
+  }
+
+  .arrowSvg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
+  .arrowFill {
+    fill: var(--pui-tooltip-bg);
+  }
+
+  /* Invisible by default; it exists so forced-colors has an outline to paint
+   * and so a bordered custom skin can point it at a border colour. */
+  .arrowBorder {
+    fill: transparent;
+  }
+
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these must not live in the
+ * components layer. Harmless where they sit today, but the next edit here
+ * would silently start losing to the global rules.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* System colour keywords survive the forced-colors substitution, so this
+     * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
+     * matching the CanvasText border .pui-hc-surface puts on the popup. */
+    .arrowFill {
+      fill: Canvas;
+    }
+
+    .arrowBorder {
+      fill: CanvasText;
+    }
+  }
+}
