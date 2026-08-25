@@ -7,15 +7,18 @@
  * portalled to <body> and therefore does NOT inherit anything declared on the
  * trigger. Knobs are declared at the top of the rule that owns the surface.
  *
- * Three things about this file are load-bearing and easy to undo by accident:
+ * Four things about this file are load-bearing and easy to undo by accident:
  *
  *   1. `alignItemWithTrigger` (Base UI's default) makes the popup OVERLAP the
  *      trigger so the selected item's text lands on the trigger's value text.
  *      While that mode is active `data-side` is the literal string "none" on
  *      BOTH the Positioner and the Popup, and every other positioning prop is
- *      ignored. Any [data-side] rule has to answer for "none", and the enter/
- *      exit transition has to be suppressed there — animating a popup that is
- *      already sitting on top of its trigger reads as a glitch, not a reveal.
+ *      ignored. Any [data-side] rule has to answer for "none" — including the
+ *      enter/exit transition, which is a DIFFERENT gesture there: the popup
+ *      grows out of the selected row (Base UI points `--transform-origin` at
+ *      that row's text) instead of rising off a side. A directional slide in
+ *      that mode would read as a glitch, because there is no side to slide
+ *      from.
  *
  *   2. Enter/exit is transitions on [data-starting-style]/[data-ending-style],
  *      never keyframes. A transition can be cancelled mid-flight, so reopening
@@ -24,7 +27,23 @@
  *      getAnimations() on those exact elements to decide when to unmount, and
  *      an infinite animation's promise never settles.
  *
- *   3. There is deliberately no `prefers-reduced-motion` block. The motion
+ *   3. That enter/exit is a THREE-part mechanism and all three parts have to
+ *      move together: the Popup folds on `scaleY`, the List scales its own box
+ *      back up by the reciprocal so the rows are not squashed with it, and the
+ *      Popup crops the overhang so the pair reads as a reveal. Change the fold
+ *      factor, the duration or the easing on one and the other two have to
+ *      follow, or the rows visibly stretch. It is done with transforms rather
+ *      than height because Base UI measures this popup's geometry when it
+ *      opens — an enter animation that touched layout would corrupt it.
+ *
+ *      For the same reason the List's half of the ENTER is a keyframe
+ *      animation rather than a transition. Base UI takes that measurement
+ *      while [data-starting-style] is still on the Popup, and it neutralises
+ *      only the Popup's own transform before reading; a transform on the List
+ *      during that window moves the item text it measures and the popup opens
+ *      permanently misaligned. See `.list` for the full note.
+ *
+ *   4. There is deliberately no `prefers-reduced-motion` block. The motion
  *      tokens collapse their own geometry — `--pui-scale-enter` becomes 1 and
  *      `--pui-travel-xs` becomes 0px — so consuming them is already correct.
  */
@@ -99,7 +118,12 @@
 
     -webkit-user-select: none;
     user-select: none;
-    cursor: default;
+    cursor: pointer;
+    /* Deliberately no press squash. `:active` is the only hook a Select
+     * trigger has for one (`data-pressed` is derived from `open`, not from the
+     * pointer — see below), and `:active` begins on pointer-DOWN, which is the
+     * same event that opens the popup. A squash there fires while the list is
+     * already unfolding rather than on the click, so it reads as a glitch. */
     transition:
       background-color var(--pui-duration-fast) var(--pui-ease-standard),
       border-color var(--pui-duration-fast) var(--pui-ease-standard),
@@ -113,7 +137,9 @@
     }
   }
 
-  /* `data-pressed` covers keyboard activation too, which `:active` misses. */
+  /* On a Select these two are the same state — Base UI derives `data-pressed`
+   * from `open`, not from the pointer — but both are matched so the rule keeps
+   * working if that mapping ever splits. */
   .trigger[data-pressed]:not([data-disabled]),
   .trigger[data-popup-open] {
     background-color: var(--pui-select-trigger-bg-active);
@@ -211,6 +237,28 @@
     color: var(--pui-color-foreground);
   }
 
+  /* The two carets of the default icon spread apart while the popup is open,
+   * which is the one bit of the trigger that reads as "expanded" from across
+   * the page. Only the built-in icon carries these classes — a caller's own
+   * icon is left alone, and only inherits the colour change above.
+   *
+   * `transform` rather than the `translate` property: this is an SVG child,
+   * and the shorthand has the wider baseline there. Half of `--pui-travel-xs`
+   * (1px) is the whole distance, and it still collapses to 0 under reduced
+   * motion because the token does. */
+  .caret {
+    transition: transform var(--pui-duration-spring-snappy)
+      var(--pui-ease-spring-snappy);
+  }
+
+  .trigger[data-popup-open] .caret[data-direction="up"] {
+    transform: translateY(calc(-1 * var(--pui-travel-xs) / 2));
+  }
+
+  .trigger[data-popup-open] .caret[data-direction="down"] {
+    transform: translateY(calc(var(--pui-travel-xs) / 2));
+  }
+
   /* Backdrop ---------------------------------------------------------------
    * Opt-in. Geometry and the fade come from `.pui-scrim`; this only owns
    * stacking, so the two cannot disagree. */
@@ -261,6 +309,30 @@
      * end padding still have room outside the trigger's box. */
     --pui-select-popup-overhang: var(--pui-space-5);
 
+    /* Motion knobs. The gesture is a vertical UNFOLD, not a zoom: only the
+     * block axis is scaled, and `transform-origin` pins the edge the popup
+     * grows out of, so it reads the way a collapsible opens. Both factors are
+     * derived from `--pui-scale-enter` (0.95) rather than written as literals,
+     * so they still collapse to exactly 1 under reduced motion — where that
+     * token becomes 1 and the delta 0.
+     *
+     * The aligned factor is the larger of the two: that popup is anchored in
+     * its middle, so each end only travels half the difference, and it needs
+     * more of it to read as the same gesture. */
+    --pui-select-popup-unfold: calc(1 - (1 - var(--pui-scale-enter)) * 3);
+    --pui-select-popup-unfold-aligned: calc(
+      1 - (1 - var(--pui-scale-enter)) * 5
+    );
+    /* The fold's easing and the List's counter-fold factor. Both are read by
+     * BOTH halves of the pair — this rule's `transition` and the List's
+     * animation — so that the only place either can be changed is here, and
+     * the two cannot drift apart. */
+    --pui-select-popup-ease: var(--pui-ease-spring-snappy);
+    --pui-select-counter-fold: calc(1 / var(--pui-select-popup-unfold));
+    /* Only the inline sides use this; see the [data-side] rules below. */
+    --pui-select-popup-travel: var(--pui-travel-sm);
+    --pui-select-popup-enter-x: 0px;
+
     /* Layout knobs shared by List, Item and GroupLabel. They live here
      * because the group label has to indent past the check indicator to line
      * its text up with the item text, and it is not an Item descendant. */
@@ -272,6 +344,17 @@
     /* The scroll arrows are absolutely positioned by Base UI (an inline
      * style), so this element has to be their containing block. */
     position: relative;
+    /* Load-bearing for the unfold: the List scales its own box back up by the
+     * reciprocal of the fold (see `.list`), so it hangs outside this box for
+     * the length of the transition and has to be cropped — cropping is what
+     * makes the pair read as a reveal instead of a resize.
+     *
+     * `clip`, not `hidden`: `hidden` would make this a scroll container, and
+     * the browser scrolls every scrollable ancestor when focus moves between
+     * items — during those few frames where the List really does overflow,
+     * that would leave the popup permanently nudged out of place. `clip`
+     * crops without ever becoming scrollable. */
+    overflow: clip;
     /* Restores what `.positioner` switched off; see the note there. */
     pointer-events: auto;
     min-width: var(--anchor-width);
@@ -285,32 +368,95 @@
     background-clip: padding-box;
     color: var(--pui-select-popup-fg);
     box-shadow: var(--pui-select-popup-shadow);
+    /* Grow out of the anchor rather than out of the popup's own centre.
+     * `--transform-origin` is published by the Positioner and points back at
+     * the trigger — and in aligned mode Base UI re-points it at the selected
+     * item's text, which is what makes the unfurl below work. */
     transform-origin: var(--transform-origin);
     transition:
       opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-duration-fast) var(--pui-ease-emphasized);
+      transform var(--pui-duration-normal) var(--pui-select-popup-ease);
   }
 
-  .popup[data-starting-style] {
-    opacity: 0;
-    transform: scale(var(--pui-scale-enter));
+  /* A popup placed above or below the trigger needs no help from a slide:
+   * `--transform-origin` already sits on the edge facing the trigger, so
+   * `scaleY` alone unfolds it away from the control — down for `bottom`, up
+   * for `top`.
+   *
+   * The inline sides are the exception. There the origin is on a vertical
+   * edge, which leaves the fold symmetrical about the popup's middle and says
+   * nothing about where the popup came from, so those two get a short slide as
+   * well. `inline-start`/`inline-end` are legal `data-side` values alongside
+   * the physical ones, so both spellings are mapped. :dir() lives inside
+   * :is(), whose argument list is forgiving — an engine without :dir() drops
+   * only that branch and the physical sides keep working. */
+  .popup:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    --pui-select-popup-enter-x: var(--pui-select-popup-travel);
   }
 
+  .popup:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    --pui-select-popup-enter-x: calc(-1 * var(--pui-select-popup-travel));
+  }
+
+  /* Closing folds back the way it opened rather than puffing outward, so the
+   * two directions read as one reversible gesture. */
+  .popup[data-starting-style],
   .popup[data-ending-style] {
     opacity: 0;
-    transform: scale(var(--pui-scale-exit));
+    transform: translateX(var(--pui-select-popup-enter-x))
+      scaleY(var(--pui-select-popup-unfold));
+  }
+
+  /* Leaving is quicker than arriving, and skips the spring: a settle on the
+   * way out just delays getting out of the way. */
+  .popup[data-ending-style] {
+    transition-duration: var(--pui-duration-fast);
     transition-timing-function: var(--pui-ease-exit);
   }
 
-  /* alignItemWithTrigger is active. The popup is already over the trigger, so
-   * scaling it in would look like a glitch; a 1px settle is the whole effect.
-   * `transition: none` is safe here — Base UI's unmount check resolves an
-   * empty getAnimations() list immediately. */
+  /* alignItemWithTrigger is active: the popup is already sitting on top of the
+   * trigger, so there is no side to rise from and a directional slide would
+   * read as a glitch. What is left is the gesture the mode is actually for —
+   * the list unfurls out of the selected row, which stays put over the
+   * trigger's value text because `--transform-origin` is pinned to it.
+   *
+   * Base UI temporarily clears `transform`/`scale`/`translate` on this element
+   * while it measures the aligned geometry and restores them afterwards, so
+   * animating the property here is safe. `--pui-ease-spring-precise` is a
+   * critically-damped spring: organic, but with no overshoot — a side-placed
+   * popup may settle past its final height because its far edge is unattached,
+   * but this one is pinned to a row sitting on the trigger and must not
+   * wobble against it. */
   .popup[data-side="none"] {
+    --pui-select-popup-ease: var(--pui-ease-spring-precise);
+    --pui-select-counter-fold: calc(
+      1 / var(--pui-select-popup-unfold-aligned)
+    );
+
     min-width: calc(var(--anchor-width) + var(--pui-select-popup-overhang));
-    opacity: 1;
+    /* Not part of the motion — a standing optical correction. Base UI lands
+     * the selected row a hair high in this mode (it positions the popup partly
+     * through a scroll offset, and that can only be a whole pixel), measurably
+     * 1px, so this puts the row back on the trigger's value text. Removing it
+     * leaves the popup looking very slightly out of alignment; it has to stay
+     * in the folded poses below too, or the row would drift by that pixel over
+     * the course of the animation. */
     transform: translateY(1px);
-    transition: none;
+  }
+
+  .popup[data-side="none"][data-starting-style],
+  .popup[data-side="none"][data-ending-style] {
+    opacity: 0;
+    transform: translateY(1px)
+      scaleY(var(--pui-select-popup-unfold-aligned));
   }
 
   /* List -------------------------------------------------------------------
@@ -333,6 +479,71 @@
     padding-block: var(--pui-select-list-padding-y);
     border-radius: inherit;
     scroll-padding-block: var(--pui-space-5);
+    /* Same origin the Popup folds around. `--transform-origin` is a custom
+     * property set on the Popup (aligned mode) or the Positioner (every other
+     * mode), so it inherits down to here, and the two boxes are close enough
+     * that the same percentage lands on the same point.
+     *
+     * The transition here only ever runs the exit; the enter is the animation
+     * below, for the reason spelled out there. */
+    transform-origin: var(--transform-origin);
+    transition: transform var(--pui-duration-fast) var(--pui-ease-exit);
+  }
+
+  /* Counter-fold.
+   *
+   * `scaleY` on the Popup alone would squash the rows along with the box. So
+   * for the length of the transition the List scales its own box back up by
+   * the reciprocal: the two cancel, the rows keep their natural height, and
+   * what actually animates is how much of the List the Popup lets through.
+   * That is the trick an accordion plays with `overflow`, done with transforms
+   * because Base UI measures this popup's geometry on open and an enter
+   * animation that touched layout would corrupt that measurement.
+   *
+   * The reciprocal is computed from the same token-derived factor, so reduced
+   * motion still collapses both halves to exactly 1. Linear interpolation of a
+   * reciprocal is not itself a reciprocal, but across this range the residual
+   * is under 1% — far below anything the eye reads as movement — provided the
+   * two transitions stay in step. Keep the duration and easing here matched to
+   * the Popup's, enter AND exit.
+   *
+   * The transform lives on the List rather than on a wrapper inside it because
+   * a transformed element contributes its TRANSFORMED box to an ancestor
+   * scroller's scrollable overflow. Inside the List that would inflate the
+   * scrollHeight Base UI reads when it aligns the popup; on the List itself —
+   * the scroller — it changes nothing. */
+  @keyframes counterFold {
+    from {
+      transform: scaleY(var(--pui-select-counter-fold));
+    }
+  }
+
+  /* The enter half is an ANIMATION and not a transition, which is the one
+   * place this file departs from rule 2 in the header — and the reason is easy
+   * to undo by accident.
+   *
+   * A transition would need its start pose to be this element's real style for
+   * as long as [data-starting-style] is on the Popup. That window is exactly
+   * when Base UI measures the selected item's text, to work out how far to
+   * shift the popup so that row lands on the trigger's value. It neutralises
+   * the POPUP's own transform before taking that reading and restores it
+   * afterwards — but it knows nothing about a transform on the List, and one
+   * here displaces the very text it is reading. The popup then opens with the
+   * selected row tens of pixels off the trigger, permanently: the reading is
+   * taken once and baked into the position.
+   *
+   * An animation carries its start pose inside the animation instead, and only
+   * starts once the Popup is settled, so at measurement time the List is
+   * genuinely untransformed. The exit is under no such constraint — Base UI
+   * skips that measurement entirely while the popup is ending — so it stays a
+   * transition, which reverses cleanly if the popup is reopened mid-close. */
+  .popup:not([data-starting-style], [data-ending-style]) .list {
+    animation: counterFold var(--pui-duration-normal)
+      var(--pui-select-popup-ease);
+  }
+
+  .popup[data-ending-style] .list {
+    transform: scaleY(var(--pui-select-counter-fold));
   }
 
   /* Scroll arrows ----------------------------------------------------------
@@ -355,12 +566,31 @@
     background-color: var(--pui-select-popup-bg);
     color: var(--pui-color-foreground-muted);
     cursor: default;
-    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+    translate: 0 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-duration-fast) var(--pui-ease-standard);
   }
 
+  /* Each arrow slides in from the edge it is pinned to, so it reads as part of
+   * the popup's own chrome arriving rather than as a row appearing. */
   .scrollArrow[data-starting-style],
   .scrollArrow[data-ending-style] {
     opacity: 0;
+  }
+
+  .scrollArrow[data-direction="up"]:is(
+    [data-starting-style],
+    [data-ending-style]
+  ) {
+    translate: 0 calc(-1 * var(--pui-travel-xs));
+  }
+
+  .scrollArrow[data-direction="down"]:is(
+    [data-starting-style],
+    [data-ending-style]
+  ) {
+    translate: 0 var(--pui-travel-xs);
   }
 
   .scrollArrow[data-direction="up"] {
@@ -375,22 +605,19 @@
     border-end-end-radius: inherit;
   }
 
-  /* An invisible extension of the hover area. In alignItemWithTrigger mode
-   * the popup sits over the trigger, so the pointer is often already past the
-   * arrow when the list needs to scroll; reaching one arrow-height beyond the
-   * popup edge catches it. */
+  /* An invisible extension of the hover area, and no longer able to reach
+   * past the popup's own edge: the Popup crops its descendants now (see
+   * `overflow` there), and cropping takes hit-testing with it. It used to gain
+   * one arrow-height OUTSIDE the popup in alignItemWithTrigger mode, where the
+   * popup covers the trigger and the pointer is often already past the arrow.
+   * Restoring that means giving up the cropping the unfold depends on, so it
+   * is a straight trade — the arrows still respond when the pointer is on
+   * them, and the List still scrolls by wheel, drag, keyboard and typeahead
+   * regardless. */
   .scrollArrow::before {
     content: "";
     position: absolute;
     inset: 0;
-  }
-
-  .scrollArrow[data-side="none"][data-direction="up"]::before {
-    top: -100%;
-  }
-
-  .scrollArrow[data-side="none"][data-direction="down"]::before {
-    bottom: -100%;
   }
 
   /* Item -------------------------------------------------------------------
@@ -448,9 +675,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    /* The check is the one moment of feedback the user gets for the choice
+     * they just made, so it springs rather than fades. */
     transition:
       opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      scale var(--pui-duration-fast) var(--pui-ease-emphasized);
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
   }
 
   .itemIndicator[data-starting-style],
