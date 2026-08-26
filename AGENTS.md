@@ -33,8 +33,11 @@ packages/ui             the library
   scripts/                ramp.mjs · motion.mjs (source of truth) + generators
 apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/components/<name>/page.mdx   the written page
-  app/globals.css                  site chrome, in @layer docs
-  app/tailwind.css                 the pretty-ui token bridge — read before styling a demo
+  app/globals.css                  the CSS that could not be a utility — read it
+  app/tailwind.css                 the pretty-ui token bridge — read before styling anything
+  components/styles.ts             class strings two components have to agree on
+  lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
+  mdx-components.tsx               the prose typography, per element
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
 ```
 
@@ -351,15 +354,20 @@ Test RTL — the demo frame has a toggle for it.
 
 ---
 
-## Styling a demo — Tailwind
+## Styling the docs site — Tailwind
 
-The docs site runs Tailwind v4, and demos are its main customer: a demo is
-documentation, so the class list a reader copies out of one is the example they
-paste into their own app. Reach for utilities instead of a `style={{ ... }}`
-object for anything that is layout or typography.
+The docs site is styled with Tailwind v4 and nothing else: there are no CSS
+modules left in `apps/docs`, and `globals.css` is 159 lines of things a utility
+class provably cannot express. Demos are still the reason it is set up this
+way — a demo is documentation, so the class list a reader copies out of one is
+the example they paste into their own app — but the chrome now uses the same
+vocabulary, which is what stops the two drifting.
+
+Reach for utilities instead of a `style={{ ... }}` object for anything that is
+layout or typography.
 
 Setup lives in [`apps/docs/app/tailwind.css`](apps/docs/app/tailwind.css).
-It is not stock Tailwind. Two things about it are load-bearing:
+It is not stock Tailwind. Three things about it are load-bearing:
 
 **The theme is `@theme inline`, and must stay that way.** Plain `@theme` emits
 `--color-panel: var(--pui-color-panel)` on `:root` and points utilities at
@@ -378,6 +386,13 @@ element and makes scopes, `data-pui-density` and `data-pui-radius` all work.
 with teeth — those classes would survive review and then fail to respond to a
 seed change.
 
+**`@source` is an explicit list, and a missing entry fails quietly.** Automatic
+detection would take its base directory from this file's location and miss both
+`demos/` and `mdx-components.tsx`. An unscanned file's classes are simply never
+emitted — and because most class names also appear somewhere scanned, the
+breakage is partial: `mb-3` works, `mt-8` does not, and the page looks slightly
+off rather than obviously broken. Add the path when you add the file.
+
 | Want | Write |
 | :-- | :-- |
 | `gap: var(--pui-space-5)` | `gap-5` — the eight steps map 1:1, so `gap-6` is 2rem, not Tailwind's stock 1.5rem |
@@ -387,7 +402,16 @@ seed change.
 | `color: var(--pui-color-foreground-muted)` | `text-foreground-muted` |
 | `transition-duration: var(--pui-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
 | `inline-size: min(32rem, 100%)` | `w-full max-w-lg` — the `--container-*` scale is untouched |
+| the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-shell`, `max-w-measure`, `max-w-hero` |
+| a layout breakpoint | `max-toc:`, `max-two-col:`, `max-split:`, `max-nav:` — named for the column that stops fitting |
 | any other token | `h-(--pui-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
+
+Four named `@custom-variant`s exist because their guard is an `@supports`
+nested in a `@media`, which the bracket syntax can express only as a class name
+nobody reads twice — and the half that would get dropped in the shortening is
+always the accessibility half: `frosted:` (backdrop blur, not under reduced
+transparency), `scroll-driven:` (a view timeline exists), `gradient-text:`
+(`background-clip: text` will actually paint, so not under forced colours).
 
 Three things stay in a `style` object, and are not oversights:
 
@@ -399,13 +423,45 @@ Three things stay in a `style` object, and are not oversights:
   motion, so a demo that moves something writes CSS, the way a component does.
 - **Values computed at runtime.**
 
-Layer order is what makes utilities usable inside a demo at all:
-`pretty-ui.* → docs → theme, base, components, utilities`, declared at the top
-of [`apps/docs/app/globals.css`](apps/docs/app/globals.css) and fixed by the
-import order in `layout.tsx`. Without it `.prose p` (0,1,1) would beat `.mb-4`
-(0,1,0) on specificity and a demo could not override the page's prose
-typography. Preflight is deliberately not imported — it would strip the UA
-list markers and heading sizes that the MDX prose builds on.
+### `cn`, and why it is configured
+
+[`apps/docs/lib/cn.ts`](apps/docs/lib/cn.ts) is the usual
+`twMerge(clsx(inputs))` — with one difference that is not optional.
+tailwind-merge ships knowing Tailwind's DEFAULT theme, and this site deleted
+that theme. Stock, its colour scale matches any value, so `text-2` parses as a
+text *colour* and `cn("text-2", "text-foreground-muted")` silently returns only
+the colour. The scales in that file narrow every namespace to the names
+`tailwind.css` actually defines. **Add a theme key in one file and you add it in
+both** — a name missed in `cn.ts` does not error, it just stops overriding its
+own family.
+
+### What is still CSS, and why
+
+[`globals.css`](apps/docs/app/globals.css) holds four blocks, each of which
+targets something no class can reach:
+
+- **A Preflight substitute** — `box-sizing` on every element, the `a` colour and
+  underline reset, and the global `:focus-visible` ring. Preflight itself is
+  deliberately not imported: it would strip the UA list markers and heading
+  sizes the MDX prose builds on.
+- **Shiki's output** — `pre.shiki`, `.shiki span`, `.line.highlighted`. It
+  arrives as an HTML string from the highlighter or the rehype plugin; there is
+  no element to hang a class on.
+- **The palette cross-fade** — it transitions custom properties by name across
+  `.themeTransition *`.
+
+Prose typography is NOT in there. It lives in
+[`mdx-components.tsx`](apps/docs/mdx-components.tsx), one class list per
+element, which is what keeps it from reaching into a demo: a `<p>` inside a
+demo is authored in the demo's own file and never passes through the mapping.
+That is why the old `margin: revert-layer` rule aimed at the demo frame is
+gone.
+
+Layer order still matters: `pretty-ui.* → docs → theme, base, components,
+utilities`, declared at the top of
+[`apps/docs/app/globals.css`](apps/docs/app/globals.css) and fixed by the
+import order in `layout.tsx`. It is what lets a utility beat the site's own
+base rules without a single `!important`.
 
 ---
 
@@ -430,7 +486,7 @@ list markers and heading sizes that the MDX prose builds on.
    the MDX page. Demos are imported twice from the same file (once to render,
    once through `?raw`), so the code shown is provably the code that runs —
    which is also why their layout is Tailwind rather than a `style` object; see
-   *Styling a demo* above.
+   *Styling the docs site* above.
 10. Add the page to the `NAV` array in
     [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx).
 

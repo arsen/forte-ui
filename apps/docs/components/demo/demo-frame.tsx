@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import styles from "./demo-frame.module.css";
+import { cn } from "@/lib/cn";
 
 export type DemoScope = {
   theme: "inherit" | "light" | "dark";
@@ -19,7 +19,10 @@ export type DemoScope = {
  * The theme scoping works because the library re-declares its colour ramps on
  * `.pui-theme` and `[data-pui-theme]`, not only on `:root`. A custom property
  * containing `var()` is substituted at the element where it is DECLARED, so
- * setting a seed on a descendant of `:root` alone would change nothing.
+ * setting a seed on a descendant of `:root` alone would change nothing. It is
+ * also why the frame's colours are written as `bg-background` rather than a
+ * hardcoded value: `@theme inline` puts the token reference in the utility, so
+ * it resolves here, under the scope, and not at `:root`.
  */
 export function DemoFrame({
   children,
@@ -32,12 +35,17 @@ export function DemoFrame({
 }) {
   return (
     <div
-      // `demoPreview` is a plain global class, not a CSS-module one: globals.css
-      // needs to reach inside this subtree to undo the `.prose` typography (see
-      // the note there), and a hashed class it cannot name would not do.
-      className={[styles.frame, "pui-theme", "demoPreview", className]
-        .filter(Boolean)
-        .join(" ")}
+      className={cn(
+        // `@container` lets demos respond to the frame rather than the
+        // viewport, so a preview narrowed by the controls strip still shows its
+        // true responsive behaviour.
+        "@container flex min-h-[8rem] flex-wrap items-center justify-center gap-3 p-6",
+        "bg-background text-foreground",
+        // The shell clips the frame, so the frame never rounds its own corners.
+        "rounded-none",
+        "pui-theme",
+        className,
+      )}
       // `dir` is a real HTML attribute, not a CSS trick — it drives Base UI's
       // keyboard direction handling as well as the visual flow.
       dir={scope.dir}
@@ -50,6 +58,20 @@ export function DemoFrame({
 }
 
 const THEMES: DemoScope["theme"][] = ["inherit", "light", "dark"];
+
+/* One control in the strip. `pointer` because it acts; the font trio because
+ * there is no Preflight and a bare <button> would otherwise be 13px Arial. */
+const CONTROL = [
+  "inline-flex min-h-(--pui-target-min) cursor-pointer items-center gap-1",
+  // Not `[font:inherit]`: Tailwind emits arbitrary properties after ordinary
+  // utilities, and the `font` shorthand carries a `font-size` — so it silently
+  // overwrote the `text-1` sitting right next to it.
+  "rounded-2 border-0 bg-transparent px-2 py-1 font-sans font-normal leading-normal text-1",
+  "text-foreground-muted transition-[color,background-color] duration-fast ease-standard",
+  "hover:bg-panel-hover hover:text-foreground",
+  "data-active:bg-primary-soft data-active:text-primary-text",
+  "pui-focus-ring",
+].join(" ");
 
 /** The control strip. Kept separate so a demo can be rendered without it. */
 export function DemoControls({
@@ -64,10 +86,10 @@ export function DemoControls({
   const themeLabel = scope.theme === "inherit" ? "Auto" : scope.theme === "light" ? "Light" : "Dark";
 
   return (
-    <div className={styles.controls}>
+    <div className="flex flex-wrap gap-1 border-t border-border-muted bg-panel px-3 py-2">
       <button
         type="button"
-        className={`${styles.control} pui-focus-ring`}
+        className={CONTROL}
         onClick={() => onChange({ ...scope, theme: THEMES[(THEMES.indexOf(scope.theme) + 1) % THEMES.length]! })}
         aria-label={`Preview theme: ${themeLabel}. Activate to change.`}
         title="Preview theme"
@@ -78,7 +100,7 @@ export function DemoControls({
 
       <button
         type="button"
-        className={`${styles.control} pui-focus-ring`}
+        className={CONTROL}
         data-active={scope.dir === "rtl" || undefined}
         onClick={() => onChange({ ...scope, dir: scope.dir === "ltr" ? "rtl" : "ltr" })}
         aria-pressed={scope.dir === "rtl"}
@@ -89,7 +111,7 @@ export function DemoControls({
 
       <button
         type="button"
-        className={`${styles.control} pui-focus-ring`}
+        className={CONTROL}
         data-active={scope.motion === "reduce" || undefined}
         onClick={() => onChange({ ...scope, motion: scope.motion === "reduce" ? "inherit" : "reduce" })}
         aria-pressed={scope.motion === "reduce"}
@@ -100,7 +122,7 @@ export function DemoControls({
 
       <button
         type="button"
-        className={`${styles.control} pui-focus-ring`}
+        className={CONTROL}
         onClick={onReset}
         title="Reset the demo to its initial state"
       >

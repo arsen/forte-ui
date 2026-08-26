@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { cn } from "@/lib/cn";
+import { EYEBROW, STICKY_COLUMN } from "./styles";
 
 type NavItem = { title: string; href: string; badge?: string };
 type NavGroup = { title: string; items: NavItem[] };
@@ -46,18 +48,25 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sidebar">
-      <nav aria-label="Documentation">
+    <aside className={cn(STICKY_COLUMN, "max-nav:hidden")}>
+      {/* The gap replaces the old `.navGroup + .navGroup` margin — same result,
+        * and it survives a group being added or reordered. */}
+      <nav aria-label="Documentation" className="flex flex-col gap-5">
         {NAV.map((group) => (
-          <div key={group.title} className="navGroup">
-            <p className="navGroupTitle">{group.title}</p>
+          <div key={group.title}>
+            <p className={cn(EYEBROW, "mt-0 mb-2 px-2")}>{group.title}</p>
             {group.items.map((item) => {
               const active = pathname === item.href;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={active ? "navLink navLinkActive" : "navLink"}
+                  className={cn(
+                    "relative block rounded-2 px-2 py-1 text-2 font-medium",
+                    "transition-[color,background-color] duration-fast ease-standard",
+                    "text-foreground-muted hover:bg-panel-hover hover:text-foreground",
+                    active && "bg-primary-soft text-primary-text",
+                  )}
                   aria-current={active ? "page" : undefined}
                 >
                   {item.title}

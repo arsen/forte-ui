@@ -38,6 +38,9 @@ importers:
       '@stefanprobst/rehype-extract-toc':
         specifier: ^3.0.0
         version: 3.0.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       next:
         specifier: ^16.2.10
         version: 16.2.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -59,6 +62,9 @@ importers:
       shiki:
         specifier: ^4.4.3
         version: 4.4.3
+      tailwind-merge:
+        specifier: ^3.6.0
+        version: 3.6.0
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.3.3
@@ -1676,6 +1682,9 @@ packages:
         optional: true
       babel-plugin-macros:
         optional: true
+
+  tailwind-merge@3.6.0:
+    resolution: {integrity: sha512-uxL7qAVQriqRQPAyK3pj66VqskWqoZ37PW94jwOTwNfq/z9oyu1V+eqrZqtR2+fCiXdYOZe/Modt8GtvqNzu+w==}
 
   tailwindcss@4.3.3:
     resolution: {integrity: sha512-gOhV3P7ufE62QDGg1zVaTgCR+EtPv92k2nIhVcVKcLmxT1sUBsQGhnZj175j+MqRt4zLF7ic+sCYjfhxMxj7YQ==}
@@ -3559,6 +3568,8 @@ snapshots:
     dependencies:
       client-only: 0.0.1
       react: 19.2.7
+
+  tailwind-merge@3.6.0: {}
 
   tailwindcss@4.3.3: {}
 

@@ -51,6 +51,54 @@
 @source "../app";
 @source "../components";
 @source "../demos";
+/* Not a directory: `mdx-components.tsx` sits at the package root and holds the
+ * entire prose typography. Left off this list its classes are never emitted —
+ * and the failure is partial, which is worse than total: `mb-3` also appears in
+ * a scanned file and works, while `mt-8` appears only here and silently does
+ * not, so headings keep their UA margins and the page looks merely a bit off. */
+@source "../mdx-components.tsx";
+
+/* ---------------------------------------------------------------------------
+ * Custom variants.
+ *
+ * Two conditions the site needs are `@supports` nested inside `@media`, which
+ * the bracket syntax can express but only as a class name long enough that
+ * nobody reads it twice — and the second half, the accessibility half, is the
+ * part that would get dropped in the shortening. Naming them keeps the guard
+ * legible at the call site.
+ * ------------------------------------------------------------------------ */
+
+/* A frosted surface: only where `backdrop-filter` actually works, and never
+ * for a reader who has asked the OS to reduce transparency. */
+@custom-variant frosted {
+  @supports (backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+      @slot;
+    }
+  }
+}
+
+/* Scroll-driven animation, which Firefox does not implement today. Anything
+ * behind this variant must be enhancement — never the thing that makes
+ * content visible. */
+@custom-variant scroll-driven {
+  @supports (animation-timeline: view()) {
+    @slot;
+  }
+}
+
+/* Gradient-filled text. `background-clip: text` produces NO visible text at all
+ * once forced-colors strips the gradient, so the fallback colour is set
+ * unconditionally and the clip is applied only where a gradient will actually
+ * paint. Both halves of that guard have to survive together, which is the
+ * argument for naming it. */
+@custom-variant gradient-text {
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    @media not (forced-colors: active) {
+      @slot;
+    }
+  }
+}
 
 /* ---------------------------------------------------------------------------
  * Deletions.
@@ -284,4 +332,67 @@
   --ease-spring-snappy: var(--pui-ease-spring-snappy);
   --ease-spring-precise: var(--pui-ease-spring-precise);
   --ease-spring-bouncy: var(--pui-ease-spring-bouncy);
+}
+
+/* ---------------------------------------------------------------------------
+ * The docs site's own measures.
+ *
+ * Everything above is the library's token system. These are the few values the
+ * DOCUMENTATION owns — chrome dimensions that no component knows about. They
+ * are literals rather than token references, so a plain `@theme` is correct
+ * here: there is no `var()` to be substituted at the wrong element.
+ *
+ * They exist as theme keys instead of arbitrary values because each is used in
+ * more than one place and they have to agree. `--spacing-header` is the header's
+ * height AND the offset the two sticky columns hang from; `--spacing-anchor` is
+ * the page's `scroll-padding-top` AND the `scroll-margin-top` on every anchored
+ * heading. Written as `h-[3.5rem]` / `top-[3.5rem]`, one of the pair eventually
+ * gets edited alone and the sidebar tucks under the header.
+ *
+ * One-off decorative sizes are NOT here — a swatch that happens to be 1.1rem is
+ * a magic number whether it is spelled in CSS or in brackets, and inventing a
+ * theme key for it would imply a system that does not exist. Those stay as
+ * arbitrary values at the point of use.
+ * ------------------------------------------------------------------------ */
+@theme {
+  --spacing-header: 3.5rem;
+  --spacing-anchor: 5rem;
+
+  --container-shell: 84rem;
+  /* NOT `--container-prose`: Tailwind ships a `max-w-prose` of its own (65ch)
+   * and it takes precedence, so the utility silently measured 65 characters
+   * instead of 48rem. "Measure" is the typographic name for the thing anyway. */
+  --container-measure: 48rem;
+  --container-hero: 46rem;
+
+  /* Layout breakpoints, named for the thing that changes rather than for a
+   * t-shirt size — each one is the width at which one specific column stops
+   * fitting, which is why they are not on a regular scale. Tailwind's stock
+   * `sm`…`2xl` are left in place alongside them.
+   *
+   * These are `max-*` variants in use (`max-toc:hidden`), which v4 emits as
+   * `width < N` where the old CSS said `max-width: N`. The difference is the
+   * single pixel at exactly N. */
+  --breakpoint-toc: 1100px;
+  --breakpoint-two-col: 900px;
+  --breakpoint-split: 860px;
+  --breakpoint-nav: 820px;
+
+  /* The home page's scroll reveal. `--animate-*` is wiped above, so this is
+   * the one animation the site defines — and it is progressive enhancement
+   * only: the base state is fully VISIBLE and the keyframe is additive, so if
+   * scroll-driven animations are unsupported (Firefox today) the content
+   * simply appears. Content must never be gated behind an animation that may
+   * not run.
+   *
+   * `--pui-travel-lg` collapses to 0px under reduced motion on its own; the
+   * `motion-safe:` variant at the call site drops the animation entirely. */
+  --animate-reveal: pui-reveal linear both;
+
+  @keyframes pui-reveal {
+    from {
+      opacity: 0;
+      translate: 0 var(--pui-travel-lg);
+    }
+  }
 }
