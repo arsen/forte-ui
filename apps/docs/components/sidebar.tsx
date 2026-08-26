@@ -32,6 +32,7 @@ const NAV: NavGroup[] = [
       { title: "Select", href: "/components/select" },
       { title: "Separator", href: "/components/separator" },
       { title: "Slider", href: "/components/slider" },
+      { title: "Spinner", href: "/components/spinner" },
       { title: "Switch", href: "/components/switch" },
       { title: "Tabs", href: "/components/tabs" },
       { title: "Tooltip", href: "/components/tooltip" },

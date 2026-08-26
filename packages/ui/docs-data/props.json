@@ -1581,6 +1581,61 @@
       }
     ]
   },
+  "Spinner": {
+    "name": "Spinner",
+    "description": "A busy indicator, in four flavours.\n\nBase UI has no spinner primitive — there is no interaction to model and no\nstate machine to get right — so this is the one component in the library\nthat is not built on one. What it does have is the part everybody gets\nwrong: an indicator that is announced once and correctly, and an animation\nthat stays informative when the user has asked for less motion.\n\n```tsx\n<Spinner />\n<Spinner variant=\"bars\" size=\"lg\" label=\"Loading invoices\" labelPlacement=\"end\" />\n<Spinner decorative variant=\"dots\" tone=\"current\" />\n```\n\nStyling is driven by `data-*` attributes and `--pui-spinner-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with Tailwind\narbitrary variants (`data-[variant=dots]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "decorative",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the spinner announcing itself: no `role=\"status\"`, and no hidden\nlabel.\n\nUse it whenever something else already announces the wait — a `Button`\nwith `loading`, a panel that sets `aria-busy`, a live region that swaps in\nthe loaded content. Two announcements for one wait is worse than one, and\na page that mounts six spinners with six live regions is unusable.\n\nA label you asked to SHOW stays visible and stays in the accessibility\ntree, as ordinary text. Text that is on screen but hidden from assistive\ntechnology is a bug in its own right, so `decorative` will not do that —\nit only ever removes the live region and the invisible label."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Loading",
+        "description": "What the spinner is waiting on. This is the only thing that reaches a\nscreen reader — the indicator itself is `aria-hidden`, because a picture\nof motion is not information.\n\nSay what is happening rather than that something is: \"Loading invoices\"\ntells someone whether the wait concerns them; \"Loading\" does not."
+      },
+      {
+        "name": "labelPlacement",
+        "type": "SpinnerLabelPlacement",
+        "required": false,
+        "defaultValue": "hidden",
+        "description": "Where the label goes. `hidden` keeps it in the accessibility tree but out\nof the paint; `end` and `bottom` also show it, which is what you want for\na wait long enough that the user deserves to know what it is for."
+      },
+      {
+        "name": "size",
+        "type": "SpinnerSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Diameter of the indicator — `1rem`, `1.5rem` or `2rem`. Every variant is\nlaid out as a fraction of it, so all four occupy exactly the same box and\ncan be swapped without moving anything around them."
+      },
+      {
+        "name": "tone",
+        "type": "SpinnerTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the indicator draws from. `current` takes\n`currentColor` instead, which is what makes a spinner dropped inside a\nbutton or a link match the text beside it."
+      },
+      {
+        "name": "variant",
+        "type": "SpinnerVariant",
+        "required": false,
+        "defaultValue": "ring",
+        "description": "Which indicator to draw. All four are the same size and cost the same —\nthis is a question of voice, not of capability.\n\n`ring` is a rotating comet, the neutral default. `dots` is three bouncing\ndots, which reads as friendlier and suits inline text. `bars` is eight\nfading spokes — the only variant whose animation is identical with and\nwithout reduced motion, so it is the safest choice for something that must\nlook the same for everyone. `pulse` is a breathing halo, best for ambient\n\"still working\" states rather than for blocking ones."
+      }
+    ]
+  },
   "Switch": {
     "name": "Switch",
     "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--pui-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",

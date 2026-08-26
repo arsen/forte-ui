@@ -1,0 +1,386 @@
+/*
+ * Spinner
+ *
+ * Four indicators, one box. Every variant is laid out as a fraction of
+ * `--pui-spinner-size` and none of them overflows it, so `variant` can be
+ * changed on a whim without anything beside the spinner moving. The dots are
+ * the load-bearing case: three at `size/4` with two gaps at `size/8` come to
+ * exactly `size`, which is why those two fractions are what they are.
+ *
+ * There is no `prefers-reduced-motion` block here, and there must not be one.
+ * The tokens collapse their own geometry, and each variant is built so that
+ * what survives the collapse is still a busy indicator:
+ *
+ *   ring    `--pui-spin-turn` goes to 0turn and the comet stops. A second,
+ *           always-running opacity animation — a no-op at full motion, because
+ *           `--pui-pulse-dip` is 1 there — becomes the visible cue. This is
+ *           the same pairing the Button spinner uses.
+ *   dots    the hop is a `--pui-travel-*` token, so it goes to 0px; the
+ *           staggered opacity wave is untouched and carries the whole thing.
+ *   bars    pure opacity, nothing to collapse. Identical animation either way,
+ *           which is what makes it the safe pick when a spinner has to look
+ *           the same for everyone.
+ *   pulse   the halo stops expanding, and `--pui-motion-off` fades the SECOND
+ *           halo out entirely — two haloes frozen at the same radius would
+ *           cross-fade into each other and read as a static ring. See below.
+ *
+ * None of the loop durations is ever shortened: `--pui-duration-loop-spin` is
+ * 800ms in every motion state. A loop driven to 1ms would flash at ~1000Hz,
+ * which is a WCAG 2.3.1 seizure hazard rather than an accessibility win. At
+ * 800ms the fastest thing here cycles at 1.25Hz.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared HERE, on the spinner itself, so a value set
+     * on an ancestor is only INHERITED and loses to these. Re-skin one spinner
+     * by setting them via `className` or `style` (an unlayered consumer rule
+     * beats this layer at any specificity); re-skin every spinner by
+     * re-pointing the global tokens on the right-hand side. */
+    --pui-spinner-size: 1.5rem;
+    /* Ring stroke and halo border. The floor matters at `sm`, where an eighth
+     * of 16px is 2px exactly and anything thinner starts to disappear against
+     * a light surface. */
+    --pui-spinner-thickness: max(2px, calc(var(--pui-spinner-size) / 8));
+    --pui-spinner-gap: var(--pui-control-gap);
+    /* One cycle. Overridden to the slower loop for `pulse` below — a halo that
+     * breathes at the ring's rate reads as agitated rather than ambient. */
+    --pui-spinner-duration: var(--pui-duration-loop-spin);
+
+    --pui-spinner-color: var(--pui-color-primary);
+    /* The faint full ring the comet travels along. It derives from
+     * `--pui-spinner-color`, and `var()` inside an unregistered custom
+     * property is substituted where the property is DECLARED — so overriding
+     * the colour on an ancestor leaves this stale. Override on the spinner
+     * itself, where both declarations meet, and it re-derives. */
+    --pui-spinner-track: color-mix(in oklab, var(--pui-spinner-color) 18%, transparent);
+
+    --pui-spinner-label-color: var(--pui-color-foreground-muted);
+    --pui-spinner-label-size: var(--pui-font-size-2);
+
+    /* How far a dot dims at the bottom of its hop, and a bar at the back of
+     * the sweep. Never 0: a part that vanishes outright makes the count of
+     * dots look unstable, and the bar ring loses its shape. */
+    --pui-spinner-dot-dim: 0.25;
+    --pui-spinner-bar-dim: 0.15;
+
+    --pui-spinner-bar-width: calc(var(--pui-spinner-size) / 9);
+    --pui-spinner-bar-length: calc(var(--pui-spinner-size) / 3.2);
+
+    /* The hop height. `min()` of a travel token and a fraction of the size
+     * gets both properties at once: it scales down with `size="sm"`, where a
+     * flat 4px would throw a 4px dot most of its own height, and it collapses
+     * to 0px under reduced motion because `--pui-travel-sm` does — `min(0px,
+     * anything positive)` is 0px. No media query, no `--pui-motion-ok`. */
+    --pui-spinner-dot-travel: min(var(--pui-travel-sm), calc(var(--pui-spinner-size) / 5));
+
+    /* Radius the halo starts from, as a scale factor. Gated on
+     * `--pui-motion-ok` per rule 11: 0.4 normally, exactly 1 under reduced
+     * motion, so the halo stops travelling and only cross-fades. It
+     * interpolates toward 1 rather than toward 0 — a scale token driven to 0
+     * would collapse the element to nothing instead of holding still. */
+    --pui-spinner-ripple-min: calc(1 - 0.6 * var(--pui-motion-ok));
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-spinner-gap);
+    /* Sits a spinner on the text baseline's line box when it is used inline —
+     * without it an inline-flex box hangs below the words beside it. */
+    vertical-align: middle;
+
+    /* Chrome, not a control: nothing here performs an action on click, so it
+     * takes `default` per the cursor table in AGENTS.md. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .root[data-label-placement="bottom"] {
+    flex-direction: column;
+  }
+
+  .indicator {
+    position: relative;
+    /* The forced-colors fallback for `ring` swaps the masked background for a
+     * real border. Without `border-box` that fallback would grow the
+     * indicator by twice the stroke and shove the label sideways. */
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: var(--pui-spinner-size);
+    aspect-ratio: 1;
+    /* The one place the tone lands. Every part below fills with
+     * `currentColor`, which means forced-colors gets the whole component right
+     * for free: it remaps `color`, so every fill follows to `CanvasText`. */
+    color: var(--pui-spinner-color);
+  }
+
+  .label {
+    color: var(--pui-spinner-label-color);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-spinner-label-size);
+    line-height: var(--pui-line-height-tight);
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * Only the diameter and the label move; everything else is a fraction of
+   * the diameter and follows on its own. */
+  .root[data-size="sm"] {
+    --pui-spinner-size: 1rem;
+    --pui-spinner-label-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="md"] {
+    --pui-spinner-size: 1.5rem;
+    --pui-spinner-label-size: var(--pui-font-size-2);
+  }
+
+  .root[data-size="lg"] {
+    --pui-spinner-size: 2rem;
+    --pui-spinner-label-size: var(--pui-font-size-3);
+  }
+
+  /* Tones ------------------------------------------------------------------
+   * A spinner paints one colour, so a tone is one slot rather than the six a
+   * Button needs. `current` is the composable one — dropped inside a button, a
+   * link or a badge it inherits whatever that thing's text colour is, and
+   * keeps matching it through hover and disabled states. */
+  .root[data-tone="primary"] {
+    --pui-spinner-color: var(--pui-color-primary);
+  }
+
+  .root[data-tone="secondary"] {
+    --pui-spinner-color: var(--pui-color-secondary);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-spinner-color: var(--pui-color-danger);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-spinner-color: var(--pui-color-foreground-muted);
+  }
+
+  .root[data-tone="current"] {
+    --pui-spinner-color: currentColor;
+  }
+
+  /* Ring -------------------------------------------------------------------
+   * A conic gradient tapering from transparent to full, punched into a ring by
+   * a radial mask. The gradient's discontinuity — full colour meeting
+   * transparent at 0deg — is the comet's head, so the sharp edge leads and the
+   * tail fades behind it as the whole thing rotates.
+   *
+   * Drawn as a background rather than as four borders because a border can
+   * only give hard quarter-circle steps; there is no way to taper one. */
+  .root[data-variant="ring"] .indicator {
+    /* `50%`, not `--pui-radius-full`: under `data-pui-radius="none"` that
+     * token is 0, and this shape is a circle by definition, not by taste. The
+     * mask would stay round while the forced-colors border below went square.
+     * Same test as `--pui-radio-radius` and the Button spinner: roundness
+     * here is meaning, not style. */
+    border-radius: 50%;
+    background-color: var(--pui-spinner-track);
+    background-image: conic-gradient(from 0deg, transparent, var(--pui-spinner-color));
+    /* Alpha of the mask image is what shows through, so `transparent` hides
+     * the disc and the opaque stop keeps the outer band. `0` as the second
+     * stop's position means "wherever the previous one ended". */
+    mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - var(--pui-spinner-thickness)),
+      black 0
+    );
+    /* Both animations always run; the tokens decide which one is VISIBLE.
+     * Normally spin-turn is 1turn and pulse-dip is 1, so it rotates and the
+     * breathe is a no-op. Under reduced motion they invert — 0turn and 0.45 —
+     * and the breathe becomes the entire busy cue. */
+    animation:
+      pui-spinner-spin var(--pui-spinner-duration) linear infinite,
+      pui-spinner-breathe var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
+  }
+
+  /* Dots -------------------------------------------------------------------
+   * Laid out with `flex-direction: row`, which follows the inline direction:
+   * in RTL the browser reverses the visual order for us, so the stagger below
+   * still runs in reading order and nothing needs `--pui-direction`. */
+  .root[data-variant="dots"] .indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--pui-spinner-size) / 8);
+  }
+
+  .root[data-variant="dots"] .part {
+    width: calc(var(--pui-spinner-size) / 4);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: currentColor;
+    /* Matches the animation's 0% frame. The stagger is a POSITIVE delay, so
+     * each dot holds its un-animated style for a fraction of a second at
+     * mount; making that style identical to the first keyframe is what stops
+     * the set flickering into life. Negative delays would avoid the wait but
+     * reverse the wave, sending it right to left. */
+    opacity: var(--pui-spinner-dot-dim);
+    animation: pui-spinner-hop var(--pui-spinner-duration) var(--pui-ease-standard) infinite;
+    animation-delay: calc(var(--pui-spinner-i) * var(--pui-spinner-duration) / 6);
+  }
+
+  /* Bars -------------------------------------------------------------------
+   * Eight spokes around a hub, each fading from full to `--pui-spinner-bar-dim`
+   * over one cycle, offset by a cycle divided by the count. Nothing moves —
+   * the sense of rotation is entirely in the phase offset, which is why this
+   * variant survives reduced motion untouched.
+   *
+   * Every spoke is placed at the top and then rotated about the hub, so the
+   * count is free: `--pui-spinner-count` comes from the DOM (see
+   * PART_COUNT in Spinner.tsx) and both the angle and the offset divide by it. */
+  .root[data-variant="bars"] .part {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(50% - var(--pui-spinner-bar-width) / 2);
+    width: var(--pui-spinner-bar-width);
+    height: var(--pui-spinner-bar-length);
+    /* A bar is a stroke, not a circle — `radius="none"` squaring off its caps
+     * is a legitimate look, so this one does follow the preset. */
+    border-radius: var(--pui-radius-full);
+    background-color: currentColor;
+    /* Measured from the bar's own top edge, which sits on the container's, so
+     * half the diameter down lands exactly on the hub. */
+    transform-origin: 50% calc(var(--pui-spinner-size) / 2);
+    rotate: calc(var(--pui-spinner-i) * 1turn / var(--pui-spinner-count));
+    opacity: var(--pui-spinner-bar-dim);
+    animation: pui-spinner-sweep var(--pui-spinner-duration) linear infinite;
+    /* Negative, so every bar is already mid-cycle on the first frame and none
+     * of them waits. Subtracting the count before scaling puts bar 0 at the
+     * START of its fade while bar 1 is one step further along, which is what
+     * makes the bright spoke travel clockwise; the obvious
+     * `-i * duration / count` runs the highlight backwards. */
+    animation-delay: calc(
+      (var(--pui-spinner-i) - var(--pui-spinner-count)) * var(--pui-spinner-duration) /
+        var(--pui-spinner-count)
+    );
+  }
+
+  /* Pulse ------------------------------------------------------------------
+   * A solid hub with haloes expanding out of it. The hub is a pseudo-element
+   * rather than another child because it never animates — it is what keeps the
+   * spinner from going completely blank between haloes. */
+  .root[data-variant="pulse"] {
+    --pui-spinner-duration: var(--pui-duration-loop-pulse);
+  }
+
+  .root[data-variant="pulse"] .indicator::before {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    width: calc(var(--pui-spinner-size) * 0.34);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  .root[data-variant="pulse"] .part {
+    /* Peak opacity, and the whole reduced-motion story for this variant.
+     * `--pui-motion-off` is 0 normally, so every halo peaks at 1. Under
+     * reduced motion it is 1, so halo 0 still peaks at 1 and halo 1 peaks at
+     * 0 — invisible. That matters because the haloes are only distinguishable
+     * by RADIUS, and reduced motion freezes them both at the same radius:
+     * left running, the two would cross-fade in antiphase into a ring of
+     * near-constant opacity that looks like nothing is happening at all. */
+    --pui-spinner-ripple-peak: calc(1 - var(--pui-spinner-i) * var(--pui-motion-off));
+
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border: var(--pui-spinner-thickness) solid currentColor;
+    /* Matches the 0% frame, for the same reason the dots do. */
+    opacity: 0;
+    animation: pui-spinner-ripple var(--pui-spinner-duration) var(--pui-ease-standard) infinite;
+    animation-delay: calc(var(--pui-spinner-i) * var(--pui-spinner-duration) / 2);
+  }
+
+  /* Keyframes -------------------------------------------------------------- */
+  @keyframes pui-spinner-spin {
+    to {
+      rotate: var(--pui-spin-turn);
+    }
+  }
+
+  @keyframes pui-spinner-breathe {
+    50% {
+      opacity: var(--pui-pulse-dip);
+    }
+  }
+
+  @keyframes pui-spinner-hop {
+    0%,
+    100% {
+      opacity: var(--pui-spinner-dot-dim);
+      translate: 0 0;
+    }
+
+    45% {
+      opacity: 1;
+      translate: 0 calc(-1 * var(--pui-spinner-dot-travel));
+    }
+  }
+
+  @keyframes pui-spinner-sweep {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: var(--pui-spinner-bar-dim);
+    }
+  }
+
+  @keyframes pui-spinner-ripple {
+    0% {
+      scale: var(--pui-spinner-ripple-min);
+      opacity: 0;
+    }
+
+    30% {
+      opacity: var(--pui-spinner-ripple-peak);
+    }
+
+    100% {
+      scale: 1;
+      opacity: 0;
+    }
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* Forced colors remaps `background-color`, `color` and `border-color`, but
+     * NOT `background-image` — so the comet would keep its brand hue while the
+     * page around it went black and white, and on a dark system theme it can
+     * disappear entirely. Drop the gradient and redraw the ring the way the
+     * Button spinner does: a `CanvasText` border with one edge painted
+     * `Canvas` so the gap still reads as a gap.
+     *
+     * The gap has to be an explicit system colour for the same reason:
+     * `transparent` is not preserved here either, and a fully coloured ring
+     * would look static however fast it rotated. */
+    .root[data-variant="ring"] .indicator {
+      background-image: none;
+      mask: none;
+      border: var(--pui-spinner-thickness) solid CanvasText;
+      border-block-start-color: Canvas;
+    }
+
+    /* `opacity` is one of the few properties forced colors leaves alone, which
+     * is normally a trap — a 55% disabled control keeps full contrast and
+     * reads as enabled. Here it is the mechanism: the dimmed dots and bars are
+     * mid-animation, not disabled, and every one of them reaches full opacity
+     * in turn. Nothing to correct. */
+  }
+}

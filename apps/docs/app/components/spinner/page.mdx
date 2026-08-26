@@ -1,0 +1,239 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Spinner",
+  description:
+    "A busy indicator in four flavours, each built to stay informative when the user has asked for less motion.",
+};
+
+# Spinner
+
+Use a spinner when a wait is short, indeterminate, and the user is expected to
+sit through it. If you know how far along the work is, show that instead — a
+progress bar answers "how much longer", which is the question a spinner cannot.
+If the wait replaces content the user was already reading, a skeleton keeps the
+layout still and tells them what is coming back.
+
+<DemoBlock id="spinner/variants" />
+
+Base UI has no spinner primitive, so this is the one component in the library
+not built on one — there is no interaction to model and no state machine to get
+right. What is left is the part that is usually got wrong: announcing the wait
+once and correctly, and animating it in a way that survives
+`prefers-reduced-motion`.
+
+## Import
+
+```tsx
+import { Spinner } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Variants
+
+The four are interchangeable. Each is laid out as a fraction of
+`--pui-spinner-size` and none of them overflows it, so swapping `variant`
+never moves anything beside the spinner — including in a row of mixed ones.
+
+Which to pick is a question of voice:
+
+| Variant | Reads as | Reach for it when |
+| --- | --- | --- |
+| `ring` | Neutral, mechanical | The default. Anything blocking — a form submitting, a route loading. |
+| `dots` | Friendly, conversational | Inline with text, in chat, beside a label. Its box is square like the others, but the ink is a short wide band rather than a disc, so it sits on a line of text without looking like a hole punched in it. |
+| `bars` | System, unobtrusive | Something that may spin for a long time, or that must animate identically for every user — see the reduced-motion section below. |
+| `pulse` | Ambient, alive | "Still connected", "still listening". Its cycle is twice as slow as the others on purpose; it is not meant to convey urgency. |
+
+### Sizes
+
+`size` sets the diameter — `1rem`, `1.5rem` or `2rem` — and everything else is
+derived from it. The ring's stroke, the dots and their gaps, the bars and the
+halo all scale together, so a `sm` spinner is a smaller spinner rather than a
+thinner one.
+
+<DemoBlock id="spinner/sizes" />
+
+The label scales too, dropping to `--pui-font-size-1` at `sm` and rising to
+`--pui-font-size-3` at `lg`.
+
+### Tones
+
+`tone` picks the colour set. Four are semantic; `current` is the composable one
+— it takes `currentColor`, so a spinner dropped inside a button, a link or a
+status message matches the text around it and keeps matching it through hover,
+disabled and theme changes.
+
+<DemoBlock id="spinner/tones" />
+
+<Callout kind="note">
+  `Button` has its own `loading` prop and draws its own indicator — you do not
+  need a `Spinner` inside one. Reach for `tone="current"` when the surrounding
+  control is not a Button: a link that is fetching, a badge, a table cell, a
+  toolbar item you built yourself.
+</Callout>
+
+### Label and placement
+
+The indicator is `aria-hidden`, because a picture of motion is not
+information. `label` is the only thing that reaches a screen reader, and it is
+rendered whether or not it is visible — `labelPlacement="hidden"` keeps it in
+the accessibility tree and out of the paint.
+
+<DemoBlock id="spinner/labels" />
+
+Say what is being waited for. "Loading invoices" tells someone whether the wait
+concerns them; "Loading" makes them guess. Show the label outright once the
+wait is long enough that the user deserves to know what it is for — roughly a
+second is the usual threshold.
+
+### In a loading panel
+
+The realistic case, and the one worth copying: the live region is the **panel**,
+and it is in the DOM from the first render. The spinner inside it is
+`decorative`, so there is exactly one announcement for one wait.
+
+<DemoBlock id="spinner/loading-panel" />
+
+<Callout kind="a11y">
+  A live region has to exist *before* its contents change to be announced
+  reliably — a screen reader has to be watching the element when the mutation
+  happens. A spinner that mounts with `role="status"` **is** its own change,
+  which is why it is announced inconsistently across screen readers and why the
+  panel pattern above is the more dependable one.
+
+  `role="status"` is still the default here because it is right for the common
+  case — a spinner that appears alongside content that stays put, and outlives
+  a good many paints. Where a parent already owns the announcement, pass
+  `decorative` and let it.
+</Callout>
+
+<Callout kind="warn">
+  Six spinners on a page means six live regions all politely queueing to say
+  "Loading". Give the *screen* one status region and make every spinner in it
+  `decorative`, rather than letting each one speak for itself.
+</Callout>
+
+### Reduced motion
+
+Every variant keeps working under `prefers-reduced-motion: reduce`, and each
+one gets there differently. The two columns below are running side by side on
+the same page — the right-hand one carries `data-pui-motion="reduce"`.
+
+<DemoBlock id="spinner/reduced-motion" />
+
+- **`ring`** stops rotating: `--pui-spin-turn` collapses to `0turn`. A second
+  animation that is always running — and is a no-op at full motion, because
+  `--pui-pulse-dip` is `1` there — takes over as a slow opacity breathe.
+- **`dots`** stop hopping: the hop is a `--pui-travel-*` token, so it goes to
+  `0px`. The staggered opacity wave is untouched and carries the whole thing.
+- **`bars`** do not change at all. Nothing about them ever moved — the sense of
+  rotation is entirely in the phase offset between eight fading spokes. That is
+  what makes this the variant to choose when a spinner has to animate
+  identically for everyone.
+- **`pulse`** stops expanding and cross-fades in place. The second halo is
+  faded out entirely, which is not tidiness: the two haloes are distinguishable
+  only by radius, and frozen at the same radius they would cross-fade in
+  antiphase into a ring of near-constant opacity that reads as nothing
+  happening. `--pui-motion-off` — which is always `1 - --pui-motion-ok` — is
+  what removes it.
+
+<Callout kind="a11y">
+  No loop duration is ever shortened. `--pui-duration-loop-spin` is 800ms in
+  every motion state, including `data-pui-motion="off"`. The rest of the system
+  collapses durations toward `1ms`, but a *repeating* animation driven to 1ms
+  flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which is the opposite
+  of an accessibility win. The fastest thing on this page cycles at 1.25Hz.
+</Callout>
+
+### Theming
+
+<DemoBlock id="spinner/theming" />
+
+## Accessibility
+
+The root renders a `<span role="status">`, which carries an implicit
+`aria-live="polite"` and `aria-atomic="true"`. The indicator and all its parts
+are `aria-hidden`; the label is the entire accessible name.
+
+`decorative` removes the role and the hidden label. It deliberately does **not**
+add `aria-hidden` to the root, so a label you asked to *show* stays in the
+accessibility tree as ordinary text — visible text that assistive technology
+cannot reach is a bug in its own right, not a feature of a decorative flag.
+
+Under forced colours the dots, bars and halo fill with `currentColor`, which the
+UA remaps to `CanvasText` along with the rest of the page. The ring is the
+exception and needs help: forced colours remaps `background-color`, `color` and
+`border-color` but leaves `background-image` alone, so the conic gradient would
+keep its brand hue against a system-coloured page — and can vanish outright on a
+dark system theme. The `a11y` layer drops the gradient there and redraws the
+ring as a `CanvasText` border with one edge painted `Canvas`, the same way the
+Button spinner does. The gap has to be an explicit system colour rather than
+`transparent`, which forced colours does not preserve either; a fully coloured
+ring looks static however fast it turns.
+
+The dimmed dots and bars keep their partial opacity under forced colours, which
+elsewhere in the library is a trap — `opacity` is one of the few properties
+forced colours does not override, so a 55% disabled control keeps full contrast
+and still reads as enabled. Here it is the mechanism rather than a bug: those
+parts are mid-animation, not disabled, and every one of them reaches full
+opacity in turn.
+
+There is nothing to focus and nothing to press, so a spinner is not in the tab
+order and takes `cursor: default` per the pointer rules.
+
+## Theming
+
+Every visual decision is a custom property declared on the spinner root. Set
+them on the spinner itself — through `className` or an inline `style` — rather
+than on an ancestor: the component declares its own defaults on the root
+element, and an element's own declaration beats an inherited value.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-spinner-size` | Diameter of the indicator. `size` sets `1rem` / `1.5rem` / `2rem`; everything below that is a fraction of it follows. | `1.5rem` |
+| `--pui-spinner-thickness` | Ring stroke and halo border. | `max(2px, calc(var(--pui-spinner-size) / 8))` |
+| `--pui-spinner-duration` | One full cycle. `variant="pulse"` raises it to `--pui-duration-loop-pulse`. | `var(--pui-duration-loop-spin)` |
+| `--pui-spinner-gap` | Space between the indicator and a visible label. | `var(--pui-control-gap)` |
+| `--pui-spinner-color` | The indicator's colour. Becomes the indicator's `color`, and every part fills with `currentColor`. | `var(--pui-color-primary)` |
+| `--pui-spinner-track` | The faint full ring the comet travels along. Set it to `transparent` for a bare arc. | `color-mix(in oklab, var(--pui-spinner-color) 18%, transparent)` |
+| `--pui-spinner-label-color` | Colour of a visible label. | `var(--pui-color-foreground-muted)` |
+| `--pui-spinner-label-size` | Font size of a visible label. Retuned by `size`. | `var(--pui-font-size-2)` |
+| `--pui-spinner-dot-dim` | How far a dot fades at the bottom of its hop. | `0.25` |
+| `--pui-spinner-dot-travel` | How high a dot hops. Collapses to `0px` under reduced motion, because `--pui-travel-sm` does. | `min(var(--pui-travel-sm), calc(var(--pui-spinner-size) / 5))` |
+| `--pui-spinner-bar-dim` | How far a bar fades at the back of the sweep. | `0.15` |
+| `--pui-spinner-bar-width` | Thickness of one spoke. | `calc(var(--pui-spinner-size) / 9)` |
+| `--pui-spinner-bar-length` | Length of one spoke. | `calc(var(--pui-spinner-size) / 3.2)` |
+| `--pui-spinner-ripple-min` | Scale a halo starts from, as a factor. Gated on `--pui-motion-ok`, so it is exactly `1` under reduced motion and the halo holds still. | `calc(1 - 0.6 * var(--pui-motion-ok))` |
+
+<Callout kind="note">
+  `--pui-spinner-track` derives from `--pui-spinner-color`, and a `var()` inside
+  an unregistered custom property is substituted where the property is
+  *declared* — on the spinner root. Re-point the colour on an ancestor and the
+  track keeps the old default. Set both on the spinner, or set neither.
+</Callout>
+
+Two more values are written by the component rather than by you, and are listed
+here only so a `var()` typo is recognisable: `--pui-spinner-count` is the number
+of animated children the current variant renders, set on the root, and
+`--pui-spinner-i` is a child's index, set on each part. Every piece of per-child
+geometry is derived from the pair — a bar's angle is `i / count` of a turn, a
+dot's stagger is a fraction of the cycle — which is why the stylesheet needs no
+`nth-child` chain and why the bar count can be changed in one place.
+
+Circles in this component use a literal `50%` rather than
+`var(--pui-radius-full)`, so `data-pui-radius="none"` cannot square off the
+ring, the dots or the halo — round is what those shapes *are*, not how they are
+styled. That is the same test [`Radio`](/components/radio) and the
+[`Button`](/components/button) spinner apply, and the only grounds on which
+anything in the library opts out of the radius presets. The bars' end caps do
+follow the preset, because a squared-off spoke is a legitimate look.
+
+## API reference
+
+<PropTable component="Spinner" />
+
+Anything a `<span>` accepts passes through as well, including `id`, `style` and
+`data-*`.

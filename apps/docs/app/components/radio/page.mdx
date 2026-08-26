@@ -276,8 +276,9 @@ a `Field.Root`, an invalid field overrides those and the border colours with the
 danger palette, so a validation failure never renders in a brand colour.
 
 <Callout kind="note">
-  The radio is one of the two shapes in the library that do not follow the
-  `data-pui-radius` presets — the Button spinner is the other.
+  A shape opts out of the `data-pui-radius` presets when its roundness is
+  meaning rather than style — the radio, the Button spinner, and
+  [`Spinner`](/components/spinner)'s circles all do.
   `--pui-radio-radius` defaults to `50%` rather than to
   `var(--pui-radius-full)`. Round is not a style choice on a radio — it is the
   only thing telling a reader "pick one of these" rather than "tick any of
