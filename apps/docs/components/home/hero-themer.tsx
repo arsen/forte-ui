@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import styles from "./hero-themer.module.css";
 
 const PALETTE = [
   { name: "Ocean", seed: "#0e76be", secondary: "#8f5fc0" },
@@ -10,6 +9,31 @@ const PALETTE = [
   { name: "Ember", seed: "#c2410c", secondary: "#0369a1" },
   { name: "Rose", seed: "#b6155f", secondary: "#0f766e" },
 ];
+
+/* One swatch.
+ *
+ * Colour IS the content of this control, so it opts out of forced-colors
+ * substitution and supplies its own boundary — otherwise five identical system
+ * -coloured pills.
+ *
+ * The transition is written as an arbitrary property rather than as
+ * `transition-[scale,border-color]` because the two halves run on different
+ * clocks: the scale is a spring and must be paired with its own duration token,
+ * while the border is a plain colour change. One shared duration would truncate
+ * the spring mid-bounce.
+ *
+ * The hover scale is gated on `--pui-motion-ok` by hand, which is the rule for
+ * literal geometry — the token is 1 normally and 0 under reduced motion, so
+ * this collapses to `scale(1)` with no media query. */
+const SWATCH = [
+  "h-[1.75rem] w-(--pui-target-comfortable) cursor-pointer p-0",
+  "rounded-pill border border-border bg-[linear-gradient(110deg,var(--a)_55%,var(--b)_55%)]",
+  "[forced-color-adjust:none]",
+  "[transition:scale_var(--pui-duration-spring-snappy)_var(--pui-ease-spring-snappy),border-color_var(--pui-duration-fast)_var(--pui-ease-standard)]",
+  "hover:scale-[calc(1_+_0.08_*_var(--pui-motion-ok))]",
+  "aria-checked:border-2 aria-checked:border-foreground",
+  "pui-focus-ring",
+].join(" ");
 
 /**
  * Re-themes the entire page from a row of swatches.
@@ -33,16 +57,16 @@ export function HeroThemer() {
   }
 
   return (
-    <div className={styles.root}>
-      <span className={styles.label} id="palette-label">Try a palette</span>
-      <div className={styles.swatches} role="radiogroup" aria-labelledby="palette-label">
+    <div className="flex flex-wrap items-center gap-3">
+      <span className="text-2 text-foreground-muted" id="palette-label">Try a palette</span>
+      <div className="flex gap-2" role="radiogroup" aria-labelledby="palette-label">
         {PALETTE.map((p, i) => (
           <button
             key={p.name}
             type="button"
             role="radio"
             aria-checked={active === i}
-            className={`${styles.swatch} pui-focus-ring`}
+            className={SWATCH}
             style={{ "--a": p.seed, "--b": p.secondary } as React.CSSProperties}
             onClick={() => apply(i)}
           >

@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Tabs } from "@dofortech/pretty-ui";
 import { DemoFrame, DemoControls, type DemoScope } from "./demo-frame";
-import styles from "./demo-shell.module.css";
 
 const INITIAL: DemoScope = { theme: "inherit", dir: "ltr", motion: "inherit" };
 
@@ -30,18 +29,20 @@ export function DemoShell({
   const [resetKey, setResetKey] = React.useState(0);
 
   return (
-    <div className={styles.root}>
-      <Tabs.Root defaultValue="preview" variant="line" className={styles.tabs}>
-        <div className={styles.bar}>
-          <Tabs.List className={styles.list}>
-            <Tabs.Tab value="preview" className={styles.tab}>Preview</Tabs.Tab>
-            <Tabs.Tab value="code" className={styles.tab}>Code</Tabs.Tab>
-            <Tabs.Indicator className={styles.indicator} />
+    <div className="my-5 overflow-hidden rounded-surface border border-border-muted bg-panel">
+      <Tabs.Root defaultValue="preview" variant="line" className="block">
+        <div className="flex items-center justify-between gap-3 border-b border-border-muted px-3">
+          <Tabs.List className="gap-1">
+            <Tabs.Tab value="preview" className="text-2">Preview</Tabs.Tab>
+            <Tabs.Tab value="code" className="text-2">Code</Tabs.Tab>
+            {/* Tabs.Indicator positions and animates itself from Base UI's
+              * --active-tab-* variables; nothing to add here. */}
+            <Tabs.Indicator />
           </Tabs.List>
-          {title ? <span className={styles.title}>{title}</span> : null}
+          {title ? <span className="font-mono text-1 text-foreground-subtle">{title}</span> : null}
         </div>
 
-        <Tabs.Panel value="preview" className={styles.panel}>
+        <Tabs.Panel value="preview" className="block">
           <DemoFrame key={resetKey} scope={scope}>
             {preview}
           </DemoFrame>
@@ -52,7 +53,9 @@ export function DemoShell({
           />
         </Tabs.Panel>
 
-        <Tabs.Panel value="code" className={styles.panel}>
+        {/* The code panel supplies its own bordered figure, which would double
+          * up on the shell's border — so the figure gives its own back. */}
+        <Tabs.Panel value="code" className="block [&>figure]:rounded-none [&>figure]:border-0">
           {code}
         </Tabs.Panel>
       </Tabs.Root>

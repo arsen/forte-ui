@@ -1,10 +1,11 @@
 /**
- * Wraps every component page's MDX output in `.prose`.
+ * Wraps every component page's MDX output.
  *
- * MDX emits bare <h1>/<p>/<table> with no wrapper of its own, so without this
- * the pages render as unstyled HTML. Keeping it here rather than in each page
- * means a new component page gets the typography for free.
+ * The typography itself is applied per element in `mdx-components.tsx`; what
+ * this adds is the measure. A line length is a property of the column, not of
+ * the paragraph, so it belongs here — and keeping it here means a new
+ * component page gets it for free.
  */
 export default function ComponentsLayout({ children }: { children: React.ReactNode }) {
-  return <div className="prose">{children}</div>;
+  return <div className="max-w-measure">{children}</div>;
 }

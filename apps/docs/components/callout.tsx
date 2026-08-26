@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import styles from "./callout.module.css";
+import { cn } from "@/lib/cn";
 
 type Kind = "note" | "a11y" | "warn";
 
@@ -7,6 +7,20 @@ const META: Record<Kind, { label: string; icon: string }> = {
   note: { label: "Note", icon: "i" },
   a11y: { label: "Accessibility", icon: "A" },
   warn: { label: "Careful", icon: "!" },
+};
+
+/* The kind is two coordinated colour changes — the surface and the badge — so
+ * they are declared together rather than as two lookups that could drift. */
+const TONE: Record<Kind, { surface: string; badge: string }> = {
+  note: { surface: "", badge: "bg-panel-active" },
+  a11y: {
+    surface: "border-primary-border bg-primary-soft",
+    badge: "bg-primary text-on-primary",
+  },
+  warn: {
+    surface: "border-danger-border bg-danger-soft",
+    badge: "bg-danger text-on-danger",
+  },
 };
 
 /**
@@ -17,11 +31,31 @@ const META: Record<Kind, { label: string; icon: string }> = {
  */
 export function Callout({ kind = "note", children }: { kind?: Kind; children: ReactNode }) {
   const meta = META[kind];
+  const tone = TONE[kind];
+
   return (
-    <aside className={styles.root} data-kind={kind}>
-      <span className={styles.icon} aria-hidden="true">{meta.icon}</span>
-      <div className={styles.body}>
-        <p className={styles.label}>{meta.label}</p>
+    // `data-kind` stays on the element even though nothing styles from it any
+    // more: it is how a reader inspecting the page tells the three apart.
+    <aside
+      className={cn(
+        "my-5 grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-surface border border-border-muted bg-panel p-4 text-2",
+        tone.surface,
+      )}
+      data-kind={kind}
+    >
+      <span
+        className={cn(
+          "grid size-5 place-items-center rounded-(--pui-radius-full) font-mono text-1 font-bold",
+          tone.badge,
+        )}
+        aria-hidden="true"
+      >
+        {meta.icon}
+      </span>
+      {/* The last child drops its bottom margin so the callout closes evenly —
+        * MDX gives every paragraph and list one. */}
+      <div className="[&>*:last-child]:mb-0">
+        <p className="mb-1 font-semibold">{meta.label}</p>
         {children}
       </div>
     </aside>

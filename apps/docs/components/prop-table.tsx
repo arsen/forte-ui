@@ -1,5 +1,6 @@
 import props from "@dofortech/pretty-ui/docs-data/props.json";
-import styles from "./prop-table.module.css";
+import { cn } from "@/lib/cn";
+import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";
 
 type PropRow = {
   name: string;
@@ -31,27 +32,42 @@ export function PropTable({ component, only }: { component: string; only?: strin
   const rows = only ? entry.props.filter((p) => only.includes(p.name)) : entry.props;
 
   return (
-    <div className={styles.wrap}>
-      <table className={styles.table}>
+    <div className={TABLE_WRAP}>
+      <table className={TABLE}>
         <caption className="pui-visually-hidden">Props for {component}</caption>
         <thead>
           <tr>
-            <th scope="col">Prop</th>
-            <th scope="col">Type</th>
-            <th scope="col">Default</th>
-            <th scope="col">Description</th>
+            <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Prop</th>
+            <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Type</th>
+            <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Default</th>
+            <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Description</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row) => (
             <tr key={row.name}>
-              <th scope="row" className={styles.nameCell}>
-                <code>{row.name}</code>
-                {row.required ? <span className={styles.required} title="Required">*</span> : null}
+              {/* A row header, so `font-normal` has to be said out loud — the
+                * UA bolds every <th> and the name is not the emphasis here. */}
+              <th
+                scope="row"
+                className={cn(TABLE_CELL, "font-normal whitespace-nowrap")}
+              >
+                <code className="font-mono text-[0.9em] text-primary-text">{row.name}</code>
+                {row.required ? (
+                  <span className="ms-[2px] text-danger-text" title="Required">*</span>
+                ) : null}
               </th>
-              <td><code className={styles.type}>{row.type}</code></td>
-              <td>{row.defaultValue ? <code>{row.defaultValue}</code> : <span aria-hidden="true">—</span>}</td>
-              <td>{row.description || <span aria-hidden="true">—</span>}</td>
+              <td className={TABLE_CELL}>
+                {/* Long unions must wrap rather than force the whole table
+                  * wide, and they break at no natural point — hence anywhere. */}
+                <code className="font-mono text-[0.85em] text-foreground-muted wrap-anywhere">
+                  {row.type}
+                </code>
+              </td>
+              <td className={TABLE_CELL}>
+                {row.defaultValue ? <code>{row.defaultValue}</code> : <span aria-hidden="true">—</span>}
+              </td>
+              <td className={TABLE_CELL}>{row.description || <span aria-hidden="true">—</span>}</td>
             </tr>
           ))}
         </tbody>

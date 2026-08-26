@@ -12,6 +12,18 @@ const nextConfig: NextConfig = {
   // handling consistent for its side-effect stylesheet imports.
   transpilePackages: ["@dofortech/pretty-ui"],
   turbopack: {
+    // Stated, not inferred.
+    //
+    // Next infers the workspace root by walking up for a lockfile, and it walks
+    // PAST the first one it finds. A git worktree created under `.claude/` sits
+    // inside the main checkout, so two `pnpm-workspace.yaml` files are in the
+    // ancestry and the outer one — the main checkout — wins. That is the wrong
+    // root for this build: the sources and `node_modules` it should be watching
+    // are the worktree's, not the ones a sibling branch happens to have.
+    //
+    // Derived from this file rather than hardcoded, so it is right in the main
+    // checkout and in every worktree without either knowing about the other.
+    root: path.join(baseDir, "..", ".."),
     rules: {
       // A rule glob with no "/" matches on FILENAME only, so "*.tsx" matches at
       // any depth. `{ not: "foreign" }` keeps the loader away from node_modules.
