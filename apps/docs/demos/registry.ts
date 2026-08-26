@@ -95,6 +95,16 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_scroll_area_basic from "./scroll-area/basic";
+import d_scroll_area_basic_src from "./scroll-area/basic?raw";
+import d_scroll_area_both_axes from "./scroll-area/both-axes";
+import d_scroll_area_both_axes_src from "./scroll-area/both-axes?raw";
+import d_scroll_area_horizontal from "./scroll-area/horizontal";
+import d_scroll_area_horizontal_src from "./scroll-area/horizontal?raw";
+import d_scroll_area_tabs from "./scroll-area/tabs";
+import d_scroll_area_tabs_src from "./scroll-area/tabs?raw";
+import d_scroll_area_visibility from "./scroll-area/visibility";
+import d_scroll_area_visibility_src from "./scroll-area/visibility?raw";
 import d_select_basic from "./select/basic";
 import d_select_basic_src from "./select/basic?raw";
 import d_select_disabled_items from "./select/disabled-items";
@@ -178,6 +188,11 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "scroll-area/basic"
+  | "scroll-area/both-axes"
+  | "scroll-area/horizontal"
+  | "scroll-area/tabs"
+  | "scroll-area/visibility"
   | "select/basic"
   | "select/disabled-items"
   | "select/grouped"
@@ -244,6 +259,11 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "scroll-area/basic": { Component: d_scroll_area_basic, source: d_scroll_area_basic_src, file: "scroll-area/basic.tsx" },
+  "scroll-area/both-axes": { Component: d_scroll_area_both_axes, source: d_scroll_area_both_axes_src, file: "scroll-area/both-axes.tsx" },
+  "scroll-area/horizontal": { Component: d_scroll_area_horizontal, source: d_scroll_area_horizontal_src, file: "scroll-area/horizontal.tsx" },
+  "scroll-area/tabs": { Component: d_scroll_area_tabs, source: d_scroll_area_tabs_src, file: "scroll-area/tabs.tsx" },
+  "scroll-area/visibility": { Component: d_scroll_area_visibility, source: d_scroll_area_visibility_src, file: "scroll-area/visibility.tsx" },
   "select/basic": { Component: d_select_basic, source: d_select_basic_src, file: "select/basic.tsx" },
   "select/disabled-items": { Component: d_select_disabled_items, source: d_select_disabled_items_src, file: "select/disabled-items.tsx" },
   "select/grouped": { Component: d_select_grouped, source: d_select_grouped_src, file: "select/grouped.tsx" },
