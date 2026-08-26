@@ -29,6 +29,12 @@
     --pui-button-height: var(--pui-control-h-md);
     --pui-button-padding-x: var(--pui-control-px-md);
     --pui-button-font-size: var(--pui-font-size-2);
+    /* Diameter of the loading Spinner. `1em`, so it tracks
+     * `--pui-button-font-size` and needs no per-size rule of its own — and so
+     * it stays in proportion if a consumer re-points the font size. Spinner's
+     * own `size` prop is not used here for the same reason: its `sm` is a flat
+     * 1rem, which is wider than the label beside it on a small button. */
+    --pui-button-spinner-size: 1em;
 
     /* Motion slots. Hover geometry is identity by default: a button's hover
      * cue is colour, which is the one channel that cannot move the hit box or
@@ -256,62 +262,21 @@
     opacity: 0;
   }
 
+  /* The Spinner itself — this rule only places it. Everything about how the
+   * ring is drawn, including its reduced-motion and forced-colors behaviour,
+   * belongs to Spinner and is not restated here; that is the point of using
+   * it. Note the animation now sits on Spinner's inner indicator rather than
+   * on this element, which keeps it clear of the rule that an `infinite`
+   * animation must never land on a Base UI Popup part: Base UI awaits
+   * getAnimations() on the popup ELEMENT and descendants are not inspected,
+   * so a loading button inside a Dialog still unmounts. */
   .spinner {
     position: absolute;
     inset: 50% auto auto 50%;
     translate: -50% -50%;
-    width: 1em;
-    height: 1em;
-    /* NOT `var(--pui-radius-full)`, for the same reason Radio opts out of the
-     * presets: round is not a style choice here. The spin only reads as motion
-     * because the transparent quarter travels around a circle, and
-     * `[data-pui-radius="none"]` sets `--pui-radius-full: 0` — which turns the
-     * ring into a three-sided square whose missing edge flicks between four
-     * positions instead of sweeping. */
-    border-radius: 50%;
-    border: 2px solid currentColor;
-    border-top-color: transparent;
-    /* Deliberately on this child, never on a popup part: Base UI awaits
-     * getAnimations() on the popup ELEMENT to decide when it may unmount, and
-     * an infinite animation's promise never settles. Descendants are not
-     * inspected, so a loading button inside a Dialog is safe. */
-    /* Both animations always run; the tokens decide which one is VISIBLE.
-     * Normally spin-turn is 1turn (it rotates) and pulse-dip is 1 (the pulse
-     * is a no-op). Under reduced motion those invert: spin-turn becomes 0turn
-     * so the ring holds still, and pulse-dip becomes 0.45 so a gentle opacity
-     * pulse takes over as the "busy" cue. Neither duration is ever collapsed —
-     * a 1ms loop would be a flashing hazard under WCAG 2.3.1. */
-    animation:
-      pui-button-spin var(--pui-duration-loop-spin) linear infinite,
-      pui-button-pulse var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
-  }
-
-  @keyframes pui-button-spin {
-    to {
-      rotate: var(--pui-spin-turn);
-    }
-  }
-
-  @keyframes pui-button-pulse {
-    50% {
-      opacity: var(--pui-pulse-dip);
-    }
-  }
-}
-
-/**
- * Accessibility overrides — see layers.css for why these cannot live in the
- * components layer.
- */
-@layer pretty-ui.a11y {
-  @media (forced-colors: active) {
-    /* `transparent` is NOT preserved under forced-colors: it is replaced with a
-     * system colour. The spinner's gap — the whole reason the rotation reads as
-     * motion — would fill in and leave a solid ring that appears static.
-     * Painting the gap `Canvas` keeps it reading as a gap against the surface. */
-    .spinner {
-      border-color: CanvasText;
-      border-top-color: Canvas;
-    }
+    /* Decorative, and sitting inside an interactive part: without this the
+     * spinner's own `cursor: default` would show through in the middle of a
+     * button whose cursor is `not-allowed` while it loads. */
+    pointer-events: none;
   }
 }

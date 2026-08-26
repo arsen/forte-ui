@@ -169,8 +169,8 @@ exception and needs help: forced colours remaps `background-color`, `color` and
 `border-color` but leaves `background-image` alone, so the conic gradient would
 keep its brand hue against a system-coloured page — and can vanish outright on a
 dark system theme. The `a11y` layer drops the gradient there and redraws the
-ring as a `CanvasText` border with one edge painted `Canvas`, the same way the
-Button spinner does. The gap has to be an explicit system colour rather than
+ring as a `CanvasText` border with one edge painted `Canvas`. The gap has to be
+an explicit system colour rather than
 `transparent`, which forced colours does not preserve either; a fully coloured
 ring looks static however fast it turns.
 

@@ -39,6 +39,8 @@ import { Button } from "@dofortech/pretty-ui";
 
 `loading` shows a spinner, hides the label from paint while keeping its width so the button cannot resize under the pointer, sets `aria-busy`, and blocks activation. Use it for the span of one request, and pair it with a `loadingLabel` that names the operation.
 
+The indicator is [`Spinner`](/components/spinner)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text colour, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--pui-button-spinner-size`.
+
 <DemoBlock id="button/loading" />
 
 <Callout kind="note">
@@ -116,6 +118,10 @@ Every property below is declared on the button's own root element. That means se
 | `--pui-button-height` | Button height; reassigned by `size` | `var(--pui-control-h-md)` |
 | `--pui-button-padding-x` | Horizontal padding; reassigned by `size`, and `0` when `iconOnly` | `var(--pui-control-px-md)` |
 | `--pui-button-font-size` | Label size; reassigned by `size` | `var(--pui-font-size-2)` |
+| `--pui-button-spinner-size` | Diameter of the loading spinner | `1em` |
+| `--pui-button-hover-lift` | How far the button rises on hover. Multiplied by `--pui-motion-ok`, so a literal value still collapses under reduced motion. | `var(--pui-control-hover-lift, 0px)` |
+| `--pui-button-hover-scale` | How far the button grows on hover; also multiplied by `--pui-motion-ok`. | `var(--pui-control-hover-scale, 1)` |
+| `--pui-button-press-scale` | How far the button squashes while held. | `var(--pui-scale-press)` |
 | `--pui-button-bg` | Resting background; filled in by `variant` | `transparent` |
 | `--pui-button-bg-hover` | Hover background | `transparent` |
 | `--pui-button-bg-active` | Pressed background | `transparent` |
