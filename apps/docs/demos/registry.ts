@@ -63,6 +63,8 @@ import d_dialog_sizes from "./dialog/sizes";
 import d_dialog_sizes_src from "./dialog/sizes?raw";
 import d_drawer_basic from "./drawer/basic";
 import d_drawer_basic_src from "./drawer/basic?raw";
+import d_drawer_controlled from "./drawer/controlled";
+import d_drawer_controlled_src from "./drawer/controlled?raw";
 import d_drawer_floating from "./drawer/floating";
 import d_drawer_floating_src from "./drawer/floating?raw";
 import d_drawer_nested from "./drawer/nested";
@@ -172,6 +174,7 @@ export type DemoId =
   | "dialog/scrollable"
   | "dialog/sizes"
   | "drawer/basic"
+  | "drawer/controlled"
   | "drawer/floating"
   | "drawer/nested"
   | "drawer/scrollable"
@@ -243,6 +246,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "dialog/scrollable": { Component: d_dialog_scrollable, source: d_dialog_scrollable_src, file: "dialog/scrollable.tsx" },
   "dialog/sizes": { Component: d_dialog_sizes, source: d_dialog_sizes_src, file: "dialog/sizes.tsx" },
   "drawer/basic": { Component: d_drawer_basic, source: d_drawer_basic_src, file: "drawer/basic.tsx" },
+  "drawer/controlled": { Component: d_drawer_controlled, source: d_drawer_controlled_src, file: "drawer/controlled.tsx" },
   "drawer/floating": { Component: d_drawer_floating, source: d_drawer_floating_src, file: "drawer/floating.tsx" },
   "drawer/nested": { Component: d_drawer_nested, source: d_drawer_nested_src, file: "drawer/nested.tsx" },
   "drawer/scrollable": { Component: d_drawer_scrollable, source: d_drawer_scrollable_src, file: "drawer/scrollable.tsx" },
