@@ -1716,6 +1716,151 @@
       }
     ]
   },
+  "Toggle": {
+    "name": "Toggle",
+    "description": "A two-state button that is either on or off, built on Base UI's unstyled\n`Toggle` primitive. Renders a `<button>` with `aria-pressed`.\n\nReach for it when the button *is* the state — bold, mute, pin, favourite —\nand the effect is immediate and local. If the state is a setting the user\nconfirms later, use [`Switch`](/components/switch) or\n[`Checkbox`](/components/checkbox), which carry a label and a form value; a\ntoggle button has neither.\n\nState is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)\nand every visual decision is a `--pui-toggle-*` custom property, so it can\nbe re-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[pressed]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon, holding the 24×24\nminimum hit target from WCAG SC 2.5.8. Always pair with `aria-label` —\nan icon is not an accessible name."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Ref to the button element. Declared as a prop rather than through\n`forwardRef` because the component is generic — a `forwardRef` wrapper\nwould erase `Value` and with it the inference on `value`."
+      },
+      {
+        "name": "size",
+        "type": "ToggleSize",
+        "required": false,
+        "defaultValue": "\"md\"",
+        "description": "Size of the button. Matches `Button` step for step so the two line up in\none toolbar. Inherited from an enclosing `ToggleGroup` when left unset."
+      },
+      {
+        "name": "tone",
+        "type": "ToggleTone",
+        "required": false,
+        "defaultValue": "\"primary\"",
+        "description": "Which semantic colour set the pressed state draws from. Combines freely\nwith `variant`. Inherited from an enclosing `ToggleGroup` when left unset."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "A unique string identifying this toggle within a `ToggleGroup`. Required\ninside a group — the group's value is the list of pressed toggles' values,\nso a toggle without one can never appear in it. Ignored outside a group,\nwhere `pressed` / `defaultPressed` carry the state instead."
+      },
+      {
+        "name": "variant",
+        "type": "ToggleVariant",
+        "required": false,
+        "defaultValue": "\"soft\"",
+        "description": "How loud the *pressed* state is. Unpressed is quiet in every variant —\nthat is what makes a toggle read as off — so the variant only decides what\n\"on\" looks like: `solid` fills with the tone, `soft` tints with it,\n`outline` tints and keeps a border that is also drawn while unpressed.\n\nThere is deliberately no `ghost`: every variant is already chromeless at\nrest, so a ghost toggle would differ from `soft` in nothing but its\npressed fill — and dropping that fill would leave hue as the only cue\nseparating on from off.\n\nInherited from an enclosing `ToggleGroup` when left unset."
+      }
+    ]
+  },
+  "ToggleGroup": {
+    "name": "ToggleGroup",
+    "description": "Shared state for a series of `Toggle`s, built on Base UI's `ToggleGroup`\nprimitive. Renders a `<div role=\"group\">`.\n\nLike `RadioGroup` this is a keyboard mode as well as a state container: the\nwhole group is one tab stop and the arrow keys move between toggles. Unlike\na radio group, moving does **not** select — arrowing past a toggle leaves it\nuntouched, and Space or Enter is what presses it. That makes a toggle group\nsafe for choices a radio group is not, including ones that fire a request.\n\nThe group has no implicit accessible name. `role=\"group\"` is not a labelable\nelement, so give it `aria-label` or point `aria-labelledby` at your own\nheading.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultValue",
+        "type": "readonly Value[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "The values pressed on mount when uncontrolled."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disable every toggle in the group."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the group to fill its container and share the space equally\nbetween the toggles. Mostly useful with `segmented`, where an evenly\ndivided strip is the expected shape."
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Allow several toggles to be pressed at once. With it off, pressing one\nunpresses the rest — but pressing the pressed one still turns it off, so\n\"nothing selected\" stays reachable in a way a radio group never allows."
+      },
+      {
+        "name": "orientation",
+        "type": "ToggleGroupOrientation",
+        "required": false,
+        "defaultValue": "\"horizontal\"",
+        "description": "Direction the toggles are laid out in, and the axis the arrow keys move\nalong. Unlike `RadioGroup`'s, this is not layout-only: Base UI binds the\narrows to the named axis, so a vertical group answers to Up and Down and\nleaves Left and Right to the page."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLDivElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Ref to the group element. Declared as a prop rather than through\n`forwardRef` because the component is generic — a `forwardRef` wrapper\nwould erase `Value` and with it the typing of `onValueChange`."
+      },
+      {
+        "name": "segmented",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Draw the group as a segmented control: one padded panel behind the whole\nset, with the toggles closed up inside it. Off, the group is just a row of\nseparate buttons — right for a toolbar, where the toggles are neighbours\nrather than alternatives.\n\nPair it with `variant=\"solid\"` for the classic filled segmented control."
+      },
+      {
+        "name": "size",
+        "type": "ToggleSize",
+        "required": false,
+        "defaultValue": "\"md\"",
+        "description": "Default `size` for every `Toggle` inside the group. A toggle's own `size`\nstill wins."
+      },
+      {
+        "name": "tone",
+        "type": "ToggleTone",
+        "required": false,
+        "defaultValue": "\"primary\"",
+        "description": "Default `tone` for every `Toggle` inside the group. A toggle's own `tone`\nstill wins."
+      },
+      {
+        "name": "value",
+        "type": "readonly Value[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "The values of every pressed toggle. Pairs with `onValueChange` for a\ncontrolled group; use `defaultValue` for an uncontrolled one. Always an\narray, including when `multiple` is false — it is then empty or holds one\nvalue."
+      },
+      {
+        "name": "variant",
+        "type": "ToggleVariant",
+        "required": false,
+        "defaultValue": "\"soft\"",
+        "description": "Default `variant` for every `Toggle` inside the group. A toggle's own\n`variant` still wins."
+      }
+    ]
+  },
   "TooltipProvider": {
     "name": "TooltipProvider",
     "description": "Shares one hover delay across every tooltip beneath it. Renders no DOM\nelement.\n\nMount it once near the root of the app. Without it each tooltip waits out\nits own delay, so sweeping across a toolbar feels sticky.",

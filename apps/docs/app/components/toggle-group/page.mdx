@@ -1,0 +1,201 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Toggle Group",
+  description:
+    "Shared state for a set of toggle buttons: one tab stop, arrow keys to move, press to choose.",
+};
+
+# Toggle Group
+
+Shared state for a series of [`Toggle`](/components/toggle)s. Renders a
+`<div role="group">`, makes the whole set one tab stop, and owns the list of
+pressed values.
+
+<DemoBlock id="toggle-group/basic" />
+
+Like a radio group this is a keyboard mode as well as a state container. Unlike
+a radio group, moving does **not** select: arrowing past a toggle leaves it
+untouched, and Space or Enter is what presses it. That makes a toggle group safe
+for choices a [`RadioGroup`](/components/radio) is not, including ones that fire
+a request.
+
+## Import
+
+```tsx
+import { Toggle, ToggleGroup } from "@dofortech/pretty-ui";
+```
+
+Every toggle in a group needs a `value`. The group's value is the list of
+pressed toggles' values, so one without a `value` can never appear in it — Base
+UI logs an error in development when that happens.
+
+## Examples
+
+### Multiple
+
+`multiple` lets any number of toggles be pressed at once. This is Base UI's own
+example, styled with our tokens.
+
+<DemoBlock id="toggle-group/multiple" />
+
+Without it, pressing one unpresses the rest. Note what that still is **not**: a
+radio group. Pressing the pressed toggle turns it off, so an empty selection
+stays reachable either way — which is exactly why a toggle group is the wrong
+control for a required choice.
+
+<DemoBlock id="toggle-group/single" />
+
+<Callout kind="warn">
+  `value` is always an array, including when `multiple` is off — it is then
+  empty or holds exactly one entry. Read `value[0]` and handle `undefined`; if
+  your UI cannot cope with nothing being selected, you want a `RadioGroup` or a
+  `Select`, not a toggle group.
+</Callout>
+
+### Segmented
+
+`segmented` puts one padded panel behind the whole set. It is deliberately the
+same surface, padding and radius that [`Tabs`](/components/tabs) uses for its
+`pill` variant, so a segmented group and a pill tab strip on the same screen
+read as the same kind of object. Pair it with `variant="solid"` for the classic
+filled segmented control, and `fullWidth` to split the container equally between
+the toggles.
+
+<DemoBlock id="toggle-group/segmented" />
+
+<Callout kind="note">
+  A segmented group has no sliding indicator, and cannot have one. `Tabs` slides
+  because Base UI measures the single active tab and publishes its geometry; a
+  toggle group has no single active item to measure — with `multiple` there may
+  be several pressed, or none. Each toggle paints its own fill instead.
+</Callout>
+
+Use `segmented` when the toggles are alternatives — one strip, one decision.
+Leave it off when they are neighbours in a toolbar, like the alignment and
+formatting groups above.
+
+### Shared appearance
+
+`variant`, `tone` and `size` set on the group become the default for every
+toggle inside it, so a strip stays uniform without repeating three props per
+item. A toggle's own prop still wins.
+
+<DemoBlock id="toggle-group/appearance" />
+
+This is React context rather than CSS inheritance, and it has to be. The
+appearance knobs are declared on each toggle's own root rule — that placement is
+what lets you re-skin a single toggle, because an element's own declaration
+beats an inherited one — so a value set on the group would be inherited and then
+immediately overwritten. The `data-*` attributes the rules key off are resolved
+in JavaScript and written onto each toggle.
+
+### Orientation
+
+`orientation="vertical"` stacks the toggles and moves the arrow keys onto the
+block axis.
+
+<DemoBlock id="toggle-group/orientation" />
+
+<Callout kind="warn">
+  Unlike `RadioGroup`'s, this is not layout only. Base UI binds the arrow keys
+  to the named axis: a vertical group answers to Up and Down and leaves Left and
+  Right to the page. Laying toggles out in a column with the default
+  `orientation="horizontal"` strands keyboard users on the wrong keys.
+</Callout>
+
+### Controlled
+
+Pass `value` and `onValueChange` for a controlled group; `defaultValue` for an
+uncontrolled one. The callback receives the new array first and Base UI's event
+details second.
+
+<DemoBlock id="toggle-group/controlled" />
+
+### Disabled
+
+`disabled` on the group reaches every toggle inside it.
+
+<DemoBlock id="toggle/disabled" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus into the group, landing on the last-focused toggle — or the first one. The whole group is a single tab stop.",
+    },
+    {
+      keys: ["ArrowRight", "ArrowDown"],
+      description:
+        "Moves focus to the next toggle without pressing it, wrapping from the last to the first. Only the arrows on the group's own axis are bound.",
+    },
+    {
+      keys: ["ArrowLeft", "ArrowUp"],
+      description: "Moves focus to the previous toggle, wrapping from the first to the last.",
+    },
+    {
+      keys: ["Home", "End"],
+      description: "Moves focus to the first or last toggle.",
+    },
+    {
+      keys: ["Space", "Enter"],
+      description: "Presses the focused toggle. Moving focus never presses anything.",
+    },
+  ]}
+/>
+
+Disabled toggles are skipped by the arrow keys as well as removed from the tab
+order. Set `loopFocus={false}` to stop the arrows wrapping at the ends.
+
+<Callout kind="a11y">
+  `ToggleGroup` has no name of its own, and `role="group"` is not a labelable
+  element — it cannot take a `<label>`. Give it `aria-label`, or point
+  `aria-labelledby` at your own heading. Without a name the grouping is
+  invisible to assistive technology and the toggles read as unrelated buttons.
+</Callout>
+
+Each toggle still needs its own name too: text children, or an `aria-label` when
+it is icon-only. See [`Toggle`](/components/toggle) for the rest — the pressed
+state, forced colours and motion all belong to the individual button.
+
+## Theming
+
+The group declares its own properties on the group element; the toggles inside
+are themed through the `--pui-toggle-*` properties documented on
+[`Toggle`](/components/toggle).
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-toggle-group-gap` | Gap between toggles. | `var(--pui-space-2)`, or `var(--pui-space-1)` when `segmented` |
+| `--pui-toggle-group-padding` | Padding inside the strip. | `0px`, or `var(--pui-space-1)` when `segmented` |
+| `--pui-toggle-group-radius` | Corner radius of the strip. | `0px`, or `var(--pui-radius-4)` when `segmented` |
+| `--pui-toggle-group-bg` | Fill behind the strip. | `transparent`, or `var(--pui-color-panel)` when `segmented` |
+| `--pui-toggle-group-border-width` | Border width of the strip. | `1px` |
+| `--pui-toggle-group-border-color` | Border colour of the strip. | `transparent` |
+
+<Callout kind="note">
+  The strip always draws a 1px border, even when it has no colour. `transparent`
+  is not preserved under forced colours — it is replaced with a system colour —
+  so declaring the border up front is what lets a segmented group keep a visible
+  boundary in high contrast, where its panel fill disappears, without the
+  accessibility rules having to add a border and shift the layout by 2px.
+</Callout>
+
+## API reference
+
+### ToggleGroup
+
+<PropTable component="ToggleGroup" />
+
+`onValueChange`, `loopFocus`, `render` and the rest of Base UI's `ToggleGroup`
+props pass through unchanged.
+
+### Toggle
+
+See [`Toggle`](/components/toggle) for the full prop table.

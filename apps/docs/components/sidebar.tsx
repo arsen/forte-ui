@@ -34,6 +34,8 @@ const NAV: NavGroup[] = [
       { title: "Slider", href: "/components/slider" },
       { title: "Switch", href: "/components/switch" },
       { title: "Tabs", href: "/components/tabs" },
+      { title: "Toggle", href: "/components/toggle" },
+      { title: "Toggle Group", href: "/components/toggle-group" },
       { title: "Tooltip", href: "/components/tooltip" },
     ],
   },
