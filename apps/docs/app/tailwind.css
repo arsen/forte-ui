@@ -1,0 +1,287 @@
+/**
+ * Tailwind for the docs site.
+ * ---------------------------------------------------------------------------
+ * Demos are documentation: the class list a reader copies out of one is the
+ * example they will paste into their own app. So this file does not bolt a
+ * second design system onto the page — it re-points Tailwind's theme at the
+ * pretty-ui tokens, and deletes the parts of the default theme that would let
+ * a demo hardcode a value the token system is supposed to own.
+ *
+ * `gap-5` therefore means `--pui-space-5`, `bg-primary` means
+ * `--pui-color-primary`, and `bg-red-500` does not exist.
+ *
+ * ---------------------------------------------------------------------------
+ * Why `@theme inline` and not plain `@theme`
+ * ---------------------------------------------------------------------------
+ * This is the whole reason the file works, and it is easy to break.
+ *
+ * A plain `@theme` emits `--color-primary: var(--pui-color-primary)` on
+ * `:root` and has utilities reference *that*. But a `var()` inside an
+ * unregistered custom property is substituted where the property is
+ * DECLARED — so the value would freeze to whatever `:root` resolved, and
+ * every scoped override in the library would stop reaching the utility.
+ *
+ * That is not hypothetical here. Every demo renders inside `DemoFrame`, which
+ * is a `.pui-theme` scope carrying `data-theme` and `data-pui-motion`, and the
+ * docs pages carry `data-pui-radius` / `data-pui-density` presets. With a
+ * plain `@theme`, `bg-panel` in a demo would keep the page's light-mode panel
+ * colour when the frame's toggle is flipped to dark.
+ *
+ * `@theme inline` substitutes the token reference into the utility itself:
+ *
+ *   .bg-panel { background-color: var(--pui-color-panel); }
+ *
+ * which resolves at the element, so scopes, presets and light/dark all work.
+ * Do not drop the `inline` keyword.
+ *
+ * ---------------------------------------------------------------------------
+ * No preflight
+ * ---------------------------------------------------------------------------
+ * `@import "tailwindcss"` would pull in Preflight, which strips list markers
+ * and heading sizes — the exact UA defaults the MDX prose in globals.css
+ * builds on, and which it does not restate. Importing `theme.css` and
+ * `utilities.css` on their own is the documented way to opt out.
+ */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+/* Explicit sources rather than automatic detection: the base directory for
+ * auto-detection is derived from this file's location, which would miss
+ * `demos/` — the one directory that matters most here. */
+@source "../app";
+@source "../components";
+@source "../demos";
+
+/* ---------------------------------------------------------------------------
+ * Deletions.
+ *
+ * Each `initial` drops a whole Tailwind namespace so the only values left are
+ * the ones defined below. This is the enforcement half of "tokens are the
+ * API": with the default palette present, `bg-slate-800` compiles, survives
+ * review, and then does not respond to the theme, dark mode, or a seed change.
+ * Arbitrary values (`bg-[#333]`) still work and are still wrong — but they now
+ * look wrong, which is the point.
+ * ------------------------------------------------------------------------ */
+@theme {
+  --color-*: initial;
+  --spacing-*: initial;
+  --text-*: initial;
+  --font-*: initial;
+  --font-weight-*: initial;
+  --leading-*: initial;
+  --tracking-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --ease-*: initial;
+  --animate-*: initial;
+}
+
+@theme inline {
+  /* ------------------------------------------------------------------------
+   * Colour — semantic slots first. These are what a demo should reach for;
+   * they are the same names the components consume, so a demo built out of
+   * them re-themes with the library rather than beside it.
+   * --------------------------------------------------------------------- */
+  --color-background: var(--pui-color-background);
+  --color-foreground: var(--pui-color-foreground);
+  --color-foreground-muted: var(--pui-color-foreground-muted);
+  --color-foreground-subtle: var(--pui-color-foreground-subtle);
+
+  --color-panel: var(--pui-color-panel);
+  --color-panel-hover: var(--pui-color-panel-hover);
+  --color-panel-active: var(--pui-color-panel-active);
+  --color-overlay: var(--pui-color-overlay);
+
+  --color-border: var(--pui-color-border);
+  --color-border-muted: var(--pui-color-border-muted);
+  --color-border-strong: var(--pui-color-border-strong);
+
+  --color-primary: var(--pui-color-primary);
+  --color-primary-hover: var(--pui-color-primary-hover);
+  --color-primary-active: var(--pui-color-primary-active);
+  --color-primary-soft: var(--pui-color-primary-soft);
+  --color-primary-soft-hover: var(--pui-color-primary-soft-hover);
+  --color-primary-soft-active: var(--pui-color-primary-soft-active);
+  --color-primary-border: var(--pui-color-primary-border);
+  --color-primary-text: var(--pui-color-primary-text);
+
+  --color-secondary: var(--pui-color-secondary);
+  --color-secondary-hover: var(--pui-color-secondary-hover);
+  --color-secondary-active: var(--pui-color-secondary-active);
+  --color-secondary-soft: var(--pui-color-secondary-soft);
+  --color-secondary-soft-hover: var(--pui-color-secondary-soft-hover);
+  --color-secondary-soft-active: var(--pui-color-secondary-soft-active);
+  --color-secondary-border: var(--pui-color-secondary-border);
+  --color-secondary-text: var(--pui-color-secondary-text);
+
+  --color-danger: var(--pui-color-danger);
+  --color-danger-hover: var(--pui-color-danger-hover);
+  --color-danger-soft: var(--pui-color-danger-soft);
+  --color-danger-border: var(--pui-color-danger-border);
+  --color-danger-text: var(--pui-color-danger-text);
+
+  --color-success: var(--pui-color-success);
+  --color-success-text: var(--pui-color-success-text);
+  --color-warning: var(--pui-color-warning);
+  --color-warning-text: var(--pui-color-warning-text);
+
+  /* Auto-contrast text for a solid fill. `text-white` is deliberately gone;
+   * this is the token that stays readable when the seed moves. */
+  --color-on-primary: var(--pui-color-on-primary);
+  --color-on-secondary: var(--pui-color-on-secondary);
+  --color-on-danger: var(--pui-color-on-danger);
+
+  /* The raw ramps, for the few demos that show the scale itself. Prefer a
+   * semantic slot above unless the step number IS the subject. */
+  --color-accent-1: var(--pui-accent-1);
+  --color-accent-2: var(--pui-accent-2);
+  --color-accent-3: var(--pui-accent-3);
+  --color-accent-4: var(--pui-accent-4);
+  --color-accent-5: var(--pui-accent-5);
+  --color-accent-6: var(--pui-accent-6);
+  --color-accent-7: var(--pui-accent-7);
+  --color-accent-8: var(--pui-accent-8);
+  --color-accent-9: var(--pui-accent-9);
+  --color-accent-10: var(--pui-accent-10);
+  --color-accent-11: var(--pui-accent-11);
+  --color-accent-12: var(--pui-accent-12);
+
+  --color-secondary-1: var(--pui-secondary-1);
+  --color-secondary-2: var(--pui-secondary-2);
+  --color-secondary-3: var(--pui-secondary-3);
+  --color-secondary-4: var(--pui-secondary-4);
+  --color-secondary-5: var(--pui-secondary-5);
+  --color-secondary-6: var(--pui-secondary-6);
+  --color-secondary-7: var(--pui-secondary-7);
+  --color-secondary-8: var(--pui-secondary-8);
+  --color-secondary-9: var(--pui-secondary-9);
+  --color-secondary-10: var(--pui-secondary-10);
+  --color-secondary-11: var(--pui-secondary-11);
+  --color-secondary-12: var(--pui-secondary-12);
+
+  --color-gray-1: var(--pui-gray-1);
+  --color-gray-2: var(--pui-gray-2);
+  --color-gray-3: var(--pui-gray-3);
+  --color-gray-4: var(--pui-gray-4);
+  --color-gray-5: var(--pui-gray-5);
+  --color-gray-6: var(--pui-gray-6);
+  --color-gray-7: var(--pui-gray-7);
+  --color-gray-8: var(--pui-gray-8);
+  --color-gray-9: var(--pui-gray-9);
+  --color-gray-10: var(--pui-gray-10);
+  --color-gray-11: var(--pui-gray-11);
+  --color-gray-12: var(--pui-gray-12);
+
+  /* ------------------------------------------------------------------------
+   * Spacing.
+   *
+   * Tailwind's default spacing is a multiplier — `p-13` is as valid as `p-4`.
+   * That is the opposite of a scale, so the multiplier goes and the eight
+   * pretty-ui steps take its place: `gap-5` IS `--pui-space-5`.
+   *
+   * Note the steps are not linear past 4 (5 = 1.5rem, 6 = 2rem, 7 = 2.5rem,
+   * 8 = 3rem), so `gap-6` here is not Tailwind's stock 1.5rem. Replacing the
+   * scale wholesale rather than patching a few keys is what keeps it
+   * monotonic — half a table would leave `p-9` smaller than `p-8`.
+   *
+   * Sizing beyond 3rem is what the untouched `--container-*` scale is for:
+   * `w-full max-w-lg` instead of a hand-written `min(32rem, 100%)`.
+   * --------------------------------------------------------------------- */
+  /* Zero is not a token, but `p-0` / `inset-0` / `m-0` all route through the
+   * spacing scale — without this key they compile to
+   * `calc(var(--spacing) * 0)`, which is invalid once the multiplier is gone
+   * and so drops the declaration entirely. It fails silently, which is the
+   * worst way for it to fail. */
+  --spacing-0: 0;
+
+  --spacing-1: var(--pui-space-1);
+  --spacing-2: var(--pui-space-2);
+  --spacing-3: var(--pui-space-3);
+  --spacing-4: var(--pui-space-4);
+  --spacing-5: var(--pui-space-5);
+  --spacing-6: var(--pui-space-6);
+  --spacing-7: var(--pui-space-7);
+  --spacing-8: var(--pui-space-8);
+
+  /* Surface padding is density-aware — a `data-pui-density` preset rewrites
+   * it — which is exactly the case `inline` exists for. The rest of the
+   * density family (`--pui-control-h-*`, `--pui-target-*`) has no natural
+   * utility name; reach for it as `h-(--pui-control-h-md)`, which resolves at
+   * the element for the same reason. */
+  --spacing-surface: var(--pui-surface-p);
+
+  /* ------------------------------------------------------------------------
+   * Typography.
+   * --------------------------------------------------------------------- */
+  --font-sans: var(--pui-font-sans);
+  --font-mono: var(--pui-font-mono);
+
+  --text-1: var(--pui-font-size-1);
+  --text-2: var(--pui-font-size-2);
+  --text-3: var(--pui-font-size-3);
+  --text-4: var(--pui-font-size-4);
+  --text-5: var(--pui-font-size-5);
+  --text-6: var(--pui-font-size-6);
+
+  --font-weight-normal: var(--pui-font-weight-normal);
+  --font-weight-medium: var(--pui-font-weight-medium);
+  --font-weight-semibold: var(--pui-font-weight-semibold);
+  --font-weight-bold: var(--pui-font-weight-bold);
+
+  --leading-tight: var(--pui-line-height-tight);
+  --leading-normal: var(--pui-line-height-normal);
+
+  --tracking-tight: var(--pui-letter-spacing-tight);
+  --tracking-normal: var(--pui-letter-spacing-normal);
+
+  /* ------------------------------------------------------------------------
+   * Geometry and elevation. `rounded-control` / `rounded-surface` are the
+   * semantic pair the `data-pui-radius` presets retarget; the numbered steps
+   * are the raw scale behind them.
+   * --------------------------------------------------------------------- */
+  --radius-1: var(--pui-radius-1);
+  --radius-2: var(--pui-radius-2);
+  --radius-3: var(--pui-radius-3);
+  --radius-4: var(--pui-radius-4);
+  --radius-5: var(--pui-radius-5);
+  --radius-6: var(--pui-radius-6);
+  --radius-control: var(--pui-radius-control);
+  --radius-surface: var(--pui-radius-surface);
+  --radius-pill: var(--pui-radius-pill);
+
+  --shadow-1: var(--pui-shadow-1);
+  --shadow-2: var(--pui-shadow-2);
+  --shadow-3: var(--pui-shadow-3);
+  --shadow-4: var(--pui-shadow-4);
+
+  /* ------------------------------------------------------------------------
+   * Motion. Durations and easings only — travel, scale and `--pui-motion-ok`
+   * stay out on purpose. Those are the tokens that collapse under reduced
+   * motion, and a `translate-y-*` utility built from one would need the
+   * `calc(... * var(--pui-motion-ok))` gate that a utility cannot carry. A
+   * demo that has to move something writes it in CSS, the way a component
+   * does.
+   *
+   * Pair a spring easing with its matching duration — a shorter duration
+   * truncates the spring mid-bounce.
+   * --------------------------------------------------------------------- */
+  /* The namespace behind `duration-*` is `--transition-duration-*`, not
+   * `--duration-*` — a name that silently generates no utility at all. */
+  --transition-duration-instant: var(--pui-duration-instant);
+  --transition-duration-fast: var(--pui-duration-fast);
+  --transition-duration-normal: var(--pui-duration-normal);
+  --transition-duration-slow: var(--pui-duration-slow);
+  --transition-duration-move: var(--pui-duration-move);
+  --transition-duration-spring-gentle: var(--pui-duration-spring-gentle);
+  --transition-duration-spring-snappy: var(--pui-duration-spring-snappy);
+  --transition-duration-spring-precise: var(--pui-duration-spring-precise);
+  --transition-duration-spring-bouncy: var(--pui-duration-spring-bouncy);
+
+  --ease-standard: var(--pui-ease-standard);
+  --ease-emphasized: var(--pui-ease-emphasized);
+  --ease-exit: var(--pui-ease-exit);
+  --ease-spring-gentle: var(--pui-ease-spring-gentle);
+  --ease-spring-snappy: var(--pui-ease-spring-snappy);
+  --ease-spring-precise: var(--pui-ease-spring-precise);
+  --ease-spring-bouncy: var(--pui-ease-spring-bouncy);
+}

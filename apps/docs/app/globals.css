@@ -6,445 +6,472 @@
  * the components, re-themes. Anything that looks wrong here is a token bug.
  */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-  /* Smooth scroll is opt-in per user preference; a11y.css already forces
-   * `scroll-behavior: auto` under prefers-reduced-motion. */
-  scroll-behavior: smooth;
-  /* Keeps an anchored heading clear of the sticky header (WCAG SC 2.4.11). */
-  scroll-padding-top: 5rem;
-}
-
-body {
-  margin: 0;
-  min-height: 100dvh;
-  background-color: var(--pui-color-background);
-  color: var(--pui-color-foreground);
-  font-family: var(--pui-font-sans);
-  font-size: var(--pui-font-size-3);
-  line-height: var(--pui-line-height-normal);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* The docs site opts into the library's focus-ring pattern globally rather
- * than defining a competing one — a second ring implementation is how the two
- * drift apart. */
-:focus-visible {
-  outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
-  outline-offset: var(--pui-focus-ring-offset);
-  box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
-}
-
-/* Layout ------------------------------------------------------------------ */
-.layout {
-  min-height: 100dvh;
-  display: grid;
-  grid-template-rows: auto 1fr;
-}
-
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--pui-space-4);
-  height: 3.5rem;
-  padding-inline: var(--pui-space-5);
-  border-bottom: 1px solid var(--pui-color-border-muted);
-  background-color: color-mix(in oklab, var(--pui-color-background) 78%, transparent);
-}
-
-@supports (backdrop-filter: blur(1px)) {
-  @media (prefers-reduced-transparency: no-preference) {
-    .header {
-      backdrop-filter: saturate(180%) blur(12px);
-    }
-  }
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--pui-space-2);
-  font-weight: var(--pui-font-weight-bold);
-  font-size: var(--pui-font-size-4);
-  letter-spacing: var(--pui-letter-spacing-tight);
-}
-
-/* Decorative: hidden in forced-colors, where a gradient becomes a meaningless
- * flat system-coloured block. */
-.brandMark {
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: var(--pui-radius-3);
-  background: linear-gradient(135deg, var(--pui-accent-9), var(--pui-secondary-9));
-}
-
-.headerActions {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--pui-space-2);
-}
-
-.shell {
-  display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr) 14rem;
-  gap: var(--pui-space-5);
-  max-width: 84rem;
-  margin-inline: auto;
-  width: 100%;
-  padding-inline: var(--pui-space-4);
-}
-
-@media (max-width: 1100px) {
-  .shell {
-    grid-template-columns: 15rem minmax(0, 1fr);
-  }
-  .toc {
-    display: none;
-  }
-}
-
-@media (max-width: 820px) {
-  .shell {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .sidebar {
-    display: none;
-  }
-}
-
-/* Sidebar ----------------------------------------------------------------- */
-.sidebar,
-.toc {
-  position: sticky;
-  top: 3.5rem;
-  align-self: start;
-  max-height: calc(100dvh - 3.5rem);
-  overflow-y: auto;
-  padding-block: var(--pui-space-6);
-  scrollbar-width: thin;
-}
-
-.navGroup + .navGroup {
-  margin-top: var(--pui-space-5);
-}
-
-.navGroupTitle {
-  margin: 0 0 var(--pui-space-2);
-  padding-inline: var(--pui-space-2);
-  font-size: var(--pui-font-size-1);
-  font-weight: var(--pui-font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--pui-color-foreground-subtle);
-}
-
-.navLink {
-  position: relative;
-  display: block;
-  padding: var(--pui-space-1) var(--pui-space-2);
-  border-radius: var(--pui-radius-2);
-  color: var(--pui-color-foreground-muted);
-  font-size: var(--pui-font-size-2);
-  font-weight: var(--pui-font-weight-medium);
-  transition:
-    color var(--pui-duration-fast) var(--pui-ease-standard),
-    background-color var(--pui-duration-fast) var(--pui-ease-standard);
-}
-
-.navLink:hover {
-  color: var(--pui-color-foreground);
-  background-color: var(--pui-color-panel-hover);
-}
-
-.navLinkActive {
-  color: var(--pui-color-primary-text);
-  background-color: var(--pui-color-primary-soft);
-}
-
-/* Table of contents ------------------------------------------------------- */
-.tocTitle {
-  margin: 0 0 var(--pui-space-2);
-  font-size: var(--pui-font-size-1);
-  font-weight: var(--pui-font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--pui-color-foreground-subtle);
-}
-
-.tocLink {
-  display: block;
-  padding: var(--pui-space-1) 0 var(--pui-space-1) var(--pui-space-3);
-  border-inline-start: 2px solid var(--pui-color-border-muted);
-  color: var(--pui-color-foreground-muted);
-  font-size: var(--pui-font-size-2);
-  transition:
-    color var(--pui-duration-fast) var(--pui-ease-standard),
-    border-color var(--pui-duration-fast) var(--pui-ease-standard);
-}
-
-.tocLink:hover,
-.tocLinkActive {
-  color: var(--pui-color-foreground);
-  border-inline-start-color: var(--pui-color-primary);
-}
-
-.tocLink[data-depth="3"] {
-  padding-inline-start: var(--pui-space-5);
-}
-
-/* Content ----------------------------------------------------------------- */
-.content {
-  min-width: 0;
-  padding-block: var(--pui-space-7) var(--pui-space-8);
-}
-
-.prose {
-  max-width: 48rem;
-}
-
-/* Child combinator, not descendant: an MDX heading is always a direct child of
- * `.prose`, and a demo can now render headings of its own — every
- * `Accordion.Header` is an `<h3>`. These rules are unlayered, so they beat the
- * library's own `margin: 0` whatever its specificity (that is the point of
- * shipping inside `@layer pretty-ui.*`), and a demo accordion would inherit a
- * 2rem gap above every row. Scoping the headings to the top level leaves the
- * demo frame alone. The paragraph and list rules below stay descendant-scoped
- * on purpose — callouts and table cells do want them. */
-.prose > h1 {
-  margin: 0 0 var(--pui-space-3);
-  font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
-  font-weight: var(--pui-font-weight-bold);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.prose > h2 {
-  margin: var(--pui-space-8) 0 var(--pui-space-3);
-  font-size: var(--pui-font-size-6);
-  font-weight: var(--pui-font-weight-semibold);
-  letter-spacing: var(--pui-letter-spacing-tight);
-  scroll-margin-top: 5rem;
-}
-
-.prose > h3 {
-  margin: var(--pui-space-6) 0 var(--pui-space-2);
-  font-size: var(--pui-font-size-4);
-  font-weight: var(--pui-font-weight-semibold);
-  scroll-margin-top: 5rem;
-}
-
-.lead {
-  font-size: var(--pui-font-size-4);
-  line-height: 1.6;
-  color: var(--pui-color-foreground-muted);
-  text-wrap: pretty;
-}
-
-.prose p {
-  margin: 0 0 var(--pui-space-4);
-  text-wrap: pretty;
-}
-
-.prose ul,
-.prose ol {
-  margin: 0 0 var(--pui-space-4);
-  padding-inline-start: var(--pui-space-5);
-}
-
-.prose li {
-  margin-bottom: var(--pui-space-1);
-}
-
-/* A demo preview is not prose.
+/* ---------------------------------------------------------------------------
+ * Layer order.
  *
- * The three rules above are unlayered, so they beat anything the library ships
- * inside `@layer pretty-ui.*` at any specificity. That is the library's whole
- * design — app CSS always wins — but it is exactly wrong inside a demo, which
- * exists to show what a component looks like with no page styles on top of it.
- * Left alone, `.prose p` puts a 16px bottom margin on every `Field.Description`
- * and opens a gap between it and the error message that no consumer would see.
+ * The library declares `pretty-ui.*` first (theme.css is imported ahead of
+ * this file), so those layers already sit at the bottom of the stack. This
+ * statement places the rest: the docs' own chrome, then Tailwind.
  *
- * `revert-layer` from an unlayered rule rolls the property back to the value
- * the previous layer produced — i.e. the component's own `margin: 0` — rather
- * than to the UA default. That matters for the `<ul>` a `Field.Error` renders
- * for multiple messages, whose list indent is set by the library: a blunt
- * `padding-inline-start: 0` would flatten it. */
-.prose .demoPreview :is(p, ul, ol, li) {
-  margin: revert-layer;
-  padding-inline-start: revert-layer;
-}
+ * Everything below therefore lives in `@layer docs` rather than unlayered.
+ * That is load-bearing in one direction only — Tailwind utilities have to be
+ * able to beat `.prose` typography, because a demo is where they are used and
+ * `.prose p` (0,1,1) outguns `.mb-4` (0,1,0) on specificity alone. Layer order
+ * outranks specificity completely, so `docs` before `utilities` settles it
+ * without a single `!important`.
+ *
+ * The `pretty-ui` name is not restated with its six sub-layers on purpose:
+ * naming a parent layer here would be a second, drifting copy of an order the
+ * library already owns.
+ * ------------------------------------------------------------------------ */
+@layer docs, theme, base, components, utilities;
 
-.prose a:not(.navLink):not(.tocLink) {
-  color: var(--pui-color-primary-text);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  text-decoration-thickness: 1px;
-}
+@layer docs {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-.prose code:not(pre code) {
-  padding: 0.1em 0.35em;
-  border-radius: var(--pui-radius-2);
-  background-color: var(--pui-color-panel-active);
-  font-family: var(--pui-font-mono);
-  font-size: 0.875em;
-}
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Smooth scroll is opt-in per user preference; a11y.css already forces
+     * `scroll-behavior: auto` under prefers-reduced-motion. */
+    scroll-behavior: smooth;
+    /* Keeps an anchored heading clear of the sticky header (WCAG SC 2.4.11). */
+    scroll-padding-top: 5rem;
+  }
 
-/* Anchored headings reveal their link on hover, but keyboard users get it on
- * focus too — hover-only affordances are unreachable without a pointer. */
-.prose > :is(h2, h3) > a {
-  opacity: 0;
-  margin-inline-start: var(--pui-space-2);
-  color: var(--pui-color-foreground-subtle);
-  transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
-}
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--pui-color-background);
+    color: var(--pui-color-foreground);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-3);
+    line-height: var(--pui-line-height-normal);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-.prose > :is(h2, h3):hover > a,
-.prose > :is(h2, h3) > a:focus-visible {
-  opacity: 1;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-/* Tables ------------------------------------------------------------------ */
-.tableWrap {
-  margin: var(--pui-space-4) 0;
-  border: 1px solid var(--pui-color-border-muted);
-  border-radius: var(--pui-radius-surface);
-  overflow-x: auto;
-}
+  /* The docs site opts into the library's focus-ring pattern globally rather
+   * than defining a competing one — a second ring implementation is how the two
+   * drift apart. */
+  :focus-visible {
+    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
+    outline-offset: var(--pui-focus-ring-offset);
+    box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+  }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--pui-font-size-2);
-}
+  /* Layout ------------------------------------------------------------------ */
+  .layout {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
 
-.table th,
-.table td {
-  padding: var(--pui-space-2) var(--pui-space-3);
-  text-align: start;
-  vertical-align: top;
-  border-bottom: 1px solid var(--pui-color-border-muted);
-}
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--pui-space-4);
+    height: 3.5rem;
+    padding-inline: var(--pui-space-5);
+    border-bottom: 1px solid var(--pui-color-border-muted);
+    background-color: color-mix(in oklab, var(--pui-color-background) 78%, transparent);
+  }
 
-.table th {
-  background-color: var(--pui-color-panel);
-  font-weight: var(--pui-font-weight-semibold);
-  white-space: nowrap;
-}
-
-.table tr:last-child td {
-  border-bottom: none;
-}
-
-.table td code {
-  font-family: var(--pui-font-mono);
-  font-size: 0.85em;
-  color: var(--pui-color-primary-text);
-}
-
-/* Callouts ---------------------------------------------------------------- */
-.callout {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--pui-space-3);
-  margin: var(--pui-space-5) 0;
-  padding: var(--pui-space-4);
-  border: 1px solid var(--pui-color-border-muted);
-  border-radius: var(--pui-radius-surface);
-  background-color: var(--pui-color-panel);
-  font-size: var(--pui-font-size-2);
-}
-
-.callout > :last-child > :last-child {
-  margin-bottom: 0;
-}
-
-.calloutA11y {
-  border-color: var(--pui-color-primary-border);
-  background-color: var(--pui-color-primary-soft);
-}
-
-.calloutWarn {
-  border-color: var(--pui-color-danger-border);
-  background-color: var(--pui-color-danger-soft);
-}
-
-/* Scroll reveal ------------------------------------------------------------
- * Progressive enhancement only. The base state is fully VISIBLE and the
- * animation is additive, so if scroll-driven animations are unsupported
- * (Firefox today) or reduced motion is on, content simply appears — content
- * must never be gated behind an animation that may not run. */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: pui-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 60%;
-    }
-
-    @keyframes pui-reveal {
-      from {
-        opacity: 0;
-        translate: 0 var(--pui-travel-lg);
+  @supports (backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+      .header {
+        backdrop-filter: saturate(180%) blur(12px);
       }
     }
   }
-}
 
-/* Skip link ---------------------------------------------------------------
- * Visible only on focus. WCAG SC 2.4.1 Bypass Blocks — without it a keyboard
- * user tabs through the entire sidebar on every page load. */
-.skipLink {
-  position: absolute;
-  top: var(--pui-space-2);
-  left: var(--pui-space-2);
-  z-index: 100;
-  padding: var(--pui-space-2) var(--pui-space-3);
-  border-radius: var(--pui-radius-control);
-  background-color: var(--pui-color-primary);
-  color: var(--pui-color-on-primary);
-  font-size: var(--pui-font-size-2);
-  font-weight: var(--pui-font-weight-medium);
-  translate: 0 -200%;
-}
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pui-space-2);
+    font-weight: var(--pui-font-weight-bold);
+    font-size: var(--pui-font-size-4);
+    letter-spacing: var(--pui-letter-spacing-tight);
+  }
 
-.skipLink:focus-visible {
-  translate: 0 0;
-}
+  /* Decorative: hidden in forced-colors, where a gradient becomes a meaningless
+   * flat system-coloured block. */
+  .brandMark {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--pui-radius-3);
+    background: linear-gradient(135deg, var(--pui-accent-9), var(--pui-secondary-9));
+  }
 
-/* Palette cross-fade -------------------------------------------------------
- * `--pui-accent-seed` is registered via @property as a <color>, which is what
- * makes it animatable at all — an unregistered custom property would snap.
- * Because every ramp step derives from the seed with relative colour syntax,
- * interpolating this ONE variable re-derives all twelve steps per frame and
- * the whole page cross-fades. Applied via a class so it only costs anything
- * once the user actually switches palette.
- *
- * Gated on reduced motion: a full-page colour wash is exactly the kind of
- * large-area change that guidance asks us to drop. */
-@media (prefers-reduced-motion: no-preference) {
-  .themeTransition,
-  .themeTransition * {
+  .headerActions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pui-space-2);
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr) 14rem;
+    gap: var(--pui-space-5);
+    max-width: 84rem;
+    margin-inline: auto;
+    width: 100%;
+    padding-inline: var(--pui-space-4);
+  }
+
+  @media (max-width: 1100px) {
+    .shell {
+      grid-template-columns: 15rem minmax(0, 1fr);
+    }
+    .toc {
+      display: none;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .shell {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sidebar {
+      display: none;
+    }
+  }
+
+  /* Sidebar ----------------------------------------------------------------- */
+  .sidebar,
+  .toc {
+    position: sticky;
+    top: 3.5rem;
+    align-self: start;
+    max-height: calc(100dvh - 3.5rem);
+    overflow-y: auto;
+    padding-block: var(--pui-space-6);
+    scrollbar-width: thin;
+  }
+
+  .navGroup + .navGroup {
+    margin-top: var(--pui-space-5);
+  }
+
+  .navGroupTitle {
+    margin: 0 0 var(--pui-space-2);
+    padding-inline: var(--pui-space-2);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pui-color-foreground-subtle);
+  }
+
+  .navLink {
+    position: relative;
+    display: block;
+    padding: var(--pui-space-1) var(--pui-space-2);
+    border-radius: var(--pui-radius-2);
+    color: var(--pui-color-foreground-muted);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
     transition:
-      --pui-accent-seed var(--pui-duration-slow) var(--pui-ease-standard),
-      --pui-secondary-seed var(--pui-duration-slow) var(--pui-ease-standard),
-      background-color var(--pui-duration-slow) var(--pui-ease-standard),
-      border-color var(--pui-duration-slow) var(--pui-ease-standard),
-      color var(--pui-duration-slow) var(--pui-ease-standard);
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .navLink:hover {
+    color: var(--pui-color-foreground);
+    background-color: var(--pui-color-panel-hover);
+  }
+
+  .navLinkActive {
+    color: var(--pui-color-primary-text);
+    background-color: var(--pui-color-primary-soft);
+  }
+
+  /* Table of contents ------------------------------------------------------- */
+  .tocTitle {
+    margin: 0 0 var(--pui-space-2);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--pui-color-foreground-subtle);
+  }
+
+  .tocLink {
+    display: block;
+    padding: var(--pui-space-1) 0 var(--pui-space-1) var(--pui-space-3);
+    border-inline-start: 2px solid var(--pui-color-border-muted);
+    color: var(--pui-color-foreground-muted);
+    font-size: var(--pui-font-size-2);
+    transition:
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .tocLink:hover,
+  .tocLinkActive {
+    color: var(--pui-color-foreground);
+    border-inline-start-color: var(--pui-color-primary);
+  }
+
+  .tocLink[data-depth="3"] {
+    padding-inline-start: var(--pui-space-5);
+  }
+
+  /* Content ----------------------------------------------------------------- */
+  .content {
+    min-width: 0;
+    padding-block: var(--pui-space-7) var(--pui-space-8);
+  }
+
+  .prose {
+    max-width: 48rem;
+  }
+
+  /* Child combinator, not descendant: an MDX heading is always a direct child of
+   * `.prose`, and a demo can now render headings of its own — every
+   * `Accordion.Header` is an `<h3>`. `docs` sits after every `pretty-ui.*`
+   * layer, so these rules beat the library's own `margin: 0` whatever its
+   * specificity, and a demo accordion would inherit a 2rem gap above every
+   * row. Scoping the headings to the top level leaves the demo frame alone.
+   * The paragraph and list rules below stay descendant-scoped on purpose —
+   * callouts and table cells do want them. */
+  .prose > h1 {
+    margin: 0 0 var(--pui-space-3);
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
+    font-weight: var(--pui-font-weight-bold);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .prose > h2 {
+    margin: var(--pui-space-8) 0 var(--pui-space-3);
+    font-size: var(--pui-font-size-6);
+    font-weight: var(--pui-font-weight-semibold);
+    letter-spacing: var(--pui-letter-spacing-tight);
+    scroll-margin-top: 5rem;
+  }
+
+  .prose > h3 {
+    margin: var(--pui-space-6) 0 var(--pui-space-2);
+    font-size: var(--pui-font-size-4);
+    font-weight: var(--pui-font-weight-semibold);
+    scroll-margin-top: 5rem;
+  }
+
+  .lead {
+    font-size: var(--pui-font-size-4);
+    line-height: 1.6;
+    color: var(--pui-color-foreground-muted);
+    text-wrap: pretty;
+  }
+
+  .prose p {
+    margin: 0 0 var(--pui-space-4);
+    text-wrap: pretty;
+  }
+
+  .prose ul,
+  .prose ol {
+    margin: 0 0 var(--pui-space-4);
+    padding-inline-start: var(--pui-space-5);
+  }
+
+  .prose li {
+    margin-bottom: var(--pui-space-1);
+  }
+
+  /* A demo preview is not prose.
+   *
+   * The three rules above sit in a later layer than anything the library ships,
+   * so they beat it at any specificity. That is the library's whole design —
+   * app CSS always wins — but it is exactly wrong inside a demo, which exists
+   * to show what a component looks like with no page styles on top of it. Left
+   * alone, `.prose p` puts a 16px bottom margin on every `Field.Description`
+   * and opens a gap between it and the error message that no consumer would
+   * see.
+   *
+   * `revert-layer` rolls the property back to the value the layer BEFORE `docs`
+   * produced — i.e. the component's own `margin: 0` — rather than to the UA
+   * default. That matters for the `<ul>` a `Field.Error` renders for multiple
+   * messages, whose list indent is set by the library: a blunt
+   * `padding-inline-start: 0` would flatten it.
+   *
+   * A demo that wants its own spacing does not go through here at all:
+   * `utilities` is a later layer than `docs`, so a Tailwind `mb-4` beats
+   * `.prose p` outright. */
+  .prose .demoPreview :is(p, ul, ol, li) {
+    margin: revert-layer;
+    padding-inline-start: revert-layer;
+  }
+
+  .prose a:not(.navLink):not(.tocLink) {
+    color: var(--pui-color-primary-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  .prose code:not(pre code) {
+    padding: 0.1em 0.35em;
+    border-radius: var(--pui-radius-2);
+    background-color: var(--pui-color-panel-active);
+    font-family: var(--pui-font-mono);
+    font-size: 0.875em;
+  }
+
+  /* Anchored headings reveal their link on hover, but keyboard users get it on
+   * focus too — hover-only affordances are unreachable without a pointer. */
+  .prose > :is(h2, h3) > a {
+    opacity: 0;
+    margin-inline-start: var(--pui-space-2);
+    color: var(--pui-color-foreground-subtle);
+    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .prose > :is(h2, h3):hover > a,
+  .prose > :is(h2, h3) > a:focus-visible {
+    opacity: 1;
+  }
+
+  /* Tables ------------------------------------------------------------------ */
+  .tableWrap {
+    margin: var(--pui-space-4) 0;
+    border: 1px solid var(--pui-color-border-muted);
+    border-radius: var(--pui-radius-surface);
+    overflow-x: auto;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--pui-font-size-2);
+  }
+
+  .table th,
+  .table td {
+    padding: var(--pui-space-2) var(--pui-space-3);
+    text-align: start;
+    vertical-align: top;
+    border-bottom: 1px solid var(--pui-color-border-muted);
+  }
+
+  .table th {
+    background-color: var(--pui-color-panel);
+    font-weight: var(--pui-font-weight-semibold);
+    white-space: nowrap;
+  }
+
+  .table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .table td code {
+    font-family: var(--pui-font-mono);
+    font-size: 0.85em;
+    color: var(--pui-color-primary-text);
+  }
+
+  /* Callouts ---------------------------------------------------------------- */
+  .callout {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--pui-space-3);
+    margin: var(--pui-space-5) 0;
+    padding: var(--pui-space-4);
+    border: 1px solid var(--pui-color-border-muted);
+    border-radius: var(--pui-radius-surface);
+    background-color: var(--pui-color-panel);
+    font-size: var(--pui-font-size-2);
+  }
+
+  .callout > :last-child > :last-child {
+    margin-bottom: 0;
+  }
+
+  .calloutA11y {
+    border-color: var(--pui-color-primary-border);
+    background-color: var(--pui-color-primary-soft);
+  }
+
+  .calloutWarn {
+    border-color: var(--pui-color-danger-border);
+    background-color: var(--pui-color-danger-soft);
+  }
+
+  /* Scroll reveal ------------------------------------------------------------
+   * Progressive enhancement only. The base state is fully VISIBLE and the
+   * animation is additive, so if scroll-driven animations are unsupported
+   * (Firefox today) or reduced motion is on, content simply appears — content
+   * must never be gated behind an animation that may not run. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .reveal {
+        animation: pui-reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;
+      }
+
+      @keyframes pui-reveal {
+        from {
+          opacity: 0;
+          translate: 0 var(--pui-travel-lg);
+        }
+      }
+    }
+  }
+
+  /* Skip link ---------------------------------------------------------------
+   * Visible only on focus. WCAG SC 2.4.1 Bypass Blocks — without it a keyboard
+   * user tabs through the entire sidebar on every page load. */
+  .skipLink {
+    position: absolute;
+    top: var(--pui-space-2);
+    left: var(--pui-space-2);
+    z-index: 100;
+    padding: var(--pui-space-2) var(--pui-space-3);
+    border-radius: var(--pui-radius-control);
+    background-color: var(--pui-color-primary);
+    color: var(--pui-color-on-primary);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    translate: 0 -200%;
+  }
+
+  .skipLink:focus-visible {
+    translate: 0 0;
+  }
+
+  /* Palette cross-fade -------------------------------------------------------
+   * `--pui-accent-seed` is registered via @property as a <color>, which is what
+   * makes it animatable at all — an unregistered custom property would snap.
+   * Because every ramp step derives from the seed with relative colour syntax,
+   * interpolating this ONE variable re-derives all twelve steps per frame and
+   * the whole page cross-fades. Applied via a class so it only costs anything
+   * once the user actually switches palette.
+   *
+   * Gated on reduced motion: a full-page colour wash is exactly the kind of
+   * large-area change that guidance asks us to drop. */
+  @media (prefers-reduced-motion: no-preference) {
+    .themeTransition,
+    .themeTransition * {
+      transition:
+        --pui-accent-seed var(--pui-duration-slow) var(--pui-ease-standard),
+        --pui-secondary-seed var(--pui-duration-slow) var(--pui-ease-standard),
+        background-color var(--pui-duration-slow) var(--pui-ease-standard),
+        border-color var(--pui-duration-slow) var(--pui-ease-standard),
+        color var(--pui-duration-slow) var(--pui-ease-standard);
+    }
   }
 }

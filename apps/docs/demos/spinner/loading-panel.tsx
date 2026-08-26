@@ -15,7 +15,7 @@ export default function SpinnerLoadingPanel() {
   }
 
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)", justifyItems: "start" }}>
+    <div className="grid justify-items-start gap-4">
       <Button onClick={load} disabled={state === "loading"}>
         {state === "done" ? "Reload invoices" : "Load invoices"}
       </Button>
@@ -31,29 +31,15 @@ export default function SpinnerLoadingPanel() {
       <div
         role="status"
         aria-busy={state === "loading"}
-        style={{
-          display: "grid",
-          alignContent: "center",
-          justifyItems: "start",
-          gap: "var(--pui-space-2)",
-          minBlockSize: "6rem",
-          inlineSize: "min(100%, 22rem)",
-          padding: "var(--pui-surface-p)",
-          borderRadius: "var(--pui-radius-surface)",
-          border: "1px solid var(--pui-color-border-muted)",
-          background: "var(--pui-color-panel)",
-          fontSize: "var(--pui-font-size-2)",
-        }}
+        className="grid min-h-[6rem] w-full max-w-[22rem] content-center justify-items-start gap-2 rounded-surface border border-border-muted bg-panel p-surface text-2"
       >
         {state === "idle" ? (
-          <span style={{ color: "var(--pui-color-foreground-muted)" }}>
-            Nothing loaded yet.
-          </span>
+          <span className="text-foreground-muted">Nothing loaded yet.</span>
         ) : state === "loading" ? (
           <Spinner variant="bars" label="Loading invoices" labelPlacement="end" decorative />
         ) : (
           ROWS.map((row) => (
-            <span key={row} style={{ fontFamily: "var(--pui-font-mono)" }}>
+            <span key={row} className="font-mono">
               {row}
             </span>
           ))

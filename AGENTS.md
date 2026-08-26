@@ -31,8 +31,10 @@ packages/ui             the library
   src/components/<name>/  <Name>.tsx · <Name>.module.css · index.ts
   src/styles/             layers · properties · tokens · motion · a11y · patterns
   scripts/                ramp.mjs · motion.mjs (source of truth) + generators
-apps/docs               the docs site — Next.js 16, MDX, Shiki
+apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/components/<name>/page.mdx   the written page
+  app/globals.css                  site chrome, in @layer docs
+  app/tailwind.css                 the pretty-ui token bridge — read before styling a demo
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
 ```
 
@@ -349,6 +351,64 @@ Test RTL — the demo frame has a toggle for it.
 
 ---
 
+## Styling a demo — Tailwind
+
+The docs site runs Tailwind v4, and demos are its main customer: a demo is
+documentation, so the class list a reader copies out of one is the example they
+paste into their own app. Reach for utilities instead of a `style={{ ... }}`
+object for anything that is layout or typography.
+
+Setup lives in [`apps/docs/app/tailwind.css`](apps/docs/app/tailwind.css).
+It is not stock Tailwind. Two things about it are load-bearing:
+
+**The theme is `@theme inline`, and must stay that way.** Plain `@theme` emits
+`--color-panel: var(--pui-color-panel)` on `:root` and points utilities at
+*that* — which freezes the value at `:root`, because a `var()` inside an
+unregistered custom property is substituted where it is declared. Every demo
+renders inside `DemoFrame`, a `.pui-theme` scope carrying `data-theme` and
+`data-pui-motion`, so `bg-panel` would keep the page's colour when the frame's
+light/dark toggle is flipped. `inline` substitutes the token into the utility
+itself (`background-color: var(--pui-color-panel)`), which resolves at the
+element and makes scopes, `data-pui-density` and `data-pui-radius` all work.
+
+**Tailwind's own scales are deleted, not extended.** `--color-*`, `--spacing-*`,
+`--text-*`, `--radius-*`, `--shadow-*`, `--ease-*` and friends are reset to
+`initial` and rebuilt from the pretty-ui tokens, so `bg-red-500`, `p-13` and
+`text-white` simply do not compile. That is the "nothing is hardcoded" rule
+with teeth — those classes would survive review and then fail to respond to a
+seed change.
+
+| Want | Write |
+| :-- | :-- |
+| `gap: var(--pui-space-5)` | `gap-5` — the eight steps map 1:1, so `gap-6` is 2rem, not Tailwind's stock 1.5rem |
+| `padding: var(--pui-surface-p)` | `p-surface` |
+| `font-size: var(--pui-font-size-2)` | `text-2` |
+| `border-radius: var(--pui-radius-control)` | `rounded-control` (also `-surface`, `-pill`, and `rounded-1`…`6`) |
+| `color: var(--pui-color-foreground-muted)` | `text-foreground-muted` |
+| `transition-duration: var(--pui-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
+| `inline-size: min(32rem, 100%)` | `w-full max-w-lg` — the `--container-*` scale is untouched |
+| any other token | `h-(--pui-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
+
+Three things stay in a `style` object, and are not oversights:
+
+- **Component knobs** — `--pui-spinner-thickness`, `--pui-button-radius`. They
+  are declared on the component's own root for a reason (see *Design
+  principles*), and a utility class cannot set an arbitrary custom property.
+- **Anything gated on `--pui-motion-ok`.** A `translate-y-*` utility cannot
+  carry the `calc(... * var(--pui-motion-ok))` that collapses it under reduced
+  motion, so a demo that moves something writes CSS, the way a component does.
+- **Values computed at runtime.**
+
+Layer order is what makes utilities usable inside a demo at all:
+`pretty-ui.* → docs → theme, base, components, utilities`, declared at the top
+of [`apps/docs/app/globals.css`](apps/docs/app/globals.css) and fixed by the
+import order in `layout.tsx`. Without it `.prose p` (0,1,1) would beat `.mb-4`
+(0,1,0) on specificity and a demo could not override the page's prose
+typography. Preflight is deliberately not imported — it would strip the UA
+list markers and heading sizes that the MDX prose builds on.
+
+---
+
 ## Adding or changing a component
 
 1. Read [`packages/ui/CONTRIBUTING.md`](packages/ui/CONTRIBUTING.md) first — it
@@ -368,7 +428,9 @@ Test RTL — the demo frame has a toggle for it.
 8. Write the doc comments on the props — `docgen` turns them into the prop table.
 9. Add demos in `apps/docs/demos/<name>/`, regenerate the registry, and write
    the MDX page. Demos are imported twice from the same file (once to render,
-   once through `?raw`), so the code shown is provably the code that runs.
+   once through `?raw`), so the code shown is provably the code that runs —
+   which is also why their layout is Tailwind rather than a `style` object; see
+   *Styling a demo* above.
 10. Add the page to the `NAV` array in
     [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx).
 
