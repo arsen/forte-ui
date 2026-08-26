@@ -244,7 +244,11 @@
       opacity var(--pui-duration-fast) var(--pui-ease-standard),
       transform var(--pui-dialog-enter-duration) var(--pui-dialog-enter-ease),
       translate var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise),
-      scale var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise);
+      scale var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise),
+      /* In step with the ::after dim below — the two together are one
+       * overlay, and a border that snapped while the surface faded would
+       * announce itself as a separate thing. */
+      border-color var(--pui-dialog-nested-duration) var(--pui-ease-standard);
   }
 
   /* Rises into place from below and grows to full size. */
@@ -324,6 +328,28 @@
 
   .popup[data-nested-dialog-open]::after {
     opacity: 1;
+  }
+
+  /* The overlay above stops at the PADDING box — an absolutely positioned box
+   * resolves `inset` against its containing block's padding box, not its
+   * border box — and `.pui-hc-surface` gives every floating surface a 1px
+   * transparent border outside it. Backgrounds paint under a border by
+   * default, so that ring keeps the popup's own undimmed `--pui-dialog-bg`
+   * and draws a bright outline around a parent that is supposed to have
+   * receded: the one part of it still at full strength, and the most visible
+   * part, because it is the silhouette. Barely readable in dark mode, glaring
+   * in light, where it reads as a white hairline frame.
+   *
+   * Painting the ring in the scrim colour composites it over that same
+   * background, which is exactly what the overlay does to the rest of the
+   * surface — so the two agree by construction rather than by a matched pair
+   * of hand-picked colours. `Drawer` carries the identical pair for the
+   * identical reason; keep them in step.
+   *
+   * Forced-colors mode reassigns this to CanvasText from the `a11y` layer,
+   * which is ordered after this one and therefore wins. */
+  .popup[data-nested-dialog-open] {
+    border-color: var(--pui-scrim-color);
   }
 
   /* Sizes ------------------------------------------------------------------ */
