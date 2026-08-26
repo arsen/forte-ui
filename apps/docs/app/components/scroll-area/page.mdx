@@ -1,0 +1,210 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Scroll Area",
+  description:
+    "A scroll container with overlay scrollbars that look the same on every platform, and a gradient edge fade driven by scroll position in pure CSS.",
+};
+
+# Scroll Area
+
+A scroll area is a box that scrolls, with the platform's scrollbars replaced by ones you can style — and with the edges of the content fading out towards whatever is still off-screen. Reach for it when a region needs to scroll independently of the page: a list in a panel, a log, a rail of cards, a tab strip too long for its container.
+
+Do not reach for it for the page itself. The document scrollbar is the one place where the platform's own behaviour — the OS overlay setting, scroll anchoring, find-in-page, the browser's own scroll restoration — matters more than a consistent look.
+
+<DemoBlock id="scroll-area/basic" />
+
+## Import
+
+```tsx
+import { ScrollArea } from "@dofortech/pretty-ui";
+```
+
+`ScrollArea` is a namespace of six parts:
+
+```tsx
+<ScrollArea.Root>
+  <ScrollArea.Viewport>
+    <ScrollArea.Content>{/* … */}</ScrollArea.Content>
+  </ScrollArea.Viewport>
+  <ScrollArea.Scrollbar orientation="vertical">
+    <ScrollArea.Thumb />
+  </ScrollArea.Scrollbar>
+  <ScrollArea.Scrollbar orientation="horizontal">
+    <ScrollArea.Thumb />
+  </ScrollArea.Scrollbar>
+  <ScrollArea.Corner />
+</ScrollArea.Root>
+```
+
+`Root` is the box you give a size to. `Viewport` is the real scroll container — the element with `overflow`, the element that takes focus, and the element the fade is painted on. `Content` wraps everything inside it. Each `Scrollbar` overlays one edge and holds one `Thumb`; `Corner` fills the square where two scrollbars would otherwise cross.
+
+Render only the parts you need. A vertically scrolling panel needs one `Scrollbar` and no `Corner`, and a scrollbar whose axis does not overflow is not rendered at all, so there is no cost to declaring both.
+
+<Callout kind="warn">
+  `ScrollArea.Root` has no height of its own. Give it a `height`, a `max-height`, or a definite track in the layout around it — a scroll area with an indefinite height simply grows to fit its content and never scrolls. `max-height` is usually what you want: the area is only as tall as it needs to be until it hits the cap.
+</Callout>
+
+## Examples
+
+### Vertical
+
+The demo at the top of the page. One `Scrollbar`, a `max-height` on the root, and a fade at whichever end still has content past it — at rest at the top there is only a bottom fade, and it closes as the last item comes into view.
+
+The scrollbars overlay the content rather than insetting it, so nothing reflows when they appear. That also means content can pass underneath them: the demo gives its `Content` a `padding-inline-end` so the text stops short of where the thumb will be.
+
+### Horizontal
+
+Nothing changes but the axis. `ScrollArea.Content` is what makes it work — see [Sizing](#sizing) below.
+
+<DemoBlock id="scroll-area/horizontal" />
+
+Notice the fade switching sides as you scroll. Its direction is the *inline* axis, not the physical one, so in an RTL context the start fade appears on the right; the demo frame's direction toggle shows this.
+
+### Both scrollbars
+
+When either axis might overflow, render both `Scrollbar`s and the `Corner`. Base UI measures the tracks and shortens each one by the corner's size, so they never overlap and the corner is exactly the square they would have fought over. It mounts only while both scrollbars are visible.
+
+<DemoBlock id="scroll-area/both-axes" />
+
+Both fades are live at once here, composited so that a corner fading on two edges fades once rather than twice.
+
+### Scrollable tabs
+
+A tab strip is the case that most wants this component: the tabs are fixed-width, they cannot wrap, and there is no room to show all of them. Wrap `Tabs.List` — not `Tabs.Root` — in a scroll area, so the strip scrolls and the panels below it stay put.
+
+<DemoBlock id="scroll-area/tabs" />
+
+Three things are load-bearing in that arrangement, and all three are already handled:
+
+- **The indicator still tracks.** Base UI measures the active tab against `Tabs.List`, which is inside the viewport and scrolls with it, so the sliding underline stays attached to its tab at every scroll position.
+- **The rail runs the full width.** `Tabs.List` is sized to its tabs rather than to the viewport, so the line variant's rail extends under the tabs that are still off-screen instead of stopping at the fold.
+- **Arrowing to an off-screen tab scrolls it into view, clear of the fade.** The browser brings a newly focused tab into view on its own; the `scroll-margin` that every `.pui-focus-ring` element carries is what stops it landing right against the edge, half-faded, with its focus ring underneath the gradient.
+
+<Callout kind="a11y">
+  A scrollable strip adds one tab stop *before* the tabs — the viewport itself, which Base UI makes focusable so that a keyboard user can scroll a region that has no other controls in it. That is the correct behaviour, not a stray stop; SC 2.1.1 requires it. It disappears on its own when the strip fits.
+</Callout>
+
+### Always-visible scrollbars, no fade
+
+`scrollbarVisibility="always"` keeps the scrollbars painted instead of revealing them on hover, and `fade={false}` turns the mask off. Together they are the conservative setting — worth choosing when the scroll area sits in dense, data-heavy chrome where a fade would read as content being cut off rather than continuing.
+
+<DemoBlock id="scroll-area/visibility" />
+
+## Sizing
+
+`ScrollArea.Content` exists because the two axes want opposite things from a box, and it is the one part worth understanding before you use the component.
+
+A plain block child of a scroll container is stretched to the width of the scrollport. That is right for a paragraph — it wraps, and the area scrolls vertically — and wrong for a row of cards, which gets clipped at the fold instead of scrolling, taking any background or rail on the row with it. Sizing the child to `max-content` fixes the row and breaks the paragraph, which now refuses to wrap and gains a horizontal scrollbar it never needed.
+
+`ScrollArea.Content` is a table box, so its width is `max(min-content, min(max-content, available))`. Content that cannot shrink — a flex row of tabs, a wide `<pre>` — has a min-content width larger than the scrollport, so the box grows past it and scrolls horizontally. Content that can shrink lands on the available width and wraps exactly as a block would. One element, both answers, no prop to get wrong.
+
+It is optional for a purely vertical scroll area, and harmless there. Put your own layout — the grid, the flex row, the padding — on a child of it, or on `Content` itself as long as you leave its `display` alone.
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], description: "Moves focus to the viewport, but only while it can actually scroll. When the content fits, the viewport is not a tab stop." },
+  { keys: ["ArrowDown", "ArrowUp"], description: "Scrolls the focused viewport by a line." },
+  { keys: ["ArrowRight", "ArrowLeft"], description: "Scrolls the focused viewport horizontally by a line." },
+  { keys: ["PageDown", "PageUp"], description: "Scrolls the focused viewport by a screen." },
+  { keys: ["Home"], description: "Scrolls to the start of the content." },
+  { keys: ["End"], description: "Scrolls to the end of the content." },
+  { keys: ["Space"], description: "Scrolls down by a screen; with Shift, up by a screen." },
+]} />
+
+Keyboard scrolling is the browser's, not ours — the viewport is a real scroll container, so every key above works because the platform makes it work, including in combination with find-in-page and with a screen reader's own reading cursor.
+
+What the component adds is that the viewport is reachable. Base UI gives it `tabIndex={0}` whenever it can scroll and `-1` when it cannot, which is SC 2.1.1 (Keyboard) for a region whose only interaction is scrolling: content a keyboard user cannot scroll to is content they cannot read. A scroll area full of buttons is already reachable through those buttons, and gets the stop anyway — it is where the arrow keys become useful.
+
+<Callout kind="a11y">
+  Give `ScrollArea.Viewport` an `aria-label` (or `aria-labelledby` pointing at the heading it belongs to). A focusable scrollable region is announced without a name of its own, so a page with two of them offers no way to tell which one focus has landed in. Every demo on this page does this — except the tab strip, where `Tabs.List` already carries the name.
+</Callout>
+
+The focus ring is painted on `ScrollArea.Root` rather than on the viewport that receives focus. That is not a stylistic choice: the fade is a mask, a mask applies to everything the element paints and is clipped to its border box, so a ring on the viewport would be cropped on all four sides and then faded out by the effect it has to remain visible through. The root is the same box, unmasked, and is where the scrollbars live, so ringing it outlines the whole scroll region — which is what focus is on. A control focused *inside* the content keeps its own ring and does not light up the region's.
+
+Keyboard focus anywhere in the region also reveals the scrollbars, so a keyboard user arrowing through a list has the same position feedback a pointer user gets on hover.
+
+Under `forced-colors`, under `prefers-contrast: more` and under `prefers-reduced-transparency`, the fade is dropped entirely and the scrollbars stop hiding. All three users have asked for the opposite of what a fade does — it is, by construction, a loss of contrast achieved by making text translucent — so the cue moves to the scrollbar, which is the half that survives a fixed palette. The tracks paint `Canvas` inside a `CanvasText` border and the thumbs paint `CanvasText`, because the UA assigns system colours from native element semantics and every part here is a `div`.
+
+## How the fade works
+
+No JavaScript runs per frame, and there is no gradient overlay element anywhere in the DOM.
+
+Base UI publishes the remaining scroll distance on each of the four edges as CSS custom properties on the viewport — `--scroll-area-overflow-y-start`, `--scroll-area-overflow-y-end`, and the two `x` equivalents — as `px` lengths, already normalised for RTL and for the browsers that report a negative `scrollLeft` there. The stylesheet turns them into a mask:
+
+```css
+.viewport {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black min(var(--pui-scroll-area-fade-size), var(--scroll-area-overflow-y-start, 0px)),
+    /* … and the mirrored pair for the end edge */
+  );
+  mask-composite: intersect;
+}
+```
+
+Three consequences fall out of that shape:
+
+- **It is a mask, not an overlay.** A gradient overlay has to be painted in the colour of whatever sits behind the content, so it is wrong the moment the scroll area moves onto a card, an image or a themed surface, and it has to be re-set by hand each time. A mask fades the content itself to transparency, which is correct on every background including none.
+- **The size *is* the scroll position.** `min()` takes the smaller of the configured fade size and the distance still scrollable, so the fade opens out of an edge as the content moves under it and is exactly `0px` while you are resting against that edge. There is deliberately no transition on it — easing a value that already is the scroll position would only make the fade lag the content it describes.
+- **The horizontal fade is logical.** A gradient's direction is physical, so the angle carries the sign: `calc(90deg * var(--pui-direction))` is `90deg` in LTR and `-90deg` in RTL, which makes the gradient's first stop the inline-start edge either way. Writing `to right` and swapping the two variables under `[dir="rtl"]` would break an LTR island inside an RTL page.
+
+The two axes are separate mask layers composited with `mask-composite: intersect`, so a pixel shows only where both agree — a corner fading on two edges fades once rather than twice. The mask is applied only while an axis actually overflows, since it promotes the viewport to its own compositing layer and there is nothing to pay for that on a scroll area that fits its content.
+
+### Motion
+
+There is no `prefers-reduced-motion` block in the stylesheet. The only motion in the component is the scrollbars fading in and out, which runs on `--pui-duration-fast` and collapses with it; the fade itself is not motion, and scrolling is the user's own.
+
+## Theming
+
+Every property below is declared on `ScrollArea.Root` and inherited by the parts inside it, which is also why an ancestor is the wrong place to set one — the root's own declaration wins over the inherited value. Override them on `ScrollArea.Root` itself, through its `className` or an inline `style`. To move every scroll area at once, re-point the global tokens in the Default column instead.
+
+| Property | What it controls | Default |
+| :-- | :-- | :-- |
+| `--pui-scroll-area-fade-size` | How far the fade reaches in from an edge, at most | `var(--pui-space-5)` |
+| `--pui-scroll-area-scrollbar-size` | Track thickness on both axes | `var(--pui-space-3)` |
+| `--pui-scroll-area-track-padding` | Inset between the track's edge and its thumb | `2px` |
+| `--pui-scroll-area-track-bg` | Track fill | `transparent` |
+| `--pui-scroll-area-track-bg-hover` | Track fill while the pointer is over it | `var(--pui-color-panel)` |
+| `--pui-scroll-area-thumb-bg` | Thumb fill | `var(--pui-color-border-strong)` |
+| `--pui-scroll-area-thumb-bg-hover` | Thumb fill on hover | `var(--pui-color-foreground-subtle)` |
+| `--pui-scroll-area-thumb-bg-active` | Thumb fill while being dragged | `var(--pui-color-foreground-muted)` |
+| `--pui-scroll-area-thumb-radius` | Corner radius of the track and thumb | `var(--pui-radius-pill)` |
+| `--pui-scroll-area-corner-bg` | Fill of the square between the two scrollbars | `transparent` |
+
+A `border-radius` set on `ScrollArea.Root` is inherited by the viewport, which is the box that actually clips, so rounding the root rounds the scrolled content with it.
+
+The parts also expose their state as data attributes — `data-has-overflow-x`, `data-has-overflow-y`, `data-overflow-x-start`, `data-overflow-x-end`, `data-overflow-y-start`, `data-overflow-y-end`, `data-scrolling`, `data-hovering`, `data-orientation` — so a Tailwind arbitrary variant such as `data-[overflow-y-start]:...` can target them without a wrapper element. The four `data-overflow-*` attributes are the boolean form of the same measurements the fade uses; `overflowEdgeThreshold` on `ScrollArea.Root` sets how many pixels must be scrolled before they appear.
+
+## API reference
+
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `ScrollArea.Root` also takes `overflowEdgeThreshold`; `ScrollArea.Scrollbar` also takes `keepMounted`. All six parts take `render` for changing the underlying element.
+
+### ScrollArea.Root
+
+<PropTable component="ScrollAreaRoot" />
+
+### ScrollArea.Viewport
+
+<PropTable component="ScrollAreaViewport" />
+
+### ScrollArea.Content
+
+<PropTable component="ScrollAreaContent" />
+
+### ScrollArea.Scrollbar
+
+<PropTable component="ScrollAreaScrollbar" />
+
+### ScrollArea.Thumb
+
+<PropTable component="ScrollAreaThumb" />
+
+### ScrollArea.Corner
+
+<PropTable component="ScrollAreaCorner" />

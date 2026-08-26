@@ -88,6 +88,17 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { ScrollArea } from "./components/scroll-area";
+export type {
+  ScrollAreaScrollbarVisibility,
+  ScrollAreaRootProps,
+  ScrollAreaViewportProps,
+  ScrollAreaContentProps,
+  ScrollAreaScrollbarProps,
+  ScrollAreaThumbProps,
+  ScrollAreaCornerProps,
+} from "./components/scroll-area";
+
 export { Select } from "./components/select";
 export type {
   SelectRootProps,

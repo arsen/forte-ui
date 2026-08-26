@@ -928,6 +928,105 @@
       }
     ]
   },
+  "ScrollAreaRoot": {
+    "name": "ScrollAreaRoot",
+    "description": "Groups the viewport, the scrollbars and the corner.\n\nGive it the size the scroll area should occupy — a `height`, a `max-height`,\nor a track in whatever layout it sits in. It is a grid with a single\n`minmax(0, 1fr)` cell, so the viewport stays content-sized until the root is\nconstrained and fills it exactly once it is; a scroll area with no height\nanywhere on it simply grows and never scrolls.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fade",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the content fades out towards any edge it can still be scrolled\npast. The fade is a mask, so it works on any background, and its size\ntracks the remaining scroll distance — it opens as you scroll away from an\nedge and is absent while you are resting against one. Dropped\nautomatically under `forced-colors`, `prefers-contrast: more` and\n`prefers-reduced-transparency`, where the scrollbars carry the cue\ninstead."
+      },
+      {
+        "name": "scrollbarVisibility",
+        "type": "ScrollAreaScrollbarVisibility",
+        "required": false,
+        "defaultValue": "auto",
+        "description": "When the scrollbars are shown. `\"auto\"` overlays them and reveals them\nwhile the pointer is anywhere over the scroll area, while it is being\nscrolled, or while something inside it has keyboard focus; `\"always\"`\nleaves them painted. Either way a scrollbar for an axis that does not\noverflow is not rendered at all."
+      }
+    ]
+  },
+  "ScrollAreaViewport": {
+    "name": "ScrollAreaViewport",
+    "description": "The scrolling box. Base UI gives it `tabIndex={0}` whenever it can actually\nscroll, so a keyboard user can reach the content and page through it with\nthe arrow keys — and drops it back to `-1` when the content fits, so a\nnon-scrollable region does not become a dead tab stop.\n\nName it. A scrollable region is announced as a group with no name of its\nown, so pass `aria-label` (or `aria-labelledby` pointing at the heading it\nbelongs to) whenever the surrounding content does not already make it\nobvious what is being scrolled.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ScrollAreaContent": {
+    "name": "ScrollAreaContent",
+    "description": "Wraps everything inside the viewport, and is what makes horizontal scrolling\nwork: it is sized to its content rather than stretched to the viewport, so a\nrow that cannot shrink — tabs, cards, a wide table — overflows and scrolls\ninstead of being clipped, while content that can shrink still wraps normally\nand scrolls only vertically.\n\nOptional for a purely vertical scroll area, and harmless there.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ScrollAreaScrollbar": {
+    "name": "ScrollAreaScrollbar",
+    "description": "One scrollbar track, containing a `ScrollArea.Thumb`.\n\nIt overlays the content rather than insetting it, so showing or hiding it\nnever reflows what is being scrolled. Base UI removes it from the DOM\nentirely while its axis does not overflow — pass `keepMounted` if you need\nto style or measure it in that state.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "\"horizontal\" | \"vertical\"",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Which axis this scrollbar controls. Render one for each axis that can\noverflow; render both, plus `ScrollArea.Corner`, when either might."
+      }
+    ]
+  },
+  "ScrollAreaThumb": {
+    "name": "ScrollAreaThumb",
+    "description": "The draggable part of a scrollbar. Renders inside `ScrollArea.Scrollbar`,\nwhich is also what sizes it: Base UI measures the track — its padding\nincluded — and publishes the result as an inline `height` or `width`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ScrollAreaCorner": {
+    "name": "ScrollAreaCorner",
+    "description": "The square where the two scrollbars would otherwise cross. Render it\nwhenever both scrollbars are rendered — Base UI sizes each track to stop\nshort of it, and mounts the corner only while both are visible, so it costs\nnothing on a scroll area that turns out to need only one axis.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "SelectLabel": {
     "name": "SelectLabel",
     "description": "A visible label wired to the trigger. This is the preferred way to give a\nselect its accessible name — Base UI renders a `<div>` and associates it\nwith `aria-labelledby`, so clicking it focuses the trigger without opening\nthe popup. When no visible label is rendered, put `aria-label` on\n`<Select.Trigger>` instead.",
