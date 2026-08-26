@@ -1,0 +1,99 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Form",
+  description:
+    "A <form> that collects the validity of every Field inside it, blocks submission until they pass, and routes server errors back by name.",
+};
+
+# Form
+
+`Form` is a native `<form>` that knows about the [`Field`](/components/field)s
+inside it. It collects their values by `name` on submit, refuses to submit while
+any of them is invalid and moves focus to the first one that failed, and routes
+an `errors` object from your server back to the right message.
+
+<DemoBlock id="form/basic" />
+
+Four different controls, no `onChange` handlers, no form state library, no
+`useState` per field. Every one of them reaches `values` under the `name` on its
+`Field.Root`: `Input` as a string, `Select` as the chosen value, `Checkbox` and
+`Switch` as booleans.
+
+## Import
+
+```tsx
+import { Form } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Server errors
+
+Constraint validation catches what the browser can see. Everything else —
+uniqueness, permissions, anything that needs a round trip — comes back from the
+server, and `errors` is how it gets to the right field. Keys match the `name` on
+a `Field.Root`; values are a message or an array of them.
+
+<DemoBlock id="form/server-errors" />
+
+Base UI mirrors `errors` into its own state and drops a field's entry as soon as
+that field changes. A server error describes a value the server has seen, so it
+stops being true the moment the value moves — there is nothing to clear by hand.
+
+### Validation timing
+
+`validationMode` on the form sets the default for every field in it;
+`validationMode` on an individual `Field.Root` overrides it.
+
+| Mode | Validates | Reach for it when |
+| --- | --- | --- |
+| `onSubmit` *(default)* | On submit, then on every change afterwards | Almost always. It does not interrupt someone mid-answer, and once they have seen an error it corrects live. |
+| `onBlur` | When a control loses focus | Long forms where a per-field verdict as you move down the page is genuinely useful. |
+| `onChange` | On every change | A value with an expensive or remote check — pair it with `validationDebounceTime` on the field. |
+
+## Accessibility
+
+<Callout kind="a11y">
+  A failed submit moves focus to the first invalid control and selects its text.
+  That is the part most hand-rolled forms miss: without it a keyboard or screen
+  reader user is left at the submit button with no indication that anything
+  changed further up the page.
+</Callout>
+
+Base UI calls `preventDefault()` on the native submit event when `onFormSubmit`
+is used, so `onFormSubmit` replaces `onSubmit` rather than sitting beside it.
+The element is still a real `<form>`, so `action`, `method` and a native
+non-JavaScript submit all work when you leave `onFormSubmit` off.
+
+Each field's message is wired into its own control's `aria-describedby` — there
+is no error summary at the top of the form. Add one yourself for long forms; SC
+3.3.1 is satisfied either way, but a summary saves a lot of scrolling.
+
+## Theming
+
+`Form` carries almost no styling — a `<form>` has no UA presentation worth
+undoing. It lays out as a column because a form is nearly always a stack of
+fields, and without it every consumer writes the same three declarations. Set
+`display` through `className` for anything else.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-form-gap` | Space between the form's children | `var(--pui-space-5)` |
+
+`min-inline-size: 0` is set for the same reason it is on `Field` and
+`Fieldset`: a text input inside refuses to shrink below its ~20-character
+intrinsic width, so without it the form overflows a narrow column rather than
+letting its fields wrap.
+
+## API reference
+
+### Form
+
+<PropTable component="Form" />
+
+The generic is preserved, so `<Form<SignUpValues> onFormSubmit={…}>` types
+`values` for you. Everything else is a native `<form>` prop and passes straight
+through.

@@ -1,19 +1,16 @@
 "use client";
 
-import { Switch } from "@dofortech/pretty-ui";
+import { Field, Switch } from "@dofortech/pretty-ui";
 
 export default function SwitchBasic() {
   return (
-    <label
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "var(--pui-space-3)",
-        fontSize: "var(--pui-font-size-2)",
-      }}
-    >
-      <Switch defaultChecked />
-      Email notifications
-    </label>
+    // The switch goes inside the label — it renders no text of its own, and
+    // Field wires the two together without an id in sight.
+    <Field.Root name="email-notifications">
+      <Field.Label>
+        <Switch defaultChecked />
+        Email notifications
+      </Field.Label>
+    </Field.Root>
   );
 }

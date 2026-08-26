@@ -263,6 +263,25 @@ a {
   margin-bottom: var(--pui-space-1);
 }
 
+/* A demo preview is not prose.
+ *
+ * The three rules above are unlayered, so they beat anything the library ships
+ * inside `@layer pretty-ui.*` at any specificity. That is the library's whole
+ * design — app CSS always wins — but it is exactly wrong inside a demo, which
+ * exists to show what a component looks like with no page styles on top of it.
+ * Left alone, `.prose p` puts a 16px bottom margin on every `Field.Description`
+ * and opens a gap between it and the error message that no consumer would see.
+ *
+ * `revert-layer` from an unlayered rule rolls the property back to the value
+ * the previous layer produced — i.e. the component's own `margin: 0` — rather
+ * than to the UA default. That matters for the `<ul>` a `Field.Error` renders
+ * for multiple messages, whose list indent is set by the library: a blunt
+ * `padding-inline-start: 0` would flatten it. */
+.prose .demoPreview :is(p, ul, ol, li) {
+  margin: revert-layer;
+  padding-inline-start: revert-layer;
+}
+
 .prose a:not(.navLink):not(.tocLink) {
   color: var(--pui-color-primary-text);
   text-decoration: underline;

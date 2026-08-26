@@ -202,9 +202,10 @@ export interface SelectTriggerProps extends Omit<BaseTriggerProps, "className"> 
  * The button that opens the popup. Renders a native `<button>`.
  *
  * Give it `<Select.Value>` and `<Select.Icon>` as children. It must have an
- * accessible name: either render a `<Select.Label>` inside the same
- * `<Select.Root>`, or pass `aria-label` here. In development the trigger
- * warns once if it ends up with neither.
+ * accessible name: render a `<Select.Label>` inside the same `<Select.Root>`,
+ * a `<Field.Label nativeLabel={false}>` in the same `<Field.Root>`, or pass
+ * `aria-label` here. In development the trigger warns once if it ends up with
+ * none of them.
  */
 export const SelectTrigger = React.forwardRef<
   HTMLButtonElement,
@@ -227,29 +228,51 @@ export const SelectTrigger = React.forwardRef<
     [ref],
   );
 
-  // `<Select.Label>` sets aria-labelledby through context during the same
-  // commit, so by the time effects run the attribute is either there or the
-  // select genuinely has no name. Dev-only: this is a lint, not behaviour.
+  const warnedRef = React.useRef(false);
+
+  // Dev-only: this is a lint, not behaviour. Three details are load-bearing.
+  //
+  // No dependency array, so the timer is cleared and re-armed on every commit
+  // and the check only runs once renders have settled. That is the fix for a
+  // false positive: a label publishes its id to the trigger through context
+  // from its OWN effect, effects run child-first, so on the mounting commit
+  // the trigger legitimately has no `aria-labelledby` yet — it arrives on the
+  // re-render the label's setState schedules. Reading the attribute in the
+  // effect body warned about every correctly labelled select, loudest about
+  // `<Field.Label nativeLabel={false}>`, which is the pattern the docs
+  // recommend.
+  //
+  // `setTimeout`, not `requestAnimationFrame`: rAF does not fire at all while
+  // the tab is hidden, so the lint would silently never run for anyone with
+  // the page open in a background tab — and it would look fixed in exactly
+  // the situation where it was doing nothing.
+  //
+  // `warnedRef` because the settled check can run again on any later commit.
   React.useEffect(() => {
     if (!isDevelopment) {
-      return;
+      return undefined;
     }
-    const node = localRef.current;
-    if (!node) {
-      return;
-    }
-    if (
-      !node.getAttribute("aria-label") &&
-      !node.getAttribute("aria-labelledby")
-    ) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        "[pretty-ui] <Select.Trigger> has no accessible name. Render a " +
-          "<Select.Label> inside the same <Select.Root>, or pass aria-label " +
-          "to the trigger.",
-      );
-    }
-  }, []);
+    const timer = setTimeout(() => {
+      const node = localRef.current;
+      if (!node || warnedRef.current) {
+        return;
+      }
+      if (
+        !node.getAttribute("aria-label") &&
+        !node.getAttribute("aria-labelledby")
+      ) {
+        warnedRef.current = true;
+        // eslint-disable-next-line no-console
+        console.warn(
+          "[pretty-ui] <Select.Trigger> has no accessible name. Render a " +
+            "<Select.Label> inside the same <Select.Root>, a " +
+            "<Field.Label nativeLabel={false}> in the same <Field.Root>, or " +
+            "pass aria-label to the trigger.",
+        );
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  });
 
   return (
     <BaseSelect.Trigger

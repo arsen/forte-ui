@@ -1,0 +1,86 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Fieldset",
+  description:
+    "Groups related fields under one heading, with the browser's <fieldset> presentation removed.",
+};
+
+# Fieldset
+
+Use a fieldset when several fields answer one question together — an address, a
+date split across three inputs, a set of permissions. It renders a real
+`<fieldset>`, so `disabled` reaches every control inside it natively, and a
+`<Fieldset.Legend>` names the group for assistive technology.
+
+<DemoBlock id="fieldset/basic" />
+
+<Callout kind="note">
+  Not every field needs one. A `Field.Root` already names a single control;
+  wrapping one in a fieldset gives it two names, which screen readers announce
+  in full.
+</Callout>
+
+## Import
+
+```tsx
+import { Fieldset } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Disabled
+
+`disabled` on a `<fieldset>` is native. It disables every form control it
+contains — including ones this library knows nothing about — and Base UI
+propagates `data-disabled` down at the same time, so the legend, the labels and
+the descriptions dim with the controls rather than staying at full contrast
+above greyed-out inputs.
+
+<DemoBlock id="fieldset/disabled" />
+
+## Accessibility
+
+`Fieldset.Legend` renders a `<div>`, not a `<legend>`, and Base UI associates it
+with `aria-labelledby`. It announces the same way, and it avoids the three
+things that make a real `<legend>` hard to use: it sits *in* the fieldset's
+border box, it cannot be positioned like an ordinary block, and its UA styles
+differ between browsers.
+
+<Callout kind="a11y">
+  Screen readers announce the legend before *every* control in the group, so
+  keep it short. "Shipping address" — not "Please enter the address you would
+  like your order shipped to".
+</Callout>
+
+## Theming
+
+Most of the root rule is undoing the UA stylesheet: `<fieldset>` is the one
+element in this library with meaningful built-in presentation — a groove border,
+block padding, a 2px inline margin, and a `min-inline-size: min-content` that is
+**not** overridden by `width` the way it is on other elements. That last one is
+the trap: a fieldset holding a text input refuses to shrink below the input's
+~20-character intrinsic width and overflows a narrow column instead of letting
+it wrap. `min-inline-size: 0` is the fix, and it is applied here.
+
+A fieldset is a grouping, not a painted box, so the border and padding are
+removed. Set them through `className` if you want the box back.
+
+| Property | Declared on | Controls | Default |
+| --- | --- | --- | --- |
+| `--pui-fieldset-gap` | `Fieldset.Root` | Space between the legend and each field | `var(--pui-space-4)` |
+| `--pui-fieldset-legend-fg` | `Fieldset.Legend` | Legend colour | `var(--pui-color-foreground)` |
+| `--pui-fieldset-legend-font-size` | `Fieldset.Legend` | Legend font size | `var(--pui-font-size-3)` |
+| `--pui-fieldset-legend-font-weight` | `Fieldset.Legend` | Legend font weight | `var(--pui-font-weight-semibold)` |
+
+## API reference
+
+### Fieldset.Root
+
+<PropTable component="FieldsetRoot" />
+
+### Fieldset.Legend
+
+<PropTable component="FieldsetLegend" />

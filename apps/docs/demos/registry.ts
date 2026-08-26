@@ -41,6 +41,34 @@ import d_dialog_scrollable from "./dialog/scrollable";
 import d_dialog_scrollable_src from "./dialog/scrollable?raw";
 import d_dialog_sizes from "./dialog/sizes";
 import d_dialog_sizes_src from "./dialog/sizes?raw";
+import d_field_basic from "./field/basic";
+import d_field_basic_src from "./field/basic?raw";
+import d_field_checkbox_and_switch from "./field/checkbox-and-switch";
+import d_field_checkbox_and_switch_src from "./field/checkbox-and-switch?raw";
+import d_field_custom_validation from "./field/custom-validation";
+import d_field_custom_validation_src from "./field/custom-validation?raw";
+import d_field_items from "./field/items";
+import d_field_items_src from "./field/items?raw";
+import d_field_with_select from "./field/with-select";
+import d_field_with_select_src from "./field/with-select?raw";
+import d_fieldset_basic from "./fieldset/basic";
+import d_fieldset_basic_src from "./fieldset/basic?raw";
+import d_fieldset_disabled from "./fieldset/disabled";
+import d_fieldset_disabled_src from "./fieldset/disabled?raw";
+import d_form_basic from "./form/basic";
+import d_form_basic_src from "./form/basic?raw";
+import d_form_server_errors from "./form/server-errors";
+import d_form_server_errors_src from "./form/server-errors?raw";
+import d_input_basic from "./input/basic";
+import d_input_basic_src from "./input/basic?raw";
+import d_input_multiline from "./input/multiline";
+import d_input_multiline_src from "./input/multiline?raw";
+import d_input_sizes from "./input/sizes";
+import d_input_sizes_src from "./input/sizes?raw";
+import d_input_states from "./input/states";
+import d_input_states_src from "./input/states?raw";
+import d_input_variants from "./input/variants";
+import d_input_variants_src from "./input/variants?raw";
 import d_select_basic from "./select/basic";
 import d_select_basic_src from "./select/basic?raw";
 import d_select_disabled_items from "./select/disabled-items";
@@ -97,6 +125,20 @@ export type DemoId =
   | "dialog/nested"
   | "dialog/scrollable"
   | "dialog/sizes"
+  | "field/basic"
+  | "field/checkbox-and-switch"
+  | "field/custom-validation"
+  | "field/items"
+  | "field/with-select"
+  | "fieldset/basic"
+  | "fieldset/disabled"
+  | "form/basic"
+  | "form/server-errors"
+  | "input/basic"
+  | "input/multiline"
+  | "input/sizes"
+  | "input/states"
+  | "input/variants"
   | "select/basic"
   | "select/disabled-items"
   | "select/grouped"
@@ -136,6 +178,20 @@ const REGISTRY: Record<DemoId, Demo> = {
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },
   "dialog/scrollable": { Component: d_dialog_scrollable, source: d_dialog_scrollable_src, file: "dialog/scrollable.tsx" },
   "dialog/sizes": { Component: d_dialog_sizes, source: d_dialog_sizes_src, file: "dialog/sizes.tsx" },
+  "field/basic": { Component: d_field_basic, source: d_field_basic_src, file: "field/basic.tsx" },
+  "field/checkbox-and-switch": { Component: d_field_checkbox_and_switch, source: d_field_checkbox_and_switch_src, file: "field/checkbox-and-switch.tsx" },
+  "field/custom-validation": { Component: d_field_custom_validation, source: d_field_custom_validation_src, file: "field/custom-validation.tsx" },
+  "field/items": { Component: d_field_items, source: d_field_items_src, file: "field/items.tsx" },
+  "field/with-select": { Component: d_field_with_select, source: d_field_with_select_src, file: "field/with-select.tsx" },
+  "fieldset/basic": { Component: d_fieldset_basic, source: d_fieldset_basic_src, file: "fieldset/basic.tsx" },
+  "fieldset/disabled": { Component: d_fieldset_disabled, source: d_fieldset_disabled_src, file: "fieldset/disabled.tsx" },
+  "form/basic": { Component: d_form_basic, source: d_form_basic_src, file: "form/basic.tsx" },
+  "form/server-errors": { Component: d_form_server_errors, source: d_form_server_errors_src, file: "form/server-errors.tsx" },
+  "input/basic": { Component: d_input_basic, source: d_input_basic_src, file: "input/basic.tsx" },
+  "input/multiline": { Component: d_input_multiline, source: d_input_multiline_src, file: "input/multiline.tsx" },
+  "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
+  "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
+  "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
   "select/basic": { Component: d_select_basic, source: d_select_basic_src, file: "select/basic.tsx" },
   "select/disabled-items": { Component: d_select_disabled_items, source: d_select_disabled_items_src, file: "select/disabled-items.tsx" },
   "select/grouped": { Component: d_select_grouped, source: d_select_grouped_src, file: "select/grouped.tsx" },

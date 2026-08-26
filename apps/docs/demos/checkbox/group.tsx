@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, CheckboxGroup } from "@dofortech/pretty-ui";
+import { Checkbox, CheckboxGroup, Field } from "@dofortech/pretty-ui";
 
 const days = [
   { value: "mon", label: "Monday" },
@@ -10,26 +10,22 @@ const days = [
 
 export default function CheckboxGroupDemo() {
   return (
-    <CheckboxGroup
-      aria-labelledby="digest-days-label"
-      defaultValue={["mon", "fri"]}
-    >
-      <span id="digest-days-label" style={{ fontWeight: 600 }}>
-        Send the weekly digest on
-      </span>
-      {days.map((day) => (
-        <label
-          key={day.value}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "var(--pui-space-2)",
-          }}
-        >
-          <Checkbox name="digest-day" value={day.value} />
-          {day.label}
-        </label>
-      ))}
-    </CheckboxGroup>
+    // The outer Field names the group — nativeLabel={false} because the label
+    // belongs to the group, not to any one checkbox in it, so it must not
+    // resolve to a single control with htmlFor. Each Field.Item then labels its
+    // own row.
+    <Field.Root name="digest-day">
+      <Field.Label nativeLabel={false}>Send the weekly digest on</Field.Label>
+      <CheckboxGroup defaultValue={["mon", "fri"]}>
+        {days.map((day) => (
+          <Field.Item key={day.value}>
+            <Field.Label>
+              <Checkbox value={day.value} />
+              {day.label}
+            </Field.Label>
+          </Field.Item>
+        ))}
+      </CheckboxGroup>
+    </Field.Root>
   );
 }
