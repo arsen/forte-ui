@@ -1,0 +1,254 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Slider",
+  description:
+    "A range input for a value the user picks by feel, with a readout that keeps it usable when the feel is not enough.",
+};
+
+# Slider
+
+Use a slider when the user is choosing a value on a continuum and the *approximate* value is what they care about — a volume level, a price ceiling, an export quality. If the exact number matters, or if they are likely to know it before they reach for the control, use an [`Input`](/components/input) with `type="number"` instead: a slider makes a precise value the hardest thing to hit.
+
+<DemoBlock id="slider/basic" />
+
+## Import
+
+```tsx
+import { Slider } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+```tsx
+<Slider.Root>
+  <Slider.Label />
+  <Slider.Value />
+  <Slider.Control>
+    <Slider.Track>
+      <Slider.Indicator />
+      <Slider.Thumb />
+    </Slider.Track>
+  </Slider.Control>
+</Slider.Root>
+```
+
+`Root` lays the parts out as a two-column grid: `Label` and `Value` share the first row, and `Control` spans both columns underneath. Rendering only a `Control` gives you a one-row grid, so the parts above it are genuinely optional.
+
+`Track` is the whole range and `Indicator` is the filled part of it. `Thumb` renders a `<div>` around a visually hidden `<input type="range">` — that input is the real control, so it is what takes focus, what carries `name` on submit, and what a screen reader reads.
+
+## Examples
+
+### Range slider
+
+An array value is what makes a slider a range — there is no `range` prop. Place one `Thumb` per value, and give each an `index`: without it the thumbs only learn their order once the composite list registers on the client, so a server-rendered range slider paints both handles at the first value and jumps on hydration.
+
+`format` is an `Intl.NumberFormatOptions` object applied by `Slider.Value` *and* by each thumb's `aria-valuetext`, so the value is announced the same way it is displayed.
+
+<DemoBlock id="slider/range" />
+
+### Thumb alignment
+
+At `min` and `max` the thumb is wider than the rail, so something has to give. `thumbAlignment` decides what:
+
+- `center` (the default) puts the thumb's centre on the control's edge, so half of it hangs outside.
+- `edge` insets the thumb so its outer edge lands on the control's edge instead. Base UI measures the control's border and padding to work this out, which means it re-measures if you change `--pui-slider-control-padding`.
+- `edge-client-only` behaves like `edge` but drops the pre-hydration script, trading a first paint with no thumb for a smaller bundle.
+
+The red guides in the demo mark the control's edges.
+
+<DemoBlock id="slider/thumb-alignment" />
+
+### Thumb collision
+
+On a range slider, `thumbCollisionBehavior` decides what happens when a dragged thumb reaches its neighbour. `minStepsBetweenValues` is the companion knob — it holds a gap open whichever behaviour is in use.
+
+<DemoBlock id="slider/collision" />
+
+### Sizes
+
+`size` scales the rail and the thumb together, and the control's padding is *derived* from both — the larger of "enough for a 24×24 target" and "enough room for the thumb plus a little air". So every size keeps a full-size pointer target even though the painted rail is only 3px tall at `sm`.
+
+<DemoBlock id="slider/sizes" />
+
+### Tones
+
+`tone` swaps the indicator fill, the thumb's ring and its halo in one move. The rail stays neutral in every tone: it is the *empty* part of the range, and colouring it would compete with the fill it exists to contrast against.
+
+<DemoBlock id="slider/tones" />
+
+### Vertical
+
+`orientation="vertical"` turns the same parts 90°. The root becomes a single centred column and `--pui-slider-length` now describes the block axis, defaulting to `10rem`.
+
+<Callout kind="note">
+
+<kbd>↑</kbd> and <kbd>→</kbd> both increase the value in both orientations — that is the ARIA slider pattern, not an oversight. In RTL, <kbd>←</kbd> and <kbd>→</kbd> swap to follow the writing direction; the vertical keys never do.
+
+</Callout>
+
+<DemoBlock id="slider/vertical" />
+
+### Form integration
+
+A single-thumb slider submits like any other control: give `name` to the `Field.Root` and the hidden `<input type="range">` carries it.
+
+A range slider is two inputs sharing one name, so it needs a group label rather than a single one. Render `Fieldset.Root` *as* the slider root — the legend then names the group while each thumb keeps its own `aria-label`, and the submitted value is an array.
+
+<DemoBlock id="slider/form" />
+
+### Disabled
+
+`disabled` blocks interaction and drops the whole control to 55% opacity. Set it on the `Field.Root` rather than on the `Slider`: it takes precedence over the control's own prop and dims the description with it, so the reason the setting is unavailable does not stay at full contrast beside a greyed-out control. That reason has to be visible text — a disabled slider is skipped by <kbd>Tab</kbd> and cannot show a tooltip to a keyboard user.
+
+<DemoBlock id="slider/disabled" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus to the next thumb. Each thumb is its own tab stop, so a range slider takes two.",
+    },
+    {
+      keys: ["ArrowRight", "ArrowUp"],
+      description: "Increases the value by one step.",
+    },
+    {
+      keys: ["ArrowLeft", "ArrowDown"],
+      description: "Decreases the value by one step.",
+    },
+    {
+      keys: ["Shift", "ArrowUp"],
+      description: "Increases the value by largeStep (10 by default).",
+    },
+    {
+      keys: ["Shift", "ArrowDown"],
+      description: "Decreases the value by largeStep.",
+    },
+    { keys: ["PageUp"], description: "Increases the value by largeStep." },
+    { keys: ["PageDown"], description: "Decreases the value by largeStep." },
+    { keys: ["Home"], description: "Sets the value to min." },
+    { keys: ["End"], description: "Sets the value to max." },
+  ]}
+/>
+
+<Callout kind="a11y">
+
+A slider renders no text of its own, so you have to supply the name — and which
+mechanism you want depends on how many thumbs there are:
+
+```tsx
+// One thumb, no visible label: name the thumb.
+<Slider.Thumb aria-label="Volume" />
+
+// One thumb, visible label: Slider.Label names it.
+<Slider.Label>Volume</Slider.Label>
+
+// Two thumbs: Slider.Label names the GROUP, and each thumb needs its own
+// name on top of that, or both are announced identically.
+<Slider.Label>Price range</Slider.Label>
+<Slider.Thumb index={0} aria-label="Minimum price" />
+<Slider.Thumb index={1} aria-label="Maximum price" />
+```
+
+`Slider.Label` renders a `<div>` associated with every thumb through
+`aria-labelledby`, not a `<label>` — a native label can only point at one control, which
+would leave the second thumb of a range slider unnamed.
+
+</Callout>
+
+Render a `Slider.Value` wherever there is room for it. It is a visible duplicate of what `aria-valuetext` already announces, so nothing depends on it — but it is what makes the control usable for anyone who cannot judge a thumb's position by eye.
+
+The thumb's focus ring is `.pui-focus-ring-within`, not `.pui-focus-ring`: focus lands on the hidden `<input>`, so the thumb `<div>` never matches `:focus-visible` itself.
+
+The thumb's elevation and halo are painted by a `::before` rather than by the thumb's own `box-shadow`, and that is not a stylistic choice. The focus ring's second tone *is* a `box-shadow`, declared in `@layer pretty-ui.patterns` — which is ordered before `pretty-ui.components`, and layer order outranks specificity completely. A `box-shadow` on the thumb would therefore win unconditionally and delete half of a ring whose entire promise is that its two tones contrast with each other rather than with the page. If you restyle the thumb, put shadows on the pseudo-element, not on the thumb.
+
+The control is padded well past the painted rail, and that padding is what carries the 24×24 minimum target of SC 2.5.8 — a press anywhere inside the strip moves the nearest thumb, so the target is the whole strip rather than the handle. The padding is derived from the rail thickness and the thumb size, so it cannot fall below the minimum when either is retuned.
+
+In forced-colours mode the rail, the fill and the handle are separated with system keywords, because Base UI builds every part out of `<div>`s and the UA assigns system colours from *native* element semantics — a `<div role="slider">` gets nothing. The rail's boundary there is drawn with `outline` rather than `border`, since a border would change the box and throw the indicator's `height: inherit` off by its own width in that one mode. The disabled state overrides its own opacity and uses `GrayText`, because forced colours does not touch `opacity` and a 55% control would otherwise keep full system contrast and read as enabled.
+
+### Contrast
+
+The thumb's ring is `--pui-color-primary` and the rail is `--pui-color-border-muted`. The value is legible from three independent places — the indicator's length against the rail, the thumb's position, and the `Slider.Value` text — so no single pair is load-bearing on its own. If your accent seed lands pale against your page, re-point `--pui-slider-thumb-border` at `--pui-color-foreground-subtle`, which is measured at 3.73:1.
+
+The hover halo is a **translucent** mix of the tone's colour rather than its `-soft` step, and that matters. `--pui-color-primary-soft` is accent-3, which is built to sit *on* the page — 12% of the seed mixed into white in light mode, 22% into near-black in dark — so against the page it is very nearly the page itself, and the halo was effectively invisible in both modes (measured 1.12:1 in light, 1.25:1 in dark). Mixing toward `transparent` composites the accent over whatever is actually behind the control, which brings every tone to between 1.6:1 and 2.5:1 against the page in both modes and keeps it working over a panel or a card as well.
+
+### Motion
+
+The handle and the fill are **never animated into position**, and that is deliberate.
+
+Base UI rewrites the indicator's `width` and the thumb's `inset-inline-start` on every value change — which during a drag means every `pointermove`. A positional transition therefore does not run once, it *restarts every frame*, leaving the handle permanently interpolating toward a target that has already moved. It trails the pointer, and it keeps a layout-triggering property under animation for the entire gesture. An earlier version of this component had a `--pui-duration-move` glide with the transition suppressed during a drag; both suppression triggers turned out to be unreliable — `:active` is cleared the moment the pointer leaves the control's box, and `[data-dragging]` is React state that only arrives after Base UI's intentional-drag threshold — so in practice the suppression never fired at all.
+
+A keyboard-only glide is tempting and also wrong: holding an arrow key repeats at roughly 30/s and restarts the same transition each time, which reproduces the lag on a smaller scale, while a single arrow step moves the handle two or three pixels and has nothing worth animating. Native `input[type="range"]` does not animate either.
+
+What does animate is colour, and the halo around the handle on hover and while dragging — state changes with a start and an end, which is what a transition is for. There is consequently no `prefers-reduced-motion` block in this component: no geometry moves, so there is nothing for the motion tokens to collapse, and the halo is a colour cue that reduced-motion users keep in full.
+
+## Theming
+
+Every property below is declared on `Slider.Root` and consumed by the parts underneath through inheritance. Setting one on an ancestor of the root has no effect — the root's own declaration wins over an inherited value. Override them on the root itself, through `className` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-slider-length` | Control length: `inline-size` when horizontal, `block-size` when vertical. Capped at `100%` of the container. | `16rem` (`10rem` when vertical) |
+| `--pui-slider-track-thickness` | Rail thickness, and one of the two inputs the control padding derives from. | `4px` (`sm` `3px`, `lg` `6px`) |
+| `--pui-slider-thumb-size` | Thumb width and height. | `1rem` (`sm` `0.875rem`, `lg` `1.25rem`) |
+| `--pui-slider-thumb-border-width` | Thickness of the thumb's ring. | `2px` |
+| `--pui-slider-radius` | Rail and indicator corner radius. | `var(--pui-radius-pill)` |
+| `--pui-slider-gap` | Gap between the label/value row and the control. | `var(--pui-space-2)` |
+| `--pui-slider-track-bg` | Rail fill — the empty part of the range. | `var(--pui-color-border-muted)` |
+| `--pui-slider-indicator-bg` | Fill of the selected part. | `var(--pui-color-primary)`, per `tone` |
+| `--pui-slider-thumb-bg` | Thumb fill. | `var(--pui-color-background)` |
+| `--pui-slider-thumb-border` | Thumb ring colour. | `var(--pui-color-primary)`, per `tone`, `var(--pui-color-danger-border)` when invalid inside a field |
+| `--pui-slider-thumb-shadow` | Thumb shadow. | `var(--pui-shadow-1)` |
+| `--pui-slider-thumb-halo-color` | Base colour the halo is mixed from. | `var(--pui-color-primary)`, per `tone` |
+| `--pui-slider-thumb-halo-strength` | How much of that colour survives the mix toward `transparent`. | `48%` (`neutral` `30%`) |
+| `--pui-slider-thumb-halo` | The resolved halo colour. Derived from the two above; set it directly to bypass them. | `color-mix(in oklab, <halo-color> <strength>, transparent)` |
+| `--pui-slider-thumb-halo-size` | Current halo radius. Set by hover and drag; set it yourself for a halo that is always on. | `0px` |
+| `--pui-slider-thumb-halo-size-active` | Halo radius in those states. It stands down while the focus ring is up, so the ring's outer tone is not covered. | `5px` (`sm` `4px`, `lg` `6px`) |
+| `--pui-slider-control-padding` | How far the control is padded past the rail — the SC 2.5.8 target. | `max(24px − thickness, thumb − thickness + 4px) ÷ 2` |
+
+`--pui-slider-control-padding` is derived from the rail thickness and the thumb size, so resizing either keeps the pointer target correct — you rarely want to set it by hand. Note that `thumbAlignment="edge"` measures it, so changing it also moves where an edge-aligned thumb rests.
+
+## API reference
+
+The tables list what each part adds on top of Base UI. Everything else passes straight through.
+
+### Slider.Root
+
+Also takes Base UI's own root props unchanged: `value`, `defaultValue`, `onValueChange`, `onValueCommitted`, `min`, `max`, `step`, `largeStep`, `minStepsBetweenValues`, `orientation`, `thumbAlignment`, `thumbCollisionBehavior`, `format`, `locale`, `name`, `form`, `disabled`, `render` and `style`. The `Value` generic is preserved, so a `number` value keeps `onValueChange(value: number)` and an array keeps `readonly number[]`.
+
+<PropTable component="SliderRoot" />
+
+### Slider.Label
+
+<PropTable component="SliderLabel" />
+
+### Slider.Value
+
+Its `children` may be a function receiving `(formattedValues, values)`.
+
+<PropTable component="SliderValue" />
+
+### Slider.Control
+
+<PropTable component="SliderControl" />
+
+### Slider.Track
+
+<PropTable component="SliderTrack" />
+
+### Slider.Indicator
+
+<PropTable component="SliderIndicator" />
+
+### Slider.Thumb
+
+Also takes `index`, `aria-label`, `aria-valuetext`, `getAriaLabel`, `getAriaValueText`, `inputRef`, `tabIndex`, `onFocus`, `onBlur`, `onKeyDown` (all three forwarded to the nested input) and its own `disabled`.
+
+<PropTable component="SliderThumb" />

@@ -96,6 +96,19 @@ export type {
   SelectVariant,
 } from "./components/select";
 
+export { Slider } from "./components/slider";
+export type {
+  SliderSize,
+  SliderTone,
+  SliderRootProps,
+  SliderLabelProps,
+  SliderValueProps,
+  SliderControlProps,
+  SliderTrackProps,
+  SliderIndicatorProps,
+  SliderThumbProps,
+} from "./components/slider";
+
 export { Switch } from "./components/switch";
 export type { SwitchProps, SwitchSize } from "./components/switch";
 
