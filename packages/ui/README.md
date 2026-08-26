@@ -186,56 +186,24 @@ Component state composes as arbitrary variants, no wrappers needed:
 replaced most of it. Unrecognised classes are not merged — both survive and
 the cascade decides — and, worse, the stock colour scale matches *any* name,
 so `text-2` (a font size here) parses as a text colour and
-`twMerge("text-2", "text-foreground-muted")` silently drops one. Configure it:
+`twMerge("text-2", "text-foreground-muted")` silently drops one. The package
+ships the matching config:
 
 ```ts
 import { extendTailwindMerge } from "tailwind-merge";
+import { tailwindMergeConfig } from "@dofortech/pretty-ui/tailwind-merge";
 
-export const twMerge = extendTailwindMerge({
-  extend: {
-    theme: {
-      spacing: ["surface"],
-      text: ["1", "2", "3", "4", "5", "6"],
-      shadow: ["1", "2", "3", "4"],
-      radius: ["1", "2", "3", "4", "5", "6", "control", "surface", "pill"],
-      ease: [
-        "standard",
-        "emphasized",
-        "exit",
-        "spring-gentle",
-        "spring-snappy",
-        "spring-precise",
-        "spring-bouncy",
-      ],
-    },
-    classGroups: {
-      // `duration-*` reads `--transition-duration-*`, which is not one of
-      // tailwind-merge's theme keys, so the group is restated instead.
-      duration: [
-        {
-          duration: [
-            "instant",
-            "fast",
-            "normal",
-            "slow",
-            "move",
-            "spring-gentle",
-            "spring-snappy",
-            "spring-precise",
-            "spring-bouncy",
-          ],
-        },
-      ],
-    },
-  },
-});
+export const twMerge = extendTailwindMerge(tailwindMergeConfig);
 ```
 
-Colours need no entry — the colour scale already matches any name — and
-neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
-are Tailwind's own. If you add a key to one of the listed scales in your own
-`@theme`, add it here too; a missed name does not error, it just stops
-overriding its own family.
+It is a plain data object — the package has no dependency on `tailwind-merge`
+itself, so it works with whatever version your app already uses. Colours need
+no entry — the colour scale already matches any name — and neither do
+`font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names are
+Tailwind's own. If you add keys of your own in `@theme`, spread the config's
+inner arrays into your `extend` block and add them there (`spacing` in
+particular must be extended, not replaced, or `p-surface` stops merging); a
+missed name does not error, it just stops overriding its own family.
 
 ## Other styling setups
 

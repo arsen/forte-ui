@@ -450,24 +450,30 @@ Three things stay in a `style` object, and are not oversights:
 ### `cn`, and why it is configured
 
 [`apps/docs/lib/cn.ts`](apps/docs/lib/cn.ts) is the usual
-`twMerge(clsx(inputs))` plus a short `extend` block, which is not optional.
-tailwind-merge ships knowing Tailwind's DEFAULT theme, and this site replaced
+`twMerge(clsx(inputs))` plus an `extend` block, which is not optional.
+tailwind-merge ships knowing Tailwind's DEFAULT theme, and the bridge replaced
 most of it. A class it does not recognise is not an error — it is simply never
 merged, so two competing values both survive and the cascade decides. Its stock
 validators expect t-shirt sizes (`rounded-md`) or bare numbers (`p-4`), so
-`radius`, `spacing`, `ease`, `animate`, `container` and the `duration` group
-each need the names `tailwind.css` actually defines.
+every renamed scale needs its actual names listed — and `text` / `shadow` for
+a second reason: tailwind-merge's colour scale matches *any* value, so
+`text-2` parses as a text *colour* and `cn("text-2", "text-foreground-muted")`
+silently returns only the colour. Listing the steps makes them sizes again.
+That same match-anything colour scale is why colours need no entry at all, and
+neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
+are Tailwind's own.
 
-`text` and `shadow` are there for a second reason: tailwind-merge's colour
-scale matches *any* value, so `text-2` parses as a text *colour* and
-`cn("text-2", "text-foreground-muted")` silently returns only the colour.
-Listing the steps makes them sizes again.
-
-That same match-anything colour scale is why **colours need no entry at all** —
-`bg-primary-soft` and the ramps merge for free — and neither do `font-*`,
-`font-weight-*`, `leading-*` or `tracking-*`, whose names are Tailwind's own.
-**Add a key to one of the listed scales and you add it in both files** — a name
-missed in `cn.ts` does not error, it just stops overriding its own family.
+Like the bridge, the library half of this config ships with the package:
+[`packages/ui/src/tailwind-merge.ts`](packages/ui/src/tailwind-merge.ts)
+exports `tailwindMergeConfig` (plain data — the package does not depend on
+tailwind-merge) covering `spacing: surface`, `text`, `shadow`, `radius`,
+`ease` and the `duration` group. `cn.ts` spreads it and adds only what the
+DOCS added to the theme: `spacing: header/anchor`, `animate: reveal`, and the
+`container` measures. **A key added to a scale still gets added in two files —
+they are just paired by owner now**: a library token goes in the bridge and
+`packages/ui/src/tailwind-merge.ts`; a docs measure goes in
+`apps/docs/app/tailwind.css` and `cn.ts`. A name missed on the merge side does
+not error, it just stops overriding its own family.
 
 ### What is still CSS, and why
 

@@ -18,6 +18,10 @@
     },
     "./theme.css": "./dist/styles/theme.css",
     "./tailwind.css": "./dist/styles/tailwind.css",
+    "./tailwind-merge": {
+      "types": "./dist/tailwind-merge.d.ts",
+      "import": "./dist/tailwind-merge.js"
+    },
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
     "./docs-data/props.json": "./docs-data/props.json"
