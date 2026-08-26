@@ -262,7 +262,13 @@
     translate: -50% -50%;
     width: 1em;
     height: 1em;
-    border-radius: var(--pui-radius-full);
+    /* NOT `var(--pui-radius-full)`, for the same reason Radio opts out of the
+     * presets: round is not a style choice here. The spin only reads as motion
+     * because the transparent quarter travels around a circle, and
+     * `[data-pui-radius="none"]` sets `--pui-radius-full: 0` — which turns the
+     * ring into a three-sided square whose missing edge flicks between four
+     * positions instead of sweeping. */
+    border-radius: 50%;
     border: 2px solid currentColor;
     border-top-color: transparent;
     /* Deliberately on this child, never on a popup part: Base UI awaits
