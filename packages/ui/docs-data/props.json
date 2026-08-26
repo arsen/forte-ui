@@ -1332,6 +1332,118 @@
       }
     ]
   },
+  "SliderRoot": {
+    "name": "SliderRoot",
+    "description": "Groups every part of the slider and owns its value. Renders a `<div>` laid\nout as a two-column grid: `Label` and `Value` share the first row, and\n`Control` spans both columns underneath.\n\nThe generic is forwarded rather than widened, so a `number` value keeps\n`onValueChange(value: number)` and an array keeps `readonly number[]` — the\ndistinction between a single-thumb and a range slider is carried entirely by\nthe shape of `value` / `defaultValue`.\n\n```tsx\n<Slider.Root defaultValue={40}>\n  <Slider.Label>Volume</Slider.Label>\n  <Slider.Value />\n  <Slider.Control>\n    <Slider.Track>\n      <Slider.Indicator />\n      <Slider.Thumb />\n    </Slider.Track>\n  </Slider.Control>\n</Slider.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLDivElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "A ref to the root `<div>`."
+      },
+      {
+        "name": "size",
+        "type": "SliderSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the slider. Scales the track thickness, the thumb and the gap\nbetween the rows together."
+      },
+      {
+        "name": "tone",
+        "type": "SliderTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the indicator and thumb draw from."
+      }
+    ]
+  },
+  "SliderLabel": {
+    "name": "SliderLabel",
+    "description": "The slider's visible label. Renders a `<div>`, not a `<label>`, and is wired\nto every thumb's hidden `<input>` with `aria-labelledby` — a native label\ncannot point at more than one control, so a range slider would leave the\nsecond thumb unnamed.\n\nOn a range slider this names the group; give each `Thumb` its own\n`aria-label` (\"Minimum price\", \"Maximum price\") so the two are still\ndistinguishable.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SliderValue": {
+    "name": "SliderValue",
+    "description": "The current value as text. Renders an `<output>`.\n\nBy default it prints the values formatted with `Slider.Root`'s `format` and\n`locale`, joined with an en dash for a range. Pass a function as `children`\nto compose your own — it receives the formatted strings and the raw numbers:\n\n```tsx\n<Slider.Value>{(formatted) => `${formatted[0]} to ${formatted[1]}`}</Slider.Value>\n```\n\nThis is a visible duplicate of what `aria-valuetext` already announces, so\nit is never the only way to read the value — but it is what makes a slider\nusable for anyone who cannot judge a thumb's position by eye, which is why\nevery demo that has room for it renders one.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SliderControl": {
+    "name": "SliderControl",
+    "description": "The interactive strip. Renders a `<div>` that is padded well beyond the\npainted track, because *this* is the element that takes the pointer: a press\nanywhere inside it moves the nearest thumb. The padding is what gives the\ncontrol its 24×24 minimum target (SC 2.5.8) without thickening the rail, and\n`thumbAlignment=\"edge\"` measures it, so changing the padding changes where\nan edge-aligned thumb comes to rest.\n\nContains exactly one `Track`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SliderTrack": {
+    "name": "SliderTrack",
+    "description": "The rail: the whole range from `min` to `max`. Renders a `<div>` that Base\nUI gives `position: relative` inline, which is what the `Indicator` and the\n`Thumb` are positioned against.\n\nIts thickness must stay an explicit length rather than `auto` — Base UI sizes\nthe indicator's cross axis with `height: inherit` (`width: inherit` when\nvertical), so an auto-sized track leaves the indicator with nothing to\ninherit and it collapses.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SliderIndicator": {
+    "name": "SliderIndicator",
+    "description": "The filled part of the rail. Renders a `<div>` inside `Track`.\n\nBase UI owns its position and size through inline styles — `width` /\n`height` for a single thumb, plus an offset from the start edge for a range\n— so the stylesheet only paints it. Setting a width here would be\noverwritten on the next render.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "SliderThumb": {
+    "name": "SliderThumb",
+    "description": "One draggable handle. Renders a `<div>` wrapping a visually hidden\n`<input type=\"range\">` — the input is the real control, so it is what takes\nfocus and what a screen reader reads.\n\nThat split is why the focus ring is `.pui-focus-ring-within` rather than\n`.pui-focus-ring`: the thumb `<div>` never matches `:focus-visible` itself.\n\nA range slider needs one `Thumb` per value, each with an `index` — without\nit the thumbs only find their order once the composite list has registered\non the client, so a server-rendered range slider paints both handles at the\nfirst value and jumps on hydration. Give each one an `aria-label` too; the\n`Label` names the group, not the individual handles.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "Switch": {
     "name": "Switch",
     "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--pui-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",

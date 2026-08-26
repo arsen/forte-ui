@@ -139,6 +139,26 @@ import d_separator_variants from "./separator/variants";
 import d_separator_variants_src from "./separator/variants?raw";
 import d_separator_vertical from "./separator/vertical";
 import d_separator_vertical_src from "./separator/vertical?raw";
+import d_slider_basic from "./slider/basic";
+import d_slider_basic_src from "./slider/basic?raw";
+import d_slider_collision from "./slider/collision";
+import d_slider_collision_src from "./slider/collision?raw";
+import d_slider_disabled from "./slider/disabled";
+import d_slider_disabled_src from "./slider/disabled?raw";
+import d_slider_form from "./slider/form";
+import d_slider_form_src from "./slider/form?raw";
+import d_slider_labeling from "./slider/labeling";
+import d_slider_labeling_src from "./slider/labeling?raw";
+import d_slider_range from "./slider/range";
+import d_slider_range_src from "./slider/range?raw";
+import d_slider_sizes from "./slider/sizes";
+import d_slider_sizes_src from "./slider/sizes?raw";
+import d_slider_thumb_alignment from "./slider/thumb-alignment";
+import d_slider_thumb_alignment_src from "./slider/thumb-alignment?raw";
+import d_slider_tones from "./slider/tones";
+import d_slider_tones_src from "./slider/tones?raw";
+import d_slider_vertical from "./slider/vertical";
+import d_slider_vertical_src from "./slider/vertical?raw";
 import d_switch_basic from "./switch/basic";
 import d_switch_basic_src from "./switch/basic?raw";
 import d_switch_disabled from "./switch/disabled";
@@ -232,6 +252,16 @@ export type DemoId =
   | "separator/toolbar"
   | "separator/variants"
   | "separator/vertical"
+  | "slider/basic"
+  | "slider/collision"
+  | "slider/disabled"
+  | "slider/form"
+  | "slider/labeling"
+  | "slider/range"
+  | "slider/sizes"
+  | "slider/thumb-alignment"
+  | "slider/tones"
+  | "slider/vertical"
   | "switch/basic"
   | "switch/disabled"
   | "switch/settings-list"
@@ -314,6 +344,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
   "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
   "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },
+  "slider/basic": { Component: d_slider_basic, source: d_slider_basic_src, file: "slider/basic.tsx" },
+  "slider/collision": { Component: d_slider_collision, source: d_slider_collision_src, file: "slider/collision.tsx" },
+  "slider/disabled": { Component: d_slider_disabled, source: d_slider_disabled_src, file: "slider/disabled.tsx" },
+  "slider/form": { Component: d_slider_form, source: d_slider_form_src, file: "slider/form.tsx" },
+  "slider/labeling": { Component: d_slider_labeling, source: d_slider_labeling_src, file: "slider/labeling.tsx" },
+  "slider/range": { Component: d_slider_range, source: d_slider_range_src, file: "slider/range.tsx" },
+  "slider/sizes": { Component: d_slider_sizes, source: d_slider_sizes_src, file: "slider/sizes.tsx" },
+  "slider/thumb-alignment": { Component: d_slider_thumb_alignment, source: d_slider_thumb_alignment_src, file: "slider/thumb-alignment.tsx" },
+  "slider/tones": { Component: d_slider_tones, source: d_slider_tones_src, file: "slider/tones.tsx" },
+  "slider/vertical": { Component: d_slider_vertical, source: d_slider_vertical_src, file: "slider/vertical.tsx" },
   "switch/basic": { Component: d_switch_basic, source: d_switch_basic_src, file: "switch/basic.tsx" },
   "switch/disabled": { Component: d_switch_disabled, source: d_switch_disabled_src, file: "switch/disabled.tsx" },
   "switch/settings-list": { Component: d_switch_settings_list, source: d_switch_settings_list_src, file: "switch/settings-list.tsx" },

@@ -30,6 +30,7 @@ const NAV: NavGroup[] = [
       { title: "Scroll Area", href: "/components/scroll-area" },
       { title: "Select", href: "/components/select" },
       { title: "Separator", href: "/components/separator" },
+      { title: "Slider", href: "/components/slider" },
       { title: "Switch", href: "/components/switch" },
       { title: "Tabs", href: "/components/tabs" },
       { title: "Tooltip", href: "/components/tooltip" },

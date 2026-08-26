@@ -1,0 +1,445 @@
+/*
+ * Slider
+ *
+ * Base UI owns the geometry that carries the VALUE and this file owns
+ * everything else. Concretely, Base UI writes as inline styles:
+ *
+ *   Track      position: relative                     (the containing block)
+ *   Indicator  position + width/height  (+ an offset from the start edge for
+ *              a range), and `height: inherit` on the cross axis — `width`
+ *              when vertical
+ *   Thumb      position: absolute, inset-inline-start / bottom, a centring
+ *              `translate`, and a z-index that raises the active handle
+ *
+ * Three consequences, each of which has to be respected here:
+ *
+ * 1. The track's thickness must be an explicit length. The indicator inherits
+ *    it (`height: inherit`), so an `auto`-sized track leaves the indicator
+ *    with nothing to inherit and it collapses to zero.
+ * 2. Nothing in this file may set `translate` on the thumb — the inline style
+ *    would win, and the centring offset is not something to fight anyway.
+ * 3. Nothing may set the indicator's width or the thumb's position, and
+ *    nothing may TRANSITION them either. They are rewritten on every value
+ *    change, which during a drag means every pointermove; see Motion below.
+ *
+ * Motion. The thumb and the indicator have NO positional transition, and that
+ * is a fix rather than an omission. They used to glide on
+ * `--pui-duration-move`, suppressed during a drag by `.control:active` and
+ * `[data-dragging]`. Both triggers are unreliable, and measuring the shipped
+ * build showed the suppression never firing at all:
+ *
+ *   - `:active` is cleared as soon as the pointer leaves the control's box,
+ *     which a fast drag does immediately — pointer capture keeps the events
+ *     coming but does not keep the pseudo-class.
+ *   - `[data-dragging]` is React state that Base UI only sets after its
+ *     intentional-drag threshold, so it is absent for the start of every drag
+ *     and lands a commit late even after that.
+ *
+ * The result was a fresh 220ms transition on `left` and `width` created on
+ * EVERY pointermove — confirmed through `getAnimations()` — so the handle was
+ * permanently interpolating toward a target that had already moved. It reads
+ * as dropped frames, and it puts a layout-triggering property under animation
+ * for the whole gesture.
+ *
+ * A keyboard-only glide was the obvious next idea and is also wrong: holding
+ * an arrow key repeats at ~30/s and restarts the same transition each time,
+ * reintroducing the lag on a smaller scale, while a single arrow step moves
+ * the handle a couple of pixels and has nothing worth animating. So there is
+ * no positional animation at any time — which is what native `input[type=range]`
+ * does too — and no `prefers-reduced-motion` block, because there is no
+ * geometry left for it to collapse. What still animates is colour and the
+ * halo: state changes with discrete start and end points, which is the kind of
+ * thing a transition is actually for.
+ *
+ * Contrast. The thumb's ring is `--pui-color-primary`, the same reliance the
+ * Switch's checked track makes, and the rail is `--pui-color-border-muted`.
+ * The value is legible from three independent places — the indicator's length
+ * against the rail, the thumb's position, and the `Slider.Value` text — so no
+ * single pair is load-bearing on its own. A consumer whose accent seed lands
+ * pale against their page can re-point `--pui-slider-thumb-border` at
+ * `--pui-color-foreground-subtle`, which tokens.css measures at 3.73:1.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on Slider.Root, so an ancestor's value
+     * is only INHERITED and never wins over this declaration. Re-skin one
+     * slider by setting them on the root through `className` (an unlayered
+     * consumer rule beats `@layer pretty-ui.components` at any specificity) or
+     * an inline `style`; re-skin every slider by re-pointing the global tokens
+     * on the right-hand side, which this file only reads. The parts below are
+     * descendants and consume these by inheritance. */
+    --pui-slider-length: 16rem;
+    --pui-slider-track-thickness: 4px;
+    --pui-slider-thumb-size: 1rem;
+    --pui-slider-thumb-border-width: 2px;
+    --pui-slider-radius: var(--pui-radius-pill);
+    --pui-slider-gap: var(--pui-space-2);
+
+    /* Colour slots, swapped wholesale by [data-tone] below. */
+    --pui-slider-track-bg: var(--pui-color-border-muted);
+    --pui-slider-indicator-bg: var(--pui-color-primary);
+    --pui-slider-thumb-bg: var(--pui-color-background);
+    --pui-slider-thumb-border: var(--pui-color-primary);
+    --pui-slider-thumb-shadow: var(--pui-shadow-1);
+    --pui-slider-thumb-halo-color: var(--pui-color-primary);
+    --pui-slider-thumb-halo-strength: 48%;
+    /* The halo is a soft ring that fades in around the handle on hover and
+     * while dragging. It is a box-shadow on the thumb's ::before rather than a
+     * sized element, so it adds no box and cannot move the hit target (motion
+     * principle 7) — and because it is a colour cue rather than a
+     * displacement, it survives reduced motion intact. */
+    /* Translucent accent, NOT the `-soft` step. `--pui-color-primary-soft` is
+     * accent-3, which is built to sit *on* the page — 12% of the seed mixed
+     * into white in light mode, 22% into near-black in dark. Against the page
+     * it is therefore almost exactly the page, and the halo disappeared in
+     * both modes. Mixing toward `transparent` instead composites the accent
+     * over whatever is actually behind the slider, so it stays visible on the
+     * page, on a panel and on a card, and both modes get the same treatment
+     * from one declaration.
+     *
+     * Derived here, on the same element as the two inputs it reads, because a
+     * var() inside an unregistered custom property is substituted where it is
+     * DECLARED — which is also what lets the [data-tone] blocks below rewrite
+     * only the colour and get the mix recomputed for free. */
+    --pui-slider-thumb-halo: color-mix(
+      in oklab,
+      var(--pui-slider-thumb-halo-color) var(--pui-slider-thumb-halo-strength),
+      transparent
+    );
+    --pui-slider-thumb-halo-size: 0px;
+    --pui-slider-thumb-halo-size-active: 5px;
+
+    /* Derived: how far the control is padded out past the rail. Two floors,
+     * whichever is larger — the 24x24 minimum target of SC 2.5.8, and enough
+     * room for the thumb (which is wider than the rail) plus a little air. It
+     * is declared on the same element as the three inputs it reads, because an
+     * unregistered custom property is substituted where it is DECLARED: on an
+     * ancestor it would freeze at the ancestor's values, and here it re-derives
+     * correctly for every [data-size] block below, which only rewrite the
+     * inputs. */
+    --pui-slider-control-padding: max(
+      calc((var(--pui-target-min) - var(--pui-slider-track-thickness)) / 2),
+      calc(
+        (var(--pui-slider-thumb-size) - var(--pui-slider-track-thickness)) / 2 +
+          var(--pui-space-1)
+      )
+    );
+
+    box-sizing: border-box;
+    /* Two columns so Label and Value share the first row — label left, value
+     * right — with Control spanning both underneath. A slider rendered with
+     * only a Control is then a one-row grid and needs no special case. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--pui-slider-gap);
+    inline-size: var(--pui-slider-length);
+    /* So a 16rem slider inside a narrower column shrinks instead of
+     * overflowing it. Set `--pui-slider-length: 100%` for a slider that always
+     * fills its container. */
+    max-inline-size: 100%;
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  /* Vertical is the same parts turned 90°: one centred column, and the length
+   * token now describes the block axis. `inline-size: auto` undoes the
+   * horizontal width so the slider is only as wide as its widest part. */
+  .root[data-orientation="vertical"] {
+    --pui-slider-length: 10rem;
+
+    display: inline-grid;
+    grid-template-columns: minmax(0, auto);
+    justify-items: center;
+    inline-size: auto;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  /* Only the inputs are restated; --pui-slider-control-padding re-derives from
+   * them on this same element. */
+  .root[data-size="sm"] {
+    --pui-slider-track-thickness: 3px;
+    --pui-slider-thumb-size: 0.875rem;
+    --pui-slider-thumb-halo-size-active: 4px;
+  }
+
+  .root[data-size="md"] {
+    --pui-slider-track-thickness: 4px;
+    --pui-slider-thumb-size: 1rem;
+    --pui-slider-thumb-halo-size-active: 5px;
+  }
+
+  .root[data-size="lg"] {
+    --pui-slider-track-thickness: 6px;
+    --pui-slider-thumb-size: 1.25rem;
+    --pui-slider-thumb-halo-size-active: 6px;
+  }
+
+  /* Tones ----------------------------------------------------------------- */
+  .root[data-tone="secondary"] {
+    --pui-slider-indicator-bg: var(--pui-color-secondary);
+    --pui-slider-thumb-border: var(--pui-color-secondary);
+    --pui-slider-thumb-halo-color: var(--pui-color-secondary);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-slider-indicator-bg: var(--pui-color-danger);
+    --pui-slider-thumb-border: var(--pui-color-danger);
+    --pui-slider-thumb-halo-color: var(--pui-color-danger);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-slider-indicator-bg: var(--pui-color-foreground);
+    --pui-slider-thumb-border: var(--pui-color-foreground);
+    --pui-slider-thumb-halo-color: var(--pui-color-foreground);
+    /* The neutral halo is a grey, and grey at the accent's strength reads as a
+     * smudge rather than a glow, so it is pulled back. */
+    --pui-slider-thumb-halo-strength: 30%;
+  }
+
+  /* Inside a Field.Root, an invalid slider borrows the danger ring. The
+   * indicator keeps its tone so the value stays readable at a glance. */
+  .root[data-invalid] {
+    --pui-slider-thumb-border: var(--pui-color-danger-border);
+  }
+
+  .root[data-disabled] {
+    opacity: 0.55;
+  }
+
+  /* Label and value ------------------------------------------------------- */
+  /* Chrome, not a control: Slider.Label renders a <div> associated with the
+   * thumbs through aria-labelledby, so clicking it does nothing and it keeps
+   * the default arrow (see the cursor table in CONTRIBUTING.md). */
+  .label {
+    grid-column: 1;
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-normal);
+    color: var(--pui-color-foreground);
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .value {
+    grid-column: 2;
+    justify-self: end;
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+    color: var(--pui-color-foreground-muted);
+    /* Without tabular figures the readout changes width as the digits change,
+     * which makes it jitter while a thumb is being dragged. */
+    font-variant-numeric: tabular-nums;
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .root[data-orientation="vertical"] :is(.label, .value) {
+    grid-column: 1;
+    justify-self: center;
+  }
+
+  /* Control --------------------------------------------------------------- */
+  .control {
+    grid-column: 1 / -1;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    inline-size: 100%;
+    /* The padded strip, not the painted rail, is what takes the pointer — a
+     * press anywhere inside it moves the nearest thumb — so this is where the
+     * 24px minimum target lives. `thumbAlignment="edge"` measures this padding
+     * to work out where an inset thumb rests, which is the other reason it is
+     * derived rather than eyeballed. */
+    padding-block: var(--pui-slider-control-padding);
+    /* Base UI's thumbs carry an inline z-index so the active handle is drawn
+     * over its neighbour. Without a stacking context here those values are
+     * promoted into the nearest ancestor that has one — usually the page —
+     * where a `z-index: 2` thumb outranks any portalled overlay sitting at
+     * `auto`. `isolation` opens one without the side effect a `z-index` on the
+     * control itself would have. */
+    isolation: isolate;
+    /* Required for dragging on touch: without it the browser claims the
+     * gesture for scrolling and the thumb never moves. */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+  }
+
+  .control[data-orientation="vertical"] {
+    block-size: var(--pui-slider-length);
+    inline-size: auto;
+    padding-block: 0;
+    padding-inline: var(--pui-slider-control-padding);
+  }
+
+  .control[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Track ----------------------------------------------------------------- */
+  .track {
+    box-sizing: border-box;
+    inline-size: 100%;
+    /* Explicit, never `auto` — the indicator sizes its cross axis with
+     * `height: inherit`. */
+    block-size: var(--pui-slider-track-thickness);
+    border-radius: var(--pui-slider-radius);
+    background-color: var(--pui-slider-track-bg);
+  }
+
+  .track[data-orientation="vertical"] {
+    inline-size: var(--pui-slider-track-thickness);
+    block-size: 100%;
+  }
+
+  /* Indicator ------------------------------------------------------------- */
+  /* It carries the rail's radius itself rather than being clipped by an
+   * `overflow: hidden` track — the thumb is wider than the rail and lives
+   * inside the track too, so a clip there would slice the handle in half. */
+  .indicator {
+    border-radius: var(--pui-slider-radius);
+    background-color: var(--pui-slider-indicator-bg);
+    /* `width` / `height` / `inset-inline-start` / `bottom` are deliberately
+     * NOT transitioned — see the note at the top of this file. Base UI
+     * rewrites them on every pointermove, and animating them made the fill
+     * chase the pointer instead of following it. */
+    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Thumb ----------------------------------------------------------------- */
+  .thumb {
+    box-sizing: border-box;
+    inline-size: var(--pui-slider-thumb-size);
+    block-size: var(--pui-slider-thumb-size);
+    border: var(--pui-slider-thumb-border-width) solid var(--pui-slider-thumb-border);
+    border-radius: var(--pui-radius-full);
+    background-color: var(--pui-slider-thumb-bg);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    /* `box-shadow` is deliberately absent from this rule — the elevation and
+     * the halo are painted by ::before below instead. The focus ring's second
+     * tone is itself a box-shadow, declared by `.pui-focus-ring-within` in
+     * `@layer pretty-ui.patterns`, which is ordered BEFORE
+     * `pretty-ui.components`. Layer order outranks specificity completely, so
+     * any box-shadow declared here wins unconditionally and silently deletes
+     * half of a ring whose whole promise is that its two tones contrast with
+     * EACH OTHER rather than with the page.
+     *
+     * `inset-inline-start` and `bottom` are absent from the transition below
+     * for the reason given at the top of this file: Base UI rewrites them on
+     * every pointermove, so animating them makes the handle trail the pointer.
+     * Only colour is transitioned here, and the halo on ::before. */
+    transition:
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Elevation and halo, kept off the thumb itself for the reason above.
+   *
+   * The pseudo has no background of its own and both of its shadows are drawn
+   * OUTSIDE its box, so it never paints over the handle it sits on and needs
+   * no z-index — which matters, because Base UI puts an inline z-index on the
+   * active thumb only, so whether the thumb opens a stacking context varies
+   * from one handle to the next. The negative inset lines the pseudo up with
+   * the thumb's border box rather than its padding box. ::after is taken:
+   * `.pui-target` uses it for the hit-area expander. */
+  .thumb::before {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--pui-slider-thumb-border-width));
+    border-radius: inherit;
+    box-shadow:
+      var(--pui-slider-thumb-shadow),
+      0 0 0 var(--pui-slider-thumb-halo-size) var(--pui-slider-thumb-halo);
+    pointer-events: none;
+    transition: box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* The halo, on the states that mean "this handle is the one in play" — but
+   * never while the focus ring is up. ::before is painted after the thumb's
+   * own box-shadow, so a halo there would cover exactly the band the ring's
+   * outer tone occupies. Focus is the louder signal, so the halo stands down;
+   * `:has(:focus-visible)` rather than `:focus-visible` because the element
+   * that actually takes focus is the hidden <input> inside. */
+  @media (hover: hover) {
+    .control:not([data-disabled]) .thumb:hover:not(:has(:focus-visible)) {
+      --pui-slider-thumb-halo-size: var(--pui-slider-thumb-halo-size-active);
+    }
+  }
+
+  .root[data-dragging] .thumb:not(:has(:focus-visible)) {
+    --pui-slider-thumb-halo-size: var(--pui-slider-thumb-halo-size-active);
+  }
+
+  /* There is deliberately no press-squash on `scale` here. It would have to be
+   * keyed off `:active`, which a drag loses the moment the pointer leaves the
+   * control's box — so the squash would stick on mid-gesture — and 3% of a
+   * 16px handle is half a pixel either way. The halo below is the press cue,
+   * and it rides `[data-dragging]`, where arriving a commit late costs
+   * nothing because it is not carrying position. */
+  .thumb[data-disabled] {
+    cursor: not-allowed;
+  }
+}
+
+/**
+ * Accessibility overrides.
+ *
+ * `pretty-ui.a11y` is ordered AFTER `pretty-ui.components`, so these win by
+ * layer alone.
+ *
+ * Under forced colours the rail, the fill and the handle have to be separated
+ * without any author colour surviving, and a `<div>` gets no system colours
+ * from the UA the way a native `<input type=range>` would — Base UI builds
+ * every part out of divs, so the keywords are assigned here. The track's
+ * boundary is drawn with `outline` rather than `border`, because a border
+ * would change the box and throw the indicator's `height: inherit` off by its
+ * width in exactly this one mode.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .track {
+      background-color: Canvas;
+      outline: 1px solid CanvasText;
+    }
+
+    .indicator {
+      background-color: Highlight;
+    }
+
+    .thumb {
+      background-color: Canvas;
+      border-color: CanvasText;
+    }
+
+    /* Both shadows go: forced-colors strips the elevation anyway, and the halo
+     * would paint as an opaque system-coloured ring around the handle. */
+    .thumb::before {
+      box-shadow: none;
+    }
+
+    /* `opacity` is one of the few properties forced-colors does not override,
+     * so a 55% control would keep full system contrast and read as enabled. */
+    .root[data-disabled] {
+      opacity: 1;
+    }
+
+    .root[data-disabled] .track {
+      outline-color: GrayText;
+    }
+
+    .root[data-disabled] .indicator {
+      background-color: GrayText;
+    }
+
+    .root[data-disabled] .thumb {
+      border-color: GrayText;
+    }
+  }
+}
