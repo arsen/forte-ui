@@ -1,0 +1,302 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Radio",
+  description:
+    "A group of mutually exclusive options: one tab stop, arrow keys to move, exactly one answer.",
+};
+
+# Radio
+
+Use a radio group when the choices are mutually exclusive and the user has to
+end up with exactly one of them. If they can pick several, use
+[`Checkbox`](/components/checkbox); if there are more than about seven options,
+or the list is data rather than a decision, use [`Select`](/components/select).
+
+<DemoBlock id="radio/basic" />
+
+`Radio` renders a `<span>` with `role="radio"` and a hidden `<input>` next to
+it, so it carries no accessible name of its own — the
+[`Field.Label`](/components/field) wrapped around it is what gives it one, and
+most examples on this page keep that pattern. A `Field` generates the ids,
+points each label at its own control and carries the `name` into form
+submission, so none of that appears in the demo code.
+
+## Import
+
+```tsx
+import { Radio, RadioGroup } from "@dofortech/pretty-ui";
+```
+
+A `Radio` only means something inside a `RadioGroup`. The group owns the value,
+and it is what makes the set behave like a native radio group. A lone `<Radio />`
+renders, but nothing can ever select it.
+
+## Examples
+
+### Sizes
+
+`size` sets the painted circle — `0.875rem`, `1rem` or `1.25rem`, matching
+`Checkbox` step for step so the two line up in a form that mixes them. The dot
+is a fraction of the circle rather than a fixed length, so it stays in
+proportion at every size and if you override `--pui-radio-size` to something off
+the scale. The fraction itself is retuned per size, because a dot under about
+5px stops reading as a dot.
+
+The clickable area does not shrink with the circle: a pseudo-element on the root
+holds the hit target at 24×24px minimum (WCAG SC 2.5.8), so a `sm` radio is no
+harder to hit than an `lg` one.
+
+<DemoBlock id="radio/sizes" />
+
+### Orientation
+
+`orientation="horizontal"` lays the options out in a row instead of a column;
+horizontal groups wrap.
+
+<DemoBlock id="radio/orientation" />
+
+This is layout only. It does not change the keyboard model — Base UI drives the
+group with all four arrow keys either way, so a horizontal group still answers
+to Up and Down, exactly as a native one does.
+
+### Descriptions
+
+When the options need explaining, give each one a `Field.Item` with its own
+`Field.Label` and `Field.Description`. The description is wired to that radio
+with `aria-describedby`, so it is read out with the option rather than left
+floating in the group.
+
+<DemoBlock id="radio/descriptions" />
+
+### Controlled
+
+Pass `value` and `onValueChange` for a controlled group; `defaultValue` for an
+uncontrolled one. The callback receives the new value first and Base UI's event
+details second.
+
+<DemoBlock id="radio/controlled" />
+
+<Callout kind="warn">
+  Arrow keys select as they move, which is the native radio behaviour and the
+  reason a radio group is the wrong control for anything expensive. Someone
+  arrowing from the first option to the fourth passes through the second and
+  third, and each one fires `onValueChange`. Do not kick off a request, a
+  navigation or a purchase from that callback — put the work behind a submit
+  button, as the form example below does.
+</Callout>
+
+### Disabled and read-only
+
+`disabled` blocks pointer and keyboard interaction and sets `aria-disabled`. On
+a single option, put it on the `Field.Item` rather than on the `Radio`: that
+puts `data-disabled` on the label too, so the words dim with the circle instead
+of staying at full contrast beside a greyed-out control. `RadioGroup` takes
+`disabled` as well, which reaches every option inside it.
+
+<DemoBlock id="radio/disabled" />
+
+<Callout kind="a11y">
+  A disabled radio is removed from the tab order, and inside a radio group it is
+  also skipped by the arrow keys — so someone using the keyboard may never learn
+  the option exists. If the group needs to stay discoverable but must not be
+  changed — a setting fixed at signup, one an administrator owns — use
+  `readOnly` on the group instead. Read-only options stay focusable and
+  arrowable, announce `aria-readonly`, and ignore clicks and Space.
+</Callout>
+
+### Labelling a group
+
+A radio group needs two kinds of name, and they are separate problems. The
+group is named by pointing `aria-labelledby` at a heading — it cannot be a
+`<label>`, because a `<label>` resolves to a single control and
+`role="radiogroup"` is not a labelable element. Each option is then named by an
+enclosing `<label>`, which works because the root renders a `<span>` with the
+hidden `<input>` beside it.
+
+<DemoBlock id="radio/labelling" />
+
+The `Field` pattern used elsewhere on this page does both of these for you:
+`Field.Label nativeLabel={false}` names the group without `htmlFor`, and each
+`Field.Item`'s label names its own row.
+
+### Rendering as a native button
+
+The root is a `<span>` by default so that an enclosing `<label>` stays valid
+HTML. For the sibling-label pattern — a separate `<label htmlFor>` pointing at
+an `id` — you need a real `<button>`, which means `nativeButton` together with
+`render`.
+
+<DemoBlock id="radio/native-button" />
+
+<Callout kind="warn">
+  `nativeButton` also moves the `id`: with it, `id` lands on the root element
+  instead of on the hidden input. That is what makes `htmlFor` resolve — and
+  why passing `id` without `nativeButton` labels the input, not the thing the
+  user sees.
+
+  A `<button>` *inside* a wrapping label needs the render **callback** rather
+  than a render element. The callback decides where the button goes, so Base UI
+  can keep the hidden `<input>` outside the label; with `render={<button />}`
+  the input ends up inside it and the label has two controls to resolve to.
+</Callout>
+
+### In a form
+
+`Field.Root`'s `name` is what the value is submitted under, so the group itself
+needs no `name` when it sits in a field. `required` on the group blocks
+submission until something is picked and matches `Field.Error match="valueMissing"`,
+exactly as it would for a required `<input>`.
+
+<DemoBlock id="radio/form" />
+
+<Callout kind="a11y">
+  Prefer a `defaultValue` where one is defensible. A group with nothing selected
+  has no focusable option to arrow into until the user picks one — they have to
+  tab to the group and then press an arrow key to select the first option, which
+  is the native behaviour but is not obvious. Where no default is honest —
+  billing period, a survey answer — say so with `required` and an error message
+  rather than pre-selecting something the user did not choose.
+</Callout>
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus into the group, landing on the selected option — or on the first one if nothing is selected. The whole group is a single tab stop.",
+    },
+    {
+      keys: ["ArrowUp", "ArrowLeft"],
+      description:
+        "Moves to the previous option and selects it, wrapping from the first to the last. Both keys work whichever way the group is laid out.",
+    },
+    {
+      keys: ["ArrowDown", "ArrowRight"],
+      description:
+        "Moves to the next option and selects it, wrapping from the last to the first.",
+    },
+    {
+      keys: ["Space"],
+      description:
+        "Selects the focused option. Only reachable when the group started with nothing selected — after that, arrowing has already selected whatever is focused.",
+    },
+    {
+      keys: ["Enter"],
+      description:
+        "Does not select. Inside a form it submits the form, matching a native radio.",
+    },
+  ]}
+/>
+
+Disabled options are skipped by the arrow keys. `Home` and `End` are
+deliberately not bound — Base UI turns them off for radio groups so they keep
+scrolling the page.
+
+The group renders a `<div role="radiogroup">`; each option exposes
+`role="radio"` and `aria-checked`. The `<input>` beside each one is
+`aria-hidden` and exists to carry the value into form submission, so `name`,
+`value`, `required` and `form` behave as they would on a native radio.
+
+<Callout kind="a11y">
+  `RadioGroup` has no name of its own. Wrap it in a `Field.Root` and name it
+  with a `Field.Label nativeLabel={false}`, render it inside a `Fieldset.Root`
+  with a `Fieldset.Legend`, or point `aria-labelledby` at your own heading.
+  Without a name the grouping is invisible to assistive technology and the
+  options read as unrelated radios.
+</Callout>
+
+<Callout kind="a11y">
+  Each option needs a name too. Put it inside a `Field.Item` with a
+  `Field.Label`, wrap it in a plain `<label>`, or pair it with a sibling
+  `<label htmlFor>` and `nativeButton render={<button />}`. A bare `<Radio />`
+  with text beside it is not labelled.
+</Callout>
+
+**Motion.** The dot scales from `0` to `1` on a duration token, not on a
+`--pui-scale-*` token, and that distinction is the whole reason it survives
+reduced motion. A scale token collapses toward `1` under
+`prefers-reduced-motion: reduce`, which for a mark animating *toward* `1` would
+mean never appearing at all — and the dot is the only thing separating the
+selected option from the rest for anyone who cannot rely on the fill colour.
+Durations only shorten, so the dot still pops; `--pui-duration-spring-snappy`
+drops from 400ms to 120ms and the spring flattens into what reads as an instant
+appearance.
+
+The way out is deliberately not the spring. A spring undershoots, so scaling
+`1 → 0` on one would drive the dot through negative values and visibly rebound
+after it had gone; the un-select runs on standard easing instead.
+
+Under forced colours the circle paints with `Canvas`/`CanvasText`, a selected
+one with `Highlight` and a `HighlightText` dot, and a disabled one with
+`GrayText` on `Canvas` — the dot stays visible in every state.
+
+## Theming
+
+Every visual decision is a custom property declared on the radio root. Set them
+on the radio itself — through `className` or an inline `style` — rather than on
+an ancestor: the component declares its own defaults on the root element, and an
+element's own declaration beats an inherited value.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-radio-size` | Width and height of the painted circle. `size="sm"` sets `0.875rem`, `size="lg"` sets `1.25rem`. | `1rem` |
+| `--pui-radio-radius` | Corner radius of the circle. | `50%` |
+| `--pui-radio-border-width` | Border width. | `1px` |
+| `--pui-radio-dot-ratio` | Size of the dot as a fraction of the circle. Unitless on purpose, so the dot keeps its proportion at any `--pui-radio-size`. `size` retunes it: `0.4` for `sm`, `0.36` for `lg`. | `0.375` |
+| `--pui-radio-dot-size` | The dot's own width and height. Derived from the two above; set it directly to break the proportion. | `calc(var(--pui-radio-size) * var(--pui-radio-dot-ratio))` |
+| `--pui-radio-duration` | Colour transitions on the circle, the dot's fade, and the un-select. | `var(--pui-duration-fast)` |
+| `--pui-radio-pop-duration` | How long the dot takes to pop in. | `var(--pui-duration-spring-snappy)` |
+| `--pui-radio-pop-ease` | The easing that pop rides. Change it and change the duration with it — a spring truncated by a shorter duration looks broken. | `var(--pui-ease-spring-snappy)` |
+| `--pui-radio-bg` | Fill while unselected. | `var(--pui-color-background)` |
+| `--pui-radio-bg-hover` | Fill on hover while unselected. | `var(--pui-color-panel-hover)` |
+| `--pui-radio-border-color` | Border colour while unselected. | `var(--pui-color-border)` |
+| `--pui-radio-border-color-hover` | Border colour on hover while unselected. | `var(--pui-color-border-strong)` |
+| `--pui-radio-fill` | Fill while selected. | `var(--pui-color-primary)` |
+| `--pui-radio-fill-hover` | Fill on hover while selected. | `var(--pui-color-primary-hover)` |
+| `--pui-radio-dot-color` | Colour of the dot — it becomes the root's `color`, and the dot paints with `currentColor`. | `var(--pui-color-on-primary)` |
+
+`RadioGroup` declares one property of its own:
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-radio-group-gap` | Gap between options in the group. | `var(--pui-space-2)`, or `var(--pui-space-4)` when `orientation="horizontal"` |
+
+The three `-hover` values only ever apply on devices that report hover support,
+so a touch device never sticks in a hover colour after a tap.
+
+`tone` reassigns `--pui-radio-fill`, `--pui-radio-fill-hover` and
+`--pui-radio-dot-color` — `primary`, `secondary`, `danger` or `neutral`. Inside
+a `Field.Root`, an invalid field overrides those and the border colours with the
+danger palette, so a validation failure never renders in a brand colour.
+
+<Callout kind="note">
+  `--pui-radio-radius` is the one place in the library where a component does
+  not follow the `data-pui-radius` presets: it defaults to `50%` rather than to
+  `var(--pui-radius-full)`. Round is not a style choice on a radio — it is the
+  only thing telling a reader "pick one of these" rather than "tick any of
+  these", and the `none` preset sets `--pui-radius-full: 0`, which would render
+  a radio as a square indistinguishable from the checkbox beside it. Set
+  `--pui-radio-radius: var(--pui-radius-full)` to opt back in.
+</Callout>
+
+## API reference
+
+### Radio
+
+<PropTable component="Radio" />
+
+Anything Base UI's `Radio.Root` accepts passes through as well — including
+`disabled`, `readOnly`, `required`, `inputRef` and `render`.
+
+### RadioGroup
+
+<PropTable component="RadioGroup" />
+
+`onValueChange`, `form`, `inputRef`, `render` and the rest of Base UI's
+`RadioGroup` props pass through unchanged.

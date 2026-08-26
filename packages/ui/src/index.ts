@@ -88,6 +88,15 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { Radio, RadioGroup } from "./components/radio";
+export type {
+  RadioProps,
+  RadioSize,
+  RadioTone,
+  RadioGroupProps,
+  RadioGroupOrientation,
+} from "./components/radio";
+
 export { ScrollArea } from "./components/scroll-area";
 export type {
   ScrollAreaScrollbarVisibility,

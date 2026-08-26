@@ -107,6 +107,24 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_radio_basic from "./radio/basic";
+import d_radio_basic_src from "./radio/basic?raw";
+import d_radio_controlled from "./radio/controlled";
+import d_radio_controlled_src from "./radio/controlled?raw";
+import d_radio_descriptions from "./radio/descriptions";
+import d_radio_descriptions_src from "./radio/descriptions?raw";
+import d_radio_disabled from "./radio/disabled";
+import d_radio_disabled_src from "./radio/disabled?raw";
+import d_radio_form from "./radio/form";
+import d_radio_form_src from "./radio/form?raw";
+import d_radio_labelling from "./radio/labelling";
+import d_radio_labelling_src from "./radio/labelling?raw";
+import d_radio_native_button from "./radio/native-button";
+import d_radio_native_button_src from "./radio/native-button?raw";
+import d_radio_orientation from "./radio/orientation";
+import d_radio_orientation_src from "./radio/orientation?raw";
+import d_radio_sizes from "./radio/sizes";
+import d_radio_sizes_src from "./radio/sizes?raw";
 import d_scroll_area_basic from "./scroll-area/basic";
 import d_scroll_area_basic_src from "./scroll-area/basic?raw";
 import d_scroll_area_both_axes from "./scroll-area/both-axes";
@@ -236,6 +254,15 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "radio/basic"
+  | "radio/controlled"
+  | "radio/descriptions"
+  | "radio/disabled"
+  | "radio/form"
+  | "radio/labelling"
+  | "radio/native-button"
+  | "radio/orientation"
+  | "radio/sizes"
   | "scroll-area/basic"
   | "scroll-area/both-axes"
   | "scroll-area/horizontal"
@@ -328,6 +355,15 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "radio/basic": { Component: d_radio_basic, source: d_radio_basic_src, file: "radio/basic.tsx" },
+  "radio/controlled": { Component: d_radio_controlled, source: d_radio_controlled_src, file: "radio/controlled.tsx" },
+  "radio/descriptions": { Component: d_radio_descriptions, source: d_radio_descriptions_src, file: "radio/descriptions.tsx" },
+  "radio/disabled": { Component: d_radio_disabled, source: d_radio_disabled_src, file: "radio/disabled.tsx" },
+  "radio/form": { Component: d_radio_form, source: d_radio_form_src, file: "radio/form.tsx" },
+  "radio/labelling": { Component: d_radio_labelling, source: d_radio_labelling_src, file: "radio/labelling.tsx" },
+  "radio/native-button": { Component: d_radio_native_button, source: d_radio_native_button_src, file: "radio/native-button.tsx" },
+  "radio/orientation": { Component: d_radio_orientation, source: d_radio_orientation_src, file: "radio/orientation.tsx" },
+  "radio/sizes": { Component: d_radio_sizes, source: d_radio_sizes_src, file: "radio/sizes.tsx" },
   "scroll-area/basic": { Component: d_scroll_area_basic, source: d_scroll_area_basic_src, file: "scroll-area/basic.tsx" },
   "scroll-area/both-axes": { Component: d_scroll_area_both_axes, source: d_scroll_area_both_axes_src, file: "scroll-area/both-axes.tsx" },
   "scroll-area/horizontal": { Component: d_scroll_area_horizontal, source: d_scroll_area_horizontal_src, file: "scroll-area/horizontal.tsx" },

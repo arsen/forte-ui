@@ -928,6 +928,130 @@
       }
     ]
   },
+  "Radio": {
+    "name": "Radio",
+    "description": "One option in a `RadioGroup`, built on Base UI's unstyled `Radio` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Item`.\n\nA radio only means anything inside a `RadioGroup`: the group owns the value,\nand it is what makes the set one tab stop with the arrow keys moving between\noptions. A lone `<Radio />` renders, but nothing can ever select it.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-disabled`, `data-readonly`, and the `Field` validity attributes) on\nboth the root and the indicator, and every visual decision is a\n`--pui-radio-*` custom property, so it can be re-skinned from plain CSS or\ntargeted with Tailwind arbitrary variants (`data-[checked]:...`) without\nwrapping.",
+    "props": [
+      {
+        "name": "value",
+        "type": "Value",
+        "required": true,
+        "defaultValue": null,
+        "description": "The value this radio submits when it is the one selected. Matched against\nthe group's `value`, so it has to be unique within the group. Required —\na radio with no value cannot be selected."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "indicatorClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the indicator — the dot inside the circle.\nApplied after the internal styles."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Set to `true` when `render` replaces the root with a real `<button>`.\nThe root is a `<span>` by default so that an enclosing `<label>` stays\nvalid HTML; for the sibling-label pattern (`<label htmlFor>` + `id`) pass\n`nativeButton render={<button />}` instead. With `nativeButton`, `id`\nlands on the root element rather than on the hidden input."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Ref to the root element. Declared as a prop rather than through\n`forwardRef` because the component is generic — a `forwardRef` wrapper\nwould erase `Value` and with it the inference on `value`."
+      },
+      {
+        "name": "size",
+        "type": "RadioSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the painted circle. The dot is derived from it rather than fixed,\nso it keeps its proportion at every size and when a consumer overrides\n`--pui-radio-size` to something off the scale."
+      },
+      {
+        "name": "tone",
+        "type": "RadioTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the selected fill draws from. Inside a\n`Field.Root` an invalid field overrides this with the danger palette, so\na validation error always reads as an error."
+      }
+    ]
+  },
+  "RadioGroup": {
+    "name": "RadioGroup",
+    "description": "Shared state for a series of `Radio`s, built on Base UI's `RadioGroup`\nprimitive. Renders a `<div role=\"radiogroup\">`.\n\nUnlike `CheckboxGroup`, this is a keyboard mode as well as a state\ncontainer: the whole group is a single tab stop, and the arrow keys move\nbetween options — selecting as they go, which is the native radio\nbehaviour and the reason a radio group must never be used for choices that\ntrigger an expensive side effect on selection.\n\nThe group has no implicit accessible name — give it `aria-labelledby`\npointing at a heading, name it with a `Field.Label nativeLabel={false}`, or\nrender it inside a `Fieldset.Root` with a `Fieldset.Legend`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultValue",
+        "type": "Value",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "The value selected on mount when uncontrolled. Leave it out for a group\nthat starts with nothing selected — but prefer a default where one is\ndefensible, because an empty group has no focusable option to arrow into\nuntil something is picked."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disables every radio in the group."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Identifies the group in form submission. Inside a `Field.Root` the field's\n`name` is used instead, so this is only needed outside one."
+      },
+      {
+        "name": "orientation",
+        "type": "RadioGroupOrientation",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Direction the options are laid out in. Horizontal groups wrap.\n\nLayout only — it does not change the keyboard model. Base UI drives the\ngroup with all four arrow keys whichever way it is laid out, so a\nhorizontal group still answers to Up and Down."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Shows the current value but refuses to change it. Unlike `disabled` the\noptions stay focusable and announce `aria-readonly`."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLDivElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Ref to the group element. Declared as a prop rather than through\n`forwardRef` because the component is generic — a `forwardRef` wrapper\nwould erase `Value` and with it the typing of `onValueChange`."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Requires a selection before the surrounding form will submit."
+      },
+      {
+        "name": "value",
+        "type": "Value",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "The selected value. Pairs with `onValueChange` for a controlled group;\nuse `defaultValue` for an uncontrolled one."
+      }
+    ]
+  },
   "ScrollAreaRoot": {
     "name": "ScrollAreaRoot",
     "description": "Groups the viewport, the scrollbars and the corner.\n\nGive it the size the scroll area should occupy — a `height`, a `max-height`,\nor a track in whatever layout it sits in. It is a grid with a single\n`minmax(0, 1fr)` cell, so the viewport stays content-sized until the root is\nconstrained and fills it exactly once it is; a scroll area with no height\nanywhere on it simply grows and never scrolls.",
