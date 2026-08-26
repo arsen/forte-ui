@@ -144,6 +144,15 @@ export type {
   SliderThumbProps,
 } from "./components/slider";
 
+export { Spinner } from "./components/spinner";
+export type {
+  SpinnerProps,
+  SpinnerVariant,
+  SpinnerSize,
+  SpinnerTone,
+  SpinnerLabelPlacement,
+} from "./components/spinner";
+
 export { Switch } from "./components/switch";
 export type { SwitchProps, SwitchSize } from "./components/switch";
 

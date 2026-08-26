@@ -177,6 +177,20 @@ import d_slider_tones from "./slider/tones";
 import d_slider_tones_src from "./slider/tones?raw";
 import d_slider_vertical from "./slider/vertical";
 import d_slider_vertical_src from "./slider/vertical?raw";
+import d_spinner_labels from "./spinner/labels";
+import d_spinner_labels_src from "./spinner/labels?raw";
+import d_spinner_loading_panel from "./spinner/loading-panel";
+import d_spinner_loading_panel_src from "./spinner/loading-panel?raw";
+import d_spinner_reduced_motion from "./spinner/reduced-motion";
+import d_spinner_reduced_motion_src from "./spinner/reduced-motion?raw";
+import d_spinner_sizes from "./spinner/sizes";
+import d_spinner_sizes_src from "./spinner/sizes?raw";
+import d_spinner_theming from "./spinner/theming";
+import d_spinner_theming_src from "./spinner/theming?raw";
+import d_spinner_tones from "./spinner/tones";
+import d_spinner_tones_src from "./spinner/tones?raw";
+import d_spinner_variants from "./spinner/variants";
+import d_spinner_variants_src from "./spinner/variants?raw";
 import d_switch_basic from "./switch/basic";
 import d_switch_basic_src from "./switch/basic?raw";
 import d_switch_disabled from "./switch/disabled";
@@ -289,6 +303,13 @@ export type DemoId =
   | "slider/thumb-alignment"
   | "slider/tones"
   | "slider/vertical"
+  | "spinner/labels"
+  | "spinner/loading-panel"
+  | "spinner/reduced-motion"
+  | "spinner/sizes"
+  | "spinner/theming"
+  | "spinner/tones"
+  | "spinner/variants"
   | "switch/basic"
   | "switch/disabled"
   | "switch/settings-list"
@@ -390,6 +411,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "slider/thumb-alignment": { Component: d_slider_thumb_alignment, source: d_slider_thumb_alignment_src, file: "slider/thumb-alignment.tsx" },
   "slider/tones": { Component: d_slider_tones, source: d_slider_tones_src, file: "slider/tones.tsx" },
   "slider/vertical": { Component: d_slider_vertical, source: d_slider_vertical_src, file: "slider/vertical.tsx" },
+  "spinner/labels": { Component: d_spinner_labels, source: d_spinner_labels_src, file: "spinner/labels.tsx" },
+  "spinner/loading-panel": { Component: d_spinner_loading_panel, source: d_spinner_loading_panel_src, file: "spinner/loading-panel.tsx" },
+  "spinner/reduced-motion": { Component: d_spinner_reduced_motion, source: d_spinner_reduced_motion_src, file: "spinner/reduced-motion.tsx" },
+  "spinner/sizes": { Component: d_spinner_sizes, source: d_spinner_sizes_src, file: "spinner/sizes.tsx" },
+  "spinner/theming": { Component: d_spinner_theming, source: d_spinner_theming_src, file: "spinner/theming.tsx" },
+  "spinner/tones": { Component: d_spinner_tones, source: d_spinner_tones_src, file: "spinner/tones.tsx" },
+  "spinner/variants": { Component: d_spinner_variants, source: d_spinner_variants_src, file: "spinner/variants.tsx" },
   "switch/basic": { Component: d_switch_basic, source: d_switch_basic_src, file: "switch/basic.tsx" },
   "switch/disabled": { Component: d_switch_disabled, source: d_switch_disabled_src, file: "switch/disabled.tsx" },
   "switch/settings-list": { Component: d_switch_settings_list, source: d_switch_settings_list_src, file: "switch/settings-list.tsx" },
