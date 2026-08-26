@@ -1,0 +1,382 @@
+/*
+ * Toggle / ToggleGroup
+ *
+ * Same two axes as Button, but they mean something slightly different here
+ * because a toggle has two resting states rather than one:
+ *   data-variant  how loud the PRESSED state is (solid/soft/outline)
+ *   data-tone     which semantic colour set that state draws from
+ *
+ * Unpressed is quiet in every variant — transparent fill, muted label — since
+ * that is what makes a toggle read as off at a glance. So the variants only
+ * differ in what "on" looks like, and each tone still only has to define its
+ * usual handful of colour slots.
+ *
+ * Note what the pressed state is NOT allowed to be: a hue change alone. Every
+ * variant switches the FILL when it turns on, so the difference survives
+ * greyscale, and it survives forced colours too (see the a11y block, which
+ * this component needs because `aria-pressed` is not one of the selectors the
+ * global rule in patterns.css covers).
+ *
+ * There is deliberately no `prefers-reduced-motion` block here — the only
+ * geometry is `--pui-scale-press`, which collapses to exactly 1 on its own.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. They are declared here, on the button element itself,
+     * so an ancestor's value is only inherited and never wins — which is also
+     * why a ToggleGroup propagates its appearance through React context and
+     * `data-*` rather than by setting these on the group. Re-skin one toggle
+     * by setting them on the toggle (an unlayered consumer rule beats this
+     * layer whatever its specificity); re-skin every toggle by re-pointing the
+     * global tokens they resolve to. */
+    --pui-toggle-radius: var(--pui-radius-control);
+    --pui-toggle-height: var(--pui-control-h-md);
+    --pui-toggle-padding-x: var(--pui-control-px-md);
+    --pui-toggle-font-size: var(--pui-font-size-2);
+    --pui-toggle-font-weight: var(--pui-font-weight-medium);
+    --pui-toggle-gap: var(--pui-control-gap);
+    --pui-toggle-border-width: 1px;
+    --pui-toggle-duration: var(--pui-duration-fast);
+    /* Press feedback only. There is no hover lift or hover scale slot on a
+     * toggle the way there is on Button: a toggle is normally one of several
+     * in a strip, and a single item growing under the pointer breaks the
+     * shared edge that makes the strip read as one control. A literal value is
+     * safe anyway — it is multiplied by `--pui-motion-ok` at the point of use. */
+    --pui-toggle-press-scale: var(--pui-scale-press);
+
+    /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
+    --pui-toggle-tone-solid: var(--pui-color-primary);
+    --pui-toggle-tone-solid-hover: var(--pui-color-primary-hover);
+    --pui-toggle-tone-on-solid: var(--pui-color-on-primary);
+    --pui-toggle-tone-soft: var(--pui-color-primary-soft);
+    --pui-toggle-tone-soft-hover: var(--pui-color-primary-soft-hover);
+    --pui-toggle-tone-text: var(--pui-color-primary-text);
+    --pui-toggle-tone-border: var(--pui-color-primary-border);
+
+    /* Off. Identical in all three variants apart from the border, so it is
+     * stated once here rather than repeated per variant. */
+    --pui-toggle-bg: transparent;
+    --pui-toggle-bg-hover: var(--pui-color-panel-hover);
+    --pui-toggle-fg: var(--pui-color-foreground-muted);
+    --pui-toggle-fg-hover: var(--pui-color-foreground);
+    --pui-toggle-border-color: transparent;
+
+    /* On. Filled in per variant below; this is the `soft` set. */
+    --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
+    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
+    --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
+    --pui-toggle-border-color-pressed: transparent;
+
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-toggle-gap);
+    height: var(--pui-toggle-height);
+    padding-inline: var(--pui-toggle-padding-x);
+    margin: 0;
+    border: var(--pui-toggle-border-width) solid var(--pui-toggle-border-color);
+    border-radius: var(--pui-toggle-radius);
+
+    background-color: var(--pui-toggle-bg);
+    color: var(--pui-toggle-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-toggle-font-size);
+    font-weight: var(--pui-toggle-font-weight);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    /* A toggle is a button, and the platform gives a native <button>
+     * `cursor: default` — not pointer. Stated explicitly, as everything
+     * interactive in this library is. */
+    -webkit-tap-highlight-color: transparent;
+    /* `scale` as an independent property rather than through `transform`, so a
+     * consumer animating `transform` on the same element does not fight it. */
+    scale: 1;
+    /* `box-shadow` is deliberately absent: the focus ring is an `outline` plus
+     * a `box-shadow` halo, and `outline` cannot be transitioned — animating
+     * only half of it makes the ring assemble in two stages on every Tab. */
+    transition:
+      background-color var(--pui-toggle-duration) var(--pui-ease-standard),
+      border-color var(--pui-toggle-duration) var(--pui-ease-standard),
+      color var(--pui-toggle-duration) var(--pui-ease-standard),
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  .root[data-pressed] {
+    background-color: var(--pui-toggle-bg-pressed);
+    color: var(--pui-toggle-fg-pressed);
+    border-color: var(--pui-toggle-border-color-pressed);
+  }
+
+  /* Hover comes after the pressed rule so the pressed hover can win at equal
+   * specificity, and is gated on real hover support so a touch device does not
+   * stick in a hover colour after a tap. */
+  @media (hover: hover) {
+    .root:hover:not([data-disabled]) {
+      background-color: var(--pui-toggle-bg-hover);
+      color: var(--pui-toggle-fg-hover);
+    }
+
+    .root[data-pressed]:hover:not([data-disabled]) {
+      background-color: var(--pui-toggle-bg-pressed-hover);
+      color: var(--pui-toggle-fg-pressed);
+    }
+  }
+
+  .root:active:not([data-disabled]) {
+    scale: calc(1 + (var(--pui-toggle-press-scale) - 1) * var(--pui-motion-ok));
+    /* Snap in, spring out: activation has to feel immediate, and the spring in
+     * the base rule is what carries the release. */
+    transition-duration: var(--pui-duration-instant);
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    scale: 1;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  /* The same three steps as Button, so a toggle dropped into a row of buttons
+   * lines up rather than sitting a pixel proud. */
+  .root[data-size="sm"] {
+    --pui-toggle-height: var(--pui-control-h-sm);
+    --pui-toggle-padding-x: var(--pui-control-px-sm);
+    --pui-toggle-font-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="md"] {
+    --pui-toggle-height: var(--pui-control-h-md);
+    --pui-toggle-padding-x: var(--pui-control-px-md);
+    --pui-toggle-font-size: var(--pui-font-size-2);
+  }
+
+  .root[data-size="lg"] {
+    --pui-toggle-height: var(--pui-control-h-lg);
+    --pui-toggle-padding-x: var(--pui-control-px-lg);
+    --pui-toggle-font-size: var(--pui-font-size-3);
+  }
+
+  /* Every size clears the 24px SC 2.5.8 floor on height (`sm` is 28px), but an
+   * icon-only toggle has no label to hold its width open, so the width has to
+   * be pinned here. `max()` rather than a flat 24px so `md` and `lg` stay
+   * square instead of being squashed to the minimum. */
+  .root[data-icon-only] {
+    --pui-toggle-padding-x: 0;
+    aspect-ratio: 1;
+    min-inline-size: max(var(--pui-toggle-height), var(--pui-target-min));
+  }
+
+  /* Tones ----------------------------------------------------------------- */
+  .root[data-tone="secondary"] {
+    --pui-toggle-tone-solid: var(--pui-color-secondary);
+    --pui-toggle-tone-solid-hover: var(--pui-color-secondary-hover);
+    --pui-toggle-tone-on-solid: var(--pui-color-on-secondary);
+    --pui-toggle-tone-soft: var(--pui-color-secondary-soft);
+    --pui-toggle-tone-soft-hover: var(--pui-color-secondary-soft-hover);
+    --pui-toggle-tone-text: var(--pui-color-secondary-text);
+    --pui-toggle-tone-border: var(--pui-color-secondary-border);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-toggle-tone-solid: var(--pui-color-danger);
+    --pui-toggle-tone-solid-hover: var(--pui-color-danger-hover);
+    --pui-toggle-tone-on-solid: var(--pui-color-on-danger);
+    --pui-toggle-tone-soft: var(--pui-danger-3);
+    /* Deliberately the same value as the resting fill, which is what Button
+     * does for the same reason: the danger ramp in tokens.css is a sparse
+     * hand-written set (2, 3, 7, 9, 10, 11) with no step 4 to step up to, and
+     * `--pui-danger-7` is far too saturated to carry `--pui-color-danger-text`
+     * at AA. A pressed danger toggle therefore does not brighten on hover; it
+     * still has the cursor, the focus ring and the press scale. */
+    --pui-toggle-tone-soft-hover: var(--pui-danger-3);
+    --pui-toggle-tone-text: var(--pui-color-danger-text);
+    --pui-toggle-tone-border: var(--pui-color-danger-border);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-toggle-tone-solid: var(--pui-gray-12);
+    --pui-toggle-tone-solid-hover: var(--pui-gray-11);
+    --pui-toggle-tone-on-solid: var(--pui-gray-1);
+    --pui-toggle-tone-soft: var(--pui-gray-4);
+    --pui-toggle-tone-soft-hover: var(--pui-gray-5);
+    --pui-toggle-tone-text: var(--pui-color-foreground);
+    --pui-toggle-tone-border: var(--pui-color-border);
+  }
+
+  /* Variants ---------------------------------------------------------------
+   * Only the pressed slots change. `outline` is the one variant that also
+   * paints while unpressed, because its border is what marks out where the
+   * button is when nothing is on. */
+  .root[data-variant="solid"] {
+    --pui-toggle-bg-pressed: var(--pui-toggle-tone-solid);
+    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-solid-hover);
+    --pui-toggle-fg-pressed: var(--pui-toggle-tone-on-solid);
+    --pui-toggle-border-color-pressed: transparent;
+  }
+
+  .root[data-variant="soft"] {
+    --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
+    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
+    --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
+    --pui-toggle-border-color-pressed: transparent;
+  }
+
+  .root[data-variant="outline"] {
+    --pui-toggle-border-color: var(--pui-color-border);
+    --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
+    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
+    --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
+    --pui-toggle-border-color-pressed: var(--pui-toggle-tone-border);
+  }
+
+  /* Group ------------------------------------------------------------------
+   * Base UI writes `data-orientation` and `data-disabled` on this element from
+   * its own state, so neither is set in the TSX and neither may be assumed
+   * absent. `data-segmented` and `data-full-width` are ours. */
+  .group {
+    --pui-toggle-group-gap: var(--pui-space-2);
+    --pui-toggle-group-padding: 0px;
+    --pui-toggle-group-radius: 0px;
+    --pui-toggle-group-bg: transparent;
+    /* Transparent rather than absent even when there is nothing to draw:
+     * `transparent` is NOT preserved under forced colours — it is replaced
+     * with a system colour — so declaring the border here is what lets the
+     * segmented strip keep a visible boundary in high contrast without the
+     * a11y block having to add a border and shift the layout by 2px. */
+    --pui-toggle-group-border-width: 1px;
+    --pui-toggle-group-border-color: transparent;
+
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: row;
+    /* `stretch`, not `center`: in a vertical group the toggles have to take
+     * the strip's full width or the shorter labels leave ragged edges down the
+     * side of the panel. */
+    align-items: stretch;
+    gap: var(--pui-toggle-group-gap);
+    padding: var(--pui-toggle-group-padding);
+    border: var(--pui-toggle-group-border-width) solid
+      var(--pui-toggle-group-border-color);
+    border-radius: var(--pui-toggle-group-radius);
+    background-color: var(--pui-toggle-group-bg);
+  }
+
+  .group[data-orientation="vertical"] {
+    flex-direction: column;
+  }
+
+  /* The segmented control: one padded panel behind the set, with the toggles
+   * closed up inside it. Deliberately the same surface, padding and radius as
+   * Tabs' `pill` variant, so a segmented toggle group and a pill tab strip on
+   * the same screen read as the same kind of object.
+   *
+   * Unlike Tabs there is no sliding indicator, and there cannot be one: Base
+   * UI's Tabs measures the active tab and publishes its geometry, but a
+   * ToggleGroup has no single active item to measure — with `multiple` there
+   * may be several pressed at once, or none. Each toggle paints its own fill
+   * instead. */
+  .group[data-segmented] {
+    --pui-toggle-group-gap: var(--pui-space-1);
+    --pui-toggle-group-padding: var(--pui-space-1);
+    --pui-toggle-group-radius: var(--pui-radius-4);
+    --pui-toggle-group-bg: var(--pui-color-panel);
+  }
+
+  /* Scoped to direct children on purpose: a consumer who wraps the toggles in
+   * their own element gets that wrapper flexed, rather than these rules
+   * reaching past it to size elements that are not flex items of this group. */
+  .group[data-full-width] {
+    display: flex;
+    width: 100%;
+  }
+
+  .group[data-full-width] > .root {
+    /* `0` basis, not `auto`: with `auto` the widest label sets the share and
+     * the segments come out uneven, which is exactly what a segmented control
+     * must not look like. */
+    flex: 1 1 0;
+    /* Lets a long label shrink instead of forcing the strip past its
+     * container — a flex item's default `min-width: auto` would refuse. */
+    min-width: 0;
+  }
+}
+
+/* Forced colours -------------------------------------------------------------
+ * Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so
+ * everything here beats the rules above by layer alone. Specificity still
+ * decides between the rules *inside* this block, which is why their order
+ * matters below.
+ *
+ * This block is not optional decoration. The global rule in patterns.css
+ * paints the Highlight/HighlightText pair for `[data-checked]`,
+ * `[aria-checked="true"]`, `[aria-selected="true"]` and friends — but a toggle
+ * button is none of those. It is `aria-pressed`, which that list does not
+ * cover, so without the rules here the pressed state would lose its fill in
+ * forced colours and on would look exactly like off.
+ *
+ * The bare `.root` rule below is (0,1,0) and the global disabled remedy in
+ * patterns.css is written with `:where()`, i.e. (0,0,0) — so `color` and
+ * `border-color` have to be restated for the disabled case here, or a disabled
+ * toggle would keep CanvasText and read as enabled. `opacity: 1` is left to
+ * the global rule, which nothing here competes with.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* The UA derives system colours from native element semantics, and this IS
+     * a native <button> — but its background is `transparent`, which forced
+     * colours replaces with a system colour of its choosing. Pinning the pair
+     * explicitly is what keeps an unpressed toggle legible. */
+    .root {
+      background-color: Canvas;
+      color: CanvasText;
+    }
+
+    .root[data-variant="outline"] {
+      border-color: CanvasText;
+    }
+
+    .root[data-pressed]:not([data-disabled]) {
+      background-color: Highlight;
+      color: HighlightText;
+      border-color: Highlight;
+    }
+
+    /* `currentColor` icons are already covered by the rule above. This is for
+     * icons that declare their own fill or stroke, which forced colours would
+     * otherwise push to CanvasText — invisible on Highlight. A bare `svg`
+     * rather than `.pui-icon`: inside a CSS Module that global class name
+     * would be hashed into a local one and match nothing. */
+    .root[data-pressed]:not([data-disabled]) :where(svg) {
+      fill: HighlightText;
+      stroke: HighlightText;
+    }
+
+    /* Last, and at (0,2,0) so it outranks the variant rule it ties with by
+     * document order, and beats the bare `.root` rule outright. A disabled
+     * toggle drops its fill back to Canvas even when pressed: GrayText on
+     * Highlight is not a guaranteed pair (in High Contrast Black it is
+     * #3FF23F on #1AEBFF), while GrayText on Canvas is, and disabled is the
+     * more urgent of the two things to communicate. */
+    .root[data-disabled] {
+      background-color: Canvas;
+      color: GrayText;
+      border-color: GrayText;
+    }
+
+    /* The panel behind a segmented group is a background, so it disappears
+     * here and the strip would fall apart into loose buttons. The border
+     * declared in the components layer is already occupying the space; this
+     * only gives it a colour. */
+    .group[data-segmented] {
+      border-color: CanvasText;
+    }
+  }
+}

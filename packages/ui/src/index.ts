@@ -167,6 +167,16 @@ export type {
   TabsPanelProps,
 } from "./components/tabs";
 
+export { Toggle, ToggleGroup } from "./components/toggle";
+export type {
+  ToggleProps,
+  ToggleVariant,
+  ToggleTone,
+  ToggleSize,
+  ToggleGroupProps,
+  ToggleGroupOrientation,
+} from "./components/toggle";
+
 export { Tooltip } from "./components/tooltip";
 export type {
   TooltipProviderProps,

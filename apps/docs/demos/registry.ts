@@ -215,6 +215,36 @@ import d_tabs_vertical from "./tabs/vertical";
 import d_tabs_vertical_src from "./tabs/vertical?raw";
 import d_tabs_with_icons from "./tabs/with-icons";
 import d_tabs_with_icons_src from "./tabs/with-icons?raw";
+import d_toggle_basic from "./toggle/basic";
+import d_toggle_basic_src from "./toggle/basic?raw";
+import d_toggle_controlled from "./toggle/controlled";
+import d_toggle_controlled_src from "./toggle/controlled?raw";
+import d_toggle_disabled from "./toggle/disabled";
+import d_toggle_disabled_src from "./toggle/disabled?raw";
+import d_toggle_favorite from "./toggle/favorite";
+import d_toggle_favorite_src from "./toggle/favorite?raw";
+import d_toggle_icon_only from "./toggle/icon-only";
+import d_toggle_icon_only_src from "./toggle/icon-only?raw";
+import d_toggle_sizes from "./toggle/sizes";
+import d_toggle_sizes_src from "./toggle/sizes?raw";
+import d_toggle_tones from "./toggle/tones";
+import d_toggle_tones_src from "./toggle/tones?raw";
+import d_toggle_variants from "./toggle/variants";
+import d_toggle_variants_src from "./toggle/variants?raw";
+import d_toggle_group_appearance from "./toggle-group/appearance";
+import d_toggle_group_appearance_src from "./toggle-group/appearance?raw";
+import d_toggle_group_basic from "./toggle-group/basic";
+import d_toggle_group_basic_src from "./toggle-group/basic?raw";
+import d_toggle_group_controlled from "./toggle-group/controlled";
+import d_toggle_group_controlled_src from "./toggle-group/controlled?raw";
+import d_toggle_group_multiple from "./toggle-group/multiple";
+import d_toggle_group_multiple_src from "./toggle-group/multiple?raw";
+import d_toggle_group_orientation from "./toggle-group/orientation";
+import d_toggle_group_orientation_src from "./toggle-group/orientation?raw";
+import d_toggle_group_segmented from "./toggle-group/segmented";
+import d_toggle_group_segmented_src from "./toggle-group/segmented?raw";
+import d_toggle_group_single from "./toggle-group/single";
+import d_toggle_group_single_src from "./toggle-group/single?raw";
 import d_tooltip_basic from "./tooltip/basic";
 import d_tooltip_basic_src from "./tooltip/basic?raw";
 import d_tooltip_delay from "./tooltip/delay";
@@ -328,6 +358,21 @@ export type DemoId =
   | "tabs/pill"
   | "tabs/vertical"
   | "tabs/with-icons"
+  | "toggle/basic"
+  | "toggle/controlled"
+  | "toggle/disabled"
+  | "toggle/favorite"
+  | "toggle/icon-only"
+  | "toggle/sizes"
+  | "toggle/tones"
+  | "toggle/variants"
+  | "toggle-group/appearance"
+  | "toggle-group/basic"
+  | "toggle-group/controlled"
+  | "toggle-group/multiple"
+  | "toggle-group/orientation"
+  | "toggle-group/segmented"
+  | "toggle-group/single"
   | "tooltip/basic"
   | "tooltip/delay"
   | "tooltip/placement"
@@ -439,6 +484,21 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tabs/pill": { Component: d_tabs_pill, source: d_tabs_pill_src, file: "tabs/pill.tsx" },
   "tabs/vertical": { Component: d_tabs_vertical, source: d_tabs_vertical_src, file: "tabs/vertical.tsx" },
   "tabs/with-icons": { Component: d_tabs_with_icons, source: d_tabs_with_icons_src, file: "tabs/with-icons.tsx" },
+  "toggle/basic": { Component: d_toggle_basic, source: d_toggle_basic_src, file: "toggle/basic.tsx" },
+  "toggle/controlled": { Component: d_toggle_controlled, source: d_toggle_controlled_src, file: "toggle/controlled.tsx" },
+  "toggle/disabled": { Component: d_toggle_disabled, source: d_toggle_disabled_src, file: "toggle/disabled.tsx" },
+  "toggle/favorite": { Component: d_toggle_favorite, source: d_toggle_favorite_src, file: "toggle/favorite.tsx" },
+  "toggle/icon-only": { Component: d_toggle_icon_only, source: d_toggle_icon_only_src, file: "toggle/icon-only.tsx" },
+  "toggle/sizes": { Component: d_toggle_sizes, source: d_toggle_sizes_src, file: "toggle/sizes.tsx" },
+  "toggle/tones": { Component: d_toggle_tones, source: d_toggle_tones_src, file: "toggle/tones.tsx" },
+  "toggle/variants": { Component: d_toggle_variants, source: d_toggle_variants_src, file: "toggle/variants.tsx" },
+  "toggle-group/appearance": { Component: d_toggle_group_appearance, source: d_toggle_group_appearance_src, file: "toggle-group/appearance.tsx" },
+  "toggle-group/basic": { Component: d_toggle_group_basic, source: d_toggle_group_basic_src, file: "toggle-group/basic.tsx" },
+  "toggle-group/controlled": { Component: d_toggle_group_controlled, source: d_toggle_group_controlled_src, file: "toggle-group/controlled.tsx" },
+  "toggle-group/multiple": { Component: d_toggle_group_multiple, source: d_toggle_group_multiple_src, file: "toggle-group/multiple.tsx" },
+  "toggle-group/orientation": { Component: d_toggle_group_orientation, source: d_toggle_group_orientation_src, file: "toggle-group/orientation.tsx" },
+  "toggle-group/segmented": { Component: d_toggle_group_segmented, source: d_toggle_group_segmented_src, file: "toggle-group/segmented.tsx" },
+  "toggle-group/single": { Component: d_toggle_group_single, source: d_toggle_group_single_src, file: "toggle-group/single.tsx" },
   "tooltip/basic": { Component: d_tooltip_basic, source: d_tooltip_basic_src, file: "tooltip/basic.tsx" },
   "tooltip/delay": { Component: d_tooltip_delay, source: d_tooltip_delay_src, file: "tooltip/delay.tsx" },
   "tooltip/placement": { Component: d_tooltip_placement, source: d_tooltip_placement_src, file: "tooltip/placement.tsx" },
