@@ -177,7 +177,8 @@
     /* `50%`, not `--pui-radius-full`: under `data-pui-radius="none"` that
      * token is 0, and this shape is a circle by definition, not by taste. The
      * mask would stay round while the forced-colors border below went square.
-     * Same reasoning as `--pui-radio-radius`. */
+     * Same test as `--pui-radio-radius` and the Button spinner: roundness
+     * here is meaning, not style. */
     border-radius: 50%;
     background-color: var(--pui-spinner-track);
     background-image: conic-gradient(from 0deg, transparent, var(--pui-spinner-color));

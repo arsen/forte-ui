@@ -226,8 +226,10 @@ dot's stagger is a fraction of the cycle — which is why the stylesheet needs n
 Circles in this component use a literal `50%` rather than
 `var(--pui-radius-full)`, so `data-pui-radius="none"` cannot square off the
 ring, the dots or the halo — round is what those shapes *are*, not how they are
-styled. The bars' end caps do follow the preset, because a squared-off spoke is
-a legitimate look.
+styled. That is the same test [`Radio`](/components/radio) and the
+[`Button`](/components/button) spinner apply, and the only grounds on which
+anything in the library opts out of the radius presets. The bars' end caps do
+follow the preset, because a squared-off spoke is a legitimate look.
 
 ## API reference
 
