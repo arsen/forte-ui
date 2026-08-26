@@ -51,6 +51,22 @@ import d_dialog_scrollable from "./dialog/scrollable";
 import d_dialog_scrollable_src from "./dialog/scrollable?raw";
 import d_dialog_sizes from "./dialog/sizes";
 import d_dialog_sizes_src from "./dialog/sizes?raw";
+import d_drawer_basic from "./drawer/basic";
+import d_drawer_basic_src from "./drawer/basic?raw";
+import d_drawer_floating from "./drawer/floating";
+import d_drawer_floating_src from "./drawer/floating?raw";
+import d_drawer_nested from "./drawer/nested";
+import d_drawer_nested_src from "./drawer/nested?raw";
+import d_drawer_scrollable from "./drawer/scrollable";
+import d_drawer_scrollable_src from "./drawer/scrollable?raw";
+import d_drawer_sides from "./drawer/sides";
+import d_drawer_sides_src from "./drawer/sides?raw";
+import d_drawer_sizes from "./drawer/sizes";
+import d_drawer_sizes_src from "./drawer/sizes?raw";
+import d_drawer_snap_points from "./drawer/snap-points";
+import d_drawer_snap_points_src from "./drawer/snap-points?raw";
+import d_drawer_swipe_area from "./drawer/swipe-area";
+import d_drawer_swipe_area_src from "./drawer/swipe-area?raw";
 import d_field_basic from "./field/basic";
 import d_field_basic_src from "./field/basic?raw";
 import d_field_checkbox_and_switch from "./field/checkbox-and-switch";
@@ -140,6 +156,14 @@ export type DemoId =
   | "dialog/nested"
   | "dialog/scrollable"
   | "dialog/sizes"
+  | "drawer/basic"
+  | "drawer/floating"
+  | "drawer/nested"
+  | "drawer/scrollable"
+  | "drawer/sides"
+  | "drawer/sizes"
+  | "drawer/snap-points"
+  | "drawer/swipe-area"
   | "field/basic"
   | "field/checkbox-and-switch"
   | "field/custom-validation"
@@ -198,6 +222,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },
   "dialog/scrollable": { Component: d_dialog_scrollable, source: d_dialog_scrollable_src, file: "dialog/scrollable.tsx" },
   "dialog/sizes": { Component: d_dialog_sizes, source: d_dialog_sizes_src, file: "dialog/sizes.tsx" },
+  "drawer/basic": { Component: d_drawer_basic, source: d_drawer_basic_src, file: "drawer/basic.tsx" },
+  "drawer/floating": { Component: d_drawer_floating, source: d_drawer_floating_src, file: "drawer/floating.tsx" },
+  "drawer/nested": { Component: d_drawer_nested, source: d_drawer_nested_src, file: "drawer/nested.tsx" },
+  "drawer/scrollable": { Component: d_drawer_scrollable, source: d_drawer_scrollable_src, file: "drawer/scrollable.tsx" },
+  "drawer/sides": { Component: d_drawer_sides, source: d_drawer_sides_src, file: "drawer/sides.tsx" },
+  "drawer/sizes": { Component: d_drawer_sizes, source: d_drawer_sizes_src, file: "drawer/sizes.tsx" },
+  "drawer/snap-points": { Component: d_drawer_snap_points, source: d_drawer_snap_points_src, file: "drawer/snap-points.tsx" },
+  "drawer/swipe-area": { Component: d_drawer_swipe_area, source: d_drawer_swipe_area_src, file: "drawer/swipe-area.tsx" },
   "field/basic": { Component: d_field_basic, source: d_field_basic_src, file: "field/basic.tsx" },
   "field/checkbox-and-switch": { Component: d_field_checkbox_and_switch, source: d_field_checkbox_and_switch_src, file: "field/checkbox-and-switch.tsx" },
   "field/custom-validation": { Component: d_field_custom_validation, source: d_field_custom_validation_src, file: "field/custom-validation.tsx" },

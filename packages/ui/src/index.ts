@@ -42,6 +42,26 @@ export type {
   AlertDialogTriggerProps,
 } from "./components/dialog";
 
+export { Drawer } from "./components/drawer";
+export type {
+  DrawerSide,
+  DrawerSize,
+  DrawerVariant,
+  DrawerSnapPoint,
+  DrawerFooterAlign,
+  DrawerRootProps,
+  DrawerTriggerProps,
+  DrawerPopupProps,
+  DrawerHandleProps,
+  DrawerContentProps,
+  DrawerTitleProps,
+  DrawerDescriptionProps,
+  DrawerCloseProps,
+  DrawerFooterProps,
+  DrawerSwipeAreaProps,
+  DrawerVirtualKeyboardProviderProps,
+} from "./components/drawer";
+
 export { Field, FieldRoot, FieldLabel, FieldDescription, FieldError, FieldItem } from "./components/field";
 export type {
   FieldRootProps,
