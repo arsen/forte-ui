@@ -129,6 +129,16 @@ import d_select_variants from "./select/variants";
 import d_select_variants_src from "./select/variants?raw";
 import d_select_with_label from "./select/with-label";
 import d_select_with_label_src from "./select/with-label?raw";
+import d_separator_custom from "./separator/custom";
+import d_separator_custom_src from "./separator/custom?raw";
+import d_separator_horizontal from "./separator/horizontal";
+import d_separator_horizontal_src from "./separator/horizontal?raw";
+import d_separator_toolbar from "./separator/toolbar";
+import d_separator_toolbar_src from "./separator/toolbar?raw";
+import d_separator_variants from "./separator/variants";
+import d_separator_variants_src from "./separator/variants?raw";
+import d_separator_vertical from "./separator/vertical";
+import d_separator_vertical_src from "./separator/vertical?raw";
 import d_switch_basic from "./switch/basic";
 import d_switch_basic_src from "./switch/basic?raw";
 import d_switch_disabled from "./switch/disabled";
@@ -217,6 +227,11 @@ export type DemoId =
   | "select/sizes"
   | "select/variants"
   | "select/with-label"
+  | "separator/custom"
+  | "separator/horizontal"
+  | "separator/toolbar"
+  | "separator/variants"
+  | "separator/vertical"
   | "switch/basic"
   | "switch/disabled"
   | "switch/settings-list"
@@ -294,6 +309,11 @@ const REGISTRY: Record<DemoId, Demo> = {
   "select/sizes": { Component: d_select_sizes, source: d_select_sizes_src, file: "select/sizes.tsx" },
   "select/variants": { Component: d_select_variants, source: d_select_variants_src, file: "select/variants.tsx" },
   "select/with-label": { Component: d_select_with_label, source: d_select_with_label_src, file: "select/with-label.tsx" },
+  "separator/custom": { Component: d_separator_custom, source: d_separator_custom_src, file: "separator/custom.tsx" },
+  "separator/horizontal": { Component: d_separator_horizontal, source: d_separator_horizontal_src, file: "separator/horizontal.tsx" },
+  "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
+  "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
+  "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },
   "switch/basic": { Component: d_switch_basic, source: d_switch_basic_src, file: "switch/basic.tsx" },
   "switch/disabled": { Component: d_switch_disabled, source: d_switch_disabled_src, file: "switch/disabled.tsx" },
   "switch/settings-list": { Component: d_switch_settings_list, source: d_switch_settings_list_src, file: "switch/settings-list.tsx" },

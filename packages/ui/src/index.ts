@@ -115,6 +115,13 @@ export type {
   SelectVariant,
 } from "./components/select";
 
+export { Separator } from "./components/separator";
+export type {
+  SeparatorProps,
+  SeparatorOrientation,
+  SeparatorVariant,
+} from "./components/separator";
+
 export { Switch } from "./components/switch";
 export type { SwitchProps, SwitchSize } from "./components/switch";
 

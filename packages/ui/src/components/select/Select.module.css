@@ -728,20 +728,38 @@
     user-select: none;
   }
 
-  /* Separator -------------------------------------------------------------- */
+  /* Separator --------------------------------------------------------------
+   * The line is a BORDER, not a `background-color`. Under forced-colors a
+   * background is replaced with a system colour — for a plain box that is
+   * `Canvas`, the page's own backdrop — so a hairline drawn that way vanishes
+   * for exactly the users who most need the grouping cue. Border colours are
+   * forced to `CanvasText` instead, so the rule survives on its own and needs
+   * no entry in the forced-colors block at the bottom of this file.
+   *
+   * `block-size: 0` with `border-box` reads as "do not stretch", not "be zero
+   * tall": a block-size below the border width is floored at the border, so
+   * the rule still paints at its full 1px. Same shape as
+   * `separator/Separator.module.css`, which carries the longer version of this
+   * reasoning. */
   .separator {
+    box-sizing: border-box;
     margin-block: var(--pui-space-1);
     margin-inline: var(--pui-select-item-px);
-    block-size: 1px;
-    background-color: var(--pui-color-border-muted);
+    block-size: 0;
+    border-block-start: 1px solid var(--pui-color-border-muted);
   }
 
   .separator[data-orientation="vertical"] {
     margin-block: var(--pui-space-1);
     margin-inline: var(--pui-space-1);
     block-size: auto;
-    inline-size: 1px;
+    inline-size: 0;
     align-self: stretch;
+    /* Load-bearing: the base rule above paints the block-start edge, and
+     * nothing else here overrides it. Without this reset a vertical separator
+     * carries BOTH borders and renders a stray 1px tick across its top. */
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--pui-color-border-muted);
   }
 }
 

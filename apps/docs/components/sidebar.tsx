@@ -29,6 +29,7 @@ const NAV: NavGroup[] = [
       { title: "Input", href: "/components/input" },
       { title: "Scroll Area", href: "/components/scroll-area" },
       { title: "Select", href: "/components/select" },
+      { title: "Separator", href: "/components/separator" },
       { title: "Switch", href: "/components/switch" },
       { title: "Tabs", href: "/components/tabs" },
       { title: "Tooltip", href: "/components/tooltip" },
