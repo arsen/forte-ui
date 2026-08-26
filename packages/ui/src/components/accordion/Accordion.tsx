@@ -108,6 +108,7 @@ function AccordionRoot<Value = any>({
     <AccordionVariantContext.Provider value={variant}>
       <BaseAccordion.Root
         className={clsx(styles.root, className)}
+        data-pui="accordion"
         // Base UI writes `dir` on this element unconditionally, from its own
         // DirectionContext — which is `ltr` unless the app mounts Base UI's
         // `DirectionProvider`. That would make the accordion the nearest
@@ -155,6 +156,7 @@ const AccordionItem = React.forwardRef<HTMLDivElement, AccordionItemProps>(
       <BaseAccordion.Item
         ref={ref}
         className={clsx(styles.item, className)}
+        data-pui="accordion-item"
         data-variant={variant}
         {...props}
       >
@@ -191,6 +193,7 @@ const AccordionHeader = React.forwardRef<HTMLHeadingElement, AccordionHeaderProp
       <BaseAccordion.Header
         ref={ref}
         className={clsx(styles.header, className)}
+        data-pui="accordion-header"
         data-variant={variant}
         {...props}
       >
@@ -246,6 +249,7 @@ const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerPro
       <BaseAccordion.Trigger
         ref={ref}
         className={clsx(styles.trigger, "pui-focus-ring", className)}
+        data-pui="accordion-trigger"
         // The item clips to its own corners so the hover fill and the panel
         // stay inside them, which makes it a clipping container — an outset
         // ring would be cropped along the row's edges. Inset it. In the
@@ -255,9 +259,9 @@ const AccordionTrigger = React.forwardRef<HTMLButtonElement, AccordionTriggerPro
         data-variant={variant}
         {...props}
       >
-        <span className={clsx(styles.label, labelClassName)}>{children}</span>
+        <span className={clsx(styles.label, labelClassName)} data-pui="accordion-label">{children}</span>
         {icon === null ? null : (
-          <span className={styles.icon} aria-hidden="true">
+          <span className={styles.icon} data-pui="accordion-icon" aria-hidden="true">
             {icon}
           </span>
         )}
@@ -302,10 +306,11 @@ const AccordionPanel = React.forwardRef<HTMLDivElement, AccordionPanelProps>(
       <BaseAccordion.Panel
         ref={ref}
         className={clsx(styles.panel, className)}
+        data-pui="accordion-panel"
         data-variant={variant}
         {...props}
       >
-        <div className={clsx(styles.content, contentClassName)}>{children}</div>
+        <div className={clsx(styles.content, contentClassName)} data-pui="accordion-content">{children}</div>
       </BaseAccordion.Panel>
     );
   },

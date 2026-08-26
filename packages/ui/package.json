@@ -17,6 +17,7 @@
       "import": "./dist/index.js"
     },
     "./theme.css": "./dist/styles/theme.css",
+    "./tailwind.css": "./dist/styles/tailwind.css",
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
     "./docs-data/props.json": "./docs-data/props.json"

@@ -80,7 +80,7 @@ const ScrollAreaRoot = React.forwardRef<HTMLDivElement, ScrollAreaRootProps>(
 
     return (
       <ScrollAreaContext.Provider value={context}>
-        <BaseScrollArea.Root ref={ref} className={clsx(styles.root, className)} {...props}>
+        <BaseScrollArea.Root ref={ref} className={clsx(styles.root, className)} data-pui="scroll-area" {...props}>
           {children}
         </BaseScrollArea.Root>
       </ScrollAreaContext.Provider>
@@ -119,6 +119,7 @@ const ScrollAreaViewport = React.forwardRef<HTMLDivElement, ScrollAreaViewportPr
       <BaseScrollArea.Viewport
         ref={ref}
         className={clsx(styles.viewport, className)}
+        data-pui="scroll-area-viewport"
         // Presence, not a value: the stylesheet asks `[data-fade]`, and an
         // absent attribute is what turns the mask off. `data-fade="false"`
         // would still match.
@@ -155,7 +156,7 @@ export interface ScrollAreaContentProps extends Omit<BaseContentProps, "classNam
 const ScrollAreaContent = React.forwardRef<HTMLDivElement, ScrollAreaContentProps>(
   function ScrollAreaContent({ className, children, ...props }, ref) {
     return (
-      <BaseScrollArea.Content ref={ref} className={clsx(styles.content, className)} {...props}>
+      <BaseScrollArea.Content ref={ref} className={clsx(styles.content, className)} data-pui="scroll-area-content" {...props}>
         {children}
       </BaseScrollArea.Content>
     );
@@ -196,6 +197,7 @@ const ScrollAreaScrollbar = React.forwardRef<HTMLDivElement, ScrollAreaScrollbar
       <BaseScrollArea.Scrollbar
         ref={ref}
         className={clsx(styles.scrollbar, className)}
+        data-pui="scroll-area-scrollbar"
         orientation={orientation}
         data-visibility={scrollbarVisibility}
         {...props}
@@ -225,7 +227,7 @@ export interface ScrollAreaThumbProps extends Omit<BaseThumbProps, "className"> 
  */
 const ScrollAreaThumb = React.forwardRef<HTMLDivElement, ScrollAreaThumbProps>(
   function ScrollAreaThumb({ className, ...props }, ref) {
-    return <BaseScrollArea.Thumb ref={ref} className={clsx(styles.thumb, className)} {...props} />;
+    return <BaseScrollArea.Thumb ref={ref} className={clsx(styles.thumb, className)} data-pui="scroll-area-thumb" {...props} />;
   },
 );
 
@@ -249,7 +251,7 @@ export interface ScrollAreaCornerProps extends Omit<BaseCornerProps, "className"
  */
 const ScrollAreaCorner = React.forwardRef<HTMLDivElement, ScrollAreaCornerProps>(
   function ScrollAreaCorner({ className, ...props }, ref) {
-    return <BaseScrollArea.Corner ref={ref} className={clsx(styles.corner, className)} {...props} />;
+    return <BaseScrollArea.Corner ref={ref} className={clsx(styles.corner, className)} data-pui="scroll-area-corner" {...props} />;
   },
 );
 

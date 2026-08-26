@@ -197,6 +197,7 @@ export const DrawerTrigger = React.forwardRef(function DrawerTrigger<Payload>(
         "pui-focus-ring",
         className,
       )}
+      data-pui="drawer-trigger"
       {...props}
     />
   );
@@ -314,12 +315,14 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
             forceRender={forceBackdrop}
             data-scrim-floor={scrimFloor ? "" : undefined}
             className={clsx(styles.backdrop, "pui-scrim", backdropClassName)}
+            data-pui="drawer-backdrop"
           />
         ) : null}
         <BaseDrawer.Viewport
           data-side={side}
           data-variant={variant}
           className={clsx(styles.viewport, viewportClassName)}
+          data-pui="drawer-viewport"
         >
           <BaseDrawer.Popup
             ref={ref}
@@ -334,6 +337,7 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
               "pui-hc-surface",
               className,
             )}
+            data-pui="drawer-popup"
             data-side={side}
             data-variant={variant}
             data-size={size}
@@ -385,6 +389,7 @@ export const DrawerHandle = React.forwardRef<HTMLDivElement, DrawerHandleProps>(
         ref={ref}
         aria-hidden="true"
         className={clsx(styles.handle, className)}
+        data-pui="drawer-handle"
         {...props}
       />
     );
@@ -428,6 +433,7 @@ export const DrawerContent = React.forwardRef<
     <BaseDrawer.Content
       ref={ref}
       className={clsx(styles.content, className)}
+      data-pui="drawer-content"
       {...props}
     />
   );
@@ -460,6 +466,7 @@ export const DrawerTitle = React.forwardRef<
     <BaseDrawer.Title
       ref={ref}
       className={clsx(styles.title, className)}
+      data-pui="drawer-title"
       {...props}
     />
   );
@@ -488,6 +495,7 @@ export const DrawerDescription = React.forwardRef<
     <BaseDrawer.Description
       ref={ref}
       className={clsx(styles.description, className)}
+      data-pui="drawer-description"
       {...props}
     />
   );
@@ -532,6 +540,7 @@ export const DrawerClose = React.forwardRef<HTMLButtonElement, DrawerCloseProps>
           "pui-focus-ring",
           className,
         )}
+        data-pui="drawer-close"
         data-icon-only={iconOnly || undefined}
         {...props}
       />
@@ -570,6 +579,7 @@ export const DrawerFooter = React.forwardRef<HTMLDivElement, DrawerFooterProps>(
       <div
         ref={ref}
         className={clsx(styles.footer, className)}
+        data-pui="drawer-footer"
         data-align={align}
         {...props}
       />
@@ -615,6 +625,7 @@ export const DrawerSwipeArea = React.forwardRef<
       ref={ref}
       data-side={side}
       className={clsx(styles.swipeArea, className)}
+      data-pui="drawer-swipe-area"
       {...props}
     />
   );

@@ -113,6 +113,7 @@ export const DialogTrigger = React.forwardRef(function DialogTrigger<Payload>(
         "pui-focus-ring",
         className,
       )}
+      data-pui="dialog-trigger"
       {...props}
     />
   );
@@ -151,6 +152,7 @@ export const AlertDialogTrigger = React.forwardRef(
           "pui-focus-ring",
           className,
         )}
+        data-pui="dialog-trigger"
         {...props}
       />
     );
@@ -445,11 +447,13 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
           <BaseDialog.Backdrop
             forceRender={forceBackdrop}
             className={clsx(styles.backdrop, "pui-scrim", backdropClassName)}
+            data-pui="dialog-backdrop"
           />
         ) : null}
         <BaseDialog.Viewport
           data-size={size}
           className={clsx(styles.viewport, viewportClassName)}
+          data-pui="dialog-viewport"
         >
           <BaseDialog.Popup
             ref={popupRef}
@@ -464,6 +468,7 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
               "pui-hc-surface",
               className,
             )}
+            data-pui="dialog-popup"
             data-size={size}
             {...props}
           >
@@ -516,6 +521,7 @@ export const DialogSurface = React.forwardRef<
       // The forced-colors boundary moves here with the paint: the popup
       // surrenders its own in the `a11y` layer once this element exists.
       className={clsx(styles.surface, "pui-hc-surface", className)}
+      data-pui="dialog-surface"
       {...props}
     />
   );
@@ -548,6 +554,7 @@ export const DialogTitle = React.forwardRef<
     <BaseDialog.Title
       ref={ref}
       className={clsx(styles.title, className)}
+      data-pui="dialog-title"
       {...props}
     />
   );
@@ -576,6 +583,7 @@ export const DialogDescription = React.forwardRef<
     <BaseDialog.Description
       ref={ref}
       className={clsx(styles.description, className)}
+      data-pui="dialog-description"
       {...props}
     />
   );
@@ -622,6 +630,7 @@ export const DialogClose = React.forwardRef<
         "pui-focus-ring",
         className,
       )}
+      data-pui="dialog-close"
       data-icon-only={iconOnly || undefined}
       {...props}
     />
@@ -660,6 +669,7 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
       <div
         ref={ref}
         className={clsx(styles.footer, className)}
+        data-pui="dialog-footer"
         data-align={align}
         {...props}
       />

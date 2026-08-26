@@ -87,6 +87,7 @@ export function SliderRoot<
     <SliderContext.Provider value={context}>
       <BaseSlider.Root
         className={clsx(styles.root, className)}
+        data-pui="slider"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -127,6 +128,7 @@ export const SliderLabel = React.forwardRef<HTMLDivElement, SliderLabelProps>(
       <BaseSlider.Label
         ref={ref}
         className={clsx(styles.label, className)}
+        data-pui="slider-label"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -173,6 +175,7 @@ export const SliderValue = React.forwardRef<HTMLOutputElement, SliderValueProps>
       <BaseSlider.Value
         ref={ref}
         className={clsx(styles.value, className)}
+        data-pui="slider-value"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -213,6 +216,7 @@ export const SliderControl = React.forwardRef<HTMLDivElement, SliderControlProps
       <BaseSlider.Control
         ref={ref}
         className={clsx(styles.control, className)}
+        data-pui="slider-control"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -253,6 +257,7 @@ export const SliderTrack = React.forwardRef<HTMLDivElement, SliderTrackProps>(
       <BaseSlider.Track
         ref={ref}
         className={clsx(styles.track, className)}
+        data-pui="slider-track"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -291,6 +296,7 @@ export const SliderIndicator = React.forwardRef<HTMLDivElement, SliderIndicatorP
       <BaseSlider.Indicator
         ref={ref}
         className={clsx(styles.indicator, className)}
+        data-pui="slider-indicator"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -339,6 +345,7 @@ export const SliderThumb = React.forwardRef<HTMLDivElement, SliderThumbProps>(
         // `position: relative`, which Base UI's inline `position: absolute`
         // overrides — harmlessly, since absolute is a containing block too.
         className={clsx(styles.thumb, "pui-focus-ring-within", "pui-target", className)}
+        data-pui="slider-thumb"
         data-size={size}
         data-tone={tone}
         {...props}

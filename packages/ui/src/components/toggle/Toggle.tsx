@@ -125,6 +125,7 @@ export function Toggle<Value extends string = string>({
   return (
     <BaseToggle
       className={clsx(styles.root, "pui-focus-ring", className)}
+      data-pui="toggle"
       data-variant={variant ?? group?.variant ?? "soft"}
       data-tone={tone ?? group?.tone ?? "primary"}
       data-size={size ?? group?.size ?? "md"}
@@ -254,6 +255,7 @@ export function ToggleGroup<Value extends string = string>({
     <ToggleAppearanceContext.Provider value={appearance}>
       <BaseToggleGroup
         className={clsx(styles.group, className)}
+        data-pui="toggle-group"
         data-segmented={segmented || undefined}
         data-full-width={fullWidth || undefined}
         {...props}

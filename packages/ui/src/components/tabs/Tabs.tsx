@@ -61,6 +61,7 @@ const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(function TabsRo
       <BaseTabs.Root
         ref={ref}
         className={clsx(styles.root, className)}
+        data-pui="tabs"
         data-variant={variant}
         {...props}
       >
@@ -111,6 +112,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
     <BaseTabs.List
       ref={ref}
       className={clsx(styles.list, className)}
+      data-pui="tabs-list"
       activateOnFocus={activateOnFocus}
       loopFocus={loopFocus}
       data-variant={variant}
@@ -148,6 +150,7 @@ const TabsTab = React.forwardRef<HTMLElement, TabsTabProps>(function TabsTab(
     <BaseTabs.Tab
       ref={ref}
       className={clsx(styles.tab, "pui-focus-ring", className)}
+      data-pui="tabs-tab"
       // The strip is a clipping context — a pill list has padding and a line
       // list can scroll — so the ring is flipped inward and cannot be cropped.
       data-focus-inset=""
@@ -197,6 +200,7 @@ const TabsIndicator = React.forwardRef<HTMLSpanElement, TabsIndicatorProps>(
       <BaseTabs.Indicator
         ref={ref}
         className={clsx(styles.indicator, className)}
+        data-pui="tabs-indicator"
         renderBeforeHydration={renderBeforeHydration}
         data-variant={variant}
         {...props}
@@ -239,6 +243,7 @@ const TabsPanel = React.forwardRef<HTMLDivElement, TabsPanelProps>(function Tabs
     <BaseTabs.Panel
       ref={ref}
       className={clsx(styles.panel, "pui-focus-ring", className)}
+      data-pui="tabs-panel"
       keepMounted={keepMounted}
       data-variant={variant}
       {...props}
