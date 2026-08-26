@@ -1,0 +1,852 @@
+/*
+ * Drawer
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Root  →  SwipeArea
+ *         →  Portal  →  Backdrop
+ *                    →  Viewport  →  Popup  →  Handle / Content
+ *                                                →  Title / Description
+ *                                                →  Footer / Close
+ *
+ * `Root` renders no DOM element, so there is no `.root` rule here; the popup
+ * is the styling anchor and carries most of the `--pui-drawer-*` knobs. Two
+ * live elsewhere on purpose — see the notes on `.viewport` and `.backdrop`.
+ *
+ * ---------------------------------------------------------------------------
+ * One rule set, four sides
+ * ---------------------------------------------------------------------------
+ * Every side-dependent value is derived from a two-number unit vector,
+ * `--pui-drawer-axis-x` / `--pui-drawer-axis-y`, that points from the middle
+ * of the screen toward the edge the drawer rests against. Each side sets it
+ * once; the closed position and the skirt below both fall out of it, so
+ * neither is written four times and neither can drift from the other.
+ *
+ * The remaining per-side values — self-alignment, which measurement the size
+ * applies to, which two corners are rounded, and the transform origin — are
+ * genuinely different declarations rather than one declaration with a
+ * different number in it, so they stay in the four small blocks near the end.
+ *
+ * ---------------------------------------------------------------------------
+ * The skirt
+ * ---------------------------------------------------------------------------
+ * Dragging a drawer the WRONG way — pulling a bottom sheet upward, which is
+ * the first thing anybody tries — is damped by Base UI rather than blocked:
+ * it applies a square root, so a 300px pull still moves the surface about
+ * 17px past its resting place. That opens a gap between the drawer and the
+ * edge of the screen and shows a strip of scrim through it, which reads as
+ * the drawer having come loose.
+ *
+ * The fix is a skirt: a slab of the drawer's own background extending past
+ * its outer edge, off-screen at rest, that fills the gap as it opens. Base
+ * UI's own examples build it out of extra width plus a matching negative
+ * margin. This file uses a zero-blur, zero-spread `box-shadow` offset along
+ * the axis vector instead, for one decisive reason: the popup is the scroll
+ * container, and padding the box outward would push its scrollbar off-screen
+ * with it. A shadow paints outside the border box and is not clipped by the
+ * element's own `overflow`, so the drawer keeps its true size and its
+ * scrollbar stays where the user can reach it.
+ *
+ * ---------------------------------------------------------------------------
+ * Motion notes, all load-bearing
+ * ---------------------------------------------------------------------------
+ *  - No `prefers-reduced-motion` block. The slide is literal geometry (100%
+ *    of the drawer's own size, which no travel token can express), so it is
+ *    gated on `--pui-motion-ok` and collapses to nothing on its own. What
+ *    replaces it is a fade, faded IN by `--pui-motion-off` so it costs
+ *    nothing when motion is allowed: a drawer that slides should not also
+ *    dissolve.
+ *  - Enter/exit is done with transitions on [data-starting-style] /
+ *    [data-ending-style], never keyframes, so closing a drawer mid-open
+ *    reverses smoothly instead of snapping.
+ *  - The entrance rides `--pui-ease-spring-precise`, the one spring in the
+ *    set that does not overshoot. Overshoot here is not a flourish but a
+ *    defect: the drawer would sail PAST flush and pull away from the edge it
+ *    is supposed to be attached to. The skirt would cover it, but a drawer
+ *    that visibly bounces off its own edge is not what the bounce is for.
+ *  - The exit accelerates (`--pui-ease-exit`) rather than running `linear`
+ *    the way Dialog's does. Dialog's exit never arrives anywhere — it is cut
+ *    short by unmounting, mid-fade. This one arrives: it is opaque the whole
+ *    way and comes to rest exactly off-screen, so a curve that reads as
+ *    "leaving" is the honest description of what happens.
+ *  - Nothing here animates `infinite`. Base UI awaits
+ *    `Promise.all(popup.getAnimations().map(a => a.finished))` before
+ *    unmounting the popup, and an infinite animation never settles.
+ */
+@layer pretty-ui.components {
+  /* Backdrop ---------------------------------------------------------------
+   * `.pui-scrim` already supplies position/inset, the scrim colour, the
+   * optional blur and the forced-colors treatment. The opacity is taken over
+   * here so the scrim can track the drag.
+   * ---------------------------------------------------------------------- */
+  .backdrop {
+    /* One below the viewport's 40, and declared locally because the backdrop
+     * is the viewport's SIBLING inside the portal — nothing on the viewport
+     * can reach it. Set it through `backdropClassName`. */
+    --pui-drawer-backdrop-z-index: 39;
+    --pui-drawer-backdrop-duration: var(--pui-duration-normal);
+    --pui-drawer-backdrop-ease: var(--pui-ease-standard);
+    /* How dark the scrim is allowed to get at its lightest. Zero for an
+     * ordinary drawer, where clearing completely IS the point. */
+    --pui-drawer-backdrop-floor: 0;
+
+    /* Restated from `.pui-scrim` so the @supports override below has an
+     * explicit default to flip, and so the class always exists in the
+     * stylesheet regardless of at-rule handling. */
+    position: fixed;
+    z-index: var(--pui-drawer-backdrop-z-index);
+
+    /* Half-dragging the drawer out takes the page half-way back to normal
+     * brightness, so an abandoned gesture is legible in both directions and
+     * the scrim never argues with where the drawer actually is. Base UI
+     * writes the progress straight onto this element during a drag. */
+    opacity: max(
+      var(--pui-drawer-backdrop-floor),
+      calc(1 - var(--drawer-swipe-progress, 0))
+    );
+    transition: opacity var(--pui-drawer-backdrop-duration)
+      var(--pui-drawer-backdrop-ease);
+  }
+
+  /* Base UI reuses `--drawer-swipe-progress` for two different quantities.
+   * Without snap points it is how far a dismissing drag has travelled, and
+   * clearing the scrim as the drawer leaves is the whole point. WITH snap
+   * points it is instead the sheet's position within its snap range, and it
+   * reaches exactly 1 at the lowest snap — so a peeking sheet would sit over a
+   * completely undimmed page that is nonetheless still inert, which is a
+   * surface that lies about whether the page can be touched.
+   *
+   * `Drawer.Root` sets this attribute only when snap points and modality are
+   * combined, so the scrim still fades all the way out for an ordinary drag,
+   * and a deliberately non-modal sheet keeps the undimmed page it has earned.
+   * The scrim keeps tracking the sheet in between — darkening as it is raised,
+   * lightening as it is lowered — it simply stops short of vanishing. */
+  .backdrop[data-scrim-floor] {
+    --pui-drawer-backdrop-floor: 0.4;
+  }
+
+  /* `.pui-scrim` puts these on `[data-starting-style]` / `[data-ending-style]`
+   * already, but `patterns` is an EARLIER layer than `components` and layer
+   * order outranks specificity completely — so the plain `.backdrop` opacity
+   * above would beat them and the scrim would appear at full strength with no
+   * fade at either end. Restating them here puts them back in the same layer,
+   * where the attribute selector wins on specificity as intended. */
+  .backdrop[data-starting-style],
+  .backdrop[data-ending-style] {
+    opacity: 0;
+  }
+
+  /* A flick releases the drawer at speed and Base UI shortens the popup's own
+   * exit to match. The backdrop is not given that scalar, so it keys off the
+   * fact of the swipe instead: whatever the velocity was, the drawer is gone
+   * quickly, and a scrim outliving it by a fifth of a second reads as the page
+   * being slow to recover. */
+  .backdrop[data-swipe-dismiss] {
+    --pui-drawer-backdrop-duration: var(--pui-duration-fast);
+  }
+
+  /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
+   * element keeps painting against the *large* viewport, leaving an
+   * unscrimmed strip along one edge. Absolute positioning tracks the visible
+   * viewport instead. The @supports test is the standard iOS/WebKit sniff. */
+  @supports (-webkit-touch-callout: none) {
+    .backdrop {
+      position: absolute;
+    }
+  }
+
+  /* Viewport ---------------------------------------------------------------
+   * A fixed, full-screen grid. Making it a grid rather than a flex row is
+   * what lets the POPUP place itself against any of the four edges with
+   * `justify-self` / `align-self` — the viewport never has to know which side
+   * it is dealing with, so there is no second copy of that decision to keep
+   * in sync with the popup's.
+   * ---------------------------------------------------------------------- */
+  .viewport {
+    /* Stacking is not optional here. `position: fixed` alone leaves the
+     * viewport at `z-index: auto`, which paints in the same band as every
+     * other positioned-but-unstacked box on the page — and DOM order only
+     * decides ties INSIDE a band. Any element with a positive z-index (a
+     * sticky header, an app's own overlay) is in a higher band and covers the
+     * drawer no matter that the portal comes last in <body>.
+     *
+     * 40, one band below the 50 the anchored popups use, so a Select or a
+     * Tooltip opened INSIDE a drawer is above it whichever order the two
+     * portals happen to land in. Matches Dialog, so the two slot into an
+     * app's scale together. `viewportClassName` reaches it. */
+    --pui-drawer-z-index: 40;
+
+    /* Declared HERE and not on the popup, which is the one exception to this
+     * library's "knobs live on the element they style" rule, and a deliberate
+     * one. The inset is two facts that must agree: the gap the viewport
+     * leaves around the surface, and the extra distance the surface has to
+     * travel to clear the screen. The popup is the viewport's child, so
+     * leaving it undeclared there lets it INHERIT this value — one
+     * declaration, both facts, no way to set one and forget the other. */
+    --pui-drawer-inset: 0px;
+
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--pui-drawer-z-index);
+    inset: 0;
+    display: grid;
+    padding: var(--pui-drawer-inset);
+    /* Only ever non-zero inside a `Drawer.VirtualKeyboardProvider`, which is
+     * what publishes it. Without the provider the fallback keeps this equal to
+     * the line above; with it, a bottom sheet containing a text field rides
+     * above the software keyboard instead of behind it. */
+    padding-block-end: calc(
+      var(--pui-drawer-inset) + var(--drawer-keyboard-inset, 0px)
+    );
+  }
+
+  .viewport[data-variant="floating"] {
+    --pui-drawer-inset: var(--pui-space-3);
+  }
+
+  /* While the popup animates out it is still painted and still on top; without
+   * this a click aimed at the page underneath lands on the viewport instead. */
+  .viewport[data-ending-style] {
+    pointer-events: none;
+  }
+
+  /* Popup ------------------------------------------------------------------ */
+  .popup {
+    /* Component tokens. They are declared HERE, on the popup, so an ancestor's
+     * value is only inherited and loses to these — and the popup is portalled
+     * to <body> anyway, so an ancestor of the trigger is not even in the tree.
+     * Consumers set them on the popup itself (`className` on `Drawer.Popup`,
+     * whose rule is unlayered and so beats this layer) or re-point the global
+     * tokens below, which this file only ever reads.
+     *
+     * `--pui-drawer-inset` is the one knob deliberately absent from this
+     * list — see the note on `.viewport`. */
+    --pui-drawer-bg: var(--pui-color-overlay);
+    --pui-drawer-fg: var(--pui-color-foreground);
+    --pui-drawer-radius: var(--pui-radius-surface);
+    --pui-drawer-padding: var(--pui-surface-p);
+    --pui-drawer-gap: var(--pui-space-4);
+    --pui-drawer-shadow: var(--pui-shadow-4);
+    --pui-drawer-font-size: var(--pui-font-size-2);
+    /* No width token exists in the inventory (widths are layout, not theme),
+     * so the size scale lives in this knob and is overridable per app. */
+    --pui-drawer-size: 24rem;
+    /* How far the drawer's background extends past its outer edge to cover a
+     * wrong-way overdrag. See the note at the top of the file. */
+    --pui-drawer-bleed: var(--pui-space-8);
+
+    /* Enter/exit gesture. Broken out into knobs so an app can retune the feel
+     * without restating the transition. */
+    --pui-drawer-duration: var(--pui-duration-spring-precise);
+    --pui-drawer-ease: var(--pui-ease-spring-precise);
+    --pui-drawer-exit-duration: var(--pui-duration-normal);
+    --pui-drawer-exit-ease: var(--pui-ease-exit);
+
+    /* Nested stacking. The parent shrinks toward its own outer edge — see the
+     * `transform-origin` in the per-side blocks — so it recedes behind the
+     * child instead of sliding out from under it. `spring-precise` is the one
+     * spring with no overshoot, so the surface settles rather than bouncing
+     * beneath a drawer that is still arriving.
+     *
+     * Scale alone is not enough of a cue, and bottom sheets are where that
+     * shows: two of them arrive from the same edge in the same surface
+     * colour, so a 4% size difference reads as one continuous panel with a
+     * seam across it rather than as two. The dim is what separates the
+     * layers. */
+    --pui-drawer-nested-scale-step: 0.04;
+    --pui-drawer-nested-scrim: var(--pui-scrim-color);
+    --pui-drawer-nested-duration: var(--pui-duration-spring-precise);
+
+    /* The unit vector, pointing at the edge this drawer rests against. Zero
+     * here is a real default and not a placeholder: a popup that somehow
+     * carried no `data-side` would sit still rather than fly off in whichever
+     * direction the last rule happened to name. */
+    --pui-drawer-axis-x: 0;
+    --pui-drawer-axis-y: 0;
+
+    /* The closed position: the drawer's own full extent, plus the gap a
+     * floating drawer has to cross before it reaches the edge, plus one pixel
+     * so a fractional device pixel ratio cannot leave a hairline of the
+     * surface showing along the edge.
+     *
+     * Gated on --pui-motion-ok, so reduced motion lands the drawer at rest
+     * and lets the fade below carry the whole transition. The multiplication
+     * has to wrap the entire expression: shortening the travel alone would
+     * leave the +1px behind as a visible one-pixel jump. */
+    --pui-drawer-closed-shift: calc(
+      (100% + var(--pui-drawer-inset) + 1px) * var(--pui-motion-ok)
+    );
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-drawer-gap);
+    padding: var(--pui-drawer-padding);
+
+    background-color: var(--pui-drawer-bg);
+    color: var(--pui-drawer-fg);
+
+    /* First shadow is the skirt — zero blur, zero spread, offset along the
+     * axis vector, painted in the drawer's own background colour, so it reads
+     * as the surface continuing past the edge of the screen rather than as a
+     * shadow. It collapses to an invisible no-op when the bleed is 0, which is
+     * how the floating variant switches it off without a second rule. The
+     * elevation shadow follows, and paints under it. */
+    box-shadow:
+      calc(var(--pui-drawer-axis-x) * var(--pui-drawer-bleed))
+        calc(var(--pui-drawer-axis-y) * var(--pui-drawer-bleed)) 0 0
+        var(--pui-drawer-bg),
+      var(--pui-drawer-shadow);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-drawer-font-size);
+    line-height: var(--pui-line-height-normal);
+
+    /* A FALLBACK scroller, not the usual one. `Drawer.Content` scrolls in the
+     * normal case (see its rule); this catches a drawer built without one, so
+     * overlong content scrolls instead of spilling out of the surface.
+     *
+     * Base UI walks up from wherever the gesture started and takes the first
+     * scrollable ancestor, so an inner scroller is found ahead of this and
+     * "only swipe once the scroll has bottomed out" keeps working either way.
+     *
+     * The inline axis is `hidden` rather than `auto` so a wide child cannot
+     * introduce a horizontal scroll for a left/right drawer to fight with. */
+    overflow: hidden auto;
+    /* Keep a scroll gesture that reaches the end of the drawer from chaining
+     * to the page behind it. */
+    overscroll-behavior: contain;
+
+    /* A drag rewrites the transform on every pointermove. Without a layer of
+     * its own the drawer repaints its whole subtree each frame, which is the
+     * one place in this component where a long list makes the gesture stutter.
+     * Safe to hint permanently here because the popup only exists while the
+     * drawer is open. */
+    will-change: transform;
+
+    /* `translate`/`scale` are left to the nested stacking below, which is why
+     * the gesture uses the `transform` shorthand: the two compose instead of
+     * overwriting each other. Both axes are written every time because only
+     * one of them is ever non-zero, which keeps this a single declaration
+     * rather than one per side. The snap-point offset only moves a top/bottom
+     * drawer; Base UI pins it at 0px everywhere else. */
+    transform: translate(
+      var(--drawer-swipe-movement-x, 0px),
+      calc(
+        var(--drawer-snap-point-offset, 0px) +
+          var(--drawer-swipe-movement-y, 0px)
+      )
+    );
+    scale: calc(
+      1 - var(--pui-drawer-nested-scale-step) * var(--pui-motion-ok) *
+        var(--nested-drawers, 0)
+    );
+    transition:
+      transform var(--pui-drawer-duration) var(--pui-drawer-ease),
+      opacity var(--pui-drawer-duration) var(--pui-ease-standard),
+      scale var(--pui-drawer-nested-duration) var(--pui-ease-spring-precise),
+      /* Paired with the overlay's own fade below, so the silhouette and the
+       * surface inside it dim as one thing rather than in two steps. */
+      border-color var(--pui-drawer-nested-duration) var(--pui-ease-standard);
+  }
+
+  /* Waiting off-screen, and going back there. The same declaration serves
+   * both ends, so an open interrupted halfway simply runs back down the path
+   * it came up.
+   *
+   * The opacity is 1 — no fade — as long as motion is allowed, because a
+   * drawer that slides has no need to dissolve as well. When the slide is
+   * suppressed `--pui-motion-off` flips to 1 and the fade appears in its
+   * place, so the drawer still reads as arriving rather than being switched
+   * on. */
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    opacity: calc(1 - var(--pui-motion-off));
+    transform: translate(
+      calc(var(--pui-drawer-axis-x) * var(--pui-drawer-closed-shift)),
+      calc(var(--pui-drawer-axis-y) * var(--pui-drawer-closed-shift))
+    );
+  }
+
+  /* Leaving is a shorter, sharper move than arriving: the spring's job is to
+   * make a surface settle, and nothing settles on its way out.
+   *
+   * `--drawer-swipe-strength` is Base UI's release velocity, 0.1 to 1, and
+   * only leaves 1 when the drawer was flung rather than closed. Scaling by it
+   * means a hard flick finishes in a couple of frames instead of coasting for
+   * a quarter second after the finger has already left the glass. The floor
+   * of 0.1 keeps this well clear of the 0s at which no transition object is
+   * created and `transitionend` never fires. */
+  .popup[data-ending-style] {
+    transition-duration: calc(
+      var(--drawer-swipe-strength, 1) * var(--pui-drawer-exit-duration)
+    );
+    transition-timing-function: var(--pui-drawer-exit-ease);
+  }
+
+  /* Sides ------------------------------------------------------------------
+   * Each block sets the axis vector, picks the two corners that face into the
+   * page, aligns the popup within the viewport grid, and points the nested
+   * scale at its outer edge so a parent recedes straight backward.
+   *
+   * The corner radii are physical rather than logical on purpose. `side` is
+   * physical — a `right` drawer is on the right in both directions — so a
+   * logical corner property would flip the rounding away from the visible
+   * edge in RTL.
+   * ---------------------------------------------------------------------- */
+  .popup[data-side="left"],
+  .popup[data-side="right"] {
+    align-self: stretch;
+    inline-size: var(--pui-drawer-size);
+    max-inline-size: 100%;
+  }
+
+  .popup[data-side="right"] {
+    --pui-drawer-axis-x: 1;
+    justify-self: end;
+    border-radius: var(--pui-drawer-radius) 0 0 var(--pui-drawer-radius);
+    transform-origin: 100% 50%;
+  }
+
+  .popup[data-side="left"] {
+    --pui-drawer-axis-x: -1;
+    justify-self: start;
+    border-radius: 0 var(--pui-drawer-radius) var(--pui-drawer-radius) 0;
+    transform-origin: 0% 50%;
+  }
+
+  /* Height stays `auto` so a short sheet is only as tall as its content —
+   * the size is a ceiling here, not a measurement. */
+  .popup[data-side="top"],
+  .popup[data-side="bottom"] {
+    justify-self: stretch;
+    max-block-size: min(var(--pui-drawer-size), 100%);
+  }
+
+  .popup[data-side="bottom"] {
+    --pui-drawer-axis-y: 1;
+    align-self: end;
+    border-radius: var(--pui-drawer-radius) var(--pui-drawer-radius) 0 0;
+    transform-origin: 50% 100%;
+  }
+
+  .popup[data-side="top"] {
+    --pui-drawer-axis-y: -1;
+    align-self: start;
+    border-radius: 0 0 var(--pui-drawer-radius) var(--pui-drawer-radius);
+    transform-origin: 50% 0%;
+  }
+
+  /* Sizes ------------------------------------------------------------------ */
+  .popup[data-size="sm"] {
+    --pui-drawer-size: 18rem;
+  }
+
+  .popup[data-size="md"] {
+    --pui-drawer-size: 24rem;
+  }
+
+  .popup[data-size="lg"] {
+    --pui-drawer-size: 32rem;
+  }
+
+  .popup[data-size="full"] {
+    --pui-drawer-size: 100%;
+  }
+
+  /* `--pui-drawer-size` is a MAXIMUM on the block axis, and a maximum of 100%
+   * still leaves a short sheet at its content height. A drawer asked to fill
+   * the screen has to say so outright. */
+  .popup[data-size="full"][data-side="top"],
+  .popup[data-size="full"][data-side="bottom"] {
+    block-size: 100%;
+  }
+
+  /* Floating ---------------------------------------------------------------
+   * Ordered after the four side blocks deliberately: it ties with them at
+   * (0,2,0), so source order is what lets it round all four corners instead
+   * of only the two facing the page.
+   *
+   * The bleed goes to zero because there is nothing left for it to cover — a
+   * floating drawer is already surrounded by scrim, so an overdrag moves it
+   * within a gap that is meant to be there rather than opening one that is
+   * not.
+   * ---------------------------------------------------------------------- */
+  .popup[data-variant="floating"] {
+    --pui-drawer-bleed: 0px;
+    border-radius: var(--pui-drawer-radius);
+  }
+
+  /* Nested drawers ---------------------------------------------------------
+   * Base UI does not render a child drawer's Backdrop unless `forceRender` is
+   * set, so a parent has to mark its own retreat. The overlay is always
+   * present at zero opacity: a pseudo-element created at the moment the
+   * attribute appeared would have no start value to transition from.
+   *
+   * `position: absolute` is only correct because the popup is not a scroll
+   * container — `Drawer.Content` is. An out-of-flow child of a scroll
+   * container is anchored to the scroll origin, so on a scrolling popup this
+   * dim would sit above the visible area and leave the part the user can
+   * actually see undimmed. The one arrangement that still hits that is a
+   * drawer built with no `Drawer.Content` at all, overflowing far enough to
+   * use the popup's fallback scroll, scrolled, with a nested drawer open.
+   * ---------------------------------------------------------------------- */
+  .popup::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--pui-drawer-nested-scrim);
+    opacity: 0;
+    pointer-events: none;
+    /* Ramps in over the same window as the parent's retreat, so the dim and
+     * the shrink read as one movement. */
+    transition: opacity var(--pui-drawer-nested-duration)
+      var(--pui-ease-standard);
+  }
+
+  .popup[data-nested-drawer-open]::after {
+    opacity: 1;
+  }
+
+  /* The overlay above stops at the PADDING box, and `.pui-hc-surface` gives
+   * every floating surface a 1px transparent border outside it. Backgrounds
+   * paint under a border by default, so that ring keeps the drawer's own
+   * undimmed background and draws a bright outline around a parent that is
+   * supposed to have receded — the one part of it still at full strength, and
+   * the most visible part, because it is the silhouette.
+   *
+   * Painting the ring in the scrim colour composites it over that same
+   * background, which is exactly what the overlay does to the rest of the
+   * surface — so the two agree by construction rather than by a matched pair
+   * of hand-picked colours. Growing the overlay instead would not work: the
+   * popup's `overflow` clips a negative inset straight back to the padding
+   * box.
+   *
+   * Forced-colors mode reassigns this to CanvasText from the `a11y` layer,
+   * which is ordered after this one and therefore wins. */
+  .popup[data-nested-drawer-open] {
+    border-color: var(--pui-drawer-nested-scrim);
+  }
+
+  /* Handle -----------------------------------------------------------------
+   * The pill that advertises the drag. `flex: none` because it is a fixed
+   * ornament in a column that may also hold a scrolling list; without it the
+   * pill would be squashed to nothing by a tall sibling.
+   * ---------------------------------------------------------------------- */
+  .handle {
+    --pui-drawer-handle-length: 2.25rem;
+    --pui-drawer-handle-thickness: 0.25rem;
+    --pui-drawer-handle-color: var(--pui-color-border-strong);
+    /* How far a side drawer's grip sits from the edge it hugs. Small enough to
+     * stay inside the popup's padding, so it never collides with content. */
+    --pui-drawer-handle-inset: var(--pui-space-2);
+
+    flex: none;
+    border-radius: var(--pui-radius-pill);
+    background-color: var(--pui-drawer-handle-color);
+    /* The gesture belongs to the whole surface, so the pill must not become a
+     * separate press target sitting in front of it. */
+    pointer-events: none;
+  }
+
+  .popup[data-side="top"] .handle,
+  .popup[data-side="bottom"] .handle {
+    inline-size: var(--pui-drawer-handle-length);
+    block-size: var(--pui-drawer-handle-thickness);
+    /* Symmetric, so this stays correct in both directions. */
+    margin-inline: auto;
+  }
+
+  /* A side drawer's pill turns to face the direction it is dragged, hugs the
+   * edge that faces into the page, and centres itself down that edge — the
+   * shape of a grip on a panel you can pull.
+   *
+   * It is taken OUT of the column flow to get there. Left in flow it lands in
+   * the top corner with the whole drawer below it, where a 4px stroke reads as
+   * a stray mark — a text caret, a rendering artefact — rather than as
+   * something to grab.
+   *
+   * Taking it out of flow is only safe because the popup does not scroll —
+   * `Drawer.Content` does. An out-of-flow child of a scroll container is
+   * anchored to the scroll ORIGIN rather than to the scrollport, so against a
+   * scrolling popup this grip would slide out of view on the first scroll.
+   * `position: fixed` is no escape either: the popup's own transform makes it
+   * the containing block, and the same anchoring applies.
+   *
+   * The offsets are physical (`left` / `right`), not logical. In a column flex
+   * container the cross axis follows the writing direction, so anything
+   * logical lands on the wrong side in RTL and puts the grip on the drawer's
+   * OUTER edge, half of it off-screen. */
+  .popup[data-side="left"] .handle,
+  .popup[data-side="right"] .handle {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    inline-size: var(--pui-drawer-handle-thickness);
+    block-size: var(--pui-drawer-handle-length);
+  }
+
+  .popup[data-side="left"] .handle {
+    right: var(--pui-drawer-handle-inset);
+  }
+
+  .popup[data-side="right"] .handle {
+    left: var(--pui-drawer-handle-inset);
+  }
+
+  /* Content ---------------------------------------------------------------- */
+  .content {
+    /* Side drawers are already narrow, so there is nothing to cap. */
+    --pui-drawer-content-max-inline-size: 100%;
+
+    /* This, and not the popup, is the drawer's scroll container.
+     *
+     * It grows into a drawer with room to spare (so a `Drawer.Footer` in here
+     * still sinks to the far end) and shrinks when the content outgrows the
+     * surface, scrolling internally rather than pushing the popup past its
+     * own bounds. `min-block-size: 0` is what permits the shrink at all — a
+     * flex item's automatic minimum size is its content, which would otherwise
+     * refuse to go below it and hand the overflow back to the popup.
+     *
+     * Putting the scroll here rather than on the popup is what keeps a
+     * `Drawer.Handle` still. An out-of-flow child of a scroll container is
+     * anchored to the scroll ORIGIN, not to the scrollport — `position: fixed`
+     * included, since the popup's own transform makes it the containing block
+     * — so a grip positioned against a scrolling popup slides out of view the
+     * moment the drawer is scrolled. Against a popup that does not scroll, it
+     * simply holds. It also means a `Drawer.Footer` placed OUTSIDE this
+     * element pins to the bottom of the drawer instead of scrolling away. */
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-drawer-gap);
+    inline-size: 100%;
+    max-inline-size: var(--pui-drawer-content-max-inline-size);
+    margin-inline: auto;
+  }
+
+  /* A top or bottom drawer is as wide as the screen, and body text set across
+   * a whole desktop viewport is genuinely hard to read — the eye loses the
+   * line on the way back. Capping and centring is the default rather than
+   * something to opt into, because the bad version is what you get by simply
+   * putting text in a sheet. Raise it to `100%` for a drawer whose content is
+   * a grid or a toolbar and wants the full width. */
+  .popup[data-side="top"] .content,
+  .popup[data-side="bottom"] .content {
+    --pui-drawer-content-max-inline-size: 32rem;
+  }
+
+  .title {
+    margin: 0;
+    font-size: var(--pui-font-size-4);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    letter-spacing: var(--pui-letter-spacing-tight);
+    color: var(--pui-color-foreground);
+  }
+
+  .description {
+    margin: 0;
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+    /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body copy. */
+    color: var(--pui-color-foreground-muted);
+  }
+
+  /* A description belongs to the title above it, so it sits closer than the
+   * drawer's own rhythm. Done by pulling the description up rather than by
+   * introducing a header part, so the anatomy stays exactly Base UI's. */
+  .title + .description {
+    margin-block-start: calc(var(--pui-space-1) - var(--pui-drawer-gap));
+  }
+
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--pui-control-gap);
+    /* A drawer usually has room to spare along its own axis, so the actions
+     * sink to the far end rather than floating under the content. Harmless
+     * when there is no spare room — `auto` collapses to nothing. */
+    margin-block-start: auto;
+    padding-block-start: var(--pui-space-1);
+  }
+
+  .footer[data-align="start"] {
+    justify-content: flex-start;
+  }
+
+  .footer[data-align="center"] {
+    justify-content: center;
+  }
+
+  .footer[data-align="end"] {
+    justify-content: flex-end;
+  }
+
+  .footer[data-align="between"] {
+    justify-content: space-between;
+  }
+
+  /* Swipe area -------------------------------------------------------------
+   * An invisible strip along the drawer's own edge, outside the portal
+   * because it has to exist while the drawer is closed. Its z-index sits
+   * below the drawer's so an open drawer is never underneath the strip that
+   * opens it.
+   * ---------------------------------------------------------------------- */
+  .swipeArea {
+    --pui-drawer-swipe-area-size: var(--pui-space-6);
+    --pui-drawer-swipe-area-z-index: 38;
+
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--pui-drawer-swipe-area-z-index);
+    /* `touch-action` is deliberately absent. Base UI sets it inline, per axis —
+     * `pan-y` on a left/right strip, `pan-x` on a top/bottom one — so the
+     * gesture is claimed on the drawer's axis while a scroll along the other
+     * one still reaches the page. An inline style also outranks anything in
+     * this file, so a `touch-action` written here would be dead code that
+     * merely looks load-bearing. */
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .swipeArea[data-side="right"] {
+    inset: 0 0 0 auto;
+    inline-size: var(--pui-drawer-swipe-area-size);
+  }
+
+  .swipeArea[data-side="left"] {
+    inset: 0 auto 0 0;
+    inline-size: var(--pui-drawer-swipe-area-size);
+  }
+
+  .swipeArea[data-side="top"] {
+    inset: 0 0 auto 0;
+    block-size: var(--pui-drawer-swipe-area-size);
+  }
+
+  .swipeArea[data-side="bottom"] {
+    inset: auto 0 0 0;
+    block-size: var(--pui-drawer-swipe-area-size);
+  }
+
+  /* Trigger and Close ------------------------------------------------------
+   * A modest neutral button so an unstyled `<Drawer.Trigger>Open</...>` does
+   * not fall back to the UA's grey chrome. Both parts drop these styles
+   * entirely when the consumer passes `render` (typically our own `<Button>`),
+   * because two full button styles on one element resolve by source order
+   * inside the same cascade layer — which is not something a consumer can
+   * predict or fix.
+   * ---------------------------------------------------------------------- */
+  .trigger,
+  .close {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-control-gap);
+    height: var(--pui-control-h-md);
+    padding-inline: var(--pui-control-px-md);
+    margin: 0;
+    border: 1px solid var(--pui-color-border);
+    border-radius: var(--pui-radius-control);
+
+    background-color: var(--pui-color-panel);
+    color: var(--pui-color-foreground);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]),
+    .close:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+    }
+  }
+
+  .trigger:active:not([data-disabled]),
+  .close:active:not([data-disabled]) {
+    background-color: var(--pui-color-panel-active);
+  }
+
+  .trigger[data-disabled],
+  .close[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Icon-only close: square, quiet, and never smaller than the 24px hit
+   * target from SC 2.5.8. Always needs an `aria-label`. */
+  .close[data-icon-only] {
+    padding-inline: 0;
+    aspect-ratio: 1;
+    min-inline-size: max(var(--pui-control-h-md), var(--pui-target-min));
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--pui-color-foreground-muted);
+  }
+
+  @media (hover: hover) {
+    .close[data-icon-only]:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+      color: var(--pui-color-foreground);
+    }
+  }
+}
+
+/**
+ * Accessibility overrides.
+ *
+ * A separate block in `pretty-ui.a11y`, which is ordered AFTER
+ * `pretty-ui.components`, so these win by layer order alone rather than by
+ * out-specifying the rules above.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* Every background-color collapses to a system colour here, so the pill
+     * would be painted in the same Canvas as the surface behind it and
+     * disappear. `.pui-hc-surface` has already given the popup `Canvas`, so
+     * `CanvasText` is the one value guaranteed to contrast with it. */
+    .handle {
+      background-color: CanvasText;
+    }
+
+    /* The skirt is a box-shadow and shadows are stripped in forced-colors
+     * mode, so an overdrag would expose the scrim through the gap. The scrim
+     * is painted as flat `Canvas` here, which is exactly what the skirt would
+     * have covered it with — nothing to restore. The elevation shadow goes
+     * with it, which is what `.pui-hc-surface` supplies the border for. */
+    .popup {
+      box-shadow: none;
+    }
+
+    /* The nested dim is a translucent black overlay, and forced-colors
+     * repaints every background in an OPAQUE system colour while leaving
+     * `opacity` alone — so at full opacity it stops being a dim and becomes a
+     * blank panel covering the parent completely. Drop it. The separation it
+     * provides is already carried here by the `CanvasText` border
+     * `.pui-hc-surface` gives both surfaces, which is the boundary this mode
+     * relies on everywhere else. */
+    .popup[data-nested-drawer-open]::after {
+      display: none;
+    }
+  }
+}

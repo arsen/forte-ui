@@ -346,6 +346,220 @@
       }
     ]
   },
+  "DrawerRoot": {
+    "name": "DrawerRoot",
+    "description": "Groups all parts of a drawer and owns its open state.\n\nRenders no DOM element, so it takes no `className`, `style` or `ref` —\nstyle `Drawer.Popup` instead. Every Base UI `Drawer.Root` prop is forwarded\nunchanged (`open`, `defaultOpen`, `onOpenChange`, `onOpenChangeComplete`,\n`modal`, `disablePointerDismissal`, `actionsRef`, `handle`, `triggerId`,\n`defaultTriggerId`, `snapPoints`, `snapPoint`, `onSnapPointChange`,\n`snapToSequentialPoints`) except `swipeDirection`, which `side` replaces.",
+    "props": [
+      {
+        "name": "side",
+        "type": "DrawerSide",
+        "required": false,
+        "defaultValue": "right",
+        "description": "Which edge of the viewport the drawer slides in from. It also decides the\ndirection of the dismiss gesture, which is why it lives on `Root` rather\nthan on `Popup`.\n\nPhysical, not logical: `translate` has no logical form, and Base UI's\nswipe direction is physical too. An RTL layout that wants its navigation\non the leading edge should say `side=\"right\"` for that layout."
+      },
+      {
+        "name": "snapPoints",
+        "type": "DrawerSnapPoint[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Heights a `side=\"top\"` or `side=\"bottom\"` drawer settles at. Numbers\nbetween 0 and 1 are fractions of the viewport, numbers above 1 are pixels,\nand strings carry their own `px`/`rem` unit — `[\"148px\", 1]` is the usual\npeek-then-full pair.\n\nIgnored for `side=\"left\"` and `side=\"right\"`, which have no snap axis."
+      },
+      {
+        "name": "swipe",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Allow dragging the drawer to dismiss it. Turning it off keeps the drawer\nfully usable — trigger, Escape, outside press and `Drawer.Close` all still\nwork — and only removes the gesture.\n\nLeave it on for anything that reaches a touch screen: a drag toward the\nedge is how a drawer is expected to close there, and on a large phone it\nis the only dismissal within reach of one thumb."
+      }
+    ]
+  },
+  "DrawerTrigger": {
+    "name": "DrawerTrigger",
+    "description": "A button that opens the drawer.\n\nRenders a `<button>`. Pass `render={<Button />}` to compose it with a\nstyled button — the trigger's own neutral styling steps aside when `render`\nis present, so the two never fight over the cascade.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerPopup": {
+    "name": "DrawerPopup",
+    "description": "The drawer surface, together with the three wrappers it always needs:\n`Portal` → `Backdrop` + `Viewport` → `Popup`. Collapsing them into one\ncomponent keeps the common case to a single element while leaving every\nBase UI `Popup` prop (`initialFocus`, `finalFocus`, `render`, …) available.\n\n`Title`, `Description` and `Close` must be rendered *inside* this\ncomponent: that is what auto-wires `aria-labelledby` / `aria-describedby`,\nand a close button outside the popup is unreachable to touch screen-reader\nusers.\n\nScrolling belongs to `Drawer.Content`, not to this element; the popup keeps\nonly a fallback `overflow` for drawers built without one. Base UI takes the\nfirst scrollable ancestor of wherever the gesture started, so a swipe still\nwaits for that scroll to reach its end.",
+    "props": [
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Render the scrim behind the drawer. Turn it off for a non-modal drawer\nthat should leave the page visibly usable."
+      },
+      {
+        "name": "backdropClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup itself. Applied after the internal\nstyles so consumer utilities (e.g. Tailwind) win without needing\n`!important`."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Element the portal renders into. Defaults to `document.body`; set it when\nthe drawer must live inside a specific stacking or shadow root."
+      },
+      {
+        "name": "forceBackdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render the backdrop even when this drawer is nested inside another one.\nBase UI suppresses nested backdrops by default — the parent recedes and\ndims itself instead — so only set this when a nested drawer genuinely\nneeds its own scrim."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep the portal — and therefore the popup — in the DOM while the drawer\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
+      },
+      {
+        "name": "size",
+        "type": "DrawerSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "How far the drawer extends along its own axis — width for `left`/`right`,\nheight for `top`/`bottom`. `\"full\"` covers the whole viewport.\n\nOn `top`/`bottom` this is a *maximum*: a short sheet is only as tall as\nits content, which is what a bottom sheet should do."
+      },
+      {
+        "name": "variant",
+        "type": "DrawerVariant",
+        "required": false,
+        "defaultValue": "edge",
+        "description": "`\"edge\"` sits flush against the side of the screen and rounds only its\ntwo inner corners. `\"floating\"` insets the whole surface by\n`--pui-drawer-inset` and rounds all four, so the page shows through\naround it."
+      },
+      {
+        "name": "viewportClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the fixed container the popup is placed in.\nIt owns `--pui-drawer-z-index` and `--pui-drawer-inset` — the popup reads\nthe inset from here by inheritance, so setting it once on the viewport\nkeeps the surface and the gap around it in agreement."
+      }
+    ]
+  },
+  "DrawerHandle": {
+    "name": "DrawerHandle",
+    "description": "The grab bar that advertises the drag gesture.\n\nA decorative `<div>`, hidden from assistive technology: it is a picture of\nan affordance, not a control, and the gesture it describes is never the\nonly way out of a drawer. Give the drawer a `Drawer.Close` as well.\n\nKeep it *outside* `Drawer.Content`. Content deliberately swallows mouse\ndrags so text stays selectable, so a handle placed inside it could not be\ndragged with a mouse — which is the one input that has no other way to\nstart the gesture.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerContent": {
+    "name": "DrawerContent",
+    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also the drawer's scroll container, which is what keeps a\n`Drawer.Handle` from scrolling away and lets a `Drawer.Footer` placed\n*outside* it pin to the bottom of the drawer.\n\nOn a `top`/`bottom` drawer it caps and centres its own width through\n`--pui-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerTitle": {
+    "name": "DrawerTitle",
+    "description": "The drawer's accessible name.\n\nRenders an `<h2>`. Inside `Drawer.Popup` it is wired up as the popup's\n`aria-labelledby` automatically; every drawer should have one.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerDescription": {
+    "name": "DrawerDescription",
+    "description": "A short explanation of what the drawer is for.\n\nRenders a `<p>`. Inside `Drawer.Popup` it becomes the popup's\n`aria-describedby`, so it is announced after the title.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerClose": {
+    "name": "DrawerClose",
+    "description": "A button that closes the drawer.\n\nRenders a `<button>`. Keep it inside `Drawer.Popup`: in a modal drawer the\nrest of the page is inert, and a touch screen-reader user has no other way\nout — the swipe gesture is not available to them. Pass `render={<Button />}`\nto compose it with a styled button.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon — the corner \"×\"\ntreatment. Enforces the 24px minimum hit target from WCAG SC 2.5.8.\nAlways pair with `aria-label`, since there is no text to announce."
+      }
+    ]
+  },
+  "DrawerFooter": {
+    "name": "DrawerFooter",
+    "description": "The action row at the bottom of a drawer.\n\nA plain `<div>` — not a Base UI part — that supplies the standard spacing\nand alignment for the confirm/cancel buttons.",
+    "props": [
+      {
+        "name": "align",
+        "type": "DrawerFooterAlign",
+        "required": false,
+        "defaultValue": "end",
+        "description": "How the actions are distributed along the footer. `\"between\"` is the\npattern for a destructive action pushed away from the safe one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerSwipeArea": {
+    "name": "DrawerSwipeArea",
+    "description": "An invisible strip along the drawer's own edge that opens it when swiped\ninward.\n\nRenders a `<div>`, pinned with `position: fixed` and sized by\n`--pui-drawer-swipe-area-size`. It sits *outside* the portal — it has to\nexist while the drawer is closed — so it is the one part that lives beside\n`Drawer.Trigger` rather than inside `Drawer.Popup`.\n\nIt covers that strip of the page for pointer purposes, so anything the app\nputs hard against that edge becomes unreachable. Pair it with a real\ntrigger; a gesture with no visible control is undiscoverable, and it is not\navailable to a keyboard or screen-reader user at all.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "SelectLabel": {
     "name": "SelectLabel",
     "description": "A visible label wired to the trigger. This is the preferred way to give a\nselect its accessible name — Base UI renders a `<div>` and associates it\nwith `aria-labelledby`, so clicking it focuses the trigger without opening\nthe popup. When no visible label is rendered, put `aria-label` on\n`<Select.Trigger>` instead.",

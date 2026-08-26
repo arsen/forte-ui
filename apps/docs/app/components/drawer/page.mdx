@@ -1,0 +1,306 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Drawer",
+  description:
+    "A panel that slides in from any edge of the screen, flush or floating, with drag-to-dismiss and snap points.",
+};
+
+# Drawer
+
+A drawer is a panel attached to an edge of the screen. Reach for it when the content belongs *beside* the page rather than on top of it — navigation, filters, a detail panel, a mobile action sheet. When the task needs the user's whole attention and has nothing to do with a screen edge, use [Dialog](/components/dialog) instead.
+
+The difference is not decorative. A drawer's edge is what makes the drag gesture legible: it comes from somewhere and it goes back there, so pulling it that way to dismiss it is a guess anyone can make. A centred dialog has no such direction, which is why it has no such gesture.
+
+<DemoBlock id="drawer/basic" />
+
+`Drawer.Popup` collapses Base UI's `Portal` → `Backdrop` + `Viewport` → `Popup` into one element, so the common case is four parts deep rather than seven. `Drawer.Content` is separate on purpose — see [Selecting text](#selecting-text).
+
+## Import
+
+```tsx
+import { Drawer } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sides
+
+`side` on `Drawer.Root` picks the edge: `"top"`, `"right"` (the default), `"bottom"` or `"left"`. It also sets the direction of the dismiss gesture, which is why it lives on `Root` and not on `Popup` — a drawer that slid in from the right and dismissed downward would be two different drawers wearing one costume.
+
+The side is **physical**, not logical. `translate` has no logical form, and Base UI's swipe direction is physical too, so a `right` drawer is on the right in both LTR and RTL. An RTL layout that wants its navigation on the leading edge asks for `side="right"` in that layout.
+
+<DemoBlock id="drawer/sides" />
+
+### Sizes
+
+`size` on `Drawer.Popup` sets how far the drawer extends along its own axis — width for `left`/`right`, height for `top`/`bottom`: `sm` (18rem), `md` (24rem, the default), `lg` (32rem) and `full`.
+
+On a top or bottom drawer it is a *maximum*, so a short sheet is only as tall as its content — which is what a bottom sheet should do. Only `size="full"` makes one fill the screen outright.
+
+<DemoBlock id="drawer/sizes" />
+
+### Floating
+
+`variant="floating"` insets the whole surface by `--pui-drawer-inset` and rounds all four corners, so the page shows through around it. The default, `variant="edge"`, sits flush and rounds only the two corners facing into the page.
+
+Floating also switches off the bleed, because it has nothing left to cover — see [The skirt](#the-skirt).
+
+<DemoBlock id="drawer/floating" />
+
+### Long content
+
+`Drawer.Content` is the scroll container — not the viewport around the popup, the way `Dialog` does it, and not the popup itself. Base UI walks up from wherever the finger landed and takes the first scrollable ancestor, so a drag only takes over once that scroll has bottomed out. A scrolled-down drawer therefore swipes only at the end of its list, which is what every native sheet does, and `overscroll-behavior: contain` keeps a scroll that reaches the end from chaining to the page behind it.
+
+That placement decides two other things. A `Drawer.Handle` on a `left`/`right` drawer holds its position instead of scrolling away, and **`Drawer.Footer` pins to the bottom of the drawer when it sits outside `Drawer.Content`**, or scrolls with the list when it sits inside. Put it outside for a long drawer, where an action row you have to scroll to reach is a nuisance; inside for a short one, or for a bottom sheet where it should stay within the centred content column.
+
+The popup keeps a fallback `overflow` of its own, so a drawer built without `Drawer.Content` still scrolls rather than spilling out of the surface.
+
+<DemoBlock id="drawer/scrollable" />
+
+### Nested drawers
+
+A `Drawer.Root` rendered inside a `Drawer.Popup` stacks. The parent shrinks toward its own outer edge by `--pui-drawer-nested-scale-step` per level, so it recedes straight backward rather than sliding out from under the child, and fades `--pui-drawer-nested-scrim` over itself so the two surfaces stay told apart. Base UI suppresses the child's own backdrop, which is what keeps the parent visible behind it instead of scrimmed twice — pass `forceBackdrop` to a nested `Drawer.Popup` that genuinely needs one.
+
+Escape closes the topmost drawer only, so a nested drawer steps back to its parent rather than dismissing the whole stack.
+
+<DemoBlock id="drawer/nested" />
+
+#### Returning a value
+
+There is no `result` prop to await. A nested drawer hands something back the ordinary React way — the parent owns the state, and the child sets it on the way out:
+
+```tsx
+<Drawer.Close onClick={() => setPlan(p)} render={<Button />}>
+  {p.name}
+</Drawer.Close>
+```
+
+Putting it on `Drawer.Close` rather than on a plain button is what makes the semantics right, and the reason is the gesture. A drawer has three ways to leave that a dialog does not have to think about as hard: choosing something, pressing Escape, and swiping it away. Only the first should return a value — a sheet flicked aside is a sheet the user abandoned, and it must leave the parent exactly as it found it.
+
+`Drawer.Close` gives you that for free. It closes *and* runs your handler, while Escape, an outside press and a swipe all close without ever calling it. Wiring the same handler to `onOpenChange` instead would fire on every one of those and quietly commit a choice nobody made.
+
+`payload` and `Drawer.createHandle` solve the mirror-image problem — getting data *into* a drawer opened from a detached trigger. They do not carry anything back out.
+
+### Snap points
+
+A `top` or `bottom` drawer can settle at preset heights. Pass `snapPoints` to `Drawer.Root` — a fraction of the viewport (0 to 1), a pixel count (above 1), or a string with its own `px`/`rem` unit — and control the current one with `snapPoint` and `onSnapPointChange`.
+
+Give the popup `size="full"`. A snap point reveals part of a drawer by pushing the rest of it off the bottom of the screen, so the drawer has to be tall enough to have a rest to push away; snapping a 24rem sheet to `1` just gets you a 24rem sheet.
+
+Snap points are ignored on `left` and `right` drawers, which have no snap axis.
+
+<DemoBlock id="drawer/snap-points" />
+
+The scrim behaves differently here, and it has to. Base UI publishes one variable, `--drawer-swipe-progress`, for two different quantities: without snap points it is how far a dismissing drag has travelled, and clearing the scrim as the drawer leaves is the whole point of it. With snap points it is instead the sheet's position within its snap range, and it reaches exactly `1` at the *lowest* snap — so a peeking sheet would sit over a completely undimmed page that is nonetheless still inert.
+
+So when snap points and modality are combined, the scrim stops at `--pui-drawer-backdrop-floor` instead of vanishing. It still tracks the sheet in between, darkening as it is raised and lightening as it is lowered. A drawer with `modal={false}` gets no floor, because there the undimmed page really is usable.
+
+### Swipe to open
+
+`Drawer.SwipeArea` is an invisible strip along the drawer's own edge that opens it when dragged inward. It is the one part that lives beside `Drawer.Trigger` rather than inside `Drawer.Popup`, because it has to exist while the drawer is closed.
+
+<DemoBlock id="drawer/swipe-area" />
+
+<Callout kind="a11y">
+A swipe area is an addition to a trigger, never a replacement for one. The gesture is invisible, so most people never discover it, and it is not available at all to someone using a keyboard, a switch device or a screen reader. It also covers that strip of the page for pointer purposes, so anything the app puts hard against that edge stops being clickable.
+</Callout>
+
+### Turning the gesture off
+
+`swipe={false}` on `Drawer.Root` removes drag-to-dismiss and leaves everything else — trigger, Escape, outside press, `Drawer.Close` — working. Use it for a drawer whose content is itself draggable, where the two gestures would compete.
+
+Leave it on for anything that reaches a touch screen. A drag toward the edge is how a drawer is expected to close there, and on a large phone it is often the only dismissal within reach of one thumb.
+
+### Selecting text
+
+`Drawer.Content` marks its subtree as content, which exempts it from *mouse* dragging: press and drag over it and you select text instead of pulling the drawer. Touch dragging is unaffected, so the gesture still works where people actually make it.
+
+That is the whole reason this part stayed separate instead of being folded into `Drawer.Popup` the way the portal and viewport were. Folding it in would have made every drawer text-selectable and left `Drawer.Handle` — which has to be draggable with a mouse — with nowhere to live. Keep the handle outside `Drawer.Content`, and the body inside it.
+
+It also caps its own width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so `Drawer.Content` stops at `32rem` and centres itself there. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--pui-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Space"], description: "Opens the drawer when the trigger is focused. Closes it when a Close button is focused." },
+  { keys: ["Enter"], description: "Opens the drawer when the trigger is focused. Closes it when a Close button is focused." },
+  { keys: ["Esc"], description: "Requests close on the topmost drawer and returns focus to the trigger." },
+  { keys: ["Tab"], description: "Moves to the next focusable element inside the popup, looping at the end while the drawer is modal." },
+  { keys: ["Shift + Tab"], description: "Moves to the previous focusable element inside the popup, looping at the start." },
+]} />
+
+`Drawer.Title` renders an `<h2>` and becomes the popup's `aria-labelledby`; `Drawer.Description` renders a `<p>` and becomes its `aria-describedby`. Both are wired up automatically — but only because they are rendered inside `Drawer.Popup`. Move either one outside and the popup silently loses that association.
+
+When the drawer is modal (the default), focus is trapped inside the popup, page scroll is locked, and the rest of the document is made inert. On open, focus moves to the first tabbable element in the popup — except when the drawer was opened by touch, where the popup itself is focused so the virtual keyboard does not spring up. On close, focus returns to the trigger. Override either end with `initialFocus` and `finalFocus` on `Drawer.Popup`.
+
+<Callout kind="a11y">
+Render `Drawer.Close` **inside** `Drawer.Popup`, and render one in every drawer. In a modal drawer everything outside the popup is inert, so a close button placed elsewhere is unreachable. The swipe gesture is not a substitute: a touch screen-reader user has no Escape key and does not get the gesture either, so a drawer with no visible close control is a drawer they cannot leave.
+</Callout>
+
+<Callout kind="a11y">
+`Drawer.Handle` is `aria-hidden`, because it is a picture of an affordance rather than a control. That is only safe while the gesture it advertises is never the only way out — so a handle is an argument *for* a `Drawer.Close`, not against one.
+</Callout>
+
+<Callout kind="a11y">
+Give every drawer a `Drawer.Title`. If the design has no room for a visible one, put an `aria-label` on `Drawer.Popup` instead — a drawer with no accessible name is announced as just "dialog".
+</Callout>
+
+The popup itself carries a focus ring, because it is the element that receives focus on a touch-opened or keyboard-opened drawer. In forced-colors mode its shadow is stripped by the OS, so it also draws a border to keep its boundary visible.
+
+### Software keyboards
+
+Wrap a bottom sheet that contains text fields in `Drawer.VirtualKeyboardProvider`. The viewport then publishes `--drawer-keyboard-inset`, which this component adds to its bottom padding, so the sheet rides above the keyboard instead of behind it. Drawers without the provider are unaffected.
+
+## Theming
+
+Every property below is declared on the element it styles. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect — and the drawer is portalled to `<body>` in any case, so an ancestor of the trigger is not even in the tree.
+
+Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-drawer-z-index` | Stacking band for the drawer; set through `viewportClassName` | `40` |
+| `--pui-drawer-inset` | Gap between the drawer and the edge of the screen; set through `viewportClassName` | `0px` (`var(--pui-space-3)` when `variant="floating"`) |
+| `--pui-drawer-bg` | Popup background | `var(--pui-color-overlay)` |
+| `--pui-drawer-fg` | Popup text colour | `var(--pui-color-foreground)` |
+| `--pui-drawer-radius` | Corner radius — two corners for `edge`, four for `floating` | `var(--pui-radius-surface)` |
+| `--pui-drawer-padding` | Padding inside the popup | `var(--pui-surface-p)` |
+| `--pui-drawer-gap` | Gap between the popup's children, and between the content's | `var(--pui-space-4)` |
+| `--pui-drawer-shadow` | Popup shadow | `var(--pui-shadow-4)` |
+| `--pui-drawer-font-size` | Base font size inside the popup | `var(--pui-font-size-2)` |
+| `--pui-drawer-size` | Extent along the drawer's own axis; what the `size` prop sets | `24rem` (`18rem` sm, `32rem` lg, `100%` full) |
+| `--pui-drawer-bleed` | How far the surface extends past its outer edge to cover an overdrag | `var(--pui-space-8)` (`0px` when `variant="floating"`) |
+| `--pui-drawer-duration` | Length of the opening slide | `var(--pui-duration-spring-precise)` |
+| `--pui-drawer-ease` | Curve of the opening slide | `var(--pui-ease-spring-precise)` |
+| `--pui-drawer-exit-duration` | Length of the closing slide, before the velocity scalar | `var(--pui-duration-normal)` |
+| `--pui-drawer-exit-ease` | Curve of the closing slide | `var(--pui-ease-exit)` |
+| `--pui-drawer-nested-scale-step` | How much each nested drawer shrinks its parent | `0.04` |
+| `--pui-drawer-nested-scrim` | Colour the parent dims itself with under a nested drawer | `var(--pui-scrim-color)` |
+| `--pui-drawer-nested-duration` | How long the parent takes to recede under a child | `var(--pui-duration-spring-precise)` |
+| `--pui-drawer-content-max-inline-size` | Maximum width of `Drawer.Content`, which then centres itself | `32rem` on `top`/`bottom`, `100%` on `left`/`right` |
+| `--pui-drawer-handle-length` | Long edge of the grab pill | `2.25rem` |
+| `--pui-drawer-handle-thickness` | Short edge of the grab pill | `0.25rem` |
+| `--pui-drawer-handle-color` | Grab pill colour | `var(--pui-color-border-strong)` |
+| `--pui-drawer-handle-inset` | How far a `left`/`right` grip sits from the edge it hugs | `var(--pui-space-2)` |
+| `--pui-drawer-swipe-area-size` | Width of the swipe-to-open strip | `var(--pui-space-6)` |
+| `--pui-drawer-swipe-area-z-index` | Stacking band for that strip | `38` |
+| `--pui-drawer-backdrop-z-index` | Stacking band for the scrim; set through `backdropClassName` | `39` |
+| `--pui-drawer-backdrop-duration` | How long the scrim takes to clear; set through `backdropClassName` | `var(--pui-duration-normal)` (`var(--pui-duration-fast)` after a swipe) |
+| `--pui-drawer-backdrop-ease` | Curve the scrim clears on; set through `backdropClassName` | `var(--pui-ease-standard)` |
+| `--pui-drawer-backdrop-floor` | How faint the scrim may get while the drawer is still open | `0`, or `0.4` on a modal drawer with snap points |
+
+`--pui-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
+
+## Motion
+
+The drawer slides in from its edge and back out to it. There is no scale and no fade, because it does not need either: a surface that arrives from a specific direction has already said where it came from.
+
+The entrance rides `--pui-ease-spring-precise`, the one spring in the set that does not overshoot. Overshoot here is not a flourish, it is a defect — the drawer would sail *past* flush and pull away from the very edge it is supposed to be attached to. Springs that overshoot belong on things that arrive in open space, like a dialog.
+
+The exit accelerates on `--pui-ease-exit`, which is where a drawer parts company with `Dialog`. Dialog's exit geometry runs `linear` because it never arrives anywhere: it is cut short by unmounting, halfway through a fade, and an easing curve is a statement about arriving. A drawer *does* arrive. It stays opaque the whole way and comes to rest exactly off-screen, so a curve that reads as "leaving" is the honest description of what actually happens.
+
+### Reduced motion
+
+The slide is 100% of the drawer's own size, which no travel token can express, so it is literal geometry — gated on `--pui-motion-ok` and collapsing to nothing on its own. What takes its place is a fade, faded *in* by `--pui-motion-off` so it costs nothing when motion is allowed. A drawer that slides has no business also dissolving; a drawer that cannot slide would otherwise just be switched on.
+
+Neither behaviour needs a `prefers-reduced-motion` query in this component, and there isn't one.
+
+### One rule set, four sides
+
+Everything the four sides disagree about numerically is derived from a two-number unit vector — `--pui-drawer-axis-x` and `--pui-drawer-axis-y` — pointing from the middle of the screen toward the edge the drawer rests against. Each side sets it once. The closed position and the skirt both fall out of it, so neither is written four times and neither can drift from the other.
+
+What is left in the per-side blocks is the handful of things that are genuinely different declarations rather than the same declaration with a different number in it: which way the popup aligns itself in the viewport grid, whether the size applies to width or height, which two corners are rounded, and where the nested-stacking scale shrinks toward.
+
+### The skirt
+
+Dragging a drawer the wrong way — pulling a bottom sheet *upward*, which is the first thing anybody tries — is damped rather than blocked. Base UI applies a square root, so a 300px pull still moves the surface about 17px past its resting place. That opens a gap between the drawer and the edge of the screen and shows a strip of scrim through it, which reads as the drawer having come loose from the frame.
+
+The fix is a skirt: a slab of the drawer's own background extending past its outer edge, off-screen at rest, that fills the gap as it opens. Base UI's own examples build it from extra width plus a matching negative margin. This component uses a zero-blur, zero-spread `box-shadow` offset along the axis vector instead, for one decisive reason — the popup is the scroll container, and padding its box outward would push its scrollbar off-screen along with it. A shadow paints outside the border box and is not clipped by the element's own `overflow`, so the drawer keeps its true size and its scrollbar stays where the user can reach it.
+
+`variant="floating"` sets the bleed to `0px`. A floating drawer is already surrounded by scrim, so an overdrag moves it within a gap that was meant to be there rather than opening one that was not.
+
+### Swipe velocity
+
+Base UI publishes the release velocity of a dismissing flick as `--drawer-swipe-strength`, a scalar between `0.1` and `1`, and the popup's exit duration is multiplied by it. A hard flick finishes in a couple of frames instead of coasting for a quarter of a second after the finger has already left the glass. The floor of `0.1` keeps this well clear of the `0s` at which no transition object is created and `transitionend` never fires.
+
+The scrim gets the same treatment by a different route. It is not given the scalar, so it keys off the fact of the swipe instead: whatever the velocity was, the drawer is gone quickly, and a scrim outliving it by a fifth of a second reads as the page being slow to recover.
+
+While a drag is in progress the scrim tracks it directly — half-dragging the drawer out takes the page halfway back to full brightness — so an abandoned gesture is legible in both directions and the scrim never argues with where the drawer actually is.
+
+### How a stacked parent recedes
+
+Two things happen to a parent when a child opens, and both are needed. It shrinks toward its own outer edge — the transform origin sits there, so it recedes straight backward instead of sliding away from the edge it is attached to — and it fades a scrim over itself.
+
+The scale alone is not enough, and bottom sheets are where that shows. Two of them arrive from the same edge in the same surface colour, so a 4% size difference reads as one continuous panel with a seam across it rather than as two separate surfaces. The dim is what separates the layers; the scale is what gives the movement a direction.
+
+Both of these depend on the popup not being a scroll container. An out-of-flow child of a scroll container — the dim overlay, and the grip of a `left`/`right` `Drawer.Handle` — is anchored to the scroll *origin* rather than to the scrollport, so it slides out of position the moment the drawer is scrolled. `position: fixed` is no escape: the popup's own transform makes it the containing block and the same anchoring applies. Putting the scroll on `Drawer.Content` is what keeps both of them still.
+
+## API reference
+
+### Drawer.Root
+
+<PropTable component="DrawerRoot" />
+
+`Root` renders no DOM element, so it takes no `className`, `style` or `ref` — style the popup instead. It forwards every Base UI root prop unchanged: `open`, `defaultOpen`, `onOpenChange`, `onOpenChangeComplete`, `modal`, `disablePointerDismissal`, `actionsRef`, `handle`, `triggerId`, `defaultTriggerId`, `snapPoint`, `defaultSnapPoint`, `onSnapPointChange` and `snapToSequentialPoints`. The one it does not forward is `swipeDirection`, which `side` replaces — the two are the same fact stated twice, and a component that accepted both would let you contradict yourself.
+
+`modal="trap-focus"` keeps focus inside the drawer while leaving page scroll and outside pointer interaction alone, which is the setting for a persistent inspector panel.
+
+### Drawer.Trigger
+
+<PropTable component="DrawerTrigger" />
+
+Pass `render={<Button />}` to compose the trigger with a styled button. Its own neutral styling steps aside when `render` is present, so the two never fight over the cascade. Every Base UI trigger prop (`handle`, `payload`, `nativeButton`, `id`, `style`) is forwarded.
+
+### Drawer.Popup
+
+<PropTable component="DrawerPopup" />
+
+`initialFocus`, `finalFocus`, `render` and the rest of Base UI's `Popup` props are forwarded unchanged. `keepMounted` keeps the portal in the DOM while the drawer is closed, which is what you need when something inside must survive a close — an iframe, a media element, uncommitted form state.
+
+### Drawer.Handle
+
+<PropTable component="DrawerHandle" />
+
+A decorative `<div>`, so it takes every ordinary `<div>` prop. It orients itself from the drawer's side: a horizontal pill in flow above the content on a `top`/`bottom` drawer, and on a `left`/`right` drawer a vertical grip centred down the edge that faces into the page, taken out of the column flow so it does not occupy a row of its own.
+
+### Drawer.Content
+
+<PropTable component="DrawerContent" />
+
+### Drawer.Title
+
+<PropTable component="DrawerTitle" />
+
+### Drawer.Description
+
+<PropTable component="DrawerDescription" />
+
+### Drawer.Close
+
+<PropTable component="DrawerClose" />
+
+### Drawer.Footer
+
+<PropTable component="DrawerFooter" />
+
+`Drawer.Footer` is not a Base UI part — it is a `<div>` with the standard action-row spacing — so it takes every ordinary `<div>` prop.
+
+### Drawer.SwipeArea
+
+<PropTable component="DrawerSwipeArea" />
+
+`disabled` and `swipeDirection` are forwarded to Base UI. `swipeDirection` defaults to the opposite of the drawer's own, which is what makes an inward drag open it; there is rarely a reason to set it.
+
+### Drawer.VirtualKeyboardProvider
+
+Renders no DOM element and takes only `children`, so it has no generated table. Wrap a bottom sheet containing text fields in it — see [Software keyboards](#software-keyboards).
+
+### Drawer.createHandle
+
+Creates a handle that connects a `Drawer.Root` to triggers rendered outside it, optionally carrying a typed payload. Identical to `Dialog.createHandle`.

@@ -32,6 +32,26 @@ export type {
   AlertDialogTriggerProps,
 } from "./components/dialog";
 
+export { Drawer } from "./components/drawer";
+export type {
+  DrawerSide,
+  DrawerSize,
+  DrawerVariant,
+  DrawerSnapPoint,
+  DrawerFooterAlign,
+  DrawerRootProps,
+  DrawerTriggerProps,
+  DrawerPopupProps,
+  DrawerHandleProps,
+  DrawerContentProps,
+  DrawerTitleProps,
+  DrawerDescriptionProps,
+  DrawerCloseProps,
+  DrawerFooterProps,
+  DrawerSwipeAreaProps,
+  DrawerVirtualKeyboardProviderProps,
+} from "./components/drawer";
+
 export { Select } from "./components/select";
 export type {
   SelectRootProps,
