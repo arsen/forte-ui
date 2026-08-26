@@ -47,11 +47,21 @@
     box-sizing: border-box;
   }
 
-  /* Without this a link is UA blue and underlined wherever it appears, which
-   * includes a Button rendered as an <a> and every link inside a demo. */
+  /* Without these two a link is UA blue and underlined wherever it appears,
+   * which includes a Button rendered as an <a> and every link inside a demo. */
   a {
-    color: inherit;
     text-decoration: none;
+  }
+
+  /* The colour half has to skip the library's own parts. This layer sits after
+   * every `pretty-ui.*` layer and layer order outranks specificity completely,
+   * so a flat `a { color: inherit }` beats `.root { color: var(--pui-button-fg) }`
+   * in `pretty-ui.components` — a solid Button handed `render={<Link/>}` paints
+   * its label in the page foreground instead of `--pui-color-on-primary`, which
+   * is the one pairing the contrast harness guarantees. `.pui-focus-ring` is on
+   * every interactive part the library styles, so it is the marker to exclude. */
+  a:not(.pui-focus-ring) {
+    color: inherit;
   }
 
   /* The docs site opts into the library's focus-ring pattern globally rather
