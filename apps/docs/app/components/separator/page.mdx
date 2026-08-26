@@ -1,0 +1,141 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Separator",
+  description:
+    "A rule between things, in either orientation, exposed to assistive technology unless you say otherwise.",
+};
+
+# Separator
+
+A line that divides content, and — unless you opt out — tells a screen reader
+that it does. It runs either way: `horizontal` across stacked content,
+`vertical` down a row.
+
+<DemoBlock id="separator/horizontal" />
+
+## Import
+
+```tsx
+import { Separator } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Vertical
+
+Set `orientation="vertical"` and the rule turns, along with the
+`aria-orientation` it reports.
+
+A vertical separator is an empty box, so it has no length of its own. Inside a
+flex row it stretches to the tallest sibling; anywhere else — in ordinary flow,
+or between inline items like the metadata below — it falls back to one line's
+height. That floor is `--pui-separator-min-length`, and it is the only reason a
+vertical rule is ever visible outside a flex container.
+
+<DemoBlock id="separator/vertical" />
+
+In a toolbar the stretch is the point: the rule matches whatever it sits
+between, without anyone measuring the buttons.
+
+<DemoBlock id="separator/toolbar" />
+
+<Callout kind="note">
+  If a vertical rule renders as nothing, its container is almost certainly not
+  a flex or grid row — a `position: absolute` parent and a plain block parent
+  both leave it with nothing to stretch against. Give the container
+  `display: flex`, or set `--pui-separator-min-length` to the length you want.
+</Callout>
+
+### Line style
+
+`variant` is the whole visual API — a rule has exactly one dimension. `solid`
+reads as a structural division; `dashed` and `dotted` read as provisional ones,
+which is what you want for a drop zone's edge or an optional section.
+
+<DemoBlock id="separator/variants" />
+
+### Spacing and inset
+
+Two knobs place the rule, and they are named after the axes rather than after
+`margin` because which physical side each one touches flips with the
+orientation:
+
+- `--pui-separator-spacing` runs **along** the axis being separated — the gap
+  between the rule and the content on either side of it.
+- `--pui-separator-inset` runs **across** it — how far the rule is pulled in
+  from the container's edges. Negative values push it back out, which is how a
+  rule inside a padded panel becomes full-bleed.
+
+Both default to `0`, because the common case is a flex or grid parent whose
+`gap` already does the spacing and a built-in margin would double it.
+
+<DemoBlock id="separator/custom" />
+
+### In prose
+
+`Separator` renders a `<div>`. Where the division is a genuine thematic break
+in running text, swap the element for the one HTML already has:
+
+```tsx
+<Separator render={<hr />} />
+```
+
+The styles follow. The UA gives `<hr>` an inset 3D border and a `0.5em auto`
+margin; both are cleared before this component paints its own single edge, so
+an `<hr>` and a `<div>` separator are pixel-identical.
+
+## Accessibility
+
+Base UI renders `role="separator"` with an `aria-orientation` matching the
+prop, so the division is announced rather than merely drawn.
+
+That is right when the rule *is* the grouping. It is noise when the grouping is
+already carried by a heading, a landmark or a list and the rule only reinforces
+it visually — a screen reader then reads the page's decoration out loud. Pass
+`decorative` for that case:
+
+```tsx
+<Separator decorative />
+```
+
+<Callout kind="a11y">
+  A separator carries no text and no state, so it has no contrast floor of its
+  own under SC 1.4.11 — it is not a user-interface component and does not
+  convey information that is unavailable elsewhere. The default
+  `--pui-color-border-muted` is therefore tuned to be quiet. If a rule is the
+  *only* thing separating two groups, raise it to `--pui-color-border` and
+  treat it as a graphical object that needs 3:1.
+</Callout>
+
+## Theming
+
+The line is painted with a **border**, never `background-color`. Under
+forced-colors a background is replaced with a system colour — for a plain box
+that is `Canvas`, the page's own backdrop — so a hairline drawn that way
+disappears for exactly the users who most need the grouping cue. Border colours
+are forced to `CanvasText` instead, so the rule survives with no forced-colors
+rule in the stylesheet at all.
+
+Nothing here transitions. A separator has no states, so there is nothing to
+animate, and a colour transition would only make it lag behind the rest of the
+page on a theme switch.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-separator-color` | Line colour | `var(--pui-color-border-muted)` |
+| `--pui-separator-thickness` | Line thickness | `1px` |
+| `--pui-separator-style` | Line style; `variant` sets this | `solid` |
+| `--pui-separator-spacing` | Margin along the axis being separated | `0px` |
+| `--pui-separator-inset` | Margin across it — how far in from the edges | `0px` |
+| `--pui-separator-min-length` | Length floor for a vertical rule with nothing to stretch against | `1lh` |
+
+State is on `data-orientation` and `data-variant`, so a consumer can reach both
+from plain CSS or a Tailwind arbitrary variant
+(`data-[orientation=vertical]:...`) without wrapping the component.
+
+## API reference
+
+<PropTable component="Separator" />
