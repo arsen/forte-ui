@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { Button, Dialog } from "@dofortech/pretty-ui";
+import { Button, Dialog, ScrollArea } from "@dofortech/pretty-ui";
 
 const CLAUSES = [
   "1. Accounts. You are responsible for everything that happens under your account, including anything done by teammates you invite. Keep your credentials to yourself, and tell us within 24 hours if you think someone else has them.",
@@ -22,31 +21,56 @@ const CLAUSES = [
   "16. Governing law. These terms are governed by the law of the place our company is registered, and both sides agree to attempt mediation before starting proceedings.",
 ];
 
+// Caps the popup at the height the viewport gives it — the viewport is
+// `position: fixed; inset: 0` with its own padding, so 100% is the screen less
+// that padding. Without a cap the popup grows to fit its content and the
+// viewport scrolls instead, which is the default behaviour this demo replaces.
+const popup = { maxBlockSize: "100%" } as const;
+
+// `flex: 1 1 auto` gives the scroll region every pixel the title and footer do
+// not use. `minBlockSize: 0` is what lets it *shrink*: a flex item's automatic
+// minimum size is its content, so without this it refuses to go below the full
+// height of the terms and hands the overflow straight back to the popup.
+const scroller = { flex: "1 1 auto", minBlockSize: 0 } as const;
+
 const clause = { margin: 0 } as const;
 
-export default function DialogScrollable() {
-  const popupRef = React.useRef<HTMLDivElement>(null);
-
+export default function DialogScrollInside() {
   return (
     <Dialog.Root>
       <Dialog.Trigger render={<Button variant="outline" />}>
         Read the terms
       </Dialog.Trigger>
-      {/* Focus the popup rather than the first tabbable element inside it.
-          That default is right for a dialog that fits on screen, and wrong for
-          this one: the first tabbable element here is Decline, sixteen clauses
-          down, and the browser scrolls whatever it focuses into view — so the
-          terms would open at the end of the terms. Focusing the popup leaves
-          the viewport where it starts, and still announces the title and
-          description. Any dialog long enough to scroll wants this. */}
-      <Dialog.Popup ref={popupRef} initialFocus={popupRef}>
+      <Dialog.Popup style={popup}>
         <Dialog.Title>Terms of service</Dialog.Title>
         <Dialog.Description>Last updated 1 August 2026.</Dialog.Description>
-        {CLAUSES.map((text) => (
-          <p key={text} style={clause}>
-            {text}
-          </p>
-        ))}
+        {/* Name the region. A scrollable box is announced as a group with no
+            name of its own, and Base UI makes it a real tab stop whenever it
+            can scroll. */}
+        <ScrollArea.Root style={scroller}>
+          <ScrollArea.Viewport aria-label="Terms of service">
+            <ScrollArea.Content
+              style={{
+                display: "grid",
+                gap: "var(--pui-space-4)",
+                // Clear of the overlay scrollbar, so the last words of a line
+                // are never sitting under the thumb.
+                paddingInlineEnd: "var(--pui-space-4)",
+              }}
+            >
+              {CLAUSES.map((text) => (
+                <p key={text} style={clause}>
+                  {text}
+                </p>
+              ))}
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+          <ScrollArea.Scrollbar orientation="vertical">
+            <ScrollArea.Thumb />
+          </ScrollArea.Scrollbar>
+        </ScrollArea.Root>
+        {/* Outside the scroll region, so the actions stay put instead of
+            scrolling away with the clauses. */}
         <Dialog.Footer>
           <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
             Decline

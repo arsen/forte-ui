@@ -43,6 +43,24 @@ Use `AlertDialog` when the user has to answer before anything else happens. It i
 
 <DemoBlock id="dialog/sizes" />
 
+### Controlled
+
+Pass `open` and `onOpenChange` to `Dialog.Root` to own the state yourself, and `Dialog.Trigger` leaves the tree entirely. That is the shape a dialog takes when nothing on screen is *the* button that opens it — a detail panel opened by clicking a row, a confirmation raised by a failed save, a wizard step bound to a route. Nothing else about the dialog changes; the trigger was only ever a convenience for setting a boolean.
+
+<DemoBlock id="dialog/controlled" />
+
+Two things are easy to get wrong.
+
+**Accept every close.** `onOpenChange` fires for Escape, an outside press and `Dialog.Close` alike. Filter one out and the dialog stays on screen after the user has already dismissed it — the gesture ran, your state disagreed, and the state wins. `eventDetails.reason` tells them apart if you need it (`'escape-key'`, `'outside-press'`, `'close-press'`, `'trigger-press'`), and `disablePointerDismissal` on `Dialog.Root` is the supported way to refuse one, rather than silently dropping it in the handler.
+
+**Let the content outlive the `false`.** Base UI keeps the popup mounted until the closing gesture finishes, so state the dialog *reads* cannot be cleared at the same moment the dialog is told to close — the title and body would empty out in full view of the animation. Clear it in `onOpenChangeComplete`, which runs once the transition has ended.
+
+Still close from inside the dialog with `Dialog.Close` rather than a button calling `setOpen(false)`. The state change is identical; what differs is that `Dialog.Close` is announced as the dialog's close control, and it stays wired up if the dialog later becomes uncontrolled again.
+
+The open gesture changes on its own here. `origin="trigger"` aims the scale at the button that opened the dialog, and with no `Dialog.Trigger` in the tree there is nothing to aim at — so the popup falls back to growing from its own centre. Nothing to configure; see [Growing out of the trigger](#growing-out-of-the-trigger).
+
+Focus needs nothing extra in the usual case. With no trigger to return to, Base UI restores the element that was focused before the dialog opened — the row you clicked. Point `finalFocus` on `Dialog.Popup` at a ref for the cases where that element is not the right answer: a dialog opened by a timer or a route change, where nothing was focused, or one whose opening control has been removed from the page by the time it closes.
+
 ### Nested dialogs
 
 A dialog opened from inside another one stacks: the parent slides down by `--pui-dialog-nested-offset` per level, shrinks by `--pui-dialog-nested-scale-step`, and dims itself. Base UI drives this through the `--nested-dialogs` counter and the `[data-nested-dialog-open]` attribute, and suppresses the child's backdrop so the parent stays visible behind it rather than being scrimmed twice. Pass `forceBackdrop` to a nested `Dialog.Popup` if it genuinely needs its own scrim.
@@ -51,13 +69,47 @@ Escape closes the topmost dialog only, so a nested dialog steps back to its pare
 
 <DemoBlock id="dialog/nested" />
 
-### Long content
+### Scrolling outside the dialog
 
-Scrolling happens on the viewport that wraps the popup, not inside the popup. A tall dialog therefore scrolls as a whole, its top edge stays reachable, and a press in the empty space around it still counts as an outside press — so pointer dismissal keeps working. `overscroll-behavior: contain` stops a scroll that reaches the end of the dialog from chaining to the page behind it.
+This is the default. Scrolling happens on the viewport that wraps the popup, not inside the popup. A tall dialog therefore scrolls as a whole, its top edge stays reachable, and a press in the empty space around it still counts as an outside press — so pointer dismissal keeps working. `overscroll-behavior: contain` stops a scroll that reaches the end of the dialog from chaining to the page behind it.
 
 Style that scroll container with `viewportClassName` — for example to pin a dialog to the top of a tall screen instead of centring it.
 
 <DemoBlock id="dialog/scrollable" />
+
+Note the `initialFocus` on the popup, which is not decoration. On open, focus moves to the first tabbable element inside the popup, and the browser scrolls whatever it focuses into view. Here the first tabbable element is **Decline**, sixteen clauses down — so without it the terms open at the *end* of the terms, with the whole document already scrolled past. Pointing `initialFocus` at the popup itself leaves the viewport where it starts and still announces the title and description.
+
+The default is right whenever the dialog fits on screen, which is why it is the default. Override it in any dialog long enough to scroll, or give the popup a tabbable element at the top — a `Dialog.Close iconOnly` in the corner does the job on its own.
+
+### Scrolling inside the dialog
+
+The other arrangement pins the title and the action row and scrolls only the body between them. It costs two declarations and no new parts: cap the popup with `max-block-size: 100%` — the viewport is `position: fixed; inset: 0`, so that is the screen less its own padding — and give the body a scroll container.
+
+<DemoBlock id="dialog/scroll-inside" />
+
+`ScrollArea` is doing the scrolling here rather than a bare `overflow: auto`, which buys the gradient edge fade, overlay scrollbars, a keyboard-reachable region, and an `aria-label` on it. `flex: 1 1 auto` hands it every pixel the title and footer do not use, and `min-block-size: 0` is what lets it *shrink* — a flex item's automatic minimum size is its content, so without it the region refuses to go below the full height of the body and hands the overflow straight back to the popup, which is the arrangement you were trying to leave.
+
+Prefer the default. Outside scroll keeps the whole dialog reachable, keeps the empty space around it an outside press, and never leaves a user scrolling a box inside a box. Reach for inside scroll when the actions have to stay visible while the body is read — a long agreement with Accept at the bottom of it, a picker whose Apply button must not scroll away.
+
+### Elements outside the popup
+
+Some chrome belongs beside the panel rather than in it — a close button floating clear of the corner, a pager under a preview, a caption below a sheet. Render it inside `Dialog.Popup` anyway, and add a `Dialog.Surface` for the panel itself.
+
+<DemoBlock id="dialog/outside-popup" />
+
+`Dialog.Surface` takes over the paint — background, radius, padding, gap, shadow — and `Dialog.Popup` becomes a transparent container that keeps everything else it was already doing: the width from `size`, the focus trap, the enter and exit gesture, the nested-stacking offsets. There is no prop to pair it with. The stylesheet asks `:has(> .surface)`, so the popup switches on the presence of the element and the two cannot be set to disagree. Keep it a *direct* child.
+
+The knobs do not move. `--pui-dialog-bg`, `--pui-dialog-padding`, `--pui-dialog-radius`, `--pui-dialog-gap` and `--pui-dialog-shadow` are still declared on the popup and still set on the popup — custom properties inherit, so the surface reads them from there.
+
+Two things to know:
+
+**Pointer events are handed back one level.** The container spans the popup's full width, so it is given `pointer-events: none` and its *direct children* get `pointer-events: auto` — otherwise a press in the empty space beside the close button would land on the container rather than the backdrop, and outside-press dismissal would stop working in a band across the screen. Wrap several controls in a row and that row is the direct child, so repeat the handoff on it: `pointer-events: none` on the wrapper, `auto` on the controls. The demo above does exactly this for its pager.
+
+**The viewport still clips.** It is `overflow-y: auto`, which makes `overflow-x` compute to `auto` as well, so anything pushed outside the container with a negative offset can be cut off or add a scrollbar. Laying the outside elements out *in* the container — as flex children, the way the demo does — keeps them inside it and avoids the question. If you do need to escape the box, widen `--pui-dialog-viewport-padding` through `viewportClassName` to make room.
+
+<Callout kind="a11y">
+This is the whole reason `Dialog.Surface` exists. While a modal dialog is open everything outside `Dialog.Popup` is inert, so a close button genuinely moved out of the popup is not merely unstyled — it is not in the tab order, and a touch screen-reader user cannot land on it at all. Keeping the element inside the popup and moving the *paint* to an inner element is what lets the design put it outside without taking it away.
+</Callout>
 
 ## Accessibility
 
@@ -71,7 +123,7 @@ Style that scroll container with `viewportClassName` — for example to pin a di
 
 `Dialog.Title` renders an `<h2>` and becomes the popup's `aria-labelledby`; `Dialog.Description` renders a `<p>` and becomes its `aria-describedby`. Both are wired up automatically — but only because they are rendered inside `Dialog.Popup`. Move either one outside and the popup silently loses that association.
 
-When the dialog is modal (the default, and the only option for `AlertDialog`), focus is trapped inside the popup, page scroll is locked, and the rest of the document is made inert. On open, focus moves to the first tabbable element in the popup — except when the dialog was opened by touch, where the popup itself is focused so the virtual keyboard does not spring up. On close, focus returns to the trigger. Override either end with `initialFocus` and `finalFocus` on `Dialog.Popup`.
+When the dialog is modal (the default, and the only option for `AlertDialog`), focus is trapped inside the popup, page scroll is locked, and the rest of the document is made inert. On open, focus moves to the first tabbable element in the popup — except when the dialog was opened by touch, where the popup itself is focused so the virtual keyboard does not spring up. On close, focus returns to the trigger. Override either end with `initialFocus` and `finalFocus` on `Dialog.Popup`. A dialog tall enough to scroll usually needs the first of those — see [Scrolling outside the dialog](#scrolling-outside-the-dialog).
 
 <Callout kind="a11y">
 Render `Dialog.Close` **inside** `Dialog.Popup`. In a modal dialog everything outside the popup is inert, so a close button placed elsewhere is unreachable — for a touch screen-reader user, who has no Escape key, it is the only way out. Escape and the backdrop are not substitutes for a visible, targetable close control.
@@ -92,6 +144,8 @@ The popup itself carries a focus ring, because it is the element that receives f
 Every property below is declared on the element it styles — all but the first on the popup, `--pui-dialog-viewport-padding` on the scroll container around it. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect. The popup is portalled to `<body>` as well, so an ancestor of the trigger could not reach it in any case.
 
 Set the popup's knobs on the popup itself, through `className` on `Dialog.Popup` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. `--pui-dialog-viewport-padding` goes through `viewportClassName`.
+
+A `Dialog.Surface` changes none of this. It reads `--pui-dialog-bg`, `--pui-dialog-fg`, `--pui-dialog-radius`, `--pui-dialog-padding`, `--pui-dialog-gap` and `--pui-dialog-shadow` off the popup by inheritance, so the knobs stay where you already set them.
 
 The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every dialog.
 
@@ -165,6 +219,12 @@ Pass `render={<Button />}` to compose the trigger with a styled button. Its own 
 <PropTable component="DialogPopup" />
 
 `initialFocus`, `finalFocus`, `render` and the rest of Base UI's `Popup` props are forwarded unchanged. `keepMounted` keeps the portal in the DOM while the dialog is closed, which is what you need when something inside must survive a close — an iframe, a media element, uncommitted form state.
+
+### Dialog.Surface
+
+<PropTable component="DialogSurface" />
+
+`Dialog.Surface` is not a Base UI part — it is a `<div>` carrying the panel's paint — so it takes every ordinary `<div>` prop. Use it only when something has to sit outside the panel; a dialog without one is already a panel.
 
 ### Dialog.Title
 
