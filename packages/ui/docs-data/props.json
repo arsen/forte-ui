@@ -278,6 +278,73 @@
       }
     ]
   },
+  "CollapsibleRoot": {
+    "name": "CollapsibleRoot",
+    "description": "Groups the trigger and the panel, and owns whether the panel is open.\n\nUncontrolled with `defaultOpen`, controlled with `open` plus `onOpenChange`.\nUnlike `Accordion.Root`, this is a boolean rather than a list — there is only\never one panel to open.\n\nReach for `Accordion` instead when there are several of these in a row: it\nputs each section into the page's heading outline and can close the others\nas one opens, neither of which a stack of collapsibles does.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "variant",
+        "type": "CollapsibleVariant",
+        "required": false,
+        "defaultValue": "plain",
+        "description": "How much visual weight the disclosure carries. `\"plain\"` contributes no\nbox of its own — a bare text button over its panel, for a \"Show more\" that\nlives inside a page. `\"contained\"` turns the pair into a card sized and\ncoloured to match one item of a `contained` Accordion. Both are the same\nthree parts with different knobs — nothing moves."
+      }
+    ]
+  },
+  "CollapsibleTrigger": {
+    "name": "CollapsibleTrigger",
+    "description": "The button that opens and closes the panel. Renders a `<button>` carrying\n`aria-expanded` and an `aria-controls` pointing at the panel.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--pui-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.\n\nKeep the text as the accessible name. `aria-expanded` already announces open\nand closed, so a trigger reading \"Details\" needs no \"show/hide\" wording of\nits own, and an icon-only trigger has no name at all.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ChevronDownIcon />",
+        "description": "The affordance next to the label. Defaults to a chevron that rotates when\nthe panel opens. Pass your own node to replace it — it is wrapped in the\nsame rotating, `aria-hidden` box, so a plus or a caret needs no extra\nwiring — or `null` to drop it entirely."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the label box that wraps `children`.\nApplied after the internal styles."
+      }
+    ]
+  },
+  "CollapsiblePanel": {
+    "name": "CollapsiblePanel",
+    "description": "The collapsible region. Base UI measures it and publishes the result as\n`--collapsible-panel-height`, which the stylesheet transitions.\n\n`children` goes inside an inner box, and that box is where all the padding\nlives. Padding on the collapsing element itself would still paint at\n`height: 0` — the padding box survives a zero content box — so a mounted,\nclosed panel would leave a band of empty space under the trigger. The inner\nbox also gives the content something to fade and slide on while the outer\none is busy animating its height.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "contentClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the inner element that holds the padding and\nthe content. Applied after the internal styles."
+      }
+    ]
+  },
   "DialogTrigger": {
     "name": "DialogTrigger",
     "description": "A button that opens the dialog.\n\nRenders a `<button>`. Pass `render={<Button />}` to compose it with a\nstyled button — the trigger's own neutral styling steps aside when `render`\nis present, so the two never fight over the cascade.",
@@ -861,6 +928,105 @@
       }
     ]
   },
+  "ScrollAreaRoot": {
+    "name": "ScrollAreaRoot",
+    "description": "Groups the viewport, the scrollbars and the corner.\n\nGive it the size the scroll area should occupy — a `height`, a `max-height`,\nor a track in whatever layout it sits in. It is a grid with a single\n`minmax(0, 1fr)` cell, so the viewport stays content-sized until the root is\nconstrained and fills it exactly once it is; a scroll area with no height\nanywhere on it simply grows and never scrolls.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fade",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the content fades out towards any edge it can still be scrolled\npast. The fade is a mask, so it works on any background, and its size\ntracks the remaining scroll distance — it opens as you scroll away from an\nedge and is absent while you are resting against one. Dropped\nautomatically under `forced-colors`, `prefers-contrast: more` and\n`prefers-reduced-transparency`, where the scrollbars carry the cue\ninstead."
+      },
+      {
+        "name": "scrollbarVisibility",
+        "type": "ScrollAreaScrollbarVisibility",
+        "required": false,
+        "defaultValue": "auto",
+        "description": "When the scrollbars are shown. `\"auto\"` overlays them and reveals them\nwhile the pointer is anywhere over the scroll area, while it is being\nscrolled, or while something inside it has keyboard focus; `\"always\"`\nleaves them painted. Either way a scrollbar for an axis that does not\noverflow is not rendered at all."
+      }
+    ]
+  },
+  "ScrollAreaViewport": {
+    "name": "ScrollAreaViewport",
+    "description": "The scrolling box. Base UI gives it `tabIndex={0}` whenever it can actually\nscroll, so a keyboard user can reach the content and page through it with\nthe arrow keys — and drops it back to `-1` when the content fits, so a\nnon-scrollable region does not become a dead tab stop.\n\nName it. A scrollable region is announced as a group with no name of its\nown, so pass `aria-label` (or `aria-labelledby` pointing at the heading it\nbelongs to) whenever the surrounding content does not already make it\nobvious what is being scrolled.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ScrollAreaContent": {
+    "name": "ScrollAreaContent",
+    "description": "Wraps everything inside the viewport, and is what makes horizontal scrolling\nwork: it is sized to its content rather than stretched to the viewport, so a\nrow that cannot shrink — tabs, cards, a wide table — overflows and scrolls\ninstead of being clipped, while content that can shrink still wraps normally\nand scrolls only vertically.\n\nOptional for a purely vertical scroll area, and harmless there.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ScrollAreaScrollbar": {
+    "name": "ScrollAreaScrollbar",
+    "description": "One scrollbar track, containing a `ScrollArea.Thumb`.\n\nIt overlays the content rather than insetting it, so showing or hiding it\nnever reflows what is being scrolled. Base UI removes it from the DOM\nentirely while its axis does not overflow — pass `keepMounted` if you need\nto style or measure it in that state.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "\"horizontal\" | \"vertical\"",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Which axis this scrollbar controls. Render one for each axis that can\noverflow; render both, plus `ScrollArea.Corner`, when either might."
+      }
+    ]
+  },
+  "ScrollAreaThumb": {
+    "name": "ScrollAreaThumb",
+    "description": "The draggable part of a scrollbar. Renders inside `ScrollArea.Scrollbar`,\nwhich is also what sizes it: Base UI measures the track — its padding\nincluded — and publishes the result as an inline `height` or `width`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ScrollAreaCorner": {
+    "name": "ScrollAreaCorner",
+    "description": "The square where the two scrollbars would otherwise cross. Render it\nwhenever both scrollbars are rendered — Base UI sizes each track to stop\nshort of it, and mounts the corner only while both are visible, so it costs\nnothing on a scroll area that turns out to need only one axis.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "SelectLabel": {
     "name": "SelectLabel",
     "description": "A visible label wired to the trigger. This is the preferred way to give a\nselect its accessible name — Base UI renders a `<div>` and associates it\nwith `aria-labelledby`, so clicking it focuses the trigger without opening\nthe popup. When no visible label is rendered, put `aria-label` on\n`<Select.Trigger>` instead.",
@@ -1129,6 +1295,40 @@
         "required": false,
         "defaultValue": "\"horizontal\"",
         "description": "Orientation of the rule. A select list is vertical, so the separator\nbetween two groups runs horizontally."
+      }
+    ]
+  },
+  "Separator": {
+    "name": "Separator",
+    "description": "A rule between things, built on Base UI's `Separator` primitive.\n\n```tsx\n<Separator />\n<Separator orientation=\"vertical\" />\n```\n\nA vertical separator has no length of its own — it is an empty box. Inside a\nflex row it stretches to the tallest sibling; anywhere else it falls back to\none line's height, which `--pui-separator-min-length` controls. That is the\none thing worth knowing before reaching for it:\n\n```tsx\n<div style={{ display: \"flex\", alignItems: \"center\", gap: \"var(--pui-space-3)\" }}>\n  <span>Draft</span>\n  <Separator orientation=\"vertical\" />\n  <span>Edited 3m ago</span>\n</div>\n```\n\nIn prose, swap the element for the one HTML already has for this:\n\n```tsx\n<Separator render={<hr />} />\n```\n\nEvery visual decision is a `--pui-separator-*` custom property, and the\norientation is on `data-orientation`, so it can be re-skinned from plain CSS\nor targeted with Tailwind arbitrary variants\n(`data-[orientation=vertical]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "decorative",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Drops `role=\"separator\"`, leaving the line visible but absent from the\naccessibility tree.\n\nUse it when the grouping is already conveyed some other way — a heading,\na landmark, a list — and the rule is only reinforcing it visually.\nAnnouncing a boundary that the structure already communicates makes a\nscreen reader read the page's decoration out loud."
+      },
+      {
+        "name": "orientation",
+        "type": "SeparatorOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the rule runs — and therefore which axis it separates. A\n`horizontal` rule is a line across the inline axis dividing stacked\ncontent; a `vertical` one is a line down the block axis dividing content\nin a row.\n\nIt is also what Base UI reports as `aria-orientation`, so it is a\nsemantic choice, not only a visual one."
+      },
+      {
+        "name": "variant",
+        "type": "SeparatorVariant",
+        "required": false,
+        "defaultValue": "solid",
+        "description": "The line style. A rule has exactly one visual dimension, so this is the\nwhole of it: `solid` for structural divisions, `dashed` or `dotted` for\nsofter, more provisional ones (a drop zone's edge, an optional section)."
       }
     ]
   },

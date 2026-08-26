@@ -41,6 +41,16 @@ import d_checkbox_indeterminate from "./checkbox/indeterminate";
 import d_checkbox_indeterminate_src from "./checkbox/indeterminate?raw";
 import d_checkbox_sizes from "./checkbox/sizes";
 import d_checkbox_sizes_src from "./checkbox/sizes?raw";
+import d_collapsible_basic from "./collapsible/basic";
+import d_collapsible_basic_src from "./collapsible/basic?raw";
+import d_collapsible_contained from "./collapsible/contained";
+import d_collapsible_contained_src from "./collapsible/contained?raw";
+import d_collapsible_controlled from "./collapsible/controlled";
+import d_collapsible_controlled_src from "./collapsible/controlled?raw";
+import d_collapsible_custom_icon from "./collapsible/custom-icon";
+import d_collapsible_custom_icon_src from "./collapsible/custom-icon?raw";
+import d_collapsible_disabled from "./collapsible/disabled";
+import d_collapsible_disabled_src from "./collapsible/disabled?raw";
 import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
@@ -53,6 +63,8 @@ import d_dialog_sizes from "./dialog/sizes";
 import d_dialog_sizes_src from "./dialog/sizes?raw";
 import d_drawer_basic from "./drawer/basic";
 import d_drawer_basic_src from "./drawer/basic?raw";
+import d_drawer_controlled from "./drawer/controlled";
+import d_drawer_controlled_src from "./drawer/controlled?raw";
 import d_drawer_floating from "./drawer/floating";
 import d_drawer_floating_src from "./drawer/floating?raw";
 import d_drawer_nested from "./drawer/nested";
@@ -95,6 +107,16 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_scroll_area_basic from "./scroll-area/basic";
+import d_scroll_area_basic_src from "./scroll-area/basic?raw";
+import d_scroll_area_both_axes from "./scroll-area/both-axes";
+import d_scroll_area_both_axes_src from "./scroll-area/both-axes?raw";
+import d_scroll_area_horizontal from "./scroll-area/horizontal";
+import d_scroll_area_horizontal_src from "./scroll-area/horizontal?raw";
+import d_scroll_area_tabs from "./scroll-area/tabs";
+import d_scroll_area_tabs_src from "./scroll-area/tabs?raw";
+import d_scroll_area_visibility from "./scroll-area/visibility";
+import d_scroll_area_visibility_src from "./scroll-area/visibility?raw";
 import d_select_basic from "./select/basic";
 import d_select_basic_src from "./select/basic?raw";
 import d_select_disabled_items from "./select/disabled-items";
@@ -107,6 +129,16 @@ import d_select_variants from "./select/variants";
 import d_select_variants_src from "./select/variants?raw";
 import d_select_with_label from "./select/with-label";
 import d_select_with_label_src from "./select/with-label?raw";
+import d_separator_custom from "./separator/custom";
+import d_separator_custom_src from "./separator/custom?raw";
+import d_separator_horizontal from "./separator/horizontal";
+import d_separator_horizontal_src from "./separator/horizontal?raw";
+import d_separator_toolbar from "./separator/toolbar";
+import d_separator_toolbar_src from "./separator/toolbar?raw";
+import d_separator_variants from "./separator/variants";
+import d_separator_variants_src from "./separator/variants?raw";
+import d_separator_vertical from "./separator/vertical";
+import d_separator_vertical_src from "./separator/vertical?raw";
 import d_slider_basic from "./slider/basic";
 import d_slider_basic_src from "./slider/basic?raw";
 import d_slider_collision from "./slider/collision";
@@ -171,12 +203,18 @@ export type DemoId =
   | "checkbox/group"
   | "checkbox/indeterminate"
   | "checkbox/sizes"
+  | "collapsible/basic"
+  | "collapsible/contained"
+  | "collapsible/controlled"
+  | "collapsible/custom-icon"
+  | "collapsible/disabled"
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/nested"
   | "dialog/scrollable"
   | "dialog/sizes"
   | "drawer/basic"
+  | "drawer/controlled"
   | "drawer/floating"
   | "drawer/nested"
   | "drawer/scrollable"
@@ -198,12 +236,22 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "scroll-area/basic"
+  | "scroll-area/both-axes"
+  | "scroll-area/horizontal"
+  | "scroll-area/tabs"
+  | "scroll-area/visibility"
   | "select/basic"
   | "select/disabled-items"
   | "select/grouped"
   | "select/sizes"
   | "select/variants"
   | "select/with-label"
+  | "separator/custom"
+  | "separator/horizontal"
+  | "separator/toolbar"
+  | "separator/variants"
+  | "separator/vertical"
   | "slider/basic"
   | "slider/collision"
   | "slider/disabled"
@@ -247,12 +295,18 @@ const REGISTRY: Record<DemoId, Demo> = {
   "checkbox/group": { Component: d_checkbox_group, source: d_checkbox_group_src, file: "checkbox/group.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },
   "checkbox/sizes": { Component: d_checkbox_sizes, source: d_checkbox_sizes_src, file: "checkbox/sizes.tsx" },
+  "collapsible/basic": { Component: d_collapsible_basic, source: d_collapsible_basic_src, file: "collapsible/basic.tsx" },
+  "collapsible/contained": { Component: d_collapsible_contained, source: d_collapsible_contained_src, file: "collapsible/contained.tsx" },
+  "collapsible/controlled": { Component: d_collapsible_controlled, source: d_collapsible_controlled_src, file: "collapsible/controlled.tsx" },
+  "collapsible/custom-icon": { Component: d_collapsible_custom_icon, source: d_collapsible_custom_icon_src, file: "collapsible/custom-icon.tsx" },
+  "collapsible/disabled": { Component: d_collapsible_disabled, source: d_collapsible_disabled_src, file: "collapsible/disabled.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },
   "dialog/scrollable": { Component: d_dialog_scrollable, source: d_dialog_scrollable_src, file: "dialog/scrollable.tsx" },
   "dialog/sizes": { Component: d_dialog_sizes, source: d_dialog_sizes_src, file: "dialog/sizes.tsx" },
   "drawer/basic": { Component: d_drawer_basic, source: d_drawer_basic_src, file: "drawer/basic.tsx" },
+  "drawer/controlled": { Component: d_drawer_controlled, source: d_drawer_controlled_src, file: "drawer/controlled.tsx" },
   "drawer/floating": { Component: d_drawer_floating, source: d_drawer_floating_src, file: "drawer/floating.tsx" },
   "drawer/nested": { Component: d_drawer_nested, source: d_drawer_nested_src, file: "drawer/nested.tsx" },
   "drawer/scrollable": { Component: d_drawer_scrollable, source: d_drawer_scrollable_src, file: "drawer/scrollable.tsx" },
@@ -274,12 +328,22 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "scroll-area/basic": { Component: d_scroll_area_basic, source: d_scroll_area_basic_src, file: "scroll-area/basic.tsx" },
+  "scroll-area/both-axes": { Component: d_scroll_area_both_axes, source: d_scroll_area_both_axes_src, file: "scroll-area/both-axes.tsx" },
+  "scroll-area/horizontal": { Component: d_scroll_area_horizontal, source: d_scroll_area_horizontal_src, file: "scroll-area/horizontal.tsx" },
+  "scroll-area/tabs": { Component: d_scroll_area_tabs, source: d_scroll_area_tabs_src, file: "scroll-area/tabs.tsx" },
+  "scroll-area/visibility": { Component: d_scroll_area_visibility, source: d_scroll_area_visibility_src, file: "scroll-area/visibility.tsx" },
   "select/basic": { Component: d_select_basic, source: d_select_basic_src, file: "select/basic.tsx" },
   "select/disabled-items": { Component: d_select_disabled_items, source: d_select_disabled_items_src, file: "select/disabled-items.tsx" },
   "select/grouped": { Component: d_select_grouped, source: d_select_grouped_src, file: "select/grouped.tsx" },
   "select/sizes": { Component: d_select_sizes, source: d_select_sizes_src, file: "select/sizes.tsx" },
   "select/variants": { Component: d_select_variants, source: d_select_variants_src, file: "select/variants.tsx" },
   "select/with-label": { Component: d_select_with_label, source: d_select_with_label_src, file: "select/with-label.tsx" },
+  "separator/custom": { Component: d_separator_custom, source: d_separator_custom_src, file: "separator/custom.tsx" },
+  "separator/horizontal": { Component: d_separator_horizontal, source: d_separator_horizontal_src, file: "separator/horizontal.tsx" },
+  "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
+  "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
+  "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },
   "slider/basic": { Component: d_slider_basic, source: d_slider_basic_src, file: "slider/basic.tsx" },
   "slider/collision": { Component: d_slider_collision, source: d_slider_collision_src, file: "slider/collision.tsx" },
   "slider/disabled": { Component: d_slider_disabled, source: d_slider_disabled_src, file: "slider/disabled.tsx" },

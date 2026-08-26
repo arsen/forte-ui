@@ -1,0 +1,135 @@
+/*
+ * Separator
+ *
+ * One element, one line. The interesting part is not the line — it is the two
+ * ways an empty box misbehaves, both of which have a fix here.
+ *
+ * The line is painted with a BORDER, never `background-color`. Under
+ * forced-colors a background is replaced with a system colour — for a plain
+ * box that is `Canvas`, the page's own backdrop — so a hairline drawn that way
+ * vanishes for exactly the users who most need the grouping cue. Border
+ * colours are forced to `CanvasText` instead, so the rule survives and this
+ * file needs no `@media (forced-colors: active)` block at all.
+ *
+ * The other half is flex. A separator has no content, so its size along both
+ * axes is whatever the box model gives it, and inside a flex container that is
+ * either zero or wrong:
+ *
+ *   cross axis   `align-self: stretch` makes the rule span its container — a
+ *                horizontal rule inside a `align-items: center` column would
+ *                otherwise collapse to zero WIDTH, and a vertical one inside a
+ *                row to zero HEIGHT.
+ *   main axis    `flex-shrink: 0`, because a 1px main size is the cheapest
+ *                thing for flexbox to take back when a container overflows,
+ *                and the rule disappears without a trace.
+ *
+ * The two orientations then pin the axis they must NOT stretch on to a
+ * definite size (`block-size: 0` / `inline-size: 0`). `align-self: stretch`
+ * only applies to a cross size of `auto`, so pinning one axis makes the single
+ * `stretch` above mean "fill the container" on the right axis for both
+ * orientations, and nothing on the wrong one.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared HERE, on the separator itself, so a value set
+     * on an ancestor is only INHERITED and loses to this declaration. To
+     * re-skin one rule set them via `className` (an unlayered consumer rule
+     * beats `@layer pretty-ui.components` at any specificity) or an inline
+     * `style`; to move every rule at once, re-point the global tokens on the
+     * right-hand side, which this file only reads and never re-declares. */
+    --pui-separator-color: var(--pui-color-border-muted);
+    --pui-separator-thickness: 1px;
+    --pui-separator-style: solid;
+    /* Margin ALONG the axis being separated (block for horizontal, inline for
+     * vertical). Zero by default: the common case is a flex or grid parent
+     * whose `gap` already spaces the rule, and a built-in margin would add to
+     * it. Set it when the rule sits in ordinary flow. */
+    --pui-separator-spacing: 0px;
+    /* Margin ACROSS that axis — how far the rule is pulled in from the edges.
+     * This is how a rule inside a padded panel lines up with the panel's text
+     * instead of running edge to edge. */
+    --pui-separator-inset: 0px;
+    /* Length floor for a VERTICAL rule that has nothing to stretch against —
+     * in ordinary flow, or between inline items. `1lh` is one line box, which
+     * is what makes `A | B` between two spans of text look right. Ignored by
+     * horizontal rules, which get their length from the container. */
+    --pui-separator-min-length: 1lh;
+
+    box-sizing: border-box;
+
+    /* `border` and `margin` are zeroed before either is set below so that
+     * `render={<hr />}` works: the UA gives <hr> an inset 3D border on all
+     * four sides and a `0.5em auto` margin, and neither is reachable through
+     * the single-edge longhands used further down. */
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    /* See the block comment above. */
+    align-self: stretch;
+    flex-shrink: 0;
+
+    /* Chrome, not a control: it performs no action on click, so it takes
+     * `default` per the cursor table in AGENTS.md rather than `pointer`. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+
+    /* No transition anywhere in this file on purpose. A separator has no
+     * states — no hover, no focus, no open/closed — so there is nothing to
+     * animate, and adding a colour transition would only make a theme switch
+     * lag behind the rest of the page. */
+  }
+
+  /* Horizontal ------------------------------------------------------------
+   * A block box already fills its container's inline size, so nothing sets a
+   * width; `align-self: stretch` on `.root` covers the flex-column case where
+   * it would not. */
+  .root[data-orientation="horizontal"] {
+    display: block;
+    /* Pins the block axis so `stretch` cannot apply to it inside a flex ROW.
+     * With `border-box`, a block-size below the border width is floored at the
+     * border, so the rule still paints at its full thickness — this is a
+     * "do not stretch" declaration, not a "be zero tall" one. */
+    block-size: 0;
+    border-block-start:
+      var(--pui-separator-thickness) var(--pui-separator-style)
+      var(--pui-separator-color);
+    margin-block: var(--pui-separator-spacing);
+    margin-inline: var(--pui-separator-inset);
+  }
+
+  /* Vertical --------------------------------------------------------------
+   * `inline-block`, not `block`, so the rule can sit between inline items —
+   * the `Home | About | Contact` case. Flex and grid blockify it anyway, so
+   * this costs those layouts nothing. */
+  .root[data-orientation="vertical"] {
+    display: inline-block;
+    /* The mirror of `block-size: 0` above: pins the inline axis so `stretch`
+     * cannot widen the rule inside a flex COLUMN. */
+    inline-size: 0;
+    block-size: auto;
+    min-block-size: var(--pui-separator-min-length);
+    /* Centres the rule on the text baseline's line box when it IS inline.
+     * Without it the default `baseline` alignment sits an empty box's bottom
+     * edge on the baseline, so the rule hangs above the text it divides. */
+    vertical-align: middle;
+    border-inline-start:
+      var(--pui-separator-thickness) var(--pui-separator-style)
+      var(--pui-separator-color);
+    margin-inline: var(--pui-separator-spacing);
+    margin-block: var(--pui-separator-inset);
+  }
+
+  /* Line style ------------------------------------------------------------
+   * Overrides the knob rather than the `border-*-style` longhand, so one
+   * declaration reaches both orientations. At 1px `dotted` renders as a very
+   * fine stipple; that is the intent — it is the quietest rule in the set. */
+  .root[data-variant="dashed"] {
+    --pui-separator-style: dashed;
+  }
+
+  .root[data-variant="dotted"] {
+    --pui-separator-style: dotted;
+  }
+}

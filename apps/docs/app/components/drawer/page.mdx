@@ -61,6 +61,22 @@ The popup keeps a fallback `overflow` of its own, so a drawer built without `Dra
 
 <DemoBlock id="drawer/scrollable" />
 
+### Controlled
+
+Pass `open` and `onOpenChange` to `Drawer.Root` to own the state yourself, and `Drawer.Trigger` leaves the tree entirely. That is the shape a drawer takes when nothing on screen is *the* button that opens it — a detail panel opened by clicking a row, a filter sheet bound to a keyboard shortcut, a checkout opened by a route change. Nothing else about the drawer changes; the trigger was only ever a convenience for setting a boolean.
+
+<DemoBlock id="drawer/controlled" />
+
+Two things are easy to get wrong here, and both are particular to drawers.
+
+**Accept every close.** `onOpenChange` fires for the swipe as well as for Escape, an outside press and `Drawer.Close`. Filter one out and the drawer slides back into place after the finger has already thrown it off the screen — the gesture ran, your state disagreed, and the state wins. `eventDetails.reason` tells them apart if you need it (`'swipe'`, `'escape-key'`, `'outside-press'`, `'close-press'`, `'trigger-press'`), but the default is to honour all of them.
+
+**Let the content outlive the `false`.** Base UI keeps the popup mounted until the closing slide finishes, so state the drawer *reads* cannot be cleared at the same moment the drawer is told to close — the title and body would empty out in full view of the animation. Clear it in `onOpenChangeComplete`, which runs once the transition has ended.
+
+Still close from inside the drawer with `Drawer.Close` rather than a button calling `setOpen(false)`. The state change is identical; what differs is that `Drawer.Close` is announced as the drawer's close control, and it stays wired up if the drawer later becomes uncontrolled again.
+
+Focus needs nothing extra in the usual case. With no trigger to return to, Base UI restores the element that was focused before the drawer opened — the row you clicked. Point `finalFocus` on `Drawer.Popup` at a ref for the cases where that element is not the right answer: a drawer opened by a timer or a route change, where nothing was focused, or one whose opening control has been removed from the page by the time it closes.
+
 ### Nested drawers
 
 A `Drawer.Root` rendered inside a `Drawer.Popup` stacks. The parent shrinks toward its own outer edge by `--pui-drawer-nested-scale-step` per level, so it recedes straight backward rather than sliding out from under the child, and fades `--pui-drawer-nested-scrim` over itself so the two surfaces stay told apart. Base UI suppresses the child's own backdrop, which is what keeps the parent visible behind it instead of scrimmed twice — pass `forceBackdrop` to a nested `Drawer.Popup` that genuinely needs one.

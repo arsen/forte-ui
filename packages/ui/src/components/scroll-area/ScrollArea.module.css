@@ -1,0 +1,416 @@
+/*
+ * ScrollArea
+ *
+ * A scroll container with overlay scrollbars and a gradient edge fade. Four
+ * decisions carry the file; the rest is colour.
+ *
+ * 1 — The fade is a MASK on the viewport, not a gradient overlay on the root.
+ *     An overlay has to be painted in the colour of whatever is behind the
+ *     content, so it is wrong the moment the scroll area sits on a card, an
+ *     image, or a themed surface — and it has to be re-set by hand every time
+ *     the surface under it changes. A mask fades the content itself to
+ *     transparency and is therefore right on every background, including none.
+ *
+ *     It is also driven straight off scroll position. Base UI publishes the
+ *     distance from each edge on the viewport element as
+ *     --scroll-area-overflow-{x,y}-{start,end} — px lengths, already
+ *     normalised for RTL and for the browsers that report a negative
+ *     scrollLeft there — so `min(fade-size, that distance)` is a fade that
+ *     grows out of an edge as you scroll away from it and is exactly 0px while
+ *     you are resting against it. Nothing runs per frame, and there is
+ *     deliberately no transition on it: the value IS the scroll position, so
+ *     easing it would only make the fade lag the content it describes.
+ *
+ *     Those four properties are registered by Base UI with `inherits: false`
+ *     (a documented performance measure), which is why every one of them is
+ *     read HERE, on the viewport itself, where they are declared. Reading them
+ *     from a descendant returns the initial 0px, silently and with no fade.
+ *
+ * 2 — The focus ring is drawn on the ROOT even though the VIEWPORT is what
+ *     takes focus. See the rule below; in short, a mask is clipped to the
+ *     element's border box and applies to everything the element paints, so a
+ *     ring on the viewport would be cropped and then faded out by the very
+ *     effect it has to stay visible through.
+ *
+ * 3 — Content is `display: table` so that one component serves both axes.
+ *     A block child of a scroll container is stretched to the scrollport, so a
+ *     row of tabs would be cut off rather than scrolled; `width: max-content`
+ *     fixes that and breaks the vertical case instead, by refusing to wrap a
+ *     paragraph. A table box is sized to `max(min-content, min(max-content,
+ *     available))`, which is both answers at once — see `.content`.
+ *
+ * 4 — There is no `prefers-reduced-motion` block. The only motion here is the
+ *     scrollbars fading in, which already runs on --pui-duration-fast.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens, declared here on ScrollArea.Root — every other part is
+     * a descendant, so they inherit down, and the root's own declaration beats
+     * anything an ancestor sets. Re-skin one scroll area by setting these on
+     * the root element; re-skin every one by re-pointing the global tokens
+     * they resolve to. */
+
+    /* How far the fade reaches in from an edge, at most. The actual size is
+     * this or the remaining scroll distance, whichever is smaller. */
+    --pui-scroll-area-fade-size: var(--pui-space-5);
+
+    /* Track thickness, on both axes. SC 2.5.8 asks for 24x24 targets and this
+     * is half of one: it passes on the *spacing* exception instead, since a
+     * scrollbar is pinned to an edge of the region with no other target within
+     * 24px of it. That exception is what makes 12px legitimate, and it stops
+     * being true if you put anything else against that edge — raise this for a
+     * coarse-pointer layout, or if you crowd the track. */
+    --pui-scroll-area-scrollbar-size: var(--pui-space-3);
+    /* Inset between track edge and thumb. Base UI measures the track's padding
+     * when it sizes the thumb, so this stays a real padding rather than a
+     * margin on the thumb. */
+    --pui-scroll-area-track-padding: 2px;
+    --pui-scroll-area-track-bg: transparent;
+    --pui-scroll-area-track-bg-hover: var(--pui-color-panel);
+    --pui-scroll-area-thumb-bg: var(--pui-color-border-strong);
+    --pui-scroll-area-thumb-bg-hover: var(--pui-color-foreground-subtle);
+    --pui-scroll-area-thumb-bg-active: var(--pui-color-foreground-muted);
+    --pui-scroll-area-thumb-radius: var(--pui-radius-pill);
+    --pui-scroll-area-corner-bg: transparent;
+
+    box-sizing: border-box;
+    /* `position: relative` arrives from Base UI as an inline style — it is
+     * what the absolutely positioned scrollbars and corner are measured
+     * against, so it must not be overridden here.
+     *
+     * Grid rather than block, for the same reason Tabs.Root is one: a single
+     * `minmax(0, 1fr)` track leaves the viewport content-sized while the root
+     * has no height, and gives it a DEFINITE height the moment the root gets
+     * one — including from `max-height`, which is the shape most scroll areas
+     * are actually written in. A plain block viewport with `height: 100%`
+     * resolves to auto against an indefinite parent, grows past the root, and
+     * never scrolls at all. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  /* Viewport ---------------------------------------------------------------
+   * The scroll container itself. `overflow: scroll` and the class that hides
+   * the native scrollbars both arrive from Base UI as inline styles; nothing
+   * here re-declares them. */
+  .viewport {
+    box-sizing: border-box;
+    grid-area: 1 / 1;
+    /* A grid item's automatic minimum size is its content size, so without
+     * these the viewport refuses to shrink below the height of everything
+     * inside it — and a box that is never smaller than its content never
+     * scrolls. The `minmax(0, 1fr)` track above is the other half of the same
+     * fix: one caps the track, this one lets the item fit in it. */
+    min-width: 0;
+    min-height: 0;
+    /* Stops a scroll that has hit the end here from continuing in the page
+     * behind it — the standard behaviour for a self-contained scroll region,
+     * and what keeps a horizontal tab strip from dragging the page sideways. */
+    overscroll-behavior: contain;
+    /* The viewport is the box with `overflow`, so it is the box that clips.
+     * Without this, a radius set by a consumer on the Root would be painted by
+     * the root and ignored by the content scrolling under it. The two boxes
+     * are exactly the same size — the scrollbars overlay rather than inset the
+     * viewport — so inheriting the radius is exact rather than approximate. */
+    border-radius: inherit;
+  }
+
+  /* The four fade sizes, derived once. `min()` takes the smaller of the
+   * configured size and the distance still scrollable on that edge, so the
+   * fade opens as the content moves under it and closes flush at the end. The
+   * 50% term is a guard: two fades larger than the viewport would put the
+   * gradient's stops out of order, which CSS resolves by clamping them into a
+   * hard line across the middle.
+   *
+   * The `, 0px` fallbacks are load-bearing. Before Base UI's first
+   * measurement — server rendering, and the first frame after hydration —
+   * these properties do not exist, and a bare `var()` on a missing property
+   * makes the whole mask-image declaration invalid at computed-value time.
+   * The fallback makes that state mean "no fade" instead of "no mask". */
+  .viewport[data-fade] {
+    --pui-scroll-area-fade-y-start: min(
+      var(--pui-scroll-area-fade-size),
+      var(--scroll-area-overflow-y-start, 0px),
+      50%
+    );
+    --pui-scroll-area-fade-y-end: min(
+      var(--pui-scroll-area-fade-size),
+      var(--scroll-area-overflow-y-end, 0px),
+      50%
+    );
+    --pui-scroll-area-fade-x-start: min(
+      var(--pui-scroll-area-fade-size),
+      var(--scroll-area-overflow-x-start, 0px),
+      50%
+    );
+    --pui-scroll-area-fade-x-end: min(
+      var(--pui-scroll-area-fade-size),
+      var(--scroll-area-overflow-x-end, 0px),
+      50%
+    );
+  }
+
+  /* Applied only when there is something to fade. A mask promotes the viewport
+   * to its own compositing layer, which is not worth paying for on a scroll
+   * area that fits its content — and `[data-has-overflow-*]` is exactly the
+   * question being asked.
+   *
+   * `black` and `transparent` here are mask alpha, not colour: for a gradient
+   * the default `mask-mode: match-source` reads the alpha channel, so these
+   * are the numbers 1 and 0. Both are pure black, so the interpolation between
+   * them cannot introduce a grey fringe.
+   *
+   * The vertical layer is written physically (`to bottom`) because the block
+   * axis has no direction to answer for. The horizontal one cannot be: a
+   * gradient's direction is physical, so the ANGLE carries the sign —
+   * `calc(90deg * var(--pui-direction))` is 90deg (to right) in LTR and -90deg
+   * (to left) in RTL, which makes the gradient's first stop the inline-START
+   * edge either way, matching the axis Base UI already normalised the overflow
+   * distances onto. Writing `to right` and swapping the two variables in an
+   * `[dir="rtl"]` descendant rule would break an LTR island inside an RTL
+   * page, which is the whole reason --pui-direction is inherited. */
+  .viewport[data-fade]:is([data-has-overflow-x], [data-has-overflow-y]) {
+    mask-image:
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--pui-scroll-area-fade-y-start),
+        black calc(100% - var(--pui-scroll-area-fade-y-end)),
+        transparent 100%
+      ),
+      linear-gradient(
+        calc(90deg * var(--pui-direction)),
+        transparent 0,
+        black var(--pui-scroll-area-fade-x-start),
+        black calc(100% - var(--pui-scroll-area-fade-x-end)),
+        transparent 100%
+      );
+    /* Both axes at once: a pixel is visible only where BOTH layers say so, so
+     * a corner that is fading on both edges fades once, not twice. */
+    mask-composite: intersect;
+  }
+
+  /* The ring goes on the root, and the viewport's own is suppressed.
+   *
+   * Base UI makes the viewport a tab stop whenever it can scroll — SC 2.1.1, a
+   * scrollable region a keyboard user cannot reach is content they cannot
+   * read — so its focus has to be visible. It cannot be shown ON the viewport:
+   * a mask applies to everything the element paints, including its outline,
+   * and is clipped to its border box, so the ring would be cropped on all four
+   * sides and then faded out by the very edge treatment it needs to survive.
+   * The root is unmasked, is exactly the same box, and is the element the
+   * scrollbars sit in — so ringing it outlines the scroll region as a whole,
+   * which is what has focus.
+   *
+   * `:has(> .viewport:focus-visible)` rather than the `.pui-focus-ring-within`
+   * pattern class, which fires for ANY focused descendant: a button — or a
+   * tab — inside the content would then paint its own ring and the whole
+   * region's at the same time. The child combinator also keeps a nested scroll
+   * area from ringing its parent.
+   *
+   * The declarations mirror `.pui-focus-ring` in patterns.css. Its
+   * forced-colors counterpart is mirrored too, in the a11y layer at the foot
+   * of this file — a ring that only exists here would be the one that
+   * disappears in high contrast. */
+  .root:has(> .viewport:focus-visible) {
+    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
+    outline-offset: var(--pui-focus-ring-offset);
+    box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+  }
+
+  .viewport:focus-visible {
+    outline: none;
+  }
+
+  /* Content ----------------------------------------------------------------
+   * One box that sizes correctly on both axes, which no ordinary display value
+   * manages:
+   *
+   *   block          stretched to the scrollport. A row of tabs is clipped
+   *                  rather than scrolled, and a list's background stops at
+   *                  the fold instead of running under the scrolled content.
+   *   max-content    scrolls horizontally, but a paragraph now refuses to wrap
+   *                  and every vertical scroll area gains a horizontal one.
+   *
+   * A table box is sized to max(min-content, min(max-content, available)).
+   * Content that CANNOT shrink — a flex row of `flex: 0 0 auto` tabs, a wide
+   * table — has a min-content width larger than the scrollport, so the box
+   * grows to it and overflows, which is the horizontal case. Content that can
+   * shrink has a small min-content width, so the box lands on the available
+   * width and wraps exactly as a block would. `min-width: 100%` supplies the
+   * other half: a table is shrink-to-fit, so narrow content would otherwise
+   * leave the viewport's background and any hover targets short of its edge. */
+  .content {
+    box-sizing: border-box;
+    display: table;
+    min-width: 100%;
+  }
+
+  /* Scrollbars -------------------------------------------------------------
+   * `position: absolute`, `touch-action: none` and the insets — which already
+   * subtract the corner, so the two tracks never overlap — all arrive from
+   * Base UI as inline styles. What is left is size, skin and visibility.
+   *
+   * Base UI unmounts a track whose axis does not overflow (`keepMounted` is
+   * false by default), so there is no rule here for "not scrollable": that
+   * scrollbar is simply not in the DOM. */
+  .scrollbar {
+    box-sizing: border-box;
+    display: block;
+    padding: var(--pui-scroll-area-track-padding);
+    border-radius: var(--pui-scroll-area-thumb-radius);
+    background-color: var(--pui-scroll-area-track-bg);
+    /* It drags and it pages on click, so it is a control (see the pointer rule
+     * in AGENTS.md). We do not follow the native scrollbar's `default` here
+     * for the same reason we do not follow the native select's arrow. */
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .scrollbar[data-orientation="vertical"] {
+    width: var(--pui-scroll-area-scrollbar-size);
+  }
+
+  .scrollbar[data-orientation="horizontal"] {
+    height: var(--pui-scroll-area-scrollbar-size);
+  }
+
+  /* `data-hovering` is set from the ROOT's pointer events, not the track's, so
+   * the scrollbars appear together the moment the pointer enters the region —
+   * before the user has to find a 12px target that is currently invisible.
+   * `data-scrolling` covers the wheel and touch cases, where the pointer may
+   * never be over the region at all. */
+  .scrollbar:is([data-hovering], [data-scrolling]) {
+    opacity: 1;
+  }
+
+  /* `always` is an opt out of the overlay behaviour, not a state. Kept as its
+   * own rule rather than folded into the one above — they happen to declare
+   * the same thing today, but one describes a transient state and the other a
+   * setting, and a change to either should not silently move the other.
+   * (`auto` needs no rule: it is the `opacity: 0` base.) */
+  .scrollbar[data-visibility="always"] {
+    opacity: 1;
+  }
+
+  /* Keyboard parity. A pointer user gets the scrollbars on hover; without this
+   * a keyboard user scrolling the region with the arrow keys — or tabbing
+   * through controls inside it — has no thumb to read their position from.
+   * Deliberately every focus, not just the viewport's own. */
+  .root:has(:focus-visible) .scrollbar {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    .scrollbar:hover {
+      background-color: var(--pui-scroll-area-track-bg-hover);
+    }
+  }
+
+  /* Thumb ------------------------------------------------------------------
+   * The main-axis size arrives from Base UI as an inline `height` / `width`
+   * fed by --scroll-area-thumb-*, which is measured against the track WITH its
+   * padding subtracted — which is why the inset above is padding on the track
+   * rather than a margin here. Only the cross axis is ours to set. */
+  .thumb {
+    box-sizing: border-box;
+    border-radius: var(--pui-scroll-area-thumb-radius);
+    background-color: var(--pui-scroll-area-thumb-bg);
+    cursor: pointer;
+    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .thumb[data-orientation="vertical"] {
+    width: 100%;
+  }
+
+  .thumb[data-orientation="horizontal"] {
+    height: 100%;
+  }
+
+  @media (hover: hover) {
+    .thumb:hover {
+      background-color: var(--pui-scroll-area-thumb-bg-hover);
+    }
+  }
+
+  .thumb:active {
+    background-color: var(--pui-scroll-area-thumb-bg-active);
+  }
+
+  /* Corner -----------------------------------------------------------------
+   * Base UI renders this only while both tracks are visible, and sizes it from
+   * their measured thickness, so it is exactly the square the two would
+   * otherwise fight over. */
+  .corner {
+    background-color: var(--pui-scroll-area-corner-bg);
+  }
+}
+
+@layer pretty-ui.a11y {
+  /*
+   * The fade is, by construction, a loss of contrast at the edges of the
+   * content, achieved by making text translucent. All three of these users
+   * have asked for the opposite: forced colors replaces the palette with a
+   * guaranteed-contrasting one of the user's choosing, `prefers-contrast:
+   * more` asks for as much separation as we can give, and
+   * `prefers-reduced-transparency` asks for text that is not translucent —
+   * which is the entire mechanism here, not a decorative layer over it. So the
+   * mask is dropped and the scrollbars — the other half of the "there is more
+   * past this edge" cue, and the half that survives a fixed palette — stop
+   * hiding, which is why the two changes belong in one block rather than one.
+   *
+   * Combined into a single query rather than stacked, so they cannot disagree
+   * about the same declarations: `prefers-contrast: custom` matches
+   * forced-colors users too, and the forced-colors block below only ADDS to
+   * this one. (`prefers-reduced-transparency` is not Baseline — Firefox does
+   * not ship it — so it is a bonus here, never the only thing keeping the
+   * content legible.)
+   */
+  @media (forced-colors: active), (prefers-contrast: more),
+    (prefers-reduced-transparency: reduce) {
+    .viewport {
+      mask-image: none;
+    }
+
+    .scrollbar {
+      opacity: 1;
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* System colours, assigned by hand: the UA derives them from native
+     * element semantics, and these parts are all divs. The border is what
+     * separates the track from the content beside it once every background
+     * collapses to Canvas. */
+    .scrollbar {
+      border: 1px solid CanvasText;
+      background-color: Canvas;
+    }
+
+    .thumb {
+      background-color: CanvasText;
+    }
+
+    .corner {
+      background-color: Canvas;
+    }
+
+    /* The counterpart of the `.pui-focus-ring` rule in a11y.css, which cannot
+     * reach this ring because the ring is not carried by that class — the
+     * element that takes focus is not the element that can paint it. Keeping
+     * the two in step is the price of that; the alternative is a scroll region
+     * with no visible focus in the one mode that most needs it. */
+    .root:has(> .viewport:focus-visible) {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+  }
+}

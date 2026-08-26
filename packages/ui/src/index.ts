@@ -27,6 +27,14 @@ export type {
   CheckboxGroupOrientation,
 } from "./components/checkbox";
 
+export { Collapsible } from "./components/collapsible";
+export type {
+  CollapsibleVariant,
+  CollapsibleRootProps,
+  CollapsibleTriggerProps,
+  CollapsiblePanelProps,
+} from "./components/collapsible";
+
 export { Dialog, AlertDialog } from "./components/dialog";
 export type {
   DialogSize,
@@ -80,6 +88,17 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { ScrollArea } from "./components/scroll-area";
+export type {
+  ScrollAreaScrollbarVisibility,
+  ScrollAreaRootProps,
+  ScrollAreaViewportProps,
+  ScrollAreaContentProps,
+  ScrollAreaScrollbarProps,
+  ScrollAreaThumbProps,
+  ScrollAreaCornerProps,
+} from "./components/scroll-area";
+
 export { Select } from "./components/select";
 export type {
   SelectRootProps,
@@ -95,6 +114,13 @@ export type {
   SelectSize,
   SelectVariant,
 } from "./components/select";
+
+export { Separator } from "./components/separator";
+export type {
+  SeparatorProps,
+  SeparatorOrientation,
+  SeparatorVariant,
+} from "./components/separator";
 
 export { Slider } from "./components/slider";
 export type {
