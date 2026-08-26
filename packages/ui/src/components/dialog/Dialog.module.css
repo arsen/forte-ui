@@ -352,6 +352,75 @@
     border-color: var(--pui-scrim-color);
   }
 
+  /* Elements outside the surface -------------------------------------------
+   * Chrome that has to sit OUTSIDE the panel — a close button floating clear
+   * of the corner, a caption under the sheet, pager arrows beside it — still
+   * has to be rendered INSIDE `Dialog.Popup`. In a modal dialog everything
+   * outside the popup is inert, so a button moved out of it is not merely
+   * unstyled, it is unreachable: no tab stop, and nothing a touch
+   * screen-reader user can land on.
+   *
+   * So the popup stops being the panel and becomes a transparent container
+   * around it, and `Dialog.Surface` becomes the panel. The popup keeps
+   * everything that is actually its job — the sizing, the focus trap, the
+   * enter/exit gesture, the nested-stacking offsets — and gives up only the
+   * paint.
+   *
+   * `:has()` rather than a prop, the same trick `Field` uses to tell a
+   * checkbox label from a text one: a prop and a part that must agree can be
+   * set to disagree, and both halves of the mistake are silent — the surface
+   * without the prop paints a panel inside a panel, the prop without the
+   * surface paints nothing at all.
+   *
+   * `pointer-events` is the other half. The container spans the full popup
+   * width and whatever height its children need, so without this a press in
+   * the empty space beside the close button would land on the container
+   * instead of the backdrop and outside-press dismissal would quietly stop
+   * working in a band across the screen. `> *` hands it back to the real
+   * children; the `::after` dim below is a pseudo-element, which `*` does not
+   * match, and it opts out on its own anyway.
+   * ---------------------------------------------------------------------- */
+  .popup:has(> .surface) {
+    /* The properties, not the knobs — `--pui-dialog-bg`, `-padding` and
+     * `-shadow` keep their values here so `.surface` inherits them and a
+     * consumer retunes the panel from the popup exactly as before. */
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  .popup:has(> .surface) > * {
+    pointer-events: auto;
+  }
+
+  /* The nested-dialog ring painted below would trace the *container* — a
+   * scrim-coloured rounded rectangle drawn through empty backdrop around
+   * everything placed outside the panel. There is no undimmed background
+   * showing through here for it to correct, because the container has no
+   * background; the `::after` overlay covers the surface and its border
+   * alike. */
+  .popup:has(> .surface)[data-nested-dialog-open] {
+    border-color: transparent;
+  }
+
+  .surface {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* Reads the knobs off the popup, which is the element a consumer sets them
+     * on and which is still this element's parent. Custom properties inherit,
+     * so nothing has to be restated and `style={{ "--pui-dialog-padding" }}`
+     * on `Dialog.Popup` keeps working unchanged. */
+    gap: var(--pui-dialog-gap);
+    padding: var(--pui-dialog-padding);
+    border-radius: var(--pui-dialog-radius);
+
+    background-color: var(--pui-dialog-bg);
+    color: var(--pui-dialog-fg);
+    box-shadow: var(--pui-dialog-shadow);
+  }
+
   /* Sizes ------------------------------------------------------------------ */
   .popup[data-size="sm"] {
     --pui-dialog-max-inline-size: 24rem;
@@ -506,6 +575,32 @@
     .close[data-icon-only]:hover:not([data-disabled]) {
       background-color: var(--pui-color-panel-hover);
       color: var(--pui-color-foreground);
+    }
+  }
+}
+
+/* Forced colors ------------------------------------------------------------
+ * Ordered after `pretty-ui.components`, so these win on layer order alone —
+ * specificity is not what decides it. See CONTRIBUTING.md.
+ * ------------------------------------------------------------------------ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* `.pui-hc-surface` is on the popup unconditionally, and under forced
+     * colors it repaints that element as an opaque Canvas box with a
+     * CanvasText outline. That is exactly right while the popup IS the panel,
+     * and exactly wrong once it is only a transparent container: the box would
+     * be drawn around the whole container — through the backdrop, around the
+     * close button and every other element deliberately placed outside the
+     * panel — which is the one silhouette the pattern exists to avoid.
+     *
+     * The treatment is not dropped, it moves: `Dialog.Surface` carries
+     * `.pui-hc-surface` itself, so the panel keeps its boundary. This rule
+     * only takes it off the container, and it is here rather than in the
+     * components block because `.pui-hc-surface` is applied from `a11y` and a
+     * components-layer rule can never outrank a layer above it. */
+    .popup:has(> .surface) {
+      border-color: transparent;
+      background-color: transparent;
     }
   }
 }
