@@ -218,7 +218,15 @@ a {
   max-width: 48rem;
 }
 
-.prose h1 {
+/* Child combinator, not descendant: an MDX heading is always a direct child of
+ * `.prose`, and a demo can now render headings of its own — every
+ * `Accordion.Header` is an `<h3>`. These rules are unlayered, so they beat the
+ * library's own `margin: 0` whatever its specificity (that is the point of
+ * shipping inside `@layer pretty-ui.*`), and a demo accordion would inherit a
+ * 2rem gap above every row. Scoping the headings to the top level leaves the
+ * demo frame alone. The paragraph and list rules below stay descendant-scoped
+ * on purpose — callouts and table cells do want them. */
+.prose > h1 {
   margin: 0 0 var(--pui-space-3);
   font-size: clamp(2rem, 1.4rem + 2vw, 2.75rem);
   font-weight: var(--pui-font-weight-bold);
@@ -226,7 +234,7 @@ a {
   line-height: 1.1;
 }
 
-.prose h2 {
+.prose > h2 {
   margin: var(--pui-space-8) 0 var(--pui-space-3);
   font-size: var(--pui-font-size-6);
   font-weight: var(--pui-font-weight-semibold);
@@ -234,7 +242,7 @@ a {
   scroll-margin-top: 5rem;
 }
 
-.prose h3 {
+.prose > h3 {
   margin: var(--pui-space-6) 0 var(--pui-space-2);
   font-size: var(--pui-font-size-4);
   font-weight: var(--pui-font-weight-semibold);
@@ -263,6 +271,25 @@ a {
   margin-bottom: var(--pui-space-1);
 }
 
+/* A demo preview is not prose.
+ *
+ * The three rules above are unlayered, so they beat anything the library ships
+ * inside `@layer pretty-ui.*` at any specificity. That is the library's whole
+ * design — app CSS always wins — but it is exactly wrong inside a demo, which
+ * exists to show what a component looks like with no page styles on top of it.
+ * Left alone, `.prose p` puts a 16px bottom margin on every `Field.Description`
+ * and opens a gap between it and the error message that no consumer would see.
+ *
+ * `revert-layer` from an unlayered rule rolls the property back to the value
+ * the previous layer produced — i.e. the component's own `margin: 0` — rather
+ * than to the UA default. That matters for the `<ul>` a `Field.Error` renders
+ * for multiple messages, whose list indent is set by the library: a blunt
+ * `padding-inline-start: 0` would flatten it. */
+.prose .demoPreview :is(p, ul, ol, li) {
+  margin: revert-layer;
+  padding-inline-start: revert-layer;
+}
+
 .prose a:not(.navLink):not(.tocLink) {
   color: var(--pui-color-primary-text);
   text-decoration: underline;
@@ -280,15 +307,15 @@ a {
 
 /* Anchored headings reveal their link on hover, but keyboard users get it on
  * focus too — hover-only affordances are unreachable without a pointer. */
-.prose :is(h2, h3) > a {
+.prose > :is(h2, h3) > a {
   opacity: 0;
   margin-inline-start: var(--pui-space-2);
   color: var(--pui-color-foreground-subtle);
   transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
 }
 
-.prose :is(h2, h3):hover > a,
-.prose :is(h2, h3) > a:focus-visible {
+.prose > :is(h2, h3):hover > a,
+.prose > :is(h2, h3) > a:focus-visible {
   opacity: 1;
 }
 

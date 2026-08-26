@@ -31,13 +31,15 @@ import { Switch } from "@dofortech/pretty-ui";
 
 ### Disabled
 
-`disabled` blocks interaction and drops the whole control to 55% opacity. Both states stay distinguishable while disabled — put the reason in visible text next to the switch, because a disabled switch is skipped by <kbd>Tab</kbd> and cannot show a tooltip to a keyboard user.
+`disabled` blocks interaction and drops the whole control to 55% opacity. Both states stay distinguishable while disabled — put the reason in visible text next to the switch, because a disabled switch is skipped by <kbd>Tab</kbd> and cannot show a tooltip to a keyboard user. Set it on the `Field.Root` rather than on the `Switch`, as the demo does: it takes precedence over the control's own prop and dims the label with it, so that reason does not stay at full contrast beside a greyed-out control.
 
 <DemoBlock id="switch/disabled" />
 
 ### Settings list
 
-A list of settings usually needs a description under each label, which is more text than belongs inside an accessible name. Point `aria-describedby` at the description and label the switch with a sibling `<label htmlFor>` — that pattern needs `nativeButton` and `render={<button />}`, because `htmlFor` only resolves to a labelable element and, with `nativeButton`, `id` lands on the root button rather than on the hidden input. The rendered button gets `type="button"`, so it will not submit a surrounding form.
+A list of settings usually needs a description under each label, which is more text than belongs inside an accessible name. [`Field`](/components/field) is what this is for: `Field.Description` is registered into the control's `aria-describedby`, and `Field.Label` sits beside the switch rather than around it. There is no `nativeButton` here and no `htmlFor` to write — the label points at the switch's hidden `<input>`, which is a labelable element, so clicking the setting's name toggles it.
+
+The one thing `Field` cannot guess is the layout. `Field.Root` is a column; the row here is three declarations of the demo's own.
 
 <DemoBlock id="switch/settings-list" />
 
@@ -63,9 +65,27 @@ Base UI renders the root with `role="switch"` and `aria-checked`, so the state r
 
 <Callout kind="a11y">
 
-A switch renders no text of its own, so you have to supply the name. The simplest correct pattern
-is an enclosing `<label>`, which works because the root renders a `<span>` rather than a
-`<button>`:
+A switch renders no text of its own, so you have to supply the name. Reach for
+[`Field`](/components/field) first — it generates the id, and gives you a description and a
+`name` in the same move. Either arrangement works, and which one you want is only a question of
+where the switch sits:
+
+```tsx
+// Wrapping: the label contains the switch.
+<Field.Root name="notify">
+  <Field.Label><Switch /> Email notifications</Field.Label>
+</Field.Root>
+
+// Sibling: label on the left, switch on the right. No nativeButton needed —
+// the label's htmlFor resolves to the switch's hidden input.
+<Field.Root name="notify">
+  <Field.Label>Email notifications</Field.Label>
+  <Switch />
+</Field.Root>
+```
+
+Without a `Field`, an enclosing `<label>` is the simplest correct pattern, and it works because
+the root renders a `<span>` rather than a `<button>`:
 
 ```tsx
 <label>
@@ -73,8 +93,8 @@ is an enclosing `<label>`, which works because the root renders a `<span>` rathe
 </label>
 ```
 
-For a sibling label, set `nativeButton` and render a real button — and point `htmlFor` at the
-root, since `nativeButton` moves `id` there from the hidden input:
+For a hand-wired sibling label, set `nativeButton` and render a real button — and point `htmlFor`
+at the root, since `nativeButton` moves `id` there from the hidden input:
 
 ```tsx
 <label htmlFor="notify">Email notifications</label>

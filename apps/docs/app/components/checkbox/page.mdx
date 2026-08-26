@@ -19,9 +19,11 @@ flipped rather than when a form is submitted, a `Switch` reads better.
 <DemoBlock id="checkbox/basic" />
 
 `Checkbox` renders a `<span>` with `role="checkbox"` and a hidden `<input>` next
-to it. That means it carries no accessible name of its own — the enclosing
-`<label>` above is what gives it one, and every example on this page keeps that
-pattern.
+to it. That means it carries no accessible name of its own — the
+[`Field.Label`](/components/field) wrapped around it above is what gives it one,
+and every example on this page keeps that pattern. A `Field` generates the id,
+points the label at the control and carries the `name` into form submission, so
+none of that appears in the demo code.
 
 ## Import
 
@@ -49,6 +51,10 @@ array. Give each `Checkbox` a `value`, then use `defaultValue` for an
 uncontrolled group or `value` plus `onValueChange` for a controlled one. Set
 `orientation="horizontal"` to lay the items out in a row instead; horizontal
 groups wrap.
+
+The group's own heading is a `Field.Label` with `nativeLabel={false}` — it names
+the group rather than any one checkbox in it, so it must not resolve to a single
+control through `htmlFor`. Each row is then a `Field.Item` with its own label.
 
 <DemoBlock id="checkbox/group" />
 
@@ -94,8 +100,11 @@ while the hidden input still submits whatever `checked` says.
 ### Disabled
 
 `disabled` dims the box, blocks pointer and keyboard interaction, and sets
-`aria-disabled`. Style the label text yourself — the prop only reaches the
-control, not the words next to it.
+`aria-disabled`. On its own it reaches the control and not the words next to it —
+so put it on the `Field.Root` instead, as the demo does. That takes precedence
+over the control's own prop and puts `data-disabled` on the label too, which is
+what keeps the reason an option is unavailable from sitting at full contrast
+beside a greyed-out box.
 
 <DemoBlock id="checkbox/disabled" />
 
@@ -140,20 +149,21 @@ and `form` behave as they would on a native checkbox.
 <Callout kind="a11y">
   The checkbox has no accessible name until you give it one. Pick one of:
 
-  - wrap it in a `<label>` (the simplest, and what these demos do);
-  - pair it with a sibling `<label htmlFor>` and pass `nativeButton render={<button />}` so the `id` lands on a real button; or
-  - put it inside a `Field.Root` with a `Field.Label`.
+  - put it inside a `Field.Root` and wrap it in a `Field.Label` — what these demos do, and the only one that also gives you a description, an error message and a `name` in the same move;
+  - wrap it in a plain `<label>`, which works because the root renders a `<span>`; or
+  - pair it with a sibling `<label htmlFor>` and pass `nativeButton render={<button />}` so the `id` lands on a real button.
 
   A bare `<Checkbox />` with visible text next to it is not labelled — screen
   readers announce it as an unnamed checkbox.
 </Callout>
 
 <Callout kind="a11y">
-  `CheckboxGroup` renders a `role="group"` with no name of its own. Point
-  `aria-labelledby` at the element holding the group's heading text (as in the
-  group demo above), or render the group as a `Fieldset.Root` with a
-  `Fieldset.Legend`. Without a name, the grouping is invisible to assistive
-  technology and the checkboxes read as unrelated.
+  `CheckboxGroup` renders a `role="group"` with no name of its own. Wrap it in a
+  `Field.Root` and name it with a `Field.Label nativeLabel={false}` (as in the
+  group demo above), render it inside a `Fieldset.Root` with a
+  `Fieldset.Legend`, or point `aria-labelledby` at your own heading element.
+  Without a name, the grouping is invisible to assistive technology and the
+  checkboxes read as unrelated.
 </Callout>
 
 **Motion.** The mark is drawn on rather than faded in: both paths carry

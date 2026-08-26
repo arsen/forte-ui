@@ -1,0 +1,210 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Field",
+  description:
+    "Binds one control to its label, description and error message, and owns the validation state all of them read.",
+};
+
+# Field
+
+A field is the unit a form is built from: one control, the text that names it,
+the text that explains it, and the message shown when it fails. Wiring those
+four together by hand means generating ids, threading `htmlFor`, maintaining
+`aria-describedby` and remembering to remove the error id when the message
+unmounts. `Field` does all of it, and it is the only place `name` needs to be
+written.
+
+<DemoBlock id="field/basic" />
+
+Every Base UI form control works inside a field with no adapter:
+[`Input`](/components/input), [`Checkbox`](/components/checkbox),
+[`Switch`](/components/switch) and [`Select`](/components/select). There is no
+`Field.Control` here on purpose — Base UI's `Input` *is* `Field.Control`, so
+`<Input>` is the control.
+
+## Import
+
+```tsx
+import { Field } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+```tsx
+<Field.Root name="email">
+  <Field.Label>Email</Field.Label>
+  <Input type="email" required />
+  <Field.Description>We only use this for receipts.</Field.Description>
+  <Field.Error match="valueMissing">An email address is required.</Field.Error>
+</Field.Root>
+```
+
+`Field.Root` is a flex column that stretches its children — which is why an
+`Input` inside one fills the field's width without `fullWidth`.
+
+## Examples
+
+### Validation
+
+`validationMode` decides *when*, and the default (`onSubmit`, then re-validate
+on change) is almost always the one you want: validating as someone types tells
+them their email is invalid on the third character. `onBlur` is the reasonable
+middle ground, and the demo above uses it so it has something to show without a
+form to submit.
+
+One `<Field.Error match>` per failure replaces the browser's own wording, which
+differs by browser and by locale and is rarely phrased the way your product
+would phrase it.
+
+### Custom rules
+
+`validate` handles anything the platform's constraints cannot express. Return a
+string, an array of strings, or `null`; async is supported. With
+`validationMode="onChange"`, `validationDebounceTime` is what keeps it from
+running on every keystroke.
+
+<DemoBlock id="field/custom-validation" />
+
+### Checkboxes and switches
+
+A control with no text of its own goes *inside* the label. The label then lays
+itself out as a row, takes a `pointer` cursor because clicking it now toggles
+the control, and any description or error below indents to line up with the
+label's text rather than with the box.
+
+<DemoBlock id="field/checkbox-and-switch" />
+
+### With a Select
+
+<DemoBlock id="field/with-select" />
+
+<Callout kind="a11y">
+  `nativeLabel={false}` is required when the control is a `<button>`, which
+  `Select.Trigger` is. A native `<label>` would hand the trigger its `:hover`
+  state and open the popup on every click of the label text. With it off, the
+  pair is wired with `aria-labelledby` instead, and this library renders the
+  label as a `<div>` so the element and the flag cannot disagree — Base UI logs
+  an error in development when they do.
+</Callout>
+
+### Groups
+
+`Field.Item` gives one member of a checkbox or radio group its own label and
+description without opening a second field. The outer `Field.Root` still names
+the group as a whole.
+
+<DemoBlock id="field/items" />
+
+## State
+
+Every part carries the field's state on `data-*`, so a consumer can style off
+it from plain CSS or a Tailwind arbitrary variant (`data-[invalid]:...`):
+
+| Attribute | Meaning |
+| --- | --- |
+| `data-valid` / `data-invalid` | The last validation run passed / failed. Neither is present before the field has been validated at all. |
+| `data-dirty` | The value differs from the one it mounted with. |
+| `data-touched` | The control has been focused and blurred. |
+| `data-filled` | The control has a value. |
+| `data-focused` | The control has focus. |
+| `data-disabled` | From `Field.Root`, or from an enclosing `Fieldset.Root`. |
+
+The library styles only two of them. `data-invalid` turns the control's boundary
+danger-coloured, and `data-disabled` dims the whole field. The rest describe
+where the user is in the interaction, and recolouring a control the moment it is
+merely *touched* is noise — they are exposed for you to use, not used by
+default.
+
+## Accessibility
+
+The description and the error are both registered into the control's
+`aria-describedby`, and the error's id is removed again when the message
+unmounts — so a screen reader never announces a stale error, and never
+announces a description that is no longer there.
+
+<Callout kind="a11y">
+  The error element is unmounted while the field is valid, so nothing reserves
+  space for it and layout shifts when it appears. That is deliberate: a
+  permanently reserved error slot is a row of whitespace under every field. If
+  the shift matters in your layout, give `Field.Root` a `min-block-size` rather
+  than keeping an empty error mounted.
+</Callout>
+
+Enter and exit are transitions on `[data-starting-style]` /
+`[data-ending-style]`, not keyframes, so a message that appears and is corrected
+quickly reverses mid-flight instead of snapping. Base UI keeps the outgoing
+element mounted until the exit finishes, which is what lets the old text fade
+out instead of being replaced by the new one.
+
+In forced-colors mode every colour in the field collapses to `CanvasText`, so
+the error message loses the one thing marking it as an error. Colour cannot
+recover it and `forced-color-adjust: none` would opt the text out of the user's
+palette entirely — so the distinction is redrawn as an inline-start border,
+which forced-colors does preserve.
+
+## Theming
+
+`--pui-field-gap` and `--pui-field-indent` are declared on `Field.Root` and read
+by the parts below it, so one value on the root moves the whole field. The
+colour and font knobs stay on the part that paints them, so recolouring the
+error does not reach the description.
+
+| Property | Declared on | Controls | Default |
+| --- | --- | --- | --- |
+| `--pui-field-gap` | `Field.Root` | Vertical rhythm between label, control, description and error | `var(--pui-space-2)` |
+| `--pui-field-indent` | `Field.Root` | Indent for a description or error under a *wrapping* label, so it lines up with the label text rather than the checkbox | `calc(var(--pui-space-4) + var(--pui-control-gap))` |
+| `--pui-field-label-fg` | `Field.Label` | Label colour | `var(--pui-color-foreground)` |
+| `--pui-field-label-font-size` | `Field.Label` | Label font size | `var(--pui-font-size-2)` |
+| `--pui-field-label-font-weight` | `Field.Label` | Label font weight | `var(--pui-font-weight-medium)` |
+| `--pui-field-label-gap` | `Field.Label` | Gap between a wrapped control and its label text | `var(--pui-control-gap)` |
+| `--pui-field-description-fg` | `Field.Description` | Description colour | `var(--pui-color-foreground-muted)` |
+| `--pui-field-description-font-size` | `Field.Description` | Description font size | `var(--pui-font-size-1)` |
+| `--pui-field-error-fg` | `Field.Error` | Error colour | `var(--pui-color-danger-text)` |
+| `--pui-field-error-font-size` | `Field.Error` | Error font size | `var(--pui-font-size-1)` |
+
+`--pui-field-indent` defaults to an `md` Checkbox's width plus the label gap.
+It has to be a value rather than a measurement — the control declares its own
+size on itself, and a custom property set on a descendant cannot be read from an
+ancestor — so a field built on `sm` or `lg` controls wants it set explicitly.
+
+## API reference
+
+### Field.Root
+
+<PropTable component="FieldRoot" />
+
+It also forwards Base UI's `validate`, `validationMode`,
+`validationDebounceTime`, `invalid`, `dirty`, `touched` and `actionsRef`.
+
+### Field.Label
+
+<PropTable component="FieldLabel" />
+
+### Field.Description
+
+<PropTable component="FieldDescription" />
+
+### Field.Error
+
+<PropTable component="FieldError" />
+
+### Field.Item
+
+<PropTable component="FieldItem" />
+
+### Field.Validity
+
+Re-exported from Base UI unchanged. It renders no DOM of its own — `children`
+is a function that receives the raw `ValidityState` along with the field's
+value and error, for the cases where a message is not the right output.
+
+```tsx
+<Field.Validity>
+  {(state) => (
+    <progress value={String(state.value ?? "").length} max={12} />
+  )}
+</Field.Validity>
+```

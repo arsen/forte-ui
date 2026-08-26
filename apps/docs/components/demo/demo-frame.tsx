@@ -32,7 +32,12 @@ export function DemoFrame({
 }) {
   return (
     <div
-      className={[styles.frame, "pui-theme", className].filter(Boolean).join(" ")}
+      // `demoPreview` is a plain global class, not a CSS-module one: globals.css
+      // needs to reach inside this subtree to undo the `.prose` typography (see
+      // the note there), and a hashed class it cannot name would not do.
+      className={[styles.frame, "pui-theme", "demoPreview", className]
+        .filter(Boolean)
+        .join(" ")}
       // `dir` is a real HTML attribute, not a CSS trick — it drives Base UI's
       // keyboard direction handling as well as the visual flow.
       dir={scope.dir}

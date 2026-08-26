@@ -9,6 +9,16 @@
  */
 import type { ComponentType } from "react";
 
+import d_accordion_basic from "./accordion/basic";
+import d_accordion_basic_src from "./accordion/basic?raw";
+import d_accordion_contained from "./accordion/contained";
+import d_accordion_contained_src from "./accordion/contained?raw";
+import d_accordion_controlled from "./accordion/controlled";
+import d_accordion_controlled_src from "./accordion/controlled?raw";
+import d_accordion_disabled_item from "./accordion/disabled-item";
+import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
+import d_accordion_multiple from "./accordion/multiple";
+import d_accordion_multiple_src from "./accordion/multiple?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
 import d_button_icon_only from "./button/icon-only";
@@ -57,6 +67,34 @@ import d_drawer_snap_points from "./drawer/snap-points";
 import d_drawer_snap_points_src from "./drawer/snap-points?raw";
 import d_drawer_swipe_area from "./drawer/swipe-area";
 import d_drawer_swipe_area_src from "./drawer/swipe-area?raw";
+import d_field_basic from "./field/basic";
+import d_field_basic_src from "./field/basic?raw";
+import d_field_checkbox_and_switch from "./field/checkbox-and-switch";
+import d_field_checkbox_and_switch_src from "./field/checkbox-and-switch?raw";
+import d_field_custom_validation from "./field/custom-validation";
+import d_field_custom_validation_src from "./field/custom-validation?raw";
+import d_field_items from "./field/items";
+import d_field_items_src from "./field/items?raw";
+import d_field_with_select from "./field/with-select";
+import d_field_with_select_src from "./field/with-select?raw";
+import d_fieldset_basic from "./fieldset/basic";
+import d_fieldset_basic_src from "./fieldset/basic?raw";
+import d_fieldset_disabled from "./fieldset/disabled";
+import d_fieldset_disabled_src from "./fieldset/disabled?raw";
+import d_form_basic from "./form/basic";
+import d_form_basic_src from "./form/basic?raw";
+import d_form_server_errors from "./form/server-errors";
+import d_form_server_errors_src from "./form/server-errors?raw";
+import d_input_basic from "./input/basic";
+import d_input_basic_src from "./input/basic?raw";
+import d_input_multiline from "./input/multiline";
+import d_input_multiline_src from "./input/multiline?raw";
+import d_input_sizes from "./input/sizes";
+import d_input_sizes_src from "./input/sizes?raw";
+import d_input_states from "./input/states";
+import d_input_states_src from "./input/states?raw";
+import d_input_variants from "./input/variants";
+import d_input_variants_src from "./input/variants?raw";
 import d_select_basic from "./select/basic";
 import d_select_basic_src from "./select/basic?raw";
 import d_select_disabled_items from "./select/disabled-items";
@@ -97,6 +135,11 @@ import d_tooltip_with_provider from "./tooltip/with-provider";
 import d_tooltip_with_provider_src from "./tooltip/with-provider?raw";
 
 export type DemoId =
+  | "accordion/basic"
+  | "accordion/contained"
+  | "accordion/controlled"
+  | "accordion/disabled-item"
+  | "accordion/multiple"
   | "button/as-link"
   | "button/icon-only"
   | "button/loading"
@@ -121,6 +164,20 @@ export type DemoId =
   | "drawer/sizes"
   | "drawer/snap-points"
   | "drawer/swipe-area"
+  | "field/basic"
+  | "field/checkbox-and-switch"
+  | "field/custom-validation"
+  | "field/items"
+  | "field/with-select"
+  | "fieldset/basic"
+  | "fieldset/disabled"
+  | "form/basic"
+  | "form/server-errors"
+  | "input/basic"
+  | "input/multiline"
+  | "input/sizes"
+  | "input/states"
+  | "input/variants"
   | "select/basic"
   | "select/disabled-items"
   | "select/grouped"
@@ -144,6 +201,11 @@ export type DemoId =
 export type Demo = { Component: ComponentType; source: string; file: string };
 
 const REGISTRY: Record<DemoId, Demo> = {
+  "accordion/basic": { Component: d_accordion_basic, source: d_accordion_basic_src, file: "accordion/basic.tsx" },
+  "accordion/contained": { Component: d_accordion_contained, source: d_accordion_contained_src, file: "accordion/contained.tsx" },
+  "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
+  "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
+  "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },
@@ -168,6 +230,20 @@ const REGISTRY: Record<DemoId, Demo> = {
   "drawer/sizes": { Component: d_drawer_sizes, source: d_drawer_sizes_src, file: "drawer/sizes.tsx" },
   "drawer/snap-points": { Component: d_drawer_snap_points, source: d_drawer_snap_points_src, file: "drawer/snap-points.tsx" },
   "drawer/swipe-area": { Component: d_drawer_swipe_area, source: d_drawer_swipe_area_src, file: "drawer/swipe-area.tsx" },
+  "field/basic": { Component: d_field_basic, source: d_field_basic_src, file: "field/basic.tsx" },
+  "field/checkbox-and-switch": { Component: d_field_checkbox_and_switch, source: d_field_checkbox_and_switch_src, file: "field/checkbox-and-switch.tsx" },
+  "field/custom-validation": { Component: d_field_custom_validation, source: d_field_custom_validation_src, file: "field/custom-validation.tsx" },
+  "field/items": { Component: d_field_items, source: d_field_items_src, file: "field/items.tsx" },
+  "field/with-select": { Component: d_field_with_select, source: d_field_with_select_src, file: "field/with-select.tsx" },
+  "fieldset/basic": { Component: d_fieldset_basic, source: d_fieldset_basic_src, file: "fieldset/basic.tsx" },
+  "fieldset/disabled": { Component: d_fieldset_disabled, source: d_fieldset_disabled_src, file: "fieldset/disabled.tsx" },
+  "form/basic": { Component: d_form_basic, source: d_form_basic_src, file: "form/basic.tsx" },
+  "form/server-errors": { Component: d_form_server_errors, source: d_form_server_errors_src, file: "form/server-errors.tsx" },
+  "input/basic": { Component: d_input_basic, source: d_input_basic_src, file: "input/basic.tsx" },
+  "input/multiline": { Component: d_input_multiline, source: d_input_multiline_src, file: "input/multiline.tsx" },
+  "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
+  "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
+  "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
   "select/basic": { Component: d_select_basic, source: d_select_basic_src, file: "select/basic.tsx" },
   "select/disabled-items": { Component: d_select_disabled_items, source: d_select_disabled_items_src, file: "select/disabled-items.tsx" },
   "select/grouped": { Component: d_select_grouped, source: d_select_grouped_src, file: "select/grouped.tsx" },

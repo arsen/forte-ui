@@ -1,4 +1,97 @@
 {
+  "AccordionRoot": {
+    "name": "AccordionRoot",
+    "description": "Groups the items and owns which of them are open.\n\n`value` and `defaultValue` are **arrays**, even with `multiple` left off —\na single-open accordion is the array-of-one case, and `[]` is the legal\n\"everything closed\" value. Items with no `value` of their own are given a\ngenerated one, so pass `value` on the items you intend to address.\n\nBase UI's deprecated `orientation` and `loopFocus` props are not forwarded.\nThe APG dropped roving focus for accordions, so neither one affects\nanything any more, and this component styles the vertical stack only.\n\nThe `Value` generic is what an item's `value` is, defaulting to `any` as it\ndoes in Base UI — items accept anything hashable, and most sets mix nothing.\nName it (`<Accordion.Root<string> …>`) to have `value`, `defaultValue` and\n`onValueChange` checked against one type.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "variant",
+        "type": "AccordionVariant",
+        "required": false,
+        "defaultValue": "divided",
+        "description": "How much visual weight the set carries. `\"divided\"` is a flat list with a\nhairline between rows; `\"contained\"` turns every item into a separated\ncard. Both are the same parts with different knobs — nothing moves."
+      }
+    ]
+  },
+  "AccordionItem": {
+    "name": "AccordionItem",
+    "description": "One header/panel pair. Give it a `value` to address it from `Root`'s\n`value` / `defaultValue`; without one Base UI generates an opaque id that\nnothing else can name.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AccordionHeader": {
+    "name": "AccordionHeader",
+    "description": "The heading that labels the panel. Renders an `<h3>`, which is the right\nlevel surprisingly rarely — pass `render={<h2 />}` (or whichever level sits\none below the surrounding section's heading) so the page outline stays\nordered. It exists to carry `role=\"heading\"` and its level; the trigger\ninside it is what the user presses.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AccordionTrigger": {
+    "name": "AccordionTrigger",
+    "description": "The button that opens and closes the panel. Renders a `<button>` and must\nsit inside an `Accordion.Header`.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--pui-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ChevronDownIcon />",
+        "description": "The affordance at the inline-end of the row. Defaults to a chevron that\nrotates when the panel opens. Pass your own node to replace it — it is\nwrapped in the same rotating, `aria-hidden` box, so a plus or a caret\nneeds no extra wiring — or `null` to drop it entirely."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the label box that wraps `children`.\nApplied after the internal styles."
+      }
+    ]
+  },
+  "AccordionPanel": {
+    "name": "AccordionPanel",
+    "description": "The collapsible region. Base UI measures it and publishes the result as\n`--accordion-panel-height`, which the stylesheet transitions.\n\n`children` goes inside an inner box, and that box is where all the padding\nlives. Padding on the collapsing element itself would still paint at\n`height: 0` — the padding box survives a zero content box — so a closed\npanel would leave a band of empty space under every row. The inner box also\ngives the content something to fade and slide on while the outer one is\nbusy animating its height.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "contentClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the inner element that holds the padding and\nthe content. Applied after the internal styles."
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",
@@ -560,6 +653,214 @@
       }
     ]
   },
+  "FieldRoot": {
+    "name": "FieldRoot",
+    "description": "Groups one control with its label, description and error message, and owns\nthe validation state they all read. Renders a `<div>` laid out as a column.\n\nThe control is any Base UI form component — `Input`, `Checkbox`, `Switch`,\n`Select` — and none of them need wiring: the field supplies the id the label\npoints at, the `aria-describedby` linking description and error, and the\n`name` used on submit. Give `name` to the field rather than to the control,\nso `<Form onFormSubmit>` and server-returned `errors` can find it.\n\nThe column stretches its children, which is why an `Input` inside a field is\nfull width without `fullWidth`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "FieldLabel": {
+    "name": "FieldLabel",
+    "description": "The field's visible label, associated with the control automatically.\nRenders a `<label>` — or a `<div>` when `nativeLabel` is `false`.\n\nBoth labelling shapes work, and the difference is only where the control\nsits:\n\n```tsx\n// Sibling: the label points at the control with htmlFor.\n<Field.Label>Email</Field.Label>\n<Input type=\"email\" />\n\n// Wrapping: the label contains the control. Preferred for a Checkbox or a\n// Switch, which have no text of their own.\n<Field.Label><Checkbox /> Email me about releases</Field.Label>\n```\n\nA wrapping label lays itself out as a row and takes a `pointer` cursor,\nbecause clicking it toggles the control; a sibling label is chrome and keeps\nthe default arrow.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "nativeLabel",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the rendered element is a native `<label>`.\n\nLeave it `true` for `Input`, `Checkbox` and `Switch`. Set it to `false`\nfor a control that is a `<button>` — `Select.Trigger` is the one in this\nlibrary — where native label behaviour is actively wrong: the button would\npick up `:hover` from the label, and clicking the label would fire a click\non the trigger and open the popup. With `false` the association is made\nwith `aria-labelledby` instead, and the element rendered defaults to a\n`<div>` so the pair stays consistent (Base UI logs an error in development\nif a `<label>` is rendered with `nativeLabel={false}`, or vice versa)."
+      }
+    ]
+  },
+  "FieldDescription": {
+    "name": "FieldDescription",
+    "description": "Supporting text for the field. Renders a `<p>` wired into the control's\n`aria-describedby`, so it is announced with the control rather than being\nstray text next to it.\n\nPut the format hint here, not in the placeholder — a placeholder disappears\nthe moment the user starts typing, which is exactly when the hint is needed.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "FieldError": {
+    "name": "FieldError",
+    "description": "The validation message. Renders a `<div>`, and only while the field is\nactually failing — it is unmounted otherwise, so nothing reserves space for\nit.\n\nBase UI keeps the outgoing element mounted until its exit transition\nfinishes, so the message fades out with its own text rather than snapping to\nthe next one.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The message. Omit it and the field supplies the text itself; several\nfailures at once arrive as a `<ul>`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "match",
+        "type": "boolean | keyof ValidityState",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which failure to render for. Omit it to show whatever message the field\ncurrently has — the browser's own text for a native constraint, the string\nreturned by `validate`, or the entry `<Form errors>` holds for this\nfield's `name`. Pass a `ValidityState` key (`\"valueMissing\"`,\n`\"typeMismatch\"`, `\"patternMismatch\"`, …) to render only for that one\nfailure, which is how you replace a browser message with your own wording.\nPass `true` to always render, when an external form library owns\nvisibility."
+      }
+    ]
+  },
+  "FieldItem": {
+    "name": "FieldItem",
+    "description": "One row inside a `CheckboxGroup` or radio group: a control, its own label,\nand optionally its own description. Renders a `<div>`.\n\nA `Field.Root` names the group as a whole; a `Field.Item` gives each member\na label of its own without opening a second field.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether this one item ignores user interaction. `disabled` on the\nsurrounding `Field.Root` takes precedence."
+      }
+    ]
+  },
+  "FieldsetRoot": {
+    "name": "FieldsetRoot",
+    "description": "Groups related fields under one heading. Renders a `<fieldset>` laid out as\na column, with the browser's border, padding and margins removed.\n\nUse it for a set of fields that belong together — a billing address, a group\nof checkboxes — not for every field. A `Field.Root` already names a single\ncontrol; wrapping one in a fieldset gives it two names.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disables every control inside the fieldset. This is the native\n`<fieldset disabled>` behaviour, so it reaches controls the library knows\nnothing about too."
+      }
+    ]
+  },
+  "FieldsetLegend": {
+    "name": "FieldsetLegend",
+    "description": "The heading that names the fieldset. Renders a `<div>`, not a `<legend>` —\nBase UI associates it with `aria-labelledby` instead, which announces the\nsame way and lays out like ordinary text.\n\nThat matters: a real `<legend>` sits *in* the fieldset's border, cannot be\npositioned like a normal block, and drags along UA styles that differ\nbetween browsers.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "Form": {
+    "name": "Form",
+    "description": "A `<form>` that collects the validation state of every `Field` inside it,\nbuilt on Base UI's `Form` primitive.\n\n```tsx\n<Form\n  onFormSubmit={async (values) => {\n    const result = await save(values);\n    if (!result.ok) setErrors(result.errors); // keys match Field.Root name\n  }}\n  errors={errors}\n>\n  <Field.Root name=\"email\">…</Field.Root>\n  <Button type=\"submit\">Save</Button>\n</Form>\n```\n\nTwo things it does that a bare `<form>` does not: it blocks submission while\nany field is invalid and moves focus to the first one that failed, and it\nroutes the `errors` object back to the right `Field.Error` by `name` — which\nis why the `name` belongs on `Field.Root` rather than on the control.\n\nIt lays out as a column with `--pui-form-gap` between children, since a form\nis nearly always a stack of fields. Set `display` through `className` for\nanything else; the gap is a knob rather than a hardcoded rule for exactly\nthat reason.",
+    "props": [
+      {
+        "name": "actionsRef",
+        "type": "RefObject<FormActions | null>",
+        "required": false,
+        "defaultValue": null,
+        "description": "A ref to imperative actions. `validate()` runs every field; pass a field\nname to run just one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "errors",
+        "type": "Errors",
+        "required": false,
+        "defaultValue": null,
+        "description": "Errors that came from somewhere other than the browser — a server\nresponse, a form action, a schema parse. Keys are the `name` of a\n`Field.Root`; values are a message or an array of messages, which the\nmatching `Field.Error` then renders."
+      },
+      {
+        "name": "onFormSubmit",
+        "type": "((formValues: FormValues, eventDetails: { reason: \"none\"; event: Event; }) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called on submit once every field passes validation, with the form's\nvalues collected by `name`. Base UI calls `preventDefault()` on the native\nevent for you, so this replaces `onSubmit` rather than sitting beside it."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLFormElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Ref to the underlying `<form>` element. Declared explicitly rather than\nthrough `forwardRef` because the component is generic — a `forwardRef`\nwrapper would erase `FormValues` and with it the typing of\n`onFormSubmit`."
+      },
+      {
+        "name": "validationMode",
+        "type": "FormValidationMode",
+        "required": false,
+        "defaultValue": "\"onSubmit\"",
+        "description": "When the fields inside are validated. `validationMode` on an individual\n`Field.Root` takes precedence over this.\n\n- `onSubmit` — validate on submit, then re-validate on change. The default,\n  and the right one for most forms: it does not tell someone their email\n  is invalid while they are still on the third character of it.\n- `onBlur` — validate a field when it loses focus.\n- `onChange` — validate on every keystroke. Pair it with\n  `validationDebounceTime` on the field if `validate` is expensive."
+      }
+    ]
+  },
+  "Input": {
+    "name": "Input",
+    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control, swap the element out — the styles follow:\n\n```tsx\n<Input render={<textarea />} rows={4} />\n```\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the input to fill the width of its container. Only needed outside\na `Field.Root` — a field is a flex column, so an input inside one already\nstretches."
+      },
+      {
+        "name": "size",
+        "type": "InputSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the control. Height, inline padding and font size all move\ntogether, and the actual numbers follow the ambient `data-pui-density`\nsetting. Matches `Select.Trigger`'s scale, so an input and a select on the\nsame row line up.\n\nThis shadows the native `size` attribute (which sets a width in\ncharacters). Reach for `fullWidth`, a CSS `inline-size`, or\n`render={<input size={10} />}` if you need that instead."
+      },
+      {
+        "name": "variant",
+        "type": "InputVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the control carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance."
+      }
+    ]
+  },
   "SelectLabel": {
     "name": "SelectLabel",
     "description": "A visible label wired to the trigger. This is the preferred way to give a\nselect its accessible name — Base UI renders a `<div>` and associates it\nwith `aria-labelledby`, so clicking it focuses the trigger without opening\nthe popup. When no visible label is rendered, put `aria-label` on\n`<Select.Trigger>` instead.",
@@ -575,7 +876,7 @@
   },
   "SelectTrigger": {
     "name": "SelectTrigger",
-    "description": "The button that opens the popup. Renders a native `<button>`.\n\nGive it `<Select.Value>` and `<Select.Icon>` as children. It must have an\naccessible name: either render a `<Select.Label>` inside the same\n`<Select.Root>`, or pass `aria-label` here. In development the trigger\nwarns once if it ends up with neither.",
+    "description": "The button that opens the popup. Renders a native `<button>`.\n\nGive it `<Select.Value>` and `<Select.Icon>` as children. It must have an\naccessible name: render a `<Select.Label>` inside the same `<Select.Root>`,\na `<Field.Label nativeLabel={false}>` in the same `<Field.Root>`, or pass\n`aria-label` here. In development the trigger warns once if it ends up with\nnone of them.",
     "props": [
       {
         "name": "className",

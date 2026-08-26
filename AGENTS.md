@@ -341,7 +341,7 @@ Test RTL — the demo frame has a toggle for it.
 | :-- | :-- |
 | `--pui-duration-instant` (1ms) | press feedback, anything that must feel immediate |
 | `--pui-duration-fast` (160ms) | hover, colour changes, small fades, popup enter/exit |
-| `--pui-duration-normal` (240ms) | dialog enter/exit, larger surfaces |
+| `--pui-duration-normal` (240ms) | dialog enter, larger surfaces |
 | `--pui-duration-slow` (400ms) | rare; page-level transitions |
 | `--pui-duration-move` (220ms) | positional moves measured at runtime (the Tabs indicator) |
 | `--pui-duration-spring-*` | paired with the matching `--pui-ease-spring-*` |

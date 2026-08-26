@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Switch } from "@dofortech/pretty-ui";
+import { Field, Switch } from "@dofortech/pretty-ui";
 
 const SETTINGS = [
   {
@@ -31,54 +31,43 @@ const panel: CSSProperties = {
   backgroundColor: "var(--pui-color-panel)",
 };
 
+// Field.Root is a column by default. This row layout is the one thing the
+// component cannot guess, so the demo sets it — everything else (the id, the
+// aria-describedby, the label and description styling) comes from Field.
 const row: CSSProperties = {
-  display: "flex",
-  alignItems: "flex-start",
+  flexDirection: "row",
+  alignItems: "center",
   justifyContent: "space-between",
   gap: "var(--pui-space-5)",
   padding: "var(--pui-space-4)",
-};
-
-const nameStyle: CSSProperties = {
-  display: "block",
-  fontSize: "var(--pui-font-size-2)",
-  fontWeight: "var(--pui-font-weight-medium)",
-};
-
-const descriptionStyle: CSSProperties = {
-  margin: "var(--pui-space-1) 0 0",
-  fontSize: "var(--pui-font-size-1)",
-  color: "var(--pui-color-foreground-muted)",
 };
 
 export default function SwitchSettingsList() {
   return (
     <div style={panel}>
       {SETTINGS.map((setting, index) => (
-        <div
+        <Field.Root
           key={setting.id}
+          name={setting.id}
           style={
             index === 0
               ? row
-              : { ...row, borderBlockStart: "1px solid var(--pui-color-border-muted)" }
+              : {
+                  ...row,
+                  borderBlockStart: "1px solid var(--pui-color-border-muted)",
+                }
           }
         >
+          {/* The label sits beside the switch rather than around it, which is
+            * the whole reason this needs no `nativeButton`: Field points the
+            * label's htmlFor at the switch's hidden input, and that input is a
+            * labelable element. */}
           <div>
-            <label htmlFor={setting.id} style={nameStyle}>
-              {setting.name}
-            </label>
-            <p id={`${setting.id}-description`} style={descriptionStyle}>
-              {setting.description}
-            </p>
+            <Field.Label>{setting.name}</Field.Label>
+            <Field.Description>{setting.description}</Field.Description>
           </div>
-          <Switch
-            id={setting.id}
-            nativeButton
-            render={<button />}
-            aria-describedby={`${setting.id}-description`}
-            defaultChecked={setting.defaultChecked}
-          />
-        </div>
+          <Switch defaultChecked={setting.defaultChecked} />
+        </Field.Root>
       ))}
     </div>
   );

@@ -1,0 +1,78 @@
+/*
+ * Fieldset
+ *
+ * Two surfaces: the <fieldset> itself and the Legend that names it. The knob
+ * for the column rhythm is declared on `.root` and read by nothing else, in
+ * the same spirit as Field.
+ *
+ * Most of the root rule is undoing the UA stylesheet. `<fieldset>` is the one
+ * element in this library with meaningful built-in presentation — a groove
+ * border, block padding, a 2px inline margin and, worst of all, a min-content
+ * inline size — and every line below that looks like boilerplate is removing
+ * one of those.
+ */
+@layer pretty-ui.components {
+  .root {
+    --pui-fieldset-gap: var(--pui-space-4);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-fieldset-gap);
+
+    /* The UA gives <fieldset> `min-inline-size: min-content`, and it is NOT
+     * overridden by `width`/`inline-size` the way it is on other elements. A
+     * fieldset holding a text input therefore refuses to shrink below the
+     * input's ~20-character intrinsic width and overflows narrow columns
+     * instead of wrapping. This one line is the whole fix, and it is the most
+     * commonly missed rule in this file. */
+    min-inline-size: 0;
+
+    /* UA: `border: 2px groove`, `padding-block: 0.35em 0.625em`,
+     * `padding-inline: 0.75em`, `margin-inline: 2px`. All of it goes; a
+     * fieldset here is a grouping, not a painted box. Consumers who want the
+     * box back set a border and padding through `className`. */
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  /* Legend ----------------------------------------------------------------
+   * A <div>, not a <legend> — see Fieldset.tsx for why — so it needs no UA
+   * reset of its own and lays out as an ordinary block. */
+  .legend {
+    --pui-fieldset-legend-fg: var(--pui-color-foreground);
+    --pui-fieldset-legend-font-size: var(--pui-font-size-3);
+    --pui-fieldset-legend-font-weight: var(--pui-font-weight-semibold);
+
+    margin: 0;
+    padding: 0;
+    color: var(--pui-fieldset-legend-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-fieldset-legend-font-size);
+    font-weight: var(--pui-fieldset-legend-font-weight);
+    line-height: var(--pui-line-height-tight);
+    letter-spacing: var(--pui-letter-spacing-tight);
+
+    -webkit-user-select: none;
+    user-select: none;
+    /* A heading, not a control: clicking it does nothing. */
+    cursor: default;
+  }
+
+  .legend[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+  }
+}
+
+/* Forced colours ---------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* The generic `[data-disabled]` remedy in patterns.css applies through
+     * `:where()`, at zero specificity, so the (0,2,0) colour above would
+     * outrank its GrayText. Restated at matching specificity. */
+    .legend[data-disabled] {
+      color: GrayText;
+    }
+  }
+}

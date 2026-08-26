@@ -1,0 +1,208 @@
+/*
+ * Field
+ *
+ * Four surfaces — Root, Label, Description, Error — plus Item, which is a Root
+ * in miniature for one member of a checkbox or radio group. Unlike Select,
+ * they all live in one subtree, so the knobs are declared on `.root` and read
+ * by the parts below it. That is deliberate: `--pui-field-gap` is a property of
+ * the field's rhythm, not of any one line of text, and setting it once via
+ * `className` on `Field.Root` has to move all of it.
+ *
+ * The colour and font knobs stay on the part that paints them, so a consumer
+ * can recolour the error without reaching the description.
+ *
+ * The field state arrives on every part as `data-*` — `data-invalid`,
+ * `data-valid`, `data-dirty`, `data-touched`, `data-filled`, `data-focused`,
+ * `data-disabled`. Only `disabled` is styled here. The control itself already
+ * answers for validity (its boundary turns danger-coloured), and the error
+ * message only exists while the field is failing, so painting the label red as
+ * well would be the third copy of the same fact.
+ */
+@layer pretty-ui.components {
+  /* Root ------------------------------------------------------------------ */
+  .root {
+    /* The vertical rhythm of the whole field. One step up from the 4px a
+     * standalone `Select.Label` uses, because a field stacks three or four
+     * things rather than two: at 4px the label, the control and the
+     * description read as one undifferentiated block instead of as a label
+     * above a control with a note under it. */
+    --pui-field-gap: var(--pui-space-2);
+    /* How far a description or an error is indented when the label WRAPS its
+     * control — see the rule below. Declared here rather than on the parts
+     * that read it so one value on `Field.Root` moves the whole field, and so
+     * `Field.Item` inherits it.
+     *
+     * It has to be a knob rather than a measurement: the control declares its
+     * own width on itself (`--pui-checkbox-size`), and a custom property set
+     * on a descendant cannot be read from an ancestor. The default is the `md`
+     * Checkbox's width plus the label gap. `--pui-space-4` is 1rem, which is
+     * that width exactly — written as the token, not as `1rem`, so density and
+     * any re-pointing of the scale carry through; a field built on `sm` or
+     * `lg` controls wants this set explicitly. */
+    --pui-field-indent: calc(var(--pui-space-4) + var(--pui-control-gap));
+
+    display: flex;
+    flex-direction: column;
+    /* `stretch` is the default and is load-bearing: it is what makes an Input
+     * inside a field fill the field's width without a `fullWidth` prop, and
+     * what keeps a Select.Trigger flush with the Input above it. */
+    align-items: stretch;
+    gap: var(--pui-field-gap);
+    /* A native <input> has an intrinsic min-content width of ~20 characters.
+     * Without this the field refuses to shrink below it inside a flex or grid
+     * parent, and a narrow column overflows instead of wrapping. */
+    min-inline-size: 0;
+  }
+
+  /* Label ----------------------------------------------------------------- */
+  .label {
+    --pui-field-label-fg: var(--pui-color-foreground);
+    --pui-field-label-font-size: var(--pui-font-size-2);
+    --pui-field-label-font-weight: var(--pui-font-weight-medium);
+    --pui-field-label-gap: var(--pui-control-gap);
+
+    /* A row, so a label that WRAPS its control — the Checkbox and Switch
+     * pattern — lays the control out beside its text with no extra element.
+     * With text alone it behaves exactly like a block. */
+    display: flex;
+    align-items: center;
+    gap: var(--pui-field-label-gap);
+    /* Keeps a long label from stretching the control it sits beside. */
+    align-self: flex-start;
+    margin: 0;
+
+    color: var(--pui-field-label-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-field-label-font-size);
+    font-weight: var(--pui-field-label-font-weight);
+    line-height: var(--pui-line-height-tight);
+
+    -webkit-user-select: none;
+    user-select: none;
+    /* Chrome, not a control: a sibling `<label htmlFor>` only moves focus.
+     * Overridden below for the wrapping form. */
+    cursor: default;
+  }
+
+  /* A label that CONTAINS its control does perform an action — clicking it
+   * toggles the checkbox or the switch — so it takes the pointer the cursor
+   * table requires. `:has()` is what tells the two apart without a prop: the
+   * sibling form points at a control that is not inside it.
+   *
+   * Every control this matters for renders a real (visually hidden) <input>,
+   * so `input` alone would do; the role selectors also catch a control swapped
+   * out with `nativeButton render={<button />}`. */
+  .label:has(input, [role="checkbox"], [role="switch"], [role="radio"]) {
+    cursor: pointer;
+  }
+
+  /* When the label wraps its control, the description and the error belong to
+   * the label's TEXT, not to the checkbox — flush left they read as unrelated
+   * lines starting under the box. The same `:has()` test tells the two label
+   * shapes apart, and `~` reaches forward because both parts always follow the
+   * label. A sibling label leaves them where they are: there the control is
+   * the full-width element they line up with already. */
+  .label:has(input, [role="checkbox"], [role="switch"], [role="radio"])
+    ~ :is(.description, .error) {
+    padding-inline-start: var(--pui-field-indent);
+  }
+
+  .label[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+    cursor: not-allowed;
+  }
+
+  /* Description ----------------------------------------------------------- */
+  .description {
+    --pui-field-description-fg: var(--pui-color-foreground-muted);
+    --pui-field-description-font-size: var(--pui-font-size-1);
+
+    margin: 0;
+    /* Supporting text, so `-muted` (5.82:1) rather than `-subtle` (3.73:1,
+     * which SC 1.4.3 permits for non-text only). */
+    color: var(--pui-field-description-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-field-description-font-size);
+    line-height: var(--pui-line-height-normal);
+  }
+
+  .description[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+  }
+
+  /* Error ----------------------------------------------------------------- */
+  /* Mounted only while the field is failing, so nothing reserves space for it.
+   * Enter and exit are transitions on [data-starting-style]/[data-ending-style]
+   * rather than keyframes: a message that appears and is corrected quickly
+   * reverses mid-flight instead of snapping, and Base UI keeps the outgoing
+   * element mounted (awaiting getAnimations()) until the exit finishes. */
+  .error {
+    --pui-field-error-fg: var(--pui-color-danger-text);
+    --pui-field-error-font-size: var(--pui-font-size-1);
+
+    margin: 0;
+    color: var(--pui-field-error-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-field-error-font-size);
+    line-height: var(--pui-line-height-normal);
+
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* The travel token collapses to 0px under reduced motion on its own, which
+   * leaves the fade — the part a reduced-motion user still benefits from —
+   * intact. No media query here, and none anywhere in this file. */
+  .error[data-starting-style],
+  .error[data-ending-style] {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--pui-travel-xs));
+  }
+
+  /* Several failures at once arrive from Base UI as a <ul>, which is why this
+   * is styled here and not left to the consumer's page CSS. */
+  .error ul {
+    margin: 0;
+    padding-inline-start: var(--pui-space-4);
+    list-style: disc;
+  }
+
+  /* Item ------------------------------------------------------------------ */
+  /* One member of a checkbox or radio group: its own label, its own optional
+   * description. Same rhythm as the Root, so a group of items reads as one
+   * list rather than as nested boxes. */
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-field-gap);
+    min-inline-size: 0;
+  }
+}
+
+/* Forced colours ---------------------------------------------------------- */
+/* Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+ * beat the rules above by layer alone. */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* Every colour in this file collapses to CanvasText in forced-colors, so
+     * the error message loses the one thing marking it as an error. It cannot
+     * be recovered with colour, and `forced-color-adjust: none` would opt the
+     * text out of the user's palette entirely — so the distinction is redrawn
+     * as a boundary, which forced-colors does preserve. */
+    .error {
+      border-inline-start: 2px solid CanvasText;
+      padding-inline-start: var(--pui-space-2);
+    }
+
+    /* The generic `[data-disabled]` remedy in patterns.css applies through
+     * `:where()`, i.e. at zero specificity, so the (0,2,0) colours above would
+     * outrank its GrayText. Restated at matching specificity here. */
+    .label[data-disabled],
+    .description[data-disabled] {
+      color: GrayText;
+    }
+  }
+}

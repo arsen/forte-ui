@@ -17,10 +17,15 @@ const NAV: NavGroup[] = [
   {
     title: "Components",
     items: [
+      { title: "Accordion", href: "/components/accordion" },
       { title: "Button", href: "/components/button" },
       { title: "Checkbox", href: "/components/checkbox" },
       { title: "Dialog", href: "/components/dialog" },
       { title: "Drawer", href: "/components/drawer" },
+      { title: "Field", href: "/components/field" },
+      { title: "Fieldset", href: "/components/fieldset" },
+      { title: "Form", href: "/components/form" },
+      { title: "Input", href: "/components/input" },
       { title: "Select", href: "/components/select" },
       { title: "Switch", href: "/components/switch" },
       { title: "Tabs", href: "/components/tabs" },
