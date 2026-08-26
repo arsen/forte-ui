@@ -26,14 +26,14 @@
      * on the right-hand side below, which this file only reads and never
      * re-declares. */
     --pui-radio-size: 1rem;
-    /* NOT `var(--pui-radius-full)`, and this is the one place in the library
-     * where a component opts out of the radius presets. Round is not a style
-     * choice on a radio: it is the only thing that tells a reader "pick one of
-     * these" rather than "tick any of these", and `[data-pui-radius="none"]`
-     * sets `--pui-radius-full: 0`, which would render a radio as a square
-     * indistinguishable from the checkbox next to it. A consumer who wants
-     * that anyway sets `--pui-radio-radius: var(--pui-radius-full)` and gets
-     * the preset back. */
+    /* NOT `var(--pui-radius-full)`: the radio is one of the two shapes in the
+     * library that opt out of the radius presets, the Button spinner being the
+     * other. Round is not a style choice on a radio: it is the only thing that
+     * tells a reader "pick one of these" rather than "tick any of these", and
+     * `[data-pui-radius="none"]` sets `--pui-radius-full: 0`, which would
+     * render a radio as a square indistinguishable from the checkbox next to
+     * it. A consumer who wants that anyway sets
+     * `--pui-radio-radius: var(--pui-radius-full)` and gets the preset back. */
     --pui-radio-radius: 50%;
     --pui-radio-border-width: 1px;
     /* Unitless fraction of the circle rather than a length, so the dot keeps
