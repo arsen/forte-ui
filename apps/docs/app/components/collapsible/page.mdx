@@ -1,0 +1,180 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+
+export const metadata = {
+  title: "Collapsible",
+  description:
+    "A single trigger and the region it reveals, with the open/close height animated in pure CSS.",
+};
+
+# Collapsible
+
+A collapsible hides one region behind one button. Reach for it when a piece of the page is genuinely secondary — the raw response under a formatted one, advanced settings, a build log, the rest of a long description — and the reader should be able to ignore it without scrolling past it.
+
+<DemoBlock id="collapsible/basic" />
+
+## Import
+
+```tsx
+import { Collapsible } from "@dofortech/pretty-ui";
+```
+
+`Collapsible` is a namespace of three parts, and the nesting is fixed:
+
+```tsx
+<Collapsible.Root>
+  <Collapsible.Trigger>Heading</Collapsible.Trigger>
+  <Collapsible.Panel>Body</Collapsible.Panel>
+</Collapsible.Root>
+```
+
+Whether the panel is open is a **boolean** on `Collapsible.Root` — `defaultOpen` uncontrolled, `open` plus `onOpenChange` controlled. There is only ever one panel, so unlike `Accordion.Root` there is no list of values and nothing to name.
+
+<Callout kind="note">
+  Several of these in a row is usually an [Accordion](/components/accordion), not a stack of collapsibles. The accordion puts every section into the page's heading outline, so a screen-reader user can jump between them instead of tabbing through, and it can close one section as another opens. A collapsible has no siblings and does neither. Base UI builds its accordion on this same primitive, so nothing is lost by starting here and moving up — the parts and the data attributes carry over.
+</Callout>
+
+## Examples
+
+### Plain
+
+The default `variant="plain"` is the demo at the top of this page. It contributes no box of its own: the trigger is a bare text button the exact width of its label, the panel has no inline padding, and both line up with the prose around them. Hover is a colour change rather than a fill — the button *is* the label, so recolouring it marks the whole hit box exactly.
+
+### Contained
+
+`variant="contained"` turns the pair into a card, sized and coloured to match one item of a `contained` accordion, so a lone collapsible can stand beside a set of them. The trigger becomes a full-width row with the chevron pinned to the inline-end edge, and hover fills the row — a cue confined to the label would claim only the label is pressable.
+
+<DemoBlock id="collapsible/contained" />
+
+The variant is set once on `Collapsible.Root` and reaches the trigger and panel through context, so a mismatched pair — a card with a bare-text trigger inside it — is not a state that can be expressed.
+
+### Controlled
+
+Pass `open` and `onOpenChange` to own the state, which is what it takes to drive the panel from something that is not its own trigger.
+
+<DemoBlock id="collapsible/controlled" />
+
+`onOpenChange` also receives an event details object whose `reason` is `'trigger-press'` for a user's click or key press, so a change your own code made can be told apart from one the user made.
+
+### A different marker
+
+`icon` on `Collapsible.Trigger` replaces the chevron inside the same rotating, `aria-hidden` box, and `icon={null}` drops it. Anything you pass turns 180° when the panel opens, so pick a shape that is *not* symmetric about the horizontal axis — a plus or a dot reads as not having moved.
+
+<DemoBlock id="collapsible/custom-icon" />
+
+### Disabled
+
+`disabled` on `Collapsible.Root` stops the panel opening. The trigger stays in the tab order — a control a keyboard user cannot reach is a control they cannot discover the existence of — but pressing it does nothing, and the whole card is dimmed rather than just its trigger, so one that was left open does not show fully-enabled body text under a greyed-out header.
+
+<DemoBlock id="collapsible/disabled" />
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], description: "Moves focus to the trigger, or past it. The trigger is an ordinary tab stop." },
+  { keys: ["Enter"], description: "Opens the panel, or closes it if it is already open." },
+  { keys: ["Space"], description: "Opens the panel, or closes it if it is already open." },
+]} />
+
+`Collapsible.Trigger` renders a `<button>` with `aria-expanded` and an `aria-controls` pointing at the panel. Keep the trigger's text as its accessible name: the chevron is `aria-hidden`, and `aria-expanded` already announces open and closed, so a trigger reading "Details" needs no extra "show/hide" wording, and an icon-only trigger has no name at all.
+
+<Callout kind="a11y">
+  Unlike `Accordion.Header`, nothing here renders a heading. That is deliberate — a heading exists so a reader can jump *between* sections, and a lone disclosure has none to jump between, so one would clutter the outline it claims to describe. If this really is a section heading, wrap the trigger in a heading of your own — not through `render`, which would replace the `<button>` rather than wrap it — or use the accordion, which is that component.
+</Callout>
+
+A closed panel is removed from the DOM. Two props change that, and they answer different questions:
+
+- `keepMounted` leaves it mounted and hidden, which is what you want when the panel holds scroll position or a half-filled form that should survive being closed.
+- `hiddenUntilFound` hides it with `hidden="until-found"` instead, so the browser's own find-in-page can search the text and open the panel when it matches. It implies `keepMounted`. Use it for reference content — documentation, terms, a long answer — where a reader hunting for a phrase reasonably expects `⌘F` to find it.
+
+Under forced colors the `contained` card's border is pinned to `CanvasText`, since once shadows and backgrounds are stripped it is the only thing still holding the shape. Nothing paints `Highlight`: an open disclosure is not a selected one, and the chevron's rotation is geometry, so it survives that mode untouched and goes on saying whether the panel is open. A disabled collapsible is painted `GrayText` rather than relying on opacity, which forced colors does not honour.
+
+### Motion
+
+The height animation runs without a frame of JavaScript. Base UI measures the panel and publishes the result on the element as `--collapsible-panel-height` — a `px` value while the transition runs, then `auto` once it settles, so the content can reflow afterwards. The stylesheet consumes it directly:
+
+```css
+.panel {
+  height: var(--collapsible-panel-height);
+  overflow: hidden;
+  transition: height var(--pui-collapsible-duration) var(--pui-collapsible-ease);
+}
+
+.panel[data-starting-style],
+.panel[data-ending-style] {
+  height: 0;
+}
+```
+
+<Callout kind="warn">
+  The accordion publishes `--accordion-panel-height` instead, and the two do not cross over even though Base UI builds its accordion on this primitive. Reading the wrong one fails *silently*: the declaration is invalid at computed-value time, `height` inherits, and the panel never opens. If you are styling the panel yourself, match the variable to the component you are actually inside.
+</Callout>
+
+It is a transition rather than a keyframe animation on purpose: closing the panel while it is still opening reverses from wherever it has got to instead of snapping back to full height first. Base UI works out which of the two it is dealing with by reading the panel's *computed* `transition-duration` — a duration of exactly `0s` reads as "no transition" and the measure-and-animate path is skipped entirely, which is one more reason the library's duration tokens bottom out at `1ms` and never at zero.
+
+The panel's padding is not on the panel. A padding box survives a zero content box, so padding on the collapsing element would leave a band of empty space under the trigger whenever the panel is mounted and closed — which is exactly what `keepMounted` and `hiddenUntilFound` ask for. It lives on an inner element instead, which is also what gives the content something of its own to move on. It starts a little high and at zero opacity and settles as the panel grows — travelling *downward*, because the panel clips from below and that is the direction that reads as being uncovered.
+
+For the same reason there is no gap between the trigger and the panel: a flex `gap` on the root would still be painted while a mounted panel was closed, so the same markup would leave a band under the trigger or not depending on a prop that is meant to be invisible.
+
+The chevron flips on a spring (`--pui-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--pui-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
+
+There is no `prefers-reduced-motion` block in this stylesheet, and none anywhere else in a component file. The tokens do it: `--pui-duration-normal` collapses from 240ms to 120ms and `--pui-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
+
+## Theming
+
+Every property below is declared on `Collapsible.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Collapsible.Root` itself, through its `className` or an inline `style`. To move every collapsible at once, re-point the global tokens in the Default column instead: `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
+
+Defaults are the `plain` variant; the Contained column gives the value only where the two differ.
+
+| Property | Controls | Default (`plain`) | `contained` |
+| :-- | :-- | :-- | :-- |
+| `--pui-collapsible-radius` | Corner radius of the card. The trigger takes the same radius, so its focus ring follows the card rather than being shaved by the card's own clip — squaring off its bottom two corners while the panel is open | `0px` | `var(--pui-radius-surface)` |
+| `--pui-collapsible-bg` | Background behind the whole component | `transparent` | `var(--pui-color-panel)` |
+| `--pui-collapsible-border-width` | Border around the card | `0px` | `1px` |
+| `--pui-collapsible-border-color` | Colour of that border | `var(--pui-color-border-muted)` | — |
+| `--pui-collapsible-trigger-width` | How wide the button is. `fit-content` is what makes the plain trigger exactly as wide as its own label | `fit-content` | `100%` |
+| `--pui-collapsible-trigger-px` | Inline padding of the trigger | `0px` | `var(--pui-space-3)` |
+| `--pui-collapsible-trigger-py` | Block padding of the trigger | `var(--pui-space-1)` | `var(--pui-space-3)` |
+| `--pui-collapsible-trigger-gap` | Space between the label and the marker — a minimum, once the trigger is full width | `var(--pui-control-gap)` | `var(--pui-space-4)` |
+| `--pui-collapsible-trigger-bg` | Trigger background at rest | `transparent` | — |
+| `--pui-collapsible-trigger-bg-hover` | Trigger background on hover. Unset in `plain`, where the colour change below is the cue instead | `var(--pui-collapsible-trigger-bg)` | `var(--pui-color-panel-hover)` |
+| `--pui-collapsible-trigger-color` | Label colour | `var(--pui-color-foreground)` | — |
+| `--pui-collapsible-trigger-color-hover` | Label colour on hover | `var(--pui-color-primary-text)` | unchanged from rest |
+| `--pui-collapsible-trigger-font-size` | Label size | `var(--pui-font-size-2)` | — |
+| `--pui-collapsible-trigger-font-weight` | Label weight | `var(--pui-font-weight-medium)` | — |
+| `--pui-collapsible-icon-color` | Marker colour when closed | `currentColor` | `var(--pui-color-foreground-subtle)` |
+| `--pui-collapsible-icon-color-open` | Marker colour when open | `currentColor` | `var(--pui-color-foreground)` |
+| `--pui-collapsible-icon-rotate` | How far the marker turns when the panel opens | `180deg` | — |
+| `--pui-collapsible-panel-px` | Inline padding of the panel content | `0px` | `var(--pui-space-3)` |
+| `--pui-collapsible-panel-pt` | Block-start padding of the panel content | `var(--pui-space-2)` | `0px` — the trigger's own padding already separates the two |
+| `--pui-collapsible-panel-pb` | Block-end padding of the panel content | `0px` | `var(--pui-space-4)` |
+| `--pui-collapsible-panel-color` | Body text colour | `var(--pui-color-foreground-muted)` | — |
+| `--pui-collapsible-panel-font-size` | Body text size | `var(--pui-font-size-2)` | — |
+| `--pui-collapsible-duration` | Length of the height change, and of the content's slide | `var(--pui-duration-normal)` | — |
+| `--pui-collapsible-ease` | Curve for both. Deliberately not a spring: overshooting `height` flashes a band of empty background under the last line before settling | `var(--pui-ease-standard)` | — |
+
+`variant="contained"` is itself implemented by overriding these on the root, plus one structural declaration — `overflow: hidden`, which clips the trigger's hover fill and anything you paint behind the panel to the card's curve. That clip is also why the trigger's focus ring is inset in `contained` and outset in `plain`. Setting the knobs yourself on a contained collapsible still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+
+The parts also expose their state as data attributes — `data-variant`, `data-open`, `data-closed`, `data-panel-open`, `data-disabled` — so a Tailwind arbitrary variant such as `data-[panel-open]:...` can target them without a wrapper element.
+
+<Callout kind="note">
+  `data-open` and `data-closed` are on the **root and the panel**; the trigger carries `data-panel-open` and nothing when closed. That asymmetry is Base UI's, and it is the same on the accordion.
+</Callout>
+
+## API reference
+
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `Collapsible.Root` also takes `open`, `defaultOpen`, `onOpenChange` and `disabled`; `Collapsible.Panel` takes `keepMounted` and `hiddenUntilFound`. All three parts take `render` for changing the underlying element.
+
+### Collapsible.Root
+
+<PropTable component="CollapsibleRoot" />
+
+### Collapsible.Trigger
+
+<PropTable component="CollapsibleTrigger" />
+
+### Collapsible.Panel
+
+<PropTable component="CollapsiblePanel" />

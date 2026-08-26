@@ -123,6 +123,9 @@ element inherits instead.
 **danger** (6)
 `--pui-danger-10` · `--pui-danger-11` · `--pui-danger-2` · `--pui-danger-3` · `--pui-danger-7` · `--pui-danger-9`
 
+**direction** (1)
+`--pui-direction`
+
 **duration** (11)
 `--pui-duration-fast` · `--pui-duration-instant` · `--pui-duration-loop-pulse` · `--pui-duration-loop-spin` · `--pui-duration-move` · `--pui-duration-normal` · `--pui-duration-slow` · `--pui-duration-spring-bouncy` · `--pui-duration-spring-gentle` · `--pui-duration-spring-precise` · `--pui-duration-spring-snappy`
 

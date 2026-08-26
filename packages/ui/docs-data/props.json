@@ -278,6 +278,73 @@
       }
     ]
   },
+  "CollapsibleRoot": {
+    "name": "CollapsibleRoot",
+    "description": "Groups the trigger and the panel, and owns whether the panel is open.\n\nUncontrolled with `defaultOpen`, controlled with `open` plus `onOpenChange`.\nUnlike `Accordion.Root`, this is a boolean rather than a list — there is only\never one panel to open.\n\nReach for `Accordion` instead when there are several of these in a row: it\nputs each section into the page's heading outline and can close the others\nas one opens, neither of which a stack of collapsibles does.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "variant",
+        "type": "CollapsibleVariant",
+        "required": false,
+        "defaultValue": "plain",
+        "description": "How much visual weight the disclosure carries. `\"plain\"` contributes no\nbox of its own — a bare text button over its panel, for a \"Show more\" that\nlives inside a page. `\"contained\"` turns the pair into a card sized and\ncoloured to match one item of a `contained` Accordion. Both are the same\nthree parts with different knobs — nothing moves."
+      }
+    ]
+  },
+  "CollapsibleTrigger": {
+    "name": "CollapsibleTrigger",
+    "description": "The button that opens and closes the panel. Renders a `<button>` carrying\n`aria-expanded` and an `aria-controls` pointing at the panel.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--pui-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.\n\nKeep the text as the accessible name. `aria-expanded` already announces open\nand closed, so a trigger reading \"Details\" needs no \"show/hide\" wording of\nits own, and an icon-only trigger has no name at all.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ChevronDownIcon />",
+        "description": "The affordance next to the label. Defaults to a chevron that rotates when\nthe panel opens. Pass your own node to replace it — it is wrapped in the\nsame rotating, `aria-hidden` box, so a plus or a caret needs no extra\nwiring — or `null` to drop it entirely."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the label box that wraps `children`.\nApplied after the internal styles."
+      }
+    ]
+  },
+  "CollapsiblePanel": {
+    "name": "CollapsiblePanel",
+    "description": "The collapsible region. Base UI measures it and publishes the result as\n`--collapsible-panel-height`, which the stylesheet transitions.\n\n`children` goes inside an inner box, and that box is where all the padding\nlives. Padding on the collapsing element itself would still paint at\n`height: 0` — the padding box survives a zero content box — so a mounted,\nclosed panel would leave a band of empty space under the trigger. The inner\nbox also gives the content something to fade and slide on while the outer\none is busy animating its height.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "contentClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the inner element that holds the padding and\nthe content. Applied after the internal styles."
+      }
+    ]
+  },
   "DialogTrigger": {
     "name": "DialogTrigger",
     "description": "A button that opens the dialog.\n\nRenders a `<button>`. Pass `render={<Button />}` to compose it with a\nstyled button — the trigger's own neutral styling steps aside when `render`\nis present, so the two never fight over the cascade.",

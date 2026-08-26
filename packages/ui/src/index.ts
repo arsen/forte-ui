@@ -27,6 +27,14 @@ export type {
   CheckboxGroupOrientation,
 } from "./components/checkbox";
 
+export { Collapsible } from "./components/collapsible";
+export type {
+  CollapsibleVariant,
+  CollapsibleRootProps,
+  CollapsibleTriggerProps,
+  CollapsiblePanelProps,
+} from "./components/collapsible";
+
 export { Dialog, AlertDialog } from "./components/dialog";
 export type {
   DialogSize,
