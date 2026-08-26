@@ -183,6 +183,15 @@ adding a third axis or a bespoke one-off variant.
 target states from plain CSS or Tailwind arbitrary variants
 (`data-[variant=solid]:...`) without wrapping the component.
 
+**Parts live on `data-pui`.** Every element a component renders carries
+`data-pui="<component>"` (the `styles.root` element) or
+`data-pui="<component>-<part>"` (the kebab-cased style key). The hashed CSS
+Modules class names change between releases, so this marker is the only
+selector a consumer can write against a part and keep — it is public API, and
+renaming one is a breaking change. Full placement rules and the two exceptions
+(SVG descendants, composed pretty-ui components) are rule 9 in
+`CONTRIBUTING.md`.
+
 **Component knobs are declared on the component's own root element.** A knob
 like `--pui-button-radius` is declared at the top of `.root`, defaulting to a
 semantic token. That placement is load-bearing: an element's own declaration
@@ -366,8 +375,23 @@ vocabulary, which is what stops the two drifting.
 Reach for utilities instead of a `style={{ ... }}` object for anything that is
 layout or typography.
 
-Setup lives in [`apps/docs/app/tailwind.css`](apps/docs/app/tailwind.css).
-It is not stock Tailwind. Three things about it are load-bearing:
+The token mapping itself is no longer a docs file: it ships from the library
+as the **`@dofortech/pretty-ui/tailwind.css` bridge** (source:
+[`packages/ui/src/styles/tailwind.css`](packages/ui/src/styles/tailwind.css)),
+which is the same file a consumer imports. It re-points Tailwind's theme at
+the pretty-ui tokens, deletes the stock scales, and pins the cascade-layer
+order `theme, base, pretty-ui, components, utilities` — for a consumer that
+statement is what stops Preflight (in `base`) from blanking the components
+and keeps `utilities` able to beat them, which is why the bridge must be
+imported *before* `tailwindcss`. Add a token family to the bridge and it
+reaches the docs and every consumer at once; regenerating nothing — it is
+hand-written CSS.
+
+[`apps/docs/app/tailwind.css`](apps/docs/app/tailwind.css) imports the bridge
+(its layer statement is a no-op there — `theme.css` and `globals.css` fixed
+the order first, with the `docs` layer the bridge knows nothing about) and
+keeps only what the DOCS own: the `@source` list, three named variants, and
+the site's chrome measures. Three things about the setup are load-bearing:
 
 **The theme is `@theme inline`, and must stay that way.** Plain `@theme` emits
 `--color-panel: var(--pui-color-panel)` on `:root` and points utilities at

@@ -212,6 +212,7 @@ function TooltipTrigger<Payload = unknown>({
   return (
     <BaseTooltip.Trigger<Payload>
       className={clsx(styles.trigger, "pui-focus-ring", className)}
+      data-pui="tooltip-trigger"
       {...props}
     />
   );
@@ -357,6 +358,7 @@ const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
       <BaseTooltip.Portal keepMounted={keepMounted} container={container}>
         <BaseTooltip.Positioner
           className={clsx(styles.positioner, positionerClassName)}
+          data-pui="tooltip-positioner"
           side={side}
           align={align}
           sideOffset={sideOffset}
@@ -376,6 +378,7 @@ const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
           <BaseTooltip.Popup
             ref={ref}
             className={clsx(styles.popup, "pui-hc-surface", className)}
+            data-pui="tooltip-popup"
             {...props}
           >
             {children}
@@ -423,6 +426,7 @@ const TooltipArrow = React.forwardRef<HTMLDivElement, TooltipArrowProps>(
       <BaseTooltip.Arrow
         ref={ref}
         className={clsx(styles.arrow, className)}
+        data-pui="tooltip-arrow"
         {...props}
       >
         {children ?? <ArrowSvg />}
@@ -441,6 +445,7 @@ function ArrowSvg() {
   return (
     <svg
       className={styles.arrowSvg}
+      data-pui="tooltip-arrow-svg"
       viewBox="0 0 20 10"
       preserveAspectRatio="none"
       aria-hidden="true"

@@ -84,7 +84,18 @@ Better still, target the element (`svg`) or rely on `currentColor`.
 `data-size`, `data-tone`. This is what lets consumers target states from plain
 CSS or Tailwind arbitrary variants without wrapping the component.
 
-**9. Decorative SVG gets `aria-hidden="true"`,** and anything conveying state
+**9. Every rendered element carries `data-pui="<component>"` (root) or
+`data-pui="<component>-<part>"`,** the part name being the kebab-cased style
+key. The hashed CSS Modules class names change between releases, so this
+marker is the only selector a consumer can write against a part and keep — it
+is public API, and renaming one is a breaking change. Place it right after
+`className` and before any `{...props}` spread, so a caller can override it.
+Two exceptions: SVG descendants of a tagged element get nothing (target them
+through the svg), and a composed pretty-ui component is never handed a marker
+by its host — it tags its own root, and consumers scope with a descendant
+selector (`[data-pui="button"] [data-pui="spinner"]`).
+
+**10. Decorative SVG gets `aria-hidden="true"`,** and anything conveying state
 to assistive technology goes in a `.pui-visually-hidden` span.
 
 ## Available pattern classes

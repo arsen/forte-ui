@@ -95,6 +95,7 @@ export function Radio<Value = unknown>({
       // its designed size. The root is not inside a clipping container, so the
       // focus ring stays outset.
       className={clsx(styles.root, "pui-target", "pui-focus-ring", className)}
+      data-pui="radio"
       data-size={size}
       data-tone={tone}
       {...props}
@@ -107,6 +108,7 @@ export function Radio<Value = unknown>({
         // starts from a rendered box.
         keepMounted
         className={clsx(styles.indicator, indicatorClassName)}
+        data-pui="radio-indicator"
       />
     </BaseRadio.Root>
   );
@@ -197,6 +199,7 @@ export function RadioGroup<Value = unknown>({
   return (
     <BaseRadioGroup
       className={clsx(styles.group, className)}
+      data-pui="radio-group"
       data-orientation={orientation}
       {...props}
     />

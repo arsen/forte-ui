@@ -119,6 +119,7 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
         ref={ref}
         orientation={orientation}
         className={clsx(styles.root, className)}
+        data-pui="separator"
         data-variant={variant}
         {...(decorative ? DECORATIVE_PROPS : null)}
         {...props}

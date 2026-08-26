@@ -100,6 +100,7 @@ function CollapsibleRoot({
     <CollapsibleVariantContext.Provider value={variant}>
       <BaseCollapsible.Root
         className={clsx(styles.root, className)}
+        data-pui="collapsible"
         data-variant={variant}
         {...props}
       >
@@ -159,6 +160,7 @@ const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, CollapsibleTrigge
       <BaseCollapsible.Trigger
         ref={ref}
         className={clsx(styles.trigger, "pui-focus-ring", className)}
+        data-pui="collapsible-trigger"
         // Only in `contained`. That variant clips the root to the card's
         // corners so the hover fill stays inside them, which makes it a
         // clipping container — an outset ring would be cropped along the
@@ -170,9 +172,9 @@ const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, CollapsibleTrigge
         data-variant={variant}
         {...props}
       >
-        <span className={clsx(styles.label, labelClassName)}>{children}</span>
+        <span className={clsx(styles.label, labelClassName)} data-pui="collapsible-label">{children}</span>
         {icon === null ? null : (
-          <span className={styles.icon} aria-hidden="true">
+          <span className={styles.icon} data-pui="collapsible-icon" aria-hidden="true">
             {icon}
           </span>
         )}
@@ -217,10 +219,11 @@ const CollapsiblePanel = React.forwardRef<HTMLDivElement, CollapsiblePanelProps>
       <BaseCollapsible.Panel
         ref={ref}
         className={clsx(styles.panel, className)}
+        data-pui="collapsible-panel"
         data-variant={variant}
         {...props}
       >
-        <div className={clsx(styles.content, contentClassName)}>{children}</div>
+        <div className={clsx(styles.content, contentClassName)} data-pui="collapsible-content">{children}</div>
       </BaseCollapsible.Panel>
     );
   },

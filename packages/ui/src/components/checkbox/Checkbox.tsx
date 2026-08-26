@@ -113,6 +113,7 @@ export const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
         // designed size. The root is not inside a clipping container, so the
         // focus ring stays outset.
         className={clsx(styles.root, "pui-target", "pui-focus-ring", className)}
+        data-pui="checkbox"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -125,11 +126,13 @@ export const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
           // transition starts from a rendered box.
           keepMounted
           className={clsx(styles.indicator, indicatorClassName)}
+          data-pui="checkbox-indicator"
         >
           {/* Decorative: the state is already carried by the hidden input's
             * `checked` and by `aria-checked` on the root. */}
           <svg
             className={styles.svg}
+            data-pui="checkbox-svg"
             viewBox="0 0 16 16"
             aria-hidden="true"
             focusable="false"
@@ -215,6 +218,7 @@ export const CheckboxGroup = React.forwardRef<
       // <fieldset> is already a group) can override it.
       role="group"
       className={clsx(styles.group, className)}
+      data-pui="checkbox-group"
       data-orientation={orientation}
       {...props}
     />

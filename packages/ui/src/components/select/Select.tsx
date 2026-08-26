@@ -159,6 +159,7 @@ export const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
       <BaseSelect.Label
         ref={ref}
         className={clsx(styles.label, className)}
+        data-pui="select-label"
         {...props}
       />
     );
@@ -278,6 +279,7 @@ export const SelectTrigger = React.forwardRef<
     <BaseSelect.Trigger
       ref={handleRef}
       className={clsx(styles.trigger, "pui-focus-ring", className)}
+      data-pui="select-trigger"
       data-variant={variant}
       data-size={size}
       data-full-width={fullWidth || undefined}
@@ -317,6 +319,7 @@ export const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
       <BaseSelect.Value
         ref={ref}
         className={clsx(styles.value, className)}
+        data-pui="select-value"
         {...props}
       />
     );
@@ -357,6 +360,7 @@ export const SelectIcon = React.forwardRef<HTMLSpanElement, SelectIconProps>(
       <BaseSelect.Icon
         ref={ref}
         className={clsx(styles.icon, className)}
+        data-pui="select-icon"
         {...props}
       >
         {children ?? <CaretUpDownIcon />}
@@ -495,10 +499,12 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
         {backdrop ? (
           <BaseSelect.Backdrop
             className={clsx(styles.backdrop, "pui-scrim")}
+            data-pui="select-backdrop"
           />
         ) : null}
         <BaseSelect.Positioner
           className={clsx(styles.positioner, positionerClassName)}
+          data-pui="select-positioner"
           alignItemWithTrigger={alignItemWithTrigger}
           side={side}
           align={align}
@@ -513,16 +519,17 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
           <BaseSelect.Popup
             ref={ref}
             className={clsx(styles.popup, "pui-hc-surface", className)}
+            data-pui="select-popup"
             {...props}
           >
             {scrollArrows ? (
-              <BaseSelect.ScrollUpArrow className={styles.scrollArrow}>
+              <BaseSelect.ScrollUpArrow className={styles.scrollArrow} data-pui="select-scroll-arrow">
                 <CaretUpIcon />
               </BaseSelect.ScrollUpArrow>
             ) : null}
-            <BaseSelect.List className={styles.list}>{children}</BaseSelect.List>
+            <BaseSelect.List className={styles.list} data-pui="select-list">{children}</BaseSelect.List>
             {scrollArrows ? (
-              <BaseSelect.ScrollDownArrow className={styles.scrollArrow}>
+              <BaseSelect.ScrollDownArrow className={styles.scrollArrow} data-pui="select-scroll-arrow">
                 <CaretDownIcon />
               </BaseSelect.ScrollDownArrow>
             ) : null}
@@ -589,13 +596,14 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
       <BaseSelect.Item
         ref={ref}
         className={clsx(styles.item, "pui-focus-ring", className)}
+        data-pui="select-item"
         data-focus-inset=""
         {...props}
       >
-        <BaseSelect.ItemIndicator className={styles.itemIndicator}>
+        <BaseSelect.ItemIndicator className={styles.itemIndicator} data-pui="select-item-indicator">
           {indicator ?? <CheckIcon />}
         </BaseSelect.ItemIndicator>
-        <BaseSelect.ItemText className={styles.itemText}>
+        <BaseSelect.ItemText className={styles.itemText} data-pui="select-item-text">
           {children}
         </BaseSelect.ItemText>
       </BaseSelect.Item>
@@ -628,6 +636,7 @@ export const SelectGroup = React.forwardRef<HTMLDivElement, SelectGroupProps>(
       <BaseSelect.Group
         ref={ref}
         className={clsx(styles.group, className)}
+        data-pui="select-group"
         {...props}
       />
     );
@@ -660,6 +669,7 @@ export const SelectGroupLabel = React.forwardRef<
     <BaseSelect.GroupLabel
       ref={ref}
       className={clsx(styles.groupLabel, className)}
+      data-pui="select-group-label"
       {...props}
     />
   );
@@ -697,6 +707,7 @@ export const SelectSeparator = React.forwardRef<
     <BaseSelect.Separator
       ref={ref}
       className={clsx(styles.separator, className)}
+      data-pui="select-separator"
       {...props}
     />
   );

@@ -86,6 +86,7 @@ export const Input = React.forwardRef<HTMLElement, InputProps>(
         // that are smaller than 24px, and even a `compact` `sm` input is
         // 24px tall and at least as wide as its text.
         className={clsx(styles.root, "pui-focus-ring", className)}
+        data-pui="input"
         data-size={size}
         data-variant={variant}
         data-full-width={fullWidth || undefined}

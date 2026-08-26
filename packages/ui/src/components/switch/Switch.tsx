@@ -95,15 +95,17 @@ export const Switch = React.forwardRef<HTMLElement, SwitchProps>(function Switch
       // `pui-target` grows the hit area to the SC 2.5.8 minimum without
       // changing the painted track, which is only 20px tall at `md`.
       className={clsx(styles.root, "pui-focus-ring", "pui-target", className)}
+      data-pui="switch"
       data-size={size}
       {...props}
     >
-      <BaseSwitch.Thumb className={clsx(styles.thumb, thumbClassName)}>
+      <BaseSwitch.Thumb className={clsx(styles.thumb, thumbClassName)} data-pui="switch-thumb">
         {stateIcon ? (
           // Decorative: the checked state already reaches assistive tech
           // through the root's role="switch" + aria-checked.
           <svg
             className={clsx(styles.icon, "pui-icon")}
+            data-pui="switch-icon"
             viewBox="0 0 12 12"
             aria-hidden="true"
             focusable="false"

@@ -135,6 +135,7 @@ export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
       <span
         ref={ref}
         className={clsx(styles.root, className)}
+        data-pui="spinner"
         data-variant={variant}
         data-size={size}
         data-tone={tone}
@@ -155,11 +156,12 @@ export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
         style={{ "--pui-spinner-count": count, ...style } as React.CSSProperties}
         {...props}
       >
-        <span className={styles.indicator} aria-hidden="true">
+        <span className={styles.indicator} data-pui="spinner-indicator" aria-hidden="true">
           {Array.from({ length: count }, (_, i) => (
             <span
               key={i}
               className={styles.part}
+              data-pui="spinner-part"
               // The child's index, handed to CSS. Everything per-child is
               // derived from it — the bar's angle, the dot's stagger, the
               // ripple's phase — so the stylesheet needs no `nth-child` chain
@@ -173,6 +175,7 @@ export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
             className={clsx(
               labelPlacement === "hidden" ? "pui-visually-hidden" : styles.label,
             )}
+            data-pui="spinner-label"
           >
             {label}
           </span>

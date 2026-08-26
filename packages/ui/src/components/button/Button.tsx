@@ -100,6 +100,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <BaseButton
         ref={ref}
         className={clsx(styles.root, "pui-focus-ring", className)}
+        data-pui="button"
         data-variant={variant}
         data-tone={tone}
         data-size={size}
@@ -117,7 +118,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading || undefined}
         {...props}
       >
-        <span className={styles.content}>{children}</span>
+        <span className={styles.content} data-pui="button-content">{children}</span>
         {loading ? (
           <>
             <Spinner

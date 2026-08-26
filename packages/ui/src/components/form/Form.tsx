@@ -88,5 +88,5 @@ export interface FormProps<
 export function Form<
   FormValues extends Record<string, unknown> = Record<string, unknown>,
 >({ className, ...props }: FormProps<FormValues>): React.JSX.Element {
-  return <BaseForm className={clsx(styles.root, className)} {...props} />;
+  return <BaseForm className={clsx(styles.root, className)} data-pui="form" {...props} />;
 }
