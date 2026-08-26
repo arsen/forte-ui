@@ -1,0 +1,300 @@
+/*
+ * Radio / RadioGroup
+ *
+ * Same two axes as Checkbox, and deliberately the same painted geometry, so a
+ * form mixing the two lines up:
+ *   data-size   how big the painted circle is (sm/md/lg)
+ *   data-tone   which semantic colour set the selected fill draws from
+ *
+ * The dot is the state. Colour alone cannot carry "selected" here — a group of
+ * radios differs from a group of checkboxes only in that exactly one is filled
+ * — so the dot scales 0 -> 1 over a DURATION token rather than riding a
+ * `--pui-scale-*` token. A scale token collapses to 1 under reduced motion,
+ * which for a mark animating *toward* 1 would mean "never appears at all". A
+ * duration only shortens, so the dot still pops; it just pops faster.
+ *
+ * There is deliberately no `prefers-reduced-motion` block here; the tokens
+ * already collapse their own geometry.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared on the radio element itself, so a value set on
+     * an ancestor is only INHERITED and loses to this declaration. To re-skin
+     * one radio, set them on the radio via `className` — an unlayered consumer
+     * rule beats `@layer pretty-ui.components` at any specificity — or an
+     * inline `style`. To move every radio at once, re-point the global tokens
+     * on the right-hand side below, which this file only reads and never
+     * re-declares. */
+    --pui-radio-size: 1rem;
+    /* NOT `var(--pui-radius-full)`, and this is the one place in the library
+     * where a component opts out of the radius presets. Round is not a style
+     * choice on a radio: it is the only thing that tells a reader "pick one of
+     * these" rather than "tick any of these", and `[data-pui-radius="none"]`
+     * sets `--pui-radius-full: 0`, which would render a radio as a square
+     * indistinguishable from the checkbox next to it. A consumer who wants
+     * that anyway sets `--pui-radio-radius: var(--pui-radius-full)` and gets
+     * the preset back. */
+    --pui-radio-radius: 50%;
+    --pui-radio-border-width: 1px;
+    /* Unitless fraction of the circle rather than a length, so the dot keeps
+     * its proportion when `--pui-radio-size` is overridden to anything off the
+     * three-step scale. Retuned per size below for optical weight, the same way
+     * Checkbox retunes its stroke width. */
+    --pui-radio-dot-ratio: 0.375;
+    /* Derived on the same element as the two inputs it reads — an unregistered
+     * custom property is substituted where it is DECLARED, so deriving this on
+     * an ancestor would freeze it at the ancestor's values. */
+    --pui-radio-dot-size: calc(
+      var(--pui-radio-size) * var(--pui-radio-dot-ratio)
+    );
+    --pui-radio-duration: var(--pui-duration-fast);
+    /* The dot's pop. A spring, paired with its matching duration token (a
+     * shorter one would truncate the bounce and look broken). */
+    --pui-radio-pop-duration: var(--pui-duration-spring-snappy);
+    --pui-radio-pop-ease: var(--pui-ease-spring-snappy);
+
+    /* Colour slots, filled in per tone below. */
+    --pui-radio-bg: var(--pui-color-background);
+    --pui-radio-bg-hover: var(--pui-color-panel-hover);
+    --pui-radio-border-color: var(--pui-color-border);
+    --pui-radio-border-color-hover: var(--pui-color-border-strong);
+    --pui-radio-fill: var(--pui-color-primary);
+    --pui-radio-fill-hover: var(--pui-color-primary-hover);
+    --pui-radio-dot-color: var(--pui-color-on-primary);
+
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--pui-radio-size);
+    block-size: var(--pui-radio-size);
+    padding: 0;
+    margin: 0;
+    border: var(--pui-radio-border-width) solid var(--pui-radio-border-color);
+    border-radius: var(--pui-radio-radius);
+    background-color: var(--pui-radio-bg);
+    /* The dot paints with currentColor, so this is the dot colour. */
+    color: var(--pui-radio-dot-color);
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    /* The root is the focusable element (Base UI puts tabindex on the span and
+     * parks the hidden input at tabindex -1), so it also owns the focus ring
+     * and must not flash a platform tap highlight underneath it. */
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--pui-radio-duration) var(--pui-ease-standard),
+      border-color var(--pui-radio-duration) var(--pui-ease-standard),
+      color var(--pui-radio-duration) var(--pui-ease-standard);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  @media (hover: hover) {
+    .root:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-radio-bg-hover);
+      border-color: var(--pui-radio-border-color-hover);
+    }
+
+    .root[data-checked]:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-radio-fill-hover);
+      border-color: transparent;
+    }
+  }
+
+  .root[data-checked] {
+    background-color: var(--pui-radio-fill);
+    /* Not `none`: transparent is NOT preserved under forced-colors, so this
+     * border keeps the circle outlined there while staying invisible normally. */
+    border-color: transparent;
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* A readonly radio still reads its value out; it just cannot be re-picked. */
+  .root[data-readonly] {
+    cursor: default;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  /* The painted circle stays small on purpose; `.pui-target` on the root
+   * carries the 24px minimum hit area (SC 2.5.8) in a pseudo-element instead.
+   * The three sizes match Checkbox exactly so the two line up in one form. */
+  .root[data-size="sm"] {
+    --pui-radio-size: 0.875rem;
+    /* Proportionally larger at 14px: a dot under ~5px stops reading as a dot
+     * and starts reading as a rendering artefact. */
+    --pui-radio-dot-ratio: 0.4;
+  }
+
+  .root[data-size="md"] {
+    --pui-radio-size: 1rem;
+    --pui-radio-dot-ratio: 0.375;
+  }
+
+  .root[data-size="lg"] {
+    --pui-radio-size: 1.25rem;
+    --pui-radio-dot-ratio: 0.36;
+  }
+
+  /* Tones ----------------------------------------------------------------- */
+  .root[data-tone="secondary"] {
+    --pui-radio-fill: var(--pui-color-secondary);
+    --pui-radio-fill-hover: var(--pui-color-secondary-hover);
+    --pui-radio-dot-color: var(--pui-color-on-secondary);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-radio-fill: var(--pui-color-danger);
+    --pui-radio-fill-hover: var(--pui-color-danger-hover);
+    --pui-radio-dot-color: var(--pui-color-on-danger);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-radio-fill: var(--pui-gray-12);
+    --pui-radio-fill-hover: var(--pui-gray-11);
+    --pui-radio-dot-color: var(--pui-gray-1);
+  }
+
+  /* Validity -------------------------------------------------------------- */
+  /* Inside a Field.Root, an invalid field outranks the tone: a validation
+   * failure must not be able to look like a brand-coloured success. Equal
+   * specificity to the tone rules, so this block has to stay after them. */
+  .root[data-invalid] {
+    --pui-radio-border-color: var(--pui-color-danger-border);
+    --pui-radio-border-color-hover: var(--pui-color-danger);
+    --pui-radio-fill: var(--pui-color-danger);
+    --pui-radio-fill-hover: var(--pui-color-danger-hover);
+    --pui-radio-dot-color: var(--pui-color-on-danger);
+  }
+
+  /* Indicator ------------------------------------------------------------- */
+  /* Kept mounted (see Radio.tsx) and hidden by scale rather than
+   * `display: none`. A display change would cancel the enter transition
+   * outright — a box that is not rendered has no style to transition from. */
+  .indicator {
+    display: block;
+    inline-size: var(--pui-radio-dot-size);
+    block-size: var(--pui-radio-dot-size);
+    border-radius: 50%;
+    background-color: currentColor;
+    /* Clicks belong to the root (or the enclosing label), never to the dot. */
+    pointer-events: none;
+    scale: 0;
+    opacity: 0;
+    /* This rule owns the transition OUT of the selected state, and it is
+     * deliberately not the spring: a spring undershoots, so scaling 1 -> 0 on
+     * one would drive `scale` through negative values on the way. The dot is
+     * radially symmetric so the flip itself is invisible, but the rebound back
+     * up from below zero is not — the dot would visibly re-appear for a frame
+     * after it had gone. Standard easing on the way out, spring on the way in. */
+    transition:
+      scale var(--pui-radio-duration) var(--pui-ease-standard),
+      opacity var(--pui-radio-duration) var(--pui-ease-standard);
+  }
+
+  .indicator[data-checked] {
+    scale: 1;
+    opacity: 1;
+    /* Transition properties are read from the rule for the state being
+     * entered, so this is the pop — and only the pop. Overshooting past 1 is
+     * the whole point of it and costs nothing: the dot is a third of the
+     * circle, so even at the spring's peak it stays well inside. */
+    transition:
+      scale var(--pui-radio-pop-duration) var(--pui-radio-pop-ease),
+      opacity var(--pui-radio-duration) var(--pui-ease-standard);
+  }
+
+  /* Mounting already-selected (a `defaultValue` group, or a selected radio
+   * being revealed) starts collapsed and pops in from here. Same specificity
+   * as the rule above — (0,2,0) — so document order is what makes it win, and
+   * it has to stay below. */
+  .indicator[data-starting-style],
+  .indicator[data-ending-style] {
+    scale: 0;
+    opacity: 0;
+  }
+
+  /* Group ----------------------------------------------------------------- */
+  .group {
+    --pui-radio-group-gap: var(--pui-space-2);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-radio-group-gap);
+  }
+
+  .group[data-orientation="horizontal"] {
+    --pui-radio-group-gap: var(--pui-space-4);
+
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+/* Forced colours ---------------------------------------------------------- */
+/* Top-level `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so
+ * everything here beats the rules above by layer alone — no `!important`, no
+ * padded selectors. Specificity still decides between rules *inside* this
+ * block, including against the global forced-colors rules in patterns.css.
+ *
+ * The UA derives system colours from native element semantics, and the root is
+ * a <span> with role="radio" — it gets nothing automatically, so the keywords
+ * are assigned here. The generic `[data-disabled]` remedy in patterns.css
+ * (GrayText + opacity: 1) applies through `:where()`, i.e. at zero specificity,
+ * so the `.root` rules below would outrank its colours; the ones this component
+ * actually needs are restated, and `opacity: 1` — which nothing here competes
+ * with — is left to the global rule. */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .root {
+      border-color: CanvasText;
+      background-color: Canvas;
+    }
+
+    .root[data-checked] {
+      background-color: Highlight;
+      border-color: Highlight;
+    }
+
+    /* Disabled outranks checked by document order at equal specificity, which
+     * is the whole fix: the global rules would otherwise leave a GrayText dot
+     * on a Highlight fill, and those two keywords are not a guaranteed pair —
+     * in High Contrast Black it is GrayText #3FF23F on Highlight #1AEBFF.
+     * Dropping the fill back to Canvas gives GrayText on Canvas, which is
+     * guaranteed, and reads unambiguously as disabled. Losing the fill costs
+     * nothing here, because on a radio the dot — not the fill — is what
+     * carries "selected". */
+    .root[data-disabled] {
+      background-color: Canvas;
+      border-color: GrayText;
+    }
+
+    /* The indicator carries `data-checked` too, so the global
+     * `[data-checked] { background-color: Highlight }` in patterns.css paints
+     * the dot Highlight on an already-Highlight circle and it disappears.
+     * HighlightText is the guaranteed partner for Highlight.
+     *
+     * The descendant selector is not decoration: patterns.css puts its rule in
+     * this same layer, so layer order cannot settle this one and specificity
+     * has to. That rule is `:is(…, [data-checked], …):not([data-disabled], …)`,
+     * which `:is()` and `:not()` both weigh at (0,1,0) — (0,2,0) in total. A
+     * bare `.indicator` would lose to it. */
+    .root[data-checked] .indicator {
+      background-color: HighlightText;
+    }
+
+    /* And this one has to outrank the rule above rather than merely follow it,
+     * because a disabled *and* selected radio matches both. Its circle has
+     * already dropped back to Canvas two rules up, and HighlightText on Canvas
+     * is not a guaranteed pair; GrayText on Canvas is. */
+    .root[data-checked][data-disabled] .indicator {
+      background-color: GrayText;
+    }
+  }
+}
