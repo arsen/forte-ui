@@ -42,6 +42,24 @@ export type {
   AlertDialogTriggerProps,
 } from "./components/dialog";
 
+export { Field, FieldRoot, FieldLabel, FieldDescription, FieldError, FieldItem } from "./components/field";
+export type {
+  FieldRootProps,
+  FieldLabelProps,
+  FieldDescriptionProps,
+  FieldErrorProps,
+  FieldItemProps,
+} from "./components/field";
+
+export { Fieldset, FieldsetRoot, FieldsetLegend } from "./components/fieldset";
+export type { FieldsetRootProps, FieldsetLegendProps } from "./components/fieldset";
+
+export { Form } from "./components/form";
+export type { FormProps, FormValidationMode } from "./components/form";
+
+export { Input } from "./components/input";
+export type { InputProps, InputSize, InputVariant } from "./components/input";
+
 export { Select } from "./components/select";
 export type {
   SelectRootProps,

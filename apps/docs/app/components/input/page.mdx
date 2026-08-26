@@ -1,0 +1,139 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Input",
+  description:
+    "A single-line text control that carries the field's validity state, sized on the same scale as the rest of the set.",
+};
+
+# Input
+
+The control you reach for whenever the value is typed rather than chosen. It is
+a real `<input>`, so `type`, `placeholder`, `required`, `pattern`, `minLength`
+and the rest work exactly as they do on the platform — what the library adds is
+the design system's metrics, the two-tone focus ring, and the wiring that makes
+it participate in a [Field](/components/field) without a line of glue.
+
+<DemoBlock id="input/basic" />
+
+Base UI's `Input` **is** `Field.Control` under a friendlier name. That is why
+there is no `Field.Control` in this library and no `<Field.Control render={...}>`
+dance: `<Input>` inside a `<Field.Root>` already picks up the label, the
+description, the error message, the `name` used on submit, and the validity
+attributes.
+
+## Import
+
+```tsx
+import { Input } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sizes
+
+`size` moves height, inline padding and font size together, and the numbers come
+from the same `--pui-control-*` tokens `Select.Trigger` reads — so an input and
+a select on one row are the same height at every `data-pui-density` setting.
+
+<DemoBlock id="input/sizes" />
+
+<Callout kind="note">
+  `size` shadows the native `size` attribute, which sets a width in characters.
+  It is a deliberate trade: consistency with `Button`, `Select` and `Checkbox`
+  is worth more than an attribute almost nobody sets. Use `fullWidth`, a CSS
+  `inline-size`, or `render={<input size={10} />}` if you need the native one.
+</Callout>
+
+### Variants
+
+`variant` changes only how much weight the control carries: `outline` reads as
+a form control, `soft` as a filled field, `ghost` as an inline affordance —
+the same three the select trigger has.
+
+<DemoBlock id="input/variants" />
+
+### States
+
+Disabled and read-only are not the same thing and do not look the same.
+Disabled drops to 55% opacity and takes `cursor: not-allowed`. Read-only keeps
+full contrast, a panel-coloured background, and the text cursor — everywhere
+else in this library a read-only control falls back to the default arrow, but
+selecting and copying the value is the point of the state, so the text cursor
+stays.
+
+<DemoBlock id="input/states" />
+
+### Multi-line
+
+There is no separate `Textarea` component. Swap the element out and the styles
+follow the tag: the fixed control height becomes a minimum, the block padding
+comes back, and `resize` is limited to the vertical axis so the box cannot
+escape the column it sits in.
+
+<DemoBlock id="input/multiline" />
+
+## Accessibility
+
+An input needs an accessible name, and `<Field.Label>` is the way to give it
+one — it renders a real `<label>` wired with `htmlFor`, so clicking the text
+focuses the control and the hit target grows by the width of the label. Where
+the design has no visible label, `aria-label` on the input is the fallback.
+
+<Callout kind="a11y">
+  Put format hints in `<Field.Description>`, not in `placeholder`. A placeholder
+  disappears the moment the user starts typing, which is exactly when the hint
+  is needed; it is invisible to anyone who has already filled the field; and it
+  is not reliably announced.
+</Callout>
+
+Placeholder text is coloured `--pui-color-foreground-muted` (5.82:1) rather
+than `--pui-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
+placeholders in an enabled control, and Firefox's own 0.54 `::placeholder`
+opacity is reset for the same reason.
+
+In forced-colors mode the control paints `Field` / `FieldText` with a
+`FieldText` boundary. That last part matters for `soft` and `ghost`, whose
+border is `transparent` — a value forced-colors replaces with a system colour
+of its choosing rather than leaving invisible, so without the restatement the
+three variants would stop looking like the same control.
+
+## Theming
+
+Every `--pui-input-*` property is declared on the input element itself, and an
+element's own declaration beats an inherited one — so setting these on `:root`,
+on a theme scope or on any ancestor does nothing. Set them on the input, through
+`className` (an unlayered rule beats `@layer pretty-ui.components` whatever its
+specificity) or an inline `style`.
+
+The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*` — are the exception: this component only reads those, so
+re-pointing them from `:root` or a theme scope moves every input at once.
+
+| Property | Controls | Default |
+| --- | --- | --- |
+| `--pui-input-height` | Control height (reset per `size`) | `var(--pui-control-h-md)` |
+| `--pui-input-padding-x` | Inline padding (reset per `size`) | `var(--pui-control-px-md)` |
+| `--pui-input-font-size` | Font size (reset per `size`) | `var(--pui-font-size-2)` |
+| `--pui-input-radius` | Corner radius | `var(--pui-radius-control)` |
+| `--pui-input-border-width` | Border width | `1px` |
+| `--pui-input-bg` | Background (reset per `variant`) | `var(--pui-color-background)` |
+| `--pui-input-bg-hover` | Background on hover | `var(--pui-color-panel-hover)` |
+| `--pui-input-fg` | Text colour | `var(--pui-color-foreground)` |
+| `--pui-input-placeholder-fg` | Placeholder colour | `var(--pui-color-foreground-muted)` |
+| `--pui-input-border-color` | Border colour (reset per `variant`, and by `data-invalid`) | `var(--pui-color-border)` |
+| `--pui-input-border-color-hover` | Border colour on hover | `var(--pui-color-border-strong)` |
+| `--pui-input-caret-color` | Caret colour | `var(--pui-color-primary)` |
+| `--pui-input-selection-bg` | Selection background | `var(--pui-color-primary-soft)` |
+| `--pui-input-selection-fg` | Selection text colour | `var(--pui-color-primary-text)` |
+
+## API reference
+
+### Input
+
+<PropTable component="Input" />
+
+Everything else is a native `<input>` prop and passes straight through, plus
+Base UI's `render`, `onValueChange` and `defaultValue`.

@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@dofortech/pretty-ui";
+import { Checkbox, Field } from "@dofortech/pretty-ui";
 
 const sizes = [
   { size: "sm", label: "Small" },
@@ -12,17 +12,12 @@ export default function CheckboxSizes() {
   return (
     <>
       {sizes.map(({ size, label }) => (
-        <label
-          key={size}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "var(--pui-space-2)",
-          }}
-        >
-          <Checkbox size={size} defaultChecked />
-          {label}
-        </label>
+        <Field.Root key={size}>
+          <Field.Label>
+            <Checkbox size={size} defaultChecked />
+            {label}
+          </Field.Label>
+        </Field.Root>
       ))}
     </>
   );

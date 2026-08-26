@@ -1,12 +1,6 @@
 "use client";
 
-import { Checkbox } from "@dofortech/pretty-ui";
-
-const row = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "var(--pui-space-2)",
-} as const;
+import { Checkbox, Field } from "@dofortech/pretty-ui";
 
 export default function CheckboxDisabled() {
   return (
@@ -14,23 +8,33 @@ export default function CheckboxDisabled() {
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "var(--pui-space-2)",
+        gap: "var(--pui-space-3)",
       }}
     >
-      <label style={row}>
-        <Checkbox name="require-review" defaultChecked />
-        Require a review before merging
-      </label>
+      <Field.Root name="require-review">
+        <Field.Label>
+          <Checkbox defaultChecked />
+          Require a review before merging
+        </Field.Label>
+      </Field.Root>
 
-      <label style={{ ...row, color: "var(--pui-color-foreground-muted)" }}>
-        <Checkbox name="signed-commits" disabled />
-        Require signed commits (Team plan)
-      </label>
+      {/* `disabled` on the Field rather than on the Checkbox: it takes
+        * precedence over the control's own prop AND puts `data-disabled` on the
+        * label, so the words dim with the box instead of staying at full
+        * contrast beside a greyed-out control. */}
+      <Field.Root name="signed-commits" disabled>
+        <Field.Label>
+          <Checkbox />
+          Require signed commits (Team plan)
+        </Field.Label>
+      </Field.Root>
 
-      <label style={{ ...row, color: "var(--pui-color-foreground-muted)" }}>
-        <Checkbox name="enforce-admins" disabled defaultChecked />
-        Enforce for administrators (managed by your organisation)
-      </label>
+      <Field.Root name="enforce-admins" disabled>
+        <Field.Label>
+          <Checkbox defaultChecked />
+          Enforce for administrators (managed by your organisation)
+        </Field.Label>
+      </Field.Root>
     </div>
   );
 }
