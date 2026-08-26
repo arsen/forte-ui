@@ -17,23 +17,11 @@ const COLUMNS = [
 
 export default function SpinnerReducedMotion() {
   return (
-    <div style={{ display: "flex", gap: "var(--pui-space-7)", flexWrap: "wrap" }}>
+    <div className="flex flex-wrap gap-7">
       {COLUMNS.map(({ motion, title }) => (
-        <div
-          key={motion}
-          data-pui-motion={motion}
-          style={{ display: "grid", gap: "var(--pui-space-4)", justifyItems: "start" }}
-        >
-          <span
-            style={{
-              fontSize: "var(--pui-font-size-1)",
-              fontWeight: "var(--pui-font-weight-medium)",
-              color: "var(--pui-color-foreground-muted)",
-            }}
-          >
-            {title}
-          </span>
-          <div style={{ display: "flex", gap: "var(--pui-space-5)" }}>
+        <div key={motion} data-pui-motion={motion} className="grid justify-items-start gap-4">
+          <span className="text-1 font-medium text-foreground-muted">{title}</span>
+          <div className="flex gap-5">
             {VARIANTS.map((variant) => (
               <Spinner key={variant} variant={variant} size="lg" decorative />
             ))}

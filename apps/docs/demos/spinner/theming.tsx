@@ -8,7 +8,8 @@ import { Spinner } from "@dofortech/pretty-ui";
  * of these set their tokens ON the spinner: `--pui-spinner-track` derives from
  * `--pui-spinner-color`, and a derived custom property is resolved where it is
  * declared — set the colour on an ancestor and the track would keep the
- * default. */
+ * default. That is also why these stay a `style` object rather than becoming
+ * utility classes: they are the component's own knobs, not layout. */
 const RECIPES: { label: string; style: CSSProperties }[] = [
   {
     label: "Hairline, slow",
@@ -38,21 +39,11 @@ const RECIPES: { label: string; style: CSSProperties }[] = [
 
 export default function SpinnerTheming() {
   return (
-    <div style={{ display: "flex", gap: "var(--pui-space-6)", flexWrap: "wrap" }}>
+    <div className="flex flex-wrap gap-6">
       {RECIPES.map(({ label, style }, i) => (
-        <div
-          key={label}
-          style={{ display: "grid", justifyItems: "center", gap: "var(--pui-space-2)" }}
-        >
+        <div key={label} className="grid justify-items-center gap-2">
           <Spinner variant={i === 2 ? "bars" : "ring"} size="lg" style={style} decorative />
-          <span
-            style={{
-              fontSize: "var(--pui-font-size-1)",
-              color: "var(--pui-color-foreground-muted)",
-            }}
-          >
-            {label}
-          </span>
+          <span className="text-1 text-foreground-muted">{label}</span>
         </div>
       ))}
     </div>

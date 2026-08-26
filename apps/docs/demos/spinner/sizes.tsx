@@ -7,21 +7,10 @@ const SIZES = ["sm", "md", "lg"] as const;
 
 export default function SpinnerSizes() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)" }}>
+    <div className="grid gap-4">
       {SIZES.map((size) => (
-        <div
-          key={size}
-          style={{ display: "flex", alignItems: "center", gap: "var(--pui-space-5)" }}
-        >
-          <code
-            style={{
-              fontFamily: "var(--pui-font-mono)",
-              fontSize: "var(--pui-font-size-1)",
-              width: "2.5rem",
-            }}
-          >
-            {size}
-          </code>
+        <div key={size} className="flex items-center gap-5">
+          <code className="w-7 font-mono text-1">{size}</code>
           {/* Every variant occupies the same box at a given size, so the four
            * of them line up on both axes without any layout help here. */}
           {VARIANTS.map((variant) => (

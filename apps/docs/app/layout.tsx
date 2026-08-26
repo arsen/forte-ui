@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
+// Import order is load-bearing. `@layer` fixes an order at first appearance,
+// so theme.css must come first (it declares the six `pretty-ui.*` layers) and
+// globals.css second (it declares `docs, theme, base, components, utilities`,
+// which is what puts Tailwind's utilities last and lets them win inside a
+// demo). tailwind.css only fills layers those two already positioned.
 import "@dofortech/pretty-ui/theme.css";
 import "./globals.css";
+import "./tailwind.css";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Sidebar } from "@/components/sidebar";

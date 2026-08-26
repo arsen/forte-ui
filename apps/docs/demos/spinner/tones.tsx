@@ -4,44 +4,29 @@ import { Spinner } from "@dofortech/pretty-ui";
 
 const TONES = ["primary", "secondary", "danger", "neutral"] as const;
 
+/* `current` takes whatever colour it lands in, which is what makes it the one
+ * to reach for inside another control. Both rows below use the same markup —
+ * only the surrounding `color` differs. */
+const CONTEXTS = [
+  { label: "inside muted text", className: "text-foreground-muted" },
+  { label: "inside a danger message", className: "text-danger-text" },
+];
+
 export default function SpinnerTones() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-5)" }}>
-      <div style={{ display: "flex", gap: "var(--pui-space-5)", alignItems: "center" }}>
+    <div className="grid gap-5">
+      <div className="flex items-center gap-5">
         {TONES.map((tone) => (
-          <div
-            key={tone}
-            style={{ display: "grid", justifyItems: "center", gap: "var(--pui-space-2)" }}
-          >
+          <div key={tone} className="grid justify-items-center gap-2">
             <Spinner tone={tone} size="lg" decorative />
-            <code
-              style={{ fontFamily: "var(--pui-font-mono)", fontSize: "var(--pui-font-size-1)" }}
-            >
-              {tone}
-            </code>
+            <code className="font-mono text-1">{tone}</code>
           </div>
         ))}
       </div>
 
-      {/* `current` takes whatever colour it lands in, which is what makes it
-       * the one to reach for inside another control. Both lines below use the
-       * same markup — only the surrounding `color` differs. */}
-      <div style={{ display: "grid", gap: "var(--pui-space-3)" }}>
-        {[
-          { label: "inside muted text", color: "var(--pui-color-foreground-muted)" },
-          { label: "inside a danger message", color: "var(--pui-color-danger-text)" },
-        ].map(({ label, color }) => (
-          <p
-            key={label}
-            style={{
-              margin: 0,
-              color,
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--pui-space-2)",
-              fontSize: "var(--pui-font-size-2)",
-            }}
-          >
+      <div className="grid gap-3">
+        {CONTEXTS.map(({ label, className }) => (
+          <p key={label} className={`m-0 flex items-center gap-2 text-2 ${className}`}>
             <Spinner variant="dots" tone="current" size="sm" decorative />
             {label}
           </p>
