@@ -41,6 +41,16 @@ import d_checkbox_indeterminate from "./checkbox/indeterminate";
 import d_checkbox_indeterminate_src from "./checkbox/indeterminate?raw";
 import d_checkbox_sizes from "./checkbox/sizes";
 import d_checkbox_sizes_src from "./checkbox/sizes?raw";
+import d_collapsible_basic from "./collapsible/basic";
+import d_collapsible_basic_src from "./collapsible/basic?raw";
+import d_collapsible_contained from "./collapsible/contained";
+import d_collapsible_contained_src from "./collapsible/contained?raw";
+import d_collapsible_controlled from "./collapsible/controlled";
+import d_collapsible_controlled_src from "./collapsible/controlled?raw";
+import d_collapsible_custom_icon from "./collapsible/custom-icon";
+import d_collapsible_custom_icon_src from "./collapsible/custom-icon?raw";
+import d_collapsible_disabled from "./collapsible/disabled";
+import d_collapsible_disabled_src from "./collapsible/disabled?raw";
 import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
@@ -151,6 +161,11 @@ export type DemoId =
   | "checkbox/group"
   | "checkbox/indeterminate"
   | "checkbox/sizes"
+  | "collapsible/basic"
+  | "collapsible/contained"
+  | "collapsible/controlled"
+  | "collapsible/custom-icon"
+  | "collapsible/disabled"
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/nested"
@@ -217,6 +232,11 @@ const REGISTRY: Record<DemoId, Demo> = {
   "checkbox/group": { Component: d_checkbox_group, source: d_checkbox_group_src, file: "checkbox/group.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },
   "checkbox/sizes": { Component: d_checkbox_sizes, source: d_checkbox_sizes_src, file: "checkbox/sizes.tsx" },
+  "collapsible/basic": { Component: d_collapsible_basic, source: d_collapsible_basic_src, file: "collapsible/basic.tsx" },
+  "collapsible/contained": { Component: d_collapsible_contained, source: d_collapsible_contained_src, file: "collapsible/contained.tsx" },
+  "collapsible/controlled": { Component: d_collapsible_controlled, source: d_collapsible_controlled_src, file: "collapsible/controlled.tsx" },
+  "collapsible/custom-icon": { Component: d_collapsible_custom_icon, source: d_collapsible_custom_icon_src, file: "collapsible/custom-icon.tsx" },
+  "collapsible/disabled": { Component: d_collapsible_disabled, source: d_collapsible_disabled_src, file: "collapsible/disabled.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },

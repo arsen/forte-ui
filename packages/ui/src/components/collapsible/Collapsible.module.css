@@ -1,0 +1,370 @@
+/*
+ * Collapsible
+ *
+ * One trigger, one panel. Two treatments, same three parts:
+ *
+ *   data-variant="plain"      bare text button, no chrome — a "Show more"
+ *                             that sits inside a paragraph of prose
+ *   data-variant="contained"  a card, matching one `contained` Accordion item
+ *
+ * The height animation is the load-bearing part, and it is the same trick the
+ * Accordion plays with a DIFFERENT variable name. Base UI measures the panel
+ * and publishes the result on the element as --collapsible-panel-height —
+ * `--accordion-panel-height` is the Accordion primitive's, and the two do not
+ * cross over even though Accordion is built on Collapsible internally. Reading
+ * the wrong one fails silently: the declaration becomes invalid at
+ * computed-value time, `height` inherits, and the panel never opens.
+ *
+ * Three things about that animation are worth knowing before editing:
+ *
+ *   - It is a transition on [data-starting-style] / [data-ending-style], not a
+ *     keyframe animation, so closing a panel while it is still opening
+ *     reverses from wherever it has got to instead of snapping.
+ *   - Base UI decides which of the two it is dealing with by reading the
+ *     panel's COMPUTED transition-duration and animation-name. A duration of
+ *     exactly 0s reads as "no transition" and the measure-and-animate path is
+ *     skipped entirely — a second reason the duration tokens bottom out at 1ms
+ *     and never at 0s. Declaring both a transition and a keyframe animation
+ *     here would earn a console warning and the transition would win; do not
+ *     add one.
+ *   - There is deliberately no `display` declaration on .panel. Base UI hides
+ *     a kept-mounted panel with the `hidden` attribute, and with
+ *     `hiddenUntilFound` it uses `hidden="until-found"`, whose whole point is
+ *     that the UA hides it with `content-visibility` so find-in-page can still
+ *     reach the text. Any author `display` beats the UA's [hidden] rule and
+ *     would either leave the panel open or break find-in-page.
+ *
+ * No prefers-reduced-motion block, here or anywhere else in a component file:
+ * the travel token collapses to 0px and the durations shorten on their own.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on Collapsible.Root itself, so an
+     * ancestor's value is only ever inherited and never wins. Re-skin one
+     * collapsible by setting these on the root element (an unlayered consumer
+     * rule beats this layer whatever its specificity); re-skin every
+     * collapsible by re-pointing the global tokens they resolve to. */
+
+    /* Chrome. Zero in `plain`: the component contributes no box of its own, so
+     * it can be dropped between two paragraphs without opening a second grid
+     * to read. The `contained` block below turns all four on at once. */
+    --pui-collapsible-radius: 0px;
+    --pui-collapsible-bg: transparent;
+    --pui-collapsible-border-width: 0px;
+    --pui-collapsible-border-color: var(--pui-color-border-muted);
+
+    /* Trigger.
+     *
+     * `fit-content` rather than `100%` is what separates the two variants:
+     * in `plain` the button is exactly as wide as its own label, so nothing
+     * to the side of the text is pressable and nothing claims to be. */
+    --pui-collapsible-trigger-width: fit-content;
+    --pui-collapsible-trigger-px: 0px;
+    --pui-collapsible-trigger-py: var(--pui-space-1);
+    --pui-collapsible-trigger-gap: var(--pui-control-gap);
+    --pui-collapsible-trigger-bg: transparent;
+    /* Hover is a colour change on the label, not a fill.
+     *
+     * The Accordion argues the other way round and both are right for their
+     * own geometry: an accordion row spans the container, so a cue confined to
+     * the label would claim only the label is pressable. Here the button IS
+     * the label — `width: fit-content` — so recolouring it marks the whole hit
+     * box exactly. `contained` restores the row and the fill along with it. */
+    --pui-collapsible-trigger-bg-hover: var(--pui-collapsible-trigger-bg);
+    --pui-collapsible-trigger-color: var(--pui-color-foreground);
+    --pui-collapsible-trigger-color-hover: var(--pui-color-primary-text);
+    --pui-collapsible-trigger-font-size: var(--pui-font-size-2);
+    --pui-collapsible-trigger-font-weight: var(--pui-font-weight-medium);
+
+    /* Icon. `currentColor` in `plain`, so the chevron travels with the label
+     * through rest, hover and disabled without a second pair of tokens to keep
+     * in step — it sits one gap away from the text and reads as part of the
+     * same word group. `contained` puts it at the far end of a wide row, where
+     * it has to recede instead, and swaps in the Accordion's two greys. */
+    --pui-collapsible-icon-color: currentColor;
+    --pui-collapsible-icon-color-open: currentColor;
+    --pui-collapsible-icon-rotate: 180deg;
+
+    /* Panel. Unlike the Accordion, `plain` DOES get a block-start knob: its
+     * trigger's own padding is one `--pui-space-1`, far too little to separate
+     * a heading from its body on its own. `contained` zeroes it again, because
+     * there the trigger's `--pui-space-3` already does the job and a second
+     * helping double-spaces the row. */
+    --pui-collapsible-panel-px: 0px;
+    --pui-collapsible-panel-pt: var(--pui-space-2);
+    --pui-collapsible-panel-pb: 0px;
+    --pui-collapsible-panel-color: var(--pui-color-foreground-muted);
+    --pui-collapsible-panel-font-size: var(--pui-font-size-2);
+
+    /* One duration and one curve for the height and the content's slide, so
+     * the two cannot drift apart. Deliberately NOT a spring: an overshooting
+     * curve on `height` pushes the panel past its own content and flashes a
+     * band of empty background under the last line before settling back, and
+     * the springs that do not overshoot are only slower ease-outs. */
+    --pui-collapsible-duration: var(--pui-duration-normal);
+    --pui-collapsible-ease: var(--pui-ease-standard);
+
+    box-sizing: border-box;
+    /* Block, not a flex column. A flex `gap` between the trigger and the panel
+     * would still be painted while the panel is mounted and closed — which is
+     * exactly what `keepMounted` and `hiddenUntilFound` ask for — so the same
+     * markup would leave a band under the trigger or not depending on a prop
+     * that is supposed to be invisible. The panel's own padding, which a zero
+     * content box clips away, is the spacing that cannot get that wrong. */
+    display: block;
+    border: var(--pui-collapsible-border-width) solid
+      var(--pui-collapsible-border-color);
+    border-radius: var(--pui-collapsible-radius);
+    background-color: var(--pui-collapsible-bg);
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  /* Contained: the disclosure becomes a card, sized and coloured to match one
+   * item of a `contained` Accordion, so a lone collapsible can stand beside a
+   * set of them. Everything here is a knob the defaults above already declared
+   * — except the clip, which is structural and explained on its own line. */
+  .root[data-variant="contained"] {
+    --pui-collapsible-radius: var(--pui-radius-surface);
+    --pui-collapsible-bg: var(--pui-color-panel);
+    --pui-collapsible-border-width: 1px;
+
+    --pui-collapsible-trigger-width: 100%;
+    --pui-collapsible-trigger-px: var(--pui-space-3);
+    --pui-collapsible-trigger-py: var(--pui-space-3);
+    /* Minimum space between the label and the icon, so a label long enough to
+     * fill the row still cannot run into it. */
+    --pui-collapsible-trigger-gap: var(--pui-space-4);
+    --pui-collapsible-trigger-bg-hover: var(--pui-color-panel-hover);
+    --pui-collapsible-trigger-color-hover: var(--pui-collapsible-trigger-color);
+
+    /* `-subtle` is 3.73:1 — below the floor for text, fine for a non-text
+     * indicator (SC 1.4.11), and `prefers-contrast: more` promotes it anyway.
+     * It is never the only cue: `aria-expanded` and the panel itself say the
+     * same thing. */
+    --pui-collapsible-icon-color: var(--pui-color-foreground-subtle);
+    --pui-collapsible-icon-color-open: var(--pui-color-foreground);
+
+    --pui-collapsible-panel-px: var(--pui-space-3);
+    --pui-collapsible-panel-pt: 0px;
+    --pui-collapsible-panel-pb: var(--pui-space-4);
+
+    /* Structural, not a knob: it clips the trigger's hover fill and anything
+     * the consumer paints behind the panel to the card's curve, so neither has
+     * to know the radius. It is also why the trigger's focus ring is inset in
+     * this variant and only this one — an outset ring inside a clipping box
+     * gets cropped along the card's edges. `plain` must NOT inherit it: with
+     * no card to clip to, the only thing `overflow: hidden` would reach is
+     * that same ring, drawn outside a box the reader cannot see. */
+    overflow: hidden;
+  }
+
+  /* Applied to the whole root, not just the trigger: a disabled collapsible
+   * that happens to be open would otherwise show fully-enabled body text under
+   * a greyed-out trigger. `opacity` is the non-forced-colors treatment only —
+   * the generic `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y,
+   * ordered after this one) restores `opacity: 1` and paints GrayText, so the
+   * 55% cannot survive into HCM and read as enabled. */
+  .root[data-disabled] {
+    opacity: 0.55;
+  }
+
+  /* Trigger ----------------------------------------------------------------
+   * Not wrapped in a heading, unlike the Accordion's. A `<h3>` is what puts an
+   * accordion section into the page outline so a screen-reader user can jump
+   * between siblings; a lone disclosure has no siblings to jump between, and a
+   * heading that leads nowhere clutters the outline it claims to describe.
+   * Wrap the trigger in a heading of your own if this one really is a section
+   * heading — not through `render`, which would replace the <button> rather
+   * than wrap it — or reach for the Accordion, which is that component. */
+  .trigger {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--pui-collapsible-trigger-gap);
+    width: var(--pui-collapsible-trigger-width);
+    /* SC 2.5.8 in both axes. The vertical floor is the one that usually bites,
+     * but `plain` shrink-wraps its label, and a one-word trigger ("More") with
+     * the icon suppressed would otherwise fall under 24px wide. */
+    min-height: var(--pui-target-min);
+    min-width: var(--pui-target-min);
+    padding: var(--pui-collapsible-trigger-py) var(--pui-collapsible-trigger-px);
+    margin: 0;
+    border: 0;
+    /* Same radius as the card. In `contained` that is what stops the inset
+     * focus ring having its corners shaved off by the card's own clip; in
+     * `plain` it is 0, which is also what makes the [data-panel-open] rule
+     * below a no-op there rather than one needing a variant to guard it. */
+    border-radius: var(--pui-collapsible-radius);
+
+    background-color: var(--pui-collapsible-trigger-bg);
+    color: var(--pui-collapsible-trigger-color);
+
+    font-family: inherit;
+    font-size: var(--pui-collapsible-trigger-font-size);
+    font-weight: var(--pui-collapsible-trigger-font-weight);
+    line-height: var(--pui-line-height-normal);
+    text-align: start;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Open, the row's bottom edge is the seam with the panel rather than the
+   * bottom of the card, and a ring curving away from a surface it is touching
+   * reads as a chip that has come unstuck — the same reason a `line` Tab keeps
+   * its rail-side corners square. Nothing flickers when this flips: at the
+   * moment the panel is still 0px tall, the seam IS the bottom of the card,
+   * and the card's clip rounds these corners right back off. */
+  .trigger[data-panel-open] {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]) {
+      background-color: var(--pui-collapsible-trigger-bg-hover);
+      color: var(--pui-collapsible-trigger-color-hover);
+    }
+  }
+
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Owns the flexible column, so a long label wraps inside the row instead of
+   * pushing the icon out of it. A flex row rather than a plain box: an icon
+   * passed alongside the text lines up on `--pui-control-gap` without a
+   * wrapper. */
+  .label {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--pui-control-gap);
+    min-width: 0;
+  }
+
+  /* Icon --------------------------------------------------------------------
+   * `rotate` as its own property, not through the `transform` shorthand, so
+   * nothing else the consumer puts on this box has to share one slot with it.
+   *
+   * The angle is NOT multiplied by --pui-motion-ok. Under reduced motion the
+   * chevron still has to end up pointing the other way — it is the state, and
+   * only the trip between the two states is motion. The duration collapses on
+   * its own, so the flip becomes instantaneous rather than absent.
+   *
+   * Nor is it multiplied by --pui-direction. A chevron pointing DOWN that
+   * turns 180° is the same gesture in both writing directions; an
+   * inline-facing one turning 90° would not be, because `rotate` is physical
+   * and has no logical form. */
+  .icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-collapsible-icon-color);
+    rotate: 0deg;
+    /* Spring easing paired with its own duration token — a shorter one
+     * truncates the curve mid-bounce and reads as a stutter. */
+    transition:
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      rotate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  /* In `plain` the marker's colour IS the label's — `currentColor`, recomputed
+   * from the trigger every frame while the trigger's own colour transition
+   * runs. Transitioning it a second time here would set the chevron chasing a
+   * target that keeps moving under it, so on hover it would trail the word
+   * beside it by up to a whole --pui-duration-fast. Dropping `color` from the
+   * list leaves it locked to the label.
+   *
+   * The whole shorthand is restated rather than just `transition-property`:
+   * shortening the property list to one leaves the two durations behind, and
+   * `rotate` would take the FIRST of them — the 160ms meant for colour — which
+   * truncates the spring mid-bounce. */
+  .trigger[data-variant="plain"] .icon {
+    transition: rotate var(--pui-duration-spring-snappy)
+      var(--pui-ease-spring-snappy);
+  }
+
+  .trigger[data-panel-open] .icon {
+    color: var(--pui-collapsible-icon-color-open);
+    rotate: var(--pui-collapsible-icon-rotate);
+  }
+
+  /* Panel ------------------------------------------------------------------
+   * Padding lives on .content, never here: a padding box survives a zero
+   * content box, so padding on the collapsing element would leave a band of
+   * space under the trigger whenever the panel is mounted and closed. */
+  .panel {
+    box-sizing: border-box;
+    height: var(--collapsible-panel-height);
+    overflow: hidden;
+    color: var(--pui-collapsible-panel-color);
+    font-size: var(--pui-collapsible-panel-font-size);
+    line-height: var(--pui-line-height-normal);
+    transition: height var(--pui-collapsible-duration)
+      var(--pui-collapsible-ease);
+  }
+
+  .panel[data-starting-style],
+  .panel[data-ending-style] {
+    height: 0;
+  }
+
+  /* The content settles into place while the panel is still growing, which is
+   * what stops the text from looking pasted in at full opacity behind a
+   * moving edge. It starts slightly high and drops back: the panel clips it
+   * from below, so travelling downward is the direction that reads as being
+   * uncovered. --pui-travel-sm is 0px under reduced motion, leaving the fade
+   * — which is the part that helps there. */
+  .content {
+    padding: var(--pui-collapsible-panel-pt) var(--pui-collapsible-panel-px)
+      var(--pui-collapsible-panel-pb);
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-collapsible-duration) var(--pui-collapsible-ease);
+  }
+
+  .panel[data-starting-style] .content,
+  .panel[data-ending-style] .content {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--pui-travel-sm));
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so it
+ * beats everything above by layer alone — no `!important`, no specificity
+ * inflation.
+ *
+ * What patterns.css already handles, and must not be restated here:
+ *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is
+ *     the only reliable disabled cue once opacity stops being honoured.
+ *   - `.pui-focus-ring:focus-visible` becomes a Highlight outline.
+ *
+ * What is collapsible-specific: the `contained` card's border. Its colour
+ * comes from a token, and a token resolves to a colour forced-colors then
+ * replaces with its own — which leaves the border as the only thing still
+ * holding the card's shape once shadows and backgrounds are stripped, painted
+ * in whatever the system chose. Pinning it to CanvasText keeps the card a
+ * card. `plain` has no border to pin, and needs none: its trigger is text.
+ *
+ * Nothing paints Highlight. An open disclosure is not a selected one — the
+ * chevron's rotation is geometry, so it survives forced colors untouched and
+ * goes on saying whether the panel is open.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .root[data-variant="contained"] {
+      border-color: CanvasText;
+    }
+  }
+}
