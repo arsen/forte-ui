@@ -398,7 +398,7 @@ in #8.
   element does nothing.
 - `transparent` is **not** preserved under forced-colors — it is replaced with a
   system colour. That is a feature (`.pui-hc-surface` relies on it) and a trap
-  (the Button spinner's gap would fill in).
+  (the gap in `Spinner`'s ring would fill in).
 - `opacity` is one of the few properties forced-colors does **not** override, so
   a `0.55` disabled control keeps full contrast and reads as enabled. `GrayText`
   at `opacity: 1` in the `a11y` layer is the fix.

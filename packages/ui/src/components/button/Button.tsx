@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Button as BaseButton } from "@base-ui/react/button";
 import { clsx } from "clsx";
+import { Spinner } from "../spinner";
 import styles from "./Button.module.css";
 
 export type ButtonVariant = "solid" | "soft" | "outline" | "ghost";
@@ -119,7 +120,28 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span className={styles.content}>{children}</span>
         {loading ? (
           <>
-            <span className={styles.spinner} aria-hidden="true" />
+            <Spinner
+              className={styles.spinner}
+              // `current` is the tone that composes: the ring takes the
+              // button's own text colour, so it keeps matching through every
+              // variant, tone and hover state without Button having to hand it
+              // a palette.
+              tone="current"
+              // The button already owns the announcement — `aria-busy` plus the
+              // hidden label below. A second live region for the same wait is
+              // worse than one, which is exactly what `decorative` is for.
+              decorative
+              // The one knob Button has to reach in through. Spinner declares
+              // `--pui-spinner-size` on its OWN root, so an inherited value
+              // never wins; setting it inline lands it on that element while
+              // still resolving through Button's knob, so overriding
+              // `--pui-button-spinner-size` on the button still works.
+              style={
+                {
+                  "--pui-spinner-size": "var(--pui-button-spinner-size)",
+                } as React.CSSProperties
+              }
+            />
             {/* Visually redundant with the spinner, but the spinner is
              * decorative; this is what actually reaches assistive tech. */}
             <span className="pui-visually-hidden">{loadingLabel}</span>

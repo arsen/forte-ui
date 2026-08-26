@@ -13,8 +13,7 @@
  *
  *   ring    `--pui-spin-turn` goes to 0turn and the comet stops. A second,
  *           always-running opacity animation — a no-op at full motion, because
- *           `--pui-pulse-dip` is 1 there — becomes the visible cue. This is
- *           the same pairing the Button spinner uses.
+ *           `--pui-pulse-dip` is 1 there — becomes the visible cue.
  *   dots    the hop is a `--pui-travel-*` token, so it goes to 0px; the
  *           staggered opacity wave is untouched and carries the whole thing.
  *   bars    pure opacity, nothing to collapse. Identical animation either way,
@@ -177,8 +176,8 @@
     /* `50%`, not `--pui-radius-full`: under `data-pui-radius="none"` that
      * token is 0, and this shape is a circle by definition, not by taste. The
      * mask would stay round while the forced-colors border below went square.
-     * Same test as `--pui-radio-radius` and the Button spinner: roundness
-     * here is meaning, not style. */
+     * Same test as `--pui-radio-radius`: roundness here is meaning, not
+     * style. */
     border-radius: 50%;
     background-color: var(--pui-spinner-track);
     background-image: conic-gradient(from 0deg, transparent, var(--pui-spinner-color));
@@ -363,9 +362,9 @@
     /* Forced colors remaps `background-color`, `color` and `border-color`, but
      * NOT `background-image` — so the comet would keep its brand hue while the
      * page around it went black and white, and on a dark system theme it can
-     * disappear entirely. Drop the gradient and redraw the ring the way the
-     * Button spinner does: a `CanvasText` border with one edge painted
-     * `Canvas` so the gap still reads as a gap.
+     * disappear entirely. Drop the gradient and redraw the ring as a
+     * `CanvasText` border with one edge painted `Canvas`, so the gap still
+     * reads as a gap.
      *
      * The gap has to be an explicit system colour for the same reason:
      * `transparent` is not preserved here either, and a fully coloured ring
