@@ -476,6 +476,52 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
 );
 
 /* -------------------------------------------------------------------------
+ * Surface
+ * ---------------------------------------------------------------------- */
+
+export interface DialogSurfaceProps
+  extends Omit<React.ComponentPropsWithoutRef<"div">, "className"> {
+  /**
+   * Additional class name(s). Applied after the internal styles so consumer
+   * utilities (e.g. Tailwind) win without needing `!important`.
+   */
+  className?: string;
+}
+
+/**
+ * The visible panel, for dialogs that also carry chrome *outside* it — a close
+ * button floating clear of the corner, a caption under the sheet, pager arrows
+ * beside it.
+ *
+ * Use it and `Dialog.Popup` stops painting: the popup keeps the sizing, the
+ * focus trap and the enter/exit gesture but turns into a transparent container,
+ * and this element becomes the surface. Everything stays inside `Dialog.Popup`
+ * and therefore inside the tab order and the accessibility tree — which is the
+ * whole point, since in a modal dialog anything outside the popup is inert.
+ *
+ * There is no prop to pair it with. The stylesheet asks `.popup:has(> .surface)`,
+ * so the popup switches on the presence of this element and the two cannot
+ * disagree. Keep it a *direct* child of `Dialog.Popup`.
+ *
+ * A plain `<div>`, not a Base UI part — the primitive has no such anatomy, and
+ * Base UI's own example for this pattern uses a bare div too.
+ */
+export const DialogSurface = React.forwardRef<
+  HTMLDivElement,
+  DialogSurfaceProps
+>(function DialogSurface({ className, ...props }, ref) {
+  return (
+    <div
+      ref={ref}
+      // The forced-colors boundary moves here with the paint: the popup
+      // surrenders its own in the `a11y` layer once this element exists.
+      className={clsx(styles.surface, "pui-hc-surface", className)}
+      {...props}
+    />
+  );
+});
+
+/* -------------------------------------------------------------------------
  * Title / Description
  * ---------------------------------------------------------------------- */
 
@@ -648,6 +694,7 @@ export const Dialog = {
   Root: DialogRoot,
   Trigger: DialogTrigger,
   Popup: DialogPopup,
+  Surface: DialogSurface,
   Title: DialogTitle,
   Description: DialogDescription,
   Close: DialogClose,
@@ -671,6 +718,7 @@ export const AlertDialog = {
   // Base UI's alert-dialog entry point re-exports these exact components, so
   // the styled wrappers above are the correct parts for both namespaces.
   Popup: DialogPopup,
+  Surface: DialogSurface,
   Title: DialogTitle,
   Description: DialogDescription,
   Close: DialogClose,

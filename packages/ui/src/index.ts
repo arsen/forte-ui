@@ -42,6 +42,7 @@ export type {
   DialogRootProps,
   DialogTriggerProps,
   DialogPopupProps,
+  DialogSurfaceProps,
   DialogTitleProps,
   DialogDescriptionProps,
   DialogCloseProps,

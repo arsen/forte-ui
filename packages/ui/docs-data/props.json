@@ -440,6 +440,19 @@
       }
     ]
   },
+  "DialogSurface": {
+    "name": "DialogSurface",
+    "description": "The visible panel, for dialogs that also carry chrome *outside* it — a close\nbutton floating clear of the corner, a caption under the sheet, pager arrows\nbeside it.\n\nUse it and `Dialog.Popup` stops painting: the popup keeps the sizing, the\nfocus trap and the enter/exit gesture but turns into a transparent container,\nand this element becomes the surface. Everything stays inside `Dialog.Popup`\nand therefore inside the tab order and the accessibility tree — which is the\nwhole point, since in a modal dialog anything outside the popup is inert.\n\nThere is no prop to pair it with. The stylesheet asks `.popup:has(> .surface)`,\nso the popup switches on the presence of this element and the two cannot\ndisagree. Keep it a *direct* child of `Dialog.Popup`.\n\nA plain `<div>`, not a Base UI part — the primitive has no such anatomy, and\nBase UI's own example for this pattern uses a bare div too.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "DialogTitle": {
     "name": "DialogTitle",
     "description": "The dialog's accessible name.\n\nRenders an `<h2>`. Inside `Dialog.Popup` it is wired up as the popup's\n`aria-labelledby` automatically; every dialog should have one.",

@@ -55,8 +55,14 @@ import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
 import d_dialog_basic_src from "./dialog/basic?raw";
+import d_dialog_controlled from "./dialog/controlled";
+import d_dialog_controlled_src from "./dialog/controlled?raw";
 import d_dialog_nested from "./dialog/nested";
 import d_dialog_nested_src from "./dialog/nested?raw";
+import d_dialog_outside_popup from "./dialog/outside-popup";
+import d_dialog_outside_popup_src from "./dialog/outside-popup?raw";
+import d_dialog_scroll_inside from "./dialog/scroll-inside";
+import d_dialog_scroll_inside_src from "./dialog/scroll-inside?raw";
 import d_dialog_scrollable from "./dialog/scrollable";
 import d_dialog_scrollable_src from "./dialog/scrollable?raw";
 import d_dialog_sizes from "./dialog/sizes";
@@ -228,7 +234,10 @@ export type DemoId =
   | "collapsible/disabled"
   | "dialog/alert"
   | "dialog/basic"
+  | "dialog/controlled"
   | "dialog/nested"
+  | "dialog/outside-popup"
+  | "dialog/scroll-inside"
   | "dialog/scrollable"
   | "dialog/sizes"
   | "drawer/basic"
@@ -329,7 +338,10 @@ const REGISTRY: Record<DemoId, Demo> = {
   "collapsible/disabled": { Component: d_collapsible_disabled, source: d_collapsible_disabled_src, file: "collapsible/disabled.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
+  "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },
+  "dialog/outside-popup": { Component: d_dialog_outside_popup, source: d_dialog_outside_popup_src, file: "dialog/outside-popup.tsx" },
+  "dialog/scroll-inside": { Component: d_dialog_scroll_inside, source: d_dialog_scroll_inside_src, file: "dialog/scroll-inside.tsx" },
   "dialog/scrollable": { Component: d_dialog_scrollable, source: d_dialog_scrollable_src, file: "dialog/scrollable.tsx" },
   "dialog/sizes": { Component: d_dialog_sizes, source: d_dialog_sizes_src, file: "dialog/sizes.tsx" },
   "drawer/basic": { Component: d_drawer_basic, source: d_drawer_basic_src, file: "drawer/basic.tsx" },
