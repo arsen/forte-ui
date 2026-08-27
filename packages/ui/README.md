@@ -187,23 +187,42 @@ replaced most of it. Unrecognised classes are not merged — both survive and
 the cascade decides — and, worse, the stock colour scale matches *any* name,
 so `text-2` (a font size here) parses as a text colour and
 `twMerge("text-2", "text-foreground-muted")` silently drops one. The package
-ships the matching config:
+ships a `cn` already configured for the bridge:
 
 ```ts
-import { extendTailwindMerge } from "tailwind-merge";
-import { tailwindMergeConfig } from "@dofortech/pretty-ui/tailwind-merge";
+import { cn } from "@dofortech/pretty-ui/cn";
 
-export const twMerge = extendTailwindMerge(tailwindMergeConfig);
+cn("p-4", condition && "p-6"); // -> "p-6" when condition holds
 ```
 
-It is a plain data object — the package has no dependency on `tailwind-merge`
-itself, so it works with whatever version your app already uses. Colours need
-no entry — the colour scale already matches any name — and neither do
-`font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names are
-Tailwind's own. If you add keys of your own in `@theme`, spread the config's
-inner arrays into your `extend` block and add them there (`spacing` in
-particular must be extended, not replaced, or `p-surface` stops merging); a
-missed name does not error, it just stops overriding its own family.
+`tailwind-merge` is an *optional* peer dependency — install it alongside the
+package to use this subpath; apps that never import it pay nothing.
+
+If your app adds its own `@theme` keys, the bare `cn` cannot know them —
+extend it with `createCn`, which takes the same `{ extend, override }` shape
+as tailwind-merge itself and *appends* your names to the library's scales:
+
+```ts
+import { createCn } from "@dofortech/pretty-ui/cn";
+
+export const cn = createCn({
+  extend: {
+    theme: {
+      spacing: ["header"], // lands beside the library's `surface`
+      animate: ["reveal"],
+    },
+  },
+});
+```
+
+For setups that are not `cn`-shaped at all, the underlying
+`tailwindMergeConfig` stays exported from `@dofortech/pretty-ui/tailwind-merge`
+as a plain data object.
+
+Colours need no entry — the colour scale already matches any name — and
+neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
+are Tailwind's own. A missed name does not error, it just stops overriding
+its own family.
 
 ## Other styling setups
 

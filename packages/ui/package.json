@@ -22,6 +22,10 @@
       "types": "./dist/tailwind-merge.d.ts",
       "import": "./dist/tailwind-merge.js"
     },
+    "./cn": {
+      "types": "./dist/cn.d.ts",
+      "import": "./dist/cn.js"
+    },
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
     "./docs-data/props.json": "./docs-data/props.json"
@@ -41,7 +45,13 @@
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "tailwind-merge": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwind-merge": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -54,6 +64,7 @@
     "glob": "^13.0.6",
     "react": "^19.2.7",
     "react-docgen-typescript": "^2.4.0",
+    "tailwind-merge": "^3.6.0",
     "react-dom": "^19.2.7",
     "typescript": "~5.9.3",
     "vite": "^8.1.5",
