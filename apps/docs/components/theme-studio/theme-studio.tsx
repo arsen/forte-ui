@@ -148,7 +148,6 @@ const DEFAULTS: ThemeConfig = {
  *  without loading the colour maths — see `noFlashScript`. */
 type StoredStudio = {
   config: ThemeConfig;
-  applyToSite: boolean;
   root: { vars: Record<string, string>; data: Record<string, string> };
 };
 
@@ -156,7 +155,7 @@ const STORAGE_KEY = "pui-studio";
 
 /** Storage is user-editable and survives across deploys, so nothing read back
  *  is trusted: every field falls back to its default. */
-function readStored(): { config: ThemeConfig; applyToSite: boolean } | null {
+function readStored(): ThemeConfig | null {
   let raw: string | null = null;
   try {
     raw = localStorage.getItem(STORAGE_KEY);
@@ -173,7 +172,7 @@ function readStored(): { config: ThemeConfig; applyToSite: boolean } | null {
   }
   if (!parsed || typeof parsed !== "object") return null;
 
-  const { config, applyToSite } = parsed as Partial<StoredStudio>;
+  const { config } = parsed as Partial<StoredStudio>;
   if (!config || typeof config !== "object") return null;
   const c = config as Record<string, unknown>;
 
@@ -183,21 +182,17 @@ function readStored(): { config: ThemeConfig; applyToSite: boolean } | null {
     options.includes(v as T) ? (v as T) : fallback;
 
   return {
-    config: {
-      seed: hex(c.seed, DEFAULTS.seed),
-      secondary: hex(c.secondary, DEFAULTS.secondary),
-      tint:
-        typeof c.tint === "number" && c.tint >= 0 && c.tint <= 1 ? c.tint : DEFAULTS.tint,
-      radius: oneOf(c.radius, RADIUS, DEFAULTS.radius),
-      density: oneOf(c.density, DENSITY, DEFAULTS.density),
-      motion: oneOf(c.motion, MOTION, DEFAULTS.motion),
-    },
-    applyToSite: applyToSite === true,
+    seed: hex(c.seed, DEFAULTS.seed),
+    secondary: hex(c.secondary, DEFAULTS.secondary),
+    tint: typeof c.tint === "number" && c.tint >= 0 && c.tint <= 1 ? c.tint : DEFAULTS.tint,
+    radius: oneOf(c.radius, RADIUS, DEFAULTS.radius),
+    density: oneOf(c.density, DENSITY, DEFAULTS.density),
+    motion: oneOf(c.motion, MOTION, DEFAULTS.motion),
   };
 }
 
-/** Style + attributes that realise a config. Applied to a scoped preview, or
- *  to the document root when "apply to site" is on. */
+/** Style + attributes that realise a config. Applied both to the scoped
+ *  preview and to the document root, which the studio always re-themes. */
 function configToAttrs(cfg: ThemeConfig) {
   const seedO = hexToOklch(cfg.seed);
   const on = seedO ? bestOnColor(seedO) : null;
@@ -275,7 +270,6 @@ function Ratio({ value, large = false }: { value: number; large?: boolean }) {
 
 export function ThemeStudio() {
   const [cfg, setCfg] = React.useState<ThemeConfig>(DEFAULTS);
-  const [applyToSite, setApplyToSite] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
   // The stored config cannot seed useState: the server renders the defaults,
   // so reading storage during the first render would mismatch on hydration.
@@ -305,20 +299,17 @@ export function ThemeStudio() {
 
   React.useEffect(() => {
     const stored = readStored();
-    if (stored) {
-      setCfg(stored.config);
-      setApplyToSite(stored.applyToSite);
-    }
+    if (stored) setCfg(stored);
     setRestored(true);
   }, []);
 
-  // Persist on every change, so the studio is where you left it — and, when
-  // "apply to site" is on, so is the rest of the docs.
+  // Persist on every change, so the studio is where you left it — and so is
+  // the rest of the docs, which the pre-paint script re-themes from the same
+  // record before anything renders.
   React.useEffect(() => {
     if (!restored) return;
     const payload: StoredStudio = {
       config: cfg,
-      applyToSite,
       root: {
         vars: attrs.style as Record<string, string>,
         data: {
@@ -331,30 +322,25 @@ export function ThemeStudio() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch { /* private mode or a full quota: the session still works */ }
-  }, [restored, cfg, applyToSite, attrs]);
+  }, [restored, cfg, attrs]);
 
   // Mirror onto <html> so the entire site — header, sidebar, prose, code —
   // re-themes live. That is the demonstration: the docs are built from the
   // same tokens the library ships.
   React.useEffect(() => {
-    // Before the restore lands, the root may already carry the stored theme
-    // from the pre-paint script; clearing it here would flash the defaults.
+    // Before the restore lands, `cfg` is still DEFAULTS while the root already
+    // carries the stored theme from the pre-paint script — writing here would
+    // flash the defaults over it.
     if (!restored) return;
     const root = document.documentElement;
-    const keys = ["--pui-accent-seed", "--pui-secondary-seed", "--pui-neutral-tint", "--pui-color-on-primary", "--pui-color-on-secondary"];
     const dataKeys = ["puiRadius", "puiDensity", "puiMotion"] as const;
 
-    if (!applyToSite) {
-      keys.forEach((k) => root.style.removeProperty(k));
-      dataKeys.forEach((k) => delete root.dataset[k]);
-      return;
-    }
     Object.entries(attrs.style as Record<string, string>).forEach(([k, v]) => root.style.setProperty(k, v));
     root.dataset.puiRadius = attrs["data-pui-radius"] ?? "";
     root.dataset.puiDensity = attrs["data-pui-density"] ?? "";
     root.dataset.puiMotion = attrs["data-pui-motion"] ?? "";
     dataKeys.forEach((k) => { if (!root.dataset[k]) delete root.dataset[k]; });
-  }, [restored, applyToSite, attrs]);
+  }, [restored, attrs]);
 
   React.useEffect(() => {
     if (!copied) return;
@@ -452,18 +438,6 @@ export function ThemeStudio() {
             </p>
           ))}
         </section>
-
-        <label className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-2 text-2">
-          <input
-            type="checkbox"
-            checked={applyToSite}
-            onChange={(e) => setApplyToSite(e.target.checked)}
-          />
-          <span className="grid gap-[2px]">
-            <b>Apply to this whole site</b>
-            <span className={HINT}>Re-themes the docs live — header, nav, prose and code.</span>
-          </span>
-        </label>
       </div>
 
       <div className="grid gap-4">
