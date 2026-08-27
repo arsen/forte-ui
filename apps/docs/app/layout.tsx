@@ -104,7 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               * `p`, `ul` and `ol` in `mdx-components.tsx`, which is the only
               * place that can tell running text from a prop table. This cap is
               * a stop for ultra-wide displays; that one is the measure. */}
-            <div className="grid w-full justify-center grid-cols-[15rem_minmax(0,var(--container-6xl))_14rem] gap-5 px-4 max-toc:grid-cols-[15rem_minmax(0,var(--container-6xl))] max-nav:grid-cols-[minmax(0,var(--container-6xl))]">
+            <div className="grid w-full justify-center grid-cols-[15rem_minmax(0,var(--container-5xl))_14rem] gap-6 px-4 max-toc:grid-cols-[15rem_minmax(0,var(--container-6xl))] max-nav:grid-cols-[minmax(0,var(--container-6xl))]">
               <Sidebar />
               <main className="min-w-0 pt-7 pb-8" id="main">{children}</main>
               {/* The section rail. It renders nothing on a page with fewer than
