@@ -2616,6 +2616,143 @@
       }
     ]
   },
+  "Menubar": {
+    "name": "Menubar",
+    "tokens": [
+      {
+        "name": "--pui-menubar-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between adjacent menu triggers",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-padding",
+        "value": "0px",
+        "description": "Padding between the strip's edge and the triggers",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of the strip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-bg",
+        "value": "transparent",
+        "description": "Strip background",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-border-width",
+        "value": "0px",
+        "description": "Width of the hairline around the strip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "1px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height of a menu trigger in the bar",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-px",
+        "value": "var(--pui-control-px-sm)",
+        "description": "Inline padding inside a trigger. One step tighter than a standalone button's: a bar is a row of words, and `md` padding spaces them like buttons in a toolbar",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a trigger",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Trigger font size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Trigger font weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Trigger text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-bg",
+        "value": "transparent",
+        "description": "Trigger background at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Trigger background on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel-active)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-trigger-bg-open",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the trigger whose menu is open",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-fg-open",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the trigger whose menu is open",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "NumberField": {
     "name": "NumberField",
     "tokens": [

@@ -126,11 +126,14 @@ export interface MenuTriggerProps<Payload = unknown>
   extends Omit<BaseMenu.Trigger.Props<Payload>, "className"> {
   /**
    * Also open the menu when the trigger is hovered. Off by default, and worth
-   * leaving off for a top-level menu: a menu that opens on hover is a menu
-   * that opens by accident on the way to somewhere else. It is the right
-   * setting inside a menubar, where one open menu makes its siblings behave
-   * as one strip.
-   * @default false
+   * leaving off for a standalone menu: a menu that opens on hover is a menu
+   * that opens by accident on the way to somewhere else.
+   *
+   * Inside a `<Menubar>` it turns itself on, but only once a sibling menu in
+   * the same bar is already open — which is what makes the row behave as one
+   * strip after the first click without any of its triggers firing at a
+   * passing pointer. Pass it explicitly to override that either way.
+   * @default false, or true inside a `Menubar` with a menu already open
    */
   openOnHover?: BaseMenu.Trigger.Props<Payload>["openOnHover"];
   /**
