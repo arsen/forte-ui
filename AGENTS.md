@@ -36,8 +36,10 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the pretty-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
+  components/nav.tsx               the page list itself — rail and drawer share it
   components/sidebar.tsx           the page list — the shell's left column
   components/toc.tsx               the section rail — the shell's right column
+  components/shell-drawers.tsx     both columns again, for screens without room
   components/toc-registry.ts       GENERATED — the rail's server-rendered seed
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   mdx-components.tsx               the prose typography, per element
@@ -500,6 +502,20 @@ Three things stay in a `style` object, and are not oversights:
   motion, so a demo that moves something writes CSS, the way a component does.
 - **Values computed at runtime.**
 
+### Icons
+
+The docs site draws its icons from **lucide-react**, with the one GitHub mark
+coming from **react-icons** (`SiGithub`) because lucide dropped its brand set
+and a brand mark should be the owner's own. Both are DOCS dependencies: the
+library ships no icon catalogue today, and when it grows one these imports are
+what changes.
+
+Size them with the `ICON` string from `components/styles.ts`
+(`size-4 shrink-0`), never the libraries' own `size` prop — `size-4` is
+`--pui-space-4` and a number is a number. Do **not** add `.pui-icon`: it sets
+`fill: currentColor`, which is right for the solid glyphs the library's
+components draw and turns a stroked outline into a solid blob.
+
 ### `cn`, and why it is configured
 
 [`apps/docs/lib/cn.ts`](apps/docs/lib/cn.ts) is the usual
@@ -602,7 +618,9 @@ base rules without a single `!important`.
    which is also why their layout is Tailwind rather than a `style` object; see
    *Styling the docs site* above.
 10. Add the page to the `NAV` array in
-    [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx), and
+    [`apps/docs/components/nav.tsx`](apps/docs/components/nav.tsx) — which is
+    the list `Sidebar` and the navigation drawer both render, so one edit
+    covers the rail and the phone — and
     run `toc` so the right-hand "On this page" rail is in the server HTML for
     the new route. It will find the headings without you — reading them off the
     rendered page is what it falls back to — but until the seed is regenerated

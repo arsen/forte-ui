@@ -7,7 +7,7 @@ import { ThemingTable } from "@/components/theming-table";
 export const metadata = {
   title: "Checkbox",
   description:
-    "A checkbox for options that stand on their own, with a mixed state, group support and a parent checkbox that ticks its children.",
+    "A checkbox for options that stand on their own, with three sizes, a mixed state and a hit target that never drops below 24px.",
 };
 
 # Checkbox
@@ -29,7 +29,7 @@ none of that appears in the demo code.
 ## Import
 
 ```tsx
-import { Checkbox, CheckboxGroup } from "@dofortech/pretty-ui";
+import { Checkbox } from "@dofortech/pretty-ui";
 ```
 
 ## Examples
@@ -45,58 +45,35 @@ pseudo-element on the root holds the hit target at 24×24px minimum
 
 <DemoBlock id="checkbox/sizes" />
 
-### Groups
-
-`CheckboxGroup` holds the checked values for a series of checkboxes in one
-array. Give each `Checkbox` a `value`, then use `defaultValue` for an
-uncontrolled group or `value` plus `onValueChange` for a controlled one. Set
-`orientation="horizontal"` to lay the items out in a row instead; horizontal
-groups wrap.
-
-The group's own heading is a `Field.Label` with `nativeLabel={false}` — it names
-the group rather than any one checkbox in it, so it must not resolve to a single
-control through `htmlFor`. Each row is then a `Field.Item` with its own label.
-
-<DemoBlock id="checkbox/group" />
-
-Grouping is a state and labelling convenience, not a keyboard mode: every
-checkbox in the group stays its own tab stop, exactly as a run of native
-checkboxes would.
-
-### Indeterminate and parent checkboxes
+### Indeterminate
 
 `indeterminate` puts the checkbox in a mixed state — neither ticked nor
 unticked. The mark becomes a dash instead of a tick, `aria-checked` becomes
 `"mixed"`, and `data-indeterminate` appears on both the root and the indicator,
 so either can be targeted from CSS (`data-[indeterminate]:…` in Tailwind).
 
-The usual source of a mixed state is a parent checkbox that summarises its
-children. Add `parent` to the summarising checkbox and the group works out the
-mixed state for you.
+It is a summary rather than a third value the user can choose: no activation
+ever produces a mixed box, so it is always derived from something else — most
+often a list that is only partly selected.
 
 <DemoBlock id="checkbox/indeterminate" />
-
-<Callout kind="warn">
-  `parent` only does something inside a `CheckboxGroup` that is **controlled**
-  (`value` and `onValueChange`) **and** given `allValues` — the full list of
-  child values, ticked or not, which is how the group tells "some" apart from
-  "all". Outside a group, or without `allValues`, the prop is ignored and you
-  get a plain checkbox.
-</Callout>
-
-Three details worth knowing about a parent checkbox:
-
-- Activating it while it is mixed ticks every child. Activating it again unticks
-  them all. A third activation restores the partial selection it started from.
-- It is left out of form submission: Base UI drops the `name` on a parent
-  checkbox, so only the children submit values.
-- Its `aria-controls` is built from ids the group generates for the children, so
-  do not pass your own `id` to a child checkbox inside a parent group — it
-  breaks the association.
 
 `indeterminate` and `checked` are independent. A checkbox can be both, and when
 it is, the mixed state wins visually (the tick retracts, the dash draws in)
 while the hidden input still submits whatever `checked` says.
+
+<Callout kind="note">
+  Deriving the mixed state by hand is worth it for a one-off. For a real set of
+  options, [`CheckboxGroup`](/components/checkbox-group) holds the ticked values
+  in one array and works the mixed state out for you — add `parent` to the
+  summarising checkbox and the group drives it.
+</Callout>
+
+### Groups
+
+`CheckboxGroup` collects a series of checkboxes into one array of values, names
+them together and can disable them together. It has a page of its own:
+[`CheckboxGroup`](/components/checkbox-group).
 
 ### Disabled
 
@@ -117,8 +94,6 @@ beside a greyed-out box.
   instead. A read-only checkbox stays focusable, announces `aria-readonly`, and
   ignores clicks and Space.
 </Callout>
-
-`CheckboxGroup` also takes `disabled`, which disables every checkbox inside it.
 
 ## Accessibility
 
@@ -158,15 +133,6 @@ and `form` behave as they would on a native checkbox.
   readers announce it as an unnamed checkbox.
 </Callout>
 
-<Callout kind="a11y">
-  `CheckboxGroup` renders a `role="group"` with no name of its own. Wrap it in a
-  `Field.Root` and name it with a `Field.Label nativeLabel={false}` (as in the
-  group demo above), render it inside a `Fieldset.Root` with a
-  `Fieldset.Legend`, or point `aria-labelledby` at your own heading element.
-  Without a name, the grouping is invisible to assistive technology and the
-  checkboxes read as unrelated.
-</Callout>
-
 **Motion.** The mark is drawn on rather than faded in: both paths carry
 `pathLength="1"`, and the stylesheet animates `stroke-dashoffset` from `1` to
 `0` over `--pui-checkbox-draw-duration`. That choice matters for reduced
@@ -190,10 +156,6 @@ element, and an element's own declaration beats an inherited value.
 
 <ThemingTable component="Checkbox" part="root" />
 
-`CheckboxGroup` declares one property of its own:
-
-<ThemingTable component="Checkbox" part="group" />
-
 The three `-hover` values only ever apply on devices that report hover support,
 so a touch device never sticks in a hover colour after a tap.
 
@@ -214,7 +176,5 @@ Anything Base UI's `Checkbox.Root` accepts passes through as well — including
 
 ### CheckboxGroup
 
-<PropTable component="CheckboxGroup" />
-
-`onValueChange`, `render` and the rest of Base UI's `CheckboxGroup` props pass
-through unchanged.
+See [`CheckboxGroup`](/components/checkbox-group) for the group's own prop
+table, its theming property and the parent-checkbox rules.

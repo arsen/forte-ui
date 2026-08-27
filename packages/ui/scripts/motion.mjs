@@ -31,6 +31,10 @@ export const DURATIONS = [
   { name: "move",    base: "220ms", reduce: "1ms",   off: "1ms" },
   { name: "loop-spin",  base: "800ms",  reduce: "800ms",  off: "800ms",  never: true },
   { name: "loop-pulse", base: "1600ms", reduce: "1600ms", off: "1600ms", never: true },
+  // A segment crossing the full width of something. Longer than a spin because
+  // the distance is the page's width rather than a 24px circle, and a sweep
+  // fast enough to feel like a spinner reads as a strobe.
+  { name: "loop-sweep", base: "1400ms", reduce: "1400ms", off: "1400ms", never: true },
 ];
 
 /** Geometry. Travel collapses to 0; scales interpolate toward 1 (identity),
@@ -59,6 +63,12 @@ export const GEOMETRY = [
  */
 export const EASINGS = [
   { name: "standard",  value: "cubic-bezier(0.2, 0, 0, 1)" },
+  // Symmetric, and the only easing here that is safe on a LOOP. The others all
+  // end slower than they start, so a repeating animation crawls to its last
+  // frame and then jumps back to a fast first one — a visible stutter once per
+  // cycle. Easing in and out equally puts the slow parts at both ends, where
+  // an indeterminate segment is usually off the edge of its track anyway.
+  { name: "in-out",    value: "cubic-bezier(0.4, 0, 0.6, 1)" },
   { name: "emphasized", value: "cubic-bezier(0.2, 0, 0, 1.2)" },
   { name: "exit",      value: "cubic-bezier(0.4, 0, 1, 1)" },
   { name: "spring-gentle", value: "linear(0, 0.066, 0.203, 0.3552, 0.4964, 0.6164, 0.7132, 0.7887, 0.8461, 0.889, 0.9206, 0.9436, 0.9601, 0.972, 0.9804, 0.9864, 0.9905, 0.9934, 0.9955, 0.9969, 0.9979, 0.9985, 0.999)" },

@@ -19,6 +19,20 @@ import d_accordion_disabled_item from "./accordion/disabled-item";
 import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
 import d_accordion_multiple from "./accordion/multiple";
 import d_accordion_multiple_src from "./accordion/multiple?raw";
+import d_avatar_basic from "./avatar/basic";
+import d_avatar_basic_src from "./avatar/basic?raw";
+import d_avatar_fallback from "./avatar/fallback";
+import d_avatar_fallback_src from "./avatar/fallback?raw";
+import d_avatar_group from "./avatar/group";
+import d_avatar_group_src from "./avatar/group?raw";
+import d_avatar_presence from "./avatar/presence";
+import d_avatar_presence_src from "./avatar/presence?raw";
+import d_avatar_shapes from "./avatar/shapes";
+import d_avatar_shapes_src from "./avatar/shapes?raw";
+import d_avatar_sizes from "./avatar/sizes";
+import d_avatar_sizes_src from "./avatar/sizes?raw";
+import d_avatar_variants from "./avatar/variants";
+import d_avatar_variants_src from "./avatar/variants?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
 import d_button_icon_only from "./button/icon-only";
@@ -35,12 +49,28 @@ import d_checkbox_basic from "./checkbox/basic";
 import d_checkbox_basic_src from "./checkbox/basic?raw";
 import d_checkbox_disabled from "./checkbox/disabled";
 import d_checkbox_disabled_src from "./checkbox/disabled?raw";
-import d_checkbox_group from "./checkbox/group";
-import d_checkbox_group_src from "./checkbox/group?raw";
 import d_checkbox_indeterminate from "./checkbox/indeterminate";
 import d_checkbox_indeterminate_src from "./checkbox/indeterminate?raw";
 import d_checkbox_sizes from "./checkbox/sizes";
 import d_checkbox_sizes_src from "./checkbox/sizes?raw";
+import d_checkbox_group_basic from "./checkbox-group/basic";
+import d_checkbox_group_basic_src from "./checkbox-group/basic?raw";
+import d_checkbox_group_controlled from "./checkbox-group/controlled";
+import d_checkbox_group_controlled_src from "./checkbox-group/controlled?raw";
+import d_checkbox_group_disabled from "./checkbox-group/disabled";
+import d_checkbox_group_disabled_src from "./checkbox-group/disabled?raw";
+import d_checkbox_group_form from "./checkbox-group/form";
+import d_checkbox_group_form_src from "./checkbox-group/form?raw";
+import d_checkbox_group_labelling from "./checkbox-group/labelling";
+import d_checkbox_group_labelling_src from "./checkbox-group/labelling?raw";
+import d_checkbox_group_native_button from "./checkbox-group/native-button";
+import d_checkbox_group_native_button_src from "./checkbox-group/native-button?raw";
+import d_checkbox_group_nested from "./checkbox-group/nested";
+import d_checkbox_group_nested_src from "./checkbox-group/nested?raw";
+import d_checkbox_group_orientation from "./checkbox-group/orientation";
+import d_checkbox_group_orientation_src from "./checkbox-group/orientation?raw";
+import d_checkbox_group_parent from "./checkbox-group/parent";
+import d_checkbox_group_parent_src from "./checkbox-group/parent?raw";
 import d_collapsible_basic from "./collapsible/basic";
 import d_collapsible_basic_src from "./collapsible/basic?raw";
 import d_collapsible_contained from "./collapsible/contained";
@@ -135,6 +165,26 @@ import d_popover_sizes from "./popover/sizes";
 import d_popover_sizes_src from "./popover/sizes?raw";
 import d_popover_viewport from "./popover/viewport";
 import d_popover_viewport_src from "./popover/viewport?raw";
+import d_progress_basic from "./progress/basic";
+import d_progress_basic_src from "./progress/basic?raw";
+import d_progress_circle_sizes from "./progress/circle-sizes";
+import d_progress_circle_sizes_src from "./progress/circle-sizes?raw";
+import d_progress_circle from "./progress/circle";
+import d_progress_circle_src from "./progress/circle?raw";
+import d_progress_formatting from "./progress/formatting";
+import d_progress_formatting_src from "./progress/formatting?raw";
+import d_progress_indeterminate from "./progress/indeterminate";
+import d_progress_indeterminate_src from "./progress/indeterminate?raw";
+import d_progress_reduced_motion from "./progress/reduced-motion";
+import d_progress_reduced_motion_src from "./progress/reduced-motion?raw";
+import d_progress_sizes from "./progress/sizes";
+import d_progress_sizes_src from "./progress/sizes?raw";
+import d_progress_theming from "./progress/theming";
+import d_progress_theming_src from "./progress/theming?raw";
+import d_progress_tones from "./progress/tones";
+import d_progress_tones_src from "./progress/tones?raw";
+import d_progress_upload from "./progress/upload";
+import d_progress_upload_src from "./progress/upload?raw";
 import d_radio_basic from "./radio/basic";
 import d_radio_basic_src from "./radio/basic?raw";
 import d_radio_controlled from "./radio/controlled";
@@ -282,6 +332,13 @@ export type DemoId =
   | "accordion/controlled"
   | "accordion/disabled-item"
   | "accordion/multiple"
+  | "avatar/basic"
+  | "avatar/fallback"
+  | "avatar/group"
+  | "avatar/presence"
+  | "avatar/shapes"
+  | "avatar/sizes"
+  | "avatar/variants"
   | "button/as-link"
   | "button/icon-only"
   | "button/loading"
@@ -290,9 +347,17 @@ export type DemoId =
   | "button/variants"
   | "checkbox/basic"
   | "checkbox/disabled"
-  | "checkbox/group"
   | "checkbox/indeterminate"
   | "checkbox/sizes"
+  | "checkbox-group/basic"
+  | "checkbox-group/controlled"
+  | "checkbox-group/disabled"
+  | "checkbox-group/form"
+  | "checkbox-group/labelling"
+  | "checkbox-group/native-button"
+  | "checkbox-group/nested"
+  | "checkbox-group/orientation"
+  | "checkbox-group/parent"
   | "collapsible/basic"
   | "collapsible/contained"
   | "collapsible/controlled"
@@ -340,6 +405,16 @@ export type DemoId =
   | "popover/scrollable"
   | "popover/sizes"
   | "popover/viewport"
+  | "progress/basic"
+  | "progress/circle-sizes"
+  | "progress/circle"
+  | "progress/formatting"
+  | "progress/indeterminate"
+  | "progress/reduced-motion"
+  | "progress/sizes"
+  | "progress/theming"
+  | "progress/tones"
+  | "progress/upload"
   | "radio/basic"
   | "radio/controlled"
   | "radio/descriptions"
@@ -419,6 +494,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
   "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
   "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
+  "avatar/basic": { Component: d_avatar_basic, source: d_avatar_basic_src, file: "avatar/basic.tsx" },
+  "avatar/fallback": { Component: d_avatar_fallback, source: d_avatar_fallback_src, file: "avatar/fallback.tsx" },
+  "avatar/group": { Component: d_avatar_group, source: d_avatar_group_src, file: "avatar/group.tsx" },
+  "avatar/presence": { Component: d_avatar_presence, source: d_avatar_presence_src, file: "avatar/presence.tsx" },
+  "avatar/shapes": { Component: d_avatar_shapes, source: d_avatar_shapes_src, file: "avatar/shapes.tsx" },
+  "avatar/sizes": { Component: d_avatar_sizes, source: d_avatar_sizes_src, file: "avatar/sizes.tsx" },
+  "avatar/variants": { Component: d_avatar_variants, source: d_avatar_variants_src, file: "avatar/variants.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },
@@ -427,9 +509,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "button/variants": { Component: d_button_variants, source: d_button_variants_src, file: "button/variants.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },
   "checkbox/disabled": { Component: d_checkbox_disabled, source: d_checkbox_disabled_src, file: "checkbox/disabled.tsx" },
-  "checkbox/group": { Component: d_checkbox_group, source: d_checkbox_group_src, file: "checkbox/group.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },
   "checkbox/sizes": { Component: d_checkbox_sizes, source: d_checkbox_sizes_src, file: "checkbox/sizes.tsx" },
+  "checkbox-group/basic": { Component: d_checkbox_group_basic, source: d_checkbox_group_basic_src, file: "checkbox-group/basic.tsx" },
+  "checkbox-group/controlled": { Component: d_checkbox_group_controlled, source: d_checkbox_group_controlled_src, file: "checkbox-group/controlled.tsx" },
+  "checkbox-group/disabled": { Component: d_checkbox_group_disabled, source: d_checkbox_group_disabled_src, file: "checkbox-group/disabled.tsx" },
+  "checkbox-group/form": { Component: d_checkbox_group_form, source: d_checkbox_group_form_src, file: "checkbox-group/form.tsx" },
+  "checkbox-group/labelling": { Component: d_checkbox_group_labelling, source: d_checkbox_group_labelling_src, file: "checkbox-group/labelling.tsx" },
+  "checkbox-group/native-button": { Component: d_checkbox_group_native_button, source: d_checkbox_group_native_button_src, file: "checkbox-group/native-button.tsx" },
+  "checkbox-group/nested": { Component: d_checkbox_group_nested, source: d_checkbox_group_nested_src, file: "checkbox-group/nested.tsx" },
+  "checkbox-group/orientation": { Component: d_checkbox_group_orientation, source: d_checkbox_group_orientation_src, file: "checkbox-group/orientation.tsx" },
+  "checkbox-group/parent": { Component: d_checkbox_group_parent, source: d_checkbox_group_parent_src, file: "checkbox-group/parent.tsx" },
   "collapsible/basic": { Component: d_collapsible_basic, source: d_collapsible_basic_src, file: "collapsible/basic.tsx" },
   "collapsible/contained": { Component: d_collapsible_contained, source: d_collapsible_contained_src, file: "collapsible/contained.tsx" },
   "collapsible/controlled": { Component: d_collapsible_controlled, source: d_collapsible_controlled_src, file: "collapsible/controlled.tsx" },
@@ -477,6 +567,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "popover/scrollable": { Component: d_popover_scrollable, source: d_popover_scrollable_src, file: "popover/scrollable.tsx" },
   "popover/sizes": { Component: d_popover_sizes, source: d_popover_sizes_src, file: "popover/sizes.tsx" },
   "popover/viewport": { Component: d_popover_viewport, source: d_popover_viewport_src, file: "popover/viewport.tsx" },
+  "progress/basic": { Component: d_progress_basic, source: d_progress_basic_src, file: "progress/basic.tsx" },
+  "progress/circle-sizes": { Component: d_progress_circle_sizes, source: d_progress_circle_sizes_src, file: "progress/circle-sizes.tsx" },
+  "progress/circle": { Component: d_progress_circle, source: d_progress_circle_src, file: "progress/circle.tsx" },
+  "progress/formatting": { Component: d_progress_formatting, source: d_progress_formatting_src, file: "progress/formatting.tsx" },
+  "progress/indeterminate": { Component: d_progress_indeterminate, source: d_progress_indeterminate_src, file: "progress/indeterminate.tsx" },
+  "progress/reduced-motion": { Component: d_progress_reduced_motion, source: d_progress_reduced_motion_src, file: "progress/reduced-motion.tsx" },
+  "progress/sizes": { Component: d_progress_sizes, source: d_progress_sizes_src, file: "progress/sizes.tsx" },
+  "progress/theming": { Component: d_progress_theming, source: d_progress_theming_src, file: "progress/theming.tsx" },
+  "progress/tones": { Component: d_progress_tones, source: d_progress_tones_src, file: "progress/tones.tsx" },
+  "progress/upload": { Component: d_progress_upload, source: d_progress_upload_src, file: "progress/upload.tsx" },
   "radio/basic": { Component: d_radio_basic, source: d_radio_basic_src, file: "radio/basic.tsx" },
   "radio/controlled": { Component: d_radio_controlled, source: d_radio_controlled_src, file: "radio/controlled.tsx" },
   "radio/descriptions": { Component: d_radio_descriptions, source: d_radio_descriptions_src, file: "radio/descriptions.tsx" },

@@ -1,50 +1,61 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox, CheckboxGroup, Field } from "@dofortech/pretty-ui";
+import { Checkbox, Field } from "@dofortech/pretty-ui";
 
-const permissions = [
-  { value: "read", label: "Read code and issues" },
-  { value: "write", label: "Push to branches" },
-  { value: "admin", label: "Manage settings and members" },
+const FILES = [
+  { value: "report", label: "quarterly-report.pdf" },
+  { value: "budget", label: "budget-2026.xlsx" },
+  { value: "notes", label: "handover-notes.md" },
 ];
 
-const allValues = permissions.map((permission) => permission.value);
+const ALL_VALUES = FILES.map((file) => file.value);
 
 export default function CheckboxIndeterminate() {
-  const [value, setValue] = React.useState<string[]>(["read"]);
+  const [selected, setSelected] = React.useState<string[]>(["report"]);
+
+  const all = selected.length === FILES.length;
+  const some = selected.length > 0 && !all;
 
   return (
-    // Field.Root is what makes the Field.Item rows below legal — an item reads
-    // the root's context and throws without it. Here the root carries no label
-    // of its own: the parent checkbox's text is the heading, so the group takes
-    // aria-label instead. A name cannot be borrowed by two things at once
-    // without one of them being announced twice.
-    <Field.Root name="permissions">
-      <CheckboxGroup
-        aria-label="Repository access"
-        value={value}
-        onValueChange={setValue}
-        allValues={allValues}
-      >
-        <Field.Item>
-          <Field.Label>
-            <Checkbox parent />
-            Repository access
-          </Field.Label>
-        </Field.Item>
+    <Field.Root name="files">
+      <Field.Item>
+        <Field.Label>
+          {/* `checked` and `indeterminate` are independent props, and the mixed
+            * state is derived rather than stored: with one of three files
+            * ticked the box is unchecked AND indeterminate, so the dash draws
+            * and aria-checked reads "mixed". Activating it then reports
+            * checked: true, because a mixed box is not a checked one. */}
+          <Checkbox
+            checked={all}
+            indeterminate={some}
+            onCheckedChange={(checked) =>
+              setSelected(checked ? ALL_VALUES : [])
+            }
+          />
+          Select all files
+        </Field.Label>
+      </Field.Item>
 
-        <div className="ms-6 flex flex-col gap-2">
-          {permissions.map((permission) => (
-            <Field.Item key={permission.value}>
-              <Field.Label>
-                <Checkbox value={permission.value} />
-                {permission.label}
-              </Field.Label>
-            </Field.Item>
-          ))}
-        </div>
-      </CheckboxGroup>
+      <div className="ms-6 flex flex-col gap-2">
+        {FILES.map((file) => (
+          <Field.Item key={file.value}>
+            <Field.Label>
+              <Checkbox
+                checked={selected.includes(file.value)}
+                onCheckedChange={(checked) =>
+                  setSelected((prev) =>
+                    checked
+                      ? [...prev, file.value]
+                      : prev.filter((value) => value !== file.value),
+                  )
+                }
+              />
+              {file.label}
+            </Field.Label>
+          </Field.Item>
+        ))}
+      </div>
     </Field.Root>
   );
 }

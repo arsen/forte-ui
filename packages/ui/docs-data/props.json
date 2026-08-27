@@ -92,6 +92,107 @@
       }
     ]
   },
+  "AvatarRoot": {
+    "name": "AvatarRoot",
+    "description": "The avatar box. Holds an `Avatar.Image`, an `Avatar.Fallback`, or both —\nBase UI mounts whichever the image's loading status calls for.\n\nIt is a one-cell grid, and both parts are placed in that cell. Stacking them\nin flow would put the outgoing image *beside* the fallback for the frames it\nspends fading out, doubling the avatar's width and snapping it back.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "shape",
+        "type": "AvatarShape",
+        "required": false,
+        "defaultValue": "circle",
+        "description": "The silhouette. `circle` is the convention for people; `rounded` and\n`square` read as an object — a workspace, a repository, a bot.\n\n`circle` stays a circle under `data-pui-radius=\"none\"`, because you asked\nfor one. Only `rounded` follows the radius preset."
+      },
+      {
+        "name": "size",
+        "type": "AvatarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Diameter of the avatar — `1.5rem` through `4rem`. Everything inside is a\nfraction of it, so the initials, the icon and the corner radius all follow\nwithout a second prop."
+      },
+      {
+        "name": "tone",
+        "type": "AvatarTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the fallback draws from. Rotating the tone\nacross a list is the cheapest way to make initials tell people apart —\nbut colour is never the only cue, since the initials themselves differ."
+      },
+      {
+        "name": "variant",
+        "type": "AvatarVariant",
+        "required": false,
+        "defaultValue": "soft",
+        "description": "How loud the fallback is. `soft` is a tinted disc with tone-coloured\ninitials, `solid` fills with the tone itself, `outline` is a ring around\nnothing.\n\nThis only decides what shows while there is no image — a loaded image\ncovers the fill entirely. `outline` is the exception: its border sits\noutside the picture and stays visible either way."
+      }
+    ]
+  },
+  "AvatarImage": {
+    "name": "AvatarImage",
+    "description": "The picture. Base UI preloads `src` off-screen and only mounts this element\nonce the load succeeds, so a broken URL never paints a torn-image glyph —\nthe fallback simply stays.\n\nThe image is cropped to the box with `object-fit: cover`, so a portrait, a\nlandscape and a square all read the same.",
+    "props": [
+      {
+        "name": "alt",
+        "type": "string",
+        "required": true,
+        "defaultValue": null,
+        "description": "What the picture shows. Required, because there is no sensible guess: the\nfallback's initials are gone the moment the image loads, so an avatar with\nno alt text and no adjacent name leaves the person unidentifiable.\n\nPass the person's name when the avatar is the only thing naming them, and\n`\"\"` when their name is already written beside it — a photo repeated as\n\"Jane Doe Jane Doe\" is worse than no alt at all."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AvatarFallback": {
+    "name": "AvatarFallback",
+    "description": "What shows when there is no image, or when the image fails: initials, an\nicon, a `+3` counter.\n\nAn `svg` child is sized to `--pui-avatar-icon-size` automatically, so a\nlucide or Heroicons glyph needs no wrapper and no size prop of its own.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How long to wait before showing the fallback, in milliseconds.\n\nLeft at Base UI's `0`, which is right whenever the fallback IS the avatar:\na non-zero delay withholds it during server rendering too, so an\ninitials-only avatar would ship as an empty disc and pop in a tenth of a\nsecond later.\n\nSet it to ~100–150ms when there is an `Avatar.Image` beside it. A cached\nimage is not decoded until after hydration, so at `0` the initials paint\nand are replaced on every load; a short wait swallows that flash, at the\ncost of an empty disc for the same span on a slow connection."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "The person or thing this avatar stands for, for assistive technology only.\n\nInitials are a visual shorthand and read as noise — \"J D\" — so passing a\nlabel hides the children from the accessibility tree and announces this\ninstead. Leave it unset when the name is already written next to the\navatar, or when the fallback is a decorative icon."
+      }
+    ]
+  },
+  "AvatarGroup": {
+    "name": "AvatarGroup",
+    "description": "A row of avatars that overlap, for \"who is on this\".\n\nBase UI has no group primitive — there is no state and no interaction to\nmodel — so this is layout and nothing else: a flex row, a negative\n`margin-inline-start` on every child but the first, and a ring pushed onto\neach descendant `Avatar.Root` so the overlap reads as a stack rather than a\nsmear. Every avatar keeps its own `size`, `shape` and `tone`.\n\nLater children paint over earlier ones, which is why a `+3` counter belongs\nlast: it ends up on top, where the eye finishes.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",
@@ -1329,6 +1430,164 @@
         "defaultValue": null,
         "description": "The content that changes from trigger to trigger."
       },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressRoot": {
+    "name": "ProgressRoot",
+    "description": "Groups every part of the bar and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a two-column grid: `Label` and\n`Value` share the first row, and `Track` spans both underneath.\n\n`value` is required and `null` is a meaningful setting — it is how you say\n\"this is running and I cannot say how far along it is\", which switches every\npart below into the indeterminate animation.\n\n```tsx\n<Progress.Root value={62}>\n  <Progress.Label>Uploading</Progress.Label>\n  <Progress.Value />\n  <Progress.Track>\n    <Progress.Indicator />\n  </Progress.Track>\n</Progress.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "ProgressSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Thickness of the bar and the size of the label row — `4px`, `6px` or\n`10px` of track. The bar's *length* is not a size: it fills its container\nby default, and `--pui-progress-length` is the knob for anything else."
+      },
+      {
+        "name": "tone",
+        "type": "ProgressTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the fill draws from. The rail stays neutral in\nevery tone — it is the part that has *not* happened yet, and colouring it\nwould compete with the fill it exists to contrast against."
+      }
+    ]
+  },
+  "ProgressLabel": {
+    "name": "ProgressLabel",
+    "description": "Names what is being waited on. Renders a `<span>` wired to the root with\n`aria-labelledby`, so it is the bar's accessible name — a progress bar\nwithout one announces a bare percentage and leaves the listener to guess\nwhat it is a percentage of.\n\nWrap it in `.pui-visually-hidden` when the surrounding page already says it\nin words; that keeps the name in the accessibility tree without repeating it\non screen.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressValue": {
+    "name": "ProgressValue",
+    "description": "The readout, formatted as a percentage by default. Renders an\n`aria-hidden` `<span>` — the root already publishes the same number through\n`aria-valuenow`, and announcing it twice is worse than once.\n\nIt renders **nothing** while the bar is indeterminate, which is the point:\nthere is no number to show, and a \"0%\" that never moves is a lie. Pass a\nfunction child to say something there instead:\n\n```tsx\n<Progress.Value>\n  {(formatted, value) => (value == null ? \"Working…\" : formatted)}\n</Progress.Value>\n```\n\nSet `format` on `Progress.Root` for units other than percent — `{ style:\n\"unit\", unit: \"megabyte\" }` turns the readout into \"38 MB\" while the bar\nkeeps filling from `min` to `max`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressTrack": {
+    "name": "ProgressTrack",
+    "description": "The rail the fill runs along, and the only part with an explicit thickness —\n`Indicator` sizes its cross axis with `height: inherit`, so a track left to\nsize itself leaves the fill with nothing to inherit and it collapses to\nzero.\n\nIt also clips: the fill carries the same radius, so at 3% the rounded cap is\ncut to a sliver of the rail's own end rather than shrinking into a dot.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressIndicator": {
+    "name": "ProgressIndicator",
+    "description": "The fill. Base UI gives it an inline `width: <percent>%` while the bar is\ndeterminate and *no* inline geometry at all while it is indeterminate, which\nis what lets one element be both the fill and the sweeping segment — see the\nnote at the top of `Progress.module.css`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleRoot": {
+    "name": "ProgressCircleRoot",
+    "description": "Groups every part of the ring and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a grid where `Track` and `Value`\nshare one cell — which is what centres the readout inside the ring — and\n`Label` sits in a second row that only exists if you render one.\n\n`value` is required and `null` means indeterminate: the readout disappears\nand the arc starts rotating.\n\n```tsx\n<ProgressCircle.Root value={62}>\n  <ProgressCircle.Track>\n    <ProgressCircle.Indicator />\n  </ProgressCircle.Track>\n  <ProgressCircle.Value />\n  <ProgressCircle.Label>Uploading</ProgressCircle.Label>\n</ProgressCircle.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "ProgressSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Diameter of the ring — `2.5rem`, `3.5rem` or `5rem`. The stroke is\nmeasured in the ring's own coordinate space rather than in pixels, so it\nscales with the diameter and a `sm` circle is a smaller ring rather than a\nthinner one."
+      },
+      {
+        "name": "tone",
+        "type": "ProgressTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the arc draws from. The rail behind it stays\nneutral in every tone."
+      }
+    ]
+  },
+  "ProgressCircleTrack": {
+    "name": "ProgressCircleTrack",
+    "description": "The ring's canvas and the rail behind the arc. Renders an `<svg>` on a\n`0 0 100 100` viewBox — Base UI's `Track` is a `<div>` by default and is\nre-rendered through its `render` prop, which is also what keeps the\n`data-complete` / `data-progressing` / `data-indeterminate` attributes on\nit.\n\nThe viewBox is what makes the stroke width scale: everything inside is\nmeasured against a ring 100 units across, and the size of a unit is whatever\n`--pui-progress-circle-size` says.\n\n`render` is intentionally not forwarded. Replacing the `<svg>` would take\nthe coordinate space every rule in the stylesheet is written against with\nit, and the failure is silent — a ring that simply does not draw.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleIndicator": {
+    "name": "ProgressCircleIndicator",
+    "description": "The arc. A `<circle>` with `pathLength=\"100\"`, which renormalises its\ncircumference to 100 units so `stroke-dashoffset` can be driven straight\nfrom the percentage without anyone computing 2πr — including when\n`--pui-progress-circle-thickness` changes the radius out from under it.\n\nBase UI still writes its inline `width` / `height` / `inset-inline-start`\nhere while the bar is determinate. None of the three applies to a `<circle>`\nin CSS, so they are inert; the value reaches the arc through\n`--pui-progress-circle-percent` on the root instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleValue": {
+    "name": "ProgressCircleValue",
+    "description": "The readout, centred inside the ring. Renders an `aria-hidden` `<span>` —\nthe root already publishes the number through `aria-valuenow`.\n\nIt renders nothing while the ring is indeterminate. Pass a function child to\nput something else there, and keep it short: at `sm` the ring's inner\ndiameter is under 30px, and anything longer than three characters will need\n`size=\"lg\"` or a label underneath instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleLabel": {
+    "name": "ProgressCircleLabel",
+    "description": "Names what is being waited on, underneath the ring. Renders a `<span>` wired\nto the root with `aria-labelledby`, so it is the ring's accessible name.\n\nIts row in the grid only exists when it is rendered, so a ring without a\nlabel has no dangling gap under it.",
+    "props": [
       {
         "name": "className",
         "type": "string",

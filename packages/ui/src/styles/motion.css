@@ -30,6 +30,7 @@
 @layer pretty-ui.tokens {
   :root {
     --pui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --pui-ease-in-out: cubic-bezier(0.4, 0, 0.6, 1);
     --pui-ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
     --pui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
     --pui-ease-spring-gentle: linear(0, 0.066, 0.203, 0.3552, 0.4964, 0.6164, 0.7132, 0.7887, 0.8461, 0.889, 0.9206, 0.9436, 0.9601, 0.972, 0.9804, 0.9864, 0.9905, 0.9934, 0.9955, 0.9969, 0.9979, 0.9985, 0.999);
@@ -49,6 +50,7 @@
     --pui-duration-move: 220ms;
     --pui-duration-loop-spin: 800ms;
     --pui-duration-loop-pulse: 1600ms;
+    --pui-duration-loop-sweep: 1400ms;
     --pui-duration-spring-gentle: 700ms;
     --pui-duration-spring-snappy: 400ms;
     --pui-duration-spring-bouncy: 730ms;
@@ -79,6 +81,7 @@
       --pui-duration-move: 1ms;
       --pui-duration-loop-spin: 800ms;
       --pui-duration-loop-pulse: 1600ms;
+      --pui-duration-loop-sweep: 1400ms;
       --pui-duration-spring-gentle: 150ms;
       --pui-duration-spring-snappy: 120ms;
       --pui-duration-spring-bouncy: 150ms;
@@ -110,6 +113,7 @@
     --pui-duration-move: 1ms;
     --pui-duration-loop-spin: 800ms;
     --pui-duration-loop-pulse: 1600ms;
+    --pui-duration-loop-sweep: 1400ms;
     --pui-duration-spring-gentle: 150ms;
     --pui-duration-spring-snappy: 120ms;
     --pui-duration-spring-bouncy: 150ms;
@@ -139,6 +143,7 @@
     --pui-duration-move: 1ms;
     --pui-duration-loop-spin: 800ms;
     --pui-duration-loop-pulse: 1600ms;
+    --pui-duration-loop-sweep: 1400ms;
     --pui-duration-spring-gentle: 1ms;
     --pui-duration-spring-snappy: 1ms;
     --pui-duration-spring-bouncy: 1ms;
@@ -169,6 +174,7 @@
     --pui-duration-move: 220ms;
     --pui-duration-loop-spin: 800ms;
     --pui-duration-loop-pulse: 1600ms;
+    --pui-duration-loop-sweep: 1400ms;
     --pui-duration-spring-gentle: 700ms;
     --pui-duration-spring-snappy: 400ms;
     --pui-duration-spring-bouncy: 730ms;

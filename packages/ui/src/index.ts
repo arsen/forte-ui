@@ -15,6 +15,18 @@ export type {
   AccordionPanelProps,
 } from "./components/accordion";
 
+export { Avatar } from "./components/avatar";
+export type {
+  AvatarSize,
+  AvatarShape,
+  AvatarVariant,
+  AvatarTone,
+  AvatarRootProps,
+  AvatarImageProps,
+  AvatarFallbackProps,
+  AvatarGroupProps,
+} from "./components/avatar";
+
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
 
@@ -103,6 +115,24 @@ export type {
   PopoverFooterProps,
   PopoverViewportProps,
 } from "./components/popover";
+
+export { Progress, ProgressCircle } from "./components/progress";
+export type {
+  ProgressSize,
+  ProgressTone,
+  ProgressRootProps,
+  ProgressLabelProps,
+  ProgressValueProps,
+  ProgressTrackProps,
+  ProgressIndicatorProps,
+  ProgressCircleSize,
+  ProgressCircleTone,
+  ProgressCircleRootProps,
+  ProgressCircleTrackProps,
+  ProgressCircleIndicatorProps,
+  ProgressCircleValueProps,
+  ProgressCircleLabelProps,
+} from "./components/progress";
 
 export { Radio, RadioGroup } from "./components/radio";
 export type {

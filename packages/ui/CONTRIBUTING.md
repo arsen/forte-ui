@@ -142,11 +142,11 @@ element inherits instead.
 **direction** (1)
 `--pui-direction`
 
-**duration** (11)
-`--pui-duration-fast` · `--pui-duration-instant` · `--pui-duration-loop-pulse` · `--pui-duration-loop-spin` · `--pui-duration-move` · `--pui-duration-normal` · `--pui-duration-slow` · `--pui-duration-spring-bouncy` · `--pui-duration-spring-gentle` · `--pui-duration-spring-precise` · `--pui-duration-spring-snappy`
+**duration** (12)
+`--pui-duration-fast` · `--pui-duration-instant` · `--pui-duration-loop-pulse` · `--pui-duration-loop-spin` · `--pui-duration-loop-sweep` · `--pui-duration-move` · `--pui-duration-normal` · `--pui-duration-slow` · `--pui-duration-spring-bouncy` · `--pui-duration-spring-gentle` · `--pui-duration-spring-precise` · `--pui-duration-spring-snappy`
 
-**ease** (7)
-`--pui-ease-emphasized` · `--pui-ease-exit` · `--pui-ease-spring-bouncy` · `--pui-ease-spring-gentle` · `--pui-ease-spring-precise` · `--pui-ease-spring-snappy` · `--pui-ease-standard`
+**ease** (8)
+`--pui-ease-emphasized` · `--pui-ease-exit` · `--pui-ease-in-out` · `--pui-ease-spring-bouncy` · `--pui-ease-spring-gentle` · `--pui-ease-spring-precise` · `--pui-ease-spring-snappy` · `--pui-ease-standard`
 
 **focus** (4)
 `--pui-focus-ring-inner` · `--pui-focus-ring-offset` · `--pui-focus-ring-outer` · `--pui-focus-ring-width`
