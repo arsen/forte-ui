@@ -29,14 +29,15 @@
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
     "./docs-data/props.json": "./docs-data/props.json",
-    "./docs-data/theming.json": "./docs-data/theming.json"
+    "./docs-data/theming.json": "./docs-data/theming.json",
+    "./docs-data/tokens.json": "./docs-data/tokens.json"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs && node scripts/build-motion.mjs",
-    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs",
+    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs && node scripts/tokens-docgen.mjs",
     "generate": "pnpm run tokens && pnpm run docgen",
     "check:contrast": "node scripts/check-contrast.mjs",
     "build": "pnpm run generate && vite build",

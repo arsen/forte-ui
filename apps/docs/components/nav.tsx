@@ -33,6 +33,16 @@ const NAV: NavGroup[] = [
     ],
   },
   {
+    title: "Customization",
+    items: [
+      { title: "Theming", href: "/customization/theming" },
+      { title: "Presets", href: "/customization/presets" },
+      { title: "Design tokens", href: "/customization/tokens" },
+      { title: "Styling components", href: "/customization/styling" },
+      { title: "Tailwind", href: "/customization/tailwind" },
+    ],
+  },
+  {
     title: "Components",
     items: [
       { title: "Accordion", href: "/components/accordion" },

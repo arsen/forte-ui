@@ -1,0 +1,88 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Theming",
+  description:
+    "One colour variable rebuilds the whole design system — twelve accent steps, brand-tinted neutrals and readable text on your fill, derived in pure CSS.",
+};
+
+# Theming
+
+The entire palette is derived from one variable. Set a brand colour and the library rebuilds twelve accent steps, a matching secondary ramp, brand-tinted neutrals, and a text colour that stays readable on top of your fill — in light mode and dark mode, with no JavaScript, no build step and no theming runtime. This page is the written version of what the [Theme Studio](/theme) lets you try live; the studio's **Copy CSS** button emits exactly the declarations described here.
+
+## The seed
+
+```css
+:root {
+  --pui-accent-seed: #7c3aed;
+}
+```
+
+That is a complete theme. Everything colour-shaped that is not a status colour follows: solid buttons, soft fills, borders, focus-visible text tones, hover states. Two more inputs refine it:
+
+```css
+:root {
+  --pui-accent-seed: #7c3aed;
+  --pui-secondary-seed: #0e7490; /* a second brand colour, same treatment */
+  --pui-neutral-tint: 0.5;       /* 0 = pure grey … 1 = brand-tinted greys */
+}
+```
+
+`--pui-secondary-seed` drives everything a component renders with `tone="secondary"`. `--pui-neutral-tint` controls how much of the accent hue bleeds into the grey ramp — at `1` the neutrals carry a recognisable sliver of the brand, at `0` they are achromatic.
+
+The seeds are registered custom properties with a typed `<color>` syntax. That buys two things: a malformed value falls back to the registered default instead of silently invalidating every derived token, and the properties are animatable — which is how a theme switch can cross-fade instead of snapping.
+
+<Callout kind="note">
+  The contrast guarantees hold for seeds inside the supported envelope: OKLCH lightness 0.45–0.90, chroma 0.02–0.30, inside the sRGB gamut. Outside it the ramp still renders, but the derived pairs are no longer certified — the Theme Studio warns when a seed leaves the envelope.
+</Callout>
+
+## What the seed derives
+
+Each seed becomes a twelve-step ramp — `--pui-accent-1` through `--pui-accent-12`, and the same for `secondary` and the `gray` ramp the neutrals come from. Components never read ramp steps directly; they read semantic aliases, which is what you should override too if you need finer control than the seed gives:
+
+```css
+--pui-color-background   /* the page       — gray-1  */
+--pui-color-panel        /* raised surface — gray-2  */
+--pui-color-primary      /* solid fill     — accent-9 */
+--pui-color-primary-soft /* tinted fill    — accent-3 */
+--pui-color-primary-text /* accent text    — accent-11 */
+```
+
+The full list is on the [Design tokens](/customization/tokens) page. The status colours — danger, success, warning, info — are deliberately **not** derived from the seed: a brand colour must not be able to make an error message look reassuring.
+
+## Text on your brand colour
+
+`--pui-color-on-primary` and `--pui-color-on-secondary` — the text on solid fills — pick white or black automatically. In browsers with `contrast-color()` the browser decides from the painted colour; elsewhere a fitted OKLCH threshold decides, and it clears AA on its own across the entire supported envelope. If you want the decision to be exact in every browser, the [Theme Studio](/theme) measures it for your seed and includes the literal in its exported CSS:
+
+```css
+:root {
+  --pui-color-on-primary: oklch(0.995 0 0); /* measured for your seed */
+}
+```
+
+## Light and dark
+
+Both modes are built from the same seed — dark mode is not a second theme, it is the same derivation against a dark base. By default the library follows the operating system via `color-scheme`. To let people choose, set `data-theme` on any element, typically `<html>`:
+
+```html
+<html data-theme="dark">
+```
+
+`"light"` and `"dark"` force a mode for that subtree; removing the attribute returns to the OS preference. There is nothing colour-related to write twice: a component, a page or a whole app themed by seed is automatically correct in both modes.
+
+## Scoped themes
+
+Re-theming does not have to be global. Add the `pui-theme` class or a `data-pui-theme` attribute to any element and set seeds there — that subtree re-derives its entire palette while the rest of the page keeps yours:
+
+<DemoBlock id="theming/scoped" />
+
+Scopes nest, and each level can override just the inputs it cares about. `data-theme` works on a scope too, so a permanently-dark sidebar inside a light app is one attribute.
+
+<Callout kind="warn">
+  The scope marker is load-bearing. Setting `--pui-accent-seed` on a plain element does nothing: a custom property containing `var()` is substituted where it is *declared*, and the ramp is declared on `:root`, `.pui-theme` and `[data-pui-theme]` — so only those elements re-derive it. If a seed override ever "doesn't work", the missing scope class is almost always why.
+</Callout>
+
+## Where to go next
+
+The geometry switches — radius, density, motion — are attributes rather than colours, and they have their own page: [Presets](/customization/presets). For overriding individual variables beyond the seeds, start with [Design tokens](/customization/tokens); for restyling one component, [Styling components](/customization/styling).
