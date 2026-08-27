@@ -19,6 +19,8 @@ import d_accordion_disabled_item from "./accordion/disabled-item";
 import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
 import d_accordion_multiple from "./accordion/multiple";
 import d_accordion_multiple_src from "./accordion/multiple?raw";
+import d_avatar_badge from "./avatar/badge";
+import d_avatar_badge_src from "./avatar/badge?raw";
 import d_avatar_basic from "./avatar/basic";
 import d_avatar_basic_src from "./avatar/basic?raw";
 import d_avatar_fallback from "./avatar/fallback";
@@ -310,6 +312,7 @@ export type DemoId =
   | "accordion/controlled"
   | "accordion/disabled-item"
   | "accordion/multiple"
+  | "avatar/badge"
   | "avatar/basic"
   | "avatar/fallback"
   | "avatar/group"
@@ -461,6 +464,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
   "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
   "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
+  "avatar/badge": { Component: d_avatar_badge, source: d_avatar_badge_src, file: "avatar/badge.tsx" },
   "avatar/basic": { Component: d_avatar_basic, source: d_avatar_basic_src, file: "avatar/basic.tsx" },
   "avatar/fallback": { Component: d_avatar_fallback, source: d_avatar_fallback_src, file: "avatar/fallback.tsx" },
   "avatar/group": { Component: d_avatar_group, source: d_avatar_group_src, file: "avatar/group.tsx" },

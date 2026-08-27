@@ -4,8 +4,11 @@ export type {
   AvatarShape,
   AvatarVariant,
   AvatarTone,
+  AvatarBadgeTone,
+  AvatarBadgePlacement,
   AvatarRootProps,
   AvatarImageProps,
   AvatarFallbackProps,
+  AvatarBadgeProps,
   AvatarGroupProps,
 } from "./Avatar";
