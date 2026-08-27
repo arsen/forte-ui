@@ -104,6 +104,21 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { Popover } from "./components/popover";
+export type {
+  PopoverSize,
+  PopoverFooterAlign,
+  PopoverRootProps,
+  PopoverTriggerProps,
+  PopoverPopupProps,
+  PopoverArrowProps,
+  PopoverTitleProps,
+  PopoverDescriptionProps,
+  PopoverCloseProps,
+  PopoverFooterProps,
+  PopoverViewportProps,
+} from "./components/popover";
+
 export { Progress, ProgressCircle } from "./components/progress";
 export type {
   ProgressSize,
@@ -199,6 +214,31 @@ export type {
   TabsIndicatorProps,
   TabsPanelProps,
 } from "./components/tabs";
+
+export { Toast, useToast } from "./components/toast";
+export type {
+  ToastType,
+  ToastPosition,
+  ToastSwipeDirection,
+  ToastData,
+  ToastObject,
+  ToastActionOptions,
+  ToastOptions,
+  ToastMessage,
+  ToastHandle,
+  ToastPromiseOptions,
+  ToastApi,
+  ToastManager,
+  UseToastReturn,
+  ToastProviderProps,
+  ToastViewportProps,
+  ToastItemProps,
+  ToastIconProps,
+  ToastTitleProps,
+  ToastDescriptionProps,
+  ToastActionProps,
+  ToastCloseProps,
+} from "./components/toast";
 
 export { Toggle, ToggleGroup } from "./components/toggle";
 export type {

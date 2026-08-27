@@ -38,11 +38,12 @@ somewhere else too — read the warning below before you reach for one.
 
 Deciding between a tooltip and a popover comes down to the **purpose of the
 trigger**. If the trigger's purpose *is* to open the popup — the little "i" info
-icon is the usual case — it is a popover, not a tooltip, and its content has to
-be reachable by touch and by assistive technology. pretty-ui does not wrap a
-popover yet; use Base UI's `Popover` from `@base-ui/react/popover` with
-`openOnHover` on its trigger. If the trigger's purpose is unrelated to the popup,
-and the popup merely labels the control, it is a tooltip.
+icon is the usual case — it is a [popover](/components/popover), not a tooltip,
+and its content has to be reachable by touch and by assistive technology. Reach
+for `Popover` with `openOnHover` on its trigger: pointer users get the same
+hover-to-reveal feel, while the content stays announced and available on touch.
+If the trigger's purpose is unrelated to the popup, and the popup merely labels
+the control, it is a tooltip.
 
 For transient feedback such as "Copied!", reach for Base UI's `Toast` with its
 anchoring instead — unlike a tooltip, it is announced.

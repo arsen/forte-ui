@@ -1076,6 +1076,403 @@
       }
     ]
   },
+  "PopoverRoot": {
+    "name": "PopoverRoot",
+    "description": "Groups one popover's trigger and popup, and owns its open state. Renders no\nDOM element, so it takes no `className`, `style` or `ref`.",
+    "props": [
+      {
+        "name": "actionsRef",
+        "type": "RefObject<PopoverRootActions | null>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Imperative escape hatch. `close()` closes the popover; `unmount()` forces\nthe popup out of the DOM, for when an exit animation is driven\nexternally."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | PayloadChildRenderFunction<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "The trigger and popup for this popover. May also be a render function\nreceiving `{ payload }` from the trigger that opened it."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the popover is open when it first mounts. For a controlled\npopover use `open` instead."
+      },
+      {
+        "name": "defaultTriggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The initially attached trigger id. Pairs with `defaultOpen` the way\n`triggerId` pairs with `open`."
+      },
+      {
+        "name": "handle",
+        "type": "PopoverHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates this popover with detached triggers created through\n`Popover.createHandle()`, so one popup can serve triggers that live\nelsewhere in the tree."
+      },
+      {
+        "name": "modal",
+        "type": "boolean | \"trap-focus\"",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the popover takes the page over while it is open.\n\n- `false` — the rest of the page stays scrollable and clickable.\n- `true` — page scroll is locked and pointer interaction outside the\n  popup is disabled.\n- `'trap-focus'` — focus is trapped inside the popup, but scrolling and\n  outside pointer interaction still work.\n\nWith `true` or `'trap-focus'`, render a `Popover.Close` inside the popup:\nit is what a touch screen-reader user uses to get out, and with `true` it\nis also what switches focus trapping on."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean, eventDetails: PopoverRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the popover wants to open or close. The second argument\ncarries the reason (`'trigger-press'`, `'trigger-hover'`,\n`'trigger-focus'`, `'outside-press'`, `'escape-key'`, `'close-press'`,\n`'focus-out'`, `'imperative-action'`, `'none'`), the trigger involved,\nand can `cancel()` the change — which is how a popover holding an\nunsaved form asks before it closes."
+      },
+      {
+        "name": "onOpenChangeComplete",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called after the open or close transition has finished. Use this rather\nthan a timer when work has to wait for the popup to actually leave."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the popover is currently open. Pass this together with\n`onOpenChange` to control the popover."
+      },
+      {
+        "name": "triggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which trigger the popover is currently attached to, for controlled\nmulti-trigger setups. There is no separate `onTriggerIdChange` — read the\nnew id off `eventDetails.trigger` inside `onOpenChange`."
+      }
+    ]
+  },
+  "PopoverTrigger": {
+    "name": "PopoverTrigger",
+    "description": "The button that opens the popover. Renders a `<button>`.\n\nUnlike a tooltip trigger, this one needs no separate `aria-label` standing\nin for the popup: Base UI wires the trigger to the popup with\n`aria-haspopup` and `aria-controls`, and the popup is announced when it\nopens. An icon-only trigger still needs a name of its own, as any icon-only\nbutton does.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How long the popover lingers after the pointer leaves, in milliseconds.\nRequires `openOnHover`."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "300",
+        "description": "How long the pointer must rest on the trigger before the popover opens,\nin milliseconds. Requires `openOnHover`."
+      },
+      {
+        "name": "handle",
+        "type": "PopoverHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates a detached trigger with the `Popover.Root` carrying the same\nhandle, created once outside render with `Popover.createHandle()`."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Identifies the trigger. Also how `Popover.Root`'s `triggerId` names the\nactive trigger in controlled multi-trigger mode."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behaviour the element\ndoes not have natively."
+      },
+      {
+        "name": "openOnHover",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Also open the popover when the trigger is hovered. This is the setting\nthat turns an \"i\" info icon into the accessible alternative to a tooltip:\nhover reveals it for pointer users while press still reveals it for\neveryone else."
+      },
+      {
+        "name": "payload",
+        "type": "Payload",
+        "required": false,
+        "defaultValue": null,
+        "description": "Data handed to the popover when this trigger opens it, so one popup can\nrender different content per trigger. Read it from the render-function\nform of `Popover.Root`'s children."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, PopoverTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component —\n`render={<Button variant=\"outline\" />}` is the common case. The trigger's\nown neutral styling steps aside when this is present, so the two never\nfight over the cascade."
+      }
+    ]
+  },
+  "PopoverPopup": {
+    "name": "PopoverPopup",
+    "description": "The popover surface, together with the wrappers it always needs:\n`Portal` → `Backdrop` + `Positioner` → `Popup`. Collapsing them into one\ncomponent keeps the common case to a single element while leaving every\nBase UI `Popup` prop (`initialFocus`, `finalFocus`, `render`, …) available.\n\n`Title`, `Description` and `Close` belong *inside* it: that is what wires up\n`aria-labelledby` / `aria-describedby`, and in a modal popover a close\nbutton outside the popup is unreachable to touch screen-reader users.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "end",
+        "description": "How the popup lines up with the trigger along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Shifts the popup along the alignment axis, in pixels, or a function\nreturning one."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The element the popup positions against, when it should not be the\ntrigger. Accepts an element, a ref, a getter, or a virtual element — a\ntext selection or a right-click point."
+      },
+      {
+        "name": "arrowPadding",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a scrim behind the popup. Off by default — a popover normally\nleaves the page visible and usable. Turn it on with `modal` on\n`Popover.Root`, where the page is already inert and the scrim is what\nsays so."
+      },
+      {
+        "name": "backdropClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--pui-popover-backdrop-z-index` goes."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "How the popup reacts when it would overflow the boundary — whether it\nflips, shifts, or stays put."
+      },
+      {
+        "name": "collisionBoundary",
+        "type": "Boundary",
+        "required": false,
+        "defaultValue": "\"clipping-ancestors\"",
+        "description": "The boundary the popup tries to stay inside of."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space, in pixels, kept between the popup and the collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the portal renders. Defaults to `document.body`; point it at a\ncontainer when the popup has to live inside a specific stacking or shadow\nroot."
+      },
+      {
+        "name": "disableAnchorTracking",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the popup re-measuring the anchor on scroll and resize. Cheaper,\nbut the popup drifts if the anchor moves."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the portal — and therefore the popup — in the DOM while the popover\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--pui-popover-z-index`."
+      },
+      {
+        "name": "positionMethod",
+        "type": "\"absolute\" | \"fixed\"",
+        "required": false,
+        "defaultValue": "\"absolute\"",
+        "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "bottom",
+        "description": "Which side of the trigger to place the popup on. Flips automatically to\navoid collisions. `\"inline-start\"` / `\"inline-end\"` follow writing\ndirection."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap between trigger and popup, in pixels, or a function returning one.\nWhen an `Arrow` is rendered this must exceed the arrow's height or the\narrow overlaps the trigger; the default leaves room for the default\narrow."
+      },
+      {
+        "name": "size",
+        "type": "PopoverSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Width cap for the popup. The popup shrinks to fit its content and only\ngrows to this width when the content asks for it, so this is a ceiling\nrather than a fixed measure. Further clamped to the space the positioner\nreports as available."
+      },
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the popup glued to the trigger while it scrolls out of view instead\nof letting it detach."
+      }
+    ]
+  },
+  "PopoverArrow": {
+    "name": "PopoverArrow",
+    "description": "The wedge pointing back at the trigger. Render it as a child of\n`Popover.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--pui-popover-bg`, so a custom skin usually needs nothing here."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PopoverTitle": {
+    "name": "PopoverTitle",
+    "description": "The popover's accessible name.\n\nRenders an `<h2>` — pass `render={<h3 />}` when the surrounding document\noutline calls for a different level. Inside `Popover.Popup` it becomes the\npopup's `aria-labelledby` automatically.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PopoverDescription": {
+    "name": "PopoverDescription",
+    "description": "A short explanation of what the popover is for.\n\nRenders a `<p>`. Inside `Popover.Popup` it becomes the popup's\n`aria-describedby`, so it is announced after the title.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PopoverClose": {
+    "name": "PopoverClose",
+    "description": "A button that closes the popover. Renders a `<button>`.\n\nOptional for a plain popover — Esc and an outside press both close it — but\nrequired once `modal` is set: with `modal` it is what switches focus\ntrapping on, and under either modal setting it is the only way out for a\ntouch screen-reader user, who has neither key nor outside press available.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon — the corner \"×\"\ntreatment. Enforces the 24px minimum hit target from WCAG SC 2.5.8.\nAlways pair with `aria-label`, since there is no text to announce."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, PopoverCloseState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>`. The close button's own neutral styling\nsteps aside when this is present."
+      }
+    ]
+  },
+  "PopoverFooter": {
+    "name": "PopoverFooter",
+    "description": "The action row at the bottom of a popover.\n\nA plain `<div>` — not a Base UI part — that supplies the standard spacing\nand alignment for the confirm/cancel buttons, the same way `Dialog.Footer`\ndoes. It exists because an action row is the one piece of chrome every\nsecond popover grows, and left to each consumer it is re-invented with a\ndifferent gap every time.",
+    "props": [
+      {
+        "name": "align",
+        "type": "PopoverFooterAlign",
+        "required": false,
+        "defaultValue": "end",
+        "description": "How the actions are distributed along the footer. `\"between\"` is the\npattern for a destructive action pushed away from the safe one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PopoverViewport": {
+    "name": "PopoverViewport",
+    "description": "Animates the swap when one popup serves several triggers and its content\nchanges between them.\n\nWrap the changing content in it, inside `Popover.Popup`. Base UI keeps a\nclone of the outgoing content mounted for the length of the transition; the\nstylesheet slides the two past each other in the direction the new trigger\nlies, and resizes the popup to follow. Without it the content simply\nreplaces itself, which is fine — this part is only needed when the swap\nshould be animated.\n\nLeave the `Arrow` outside it, as a direct child of the popup: the viewport\nclips, and the arrow lives beyond the popup's edge.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The content that changes from trigger to trigger."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "ProgressRoot": {
     "name": "ProgressRoot",
     "description": "Groups every part of the bar and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a two-column grid: `Label` and\n`Value` share the first row, and `Track` spans both underneath.\n\n`value` is required and `null` is a meaningful setting — it is how you say\n\"this is running and I cannot say how far along it is\", which switches every\npart below into the indeterminate animation.\n\n```tsx\n<Progress.Root value={62}>\n  <Progress.Label>Uploading</Progress.Label>\n  <Progress.Value />\n  <Progress.Track>\n    <Progress.Indicator />\n  </Progress.Track>\n</Progress.Root>\n```",
@@ -2074,6 +2471,229 @@
         "required": false,
         "defaultValue": "false",
         "description": "Whether the panel stays in the DOM while hidden. Required if you want the\nexit transition to play, or if the panel holds scroll position or\nuncommitted form state that should survive a round trip."
+      }
+    ]
+  },
+  "ToastProvider": {
+    "name": "ToastProvider",
+    "description": "Owns every toast below it, and renders the stack.\n\nMount it once, near the root of the app:\n\n```tsx\n<Toast.Provider position=\"bottom-end\" timeout={5000}>\n  <App />\n</Toast.Provider>\n```\n\nThe viewport comes with it deliberately. Base UI keeps the two apart, which\nis the right primitive but the wrong default here: a provider without a\nviewport swallows every toast silently — the calls succeed, the store fills\nup, and nothing is ever drawn. Rendering it here means the failure cannot\nhappen, and `viewport={false}` is one prop away when you need to place it\nyourself.\n\nRenders no DOM element of its own; the stack is portalled.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The app."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colours."
+      },
+      {
+        "name": "limit",
+        "type": "number",
+        "required": false,
+        "defaultValue": "3",
+        "description": "How many toasts are visible at once. The rest stay in the store and take\ntheir turn as the front ones are dismissed, so nothing is lost — they are\nmarked `data-limited` and hidden rather than dropped."
+      },
+      {
+        "name": "position",
+        "type": "ToastPosition",
+        "required": false,
+        "defaultValue": "bottom-end",
+        "description": "Which corner or edge the stack sits at. `start` and `end` are the inline\nedges, so `bottom-end` is bottom-right in LTR and bottom-left in RTL."
+      },
+      {
+        "name": "renderToast",
+        "type": "((toast: ToastObject) => ReactNode)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Renders one toast. Return a `Toast.Item` — it is what carries the stacking\ngeometry and the swipe gesture.\n\n```tsx\nrenderToast={(toast) => (\n  <Toast.Item toast={toast}>\n    <Toast.Icon />\n    <Toast.Title />\n    <Toast.Close />\n  </Toast.Item>\n)}\n```\n\nDefaults to `<Toast.Item toast={toast} />`, which supplies the standard\nlayout from the toast's own fields."
+      },
+      {
+        "name": "swipeDirection",
+        "type": "ToastSwipeDirection | ToastSwipeDirection[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way a toast may be flicked away. Defaults to the direction away from\nthe viewport's own edge plus both inline directions; pass `[]` to turn\nswipe-to-dismiss off."
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5000",
+        "description": "How long a toast stays on screen by default, in milliseconds. `0` keeps\nevery toast until it is closed. A toast can override it with its own\n`timeout`."
+      },
+      {
+        "name": "toastManager",
+        "type": "ToastManager<any>",
+        "required": false,
+        "defaultValue": null,
+        "description": "A manager from `Toast.createManager()`, for raising toasts outside React.\nPass the manager's `base`."
+      },
+      {
+        "name": "viewport",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether to render the stack. Turn it off when you are placing\n`Toast.Viewport` yourself."
+      }
+    ]
+  },
+  "ToastViewport": {
+    "name": "ToastViewport",
+    "description": "The stack itself: Base UI's `Portal` → `Viewport`, plus the loop over the\ntoasts. Collapsing the three keeps the common case to one element, the way\n`Dialog.Popup` collapses its four.\n\n`Toast.Provider` renders one of these for you. Render it yourself only when\nit has to go somewhere specific — inside a `container`, or after some other\nportalled chrome — and pass `viewport={false}` to the provider so there is\nnot a second one.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colours."
+      },
+      {
+        "name": "position",
+        "type": "ToastPosition",
+        "required": false,
+        "defaultValue": "bottom-end",
+        "description": "Which corner or edge the stack sits at. `start` and `end` are the inline\nedges, so `bottom-end` is bottom-right in LTR and bottom-left in RTL."
+      },
+      {
+        "name": "renderToast",
+        "type": "((toast: ToastObject) => ReactNode)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Renders one toast. Return a `Toast.Item` — it is what carries the stacking\ngeometry and the swipe gesture.\n\n```tsx\nrenderToast={(toast) => (\n  <Toast.Item toast={toast}>\n    <Toast.Icon />\n    <Toast.Title />\n    <Toast.Close />\n  </Toast.Item>\n)}\n```\n\nDefaults to `<Toast.Item toast={toast} />`, which supplies the standard\nlayout from the toast's own fields."
+      },
+      {
+        "name": "swipeDirection",
+        "type": "ToastSwipeDirection | ToastSwipeDirection[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way a toast may be flicked away. Defaults to the direction away from\nthe viewport's own edge plus both inline directions; pass `[]` to turn\nswipe-to-dismiss off."
+      }
+    ]
+  },
+  "ToastItem": {
+    "name": "ToastItem",
+    "description": "One toast: Base UI's `Root` wrapping its `Content`.\n\n`Root` carries the stacking geometry, the swipe gesture and the focus\nhandling; `Content` is what fades when the toast is behind another one, and\nis why the two are separate elements rather than one.",
+    "props": [
+      {
+        "name": "toast",
+        "type": "ToastObject",
+        "required": true,
+        "defaultValue": null,
+        "description": "The toast to render — the object a `renderToast` callback receives."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The toast's contents. Omit it for the standard layout — icon, title,\ndescription, action, close — assembled from the toast's own fields.\n\nPassing children replaces that layout entirely. Compose it from the parts\n(`Toast.Icon`, `Toast.Title`, `Toast.Description`, `Toast.Action`,\n`Toast.Close`), each of which defaults its content from the toast, so a\ncustom arrangement does not mean restating the text."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "swipeDirection",
+        "type": "ToastSwipeDirection | ToastSwipeDirection[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way this toast may be flicked away. Inherited from the viewport;\nset it here to override one toast, or pass `[]` to pin it in place."
+      }
+    ]
+  },
+  "ToastIcon": {
+    "name": "ToastIcon",
+    "description": "The status glyph, coloured by the toast's type.\n\nA `loading` toast gets a `Spinner` instead of a static glyph. The spinner is\na child of the toast root rather than the root itself, which is load-bearing\n— Base UI waits on `root.getAnimations()` before removing a dismissed toast,\nand an infinite animation's promise never settles, so a spinning root would\nstay in the DOM for the lifetime of the page. `getAnimations()` is not\ncalled with `subtree: true`, so a descendant is safe.\n\nRenders nothing when there is no glyph to draw, so the icon column collapses\non a typeless toast rather than leaving a gap where an icon would be.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The glyph to draw. Defaults to `data.icon` if the toast carries one, and\notherwise to the standard glyph for its `type`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastTitle": {
+    "name": "ToastTitle",
+    "description": "The toast's headline, and its accessible name.\n\nRenders an `<h2>` whose text defaults to the toast's `title`. Renders\nnothing at all when there is no title, so a description-only toast does not\ncarry an empty heading.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastDescription": {
+    "name": "ToastDescription",
+    "description": "The second line, and the toast's accessible description.\n\nRenders a `<p>` whose text defaults to the toast's `description`, and\nrenders nothing when there is none.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastAction": {
+    "name": "ToastAction",
+    "description": "The toast's action button.\n\nRenders a `<button>` whose label and `onClick` default to the toast's\n`action`, and renders nothing when the toast has none — so the default\nlayout can include it unconditionally.\n\nClicking it does not close the toast. That is deliberate: an action that\nfails should be able to say so, and closing is one `handle.close()` away\ninside the handler.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastClose": {
+    "name": "ToastClose",
+    "description": "The button that dismisses the toast.\n\nRenders a `<button>` with a \"×\" and an `aria-label` of \"Close\", both\noverridable through `children` and `aria-label`. Base UI hides it from\nassistive technology while the stack is collapsed and reveals it once the\nviewport is hovered or focused, so it is announced exactly when it is\nreachable.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
       }
     ]
   },

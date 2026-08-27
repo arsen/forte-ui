@@ -1,0 +1,709 @@
+/*
+ * Popover
+ *
+ * An anchored surface that holds real content — text you have to read, and
+ * controls you have to reach. That is the whole difference from Tooltip, and
+ * it is what every decision below follows from: the popup is focusable and
+ * tabbable, it is announced, and it is reachable by touch.
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Root  →  Portal  →  Backdrop
+ *                    →  Positioner  →  Popup  →  Arrow / Title / Description
+ *                                                / Close / Viewport
+ *
+ * `Root` renders no DOM element, so there is no `.root` rule here; the popup
+ * is the styling anchor and carries the `--pui-popover-*` knobs.
+ *
+ * Motion notes, all load-bearing:
+ *   - No `prefers-reduced-motion` block. `--pui-travel-sm` collapses to 0px
+ *     and `--pui-scale-enter` to exactly 1, so the gesture degrades to a
+ *     plain opacity fade without this file knowing reduced motion exists.
+ *   - Enter/exit runs on TRANSITIONS keyed off [data-starting-style] /
+ *     [data-ending-style], never keyframes. A transition can be cancelled
+ *     mid-flight, so a popover dismissed while it is still opening reverses
+ *     smoothly instead of snapping.
+ *   - Nothing animates `infinite`. Base UI awaits
+ *     `Promise.all(popup.getAnimations().map(a => a.finished))` before it
+ *     unmounts the popup, and an infinite animation's promise never settles.
+ *     `getAnimations()` is not called with `subtree: true`, so a spinner
+ *     inside the popup is fine — one on the popup itself is not.
+ *
+ * The popup deliberately does NOT clip or scroll its own content. The Arrow
+ * is a child of the popup and is placed OUTSIDE its box by the positioner's
+ * inline `top`/`left`, so any `overflow` other than `visible` would crop the
+ * wedge off. For content taller than the screen, put a `ScrollArea` inside
+ * the popup and cap it with `--available-height`, which the Positioner
+ * publishes and this element inherits — see the docs page.
+ */
+/*
+ * `--available-width` is published by the Positioner as a pixel length — until
+ * `usePopupAutoResize` temporarily sets it to `max-content` to measure the
+ * popup at its natural size, which it does on every content swap under a
+ * `Popover.Viewport`. A keyword inside `min()` is invalid at computed-value
+ * time, and an unregistered property would carry that keyword straight into
+ * `max-inline-size`, dropping the width cap for the length of the measurement
+ * — so the popup would be measured unwrapped, its height would come back short
+ * by however many lines the cap was going to add, and the size transition
+ * would animate to that wrong height and then snap to the real one.
+ *
+ * Registering the property with a length syntax contains the failure: an
+ * unparseable value falls back to the initial value below instead of poisoning
+ * everything downstream, so the cap survives the measurement and the height
+ * Base UI measures is the height the popup will actually have.
+ *
+ * `@property` must live at the top level — it cannot be nested inside `@layer`.
+ * The initial value is a stand-in for "no limit"; it is a plain length rather
+ * than `100vw` because a registered initial value has to be computationally
+ * independent.
+ */
+@property --pui-popover-available-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 100000px;
+}
+
+@layer pretty-ui.components {
+  /* ------------------------------------------------------------------------
+   * Trigger
+   *
+   * A modest neutral button, so an unstyled `<Popover.Trigger>Open</...>` does
+   * not fall back to the UA's grey chrome. Dropped entirely when the consumer
+   * passes `render` (typically our own `<Button>`), because two full button
+   * styles on one element resolve by source order inside the same cascade
+   * layer — which is not something a consumer can predict or fix.
+   * --------------------------------------------------------------------- */
+  .trigger,
+  .close {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-control-gap);
+    height: var(--pui-control-h-md);
+    padding-inline: var(--pui-control-px-md);
+    margin: 0;
+    border: 1px solid var(--pui-color-border);
+    border-radius: var(--pui-radius-control);
+
+    background-color: var(--pui-color-panel);
+    color: var(--pui-color-foreground);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]),
+    .close:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+    }
+  }
+
+  .trigger:active:not([data-disabled]),
+  .close:active:not([data-disabled]) {
+    background-color: var(--pui-color-panel-active);
+  }
+
+  .trigger[data-disabled],
+  .close[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* The open trigger stays visibly pressed for as long as its popup is up.
+   * Without it a popover anchored some way from its trigger leaves no trace
+   * of what opened it — which matters here and not for a tooltip, because
+   * this popup can be tabbed into and returned from. */
+  .trigger[data-popup-open] {
+    background-color: var(--pui-color-panel-active);
+    border-color: var(--pui-color-border-strong);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Backdrop
+   *
+   * Off by default and opt-in through `backdrop` on `Popover.Popup`: a
+   * popover normally leaves the page visible and usable. It earns its keep
+   * with `modal`, where the rest of the document is already inert and the
+   * scrim is what says so.
+   *
+   * `.pui-scrim` supplies position/inset, the colour, the optional blur, the
+   * fade and the forced-colors treatment. Only stacking is component-local.
+   * --------------------------------------------------------------------- */
+  .backdrop {
+    /* One below the positioner, and declared here because the backdrop is the
+     * positioner's SIBLING inside the portal — nothing on the positioner can
+     * reach it. Set it through `backdropClassName`. */
+    /** Stacking order of the backdrop; set through `backdropClassName` */
+    --pui-popover-backdrop-z-index: 49;
+
+    /* Restated from `.pui-scrim` so the @supports override below has an
+     * explicit default to flip. */
+    position: fixed;
+    z-index: var(--pui-popover-backdrop-z-index);
+  }
+
+  /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
+   * element keeps painting against the *large* viewport, leaving an
+   * unscrimmed strip along one edge. Absolute positioning tracks the visible
+   * viewport instead. The @supports test is the standard iOS/WebKit sniff. */
+  @supports (-webkit-touch-callout: none) {
+    .backdrop {
+      position: absolute;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * Positioner
+   *
+   * Base UI writes position/top/left as inline styles; the only thing left to
+   * decide here is stacking. There is no z-index token in the inventory, so
+   * the literal lives behind a component knob and can be re-pointed at an
+   * app's own scale without forking. 50 is the same band Tooltip and Select
+   * sit in — anchored popups all belong above a Dialog's 40, so one opened
+   * from inside a dialog is not swallowed by it.
+   * --------------------------------------------------------------------- */
+  .positioner {
+    /** Stacking order of the positioner */
+    --pui-popover-z-index: 50;
+
+    z-index: var(--pui-popover-z-index);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Popup
+   * --------------------------------------------------------------------- */
+  .popup {
+    /* Component tokens. Declared HERE, on the popup, so an ancestor's value is
+     * only inherited and loses to these — and the popup is portalled to
+     * <body> anyway, so an ancestor of the trigger is not even in its tree.
+     * Consumers set them on the popup itself (`className` on `Popover.Popup`,
+     * whose rule is unlayered and so beats this layer) or re-point the global
+     * tokens below, which this file only ever reads. */
+    /** Popup surface colour */
+    --pui-popover-bg: var(--pui-color-overlay);
+    /** Popup text colour */
+    --pui-popover-fg: var(--pui-color-foreground);
+    /** Corner radius */
+    --pui-popover-radius: var(--pui-radius-surface);
+    /** Padding inside the popup */
+    --pui-popover-padding: var(--pui-surface-p);
+    /** Vertical gap between the popup's children */
+    --pui-popover-gap: var(--pui-space-3);
+    /** Popup shadow (stripped by the browser in forced-colors mode, which is
+     * why the element also carries `.pui-hc-surface`) */
+    --pui-popover-shadow: var(--pui-shadow-4);
+    /* A hairline, and not the redundancy it looks like next to the shadow.
+     * Dialog and Drawer can lean on a shadow alone because a scrim has already
+     * darkened everything behind them; a popover floats over undimmed content,
+     * and at overlay-on-background the two surfaces are within a step of each
+     * other on the grey ramp — in dark mode the shadow is nearly the only
+     * thing separating them, and it is the first casualty of a bright
+     * backdrop. `.pui-hc-surface` already reserves a 1px transparent border on
+     * this element, so painting it costs no layout. */
+    /** Width of the hairline that separates the popup from the page */
+    --pui-popover-border-width: 1px;
+    /** Colour of that hairline. The arrow's outline follows it. */
+    --pui-popover-border-color: var(--pui-color-border);
+    /** Base font size inside the popup */
+    --pui-popover-font-size: var(--pui-font-size-2);
+    /* No width token exists in the inventory — widths are layout, not theme —
+     * so the size scale lives in this knob and stays overridable per app. */
+    /** Width cap, further clamped to the space the positioner reports as
+     * available; what the `size` prop sets — `16rem` for `sm`, `26rem` for
+     * `lg` */
+    --pui-popover-max-width: 20rem;
+    /* Sized in `em` so the arrow tracks --pui-popover-font-size. Declared here
+     * rather than on .arrow because the arrow is always a child of this
+     * element and inherits them, which keeps both parts retunable from one
+     * place. */
+    /** Arrow base width */
+    --pui-popover-arrow-width: 1em;
+    /** Arrow height, and the distance it is pushed out from the popup */
+    --pui-popover-arrow-height: 0.5em;
+
+    /* Motion knobs, broken out so an app can retune the feel — or flatten it
+     * entirely — without restating the transition. */
+    /** How far the popup slides in from, per side */
+    --pui-popover-travel: var(--pui-travel-sm);
+    /** Scale the popup grows from and shrinks back to */
+    --pui-popover-enter-scale: var(--pui-scale-enter);
+    /* `normal`, not `--pui-duration-spring-snappy`. Pairing a spring with its
+     * own settle time is about not CROPPING the curve — a 400ms spring cut
+     * off at 240ms stops mid-bounce. Running the whole curve compressed is a
+     * different thing: every stop still plays, overshoot included, just
+     * faster. This is the pairing `Select`'s popup and the `Tabs` indicator
+     * already use, and matching it is the point. */
+    /** Length of the opening gesture */
+    --pui-popover-enter-duration: var(--pui-duration-normal);
+    /** Curve of the opening gesture */
+    --pui-popover-enter-ease: var(--pui-ease-spring-snappy);
+    /* Shorter than the entrance, and no spring: an arrival has to read as a
+     * surface settling into place, while a dismissal is something the user
+     * has already decided on and only needs confirming. */
+    /** Length of the closing gesture */
+    --pui-popover-exit-duration: var(--pui-duration-fast);
+    /** Curve of the closing gesture */
+    --pui-popover-exit-ease: var(--pui-ease-exit);
+    /** How long the popup takes to resize between two triggers' content;
+     * only in play when a `Popover.Viewport` is present */
+    --pui-popover-resize-duration: var(--pui-duration-normal);
+
+    /* Enter/exit displacement, resolved per side just below. Defaults to the
+     * `side="bottom"` case, which is this component's default side. */
+    --pui-popover-enter-x: 0px;
+    --pui-popover-enter-y: calc(-1 * var(--pui-popover-travel));
+
+    box-sizing: border-box;
+    /* The Arrow is absolutely positioned by the positioner (an inline style),
+     * so this element has to be its containing block. */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-popover-gap);
+    /* Shrink-to-fit up to the cap, rather than filling it: a two-word popover
+     * should not be as wide as a paragraph one. --available-width is
+     * published by the Positioner and inherited here; it is absent for the
+     * first frame, hence the fallback — a bare min() with an unset var is
+     * invalid at computed-value time and would drop the cap entirely. */
+    inline-size: max-content;
+    /* Routed through the registered property above rather than read straight
+     * from --available-width; see the note on the @property block. */
+    --pui-popover-available-width: var(--available-width, 100000px);
+    max-inline-size: min(
+      var(--pui-popover-max-width),
+      var(--pui-popover-available-width)
+    );
+    padding: var(--pui-popover-padding);
+    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+     * alone — patterns is ordered before components. Forced colors then wins
+     * it back from the a11y layer, which is ordered after both. */
+    border: var(--pui-popover-border-width) solid
+      var(--pui-popover-border-color);
+    border-radius: var(--pui-popover-radius);
+
+    background-color: var(--pui-popover-bg);
+    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+     * stops the background bleeding out under it. */
+    background-clip: padding-box;
+    color: var(--pui-popover-fg);
+    box-shadow: var(--pui-popover-shadow);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-popover-font-size);
+    line-height: var(--pui-line-height-normal);
+    letter-spacing: var(--pui-letter-spacing-normal);
+    text-align: start;
+
+    /* Grow out of the trigger rather than out of the popup's own centre.
+     * `--transform-origin` is published by the Positioner and points back at
+     * the anchor. */
+    transform-origin: var(--transform-origin);
+    /* Opacity is deliberately shorter than the transform: the surface is
+     * legible early and the spring finishes settling behind readable content,
+     * instead of the popup spending the whole entrance half-transparent. */
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-popover-enter-duration) var(--pui-popover-enter-ease);
+  }
+
+  /* Directional rise: the popup starts a few pixels nearer the trigger and
+   * settles outward. `inline-start`/`inline-end` are legal `data-side` values
+   * as well as the physical ones, so both spellings are mapped. :dir() lives
+   * inside :is(), whose argument list is forgiving — an engine without :dir()
+   * support drops only that branch and the physical sides keep working. */
+  .popup[data-side="top"] {
+    --pui-popover-enter-x: 0px;
+    --pui-popover-enter-y: var(--pui-popover-travel);
+  }
+
+  .popup[data-side="bottom"] {
+    --pui-popover-enter-x: 0px;
+    --pui-popover-enter-y: calc(-1 * var(--pui-popover-travel));
+  }
+
+  .popup:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    --pui-popover-enter-x: var(--pui-popover-travel);
+    --pui-popover-enter-y: 0px;
+  }
+
+  .popup:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    --pui-popover-enter-x: calc(-1 * var(--pui-popover-travel));
+    --pui-popover-enter-y: 0px;
+  }
+
+  /* Closing retraces the entrance rather than puffing outward, so the two
+   * directions read as one reversible gesture and an open interrupted halfway
+   * simply continues back along the path it came up. */
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: translate(var(--pui-popover-enter-x), var(--pui-popover-enter-y))
+      scale(var(--pui-popover-enter-scale));
+  }
+
+  .popup[data-ending-style] {
+    transition-duration: var(--pui-popover-exit-duration);
+    transition-timing-function: var(--pui-popover-exit-ease);
+  }
+
+  /* Base UI sets `data-instant` when the change was NOT a considered
+   * open/close — a dismissal, a focus jump, one trigger handing the popup to
+   * another. Animating those reads as a glitch, so the transition is dropped
+   * for exactly those cases. The Arrow needs no companion rule: it carries no
+   * transition of its own, and its state mapping publishes no `data-instant`
+   * to hang one on. */
+  .popup[data-instant] {
+    transition: none;
+  }
+
+  /* Sizes ------------------------------------------------------------------ */
+  .popup[data-size="sm"] {
+    --pui-popover-max-width: 16rem;
+  }
+
+  .popup[data-size="md"] {
+    --pui-popover-max-width: 20rem;
+  }
+
+  .popup[data-size="lg"] {
+    --pui-popover-max-width: 26rem;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Arrow
+   *
+   * An SVG, never a CSS-border triangle. In forced-colors mode all four
+   * border colours are forced to CanvasText, so the classic
+   * `border: 6px solid transparent` triangle renders as a filled RECTANGLE.
+   * Two flat paths cannot fail that way, and they let the outline be given
+   * its own system colour below.
+   *
+   * Offsets follow from the geometry: the unrotated box is width x height, so
+   * pushing it out by `height` on the block axis, or by (width + height) / 2
+   * on the inline axis after a quarter turn, lands its base flush against the
+   * popup edge.
+   *
+   * None of them subtract the border, and that is not an oversight. An
+   * absolutely positioned element is offset from its containing block's
+   * PADDING box, which already starts one border-width inside the popup — so
+   * `-height` puts the wedge's base on the border's inner edge, where its fill
+   * covers exactly that one row. The popup's outline then runs up one slope
+   * and down the other as a single unbroken line, and it stays right at any
+   * border width. Subtracting it here would push the wedge a further border
+   * width into the surface for no gain.
+   * --------------------------------------------------------------------- */
+  .arrow {
+    display: block;
+    width: var(--pui-popover-arrow-width);
+    height: var(--pui-popover-arrow-height);
+  }
+
+  .arrow[data-side="top"] {
+    bottom: calc(-1 * var(--pui-popover-arrow-height));
+    rotate: 180deg;
+  }
+
+  .arrow[data-side="bottom"] {
+    top: calc(-1 * var(--pui-popover-arrow-height));
+    rotate: 0deg;
+  }
+
+  .arrow:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    right: calc(
+      -0.5 *
+        (var(--pui-popover-arrow-width) + var(--pui-popover-arrow-height))
+    );
+    rotate: 90deg;
+  }
+
+  .arrow:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    left: calc(
+      -0.5 *
+        (var(--pui-popover-arrow-width) + var(--pui-popover-arrow-height))
+    );
+    rotate: -90deg;
+  }
+
+  .arrowSvg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
+  .arrowFill {
+    fill: var(--pui-popover-bg);
+  }
+
+  /* The larger triangle sitting under the fill, showing only as a hairline
+   * along the two slopes because the fill triangle is inset from it. That is
+   * what continues the popup's own border around the wedge — set
+   * `--pui-popover-border-color: transparent` and the arrow goes back to a
+   * flat wedge, in step with the popup. It is also the path forced-colors
+   * repaints below. */
+  .arrowBorder {
+    fill: var(--pui-popover-border-color);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Title / Description
+   * --------------------------------------------------------------------- */
+  .title {
+    margin: 0;
+    /* One step down from Dialog's title: this surface is a fraction of the
+     * size and a dialog-scale heading in it reads as a shout. */
+    font-size: var(--pui-font-size-3);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    letter-spacing: var(--pui-letter-spacing-tight);
+    color: var(--pui-color-foreground);
+  }
+
+  .description {
+    margin: 0;
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+    /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body copy. */
+    color: var(--pui-color-foreground-muted);
+  }
+
+  /* A description belongs to the title above it, so it sits closer than the
+   * popup's own rhythm. Done by pulling the description up rather than by
+   * introducing a header part, so the anatomy stays exactly Base UI's. */
+  .title + .description {
+    margin-block-start: calc(var(--pui-space-1) - var(--pui-popover-gap));
+  }
+
+  /* ------------------------------------------------------------------------
+   * Footer
+   *
+   * Not a Base UI part. It is here for the same reason `Dialog.Footer` is: an
+   * action row is the one piece of chrome every second popover grows, and
+   * left to each consumer it is re-invented with a different gap every time.
+   * A plain `<div>` that supplies the spacing and alignment, nothing more.
+   * --------------------------------------------------------------------- */
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--pui-control-gap);
+    margin-block-start: var(--pui-space-1);
+  }
+
+  .footer[data-align="start"] {
+    justify-content: flex-start;
+  }
+
+  .footer[data-align="center"] {
+    justify-content: center;
+  }
+
+  .footer[data-align="end"] {
+    justify-content: flex-end;
+  }
+
+  .footer[data-align="between"] {
+    justify-content: space-between;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Close
+   *
+   * Shares the neutral button rule at the top of the file with `.trigger`.
+   * Only the icon-only treatment is its own.
+   * --------------------------------------------------------------------- */
+
+  /* Square, quiet, and never smaller than the 24px hit target from SC 2.5.8.
+   * Always needs an `aria-label`. */
+  .close[data-icon-only] {
+    padding-inline: 0;
+    aspect-ratio: 1;
+    min-inline-size: max(var(--pui-control-h-md), var(--pui-target-min));
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--pui-color-foreground-muted);
+  }
+
+  @media (hover: hover) {
+    .close[data-icon-only]:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+      color: var(--pui-color-foreground);
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * Viewport
+   *
+   * Only needed when ONE popup serves several triggers and the swap between
+   * their contents should animate. Base UI renders two children inside it:
+   * `[data-current]`, the incoming content, and — for the length of the
+   * transition — `[data-previous]`, a DOM clone of the outgoing content that
+   * it gives an inline `position: absolute`.
+   *
+   * The two are overlapped in a single grid cell rather than stacked in flow.
+   * Base UI keeps the outgoing clone mounted until its exit finishes, and in
+   * flow that clone would add its own height to the popup, which would then
+   * snap back the moment it unmounted.
+   * --------------------------------------------------------------------- */
+  .viewport {
+    /** How far the incoming and outgoing content slide during a swap */
+    --pui-popover-viewport-travel: var(--pui-travel-sm);
+    /* Which way the swap slides, resolved from `data-activation-direction`
+     * below. Internal on purpose — a plain comment, so theming-docgen does
+     * not publish it: it is an intermediate, and the knob to turn is
+     * --pui-popover-viewport-travel. */
+    --pui-popover-viewport-x: 0px;
+
+    /* The clone's inline `position: absolute` needs this element as its
+     * containing block, or it would escape to the popup — or further. */
+    position: relative;
+    display: grid;
+    grid-template-areas: "content";
+    /* Cropping is what makes the swap read as one panel replacing another
+     * rather than two panels crossing in the open. Safe here, unlike on the
+     * popup: the Arrow is the viewport's sibling, not its child. */
+    overflow: clip;
+    /* With a zero clip margin the clip box ends exactly where the content
+     * does, and the focus ring on the first control inside would be shaved
+     * off. The ring's own reach is the smallest margin that saves it, and
+     * keeping the margin that tight is the point: what has to be cropped is
+     * the outgoing clone during a resize, which overflows by the difference
+     * between two panel heights. */
+    overflow-clip-margin: calc(
+      var(--pui-focus-ring-width) + var(--pui-focus-ring-offset)
+    );
+  }
+
+  .viewport > * {
+    grid-area: content;
+    /* The children are Base UI's own wrappers and carry no styles of their
+     * own, so the popup's column layout has to be restated one level down. */
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-popover-gap);
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-duration-normal) var(--pui-ease-emphasized);
+  }
+
+  /* The outgoing clone is frozen at the size it had when it was current —
+   * Base UI writes `--popup-width` / `--popup-height` onto it for exactly
+   * this — so it does not reflow to the incoming content's width halfway
+   * through leaving. */
+  .viewport > [data-previous] {
+    inline-size: var(--popup-width, auto);
+    block-size: var(--popup-height, auto);
+  }
+
+  /* `data-activation-direction` is two space-separated words — a horizontal
+   * one and a vertical one, either of which may be empty ("right down",
+   * "left ", " up"). Only the horizontal half is used: the popup is already
+   * resizing on the block axis, and adding a vertical slide on top of that
+   * reads as two things moving at once.
+   *
+   * `--pui-direction` is deliberately NOT applied here, and this is the one
+   * place in the library where leaving it out is correct. The usual rule —
+   * multiply any inline-axis distance by it, because `translate` is physical
+   * and the inline axis is not — assumes the INTENT is logical ("enter from
+   * the start edge"). This intent is already physical: Base UI derives these
+   * words from `getBoundingClientRect()`, so "right" means the new trigger is
+   * physically to the right of the old one, in RTL exactly as in LTR.
+   * Flipping it would send the content away from the trigger the user just
+   * pressed. */
+  .viewport[data-activation-direction~="right"] {
+    --pui-popover-viewport-x: var(--pui-popover-viewport-travel);
+  }
+
+  .viewport[data-activation-direction~="left"] {
+    --pui-popover-viewport-x: calc(-1 * var(--pui-popover-viewport-travel));
+  }
+
+  .viewport > [data-current][data-starting-style] {
+    opacity: 0;
+    translate: var(--pui-popover-viewport-x) 0;
+  }
+
+  /* The clone leaves the way the newcomer came in — opposite side, same
+   * distance — so the pair reads as one strip sliding across. */
+  .viewport > [data-previous][data-ending-style] {
+    opacity: 0;
+    translate: calc(-1 * var(--pui-popover-viewport-x)) 0;
+  }
+
+  /* A `data-instant` swap was not a considered navigation; see the note on
+   * the popup. */
+  .viewport[data-instant] > * {
+    transition: none;
+  }
+
+  /* The popup follows its content between sizes instead of jumping. Gated on
+   * `:has(> .viewport)` because `--popup-width` / `--popup-height` are only
+   * written while a Viewport is mounted, and `width: auto` transitions to
+   * nothing — the pair would otherwise be dead weight on every popover.
+   *
+   * `width`/`height`, not the logical properties: Base UI measures and writes
+   * physical pixels, and `inline-size` would map them to the wrong axis under
+   * a vertical writing mode. */
+  .popup:has(> .viewport) {
+    width: var(--popup-width, auto);
+    height: var(--popup-height, auto);
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-popover-enter-duration) var(--pui-popover-enter-ease),
+      width var(--pui-popover-resize-duration) var(--pui-ease-emphasized),
+      height var(--pui-popover-resize-duration) var(--pui-ease-emphasized);
+
+    /* The viewport has taken over the column for its own two children, and
+     * the popup's gap would add a phantom row beside its single child. */
+    gap: 0;
+  }
+}
+
+/*
+ * Accessibility overrides — see layers.css for why these must not live in the
+ * components layer. Layer order outranks specificity completely, so a
+ * forced-colors rule placed earlier could never win.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* System colour keywords survive the forced-colors substitution, so this
+     * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
+     * matching the CanvasText border `.pui-hc-surface` puts on the popup. */
+    .arrowFill {
+      fill: Canvas;
+    }
+
+    .arrowBorder {
+      fill: CanvasText;
+    }
+  }
+}

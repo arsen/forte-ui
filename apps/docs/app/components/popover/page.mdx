@@ -1,0 +1,352 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Popover",
+  description:
+    "An anchored surface for content the user has to read or act on — announced, tabbable, and reachable by touch.",
+};
+
+# Popover
+
+A surface anchored to the control that opened it, holding content the user has
+to read or act on. Unlike a tooltip it is announced to screen readers, it can be
+tabbed into, and it opens on touch — so it is the right home for anything that
+matters.
+
+<DemoBlock id="popover/basic" />
+
+## Popover or tooltip?
+
+The question is what the **trigger** is for, not how much text the popup holds.
+
+- If the trigger's purpose *is* to open the popup — the little "i" info icon is
+  the usual case — it is a popover.
+- If the trigger does something else and the popup merely labels it, it is a
+  [tooltip](/components/tooltip).
+
+That distinction decides who can reach the content. A tooltip is never
+announced, never tabbable, and never opens on touch; a popover is all three. So
+whenever the content matters, this is the component, and the info-icon pattern
+in particular belongs here rather than in a tooltip — see
+[Opening on hover](#opening-on-hover) below, which gives pointer users the same
+feel without stranding everyone else.
+
+## Import
+
+```tsx
+import { Popover } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+`Popover.Popup` collapses Base UI's `Portal`, `Backdrop` and `Positioner` into
+one part, so the common case is a single element. Its props are drawn from all
+four.
+
+```tsx
+<Popover.Root>
+  <Popover.Trigger />
+  <Popover.Popup>
+    <Popover.Arrow />
+    <Popover.Title />
+    <Popover.Description />
+    <Popover.Viewport />
+    <Popover.Footer>
+      <Popover.Close />
+    </Popover.Footer>
+  </Popover.Popup>
+</Popover.Root>
+```
+
+`Title`, `Description` and `Close` belong *inside* `Popover.Popup`: that is what
+wires up `aria-labelledby` and `aria-describedby`, and in a modal popover a
+close button outside the popup is unreachable.
+
+### The arrow
+
+There is no `arrow` prop. **Render `<Popover.Arrow />` as a child of
+`Popover.Popup`** and the wedge appears, pointing back at the trigger; leave it
+out and the popup is a plain rectangle. Nothing else is needed — it positions
+and rotates itself from the side the popup resolved to, and it takes the popup's
+own fill and hairline, so a re-skinned popover re-skins the arrow with it.
+
+```tsx
+<Popover.Popup>
+  <Popover.Arrow />
+  <Popover.Title>Notifications</Popover.Title>
+</Popover.Popup>
+```
+
+Two things to know. `sideOffset` has to leave room for it — the default 8px
+clears the default arrow, so only a smaller offset is a problem. And with a
+`Popover.Viewport`, keep the arrow *outside* the viewport, as a direct child of
+the popup: the viewport clips, and the arrow lives past the popup's edge.
+
+## Examples
+
+### Sides
+
+`side` on `Popover.Popup` picks the edge the popup opens from, and `align` moves
+it along that edge. Both are hints: the popup flips to the opposite side when it
+would overflow the collision boundary, which is why the `left` and `right`
+popovers below may land elsewhere in a narrow frame. Alongside the four physical
+sides, `"inline-start"` and `"inline-end"` follow writing direction instead of
+staying pinned to a physical edge.
+
+<DemoBlock id="popover/placement" />
+
+### Sizes
+
+`size` sets a width **cap**, not a width. The popup shrinks to fit its content
+and only grows this wide when the content asks for it — and it is clamped again
+to whatever room the positioner reports as available, so a wide popover on a
+narrow screen narrows rather than overflowing.
+
+<DemoBlock id="popover/sizes" />
+
+### Opening on hover
+
+`openOnHover` on `Popover.Trigger` reveals the popup on hover as well as on
+press, with `delay` and `closeDelay` tuning the wait. This is the accessible
+version of the info-icon affordance: pointer users get the tooltip feel, while
+the content stays announced, tabbable and available on touch.
+
+<DemoBlock id="popover/open-on-hover" />
+
+### A form inside
+
+A popover can hold real controls. `initialFocus` on `Popover.Popup` says where
+focus lands when it opens — by default the first tabbable element, except on a
+touch open, where Base UI focuses the popup itself rather than throwing up the
+virtual keyboard.
+
+<DemoBlock id="popover/form" />
+
+`Popover.Footer` is the action row. It is not a Base UI part; it exists for the
+same reason `Dialog.Footer` does, and takes the same `align` values —
+`"between"` being the one for a destructive action pushed away from the safe one.
+
+### Modal
+
+`modal` on `Popover.Root` takes the page over: `true` locks page scroll and
+disables pointer interaction outside the popup, `"trap-focus"` traps the keyboard
+without either. `backdrop` on `Popover.Popup` adds the scrim, and belongs with
+`modal={true}` — on a non-modal popover a dim page would claim an inertness that
+is not there.
+
+<DemoBlock id="popover/modal" />
+
+<Callout kind="a11y">
+
+**A modal popover needs a `Popover.Close` inside the popup.** With
+`modal={true}` it is what switches focus trapping on in the first place, and
+under either modal setting it is the only way out for a touch screen-reader
+user — who has neither an Escape key nor an outside press available.
+
+</Callout>
+
+### Tall content
+
+The popup deliberately never scrolls. The `Arrow` is placed outside the popup's
+box by the positioner, so any `overflow` other than `visible` would crop the
+wedge off. Put the scroll on something inside instead — a
+[`ScrollArea`](/components/scroll-area) is the ready-made answer — and cap it
+with `--available-height`, the room the positioner measured between the anchor
+and the viewport edge, which the popup passes down by inheritance.
+
+<DemoBlock id="popover/scrollable" />
+
+### Multiple triggers
+
+One `Popover.Root` can serve several triggers. Each hands the popup a `payload`,
+and the popup reads it from the render-function form of `Root`'s children — so
+the content is written once and only one popup element is ever mounted.
+
+<DemoBlock id="popover/multiple-triggers" />
+
+Guard on `payload` being undefined. It is undefined before the first open, and
+again while the popup animates out, because Base UI keeps the popup mounted
+until the exit transition finishes.
+
+### Detached triggers
+
+`Popover.createHandle()` connects a `Popover.Root` to triggers that are not its
+children, for when defining the popup next to its trigger is not practical — a
+toolbar at the top of a layout and its content at the bottom, say. Pass the same
+handle to the root and to every trigger. The handle is also an imperative
+remote: `open(triggerId)` and `close()`.
+
+<DemoBlock id="popover/detached-trigger" />
+
+Create the handle **outside render**. One made during render is a new object on
+every pass, and the root and its triggers stop recognising each other.
+`open()` takes a trigger id rather than a payload — the popup still has to be
+anchored to something — so give each detached trigger an explicit `id`.
+
+### Controlled, with multiple triggers
+
+A controlled multi-trigger popover has two pieces of state: `open`, and
+`triggerId` naming the trigger it is anchored to. There is no separate
+`onTriggerIdChange` — the trigger that caused the change arrives on
+`onOpenChange`'s event details, so both are updated from the one handler.
+Changing `triggerId` alone re-anchors the popup without closing it.
+
+<DemoBlock id="popover/controlled" />
+
+### Animating between triggers
+
+`Popover.Viewport` animates the swap when one popup serves several triggers and
+its content changes between them. It keeps a clone of the outgoing panel mounted
+for the length of the transition, slides the two past each other in the direction
+the new trigger lies, and resizes the popup to follow.
+
+<DemoBlock id="popover/viewport" />
+
+Two placement rules. Wrap only the content that changes, and keep
+`Popover.Arrow` **outside** the viewport: the viewport clips, and the arrow lives
+past the popup's edge. Without a viewport the content still swaps correctly — it
+just cuts rather than sliding, which is the right choice when the panels are
+similar enough that the movement would be noise.
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Enter", "Space"],
+      description:
+        "Opens the popover from the trigger, and moves focus into the popup.",
+    },
+    {
+      keys: ["Tab"],
+      description:
+        "Moves through the popup's own controls. In a non-modal popover, tabbing past the last one continues into the page and closes the popover; with modal it cycles inside.",
+    },
+    {
+      keys: ["Esc"],
+      description:
+        "Closes the popover and returns focus to the trigger.",
+    },
+  ]}
+/>
+
+Base UI wires the trigger to the popup with `aria-haspopup` and `aria-controls`,
+gives the popup `role="dialog"`, and points `aria-labelledby` /
+`aria-describedby` at `Popover.Title` and `Popover.Description` when they are
+present. Render a title in every popover that holds more than a sentence: it is
+the popup's accessible name, and without one a screen reader announces an
+unnamed dialog.
+
+An outside press closes a non-modal popover, and so does focus leaving it. Both
+report through `onOpenChange` with a reason, and the event can be cancelled —
+which is how a popover holding an unsaved form asks before it goes.
+
+<Callout kind="a11y">
+
+**An icon-only trigger still needs its own accessible name**, the way any
+icon-only button does — `aria-label` on `Popover.Trigger`, with
+`aria-hidden="true"` on the glyph so it cannot compete. Unlike a tooltip
+trigger, the name does not have to duplicate the popup's content: the popup is
+announced on its own once it opens.
+
+</Callout>
+
+In forced-colors mode the popup's shadow is stripped by the browser, so the
+component carries a transparent border that becomes the visible system-coloured
+boundary, and the arrow is drawn as two SVG paths rather than the traditional
+CSS-border triangle, which would degrade into a filled rectangle. Reduced motion
+is handled by the motion tokens: the travel collapses to `0px` and the scale to
+exactly `1`, leaving a plain opacity fade.
+
+## Theming
+
+Every value below is a custom property you can override.
+`--pui-popover-z-index` is declared on the positioner and
+`--pui-popover-backdrop-z-index` on the backdrop; the viewport pair is declared
+on the viewport, and everything else on the popup.
+
+<ThemingTable component="Popover" />
+
+Where you set these matters. Each one is declared on its own element, so setting
+it on an ancestor, on `:root` or on a theme scope has no effect — an element's
+own declaration wins over an inherited value. Override them on the element that
+declares them: `className` on `Popover.Popup` for most, `positionerClassName`
+for the stacking one, `backdropClassName` for the scrim's. The portal makes the
+ancestor route doubly useless: the popup renders on `document.body`, so nothing
+above the *trigger* is an ancestor of it in the first place.
+
+To re-skin every popover at once, re-point the global tokens the defaults
+resolve to — `--pui-color-overlay`, `--pui-color-border`,
+`--pui-radius-surface`, `--pui-surface-p`, `--pui-shadow-4`, `--pui-space-*`,
+`--pui-font-*`, `--pui-travel-sm`. The popup only reads those and never
+re-declares them, so a value set on `:root` or a theme scope does reach it. The
+knobs with literal defaults — `--pui-popover-max-width`,
+`--pui-popover-border-width`, `--pui-popover-arrow-width`,
+`--pui-popover-arrow-height` and the two z-indexes — have no global token behind
+them, so those can only be changed on the element itself.
+
+The hairline is worth a word, because `Dialog` and `Drawer` do without one.
+Those sit on a scrim that has already darkened the page behind them; a popover
+floats over undimmed content, where the overlay and the page background are a
+single step apart on the grey ramp and the shadow is doing nearly all the
+separating — which is not enough in dark mode, and less than that over a bright
+photo. `--pui-popover-border-color: transparent` gives you the shadow-only look
+back, and the arrow follows: its outline is the same token, so the wedge flattens
+in step with the surface rather than keeping an outline the popup no longer has.
+
+The stylesheet also computes `--pui-popover-enter-x` / `--pui-popover-enter-y`
+from `--pui-popover-travel` and the resolved `data-side`, and
+`--pui-popover-viewport-x` from `--pui-popover-viewport-travel` and
+`data-activation-direction`. They are internal; change the travel tokens instead.
+
+## API reference
+
+### Popover.Root
+
+<PropTable component="PopoverRoot" />
+
+### Popover.Trigger
+
+<PropTable component="PopoverTrigger" />
+
+### Popover.Popup
+
+Renders the portal, the optional backdrop, the positioner and the popup as one
+part, so its props are drawn from all four.
+
+<PropTable component="PopoverPopup" />
+
+### Popover.Arrow
+
+<PropTable component="PopoverArrow" />
+
+### Popover.Title
+
+<PropTable component="PopoverTitle" />
+
+### Popover.Description
+
+<PropTable component="PopoverDescription" />
+
+### Popover.Close
+
+<PropTable component="PopoverClose" />
+
+### Popover.Footer
+
+<PropTable component="PopoverFooter" />
+
+### Popover.Viewport
+
+<PropTable component="PopoverViewport" />
+
+### Popover.createHandle
+
+`Popover.createHandle<Payload>()` returns a handle connecting a `Popover.Root`
+to detached `Popover.Trigger`s. Pass it to the `handle` prop of both. It also
+exposes `open(triggerId)`, `close()` and `isOpen`, which take effect only while
+a root using the handle is mounted.

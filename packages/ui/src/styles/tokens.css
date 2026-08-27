@@ -205,6 +205,8 @@
     --pui-color-success-text: var(--pui-success-11);
     --pui-color-warning: var(--pui-warning-9);
     --pui-color-warning-text: var(--pui-warning-11);
+    --pui-color-info: var(--pui-info-9);
+    --pui-color-info-text: var(--pui-info-11);
 
     /* Text on a solid status fill. Literals, not the auto-contrast expression
      * the brand tones use: those hues are fixed above, so the answer is known
@@ -216,7 +218,11 @@
      * silently. `--pui-success-9` sits almost exactly on the white/black
      * crossover: 4.54:1 white against 4.56:1 black, so it clears AA either way
      * and by very little. check-contrast.mjs asserts all three pairs, which is
-     * what stops a future nudge to a status hue from quietly breaking one. */
+     * what stops a future nudge to a status hue from quietly breaking one.
+     *
+     * There is deliberately no `--pui-color-on-info` yet: nothing paints text
+     * on `--pui-info-9`, and the answer there is NOT white (4.15:1). Add it
+     * with a matching assertion the day something needs it. */
     --pui-color-on-success: oklch(0.995 0 0);
     --pui-color-on-warning: oklch(0.145 0 0);
   }
