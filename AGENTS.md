@@ -479,7 +479,7 @@ off rather than obviously broken. Add the path when you add the file.
 | `color: var(--pui-color-foreground-muted)` | `text-foreground-muted` |
 | `transition-duration: var(--pui-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
 | `inline-size: min(32rem, 100%)` | `w-full max-w-lg` — the `--container-*` scale is untouched |
-| the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-shell`, `max-w-measure`, `max-w-hero` |
+| the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-measure`, `max-w-hero` |
 | a layout breakpoint | `max-toc:`, `max-two-col:`, `max-split:`, `max-nav:` — named for the column that stops fitting |
 | any other token | `h-(--pui-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
 
