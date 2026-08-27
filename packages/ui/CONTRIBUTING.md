@@ -51,6 +51,19 @@ popup stays in the DOM permanently. `getAnimations()` is not called with
 part sits inside a clipping container (list rows, tab strips, select items),
 which flips the ring inward so `overflow: hidden` cannot crop it.
 
+Where the element that HOLDS focus is not the element that should look focused —
+Slider's and ColorPicker's thumbs over their hidden inputs, NumberField's group
+over its text field — the wrapper takes `.pui-focus-ring-within` instead. That
+class already suppresses the UA ring on the descendant it rings for, so do not
+restate `outline: none` in the component. It does not suppress a nested part
+that rings itself, which is how NumberField's steppers keep their own.
+
+Both are still beaten by an app-level global `:focus-visible` rule, since every
+`pretty-ui` layer loses to an app's own CSS by design. That is only visible on
+the `-within` components, where it draws a second ring on the inner control; the
+fix belongs in the app, and `apps/docs/app/globals.css` carries the worked
+example.
+
 **5b. Forced-colors rules go in `@layer pretty-ui.a11y`, not in your component
 layer.** Layer order outranks specificity entirely, and `a11y` is ordered after
 `components`. A forced-colors fix written inside your `@layer

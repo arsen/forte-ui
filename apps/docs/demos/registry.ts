@@ -171,6 +171,26 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_number_field_basic from "./number-field/basic";
+import d_number_field_basic_src from "./number-field/basic?raw";
+import d_number_field_form from "./number-field/form";
+import d_number_field_form_src from "./number-field/form?raw";
+import d_number_field_format from "./number-field/format";
+import d_number_field_format_src from "./number-field/format?raw";
+import d_number_field_scrubbing from "./number-field/scrubbing";
+import d_number_field_scrubbing_src from "./number-field/scrubbing?raw";
+import d_number_field_sensitivity from "./number-field/sensitivity";
+import d_number_field_sensitivity_src from "./number-field/sensitivity?raw";
+import d_number_field_sizes from "./number-field/sizes";
+import d_number_field_sizes_src from "./number-field/sizes?raw";
+import d_number_field_states from "./number-field/states";
+import d_number_field_states_src from "./number-field/states?raw";
+import d_number_field_steps from "./number-field/steps";
+import d_number_field_steps_src from "./number-field/steps?raw";
+import d_number_field_variants from "./number-field/variants";
+import d_number_field_variants_src from "./number-field/variants?raw";
+import d_number_field_wheel from "./number-field/wheel";
+import d_number_field_wheel_src from "./number-field/wheel?raw";
 import d_otp_field_auto_submit from "./otp-field/auto-submit";
 import d_otp_field_auto_submit_src from "./otp-field/auto-submit?raw";
 import d_otp_field_basic from "./otp-field/basic";
@@ -504,6 +524,16 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "number-field/basic"
+  | "number-field/form"
+  | "number-field/format"
+  | "number-field/scrubbing"
+  | "number-field/sensitivity"
+  | "number-field/sizes"
+  | "number-field/states"
+  | "number-field/steps"
+  | "number-field/variants"
+  | "number-field/wheel"
   | "otp-field/auto-submit"
   | "otp-field/basic"
   | "otp-field/controlled"
@@ -714,6 +744,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "number-field/basic": { Component: d_number_field_basic, source: d_number_field_basic_src, file: "number-field/basic.tsx" },
+  "number-field/form": { Component: d_number_field_form, source: d_number_field_form_src, file: "number-field/form.tsx" },
+  "number-field/format": { Component: d_number_field_format, source: d_number_field_format_src, file: "number-field/format.tsx" },
+  "number-field/scrubbing": { Component: d_number_field_scrubbing, source: d_number_field_scrubbing_src, file: "number-field/scrubbing.tsx" },
+  "number-field/sensitivity": { Component: d_number_field_sensitivity, source: d_number_field_sensitivity_src, file: "number-field/sensitivity.tsx" },
+  "number-field/sizes": { Component: d_number_field_sizes, source: d_number_field_sizes_src, file: "number-field/sizes.tsx" },
+  "number-field/states": { Component: d_number_field_states, source: d_number_field_states_src, file: "number-field/states.tsx" },
+  "number-field/steps": { Component: d_number_field_steps, source: d_number_field_steps_src, file: "number-field/steps.tsx" },
+  "number-field/variants": { Component: d_number_field_variants, source: d_number_field_variants_src, file: "number-field/variants.tsx" },
+  "number-field/wheel": { Component: d_number_field_wheel, source: d_number_field_wheel_src, file: "number-field/wheel.tsx" },
   "otp-field/auto-submit": { Component: d_otp_field_auto_submit, source: d_otp_field_auto_submit_src, file: "otp-field/auto-submit.tsx" },
   "otp-field/basic": { Component: d_otp_field_basic, source: d_otp_field_basic_src, file: "otp-field/basic.tsx" },
   "otp-field/controlled": { Component: d_otp_field_controlled, source: d_otp_field_controlled_src, file: "otp-field/controlled.tsx" },

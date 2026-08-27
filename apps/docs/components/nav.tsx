@@ -48,6 +48,7 @@ const NAV: NavGroup[] = [
       { title: "Fieldset", href: "/components/fieldset" },
       { title: "Form", href: "/components/form" },
       { title: "Input", href: "/components/input" },
+      { title: "Number Field", href: "/components/number-field" },
       { title: "OTP Field", href: "/components/otp-field" },
       { title: "Popover", href: "/components/popover" },
       { title: "Preview Card", href: "/components/preview-card" },

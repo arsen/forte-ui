@@ -22,6 +22,24 @@
     box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
   }
 
+  /* `.pui-focus-ring-within` is a statement that the WRAPPER rings on behalf of
+   * whatever inside it holds focus — Slider's and ColorPicker's thumbs over
+   * their hidden inputs, NumberField's group over its text field. So that inner
+   * element must not draw the UA's own ring on top, or the control wears two.
+   *
+   * The `:not()` is what keeps this from also silencing a nested part that
+   * legitimately rings ITSELF (NumberField's steppers sit inside its group and
+   * carry `.pui-focus-ring`). Written as an exclusion rather than left to
+   * document order because this rule and `.pui-focus-ring:focus-visible` below
+   * are both (0,2,0): disjoint sets settle it, a tie would not. `:where()`
+   * keeps the exclusion itself out of the specificity.
+   *
+   * This replaces the `outline: none` each such component used to restate. */
+  .pui-focus-ring-within
+    :where(:not(.pui-focus-ring, .pui-focus-ring-within)):focus-visible {
+    outline: none;
+  }
+
   /* Inside a clipping context — list rows, tab strips, select items — an
    * outward ring would be cut off. Invert it. */
   .pui-focus-ring[data-focus-inset]:focus-visible {
