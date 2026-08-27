@@ -111,6 +111,12 @@ import d_dialog_basic from "./dialog/basic";
 import d_dialog_basic_src from "./dialog/basic?raw";
 import d_dialog_controlled from "./dialog/controlled";
 import d_dialog_controlled_src from "./dialog/controlled?raw";
+import d_dialog_footer_align from "./dialog/footer-align";
+import d_dialog_footer_align_src from "./dialog/footer-align?raw";
+import d_dialog_form from "./dialog/form";
+import d_dialog_form_src from "./dialog/form?raw";
+import d_dialog_header from "./dialog/header";
+import d_dialog_header_src from "./dialog/header?raw";
 import d_dialog_nested from "./dialog/nested";
 import d_dialog_nested_src from "./dialog/nested?raw";
 import d_dialog_outside_popup from "./dialog/outside-popup";
@@ -159,8 +165,6 @@ import d_form_server_errors from "./form/server-errors";
 import d_form_server_errors_src from "./form/server-errors?raw";
 import d_input_basic from "./input/basic";
 import d_input_basic_src from "./input/basic?raw";
-import d_input_multiline from "./input/multiline";
-import d_input_multiline_src from "./input/multiline?raw";
 import d_input_sizes from "./input/sizes";
 import d_input_sizes_src from "./input/sizes?raw";
 import d_input_states from "./input/states";
@@ -187,6 +191,22 @@ import d_number_field_variants from "./number-field/variants";
 import d_number_field_variants_src from "./number-field/variants?raw";
 import d_number_field_wheel from "./number-field/wheel";
 import d_number_field_wheel_src from "./number-field/wheel?raw";
+import d_otp_field_auto_submit from "./otp-field/auto-submit";
+import d_otp_field_auto_submit_src from "./otp-field/auto-submit?raw";
+import d_otp_field_basic from "./otp-field/basic";
+import d_otp_field_basic_src from "./otp-field/basic?raw";
+import d_otp_field_controlled from "./otp-field/controlled";
+import d_otp_field_controlled_src from "./otp-field/controlled?raw";
+import d_otp_field_grouped from "./otp-field/grouped";
+import d_otp_field_grouped_src from "./otp-field/grouped?raw";
+import d_otp_field_masked from "./otp-field/masked";
+import d_otp_field_masked_src from "./otp-field/masked?raw";
+import d_otp_field_sizes from "./otp-field/sizes";
+import d_otp_field_sizes_src from "./otp-field/sizes?raw";
+import d_otp_field_states from "./otp-field/states";
+import d_otp_field_states_src from "./otp-field/states?raw";
+import d_otp_field_variants from "./otp-field/variants";
+import d_otp_field_variants_src from "./otp-field/variants?raw";
 import d_popover_basic from "./popover/basic";
 import d_popover_basic_src from "./popover/basic?raw";
 import d_popover_controlled from "./popover/controlled";
@@ -209,6 +229,26 @@ import d_popover_sizes from "./popover/sizes";
 import d_popover_sizes_src from "./popover/sizes?raw";
 import d_popover_viewport from "./popover/viewport";
 import d_popover_viewport_src from "./popover/viewport?raw";
+import d_preview_card_basic from "./preview-card/basic";
+import d_preview_card_basic_src from "./preview-card/basic?raw";
+import d_preview_card_controlled from "./preview-card/controlled";
+import d_preview_card_controlled_src from "./preview-card/controlled?raw";
+import d_preview_card_delay from "./preview-card/delay";
+import d_preview_card_delay_src from "./preview-card/delay?raw";
+import d_preview_card_detached_trigger from "./preview-card/detached-trigger";
+import d_preview_card_detached_trigger_src from "./preview-card/detached-trigger?raw";
+import d_preview_card_inline from "./preview-card/inline";
+import d_preview_card_inline_src from "./preview-card/inline?raw";
+import d_preview_card_media from "./preview-card/media";
+import d_preview_card_media_src from "./preview-card/media?raw";
+import d_preview_card_multiple_triggers from "./preview-card/multiple-triggers";
+import d_preview_card_multiple_triggers_src from "./preview-card/multiple-triggers?raw";
+import d_preview_card_placement from "./preview-card/placement";
+import d_preview_card_placement_src from "./preview-card/placement?raw";
+import d_preview_card_sizes from "./preview-card/sizes";
+import d_preview_card_sizes_src from "./preview-card/sizes?raw";
+import d_preview_card_viewport from "./preview-card/viewport";
+import d_preview_card_viewport_src from "./preview-card/viewport?raw";
 import d_progress_basic from "./progress/basic";
 import d_progress_basic_src from "./progress/basic?raw";
 import d_progress_circle_sizes from "./progress/circle-sizes";
@@ -331,6 +371,22 @@ import d_tabs_vertical from "./tabs/vertical";
 import d_tabs_vertical_src from "./tabs/vertical?raw";
 import d_tabs_with_icons from "./tabs/with-icons";
 import d_tabs_with_icons_src from "./tabs/with-icons?raw";
+import d_textarea_auto_resize from "./textarea/auto-resize";
+import d_textarea_auto_resize_src from "./textarea/auto-resize?raw";
+import d_textarea_basic from "./textarea/basic";
+import d_textarea_basic_src from "./textarea/basic?raw";
+import d_textarea_character_count from "./textarea/character-count";
+import d_textarea_character_count_src from "./textarea/character-count?raw";
+import d_textarea_composer from "./textarea/composer";
+import d_textarea_composer_src from "./textarea/composer?raw";
+import d_textarea_sizes from "./textarea/sizes";
+import d_textarea_sizes_src from "./textarea/sizes?raw";
+import d_textarea_states from "./textarea/states";
+import d_textarea_states_src from "./textarea/states?raw";
+import d_textarea_validation from "./textarea/validation";
+import d_textarea_validation_src from "./textarea/validation?raw";
+import d_textarea_variants from "./textarea/variants";
+import d_textarea_variants_src from "./textarea/variants?raw";
 import d_toast_action from "./toast/action";
 import d_toast_action_src from "./toast/action?raw";
 import d_toast_basic from "./toast/basic";
@@ -438,6 +494,9 @@ export type DemoId =
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/controlled"
+  | "dialog/footer-align"
+  | "dialog/form"
+  | "dialog/header"
   | "dialog/nested"
   | "dialog/outside-popup"
   | "dialog/scroll-inside"
@@ -462,7 +521,6 @@ export type DemoId =
   | "form/basic"
   | "form/server-errors"
   | "input/basic"
-  | "input/multiline"
   | "input/sizes"
   | "input/states"
   | "input/variants"
@@ -476,6 +534,14 @@ export type DemoId =
   | "number-field/steps"
   | "number-field/variants"
   | "number-field/wheel"
+  | "otp-field/auto-submit"
+  | "otp-field/basic"
+  | "otp-field/controlled"
+  | "otp-field/grouped"
+  | "otp-field/masked"
+  | "otp-field/sizes"
+  | "otp-field/states"
+  | "otp-field/variants"
   | "popover/basic"
   | "popover/controlled"
   | "popover/detached-trigger"
@@ -487,6 +553,16 @@ export type DemoId =
   | "popover/scrollable"
   | "popover/sizes"
   | "popover/viewport"
+  | "preview-card/basic"
+  | "preview-card/controlled"
+  | "preview-card/delay"
+  | "preview-card/detached-trigger"
+  | "preview-card/inline"
+  | "preview-card/media"
+  | "preview-card/multiple-triggers"
+  | "preview-card/placement"
+  | "preview-card/sizes"
+  | "preview-card/viewport"
   | "progress/basic"
   | "progress/circle-sizes"
   | "progress/circle"
@@ -548,6 +624,14 @@ export type DemoId =
   | "tabs/pill"
   | "tabs/vertical"
   | "tabs/with-icons"
+  | "textarea/auto-resize"
+  | "textarea/basic"
+  | "textarea/character-count"
+  | "textarea/composer"
+  | "textarea/sizes"
+  | "textarea/states"
+  | "textarea/validation"
+  | "textarea/variants"
   | "toast/action"
   | "toast/basic"
   | "toast/custom"
@@ -630,6 +714,9 @@ const REGISTRY: Record<DemoId, Demo> = {
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },
+  "dialog/footer-align": { Component: d_dialog_footer_align, source: d_dialog_footer_align_src, file: "dialog/footer-align.tsx" },
+  "dialog/form": { Component: d_dialog_form, source: d_dialog_form_src, file: "dialog/form.tsx" },
+  "dialog/header": { Component: d_dialog_header, source: d_dialog_header_src, file: "dialog/header.tsx" },
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },
   "dialog/outside-popup": { Component: d_dialog_outside_popup, source: d_dialog_outside_popup_src, file: "dialog/outside-popup.tsx" },
   "dialog/scroll-inside": { Component: d_dialog_scroll_inside, source: d_dialog_scroll_inside_src, file: "dialog/scroll-inside.tsx" },
@@ -654,7 +741,6 @@ const REGISTRY: Record<DemoId, Demo> = {
   "form/basic": { Component: d_form_basic, source: d_form_basic_src, file: "form/basic.tsx" },
   "form/server-errors": { Component: d_form_server_errors, source: d_form_server_errors_src, file: "form/server-errors.tsx" },
   "input/basic": { Component: d_input_basic, source: d_input_basic_src, file: "input/basic.tsx" },
-  "input/multiline": { Component: d_input_multiline, source: d_input_multiline_src, file: "input/multiline.tsx" },
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
@@ -668,6 +754,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "number-field/steps": { Component: d_number_field_steps, source: d_number_field_steps_src, file: "number-field/steps.tsx" },
   "number-field/variants": { Component: d_number_field_variants, source: d_number_field_variants_src, file: "number-field/variants.tsx" },
   "number-field/wheel": { Component: d_number_field_wheel, source: d_number_field_wheel_src, file: "number-field/wheel.tsx" },
+  "otp-field/auto-submit": { Component: d_otp_field_auto_submit, source: d_otp_field_auto_submit_src, file: "otp-field/auto-submit.tsx" },
+  "otp-field/basic": { Component: d_otp_field_basic, source: d_otp_field_basic_src, file: "otp-field/basic.tsx" },
+  "otp-field/controlled": { Component: d_otp_field_controlled, source: d_otp_field_controlled_src, file: "otp-field/controlled.tsx" },
+  "otp-field/grouped": { Component: d_otp_field_grouped, source: d_otp_field_grouped_src, file: "otp-field/grouped.tsx" },
+  "otp-field/masked": { Component: d_otp_field_masked, source: d_otp_field_masked_src, file: "otp-field/masked.tsx" },
+  "otp-field/sizes": { Component: d_otp_field_sizes, source: d_otp_field_sizes_src, file: "otp-field/sizes.tsx" },
+  "otp-field/states": { Component: d_otp_field_states, source: d_otp_field_states_src, file: "otp-field/states.tsx" },
+  "otp-field/variants": { Component: d_otp_field_variants, source: d_otp_field_variants_src, file: "otp-field/variants.tsx" },
   "popover/basic": { Component: d_popover_basic, source: d_popover_basic_src, file: "popover/basic.tsx" },
   "popover/controlled": { Component: d_popover_controlled, source: d_popover_controlled_src, file: "popover/controlled.tsx" },
   "popover/detached-trigger": { Component: d_popover_detached_trigger, source: d_popover_detached_trigger_src, file: "popover/detached-trigger.tsx" },
@@ -679,6 +773,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "popover/scrollable": { Component: d_popover_scrollable, source: d_popover_scrollable_src, file: "popover/scrollable.tsx" },
   "popover/sizes": { Component: d_popover_sizes, source: d_popover_sizes_src, file: "popover/sizes.tsx" },
   "popover/viewport": { Component: d_popover_viewport, source: d_popover_viewport_src, file: "popover/viewport.tsx" },
+  "preview-card/basic": { Component: d_preview_card_basic, source: d_preview_card_basic_src, file: "preview-card/basic.tsx" },
+  "preview-card/controlled": { Component: d_preview_card_controlled, source: d_preview_card_controlled_src, file: "preview-card/controlled.tsx" },
+  "preview-card/delay": { Component: d_preview_card_delay, source: d_preview_card_delay_src, file: "preview-card/delay.tsx" },
+  "preview-card/detached-trigger": { Component: d_preview_card_detached_trigger, source: d_preview_card_detached_trigger_src, file: "preview-card/detached-trigger.tsx" },
+  "preview-card/inline": { Component: d_preview_card_inline, source: d_preview_card_inline_src, file: "preview-card/inline.tsx" },
+  "preview-card/media": { Component: d_preview_card_media, source: d_preview_card_media_src, file: "preview-card/media.tsx" },
+  "preview-card/multiple-triggers": { Component: d_preview_card_multiple_triggers, source: d_preview_card_multiple_triggers_src, file: "preview-card/multiple-triggers.tsx" },
+  "preview-card/placement": { Component: d_preview_card_placement, source: d_preview_card_placement_src, file: "preview-card/placement.tsx" },
+  "preview-card/sizes": { Component: d_preview_card_sizes, source: d_preview_card_sizes_src, file: "preview-card/sizes.tsx" },
+  "preview-card/viewport": { Component: d_preview_card_viewport, source: d_preview_card_viewport_src, file: "preview-card/viewport.tsx" },
   "progress/basic": { Component: d_progress_basic, source: d_progress_basic_src, file: "progress/basic.tsx" },
   "progress/circle-sizes": { Component: d_progress_circle_sizes, source: d_progress_circle_sizes_src, file: "progress/circle-sizes.tsx" },
   "progress/circle": { Component: d_progress_circle, source: d_progress_circle_src, file: "progress/circle.tsx" },
@@ -740,6 +844,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tabs/pill": { Component: d_tabs_pill, source: d_tabs_pill_src, file: "tabs/pill.tsx" },
   "tabs/vertical": { Component: d_tabs_vertical, source: d_tabs_vertical_src, file: "tabs/vertical.tsx" },
   "tabs/with-icons": { Component: d_tabs_with_icons, source: d_tabs_with_icons_src, file: "tabs/with-icons.tsx" },
+  "textarea/auto-resize": { Component: d_textarea_auto_resize, source: d_textarea_auto_resize_src, file: "textarea/auto-resize.tsx" },
+  "textarea/basic": { Component: d_textarea_basic, source: d_textarea_basic_src, file: "textarea/basic.tsx" },
+  "textarea/character-count": { Component: d_textarea_character_count, source: d_textarea_character_count_src, file: "textarea/character-count.tsx" },
+  "textarea/composer": { Component: d_textarea_composer, source: d_textarea_composer_src, file: "textarea/composer.tsx" },
+  "textarea/sizes": { Component: d_textarea_sizes, source: d_textarea_sizes_src, file: "textarea/sizes.tsx" },
+  "textarea/states": { Component: d_textarea_states, source: d_textarea_states_src, file: "textarea/states.tsx" },
+  "textarea/validation": { Component: d_textarea_validation, source: d_textarea_validation_src, file: "textarea/validation.tsx" },
+  "textarea/variants": { Component: d_textarea_variants, source: d_textarea_variants_src, file: "textarea/variants.tsx" },
   "toast/action": { Component: d_toast_action, source: d_toast_action_src, file: "toast/action.tsx" },
   "toast/basic": { Component: d_toast_basic, source: d_toast_basic_src, file: "toast/basic.tsx" },
   "toast/custom": { Component: d_toast_custom, source: d_toast_custom_src, file: "toast/custom.tsx" },

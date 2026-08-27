@@ -1615,7 +1615,7 @@
   },
   "Input": {
     "name": "Input",
-    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control, swap the element out — the styles follow:\n\n```tsx\n<Input render={<textarea />} rows={4} />\n```\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control reach for `Textarea`, which is the same\n`Field.Control` rendered as a `<textarea>` and adds the things a paragraph of\ntext needs — row-based sizing, a growth ceiling, and `autoResize`.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -1798,6 +1798,115 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "OTPFieldRoot": {
+    "name": "OTPFieldRoot",
+    "description": "Groups every slot of a one-time-code field and owns the value. Renders a\n`<div role=\"group\">` laid out as a wrapping flex row, plus a visually hidden\n`<input>` beside it that carries the whole code into form submission and\nconstraint validation.\n\n```tsx\n<Field.Root name=\"code\">\n  <Field.Label>Verification code</Field.Label>\n  <OTPField.Root length={6} />\n</Field.Root>\n```\n\nThe value is one string, not one per slot: `value`, `defaultValue`,\n`onValueChange` and `onValueComplete` all speak in `\"123456\"`. Typing\nadvances, Backspace retreats, and a paste fills from the slot it lands on —\nBase UI owns all of that, including clamping to `length` and filtering by\n`validationType`.\n\n`autoComplete` defaults to `\"one-time-code\"`, which is what lets iOS and\nAndroid offer a code straight from the SMS that just arrived. Do not\noverride it without a reason.\n\nState is exposed on `data-*` (`data-complete`, `data-filled`,\n`data-disabled`, `data-readonly`, plus `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched` and `data-focused` inside a `Field.Root`) and\nevery visual decision is a `--pui-otp-field-*` custom property, so it can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[complete]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "length",
+        "type": "number",
+        "required": true,
+        "defaultValue": null,
+        "description": "How many characters the code has, and therefore how many slots the field\nrenders. Required: the root clamps the value, decides when it is complete\nand writes the hidden input's `pattern` from it, all of which have to be\nright on the server render, before a single slot has mounted.\n\nWhen you pass your own children, the number of `<OTPField.Input>`s has to\nmatch — Base UI warns in development when it does not."
+      },
+      {
+        "name": "autoSubmit",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Submit the owning form as soon as the last slot is filled.\n\nThe reason to want it is that the code is the whole form — there is\nnothing left to review, and a Verify button is a step whose only content\nis \"yes, I meant the six digits I just typed\". `onValueComplete` runs\nimmediately before the submit, so you can still stop it."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The slots, and anything between them. Leave it out and the root renders\n`length` plain `<OTPField.Input>`s for you — the common case, and the one\nwhere Base UI otherwise warns at runtime if the count and `length`\ndisagree.\n\nPass children when the row is not uniform: groups split by an\n`<OTPField.Separator />`, or a slot with its own `aria-label`. The count\nstill has to equal `length`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "mask",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Replace each character with a dot, the way a password field does.\n\nOff by default, and worth leaving off. A code that is read off a phone and\ntyped once has nothing to shoulder-surf that the SMS did not already\nexpose, and hiding it takes away the user's only way to check what they\ntyped."
+      },
+      {
+        "name": "size",
+        "type": "OTPFieldSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the slots. Sets their square side and the character's font size\ntogether, and the side comes from the same `--pui-control-*` tokens\n`Input` and `Select.Trigger` read — so a code field lines up with the rest\nof a form at every `data-pui-density` setting."
+      },
+      {
+        "name": "validationType",
+        "type": "OTPFieldValidationType",
+        "required": false,
+        "defaultValue": "\"numeric\"",
+        "description": "Which characters the field accepts. Anything else is dropped as it is\ntyped or pasted and reported through `onValueInvalid`, so a code copied\nwith a stray space or a dash still lands correctly.\n\nIt also picks the virtual keyboard: `numeric` asks for the digit pad,\nwhich is most of why a phone is bearable to type a code on. Override\n`inputMode` if you need a different one."
+      },
+      {
+        "name": "variant",
+        "type": "OTPFieldVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight each slot carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `underline` as a row of rules.\n\nThere is no `ghost`, unlike `Input`: a slot with no boundary leaves\nnothing to count, and how many characters the code has is the one thing\nthe field has to say before anything is typed."
+      }
+    ]
+  },
+  "OTPFieldInput": {
+    "name": "OTPFieldInput",
+    "description": "One character of the code. Renders an `<input>`.\n\nSlots take their index from the order they are rendered in, so there is no\n`index` prop to keep in step — but the number of them must equal the root's\n`length`, and Base UI warns in development when it does not. Render them\nyourself only when the row needs something a bare list cannot express;\notherwise let `OTPField.Root` produce them.\n\nExactly one slot is in the tab order at a time, which is what makes the\nwhole field a single tab stop rather than six. Focusing one selects its\ncharacter, so the next keypress replaces it instead of being rejected by a\nfull slot.\n\n`aria-label` on the FIRST slot is ignored — Base UI warns about it — because\nthe name belongs to the group, not to a character of it. Name the field with\na `<Field.Label>` or a `<label>` instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "OTPFieldSeparator": {
+    "name": "OTPFieldSeparator",
+    "description": "The dash between two groups of slots — the `123 – 456` shape a six-digit\ncode is usually printed in. Renders the library's `Separator`, so it carries\n`data-pui=\"separator\"` rather than a marker of its own; scope to it with\n`[data-pui=\"otp-field\"] [data-pui=\"separator\"]`.\n\nIt is a **horizontal** rule sized to `--pui-otp-field-separator-length`,\nnot a vertical bar, and it counts against nothing: `length` is the number of\n`Input`s, so a separator can go anywhere between them.\n\n```tsx\n<OTPField.Root length={6}>\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Separator />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n</OTPField.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "decorative",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Drops `role=\"separator\"`, leaving the dash visible but absent from the\naccessibility tree.\n\nDefaults to `true` here, which is the opposite of a standalone\n`Separator`: the slots either side of it are one value and one control,\nso the grouping is a reading aid for the eye only. Announcing a boundary\nin the middle of a six-digit code describes the layout, not the field."
+      },
+      {
+        "name": "orientation",
+        "type": "SeparatorOrientation",
+        "required": false,
+        "defaultValue": "\"horizontal\"",
+        "description": "Which way the rule runs — and therefore which axis it separates. A\n`horizontal` rule is a line across the inline axis dividing stacked\ncontent; a `vertical` one is a line down the block axis dividing content\nin a row.\n\nIt is also what Base UI reports as `aria-orientation`, so it is a\nsemantic choice, not only a visual one."
+      },
+      {
+        "name": "variant",
+        "type": "SeparatorVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "The line style. A rule has exactly one visual dimension, so this is the\nwhole of it: `solid` for structural divisions, `dashed` or `dotted` for\nsofter, more provisional ones (a drop zone's edge, an optional section)."
       }
     ]
   },
@@ -2188,6 +2297,302 @@
         "required": false,
         "defaultValue": null,
         "description": "The content that changes from trigger to trigger."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PreviewCardRoot": {
+    "name": "PreviewCardRoot",
+    "description": "Groups one preview card's trigger and popup, and owns its open state.\nRenders no DOM element, so it takes no `className`, `style` or `ref`.",
+    "props": [
+      {
+        "name": "actionsRef",
+        "type": "RefObject<PreviewCardRootActions | null>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Imperative escape hatch. `close()` closes the card; `unmount()` forces the\npopup out of the DOM, for when an exit animation is driven externally."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | PayloadChildRenderFunction<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "The trigger and popup for this card. May also be a render function\nreceiving `{ payload }` from the trigger that opened it."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the card is open when it first mounts. For a controlled card use\n`open` instead."
+      },
+      {
+        "name": "defaultTriggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The initially attached trigger id. Pairs with `defaultOpen` the way\n`triggerId` pairs with `open`."
+      },
+      {
+        "name": "handle",
+        "type": "PreviewCardHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates this card with detached triggers created through\n`PreviewCard.createHandle()`, so one popup can serve triggers that live\nelsewhere in the tree."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean, eventDetails: PreviewCardRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the card wants to open or close. The second argument carries\nthe reason (`'trigger-hover'`, `'trigger-focus'`, `'trigger-press'`,\n`'outside-press'`, `'escape-key'`, `'imperative-action'`, `'none'`), the\ntrigger involved, and can `cancel()` the change."
+      },
+      {
+        "name": "onOpenChangeComplete",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called after the open or close transition has finished. Use this rather\nthan a timer when work has to wait for the card to actually leave."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the card is currently open. Pass this together with\n`onOpenChange` to control the card."
+      },
+      {
+        "name": "triggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which trigger the card is currently attached to, for controlled\nmulti-trigger setups. There is no separate `onTriggerIdChange` — read the\nnew id off `eventDetails.trigger` inside `onOpenChange`."
+      }
+    ]
+  },
+  "PreviewCardTrigger": {
+    "name": "PreviewCardTrigger",
+    "description": "The link the card previews. Renders an `<a>`.\n\nIt carries no `aria-haspopup`, `aria-controls` or `aria-describedby`, and\nthat is deliberate on Base UI's part: the card is supplementary, so the link\nis announced as an ordinary link and the card never interrupts. What follows\nfrom that is the one rule for the content — see `PreviewCard.Popup`.\n\nA link that wraps across lines anchors the card to the line the pointer is\nactually on, rather than to the union rectangle of all its lines. That\nhappens without configuration.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "300",
+        "description": "How long the card lingers after the pointer leaves, in milliseconds. The\npointer only has to reach the popup within this window along a direct\npath — Base UI grants the diagonal — so this is the tolerance for\novershooting, not the whole journey."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "600",
+        "description": "How long the pointer must rest on the link before the card opens, in\nmilliseconds. Also the wait before a focused link opens it."
+      },
+      {
+        "name": "handle",
+        "type": "PreviewCardHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates a detached trigger with the `PreviewCard.Root` carrying the\nsame handle, created once outside render with\n`PreviewCard.createHandle()`."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the link goes. Not optional in practice: the card is an enrichment\nof a link, and an `<a>` without `href` is neither focusable nor\nannounced as a link — so leaving it off strands every keyboard user,\nwho is also the one person for whom the card is not the point."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Identifies the trigger. Also how `PreviewCard.Root`'s `triggerId` names\nthe active trigger in controlled multi-trigger mode."
+      },
+      {
+        "name": "payload",
+        "type": "Payload",
+        "required": false,
+        "defaultValue": null,
+        "description": "Data handed to the card when this trigger opens it, so one popup can\nrender a different profile per link. Read it from the render-function\nform of `PreviewCard.Root`'s children."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, PreviewCardTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/u/ada\" />}` for a router link is the common case.\nThe trigger's own link styling steps aside when this is present, so the\ntwo never fight over the cascade."
+      }
+    ]
+  },
+  "PreviewCardPopup": {
+    "name": "PreviewCardPopup",
+    "description": "The card surface, together with the wrappers it always needs:\n`Portal` → `Positioner` → `Popup`. Collapsing them into one component keeps\nthe common case to a single element while leaving every Base UI `Popup` prop\n(`render`, `keepMounted`, …) available.\n\nThe card stays open while the pointer is inside it, so links in it are\nclickable. Keyboard focus is a different story: the popup is portalled to\nthe end of `<body>` and nothing moves focus into it, so Tab from the link\ncontinues into the page. Treat everything in here as **supplementary** — a\nsummary of where the link goes — and make sure anything actionable exists on\nthe destination too.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "center",
+        "description": "How the card lines up with the link along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Shifts the card along the alignment axis, in pixels, or a function\nreturning one."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The element the card positions against, when it should not be the link.\nAccepts an element, a ref, a getter, or a virtual element."
+      },
+      {
+        "name": "arrowPadding",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Minimum distance, in pixels, the arrow keeps from the card's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "How the card reacts when it would overflow the boundary — whether it\nflips, shifts, or stays put."
+      },
+      {
+        "name": "collisionBoundary",
+        "type": "Boundary",
+        "required": false,
+        "defaultValue": "\"clipping-ancestors\"",
+        "description": "The boundary the card tries to stay inside of."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space, in pixels, kept between the card and the collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the portal renders. Defaults to `document.body`; point it at a\ncontainer when the card has to live inside a specific stacking or shadow\nroot."
+      },
+      {
+        "name": "disableAnchorTracking",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the card re-measuring the anchor on scroll and resize. Cheaper, but\nthe card drifts if the anchor moves."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the portal — and therefore the card — in the DOM while it is closed.\nNeeded when something inside must stay mounted (an iframe, a media\nelement)."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single card through\n`--pui-preview-card-z-index`."
+      },
+      {
+        "name": "positionMethod",
+        "type": "\"absolute\" | \"fixed\"",
+        "required": false,
+        "defaultValue": "\"absolute\"",
+        "description": "Whether the card is positioned with `position: absolute` or\n`position: fixed`."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "bottom",
+        "description": "Which side of the link to place the card on. Flips automatically to avoid\ncollisions. `\"inline-start\"` / `\"inline-end\"` follow writing direction."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap between link and card, in pixels, or a function returning one. When an\n`Arrow` is rendered this must exceed the arrow's height or the arrow\noverlaps the link; the default leaves room for the default arrow.\n\nIt is also the gap the pointer crosses on its way in. Base UI covers the\ntrip with a safe polygon, so a wider offset is safe — but it is the one\nnumber that makes the card feel out of reach if it grows much past the\ntext it belongs to."
+      },
+      {
+        "name": "size",
+        "type": "PreviewCardSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Width cap for the card. The card shrinks to fit its content and only grows\nto this width when the content asks for it, so this is a ceiling rather\nthan a fixed measure. Further clamped to the space the positioner reports\nas available."
+      },
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the card glued to the link while it scrolls out of view instead of\nletting it detach."
+      }
+    ]
+  },
+  "PreviewCardArrow": {
+    "name": "PreviewCardArrow",
+    "description": "The wedge pointing back at the link. Render it as a child of\n`PreviewCard.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the built-in wedge. The default SVG inherits the card's colours\nthrough `--pui-preview-card-bg`, so a custom skin usually needs nothing\nhere."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PreviewCardViewport": {
+    "name": "PreviewCardViewport",
+    "description": "Animates the swap when one popup serves several links and its content\nchanges between them.\n\nWrap the changing content in it, inside `PreviewCard.Popup`. Base UI keeps a\nclone of the outgoing content mounted for the length of the transition; the\nstylesheet slides the two past each other in the direction the new link\nlies, and resizes the card to follow. Without it the content simply replaces\nitself, which is fine — this part is only needed when the swap should be\nanimated.\n\nLeave the `Arrow` outside it, as a direct child of the popup: the viewport\nclips, and the arrow lives beyond the card's edge.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The content that changes from link to link."
       },
       {
         "name": "className",
@@ -3196,6 +3601,82 @@
         "required": false,
         "defaultValue": "false",
         "description": "Whether the panel stays in the DOM while hidden. Required if you want the\nexit transition to play, or if the panel holds scroll position or\nuncommitted form state that should survive a round trip."
+      }
+    ]
+  },
+  "Textarea": {
+    "name": "Textarea",
+    "description": "A multi-line text control.\n\nBase UI has no textarea primitive, so this is built on `Field.Control` — the\nsame component `Input` is — rendered as a `<textarea>`. That is what makes it\nparticipate in a `Field` with no wiring: drop one inside a `Field.Root` and\nit picks up the label, the description, the error message, the `name` used on\nsubmit, and the validity attributes.\n\n```tsx\n<Field.Root name=\"bio\">\n  <Field.Label>Bio</Field.Label>\n  <Textarea rows={4} placeholder=\"Tell us about yourself\" />\n  <Field.Error />\n</Field.Root>\n```\n\nHeight is expressed in rows rather than pixels — `rows` is the floor,\n`maxRows` the ceiling, and `autoResize` moves between them as the user types.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-textarea-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "autoResize",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Grow with the content as the user types, between `rows` and `maxRows`.\n\nImplemented with the CSS `field-sizing` property where the browser has it,\nso there is no measurement, no reflow per keystroke and no inline height\non the element. Older engines fall back to a resize observer and a\n`scrollHeight` read, which behaves identically and costs a layout per\nchange.\n\nForces `resize` to `\"none\"`: a handle whose value the next keystroke\noverwrites is not a control."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the control to fill the width of its container. Only needed\noutside a `Field.Root` — a field is a flex column, so a textarea inside\none already stretches."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "defaultValue": null,
+        "description": "The number of rows the box may grow to before it starts scrolling\ninstead. Only a ceiling: a textarea shorter than this is unaffected.\nUnset means no ceiling."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: string, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element; }) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Callback fired when the value changes. Use when controlled."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, FieldControlState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replace the rendered element. Defaults to a `<textarea>`."
+      },
+      {
+        "name": "resize",
+        "type": "TextareaResize",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Which axes the user may drag the control along. `vertical` is the default\nbecause `both` lets the box escape the column it sits in — legitimate for\na full-width composer, wrong for a field in a form."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "defaultValue": "3",
+        "description": "The number of rows the box is at its shortest. Sets the native `rows`\nattribute and the floor the control can never shrink below — including\nunder `autoResize`, and including a drag on the resize handle."
+      },
+      {
+        "name": "size",
+        "type": "TextareaSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the control. Inline padding, block padding and font size move\ntogether, and the numbers come from the same `--pui-control-*` tokens\n`Input` and `Select.Trigger` read — so a textarea stacked under an input\nshares its optical inset at every `data-pui-density` setting.\n\nA `<textarea>` has no native `size` attribute, so unlike `Input` this\nshadows nothing."
+      },
+      {
+        "name": "variant",
+        "type": "TextareaVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the control carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance — the\nsame three `Input` has."
       }
     ]
   },

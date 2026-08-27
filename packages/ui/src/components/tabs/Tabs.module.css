@@ -298,14 +298,26 @@
 
   /* Indicator ---------------------------------------------------------------
    * Default geometry is horizontal + line: a bar the width of the active tab,
-   * pinned to the rail edge, translated along the inline axis. */
+   * pinned to the rail edge, translated along the inline axis.
+   *
+   * The inline anchor is the PHYSICAL `left`, not `inset-inline-start`, and
+   * that pairing is load-bearing. --active-tab-left is `activeTab.offsetLeft`
+   * — a physical offset from the strip's left edge, the same in both
+   * directions — and `translate` is physical too (motion principle 12: the
+   * inline axis has no logical form). Anchored logically, RTL resolves
+   * `inset-inline-start` to `right: 0`, putting the box's RIGHT edge at the
+   * strip's right edge and then translating it further right by the full
+   * offset: the indicator leaves the strip completely and the active tab is
+   * left unmarked. Two physical values agree in either direction; one of each
+   * never does. */
   .indicator {
     box-sizing: border-box;
     position: absolute;
     z-index: 0;
     inset-block-start: auto;
     inset-block-end: 0;
-    inset-inline-start: 0;
+    left: 0;
+    right: auto;
     translate: var(--active-tab-left);
     width: var(--active-tab-width);
     height: var(--pui-tabs-indicator-size);
@@ -321,11 +333,19 @@
   }
 
   /* Vertical line: the bar rides the inline-end edge, against the rail, and
-   * travels on the block axis instead. */
+   * travels on the block axis instead — so the inline placement here really is
+   * logical, and mirrors with the writing direction the way the rail does.
+   *
+   * The physical pair above has to be cleared by hand, and `inset-inline-end`
+   * has to come after it: a logical inset resolves onto `left` or `right` at
+   * computed-value time, and the two forms cascade in DECLARATION order rather
+   * than one category outranking the other. Written first it would lose to the
+   * `left`/`right` it is meant to replace in one of the two directions. */
   .indicator[data-orientation="vertical"] {
     inset-block-start: 0;
     inset-block-end: auto;
-    inset-inline-start: auto;
+    left: auto;
+    right: auto;
     inset-inline-end: 0;
     translate: 0 var(--active-tab-top);
     width: var(--pui-tabs-indicator-size);
@@ -334,13 +354,17 @@
 
   /* Pill: same element, same transition, but it takes the full size of the
    * active tab and therefore moves on both axes — the cross-axis offset
-   * matters here because the strip has padding. */
+   * matters here because the strip has padding.
+   *
+   * Back to the physical anchor for both orientations, since a pill travels on
+   * the inline axis in one of them. `right: auto` is what undoes the vertical
+   * rule's `inset-inline-end` above, which this selector also matches. */
   .indicator[data-variant="pill"],
   .indicator[data-variant="pill"][data-orientation="vertical"] {
     inset-block-start: 0;
     inset-block-end: auto;
-    inset-inline-start: 0;
-    inset-inline-end: auto;
+    left: 0;
+    right: auto;
     translate: var(--active-tab-left) var(--active-tab-top);
     width: var(--active-tab-width);
     height: var(--active-tab-height);
