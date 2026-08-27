@@ -1,0 +1,382 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Color Picker",
+  description:
+    "A saturation/brightness canvas, hue and opacity rails, a preset palette and a text field that reads and writes four CSS notations.",
+};
+
+# Color Picker
+
+Pick a colour from a preset palette, from a canvas, or by typing it — and read
+it back as HEX, RGB, HSL or OKLCH. Every part is opt-in, so the same component
+covers a nine-swatch brand palette and a full design-tool panel.
+
+<DemoBlock id="color-picker/basic" />
+
+Base UI has no colour-picker primitive, so this one is built here. It stands on
+two that do exist: [`Popover`](/components/popover) for the anchored surface,
+and Base UI's `Slider` for the hue and opacity rails — which is where their
+keyboard handling, pointer capture and RTL flip come from.
+
+## Import
+
+```tsx
+import { ColorPicker } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+`ColorPicker.Root` owns the colour and renders no element. Everything below it
+is optional; a picker is whichever parts you render.
+
+```tsx
+<ColorPicker.Root>
+  <ColorPicker.Trigger />
+  <ColorPicker.HiddenInput />
+  <ColorPicker.Popup>
+    <ColorPicker.Area />
+    <ColorPicker.HueSlider />
+    <ColorPicker.AlphaSlider />
+    <ColorPicker.Swatches />
+    <ColorPicker.Row>
+      <ColorPicker.EyeDropper />
+      <ColorPicker.Preview />
+      <ColorPicker.Format />
+      <ColorPicker.Input />
+    </ColorPicker.Row>
+  </ColorPicker.Popup>
+</ColorPicker.Root>
+```
+
+`ColorPicker.Popup` wraps `Popover.Popup` and takes all of its props — `side`,
+`align`, `sideOffset`, `initialFocus` — so placement is tuned the same way it is
+on a popover. It draws its own arrow, since its children are the picker's parts
+rather than popup chrome; pass `arrow={false}` to drop it.
+
+Swap `Trigger` and `Popup` for `ColorPicker.Panel` and the same picker sits in
+the page instead.
+
+<DemoBlock id="color-picker/inline" />
+
+## The value
+
+`value` and `defaultValue` are CSS colour strings, and what comes back out of
+`onValueChange` is a CSS colour string in the current format. There is no colour
+object to learn — the parsed forms are handed to you in the change details when
+you want them.
+
+Accepted on the way in: `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`,
+`oklch()`, `oklab()` and `transparent`, in both the legacy comma form and the
+modern space form. A string that cannot be read is **ignored**, not thrown on,
+so a half-typed value in your own state never blanks the picker.
+
+<Callout kind="note">
+Named colours (`rebeccapurple`, `tomato`) are not accepted. Supporting them
+means shipping the 148-entry CSS keyword table in every bundle that touches the
+picker, for input the picker itself never produces. Convert once at the edge if
+you have them.
+</Callout>
+
+Colours outside the sRGB gamut — `oklch(0.7 0.4 30)` is a common one — are
+**gamut-mapped**, not clipped. Chroma is reduced at constant lightness and hue
+until the colour fits, so the hue you asked for survives; clipping each channel
+at 0 and 1, which is the one-line version, changes the hue as well and hands
+back a different colour family.
+
+### Formats
+
+`format` picks the notation, out of the four in `formats`. Switching it rewrites
+the *value*, not the colour: the same colour comes back as `#7c3aed`,
+`rgb(124 58 237)`, `hsl(262.1 83.3% 57.8%)` or `oklch(0.5413 0.2466 293.01)`.
+
+That also fires `onValueChange` with reason `"format-change"`, so a controlled
+`value` never ends up in a notation the panel is no longer showing.
+
+<DemoBlock id="color-picker/formats" />
+
+<Callout kind="note">
+HEX is eight bits a channel and the other three are not, so a colour written to
+HEX and back is rounded. If your design system stores OKLCH, leave `hex` out of
+`formats` rather than trusting nobody will reach for it.
+</Callout>
+
+### Opacity
+
+Rendering `ColorPicker.AlphaSlider` is what turns alpha on. There is no prop:
+the picker omits alpha from every format while the colour is fully opaque, so a
+picker without the rail emits `#7c3aed` and never `#7c3aedff`. A `defaultValue`
+that already carries alpha keeps it either way.
+
+<DemoBlock id="color-picker/alpha" />
+
+## Examples
+
+### Swatches only
+
+`ColorPicker.Swatches` on its own is a palette picker — the right shape wherever
+the answer has to stay on brand. `colors` takes any strings `value` accepts, and
+`columns` sets both the grid and the arrow-key stride.
+
+<DemoBlock id="color-picker/swatches" />
+
+The colours come from `colors`; children are not read. That is what lets the
+group know its own order, which is what the single tab stop and the arrow keys
+are computed from. To build a row element by element — a "recently used" strip,
+say — use `ColorPicker.Swatch` on its own, where each swatch is an independent
+toggle button.
+
+### Controlled
+
+Pass `value` with `onValueChange`. `onValueCommitted` fires once when an
+interaction ends rather than once per pointer move, which is the one to persist
+from.
+
+<DemoBlock id="color-picker/controlled" />
+
+<Callout kind="note">
+A controlled picker still keeps its own hue internally, and it has to: a colour
+string cannot say which hue a black or a grey is, so a picker that re-read only
+the string would swing its hue rail to red the moment the value passed through
+`#000`. A `value` that differs from the last string the picker emitted replaces
+the model; one that comes back unchanged is recognised as its own and left
+alone.
+</Callout>
+
+### The eyedropper
+
+`ColorPicker.EyeDropper` samples a colour from anywhere on the screen. Where the
+browser has no EyeDropper API — Firefox, and everything on iOS — it renders
+**nothing at all**, which is deliberate: it is a shortcut to a colour the rest of
+the picker can already reach, so its absence costs a user nothing, while a
+button that opens no eyedropper costs them a click and their confidence in the
+rest of the panel.
+
+<DemoBlock id="color-picker/eyedropper" />
+
+### Triggers
+
+The trigger shows a swatch, then its children, then the current colour in a
+visually hidden span — so a trigger with no children is still named, by the
+value itself.
+
+<DemoBlock id="color-picker/trigger" />
+
+### In a form
+
+`ColorPicker.HiddenInput` submits the colour under a `name`.
+
+<DemoBlock id="color-picker/form" />
+
+<Callout kind="warn">
+Put it next to `ColorPicker.Trigger`, never inside `ColorPicker.Popup`. The
+popup is portalled to `<body>` and unmounted while it is closed, so a hidden
+input in there is outside the form's element tree even when it exists — and
+missing entirely by the time anything is submitted.
+</Callout>
+
+### Disabled
+
+<DemoBlock id="color-picker/disabled" />
+
+`disabled` on the root reaches every part through context. Each part is
+separately disabled rather than the panel taking `pointer-events: none`, so they
+stay announced as disabled instead of silently vanishing from the keyboard.
+
+## Keyboard
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves to the next part. The canvas takes two stops (one per axis) and the swatch grid takes one for the whole grid.",
+    },
+    {
+      keys: ["ArrowLeft", "ArrowRight"],
+      description:
+        "On the canvas, moves saturation. On a rail, moves the value by one step. In the swatch grid, moves by one swatch — following the writing direction.",
+    },
+    {
+      keys: ["ArrowUp", "ArrowDown"],
+      description:
+        "On the canvas, moves brightness — and focus follows to the brightness axis, so the value that changed is the value announced. On a rail, moves by one step. In the swatch grid, moves by one row.",
+    },
+    {
+      keys: ["Shift", "ArrowUp"],
+      description:
+        "Ten steps at once — on either axis of the canvas, and on both rails.",
+    },
+    {
+      keys: ["PageUp", "PageDown"],
+      description: "Ten percent of the axis, on the canvas and on both rails.",
+    },
+    {
+      keys: ["Home", "End"],
+      description:
+        "Jumps to either end of an axis or a rail; first and last swatch in the grid.",
+    },
+    {
+      keys: ["Enter"],
+      description:
+        "In the text field, applies the typed colour and rewrites it in its canonical form. Elsewhere, activates the control.",
+    },
+    {
+      keys: ["Escape"],
+      description:
+        "Closes a popover picker. In the text field it also restores the canonical text — though the colour itself is already applied, since every keystroke that parses is.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+<Callout kind="a11y">
+A 2D colour field has no ARIA role, so the canvas is expressed as what it
+actually is: **two sliders that share a thumb**. Each axis is a real
+`<input type="range">` — a genuine slider to assistive technology, with the
+keyboard behaviour built in rather than reimplemented — and an arrow key across
+the axes moves focus to the other input, so the value that changes is the value
+that gets announced.
+</Callout>
+
+The swatch grid is a `radiogroup`, not a row of buttons, because that is what it
+is: a set of mutually exclusive options with at most one current. It brings the
+whole convention with it — one tab stop for the group, arrow keys between
+swatches, and selection following focus — so a twenty-four colour palette costs a
+keyboard user one Tab instead of twenty-four.
+
+Two further notes:
+
+- **Colour is announced, not just shown.** `ColorPicker.Trigger` reads out the
+  current value after its label; `ColorPicker.Preview` is `aria-hidden`, since a
+  third announcement of the same colour on every drag frame is noise. For anyone
+  who cannot use a canvas at all, `ColorPicker.Input` is the exact route in and
+  out, and it is why the text field is not optional in practice.
+- **Under forced colours**, the canvas, the rails, the swatches and the previews
+  opt out of substitution (`.pui-preserve-color`) and take a system-coloured
+  hairline as their boundary — because in this one component the colour *is* the
+  content, and substituting it would leave four identical rectangles.
+
+The canvas deliberately does **not** mirror under RTL: it is a picture of a
+colour space, not a line of text, and the hue on the left of every other colour
+tool should not move because the surrounding paragraph runs the other way. The
+hue and opacity rails do mirror, because a slider's start follows the writing
+direction, and the gradients follow them.
+
+## Theming
+
+Every measure is a custom property on the panel, so a wider canvas, fatter rails
+and round swatches are five declarations and no fork.
+
+<DemoBlock id="color-picker/theming" />
+
+<ThemingTable component="ColorPicker" declaredOn />
+
+Four more custom properties are written **inline by the component**, because
+they carry live state rather than theme — and because `ColorPicker.Popup` is
+portalled to `<body>`, where a value declared on an ancestor in the React tree
+would never reach it:
+
+| Property | Holds |
+| :-- | :-- |
+| `--pui-color-picker-color` | the current colour, alpha included |
+| `--pui-color-picker-solid` | the same colour at full alpha |
+| `--pui-color-picker-hue` | its hue in degrees, unitless |
+| `--pui-color-picker-on-color` | `black` or `white`, whichever reads on it |
+
+Read them if you are skinning a part; do not set them.
+
+<Callout kind="note">
+Some colours in this component are deliberately **not** tokens, and should not
+become them. The canvas's two gradients and the hue rail's seven stops are the
+colour space itself — `white` at the left of the saturation axis is what
+saturation 0 *means*, and re-pointing it at a theme colour would not re-skin the
+picker, it would make it lie. The handles are the same argument: they sit on
+colour the user chose, about which nothing is known, so they take a white ring
+and a dark hairline rather than a token that is free to resolve to exactly the
+hue underneath them.
+</Callout>
+
+## API reference
+
+### ColorPicker.Root
+
+<PropTable component="ColorPickerRoot" />
+
+### ColorPicker.Trigger
+
+<PropTable component="ColorPickerTrigger" />
+
+### ColorPicker.Popup
+
+Renders `Popover.Popup` — the portal, the positioner and the surface — with the
+panel inside it, so its props are drawn from all of them.
+
+<PropTable component="ColorPickerPopup" />
+
+### ColorPicker.Panel
+
+<PropTable component="ColorPickerPanel" />
+
+### ColorPicker.Row
+
+<PropTable component="ColorPickerRow" />
+
+### ColorPicker.Area
+
+<PropTable component="ColorPickerArea" />
+
+### ColorPicker.HueSlider
+
+<PropTable component="ColorPickerHueSlider" />
+
+### ColorPicker.AlphaSlider
+
+<PropTable component="ColorPickerAlphaSlider" />
+
+### ColorPicker.Swatches
+
+<PropTable component="ColorPickerSwatches" />
+
+### ColorPicker.Swatch
+
+<PropTable component="ColorPickerSwatch" />
+
+### ColorPicker.Preview
+
+<PropTable component="ColorPickerPreview" />
+
+### ColorPicker.Value
+
+<PropTable component="ColorPickerValue" />
+
+### ColorPicker.Format
+
+<PropTable component="ColorPickerFormatSelect" />
+
+### ColorPicker.Input
+
+<PropTable component="ColorPickerInput" />
+
+### ColorPicker.EyeDropper
+
+<PropTable component="ColorPickerEyeDropper" />
+
+### ColorPicker.HiddenInput
+
+<PropTable component="ColorPickerHiddenInput" />
+
+### DEFAULT_SWATCHES
+
+The palette `ColorPicker.Swatches` falls back to: eight neutrals, eight warm
+hues and eight cool ones. Exported alongside the component, so an app can extend
+it rather than restate it.
+
+```tsx
+import { DEFAULT_SWATCHES } from "@dofortech/pretty-ui";
+```
