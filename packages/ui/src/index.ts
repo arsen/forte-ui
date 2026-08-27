@@ -75,6 +75,25 @@ export type {
   Rgba,
 } from "./components/color-picker";
 
+export { ContextMenu } from "./components/context-menu";
+export type {
+  ContextMenuRootProps,
+  ContextMenuTriggerProps,
+  ContextMenuItemTone,
+  ContextMenuPopupProps,
+  ContextMenuItemProps,
+  ContextMenuLinkItemProps,
+  ContextMenuCheckboxItemProps,
+  ContextMenuRadioGroupProps,
+  ContextMenuRadioItemProps,
+  ContextMenuGroupProps,
+  ContextMenuGroupLabelProps,
+  ContextMenuSeparatorProps,
+  ContextMenuSubmenuRootProps,
+  ContextMenuSubmenuTriggerProps,
+  ContextMenuShortcutProps,
+} from "./components/context-menu";
+
 export { Dialog, AlertDialog, useDialog } from "./components/dialog";
 export type {
   DialogSize,
