@@ -24,14 +24,18 @@ import { PROSE_H1, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/component
  * so it still gets the typography, which is what a callout wants.
  *
  * ---------------------------------------------------------------------------
- * Where the measure lives
+ * Where the measure went
  * ---------------------------------------------------------------------------
- * On the running-text elements below, and not on the page wrapper. The wrapper
- * is the obvious place for it — a line length is a property of the column, not
- * of the paragraph — but it is the column that the tables, demos and code
- * blocks share, and they want every pixel the shell can give them. Putting the
- * cap on `p`, `ul` and `ol` keeps prose at 48rem while a prop table spans the
- * page. See the header of `app/components/layout.tsx`.
+ * Nowhere. Running text used to stop at 48rem while the demo frames, prop
+ * tables and code blocks directly above and below it spanned the whole column,
+ * and side by side that reads as a fault rather than as a reading aid: a
+ * paragraph broke off a couple of hundred pixels short of the demo under it,
+ * with nothing in the layout to explain the ragged edge. Everything on a page
+ * shares one right edge now.
+ *
+ * That leaves exactly one thing setting the line length: the page column's own
+ * cap in `app/layout.tsx`. Change it there — a second cap here is what let the
+ * two disagree in the first place.
  */
 
 type El<T extends keyof React.JSX.IntrinsicElements> = ComponentPropsWithoutRef<T>;
@@ -41,12 +45,6 @@ type El<T extends keyof React.JSX.IntrinsicElements> = ComponentPropsWithoutRef<
  * section rail reads back to decide which heading is current, so the two can
  * never disagree about where a section starts — see `components/toc.tsx`. */
 const HEADING = "scroll-mt-anchor font-semibold";
-
-/* Running text stops at the measure even though its column no longer does.
- * Headings are exempt on purpose: a heading is one short line that is scanned,
- * not read, and capping it would leave it looking indented against the table
- * or demo underneath it. */
-const PROSE_MEASURE = "max-w-measure";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -65,21 +63,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4 className={cn(HEADING, "mt-5 mb-2 text-3", className)} {...props} />
     ),
 
-    /* `max-w-measure` here rather than on the page wrapper — see above. It is
-     * on the running-text elements only, so a table or a demo beside them still
-     * uses the full column. */
+    /* No width cap — see the header. `text-pretty` is doing the work a measure
+     * used to: over a wide column it is the last line breaking short that makes
+     * a paragraph look unfinished, and that is the break it fixes. */
     p: ({ className, ...props }: El<"p">) => (
-      <p className={cn(PROSE_MEASURE, "mb-4 text-pretty", className)} {...props} />
+      <p className={cn("mb-4 text-pretty", className)} {...props} />
     ),
 
     /* No `list-style` on purpose. Without Preflight the UA markers are intact,
      * and the UA alternates them by depth — the checkbox page nests one list,
      * and a `list-disc` here would flatten level two back to a solid bullet. */
     ul: ({ className, ...props }: El<"ul">) => (
-      <ul className={cn(PROSE_MEASURE, "mb-4 ps-5", className)} {...props} />
+      <ul className={cn("mb-4 ps-5", className)} {...props} />
     ),
     ol: ({ className, ...props }: El<"ol">) => (
-      <ol className={cn(PROSE_MEASURE, "mb-4 ps-5", className)} {...props} />
+      <ol className={cn("mb-4 ps-5", className)} {...props} />
     ),
     li: ({ className, ...props }: El<"li">) => (
       <li className={cn("mb-1", className)} {...props} />

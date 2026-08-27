@@ -26,7 +26,7 @@ export const cn = createCn({
       animate: ["reveal"],
       // Added to Tailwind's stock container scale rather than replacing it —
       // `max-w-lg` and friends are untouched and still useful.
-      container: ["measure", "hero"],
+      container: ["hero"],
     },
   },
 });

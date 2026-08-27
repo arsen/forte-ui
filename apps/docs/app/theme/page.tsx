@@ -15,16 +15,13 @@ export default function ThemePage() {
       {/* Hand-written JSX, so it does not go through the MDX element mapping —
         * the shared constants are what keep this heading the same size as the
         * one on every component page. */}
-      <div className="max-w-measure">
-        <h1 className={cn(PROSE_H1, "mb-3")}>Theme Studio</h1>
-        <p className={cn(LEAD, "mb-4")}>
-          One variable re-skins everything. Pick a colour and the whole ramp
-          rebuilds — twelve accent steps, brand-tinted neutrals, and a text
-          colour chosen to stay readable on top of your fill. No JavaScript runs
-          in the library to make this happen; it is relative colour syntax in
-          plain CSS.
-        </p>
-      </div>
+      <h1 className={cn(PROSE_H1, "mb-3")}>Theme Studio</h1>
+      <p className={cn(LEAD, "mb-4")}>
+        One variable re-skins everything. Pick a colour and the whole ramp
+        rebuilds — twelve accent steps, brand-tinted neutrals, and a text colour
+        chosen to stay readable on top of your fill. No JavaScript runs in the
+        library to make this happen; it is relative colour syntax in plain CSS.
+      </p>
       <ThemeStudio />
     </div>
   );
