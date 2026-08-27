@@ -1,7 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/pretty-ui";
+import {
+  Button,
+  ColorPicker,
+  Slider,
+  Tabs,
+  Toggle,
+  ToggleGroup,
+  type Rgba,
+} from "@dofortech/pretty-ui";
 import {
   hexToOklch,
   oklchToHex,
@@ -12,6 +20,7 @@ import {
   type Oklch,
 } from "@/lib/color";
 import { EYEBROW } from "@/components/styles";
+import { getDocumentTheme, setDocumentTheme, type DocTheme } from "@/components/theme-toggle";
 import { cn } from "@/lib/cn";
 
 const PRESETS: { name: string; seed: string; secondary: string }[] = [
@@ -25,6 +34,20 @@ const PRESETS: { name: string; seed: string; secondary: string }[] = [
   { name: "Cyan", seed: "#0e7490", secondary: "#be123c" },
 ];
 
+/* The same eight colours again, as the two flat lists `ColorPicker.Swatches`
+ * wants. Built from PRESETS rather than written out, so the picker's palette
+ * cannot drift from the preset grid above it. */
+const PRESET_SEEDS = PRESETS.map((p) => p.seed);
+const PRESET_SECONDARIES = PRESETS.map((p) => p.secondary);
+
+/* Deliberately NOT part of `ThemeConfig` below, and it is worth saying why:
+ * light/dark is a reader preference, stored under its own `pui-theme` key and
+ * shared with the header toggle, while everything in ThemeConfig is part of the
+ * theme the studio EXPORTS. Both modes are already built from the same seed, so
+ * there is nothing here to put in the copied CSS — this strip only decides
+ * which of the two you are looking at. */
+const THEME: readonly DocTheme[] = ["light", "dark"];
+
 const RADIUS = ["none", "default", "soft", "pill"] as const;
 const DENSITY = ["compact", "default", "spacious"] as const;
 const MOTION = ["full", "default", "reduce"] as const;
@@ -36,21 +59,10 @@ const MOTION = ["full", "default", "reduce"] as const;
 const GROUP = "grid gap-2";
 const GROUP_TITLE = cn(EYEBROW, "m-0 flex items-baseline justify-between");
 
-/* A secondary note. It sits inside `GROUP_TITLE` in one place, so it has to
- * undo the eyebrow's uppercase and tracking rather than merely not set them. */
-const HINT = "m-0 text-1 font-normal normal-case tracking-[0] text-foreground-muted";
-
-const PRESET = [
-  "flex min-h-(--pui-target-min) cursor-pointer items-center gap-2 px-2 py-1",
-  // `font-sans font-normal leading-normal` rather than `[font:inherit]`: the
-  // shorthand is an arbitrary property, Tailwind emits those last, and its
-  // `font-size` component would overwrite the `text-2` beside it.
-  "rounded-3 border border-transparent bg-transparent font-sans font-normal leading-normal text-2 text-foreground-muted",
-  "transition-[background-color,border-color,color] duration-fast ease-standard",
-  "hover:bg-panel-hover hover:text-foreground",
-  "data-active:border-primary-border data-active:bg-primary-soft data-active:text-primary-text",
-  "pui-focus-ring",
-].join(" ");
+/* A secondary note, and the slider's own readout — which is why it sets a size
+ * rather than only a colour: `Slider.Value` comes in at `text-2` and has to
+ * come down to match the eyebrow it shares a row with. */
+const HINT = "m-0 text-1 text-foreground-muted";
 
 /* The swatch IS the information here, so it opts out of forced-colors
  * substitution and supplies its own boundary. `border-[color:...]` rather than
@@ -62,66 +74,59 @@ const PRESET_SWATCH = [
   "border border-[color:CanvasText] [forced-color-adjust:none]",
 ].join(" ");
 
-const FIELD_INPUT = "rounded-3 border border-border px-2 py-1 font-mono text-2";
-
 /* ---------------------------------------------------------------------------
- * Segmented control.
+ * Segmented control — `Tabs`, used as a tab strip with no panels under it.
  *
- * A radiogroup, not a tab strip — arrow keys move between options and the
- * selection is announced — but it borrows Tabs' indicator: the thumb is a
- * separate element that SLIDES, so switching option reads as one movement
- * rather than two fills swapping.
+ * Some of the strip's knobs have to be retuned for that, and every one of them
+ * is set inline on Tabs.Root, the element that declares them: they are custom
+ * properties, and a utility class cannot set one.
  *
- * Tabs can measure its tabs at runtime; this cannot, so the geometry is
- * arithmetic instead. Every segment is an equal `1fr` track, which makes the
- * thumb's width `(track − gutters) / count` and its offset `index` steps of its
- * own width plus one gap. `--seg-count` and `--seg-index` come in from the
- * component. `--pui-duration-move` is the same token Tabs uses for a positional
- * move with no travel-token equivalent, and it collapses to 1ms under reduced
- * motion, so none of this needs a media query.
+ * `--pui-tabs-content-gap` is the load-bearing one. Tabs.Root is a two-row grid
+ * whose second row holds the panels, and a gutter is drawn between two explicit
+ * tracks whether or not the second one has anything in it — so a panelless
+ * strip would sit on top of a rem of dead space.
  *
- * The underscores in the calc()s are Tailwind's escape for a space, and the
- * spaces are not optional — CSS requires whitespace around `+` and `-` inside
- * calc, so `100%-2*var(--seg-gap)` would be dropped as invalid.
+ * The two surfaces have to move together, and the reason is the surface ramp.
+ * The `pill` defaults are a `--pui-color-panel` strip (gray-2) with a
+ * `--pui-color-primary-soft` thumb (accent-3), and they are tuned for a strip
+ * sitting on the page: gray-1 page, gray-2 strip, tinted thumb, each step
+ * lifting off the one under it. This panel is ALREADY gray-2, so that stack
+ * starts one rung too low — the strip disappears into the panel, and moving
+ * only the strip up to gray-4 puts accent-3 BELOW its own track, which is what
+ * turns the thumb into a hole in dark mode rather than a raised segment.
+ *
+ * So the strip recesses to gray-4 and the thumb comes back out to gray-1 — the
+ * far end of the scale in both modes, near-white on light and near-black on
+ * dark, which is the one pairing that reads the same way in each. The accent
+ * is not lost with it: `--pui-tabs-tab-color-active` already puts the active
+ * label in `--pui-color-primary-text`, so the colour lands on the word instead
+ * of the box behind it. Under forced colours none of this applies — the a11y
+ * block paints the indicator `Highlight` outright.
+ *
+ * The rest is fit. The studio's column is 19rem, and four segments at the
+ * default control height and label size do not cross it.
  * ------------------------------------------------------------------------ */
 
-const SEGMENTED = [
-  "[--seg-gap:2px] relative grid grid-cols-[repeat(var(--seg-count),minmax(0,1fr))]",
-  "gap-(--seg-gap) p-(--seg-gap) rounded-3 bg-panel-active",
-].join(" ");
+const TAB_VARS = {
+  "--pui-tabs-content-gap": "0px",
+  "--pui-tabs-list-bg": "var(--pui-color-panel-active)",
+  "--pui-tabs-indicator-color": "var(--pui-color-background)",
+  "--pui-tabs-height": "var(--pui-control-h-sm)",
+  "--pui-tabs-font-size": "var(--pui-font-size-1)",
+  "--pui-tabs-padding-x": "var(--pui-space-1)",
+} as React.CSSProperties;
 
-/* Absolutely positioned rather than a grid item: an explicitly placed grid item
- * would occupy the first cell and push the auto-placed segments along by one.
- * Its containing block is the strip's PADDING box, so the `100%` below is the
- * padded width and only the gaps have to be subtracted.
- *
- * The thumb is the only thing marking the selection, and a background is
- * replaced by a system colour under forced colours — so it paints Highlight
- * explicitly, exactly as Tabs' indicator does. */
-const SEGMENT_INDICATOR = [
-  "pointer-events-none absolute z-0 inset-y-(--seg-gap) start-(--seg-gap)",
-  "w-[calc((100%_-_2_*_var(--seg-gap)_-_(var(--seg-count)_-_1)_*_var(--seg-gap))_/_var(--seg-count))]",
-  "rounded-[calc(var(--pui-radius-3)_-_1px)] bg-background shadow-1",
-  // The percentage is the thumb's OWN width, so one step is exactly one segment
-  // plus the gap between them. `translate` is physical, so RTL mirrors by hand.
-  "translate-x-[calc(var(--seg-index)_*_(100%_+_var(--seg-gap)))]",
-  "rtl:translate-x-[calc(-1_*_var(--seg-index)_*_(100%_+_var(--seg-gap)))]",
-  "transition-[translate] duration-move ease-spring-snappy",
-  "forced-colors:bg-[color:Highlight] forced-colors:[forced-color-adjust:none]",
-].join(" ");
+/* The lift. A neutral thumb needs an edge the tinted default did not, and
+ * there is no `--pui-tabs-indicator-shadow` knob to set — but the Indicator
+ * takes a `className`, and the utilities layer beats the component's own.
+ * Dropped under forced colours anyway, where box-shadow is forced to `none`. */
+const TAB_INDICATOR = "shadow-1";
 
-const SEGMENT = [
-  // Above the thumb, so it slides behind the label the way a pill tab does.
-  "relative z-[1] min-h-(--pui-target-min) cursor-pointer p-1",
-  "rounded-[calc(var(--pui-radius-3)_-_1px)] border-0 bg-transparent",
-  "font-sans font-normal leading-normal text-1 capitalize text-foreground-muted",
-  "transition-[color] duration-fast ease-standard",
-  // `hover:` is `@media (hover: hover)` in v4, which is the gate Tabs uses too:
-  // on a touch screen `:hover` sticks to the last thing tapped.
-  "hover:not-data-active:text-foreground data-active:text-foreground",
-  "forced-colors:data-active:text-[color:HighlightText] forced-colors:data-active:[forced-color-adjust:none]",
-  "pui-focus-ring",
-].join(" ");
+/* `flex-1 min-w-0` rather than the strip's own `flex: 0 0 auto`: these are
+ * alternatives of equal weight, so they get equal width. Nothing here has to
+ * position the indicator — Base UI measures the active tab at runtime, so it
+ * follows whatever the flexbox settles on. */
+const TAB = "flex-1 min-w-0 capitalize";
 
 const RAMP = "grid h-[2.25rem] grid-cols-12 gap-[2px] overflow-hidden rounded-3";
 
@@ -279,6 +284,10 @@ export function ThemeStudio() {
   const set = <K extends keyof ThemeConfig>(k: K, v: ThemeConfig[K]) =>
     setCfg((c) => ({ ...c, [k]: v }));
 
+  // Matched on both colours, because a preset sets both: change the secondary
+  // by hand and the preset it came from is no longer what is on screen.
+  const preset = PRESETS.find((p) => p.seed === cfg.seed && p.secondary === cfg.secondary);
+
   const seedO = hexToOklch(cfg.seed);
   const warnings = seedO ? validateSeed(seedO) : [{ level: "warn" as const, message: "Not a valid hex colour." }];
   const on = seedO ? bestOnColor(seedO) : null;
@@ -362,47 +371,89 @@ export function ThemeStudio() {
           "max-two-col:static max-two-col:max-h-none",
         )}
       >
+        <Appearance />
+
         <section className={GROUP}>
           <h3 className={GROUP_TITLE}>Presets</h3>
-          <div className="grid grid-cols-2 gap-1">
+          {/* A ToggleGroup rather than a RadioGroup, for the reason `Radio`'s
+            * own doc comment gives: a radio group selects as the arrow keys
+            * move, and every selection here re-themes the entire document. A
+            * toggle group moves focus and waits for Enter or Space.
+            *
+            * It also allows "nothing pressed", which is a state this control
+            * genuinely has — edit either colour by hand and no preset is
+            * current any more. A radio group has no way to express that. */}
+          <ToggleGroup
+            className="grid w-full grid-cols-2 gap-1"
+            aria-label="Colour presets"
+            value={preset ? [preset.name] : []}
+            onValueChange={(names) => {
+              // Pressing the pressed toggle empties the group. There is no
+              // "no preset" theme to apply, so that is simply ignored.
+              const next = PRESETS.find((p) => p.name === names[0]);
+              if (next) setCfg((c) => ({ ...c, seed: next.seed, secondary: next.secondary }));
+            }}
+          >
             {PRESETS.map((p) => (
-              <button
+              <Toggle
                 key={p.name}
-                type="button"
-                className={PRESET}
-                data-active={cfg.seed === p.seed || undefined}
+                value={p.name}
+                size="sm"
+                // The toggle centres its content; a grid of them wants the
+                // swatches lined up down the column instead.
+                className="justify-start"
                 style={{ "--swatch": p.seed, "--swatch2": p.secondary } as React.CSSProperties}
-                onClick={() => setCfg((c) => ({ ...c, seed: p.seed, secondary: p.secondary }))}
-                aria-label={`${p.name} preset`}
-                title={p.name}
               >
                 <span className={PRESET_SWATCH} aria-hidden="true" />
                 {p.name}
-              </button>
+              </Toggle>
             ))}
-          </div>
+          </ToggleGroup>
         </section>
 
         <section className={GROUP}>
           <h3 className={GROUP_TITLE}>Brand colours</h3>
-          <ColorField label="Primary" value={cfg.seed} onChange={(v) => set("seed", v)} />
-          <ColorField label="Secondary" value={cfg.secondary} onChange={(v) => set("secondary", v)} />
+          <ColorField
+            label="Primary"
+            value={cfg.seed}
+            onChange={(v) => set("seed", v)}
+            swatches={PRESET_SEEDS}
+          />
+          <ColorField
+            label="Secondary"
+            value={cfg.secondary}
+            onChange={(v) => set("secondary", v)}
+            swatches={PRESET_SECONDARIES}
+          />
         </section>
 
         <section className={GROUP}>
-          <h3 className={GROUP_TITLE}>
-            Neutral tint <span className={HINT}>{cfg.tint.toFixed(2)}</span>
-          </h3>
-          <input
-            className="w-full accent-primary"
-            type="range"
+          <Slider.Root
+            value={cfg.tint}
+            onValueChange={(v) => set("tint", v)}
             min={0}
             max={1}
             step={0.05}
-            value={cfg.tint}
-            onChange={(e) => set("tint", Number(e.target.value))}
-            aria-label="Neutral tint: how much of the brand hue bleeds into the greys"
-          />
+            format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+            // The default 16rem would stop short of the panel's edge. This is
+            // the knob the component documents for exactly that.
+            style={{ "--pui-slider-length": "100%" } as React.CSSProperties}
+          >
+            {/* Slider.Label renders a <div>, so `render` puts the panel's own
+              * heading element back. It stays wired to the thumb's hidden input
+              * by aria-labelledby either way — which is why the range input's
+              * old aria-label is gone rather than moved. */}
+            <Slider.Label render={<h3 />} className={cn(EYEBROW, "m-0")}>
+              Neutral tint
+            </Slider.Label>
+            <Slider.Value className={HINT} />
+            <Slider.Control>
+              <Slider.Track>
+                <Slider.Indicator />
+                <Slider.Thumb />
+              </Slider.Track>
+            </Slider.Control>
+          </Slider.Root>
           <p className={HINT}>How much of the brand hue bleeds into the greys. 0 is pure neutral.</p>
         </section>
 
@@ -515,67 +566,129 @@ function Ramp({ name }: { name: string }) {
   );
 }
 
-function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
-  const id = React.useId();
+/** Eight-bit sRGB back to the six-digit hex the studio stores.
+ *
+ *  The picker can emit eight digits — paste `#7c3aedcc` into its input and the
+ *  alpha is real — and every consumer of a seed here wants six: `hexToOklch`,
+ *  the stored config's own validation, and the CSS the studio prints. Alpha
+ *  means nothing to a seed, so it is dropped once, at this boundary, rather
+ *  than guarded against at each of them. */
+function toHex({ r, g, b }: Rgba) {
+  return `#${[r, g, b].map((c) => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
+}
+
+function ColorField({
+  label, value, onChange, swatches,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  swatches: readonly string[];
+}) {
   return (
-    <div className="grid grid-cols-[5rem_2rem_minmax(0,1fr)] items-center gap-2 text-2 text-foreground-muted">
-      <label htmlFor={id}>{label}</label>
-      <input
-        id={id}
-        type="color"
-        value={/^#[0-9a-f]{6}$/i.test(value) ? value : "#000000"}
-        onChange={(e) => onChange(e.target.value)}
-        className="size-6 cursor-pointer rounded-3 border border-border bg-transparent p-0"
-      />
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(FIELD_INPUT, "min-w-0 bg-background text-foreground")}
-        spellCheck={false}
-        aria-label={`${label} hex value`}
-      />
-    </div>
+    <ColorPicker.Root
+      value={value}
+      onValueChange={(_, details) => onChange(toHex(details.rgba))}
+      /* One notation, so the picker never hands back a string the studio's own
+       * hex validation would reject — and so the format select has nothing to
+       * offer and is left out of the popup below. */
+      formats={["hex"]}
+    >
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+        {/* The trigger carries the label, so there is no separate <label> to
+          * pair with it, and the swatch it draws is the value. The hex sits
+          * beside the button rather than inside it: the trigger already
+          * announces the colour in a visually hidden span, and a second copy
+          * within the button would land in its accessible name twice. */}
+        <ColorPicker.Trigger className="justify-start">{label}</ColorPicker.Trigger>
+        <ColorPicker.Value />
+      </div>
+      <ColorPicker.Popup>
+        <ColorPicker.Area />
+        <ColorPicker.HueSlider />
+        {/* The preset palette again, so the eight themes are reachable one
+          * colour at a time — which is the whole point of opening this popup
+          * on a studio that already has a preset grid. */}
+        <ColorPicker.Swatches colors={swatches} label={`${label} presets`} />
+        <ColorPicker.Row>
+          <ColorPicker.Preview />
+          <ColorPicker.Input />
+        </ColorPicker.Row>
+      </ColorPicker.Popup>
+    </ColorPicker.Root>
   );
+}
+
+/**
+ * Light ⇄ dark for the whole page, offered here as well as in the header —
+ * this is the panel you are reading while you judge a seed, and the mode is
+ * the one thing about the preview you cannot change from it.
+ *
+ * `data-theme` on <html> is the source of truth and it is written before first
+ * paint, so the server has no way to know it and it cannot seed `useState`.
+ * `null` until mount is the honest answer rather than a guess: Base UI keeps
+ * the indicator hidden until it has something to measure, so the strip comes up
+ * unselected for a frame instead of flashing the wrong mode — which is the same
+ * bug the header toggle avoids by holding no state at all.
+ *
+ * The attribute is also watched rather than mirrored, because three other
+ * things write it: the header toggle, the pre-paint script, and the OS
+ * listener that follows `prefers-color-scheme` while no choice is stored.
+ * Observing what they all write is what keeps this strip right whoever moved it.
+ */
+function Appearance() {
+  const [theme, setTheme] = React.useState<DocTheme | null>(null);
+
+  React.useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setTheme(getDocumentTheme());
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
+
+  // No local write-back: `setDocumentTheme` moves the attribute and the
+  // observer above brings the value home, so there is one path in and out.
+  return <Choice label="Appearance" options={THEME} value={theme} onChange={setDocumentTheme} />;
 }
 
 function Choice<T extends string>({
   label, options, value, onChange,
-}: { label: string; options: readonly T[]; value: T; onChange: (v: T) => void }) {
+}: {
+  label: string;
+  options: readonly T[];
+  /* `null` is a legal Tabs value and is deliberately not normalised away — it
+   * is what `Appearance` renders until it has read the document. */
+  value: T | null;
+  onChange: (v: T) => void;
+}) {
   return (
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>{label}</h3>
-      {/* A radiogroup rather than a Tabs strip: these pick a setting, they do
-        * not switch between panels, so arrow keys move between options and the
-        * selection is announced as a radio rather than a tab. The sliding thumb
-        * is Tabs' indicator idea reused — the count and the active index are
-        * all the geometry needs; see SEGMENT_INDICATOR above. */}
-      <div
-        className={SEGMENTED}
-        role="radiogroup"
-        aria-label={label}
-        style={{
-          "--seg-count": options.length,
-          "--seg-index": options.indexOf(value),
-        } as React.CSSProperties}
+      {/* A tab strip with no panels beneath it. These pick a setting rather
+        * than switch between regions, so there is nothing for a Tab's
+        * `aria-controls` to point at — the strip is named by `aria-label` and
+        * the tablist's own "1 of 4" is what a screen reader reads out.
+        *
+        * What it buys is the indicator: Base UI measures the active tab and
+        * publishes its geometry, so the pill slides without this file
+        * computing a single offset. */}
+      <Tabs.Root
+        value={value}
+        onValueChange={(next) => onChange(next as T)}
+        variant="pill"
+        style={TAB_VARS}
       >
-        {options.map((o) => (
-          <button
-            key={o}
-            type="button"
-            role="radio"
-            aria-checked={value === o}
-            className={SEGMENT}
-            data-active={value === o || undefined}
-            onClick={() => onChange(o)}
-          >
-            {o}
-          </button>
-        ))}
-        {/* The thumb. Absolutely positioned, so its place in the DOM is free —
-          * it sits last, after the options it decorates. */}
-        <span className={SEGMENT_INDICATOR} aria-hidden="true" />
-      </div>
+        <Tabs.List className="w-full" aria-label={label}>
+          {options.map((o) => (
+            <Tabs.Tab key={o} value={o} className={TAB}>
+              {o}
+            </Tabs.Tab>
+          ))}
+          <Tabs.Indicator className={TAB_INDICATOR} />
+        </Tabs.List>
+      </Tabs.Root>
     </section>
   );
 }

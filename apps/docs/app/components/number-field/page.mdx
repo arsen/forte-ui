@@ -1,0 +1,335 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Number Field",
+  description:
+    "A text input that knows it holds a number — it parses, formats, steps, clamps, and can be scrubbed by dragging its label.",
+};
+
+# Number Field
+
+A text input that knows it holds a number. It parses and formats through
+`Intl.NumberFormat`, steps with the arrow keys and two stepper buttons, clamps
+to `min` and `max`, and hands a form a real `number | null` rather than a string
+that happens to look numeric.
+
+<DemoBlock id="number-field/basic" />
+
+The part worth knowing about is the **scrub area**. Wrap it around the label and
+the label becomes a drag handle — drag sideways over the word "Quantity" and the
+number follows. It is the interaction Figma, Blender and every DAW taught
+people, and it is faster than any stepper for roughing a value in.
+
+## Import
+
+```tsx
+import { NumberField } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+```tsx
+<NumberField.Root>
+  <NumberField.ScrubArea>
+    {/* the label — this is what you drag */}
+  </NumberField.ScrubArea>
+  <NumberField.Group>
+    <NumberField.Decrement />
+    <NumberField.Input />
+    <NumberField.Increment />
+  </NumberField.Group>
+</NumberField.Root>
+```
+
+`Group` is the element that draws the box; the input inside it is borderless and
+transparent, so the three segments read as one control. The steppers ship a plus
+and a minus glyph, and Base UI labels them "Increase" and "Decrease" — pass
+`children` to either one to replace the glyph without losing the label.
+
+## Scrubbing
+
+Scrubbing is invisible. Nothing about a label suggests it can be dragged, and a
+control whose best interaction nobody finds may as well not have it — so
+`ScrubArea` ships three cues by default, and they cover three different moments.
+
+<DemoBlock id="number-field/scrubbing" />
+
+**At rest — the grip.** A double-headed arrow after the label, at
+`--pui-number-field-scrub-grip-opacity` (0.7), so it reads as an affordance
+without competing with the words next to it. This is the only cue present before
+the user has done anything, and the only one a touch user ever sees, which is
+why it is on by default. Turn it off with `grip={false}` when the surrounding
+design carries the affordance some other way — not to tidy the layout.
+
+**On hover — the cursor and a wash.** `ew-resize`, or `ns-resize` when
+`direction="vertical"`, plus a panel-coloured background behind the label and
+the grip at full opacity.
+
+<Callout kind="note">
+  The resize cursor is a deliberate exception to the library's
+  [pointer rule](/). `cursor: pointer` promises "click me and something
+  happens", and clicking a scrub area does nothing at all — the value only moves
+  once the pointer does. The resize cursor is what the platform already uses for
+  this exact gesture.
+</Callout>
+
+**During the drag — a tint and a stand-in pointer.** `data-scrubbing` lands on
+the root and every part under it: the scrub area takes the primary tint, and the
+`Group`'s **border** turns primary as well, which is what connects a drag
+happening up on the label to the number it is changing. Scrubbing also takes a
+[pointer lock](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API),
+and a locked pointer is an *invisible* one — so `ScrubArea` renders a
+`ScrubAreaCursor` to stand in for it. Pass `cursor={false}` and render your own
+if you want a different glyph.
+
+<Callout kind="warn">
+  Both defaults are opt-out for a reason. `grip={false}` leaves a drag surface
+  with nothing marking it, and `cursor={false}` without a replacement
+  `ScrubAreaCursor` leaves the user dragging with no pointer visible at all.
+</Callout>
+
+### Sensitivity and direction
+
+`pixelSensitivity` is how far the pointer travels for one step, which makes it a
+precision control: raise it when the range is small and every value counts, drop
+it when the user is roughing a number in.
+
+<DemoBlock id="number-field/sensitivity" />
+
+`direction="vertical"` swaps the axis — the cursor becomes `ns-resize` and the
+grip rotates 90° to match. `teleportDistance` bounds how far the stand-in cursor
+may travel before it wraps to the opposite edge, which keeps a long drag from
+running off the screen.
+
+### The wheel
+
+The second scrub gesture, and the quiet one. `allowWheelScrub` on `Root` lets
+the wheel move the value, but only while the input is **both focused and
+hovered** — so an ordinary page scroll can never change a number in passing.
+
+<DemoBlock id="number-field/wheel" />
+
+## Examples
+
+### Sizes
+
+`size` moves height, inline padding and glyph size together, from the same
+`--pui-control-*` tokens `Input` and `Select.Trigger` read — so all three line up
+on one row at every `data-pui-density` setting. The steppers stay square because
+they take their height from the group rather than declaring one.
+
+<DemoBlock id="number-field/sizes" />
+
+### Variants
+
+The same three `Input` has: `outline` reads as a form control, `soft` as a
+filled field, `ghost` as an inline affordance. `ghost` also drops the rules
+between the segments, which are what keep the buttons legible in the other two.
+
+<DemoBlock id="number-field/variants" />
+
+### Formatting
+
+`format` takes `Intl.NumberFormatOptions` verbatim, so currency, percent and unit
+displays are a prop rather than a wrapper — and the field parses back what it
+printed, so a user can type `$1,250` into the first field below.
+
+<DemoBlock id="number-field/format" />
+
+<Callout kind="note">
+  `style: "percent"` works in fractions, the way `Intl` does: a value of `0.075`
+  displays as 7.5%, so a `step` of `0.01` is what moves the display by one point.
+  `locale` on `Root` overrides the runtime's — worth pinning when the number is
+  part of a document rather than part of the user's own settings.
+</Callout>
+
+### Steps
+
+`step` is the ordinary increment, `smallStep` the <kbd>Alt</kbd> one and
+`largeStep` the <kbd>Shift</kbd> one, and all three apply to the arrow keys, the
+stepper buttons and the scrub alike.
+
+`snapOnStep` pulls the **result of a step** onto multiples of the step, so a
+field sitting off-grid at 7 with `step={2}` moves to 8 rather than 9. It does
+not touch a value the user typed — type 7 into the second field below and it
+stays 7 until you step it, which is what keeps the control from rewriting an
+answer nobody asked it to round.
+
+<DemoBlock id="number-field/steps" />
+
+### States
+
+Disabled drops to 55% opacity and takes `cursor: not-allowed`. Read-only keeps
+full contrast — the value is still there to be read and copied — and only stops
+offering to change it. Both hide the grip: an affordance for a gesture that
+cannot happen is worse than none. Invalid recolours the group's boundary and
+nothing else, so the user's own answer never looks like the error message.
+
+<DemoBlock id="number-field/states" />
+
+### In a form
+
+The `name` goes on the `Field.Root` and the hidden input carries it, so what
+arrives in the submitted values is a real number — or `null` for an empty field,
+which is what makes "cleared" distinguishable from zero.
+
+<DemoBlock id="number-field/form" />
+
+<Callout kind="note">
+  `allowOutOfRange` lets a **typed** value sit outside `min`/`max` so the
+  platform's own range validation can fire, instead of the field silently
+  clamping the number the user meant to enter. Stepping — keys, buttons, wheel,
+  scrub — still clamps either way.
+</Callout>
+
+## Keyboard
+
+<KeyboardTable
+  rows={[
+    { keys: ["↑"], description: "Increase by step." },
+    { keys: ["↓"], description: "Decrease by step." },
+    { keys: ["Shift", "↑ / ↓"], description: "Step by largeStep (10 by default)." },
+    { keys: ["Alt", "↑ / ↓"], description: "Step by smallStep (0.1 by default)." },
+    { keys: ["Home"], description: "Jump to min — only when a min is set; otherwise the caret moves, as in any text field." },
+    { keys: ["End"], description: "Jump to max — only when a max is set." },
+    { keys: ["Tab"], description: "One stop: the text field. The steppers are deliberately not in the tab order." },
+  ]}
+/>
+
+The whole control is a single tab stop. Base UI gives both steppers
+`tabIndex={-1}`, which is the right answer for a spin button: the arrow keys
+already do what the buttons do, from the field the user is already in, so
+putting two more stops between this control and the next one would cost keyboard
+users two presses per field and buy them nothing. The buttons keep their
+`aria-label` and their `aria-controls`, so they are still described.
+
+## Accessibility
+
+The input needs an accessible name, and `<Field.Label>` is the way to give it
+one — it renders a real `<label>` wired with `htmlFor`, which is also what makes
+the scrub area's label clickable-to-focus as well as draggable. Base UI adds
+`aria-roledescription="Number field"`: the label names the control, the role
+description explains it.
+
+<Callout kind="a11y">
+  Scrubbing is an enhancement and never the only route to a value. Everything a
+  drag can do the arrow keys and the two stepper buttons can do as well, which is
+  what keeps the control usable without a pointer — and what makes it safe to
+  hide the grip in the states where dragging is off.
+</Callout>
+
+Focus is drawn once, never twice. The group carries the ring, so focusing the
+text field rings the whole control the way focusing an `Input` rings the whole
+input. The steppers carry an inset ring of their own and the group's ring is
+suppressed while one of them holds focus — which nothing reaches by default,
+since they are not tab stops, and which exists for the app that puts them back
+in the order with `tabIndex={0}`. Without the suppression that app would get two
+rings at once, because `:has(:focus-visible)` on the group is true for a focused
+stepper as well.
+
+The steppers also carry `.pui-target`, because at `sm` under
+`data-pui-density="compact"` the button inside the group's border is 22px —
+under the 24×24 floor of SC 2.5.8 — and the expander fixes the hit area without
+repainting anything.
+
+<Callout kind="warn">
+  A **global** `:focus-visible` rule in your app will draw a second ring here.
+  Everything the library ships lives in `@layer pretty-ui.*`, which an app's own
+  CSS outranks by design — so an unscoped `:focus-visible { outline: … }`
+  re-rings the input this component deliberately leaves unringed, and the
+  control ends up wearing a rounded ring around the group and a square-cornered
+  one around the middle segment at the same time. Scope the rule away from the
+  parts a component already rings for itself:
+
+```css
+:focus-visible:not(:where(.pui-focus-ring-within *)) {
+  outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
+  outline-offset: var(--pui-focus-ring-offset);
+  box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+}
+```
+
+  This site does exactly that — `Slider` has the same shape, and only got away
+  with it because the element holding its focus is visually hidden.
+</Callout>
+
+The digits are set in `tabular-nums`. That is not typographic polish: a scrub
+rewrites the value every couple of pixels of pointer travel, and proportional
+figures change width as the digits change, so the number visibly breathes for
+the whole drag.
+
+In forced-colors mode the group paints `Field` / `FieldText` with a `FieldText`
+boundary — it is a `<div>`, so the UA assigns it nothing on its own, and the
+`soft` and `ghost` variants' `transparent` border would otherwise be replaced
+with a colour of the engine's choosing rather than left invisible. The grip's
+resting opacity is reset to `1` there for the same reason a disabled control's
+is: `opacity` is one of the few properties forced-colors does **not** override,
+so a 0.7 grip would stay 30% transparent against system colours and read as
+disabled chrome.
+
+## Theming
+
+Every property below is declared on the part that paints it — the group, the
+input, a stepper, the scrub area — and an element's own declaration beats an
+inherited one, so setting these on an ancestor does nothing. Set them on the
+part, through `className` (an unlayered rule beats `@layer pretty-ui.components`
+whatever its specificity) or an inline `style`.
+
+The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*` — are the exception: this component only reads those, so
+re-pointing them from `:root` or a theme scope moves every number field at once.
+
+<ThemingTable component="NumberField" />
+
+<Callout kind="note">
+  `--pui-number-field-scrub-cursor-*` is set on an element that is portalled to
+  `<body>`, which means it does **not** inherit a `.pui-theme` scope — the same
+  trade every portalled surface in this library makes. It also means Base UI
+  writes `transform` on that element on every pointer move, so nothing there may
+  set or animate that property.
+</Callout>
+
+## API reference
+
+The tables list what each part adds on top of Base UI. Everything else passes
+straight through.
+
+### NumberField.Root
+
+Also takes Base UI's own root props unchanged: `value`, `defaultValue`,
+`onValueChange`, `onValueCommitted`, `min`, `max`, `step`, `smallStep`,
+`largeStep`, `snapOnStep`, `allowOutOfRange`, `allowWheelScrub`, `format`,
+`locale`, `name`, `form`, `id`, `required`, `disabled`, `readOnly`, `inputRef`
+and `render`.
+
+<PropTable component="NumberFieldRoot" />
+
+### NumberField.Group
+
+<PropTable component="NumberFieldGroup" />
+
+### NumberField.Input
+
+<PropTable component="NumberFieldInput" />
+
+### NumberField.Increment
+
+<PropTable component="NumberFieldIncrement" />
+
+### NumberField.Decrement
+
+<PropTable component="NumberFieldDecrement" />
+
+### NumberField.ScrubArea
+
+Also takes Base UI's `teleportDistance`.
+
+<PropTable component="NumberFieldScrubArea" />
+
+### NumberField.ScrubAreaCursor
+
+<PropTable component="NumberFieldScrubAreaCursor" />

@@ -7,6 +7,34 @@ import { ICON } from "./styles";
 
 const STORAGE_KEY = "pui-theme";
 
+export type DocTheme = "light" | "dark";
+
+/**
+ * Write the mode. The one place `data-theme` and its storage record are set
+ * together, because the two have to move as a pair: the attribute is what the
+ * palette reads, and the record is what the pre-paint script in `layout.tsx`
+ * replays on the next load. Writing only the attribute themes this page and
+ * loses the choice on navigation.
+ *
+ * Exported because the Theme Studio offers the same switch in its own panel,
+ * and a second copy of these five lines is exactly how the two would drift
+ * apart on a key rename.
+ */
+export function setDocumentTheme(next: DocTheme) {
+  document.documentElement.setAttribute("data-theme", next);
+  try {
+    localStorage.setItem(STORAGE_KEY, next);
+  } catch {
+    // Private mode / blocked storage: the switch still works for this page.
+  }
+}
+
+/** The mode currently on the document. Only meaningful after mount — before
+ *  the pre-paint script runs there is no attribute to read. */
+export function getDocumentTheme(): DocTheme {
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+}
+
 /**
  * Light ⇄ dark, and nothing else — no "system" step to cycle past.
  *
@@ -42,14 +70,7 @@ export function ThemeToggle() {
   }, []);
 
   function toggle() {
-    const root = document.documentElement;
-    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // Private mode / blocked storage: the switch still works for this page.
-    }
+    setDocumentTheme(getDocumentTheme() === "dark" ? "light" : "dark");
   }
 
   return (

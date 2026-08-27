@@ -148,6 +148,30 @@ export type {
   MenuShortcutProps,
 } from "./components/menu";
 
+export { NumberField } from "./components/number-field";
+export type {
+  NumberFieldSize,
+  NumberFieldVariant,
+  NumberFieldScrubDirection,
+  NumberFieldRootProps,
+  NumberFieldGroupProps,
+  NumberFieldInputProps,
+  NumberFieldIncrementProps,
+  NumberFieldDecrementProps,
+  NumberFieldScrubAreaProps,
+  NumberFieldScrubAreaCursorProps,
+} from "./components/number-field";
+
+export { OTPField } from "./components/otp-field";
+export type {
+  OTPFieldSize,
+  OTPFieldVariant,
+  OTPFieldValidationType,
+  OTPFieldRootProps,
+  OTPFieldInputProps,
+  OTPFieldSeparatorProps,
+} from "./components/otp-field";
+
 export { Popover } from "./components/popover";
 export type {
   PopoverSize,
@@ -162,6 +186,16 @@ export type {
   PopoverFooterProps,
   PopoverViewportProps,
 } from "./components/popover";
+
+export { PreviewCard } from "./components/preview-card";
+export type {
+  PreviewCardSize,
+  PreviewCardRootProps,
+  PreviewCardTriggerProps,
+  PreviewCardPopupProps,
+  PreviewCardArrowProps,
+  PreviewCardViewportProps,
+} from "./components/preview-card";
 
 export { Progress, ProgressCircle } from "./components/progress";
 export type {
@@ -258,6 +292,14 @@ export type {
   TabsIndicatorProps,
   TabsPanelProps,
 } from "./components/tabs";
+
+export { Textarea } from "./components/textarea";
+export type {
+  TextareaProps,
+  TextareaSize,
+  TextareaVariant,
+  TextareaResize,
+} from "./components/textarea";
 
 export { Toast, useToast } from "./components/toast";
 export type {

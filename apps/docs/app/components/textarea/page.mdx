@@ -1,0 +1,207 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Textarea",
+  description:
+    "A multi-line text control sized in rows rather than pixels, with an optional ceiling and CSS-driven auto-growth.",
+};
+
+# Textarea
+
+The control you reach for when the answer is a paragraph rather than a line.
+It is a real `<textarea>`, so `placeholder`, `required`, `minLength`,
+`maxLength`, `wrap` and the rest work exactly as they do on the platform —
+what the library adds is the design system's metrics, the two-tone focus ring,
+height expressed in rows, and the wiring that makes it participate in a
+[Field](/components/field) without a line of glue.
+
+<DemoBlock id="textarea/basic" />
+
+Base UI has no textarea primitive. This one is built on `Field.Control` —
+literally the same component [Input](/components/input) is — rendered as a
+`<textarea>` instead of an `<input>`. That is why it needs no wiring either:
+inside a `<Field.Root>` it picks up the label, the description, the error
+message, the `name` used on submit, and the validity attributes.
+
+## Import
+
+```tsx
+import { Textarea } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sizes
+
+`size` moves inline padding, block padding and font size together, and the
+numbers come from the same `--pui-control-*` tokens `Input` and
+`Select.Trigger` read — so a textarea stacked under an input in a form shares
+its optical inset at every `data-pui-density` setting.
+
+<DemoBlock id="textarea/sizes" />
+
+What `size` does **not** move is the height, because height here is counted in
+rows and a row is one line of this control's own text. The three boxes below
+are all `rows={2}` and all different heights, which is the point: a row is
+`1lh`, so the arithmetic re-does itself at every size and every density without
+a pixel being written down.
+
+<Callout kind="note">
+  A `<textarea>` has no native `size` attribute, so unlike `Input` this prop
+  shadows nothing. `cols` still works if you want a width in characters, though
+  `fullWidth` or a CSS `inline-size` is usually what you meant.
+</Callout>
+
+### Variants
+
+`variant` changes only how much weight the control carries: `outline` reads as
+a form control, `soft` as a filled field, `ghost` as an inline affordance —
+the same three `Input` and the select trigger have.
+
+<DemoBlock id="textarea/variants" />
+
+### Growing with the content
+
+`autoResize` grows the box as the user types, between `rows` and `maxRows`.
+Past `maxRows` it scrolls rather than growing — which is the whole reason to
+set one: an unbounded composer eventually pushes its own Send button off the
+bottom of the screen.
+
+<DemoBlock id="textarea/auto-resize" />
+
+It is one CSS declaration where the browser has it. `field-sizing: content`
+sizes the box from its content during layout, so there is no measurement, no
+reflow per keystroke and no inline height fighting the stylesheet — and the
+`min-block-size` / `max-block-size` computed from `rows` and `maxRows` clamp it
+without any extra code.
+
+<Callout kind="note">
+  `field-sizing` landed in Chrome 123, Firefox 152 and Safari 26.2, so a real
+  share of visitors do not have it yet. Rather than let auto-growth silently
+  not happen for them, the component falls back to a `scrollHeight` read driven
+  by an `input` listener and a `ResizeObserver` — the same geometry, at the
+  cost of a layout per change. The fallback is skipped entirely where the
+  property is supported.
+</Callout>
+
+`autoResize` forces `resize` to `"none"`, and the `data-resize` attribute
+reports that rather than what you passed: a drag handle whose value the next
+keystroke overwrites is not a control.
+
+### A character counter
+
+`maxLength` is enforced by the browser; the counter only reports it. Leaving
+enforcement to the platform is what keeps paste, undo and IME composition
+correct — a `slice()` in an `onChange` handler breaks all three.
+
+<DemoBlock id="textarea/character-count" />
+
+The count sits inside `<Field.Description>`, which means it is already in the
+textarea's `aria-describedby` and is read out with the field. It is
+deliberately **not** an `aria-live` region: it changes on every keystroke, and
+a screen reader announcing "142 left" after each one buries the letters the
+user is actually typing.
+
+### A comment composer
+
+The shape most textareas in an app actually take: one row at rest, `soft` so it
+reads as part of the thread rather than as a form, a ceiling so a long comment
+scrolls instead of pushing Post out of reach, and a modifier shortcut to send.
+
+<DemoBlock id="textarea/composer" />
+
+<Callout kind="a11y">
+  The shortcut is <kbd>⌘</kbd> / <kbd>Ctrl</kbd> + <kbd>Enter</kbd>, never
+  <kbd>Enter</kbd> alone. This is a multi-line control: a bare Enter has to keep
+  inserting a newline, or the one thing the control exists for stops working.
+</Callout>
+
+### States
+
+Disabled and read-only are not the same thing and do not look the same.
+Disabled drops to 55% opacity, takes `cursor: not-allowed`, and loses the
+resize handle — a control that cannot be edited must not offer a drag that does
+nothing. Read-only keeps full contrast, a panel-coloured background, the text
+cursor **and** the handle: selecting, copying and reading a long value is the
+point of the state, and a taller box makes all three easier.
+
+<DemoBlock id="textarea/states" />
+
+### In a form
+
+Validity arrives on `data-invalid` from `Field.Control`, whether the rule is
+`required`, a native constraint like `minLength`, or a custom `validate` on the
+field. Only the boundary and the caret recolour — turning the value text danger
+red as well would make the user's own answer look like the error message, and
+on a textarea that is a whole paragraph of it.
+
+<DemoBlock id="textarea/validation" />
+
+## Accessibility
+
+A textarea needs an accessible name, and `<Field.Label>` is the way to give it
+one — it renders a real `<label>` wired with `htmlFor`, so clicking the text
+focuses the control. Where the design has no visible label — a composer is the
+usual case — `aria-label` on the textarea is the fallback.
+
+<Callout kind="a11y">
+  Put format hints in `<Field.Description>`, not in `placeholder`. A placeholder
+  disappears the moment the user starts typing, which is exactly when the hint
+  is needed; it is invisible to anyone who has already filled the field; and it
+  is not reliably announced.
+</Callout>
+
+Placeholder text is coloured `--pui-color-foreground-muted` (5.82:1) rather
+than `--pui-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
+placeholders in an enabled control, and Firefox's own 0.54 `::placeholder`
+opacity is reset for the same reason.
+
+There is no `pui-target` here: the SC 2.5.8 floor is about pointer targets
+under 24px, and the shortest box this component can produce — `size="sm"`,
+`rows={1}`, `compact` density — is taller than that on its own.
+
+In forced-colors mode the control paints `Field` / `FieldText` with a
+`FieldText` boundary. That last part matters for `soft` and `ghost`, whose
+border is `transparent` — a value forced-colors replaces with a system colour
+of its choosing rather than leaving invisible, so without the restatement the
+three variants would stop looking like the same control.
+
+## Theming
+
+Every `--pui-textarea-*` property is declared on the textarea element itself,
+and an element's own declaration beats an inherited one — so setting these on
+`:root`, on a theme scope or on any ancestor does nothing. Set them on the
+textarea, through `className` (an unlayered rule beats
+`@layer pretty-ui.components` whatever its specificity) or an inline `style`.
+
+The two row counts are knobs like any other, which is what lets a consumer set
+a house-wide minimum height from a stylesheet without touching JSX:
+
+```css
+[data-pui="textarea"] {
+  --pui-textarea-rows: 5;
+  --pui-textarea-max-rows: 12;
+}
+```
+
+`--pui-textarea-max-rows` defaults to `infinity` rather than to a large number,
+so `max-block-size` resolves to the largest length the engine supports and the
+knob is a complete statement on its own — no ceiling until you name one.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*` — are the exception: this component only reads those, so
+re-pointing them from `:root` or a theme scope moves every textarea at once.
+
+<ThemingTable component="Textarea" />
+
+## API reference
+
+### Textarea
+
+<PropTable component="Textarea" />
+
+Everything else is a native `<textarea>` prop and passes straight through, plus
+Base UI's `render`, `onValueChange` and `defaultValue`.

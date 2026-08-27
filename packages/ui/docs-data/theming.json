@@ -2632,6 +2632,584 @@
       }
     ]
   },
+  "NumberField": {
+    "name": "NumberField",
+    "tokens": [
+      {
+        "name": "--pui-number-field-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Space between the scrub area and the group",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Control height (reset per `size`)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".group[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".group[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-border-width",
+        "value": "1px",
+        "description": "Border width",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-separator-width",
+        "value": "1px",
+        "description": "Rule between a stepper and the input",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-separator-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of the rule between a stepper and the input (reset per `variant`)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Background (reset per `variant`)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".group[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".group[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".group[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour (reset per `variant`, by `data-invalid`, and while scrubbing)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-scrubbing]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".group[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".group[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".group[data-variant=\"ghost\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".group[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-scrubbing]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".group[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-input-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding (reset per `size`)",
+        "part": "input",
+        "overrides": [
+          {
+            "selector": ".input[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".input[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".input[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-input-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size (reset per `size`)",
+        "part": "input",
+        "overrides": [
+          {
+            "selector": ".input[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".input[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".input[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-input-width",
+        "value": "5ch",
+        "description": "Room for the DIGITS at rest, before any `fullWidth` stretching. The inline padding is added to it below rather than eaten out of it, so the knob means what it says: `5ch` is five characters of room, not a box five characters wide with the padding taken out of the middle",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-text-align",
+        "value": "center",
+        "description": "Where the digits sit. `center` because the field is flanked by two steppers; `end` reads better in a table of figures",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-placeholder-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Placeholder colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-icon-size",
+        "value": "var(--pui-font-size-3)",
+        "description": "Stepper glyph size (reset per `size`)",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Stepper glyph colour",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-fg-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Stepper glyph colour on hover",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Stepper background on hover",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-bg-active",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Stepper background while held",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-press-scale",
+        "value": "var(--pui-scale-press)",
+        "description": "How far a stepper squashes while held",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the label and the grip",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-padding-x",
+        "value": "var(--pui-space-1)",
+        "description": "Inline padding of the drag surface, and the negative margin that keeps the label optically aligned with the group under it",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of the drag surface",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-bg",
+        "value": "transparent",
+        "description": "Background of the drag surface (reset while scrubbing)",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea:hover:not([data-disabled], [data-readonly])",
+            "value": "var(--pui-number-field-scrub-bg-hover)"
+          },
+          {
+            "selector": ".scrubArea[data-scrubbing]",
+            "value": "var(--pui-color-primary-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background of the drag surface on hover",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-grip-fg",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Grip colour (reset while scrubbing)",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea[data-scrubbing]",
+            "value": "var(--pui-color-primary-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-grip-opacity",
+        "value": "0.7",
+        "description": "How present the grip is at rest. It has to read as an affordance without competing with the label it sits beside",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea:hover:not([data-disabled], [data-readonly])",
+            "value": "1"
+          },
+          {
+            "selector": ".scrubArea[data-scrubbing]",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor",
+        "value": "ew-resize",
+        "description": "The pointer shown over the drag surface. Reset to `ns-resize` by `direction=\"vertical\"`",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea[data-direction=\"vertical\"]",
+            "value": "ns-resize"
+          },
+          {
+            "selector": ".scrubArea[data-disabled], .scrubArea[data-readonly]",
+            "value": "default"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-z-index",
+        "value": "60",
+        "description": "Stacking order of the stand-in pointer. One band above `Tooltip`: it replaces the mouse cursor, so nothing may cover it",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Fill of the stand-in pointer",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-halo",
+        "value": "var(--pui-color-background)",
+        "description": "The halo painted behind the fill, so the glyph stays readable over whatever the drag happens to cross",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-halo-width",
+        "value": "3px",
+        "description": "Halo thickness",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      }
+    ]
+  },
+  "OTPField": {
+    "name": "OTPField",
+    "tokens": [
+      {
+        "name": "--pui-otp-field-slot-size",
+        "value": "var(--pui-control-h-md)",
+        "description": "Slot width and height — the slots are square (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-font-size",
+        "value": "var(--pui-font-size-3)",
+        "description": "Font size of the character in a slot (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-3)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-5)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between slots",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-separator-length",
+        "value": "var(--pui-space-3)",
+        "description": "Length of the dash `OTPField.Separator` draws between slot groups",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Slot corner radius (`0px` for `variant=\"underline\"`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"underline\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-border-width",
+        "value": "1px",
+        "description": "Slot border width (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"underline\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Slot background (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".input[readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"underline\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Slot background on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Character colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Slot border colour (reset per `variant`, and again when the value is complete or the field is invalid)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".input[data-complete]",
+            "value": "var(--pui-color-primary-border)"
+          },
+          {
+            "selector": ".input[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Slot border colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".input[data-complete]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".input[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".input[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background — visible on every focus, because Base UI selects a slot's character when you land on it so the next keypress replaces it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-separator-color",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Colour of the dash `OTPField.Separator` draws",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Popover": {
     "name": "Popover",
     "tokens": [
@@ -2797,6 +3375,201 @@
       },
       {
         "name": "--pui-popover-viewport-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the incoming and outgoing content slide during a swap",
+        "part": "viewport",
+        "overrides": []
+      }
+    ]
+  },
+  "PreviewCard": {
+    "name": "PreviewCard",
+    "tokens": [
+      {
+        "name": "--pui-preview-card-trigger-color",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Link colour",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-trigger-underline-color",
+        "value": "color-mix( in oklab, currentcolor 45%, transparent )",
+        "description": "Colour of the link's underline. Muted by default so the rule reads as an underline rather than as a second line of text.",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger:hover",
+            "value": "currentcolor"
+          },
+          {
+            "selector": ".trigger[data-popup-open]",
+            "value": "currentcolor"
+          }
+        ]
+      },
+      {
+        "name": "--pui-preview-card-trigger-underline-offset",
+        "value": "0.15em",
+        "description": "Distance between the text baseline and its underline",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-z-index",
+        "value": "50",
+        "description": "Stacking order of the positioner",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Card surface colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Card text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-padding",
+        "value": "var(--pui-surface-p)",
+        "description": "Padding inside the card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Vertical gap between the card's children",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Card shadow (stripped by the browser in forced-colors mode, which is why the element also carries `.pui-hc-surface`)",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the card from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline. The arrow's outline follows it.",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Base font size inside the card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-max-width",
+        "value": "20rem",
+        "description": "Width cap, further clamped to the space the positioner reports as available; what the `size` prop sets — `16rem` for `sm`, `26rem` for `lg`",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "16rem"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "20rem"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "26rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-preview-card-arrow-width",
+        "value": "1em",
+        "description": "Arrow base width",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-arrow-height",
+        "value": "0.5em",
+        "description": "Arrow height, and the distance it is pushed out from the card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the card slides in from, per side",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-enter-scale",
+        "value": "var(--pui-scale-enter)",
+        "description": "Scale the card grows from and shrinks back to",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-enter-ease",
+        "value": "var(--pui-ease-emphasized)",
+        "description": "Curve of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-resize-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long the card takes to resize between two links' content; only in play when a `PreviewCard.Viewport` is present",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-preview-card-viewport-travel",
         "value": "var(--pui-travel-sm)",
         "description": "How far the incoming and outgoing content slide during a swap",
         "part": "viewport",
@@ -4489,6 +5262,193 @@
         "name": "--pui-tabs-panel-padding",
         "value": "0px",
         "description": "Padding inside the panel",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Textarea": {
+    "name": "Textarea",
+    "tokens": [
+      {
+        "name": "--pui-textarea-rows",
+        "value": "3",
+        "description": "Shortest the control can be, in rows (the `rows` prop writes this)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-padding-y",
+        "value": "calc(var(--pui-textarea-padding-x) / 2)",
+        "description": "Block padding",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-line-height",
+        "value": "var(--pui-line-height-normal)",
+        "description": "Line height — also the unit the row counts above are measured in",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-border-width",
+        "value": "1px",
+        "description": "Border width",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Background (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-placeholder-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Placeholder colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour (reset per `variant`, and by `data-invalid`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
         "part": "root",
         "overrides": []
       }
