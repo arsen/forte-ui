@@ -82,9 +82,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ThemeToggle />
               </div>
             </header>
-            <div className="grid w-full max-w-shell grid-cols-[15rem_minmax(0,1fr)_14rem] gap-5 px-4 max-toc:grid-cols-[15rem_minmax(0,1fr)] max-nav:grid-cols-[minmax(0,1fr)]">
+            {/* The cap is on the PAGE COLUMN, not on the grid, and the two are
+              * not interchangeable. A `max-width` on the grid is spent by the
+              * two fixed rails first — at 72rem it leaves the page 38rem, less
+              * than the 48rem measure the prose already asks for — so the cap
+              * that reads as "72rem of page" has to be written as the column's
+              * own maximum. The rails then sit against it at every width and no
+              * empty gutter opens up between the page and the section rail.
+              *
+              * `justify-center`, not `mx-auto`: the grid is `w-full` and has no
+              * maximum of its own, so what needs centring is the column set
+              * inside it, which is `justify-content` rather than a margin.
+              *
+              * Nothing here caps the reading measure — `max-w-measure` is on
+              * `p`, `ul` and `ol` in `mdx-components.tsx`, which is the only
+              * place that can tell running text from a prop table. This cap is
+              * a stop for ultra-wide displays; that one is the measure. */}
+            <div className="grid w-full justify-center grid-cols-[15rem_minmax(0,var(--container-6xl))_14rem] gap-5 px-4 max-toc:grid-cols-[15rem_minmax(0,var(--container-6xl))] max-nav:grid-cols-[minmax(0,var(--container-6xl))]">
               <Sidebar />
-              <main className="min-w-0 pt-7 pb-8 max-w-6xl mx-auto" id="main">{children}</main>
+              <main className="min-w-0 pt-7 pb-8" id="main">{children}</main>
               {/* The section rail. It renders nothing on a page with fewer than
                 * two headings, and the track is a fixed width either way, so
                 * the centre column does not shift between pages. */}
