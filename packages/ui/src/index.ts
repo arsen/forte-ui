@@ -178,6 +178,29 @@ export type {
   MenuShortcutProps,
 } from "./components/menu";
 
+export { Menubar } from "./components/menubar";
+export type {
+  MenubarProps,
+  MenubarVariant,
+  MenubarOrientation,
+} from "./components/menubar";
+
+export { NavigationMenu } from "./components/navigation-menu";
+export type {
+  NavigationMenuVariant,
+  NavigationMenuColumns,
+  NavigationMenuRootProps,
+  NavigationMenuListProps,
+  NavigationMenuItemProps,
+  NavigationMenuTriggerProps,
+  NavigationMenuIconProps,
+  NavigationMenuContentProps,
+  NavigationMenuLinkProps,
+  NavigationMenuLinkTitleProps,
+  NavigationMenuLinkDescriptionProps,
+  NavigationMenuPopupProps,
+} from "./components/navigation-menu";
+
 export { NumberField } from "./components/number-field";
 export type {
   NumberFieldSize,
@@ -365,6 +388,19 @@ export type {
   ToggleGroupProps,
   ToggleGroupOrientation,
 } from "./components/toggle";
+
+export { Toolbar } from "./components/toolbar";
+export type {
+  ToolbarOrientation,
+  ToolbarVariant,
+  ToolbarSize,
+  ToolbarRootProps,
+  ToolbarGroupProps,
+  ToolbarButtonProps,
+  ToolbarLinkProps,
+  ToolbarInputProps,
+  ToolbarSeparatorProps,
+} from "./components/toolbar";
 
 export { Tooltip } from "./components/tooltip";
 export type {

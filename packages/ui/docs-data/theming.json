@@ -2642,6 +2642,463 @@
       }
     ]
   },
+  "Menubar": {
+    "name": "Menubar",
+    "tokens": [
+      {
+        "name": "--pui-menubar-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between adjacent menu triggers",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-padding",
+        "value": "0px",
+        "description": "Padding between the strip's edge and the triggers",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of the strip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-bg",
+        "value": "transparent",
+        "description": "Strip background",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-border-width",
+        "value": "0px",
+        "description": "Width of the hairline around the strip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "1px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height of a menu trigger in the bar",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-px",
+        "value": "var(--pui-control-px-sm)",
+        "description": "Inline padding inside a trigger. One step tighter than a standalone button's: a bar is a row of words, and `md` padding spaces them like buttons in a toolbar",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a trigger",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Trigger font size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Trigger font weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Trigger text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-bg",
+        "value": "transparent",
+        "description": "Trigger background at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Trigger background on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel-active)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menubar-trigger-bg-open",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the trigger whose menu is open",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menubar-trigger-fg-open",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the trigger whose menu is open",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "NavigationMenu": {
+    "name": "NavigationMenu",
+    "tokens": [
+      {
+        "name": "--pui-navigation-menu-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between adjacent items in the bar",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height of a `plain` row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-px",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding inside a `plain` row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between a `plain` row's label and its icon",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a `plain` row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour of a `plain` row at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background of a hovered `plain` row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-bg-open",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the row whose panel is open, and of the current page's row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-fg-open",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of those same two rows",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size of a `plain` row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-row-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Font weight of a `plain` row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-icon-size",
+        "value": "var(--pui-space-4)",
+        "description": "Size the chevron is drawn at, in both variants",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-backdrop-z-index",
+        "value": "49",
+        "description": "Stacking order of the backdrop",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-z-index",
+        "value": "50",
+        "description": "Stacking order of the positioner. 50 is the band Menu, Popover, Tooltip and Select sit in — anchored popups all belong above a Dialog's 40",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-bridge",
+        "value": "var(--pui-space-2)",
+        "description": "Depth of the invisible bridge across the gap between the bar and the panel, so the pointer can travel to the panel without closing it",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-move-duration",
+        "value": "var(--pui-duration-move)",
+        "description": "How long the panel takes to travel to another trigger, and to resize between two panels",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-move-ease",
+        "value": "var(--pui-ease-emphasized)",
+        "description": "The curve it travels on",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Panel surface colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Panel text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Panel shadow (stripped by the browser in forced-colors mode, which is why the element also carries `.pui-hc-surface`)",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the panel from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline. The arrow's outline follows it.",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-content-p",
+        "value": "var(--pui-space-2)",
+        "description": "Padding inside a panel",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-content-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Gap between the cards in a panel",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-column-width",
+        "value": "15rem",
+        "description": "Width of one column. `Content`'s `columns` prop multiplies it, and the grid drops to fewer columns on its own once the panel is narrower than one of them — which is what makes a three-column panel work on a phone without a media query",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-content-inset",
+        "value": "var(--pui-space-5)",
+        "description": "Space left between the panel and the window edge when the columns above would not fit",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-p",
+        "value": "var(--pui-space-3)",
+        "description": "Padding inside a card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Gap between a card's title and its description",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Card text colour at rest",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-fg-muted",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Colour of a card's description line",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background of a hovered card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-bg-active",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the current page's card, and of a card whose nested menu is open",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-fg-active",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of those same two cards",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-card-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Base font size inside a card",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-arrow-width",
+        "value": "1em",
+        "description": "Arrow base width",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-arrow-height",
+        "value": "0.5em",
+        "description": "Arrow height, and the distance it is pushed out from the panel",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the panel slides in from, per side",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-enter-scale",
+        "value": "var(--pui-scale-enter)",
+        "description": "Scale the panel grows from and shrinks back to",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-enter-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "Curve of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-navigation-menu-swap-travel",
+        "value": "var(--pui-travel-lg)",
+        "description": "How far the outgoing and incoming panels slide past each other when the popup is handed from one trigger to another",
+        "part": "popup",
+        "overrides": []
+      }
+    ]
+  },
   "NumberField": {
     "name": "NumberField",
     "tokens": [
@@ -5929,6 +6386,254 @@
         "value": "transparent",
         "description": "Border colour of the strip.",
         "part": "group",
+        "overrides": []
+      }
+    ]
+  },
+  "Toolbar": {
+    "name": "Toolbar",
+    "tokens": [
+      {
+        "name": "--pui-toolbar-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between items. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-padding",
+        "value": "var(--pui-space-2)",
+        "description": "Padding inside the bar. `size` re-points it; `variant=\"plain\"` drops it to `0`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          },
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius. `variant=\"plain\"` drops it to `0`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-bg",
+        "value": "transparent",
+        "description": "Fill behind the bar. `variant` sets it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-border-width",
+        "value": "1px",
+        "description": "Border width.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-border-color",
+        "value": "transparent",
+        "description": "Border colour. `variant` sets it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"], .root[data-variant=\"outline\"]",
+            "value": "CanvasText"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-shadow",
+        "value": "none",
+        "description": "Drop shadow. Unset by default — a toolbar is part of the page, not a surface floating over it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-group-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Gap between items inside the group. Tighter than the bar's own gap, which is what makes a cluster read as one.",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-thickness",
+        "value": "1px",
+        "description": "Line thickness.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-color",
+        "value": "var(--pui-color-border)",
+        "description": "Line colour.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-inset",
+        "value": "var(--pui-space-1)",
+        "description": "How far the rule stops short of the bar's inner edges.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-min-length",
+        "value": "1lh",
+        "description": "Length floor for a rule with nothing to stretch against.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height. `size` re-points it.",
+        "part": "link",
+        "overrides": [
+          {
+            "selector": ".link[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".link[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".link[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-link-padding-x",
+        "value": "var(--pui-space-2)",
+        "description": "Inline padding.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius — for the hover fill and the focus ring, which both need to match the buttons beside it.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label size. `size` re-points it.",
+        "part": "link",
+        "overrides": [
+          {
+            "selector": ".link[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".link[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".link[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-link-color",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Label colour.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill on hover.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-underline-color",
+        "value": "color-mix( in oklab, currentcolor 45%, transparent )",
+        "description": "Underline colour.",
+        "part": "link",
+        "overrides": [
+          {
+            "selector": ".link:hover",
+            "value": "currentcolor"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-link-underline-offset",
+        "value": "0.15em",
+        "description": "Distance between the text baseline and its underline.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Colour transitions between states.",
+        "part": "link",
         "overrides": []
       }
     ]

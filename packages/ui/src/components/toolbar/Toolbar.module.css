@@ -1,0 +1,354 @@
+/*
+ * Toolbar
+ *
+ * A row (or column) of controls that is ONE tab stop, with the arrow keys
+ * moving between the items. Base UI owns all of that; this file only decides
+ * what the bar and its two owned parts — the group and the separator — look
+ * like.
+ *
+ * Two axes, as everywhere else in the library:
+ *   data-variant  how much chrome the BAR carries (plain / panel / outline)
+ *   data-size     how tight the bar is, and the default size of its items
+ *
+ * `data-size` is deliberately NOT read by the buttons and inputs inside. Their
+ * size knobs are declared on their own root rules — the placement that lets a
+ * consumer re-skin one control — so an inherited value from here would lose to
+ * them anyway. The root writes the size onto each item in JS instead; see the
+ * context block in `Toolbar.tsx`.
+ *
+ * Base UI writes `data-orientation` and `data-disabled` on the root and the
+ * group from its own state, so neither is set in the TSX and neither may be
+ * assumed absent.
+ *
+ * There is no `prefers-reduced-motion` block and no transition on the bar
+ * itself: a toolbar has no states of its own. Everything that animates in here
+ * is a control that animates on its own terms.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens, declared here on the bar itself so an ancestor's value
+     * is only inherited and never wins. Re-skin one bar by setting them on it
+     * (an unlayered consumer rule beats this layer at any specificity);
+     * re-skin every bar by re-pointing the global tokens they resolve to. */
+    /** Gap between items. `size` re-points it. */
+    --pui-toolbar-gap: var(--pui-space-2);
+    /** Padding inside the bar. `size` re-points it; `variant="plain"` drops it
+     * to `0`. */
+    --pui-toolbar-padding: var(--pui-space-2);
+    /** Corner radius. `variant="plain"` drops it to `0`. */
+    --pui-toolbar-radius: var(--pui-radius-surface);
+    /** Fill behind the bar. `variant` sets it. */
+    --pui-toolbar-bg: transparent;
+    /* Declared even when there is nothing to draw, and `transparent` rather
+     * than absent, because `transparent` is NOT preserved under forced colours
+     * — it is replaced with a system colour. Reserving the 1px here is what
+     * lets the a11y block give a panel bar a visible edge in high contrast,
+     * where its fill disappears, without adding 2px of border and shifting
+     * every item in the bar. */
+    /** Border width. */
+    --pui-toolbar-border-width: 1px;
+    /** Border colour. `variant` sets it. */
+    --pui-toolbar-border-color: transparent;
+    /** Drop shadow. Unset by default — a toolbar is part of the page, not a
+     * surface floating over it. */
+    --pui-toolbar-shadow: none;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--pui-toolbar-gap);
+    padding: var(--pui-toolbar-padding);
+    border: var(--pui-toolbar-border-width) solid var(--pui-toolbar-border-color);
+    border-radius: var(--pui-toolbar-radius);
+    background-color: var(--pui-toolbar-bg);
+    box-shadow: var(--pui-toolbar-shadow);
+
+    /* Chrome, not a control: the bar itself performs no action, so it takes
+     * `default` per the cursor table in AGENTS.md. Each item inside declares
+     * its own `pointer`. */
+    cursor: default;
+  }
+
+  /* A vertical bar sizes to its widest item rather than to its container: a
+   * column stretched across the page would put a metre of empty bar beside
+   * three icons. `stretch` then squares the items up with each other, which is
+   * what makes a vertical strip read as one object. */
+  .root[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+    inline-size: fit-content;
+  }
+
+  /* Horizontal only — `wrap` is ignored in a column, where the block axis is
+   * already unbounded. `align-items: center` above would centre each LINE, so
+   * nothing else has to change. */
+  .root[data-orientation="horizontal"][data-wrap] {
+    flex-wrap: wrap;
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * Only the bar's own two measures. The items are sized through the context
+   * in the TSX, so these stay in step without this file knowing anything about
+   * Button or Input. */
+  .root[data-size="sm"] {
+    --pui-toolbar-gap: var(--pui-space-1);
+    --pui-toolbar-padding: var(--pui-space-1);
+  }
+
+  .root[data-size="md"] {
+    --pui-toolbar-gap: var(--pui-space-2);
+    --pui-toolbar-padding: var(--pui-space-2);
+  }
+
+  .root[data-size="lg"] {
+    --pui-toolbar-gap: var(--pui-space-2);
+    --pui-toolbar-padding: var(--pui-space-3);
+  }
+
+  /* Variants ---------------------------------------------------------------
+   * `plain` is the only one that also zeroes the geometry: with no surface to
+   * sit on, the padding would push the first control away from whatever the
+   * bar is aligned with — a heading, a text column, the editor below it — and
+   * a row of buttons that does not line up with the thing it acts on reads as
+   * a mistake. */
+  .root[data-variant="plain"] {
+    --pui-toolbar-padding: 0px;
+    --pui-toolbar-radius: 0px;
+    --pui-toolbar-bg: transparent;
+    --pui-toolbar-border-color: transparent;
+  }
+
+  .root[data-variant="panel"] {
+    --pui-toolbar-bg: var(--pui-color-panel);
+    --pui-toolbar-border-color: transparent;
+  }
+
+  /* Background, not `transparent`: an outline bar is a container, and one laid
+   * over striped or image content with only a border would let that content
+   * run behind its controls. */
+  .root[data-variant="outline"] {
+    --pui-toolbar-bg: var(--pui-color-background);
+    --pui-toolbar-border-color: var(--pui-color-border);
+  }
+
+  /* Group ------------------------------------------------------------------
+   * A cluster inside the bar. The gap is the whole of the visual difference:
+   * tighter than the bar's, so the eye groups the items before it reads them.
+   * There is no fill and no border on purpose — a group is a hint, and boxing
+   * every cluster turns one toolbar into five little ones. */
+  .group {
+    /** Gap between items inside the group. Tighter than the bar's own gap,
+     * which is what makes a cluster read as one. */
+    --pui-toolbar-group-gap: var(--pui-space-1);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--pui-toolbar-group-gap);
+  }
+
+  /* `stretch`, not `center`: in a column the items have to take the group's
+   * full width or the shorter labels leave ragged edges down its side. */
+  .group[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Separator --------------------------------------------------------------
+   * Base UI hands this the orientation PERPENDICULAR to the toolbar's, so
+   * `[data-orientation="vertical"]` below is the rule that fires in an
+   * ordinary horizontal bar.
+   *
+   * The line is a BORDER, never a `background-color`. A background is replaced
+   * with a system colour under forced colours — for a plain box that is
+   * `Canvas`, the page's own backdrop — so a hairline drawn that way vanishes
+   * for exactly the users who most need the grouping cue. Border colours are
+   * forced to `CanvasText` instead, which is why this file needs no
+   * forced-colors rule for the separator at all.
+   *
+   * A separator has no content, so inside a flex container its size is either
+   * zero or wrong on both axes:
+   *   cross axis   `align-self: stretch` spans it across the bar…
+   *   main axis    …and `flex-shrink: 0` stops flexbox reclaiming its 1px,
+   *                which is the cheapest thing in the row to take back.
+   * Each orientation then pins the axis it must NOT stretch on to a definite
+   * size, because `align-self: stretch` only applies to a cross size of
+   * `auto`. */
+  .separator {
+    /** Line thickness. */
+    --pui-toolbar-separator-thickness: 1px;
+    /** Line colour. */
+    --pui-toolbar-separator-color: var(--pui-color-border);
+    /* Not zero, unlike `Separator`'s: a rule running the full height of a
+     * padded bar touches the fill's top and bottom edges and reads as a seam
+     * splitting the bar in two, rather than as a divider between two groups
+     * inside it. */
+    /** How far the rule stops short of the bar's inner edges. */
+    --pui-toolbar-separator-inset: var(--pui-space-1);
+    /** Length floor for a rule with nothing to stretch against. */
+    --pui-toolbar-separator-min-length: 1lh;
+
+    box-sizing: border-box;
+    /* Zeroed before either is set below, so `render={<hr />}` works: the UA
+     * gives <hr> an inset 3D border on all four sides and a `0.5em auto`
+     * margin, and neither is reachable through the single-edge longhands. */
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    align-self: stretch;
+    flex-shrink: 0;
+
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* The rule in a HORIZONTAL toolbar. */
+  .separator[data-orientation="vertical"] {
+    display: inline-block;
+    /* Pins the inline axis so `stretch` cannot widen the rule. With
+     * `border-box` an inline-size below the border width is floored at the
+     * border, so it still paints at full thickness — this says "do not
+     * stretch", not "be zero wide". */
+    inline-size: 0;
+    block-size: auto;
+    min-block-size: var(--pui-toolbar-separator-min-length);
+    border-inline-start:
+      var(--pui-toolbar-separator-thickness) solid
+      var(--pui-toolbar-separator-color);
+    margin-block: var(--pui-toolbar-separator-inset);
+  }
+
+  /* …and the rule in a VERTICAL one. */
+  .separator[data-orientation="horizontal"] {
+    display: block;
+    /* The mirror of the above: pins the block axis. */
+    block-size: 0;
+    border-block-start:
+      var(--pui-toolbar-separator-thickness) solid
+      var(--pui-toolbar-separator-color);
+    margin-inline: var(--pui-toolbar-separator-inset);
+  }
+
+  /* Link -------------------------------------------------------------------
+   * Drawn as a link and not as a button, deliberately. It navigates, and the
+   * underline is the only cue that says so before it is clicked — colour alone
+   * would fail SC 1.4.1 against the buttons beside it, which share the bar's
+   * text colour.
+   *
+   * The height matches the controls it sits between so the bar has one
+   * baseline, which also carries the SC 2.5.8 floor: the smallest step is
+   * 28px tall, and a link is as wide as its text. */
+  .link {
+    /** Height. `size` re-points it. */
+    --pui-toolbar-link-height: var(--pui-control-h-md);
+    /** Inline padding. */
+    --pui-toolbar-link-padding-x: var(--pui-space-2);
+    /** Corner radius — for the hover fill and the focus ring, which both need
+     * to match the buttons beside it. */
+    --pui-toolbar-link-radius: var(--pui-radius-control);
+    /** Label size. `size` re-points it. */
+    --pui-toolbar-link-font-size: var(--pui-font-size-2);
+    /** Label colour. */
+    --pui-toolbar-link-color: var(--pui-color-primary-text);
+    /** Fill on hover. */
+    --pui-toolbar-link-bg-hover: var(--pui-color-panel-hover);
+    /* Muted by default so the rule reads as an underline rather than as a
+     * second line of text, then brought to full strength on hover. */
+    /** Underline colour. */
+    --pui-toolbar-link-underline-color: color-mix(
+      in oklab,
+      currentcolor 45%,
+      transparent
+    );
+    /** Distance between the text baseline and its underline. */
+    --pui-toolbar-link-underline-offset: 0.15em;
+    /** Colour transitions between states. */
+    --pui-toolbar-link-duration: var(--pui-duration-fast);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-control-gap);
+    block-size: var(--pui-toolbar-link-height);
+    padding-inline: var(--pui-toolbar-link-padding-x);
+    border-radius: var(--pui-toolbar-link-radius);
+
+    color: var(--pui-toolbar-link-color);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-toolbar-link-font-size);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    text-decoration: underline;
+    text-decoration-color: var(--pui-toolbar-link-underline-color);
+    /* `from-font` where the font ships a thickness, so the rule sits where the
+     * typeface's designer put it. */
+    text-decoration-thickness: from-font;
+    text-underline-offset: var(--pui-toolbar-link-underline-offset);
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    /* `box-shadow` is deliberately absent: the focus ring is an `outline` plus
+     * a `box-shadow` halo, and `outline` cannot be transitioned — animating
+     * only half of it makes the ring assemble in two stages on every Tab. */
+    transition:
+      background-color var(--pui-toolbar-link-duration) var(--pui-ease-standard),
+      text-decoration-color var(--pui-toolbar-link-duration)
+        var(--pui-ease-standard);
+  }
+
+  /* Gated on real hover support so a touch device does not stick in the hover
+   * fill after a tap. */
+  @media (hover: hover) {
+    .link:hover {
+      --pui-toolbar-link-underline-color: currentcolor;
+
+      background-color: var(--pui-toolbar-link-bg-hover);
+    }
+  }
+
+  .link[data-size="sm"] {
+    --pui-toolbar-link-height: var(--pui-control-h-sm);
+    --pui-toolbar-link-font-size: var(--pui-font-size-1);
+  }
+
+  .link[data-size="md"] {
+    --pui-toolbar-link-height: var(--pui-control-h-md);
+    --pui-toolbar-link-font-size: var(--pui-font-size-2);
+  }
+
+  .link[data-size="lg"] {
+    --pui-toolbar-link-height: var(--pui-control-h-lg);
+    --pui-toolbar-link-font-size: var(--pui-font-size-3);
+  }
+}
+
+/* Forced colours -------------------------------------------------------------
+ * Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so
+ * everything here beats the rules above by layer alone.
+ *
+ * Only the bar's own fill needs rescuing. `panel` and `outline` both paint a
+ * background, and a background is replaced with a system colour here — so a
+ * `panel` bar would dissolve into the page and its controls would fall apart
+ * into a loose row. The 1px border is already occupying the space (see the
+ * knob comment above); this only gives it a colour. `plain` is left alone,
+ * which is correct: it never claimed to be a surface.
+ *
+ * The separator needs nothing — it is drawn with a border, which forced
+ * colours keeps — and the link inherits `LinkText` from the `.pui-link` rule
+ * in patterns.css.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .root[data-variant="panel"],
+    .root[data-variant="outline"] {
+      --pui-toolbar-border-color: CanvasText;
+    }
+  }
+}

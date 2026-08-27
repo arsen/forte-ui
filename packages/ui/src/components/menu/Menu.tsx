@@ -48,6 +48,13 @@ export const MenuPlacementContext =
  * popup's corner ON the cursor rather than a gap away from it. Passing
  * `side="bottom"` here would silently opt every context menu out of those two
  * offsets and drop the popup below the click instead of at it.
+ *
+ * A `Menu.Root` inside a `<Menubar>` takes the `menu` row, since a menubar
+ * menu does drop below its trigger. That is right for the horizontal bar and
+ * carried over unchanged from the boolean this table replaced — but note it is
+ * a decision now: Base UI would pick `inline-end` for a VERTICAL bar if `side`
+ * were left unset, and `"bottom"` overrides it. Give the bar its own row here
+ * rather than reaching for `side` at each call site if that ever needs fixing.
  */
 const PLACEMENT_DEFAULTS: Record<
   MenuPlacementKind,
@@ -176,11 +183,14 @@ export interface MenuTriggerProps<Payload = unknown>
   extends Omit<BaseMenu.Trigger.Props<Payload>, "className"> {
   /**
    * Also open the menu when the trigger is hovered. Off by default, and worth
-   * leaving off for a top-level menu: a menu that opens on hover is a menu
-   * that opens by accident on the way to somewhere else. It is the right
-   * setting inside a menubar, where one open menu makes its siblings behave
-   * as one strip.
-   * @default false
+   * leaving off for a standalone menu: a menu that opens on hover is a menu
+   * that opens by accident on the way to somewhere else.
+   *
+   * Inside a `<Menubar>` it turns itself on, but only once a sibling menu in
+   * the same bar is already open — which is what makes the row behave as one
+   * strip after the first click without any of its triggers firing at a
+   * passing pointer. Pass it explicitly to override that either way.
+   * @default false, or true inside a `Menubar` with a menu already open
    */
   openOnHover?: BaseMenu.Trigger.Props<Payload>["openOnHover"];
   /**

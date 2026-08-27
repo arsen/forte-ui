@@ -1,0 +1,928 @@
+/*
+ * NavigationMenu
+ *
+ * Two surfaces, as in Menu: the bar (Root → List → Item → Trigger/Link) and
+ * the floating Popup. They are separate "roots" for the token convention,
+ * because the popup is portalled to <body> and inherits nothing declared on
+ * the bar. Bar knobs are declared on `.root`; everything the panel needs —
+ * surface, layout, card rows, motion — is declared on `.popup`, which every
+ * panel is a descendant of once it is open.
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Root  →  List  →  Item  →  Trigger  →  Icon
+ *                            →  Content  →  Link  →  LinkTitle
+ *                                                 /  LinkDescription
+ *         →  Portal  →  Backdrop
+ *                    →  Positioner  →  Popup  →  Arrow
+ *                                             →  Viewport
+ *
+ * The Content parts are written up in the list and MOVED into the viewport
+ * when their item opens — one popup serves every item, sliding and resizing
+ * between them. That is the behaviour this file exists to draw, and five
+ * things in it are load-bearing:
+ *
+ *   1. The popup is sized from `--popup-width` / `--popup-height`, which Base
+ *      UI measures and writes as inline custom properties. Both are ABSENT on
+ *      the first open, which makes the declaration invalid at computed-value
+ *      time and leaves `width` at `auto` — that is how the popup gets its
+ *      first measurement, so do not add a fallback to those two `var()`s.
+ *
+ *   2. The travel between triggers is a transition on the positioner's
+ *      `top`/`left`/`right`/`bottom`, which Base UI writes as inline styles.
+ *      `[data-instant]` turns it off for the changes that are not a considered
+ *      move — a dismissal, the popup being handed over on first open.
+ *
+ *   3. The two panels crossing during a swap are overlapped, not stacked: Base
+ *      UI gives the outgoing one `position: absolute` inline, and the viewport
+ *      is its containing block. The viewport clips, which is what makes the
+ *      swap read as one panel replacing another rather than two sliding past
+ *      each other in the open.
+ *
+ *   4. Because the viewport clips, every link carries `data-focus-inset` so
+ *      its ring is drawn inside its own box and cannot be shaved off along the
+ *      panel edge (SC 2.4.11).
+ *
+ *   5. No `prefers-reduced-motion` block. `--pui-travel-*` collapses to 0px,
+ *      `--pui-scale-enter` to exactly 1, and `--pui-duration-move` to 1ms, so
+ *      the panel appears and swaps without travelling and without this file
+ *      knowing reduced motion exists.
+ */
+
+@layer pretty-ui.components {
+  /* ------------------------------------------------------------------------
+   * Root
+   *
+   * Renders <nav>, or <div> when nested inside another menu's Content. The bar
+   * knobs live here rather than on `.trigger` on purpose — the same reasoning
+   * as Tabs: one place retunes every row in one bar, and a row's own rule only
+   * ever reads them. A consumer who wants to move ALL bars re-points the global
+   * tokens in the defaults instead.
+   * --------------------------------------------------------------------- */
+  .root {
+    /** Space between adjacent items in the bar */
+    --pui-navigation-menu-gap: var(--pui-space-1);
+
+    /* The `plain` row: a Trigger in the bar, and a Link that navigates
+     * straight out instead of opening a panel. Both draw from this one set so
+     * they sit level in the same list — a bar where the two are a pixel apart
+     * in height is the classic symptom of styling them separately. */
+    /** Height of a `plain` row */
+    --pui-navigation-menu-row-height: var(--pui-control-h-md);
+    /** Inline padding inside a `plain` row */
+    --pui-navigation-menu-row-px: var(--pui-control-px-md);
+    /** Gap between a `plain` row's label and its icon */
+    --pui-navigation-menu-row-gap: var(--pui-control-gap);
+    /** Corner radius of a `plain` row */
+    --pui-navigation-menu-row-radius: var(--pui-radius-control);
+    /** Text colour of a `plain` row at rest */
+    --pui-navigation-menu-row-fg: var(--pui-color-foreground);
+    /** Background of a hovered `plain` row */
+    --pui-navigation-menu-row-bg-hover: var(--pui-color-panel-hover);
+    /* The open row and the current page share one treatment. They are the same
+     * statement — "this is the part of the site you are in" — and giving them
+     * two would leave a bar with both showing two kinds of emphasis at once. */
+    /** Background of the row whose panel is open, and of the current page's row */
+    --pui-navigation-menu-row-bg-open: var(--pui-color-primary-soft);
+    /** Text colour of those same two rows */
+    --pui-navigation-menu-row-fg-open: var(--pui-color-primary-text);
+    /** Font size of a `plain` row */
+    --pui-navigation-menu-row-font-size: var(--pui-font-size-2);
+    /** Font weight of a `plain` row */
+    --pui-navigation-menu-row-font-weight: var(--pui-font-weight-medium);
+
+    /** Size the chevron is drawn at, in both variants */
+    --pui-navigation-menu-icon-size: var(--pui-space-4);
+
+    box-sizing: border-box;
+    font-family: var(--pui-font-sans);
+  }
+
+  /* ------------------------------------------------------------------------
+   * List / Item
+   * --------------------------------------------------------------------- */
+  .list {
+    box-sizing: border-box;
+    /* The containing block for the bar. An `<li>` is `position: static`, so
+     * anything a consumer positions absolutely inside a row would otherwise
+     * escape to the nearest positioned ancestor — which, on a page that has
+     * one, is not the bar. */
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--pui-navigation-menu-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* `data-orientation` is stamped on this element by the List component, not
+   * inherited through a `.root[data-orientation] .list` descendant selector.
+   * A vertical menu nested inside a horizontal one puts its list inside BOTH
+   * roots, so the descendant form would match twice at equal specificity and
+   * source order would pick the winner. */
+  .list[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .item {
+    /* Flex, so the row inside stretches to the item rather than sitting at its
+     * own intrinsic height in a taller line box. */
+    display: flex;
+    margin: 0;
+  }
+
+  /* In a vertical bar the rows fill the column and their label goes to the
+   * reading edge, with the chevron pushed to the far one. Child combinators
+   * throughout: a nested menu's own list is a descendant of this one, and must
+   * not be reached by it. */
+  .list[data-orientation="vertical"] > .item {
+    align-items: stretch;
+  }
+
+  .list[data-orientation="vertical"] > .item > .trigger[data-variant="plain"],
+  .list[data-orientation="vertical"] > .item > .link[data-variant="plain"] {
+    inline-size: 100%;
+    justify-content: space-between;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Trigger / Link
+   *
+   * One `variant` axis across both parts, because the two are interchangeable
+   * in both places they appear: a bar item either opens a panel (Trigger) or
+   * navigates (Link), and a panel row either opens a nested menu (Trigger) or
+   * navigates (Link). Styling them per part instead of per variant is what
+   * leaves the two a pixel out of line.
+   * --------------------------------------------------------------------- */
+  .trigger,
+  .link {
+    box-sizing: border-box;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+    color: inherit;
+    font-family: inherit;
+    text-align: start;
+    text-decoration: none;
+    /* Both of them do something on activation, so both say so — a native
+     * <button> gets `default` from the UA stylesheet and Base UI's <a> only
+     * gets `pointer` when it has an href. */
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .trigger[data-variant="plain"],
+  .link[data-variant="plain"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-navigation-menu-row-gap);
+    block-size: var(--pui-navigation-menu-row-height);
+    /* SC 2.5.8: a dense preset takes --pui-control-h-md below 24px. */
+    min-block-size: var(--pui-target-min);
+    padding-inline: var(--pui-navigation-menu-row-px);
+    border-radius: var(--pui-navigation-menu-row-radius);
+
+    color: var(--pui-navigation-menu-row-fg);
+
+    font-size: var(--pui-navigation-menu-row-font-size);
+    font-weight: var(--pui-navigation-menu-row-font-weight);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  @media (hover: hover) {
+    .trigger[data-variant="plain"]:hover:not([data-popup-open]),
+    .link[data-variant="plain"]:hover:not([data-active]) {
+      background-color: var(--pui-navigation-menu-row-bg-hover);
+    }
+  }
+
+  /* The open trigger stays lit for as long as its panel is up. With one popup
+   * serving the whole bar, this is the only thing on screen saying which item
+   * produced the panel currently under it. */
+  .trigger[data-variant="plain"][data-popup-open],
+  .link[data-variant="plain"][data-active] {
+    background-color: var(--pui-navigation-menu-row-bg-open);
+    color: var(--pui-navigation-menu-row-fg-open);
+  }
+
+  /* Card: the block shape inside a panel. A card Trigger and a card Link are
+   * the same box; only the chevron differs, and it is placed below. */
+  .trigger[data-variant="card"],
+  .link[data-variant="card"] {
+    /* Containing block for a card Trigger's absolutely positioned chevron. */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-navigation-menu-card-gap);
+    inline-size: 100%;
+    min-block-size: var(--pui-target-min);
+    padding: var(--pui-navigation-menu-card-p);
+    border-radius: var(--pui-navigation-menu-card-radius);
+
+    color: var(--pui-navigation-menu-card-fg);
+
+    font-size: var(--pui-navigation-menu-card-font-size);
+    line-height: var(--pui-line-height-normal);
+  }
+
+  /* Room for the chevron, which is out of flow and would otherwise be sat on
+   * by a long title. Only the Trigger reserves it — a card Link has none. */
+  .trigger[data-variant="card"] {
+    padding-inline-end: calc(
+      var(--pui-navigation-menu-card-p) + var(--pui-navigation-menu-icon-size) +
+        var(--pui-navigation-menu-card-gap)
+    );
+  }
+
+  @media (hover: hover) {
+    .trigger[data-variant="card"]:hover:not([data-popup-open]),
+    .link[data-variant="card"]:hover:not([data-active]) {
+      background-color: var(--pui-navigation-menu-card-bg-hover);
+    }
+  }
+
+  .trigger[data-variant="card"][data-popup-open],
+  .link[data-variant="card"][data-active] {
+    background-color: var(--pui-navigation-menu-card-bg-active);
+    color: var(--pui-navigation-menu-card-fg-active);
+  }
+
+  /* ------------------------------------------------------------------------
+   * LinkTitle / LinkDescription
+   * --------------------------------------------------------------------- */
+  .linkTitle {
+    display: block;
+    font-size: var(--pui-navigation-menu-card-font-size);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+  }
+
+  .linkDescription {
+    display: block;
+    /* -muted, not -subtle: this is permanently visible text, so SC 1.4.3
+     * applies and -subtle is 3.73:1. */
+    color: var(--pui-navigation-menu-card-fg-muted);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-normal);
+    line-height: var(--pui-line-height-normal);
+    /* Long enough descriptions wrap; balancing them keeps a two-line one from
+     * leaving a single orphaned word under a full line. */
+    text-wrap: pretty;
+  }
+
+  /* A descendant that declares its own colour does not follow its row's, so
+   * the muted line has to be told to join in when the row is the current page
+   * or has its own menu open. */
+  .trigger[data-variant="card"][data-popup-open] .linkDescription,
+  .link[data-variant="card"][data-active] .linkDescription {
+    color: inherit;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Icon
+   * --------------------------------------------------------------------- */
+  .icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    /* Pointer events off so the chevron never becomes the hover target inside
+     * its own trigger — the parent's cursor shows through. */
+    pointer-events: none;
+    transition: rotate var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .icon svg {
+    display: block;
+    inline-size: var(--pui-navigation-menu-icon-size);
+    block-size: var(--pui-navigation-menu-icon-size);
+  }
+
+  /* Only the `plain` chevron flips: it points down at a panel that drops below
+   * the bar, so up is a meaningful "this closes". A card trigger's chevron
+   * points along the inline axis at a panel that arrives from the side, and
+   * rotating that one through 180° would aim it away from where the panel is. */
+  .trigger[data-variant="plain"] .icon[data-popup-open] {
+    rotate: 180deg;
+  }
+
+  /* `translate` and `scale` as independent properties rather than one
+   * `transform`, so the centring and the RTL mirror do not fight over it. The
+   * mirror is the rule about the inline axis having no logical form: the glyph
+   * is drawn pointing right, and `--pui-direction` is -1 in RTL. */
+  .trigger[data-variant="card"] .icon {
+    position: absolute;
+    inset-inline-end: var(--pui-navigation-menu-card-p);
+    top: 50%;
+    translate: 0 -50%;
+    scale: var(--pui-direction) 1;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Backdrop
+   *
+   * Off by default and opt-in through `backdrop` on `NavigationMenu.Popup`. A
+   * navigation bar is browsed rather than committed to, and dimming the page
+   * to look at it reads as a far bigger interruption than it is. It earns its
+   * keep on a phone, where the panel covers most of the viewport anyway.
+   *
+   * `.pui-scrim` supplies position/inset, the colour, the optional blur, the
+   * fade and the forced-colors treatment. Only stacking is component-local.
+   * --------------------------------------------------------------------- */
+  .backdrop {
+    /* One below the positioner, and declared here because the backdrop is the
+     * positioner's SIBLING inside the portal — nothing on the positioner can
+     * reach it, and `NavigationMenu.Popup` exposes no class name for it. */
+    /** Stacking order of the backdrop */
+    --pui-navigation-menu-backdrop-z-index: 49;
+
+    /* Restated from `.pui-scrim` so the @supports override below has an
+     * explicit default to flip. */
+    position: fixed;
+    z-index: var(--pui-navigation-menu-backdrop-z-index);
+  }
+
+  /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
+   * element keeps painting against the *large* viewport, leaving an
+   * unscrimmed strip along one edge. Absolute positioning tracks the visible
+   * viewport instead. The @supports test is the standard iOS/WebKit sniff. */
+  @supports (-webkit-touch-callout: none) {
+    .backdrop {
+      position: absolute;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * Positioner
+   *
+   * Base UI writes position/top/left as inline styles and re-writes them every
+   * time another trigger takes the popup over. Transitioning those four is the
+   * whole slide-between-triggers gesture — there is no JavaScript running per
+   * frame, exactly as with the Tabs indicator.
+   *
+   * The two motion knobs are declared HERE rather than on the popup because
+   * the popup is this element's child and inherits them: the travel and the
+   * popup's own resize are one movement and have to be retuned as one.
+   * --------------------------------------------------------------------- */
+  .positioner {
+    /** Stacking order of the positioner. 50 is the band Menu, Popover, Tooltip
+     * and Select sit in — anchored popups all belong above a Dialog's 40 */
+    --pui-navigation-menu-z-index: 50;
+    /* Paired with `sideOffset`, whose default is 8. Change one and change the
+     * other, or the pointer crosses dead space on the way to the panel and
+     * `closeDelay` alone has to save it. */
+    /** Depth of the invisible bridge across the gap between the bar and the
+     * panel, so the pointer can travel to the panel without closing it */
+    --pui-navigation-menu-bridge: var(--pui-space-2);
+    /** How long the panel takes to travel to another trigger, and to resize
+     * between two panels */
+    --pui-navigation-menu-move-duration: var(--pui-duration-move);
+    /** The curve it travels on */
+    --pui-navigation-menu-move-ease: var(--pui-ease-emphasized);
+
+    box-sizing: border-box;
+    z-index: var(--pui-navigation-menu-z-index);
+    /* Frozen at the size Base UI measured, so the positioner does not reflow
+     * to the incoming panel a frame before the popup transitions to it. Both
+     * are absent on the first open — see the header note. */
+    inline-size: var(--positioner-width);
+    block-size: var(--positioner-height);
+    max-inline-size: var(--available-width);
+
+    transition-property: top, left, right, bottom;
+    transition-duration: var(--pui-navigation-menu-move-duration);
+    transition-timing-function: var(--pui-navigation-menu-move-ease);
+  }
+
+  /* Base UI sets `data-instant` when the change was NOT a considered move — a
+   * dismissal, or the first open, where there is no previous position to
+   * travel from and the panel would otherwise fly in from wherever the
+   * positioner happened to start. */
+  .positioner[data-instant] {
+    transition: none;
+  }
+
+  /* The bridge. `sideOffset` puts real space between the bar and the panel,
+   * and a pointer crossing it is outside both — without this the panel is
+   * relying on `closeDelay` alone, which is a race the pointer wins as soon as
+   * it slows down. Painted nothing, so it costs no pixels. */
+  .positioner::before {
+    content: "";
+    position: absolute;
+  }
+
+  .positioner[data-side="top"]::before {
+    inset-inline: 0;
+    bottom: calc(-1 * var(--pui-navigation-menu-bridge));
+    block-size: var(--pui-navigation-menu-bridge);
+  }
+
+  .positioner[data-side="bottom"]::before {
+    inset-inline: 0;
+    top: calc(-1 * var(--pui-navigation-menu-bridge));
+    block-size: var(--pui-navigation-menu-bridge);
+  }
+
+  /* `inline-start`/`inline-end` are legal `data-side` values as well as the
+   * physical ones. `:dir()` lives inside `:is()`, whose argument list is
+   * forgiving: an engine without `:dir()` support drops only that branch and
+   * the physical sides keep working. */
+  .positioner:is(
+      [data-side="left"],
+      [data-side="inline-start"]:dir(ltr),
+      [data-side="inline-end"]:dir(rtl)
+    )::before {
+    inset-block: 0;
+    right: calc(-1 * var(--pui-navigation-menu-bridge));
+    inline-size: var(--pui-navigation-menu-bridge);
+  }
+
+  .positioner:is(
+      [data-side="right"],
+      [data-side="inline-end"]:dir(ltr),
+      [data-side="inline-start"]:dir(rtl)
+    )::before {
+    inset-block: 0;
+    left: calc(-1 * var(--pui-navigation-menu-bridge));
+    inline-size: var(--pui-navigation-menu-bridge);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Popup
+   * --------------------------------------------------------------------- */
+  .popup {
+    /* Component tokens. Declared HERE, on the popup, so an ancestor's value is
+     * only inherited and loses to these — and the popup is portalled to <body>
+     * anyway, so an ancestor of the bar is not even in its tree. The panel
+     * parts below (`.content`, the card rows, the arrow) deliberately do NOT
+     * redeclare the knobs they read: every one of them is a descendant of this
+     * element once it is open, which is what lets a single `className` on
+     * `NavigationMenu.Popup` retune a whole panel. */
+    /** Panel surface colour */
+    --pui-navigation-menu-bg: var(--pui-color-overlay);
+    /** Panel text colour */
+    --pui-navigation-menu-fg: var(--pui-color-foreground);
+    /** Corner radius */
+    --pui-navigation-menu-radius: var(--pui-radius-surface);
+    /** Panel shadow (stripped by the browser in forced-colors mode, which is
+     * why the element also carries `.pui-hc-surface`) */
+    --pui-navigation-menu-shadow: var(--pui-shadow-4);
+    /* A hairline, and not the redundancy it looks like next to the shadow. The
+     * panel floats over undimmed content, and at overlay-on-background the two
+     * surfaces are within a step of each other on the grey ramp — in dark mode
+     * the shadow is nearly the only thing separating them, and it is the first
+     * casualty of a bright page behind it. `.pui-hc-surface` already reserves a
+     * 1px transparent border on this element, so painting it costs no layout. */
+    /** Width of the hairline that separates the panel from the page */
+    --pui-navigation-menu-border-width: 1px;
+    /** Colour of that hairline. The arrow's outline follows it. */
+    --pui-navigation-menu-border-color: var(--pui-color-border);
+
+    /* Panel layout. No width token exists in the inventory — widths are
+     * layout, not theme — so the column measure lives in a knob and stays
+     * overridable per app. */
+    /** Padding inside a panel */
+    --pui-navigation-menu-content-p: var(--pui-space-2);
+    /** Gap between the cards in a panel */
+    --pui-navigation-menu-content-gap: var(--pui-space-1);
+    /** Width of one column. `Content`'s `columns` prop multiplies it, and the
+     * grid drops to fewer columns on its own once the panel is narrower than
+     * one of them — which is what makes a three-column panel work on a phone
+     * without a media query */
+    --pui-navigation-menu-column-width: 15rem;
+    /** Space left between the panel and the window edge when the columns above
+     * would not fit */
+    --pui-navigation-menu-content-inset: var(--pui-space-5);
+
+    /* The card row. */
+    /** Padding inside a card */
+    --pui-navigation-menu-card-p: var(--pui-space-3);
+    /** Gap between a card's title and its description */
+    --pui-navigation-menu-card-gap: var(--pui-space-1);
+    /** Corner radius of a card */
+    --pui-navigation-menu-card-radius: var(--pui-radius-control);
+    /** Card text colour at rest */
+    --pui-navigation-menu-card-fg: var(--pui-color-foreground);
+    /** Colour of a card's description line */
+    --pui-navigation-menu-card-fg-muted: var(--pui-color-foreground-muted);
+    /** Background of a hovered card */
+    --pui-navigation-menu-card-bg-hover: var(--pui-color-panel-hover);
+    /** Background of the current page's card, and of a card whose nested menu
+     * is open */
+    --pui-navigation-menu-card-bg-active: var(--pui-color-primary-soft);
+    /** Text colour of those same two cards */
+    --pui-navigation-menu-card-fg-active: var(--pui-color-primary-text);
+    /** Base font size inside a card */
+    --pui-navigation-menu-card-font-size: var(--pui-font-size-2);
+
+    /* Sized in `em` so the arrow tracks the panel's font size. Declared here
+     * rather than on `.arrow` because the arrow is always a child of this
+     * element and inherits them, which keeps both parts retunable from one
+     * place. */
+    /** Arrow base width */
+    --pui-navigation-menu-arrow-width: 1em;
+    /** Arrow height, and the distance it is pushed out from the panel */
+    --pui-navigation-menu-arrow-height: 0.5em;
+
+    /* Motion knobs, broken out so an app can retune the feel — or flatten it
+     * entirely — without restating the transitions. `--pui-navigation-menu-
+     * move-duration` and `-move-ease` are NOT here: they belong to the
+     * positioner and are inherited, because the travel and the resize are one
+     * movement. */
+    /** How far the panel slides in from, per side */
+    --pui-navigation-menu-travel: var(--pui-travel-sm);
+    /** Scale the panel grows from and shrinks back to */
+    --pui-navigation-menu-enter-scale: var(--pui-scale-enter);
+    /* `normal` paired with the snappy spring, which is the pairing Menu,
+     * Popover, Select and the Tabs indicator already use. Pairing a spring
+     * with its own settle time is about not CROPPING the curve; running the
+     * whole curve compressed still plays every stop, overshoot included. */
+    /** Length of the opening gesture */
+    --pui-navigation-menu-enter-duration: var(--pui-duration-normal);
+    /** Curve of the opening gesture */
+    --pui-navigation-menu-enter-ease: var(--pui-ease-spring-snappy);
+    /* Shorter than the entrance, and no spring: an arrival has to read as a
+     * surface settling into place, while a dismissal is something the user has
+     * already decided on and only needs confirming. */
+    /** Length of the closing gesture */
+    --pui-navigation-menu-exit-duration: var(--pui-duration-fast);
+    /** Curve of the closing gesture */
+    --pui-navigation-menu-exit-ease: var(--pui-ease-exit);
+    /** How far the outgoing and incoming panels slide past each other when the
+     * popup is handed from one trigger to another */
+    --pui-navigation-menu-swap-travel: var(--pui-travel-lg);
+
+    /* Enter/exit displacement, resolved per side just below. Defaults to the
+     * `side="bottom"` case, which is this component's default side. */
+    --pui-navigation-menu-enter-x: 0px;
+    --pui-navigation-menu-enter-y: calc(
+      -1 * var(--pui-navigation-menu-travel)
+    );
+
+    box-sizing: border-box;
+    /* Containing block for the Arrow, which the positioner places with inline
+     * styles. `overflow: visible` because the wedge lives beyond this edge —
+     * the clipping the swap needs happens one level down, on the viewport. */
+    position: relative;
+    overflow: visible;
+    /* Physical `width`/`height`, not the logical pair, because these are the
+     * names Base UI publishes its measurements under and the names the
+     * transition below animates. A popup's measured size is not a
+     * direction-sensitive quantity. Both are absent on the first open — see
+     * the header note; do not add a fallback. */
+    width: var(--popup-width);
+    height: var(--popup-height);
+    /* Never taller than the space Base UI measured between the bar and the
+     * viewport edge; past that the panel scrolls. */
+    max-block-size: var(--available-height);
+    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+     * alone — patterns is ordered before components. Forced colors then wins
+     * it back from the a11y layer, which is ordered after both. */
+    border: var(--pui-navigation-menu-border-width) solid
+      var(--pui-navigation-menu-border-color);
+    border-radius: var(--pui-navigation-menu-radius);
+
+    background-color: var(--pui-navigation-menu-bg);
+    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+     * stops the background bleeding out under it. */
+    background-clip: padding-box;
+    color: var(--pui-navigation-menu-fg);
+    box-shadow: var(--pui-navigation-menu-shadow);
+
+    font-family: var(--pui-font-sans);
+    line-height: var(--pui-line-height-normal);
+    letter-spacing: var(--pui-letter-spacing-normal);
+    text-align: start;
+
+    /* Grow out of the trigger rather than out of the panel's own centre.
+     * `--transform-origin` is published by the positioner and points back at
+     * the anchor. */
+    transform-origin: var(--transform-origin);
+    /* Opacity is deliberately shorter than the transform: the links are
+     * legible early and the spring finishes settling behind readable text,
+     * instead of the panel spending the whole entrance half-transparent. The
+     * two size properties run on the positioner's move timing, because the
+     * resize and the travel are the same gesture seen from two elements. */
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-navigation-menu-enter-duration)
+        var(--pui-navigation-menu-enter-ease),
+      width var(--pui-navigation-menu-move-duration)
+        var(--pui-navigation-menu-move-ease),
+      height var(--pui-navigation-menu-move-duration)
+        var(--pui-navigation-menu-move-ease);
+  }
+
+  /* Directional rise: the panel starts a few pixels nearer the bar and settles
+   * outward. */
+  .popup[data-side="top"] {
+    --pui-navigation-menu-enter-x: 0px;
+    --pui-navigation-menu-enter-y: var(--pui-navigation-menu-travel);
+  }
+
+  .popup[data-side="bottom"] {
+    --pui-navigation-menu-enter-x: 0px;
+    --pui-navigation-menu-enter-y: calc(
+      -1 * var(--pui-navigation-menu-travel)
+    );
+  }
+
+  .popup:is(
+      [data-side="left"],
+      [data-side="inline-start"]:dir(ltr),
+      [data-side="inline-end"]:dir(rtl)
+    ) {
+    --pui-navigation-menu-enter-x: var(--pui-navigation-menu-travel);
+    --pui-navigation-menu-enter-y: 0px;
+  }
+
+  .popup:is(
+      [data-side="right"],
+      [data-side="inline-end"]:dir(ltr),
+      [data-side="inline-start"]:dir(rtl)
+    ) {
+    --pui-navigation-menu-enter-x: calc(
+      -1 * var(--pui-navigation-menu-travel)
+    );
+    --pui-navigation-menu-enter-y: 0px;
+  }
+
+  /* Closing retraces the entrance rather than puffing outward, so the two
+   * directions read as one reversible gesture and an open interrupted halfway
+   * simply continues back along the path it came up. */
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: translate(
+        var(--pui-navigation-menu-enter-x),
+        var(--pui-navigation-menu-enter-y)
+      )
+      scale(var(--pui-navigation-menu-enter-scale));
+  }
+
+  .popup[data-ending-style] {
+    transition-duration: var(--pui-navigation-menu-exit-duration);
+    transition-timing-function: var(--pui-navigation-menu-exit-ease);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Arrow
+   * --------------------------------------------------------------------- */
+  .arrow {
+    display: block;
+    inline-size: var(--pui-navigation-menu-arrow-width);
+    block-size: var(--pui-navigation-menu-arrow-height);
+    /* Base UI re-writes the arrow's own offset every time the popup moves to
+     * another trigger. On the positioner's timing, so the wedge and the panel
+     * arrive together instead of the wedge chasing it. */
+    transition-property: left, right, top, bottom;
+    transition-duration: var(--pui-navigation-menu-move-duration);
+    transition-timing-function: var(--pui-navigation-menu-move-ease);
+  }
+
+  /* `data-instant` is on the positioner, not the arrow, so the wedge has to be
+   * reached from there — otherwise it slides in from its last position on an
+   * open the panel itself does not animate. */
+  .positioner[data-instant] .arrow {
+    transition: none;
+  }
+
+  .arrow[data-side="top"] {
+    bottom: calc(-1 * var(--pui-navigation-menu-arrow-height));
+    rotate: 180deg;
+  }
+
+  .arrow[data-side="bottom"] {
+    top: calc(-1 * var(--pui-navigation-menu-arrow-height));
+    rotate: 0deg;
+  }
+
+  .arrow:is(
+      [data-side="left"],
+      [data-side="inline-start"]:dir(ltr),
+      [data-side="inline-end"]:dir(rtl)
+    ) {
+    right: calc(
+      -0.5 *
+        (
+          var(--pui-navigation-menu-arrow-width) +
+            var(--pui-navigation-menu-arrow-height)
+        )
+    );
+    rotate: 90deg;
+  }
+
+  .arrow:is(
+      [data-side="right"],
+      [data-side="inline-end"]:dir(ltr),
+      [data-side="inline-start"]:dir(rtl)
+    ) {
+    left: calc(
+      -0.5 *
+        (
+          var(--pui-navigation-menu-arrow-width) +
+            var(--pui-navigation-menu-arrow-height)
+        )
+    );
+    rotate: -90deg;
+  }
+
+  .arrowSvg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
+  .arrowFill {
+    fill: var(--pui-navigation-menu-bg);
+  }
+
+  /* The larger triangle sitting under the fill, showing only as a hairline
+   * along the two slopes because the fill triangle is inset from it. That is
+   * what continues the panel's own border around the wedge — set
+   * `--pui-navigation-menu-border-color: transparent` and the arrow goes back
+   * to a flat wedge, in step with the panel. It is also the path forced-colors
+   * repaints below. */
+  .arrowBorder {
+    fill: var(--pui-navigation-menu-border-color);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Viewport
+   *
+   * The clipping window the panels cross inside. `position: relative` is what
+   * makes it the containing block for the outgoing panel, which Base UI takes
+   * out of flow with an inline `position: absolute` — stacking the two in flow
+   * would make the popup as tall as both at once and then snap back.
+   *
+   * `clip`, not `hidden`: `hidden` would make this a scroll container, and a
+   * scroll container scrolls itself when focus moves into a panel that is
+   * still sliding into place. The links carry `data-focus-inset` so their
+   * rings are inside their own boxes and survive the tight clip.
+   * --------------------------------------------------------------------- */
+  .viewport {
+    position: relative;
+    overflow: clip;
+    /* The clip is a rounded rect, not a square one. Without this a panel tall
+     * enough to scroll runs its text out through the popup's rounded corners,
+     * and a card hovered at the top of the list paints its fill into them. */
+    border-radius: inherit;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Content
+   * --------------------------------------------------------------------- */
+  .content {
+    /* Internal on purpose — a plain comment, so theming-docgen does not
+     * publish it: it is what `columns` sets, and the knob to turn is
+     * --pui-navigation-menu-column-width. */
+    --pui-navigation-menu-columns: 1;
+
+    box-sizing: border-box;
+    display: grid;
+    /* `min(…, 100%)` is what lets the track collapse: without it a track with
+     * a minimum wider than the grid overflows instead of the grid dropping to
+     * fewer columns. */
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(var(--pui-navigation-menu-column-width), 100%), 1fr)
+    );
+    gap: var(--pui-navigation-menu-content-gap);
+    padding: var(--pui-navigation-menu-content-p);
+    /* An absolute width rather than a percentage, because the popup this sits
+     * in is sized FROM this element and a percentage would be circular. The
+     * `min()` is the phone case, and it is a hard bound rather than
+     * `--available-width` because that one is written by the positioner a
+     * frame later — on the first open the popup would already have been
+     * measured at three columns wide. */
+    inline-size: min(
+      calc(
+        var(--pui-navigation-menu-columns) *
+          var(--pui-navigation-menu-column-width) +
+          (var(--pui-navigation-menu-columns) - 1) *
+          var(--pui-navigation-menu-content-gap) + 2 *
+          var(--pui-navigation-menu-content-p)
+      ),
+      calc(100vw - 2 * var(--pui-navigation-menu-content-inset))
+    );
+    max-inline-size: var(--available-width);
+    /* Fills the popup, which is what lets a shorter panel's background reach
+     * the corners while the popup is still transitioning to its height. */
+    block-size: 100%;
+    /* A panel taller than the space between the bar and the viewport edge
+     * scrolls rather than being clipped by the viewport above, which has no
+     * scrollbar of its own. */
+    max-block-size: var(--available-height);
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    /* Internal: which way this panel slides, resolved from
+     * `data-activation-direction` below. */
+    --pui-navigation-menu-swap-x: 0px;
+    --pui-navigation-menu-swap-y: 0px;
+
+    /* Opacity is the shorter half again: the incoming panel is readable before
+     * it has finished arriving. */
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-navigation-menu-move-duration)
+        var(--pui-navigation-menu-move-ease);
+  }
+
+  .content[data-columns="2"] {
+    --pui-navigation-menu-columns: 2;
+  }
+
+  .content[data-columns="3"] {
+    --pui-navigation-menu-columns: 3;
+  }
+
+  /* `data-activation-direction` names where the NEW trigger sits relative to
+   * the old one, so the incoming panel starts on that side and the outgoing
+   * one leaves towards the opposite. Base UI derives the word from
+   * `getBoundingClientRect()`, which makes it already physical: "right" means
+   * physically to the right in RTL exactly as in LTR. This is therefore one of
+   * the two places in the library where an inline-axis distance is NOT
+   * multiplied by `--pui-direction` — flipping it would throw the panel away
+   * from the trigger the user just reached for. (The other is
+   * `Popover`'s viewport, for the same reason.) */
+  .content[data-starting-style],
+  .content[data-ending-style] {
+    opacity: 0;
+    translate: var(--pui-navigation-menu-swap-x)
+      var(--pui-navigation-menu-swap-y);
+  }
+
+  .content[data-starting-style][data-activation-direction="right"],
+  .content[data-ending-style][data-activation-direction="left"] {
+    --pui-navigation-menu-swap-x: var(--pui-navigation-menu-swap-travel);
+  }
+
+  .content[data-starting-style][data-activation-direction="left"],
+  .content[data-ending-style][data-activation-direction="right"] {
+    --pui-navigation-menu-swap-x: calc(
+      -1 * var(--pui-navigation-menu-swap-travel)
+    );
+  }
+
+  .content[data-starting-style][data-activation-direction="down"],
+  .content[data-ending-style][data-activation-direction="up"] {
+    --pui-navigation-menu-swap-y: var(--pui-navigation-menu-swap-travel);
+  }
+
+  .content[data-starting-style][data-activation-direction="up"],
+  .content[data-ending-style][data-activation-direction="down"] {
+    --pui-navigation-menu-swap-y: calc(
+      -1 * var(--pui-navigation-menu-swap-travel)
+    );
+  }
+}
+
+/*
+ * Forced colors (Windows High Contrast) — see layers.css for why these must
+ * not live in the components layer. Layer order outranks specificity
+ * completely, so a rule placed earlier could never win.
+ *
+ * The generic rules in patterns.css cover `[data-disabled]` and
+ * `[data-highlighted]`; neither appears in this component. What is left is the
+ * two states this file paints with an author colour, which forced-colors would
+ * otherwise flatten to `Canvas` — losing the only cue saying which item is
+ * open and which page you are on — plus the descendant that declares its own
+ * colour and so does not inherit its row's.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .trigger[data-popup-open],
+    .link[data-active] {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    .trigger[data-popup-open] .linkDescription,
+    .link[data-active] .linkDescription {
+      color: HighlightText;
+    }
+
+    /* System colour keywords survive the forced-colors substitution, so this
+     * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
+     * matching the CanvasText border `.pui-hc-surface` puts on the popup. */
+    .arrowFill {
+      fill: Canvas;
+    }
+
+    .arrowBorder {
+      fill: CanvasText;
+    }
+  }
+}

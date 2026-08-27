@@ -1,0 +1,197 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Menubar",
+  description:
+    "A row of menus that behave as one strip — the application menu bar, built from ordinary Menu components.",
+};
+
+# Menubar
+
+A row of menus that behave as **one strip**: `Tab` reaches the bar once, the
+arrow keys move between its triggers from there, and after the first click the
+rest open on hover. That is the application menu bar every desktop app has along
+its title bar, and it is the shape to reach for when a screen has more commands
+than a toolbar can hold.
+
+One menu on its own is a [Menu](/components/menu) — do not put a single
+`Menu.Root` in a bar to get the styling. A row of unrelated buttons that each
+open something is a row of menus, not a menubar, and wrapping it in one changes
+what the keyboard does.
+
+<DemoBlock id="menubar/basic" />
+
+## Import
+
+```tsx
+import { Menu, Menubar } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+`Menubar` has **no parts of its own**. The menus inside it are ordinary
+`Menu` components — Base UI's own anatomy — which is what makes every Menu
+feature available here without a second set of components to learn:
+
+```tsx
+<Menubar>
+  <Menu.Root>
+    <Menu.Trigger>File</Menu.Trigger>
+    <Menu.Popup>
+      <Menu.Item>New document</Menu.Item>
+    </Menu.Popup>
+  </Menu.Root>
+  {/* …one Menu.Root per menu */}
+</Menubar>
+```
+
+A `Menu.Root` renders no element, so the triggers are the bar's own children —
+which is also why a knob set on the bar reaches every trigger in it.
+
+## Examples
+
+### Variants
+
+`plain` is the default and draws nothing: the strip is the menus, which is what
+an application menu bar under a title bar looks like. `contained` puts it on a
+panel with a hairline, for a page busy enough that a bare row of words would not
+read as a bar.
+
+<DemoBlock id="menubar/variants" />
+
+### An application bar
+
+Everything a menu can do it can still do here — shortcuts, checkable rows,
+radio groups, submenus, links, danger rows. Nothing about being in a bar
+restricts the popup.
+
+<DemoBlock id="menubar/application" />
+
+<Callout kind="note">
+  For a rule between runs of menus, use the standalone
+  [`Separator`](/components/separator) rather than `Menu.Separator`.
+  `Menu.Separator` is a part of the *popup*: it takes its inline margin from
+  `--pui-menu-item-px`, a token only `Menu.Popup` declares, so outside one that
+  margin silently resolves to zero. `role="separator"` is valid inside a
+  `role="menubar"` either way, and the arrow keys skip it because it is not
+  focusable.
+</Callout>
+
+### Triggers
+
+A `<Menu.Trigger>` inside a bar drops its standalone button chrome for a flat
+strip item. That is the library's whole visual contribution here, and it applies
+to the trigger that is still wearing its own chrome: a trigger given `render`
+keeps whatever it was rendered as, so an overflow button at the end of a bar
+stays a button.
+
+<DemoBlock id="menubar/triggers" />
+
+### Vertical
+
+`orientation="vertical"` turns the bar into a rail, swaps which arrow keys move
+between triggers, and reports `aria-orientation="vertical"`. The triggers
+stretch to the bar's width and their labels move to the reading edge.
+
+The popups do not follow: a menu still opens *below* its trigger, which in a
+column lands on top of the next one. Give them `side="inline-end"`.
+
+<DemoBlock id="menubar/orientation" />
+
+<Callout kind="warn">
+  `inline-start` and `inline-end` mirror under RTL only if the app mounts Base
+  UI's [`DirectionProvider`](https://base-ui.com/react/utils/direction-provider).
+  Base UI resolves them from that React context, which defaults to `"ltr"` — it
+  does **not** read the `dir` attribute — so in an app that only sets `dir` they
+  land exactly where `left` and `right` do. These docs mount no provider, which
+  is why the demo above opens to the right under both settings of the frame's
+  direction toggle while everything the library's own CSS drives does flip.
+</Callout>
+
+### Disabled
+
+`disabled` on the bar reaches every trigger — Base UI hands it down through
+context, so none of them needs the prop. Disable one menu by putting `disabled`
+on its own `<Menu.Trigger>`.
+
+<DemoBlock id="menubar/disabled" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], description: "Moves into the bar, landing on the trigger the arrow keys last left, and out of it again — the whole bar is one tab stop." },
+    { keys: ["Arrow Right", "Arrow Left"], description: "Move between triggers in a horizontal bar, mirrored under RTL. In a vertical bar, Arrow Right opens the focused menu." },
+    { keys: ["Arrow Down", "Arrow Up"], description: "Move between triggers in a vertical bar. In a horizontal bar, Arrow Down opens the focused menu and highlights its first row." },
+    { keys: ["Home"], description: "Moves to the first trigger." },
+    { keys: ["End"], description: "Moves to the last trigger." },
+    { keys: ["Enter", "Space"], description: "Opens the focused menu and highlights its first row." },
+    { keys: ["Esc"], description: "Closes the open menu and returns focus to its trigger." },
+  ]}
+/>
+
+Once a menu is open, the keys belong to the menu — the same set the
+[Menu](/components/menu#accessibility) page documents, including typeahead and
+the submenu keys. Arrow Left and Arrow Right at the ends of a menu step to the
+neighbouring one, which is how a menubar is expected to behave.
+
+Base UI renders `role="menubar"` and applies a roving tabindex across the
+triggers, which is what makes the whole bar a single tab stop. The bar wraps by
+default; pass `loopFocus={false}` if the arrows should stop at the ends.
+
+<Callout kind="a11y">
+  A disabled trigger stays in the bar, stays announced, and is still reached by
+  the arrow keys — so the menu remains discoverable, it just cannot be opened.
+  That means the label has to say *why* it is unavailable ("Edit (read-only
+  file)"). Greying alone tells the user nothing, and greying is invisible in
+  forced-colors mode until `GrayText` is applied — which the library does for
+  you, because `opacity` is one of the few properties forced colors leaves
+  alone.
+</Callout>
+
+<Callout kind="note">
+  The bar is modal by default: while a menu is open, page scroll is locked and
+  pointer interaction with the rest of the document is disabled, so clicking
+  anywhere else closes the menu rather than acting. That is what a desktop menu
+  bar does. Pass `modal={false}` when the bar sits over something the user
+  should still be able to scroll.
+</Callout>
+
+## Theming
+
+Every `--pui-menubar-*` property is declared on the bar's own element, and an
+element's own declaration beats an inherited value — so setting one on `:root`
+or on a theme scope has no effect. Set them on the `<Menubar>` itself, through
+`className` (an unlayered rule beats the library's `@layer pretty-ui.components`,
+whatever its specificity) or an inline `style`.
+
+The `trigger-` half is the exception that proves the rule, and it is deliberate:
+those properties are declared on the bar but *read* by the triggers, which
+reach them by inheritance. That is what lets one declaration retune every menu
+in the bar — and a trigger can still step out of it, because its own declaration
+beats the one it would inherit.
+
+<DemoBlock id="menubar/theming" />
+
+The popups are not themed from here. They are portalled to `<body>`, so nothing
+declared on the bar is even in their tree — set `--pui-menu-*` on each
+`<Menu.Popup>`, as the [Menu theming](/components/menu#theming) section
+describes.
+
+<ThemingTable
+  component="Menubar"
+  variantColumn={{ header: "contained", match: "contained" }}
+/>
+
+## API reference
+
+### Menubar
+
+<PropTable component="Menubar" />
+
+Everything inside the bar is documented on the
+[Menu](/components/menu#api-reference) page.

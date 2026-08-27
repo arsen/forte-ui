@@ -215,6 +215,40 @@ import d_menu_theming from "./menu/theming";
 import d_menu_theming_src from "./menu/theming?raw";
 import d_menu_trigger from "./menu/trigger";
 import d_menu_trigger_src from "./menu/trigger?raw";
+import d_menubar_application from "./menubar/application";
+import d_menubar_application_src from "./menubar/application?raw";
+import d_menubar_basic from "./menubar/basic";
+import d_menubar_basic_src from "./menubar/basic?raw";
+import d_menubar_disabled from "./menubar/disabled";
+import d_menubar_disabled_src from "./menubar/disabled?raw";
+import d_menubar_orientation from "./menubar/orientation";
+import d_menubar_orientation_src from "./menubar/orientation?raw";
+import d_menubar_theming from "./menubar/theming";
+import d_menubar_theming_src from "./menubar/theming?raw";
+import d_menubar_triggers from "./menubar/triggers";
+import d_menubar_triggers_src from "./menubar/triggers?raw";
+import d_menubar_variants from "./menubar/variants";
+import d_menubar_variants_src from "./menubar/variants?raw";
+import d_navigation_menu_active from "./navigation-menu/active";
+import d_navigation_menu_active_src from "./navigation-menu/active?raw";
+import d_navigation_menu_arrow from "./navigation-menu/arrow";
+import d_navigation_menu_arrow_src from "./navigation-menu/arrow?raw";
+import d_navigation_menu_basic from "./navigation-menu/basic";
+import d_navigation_menu_basic_src from "./navigation-menu/basic?raw";
+import d_navigation_menu_columns from "./navigation-menu/columns";
+import d_navigation_menu_columns_src from "./navigation-menu/columns?raw";
+import d_navigation_menu_controlled from "./navigation-menu/controlled";
+import d_navigation_menu_controlled_src from "./navigation-menu/controlled?raw";
+import d_navigation_menu_custom_links from "./navigation-menu/custom-links";
+import d_navigation_menu_custom_links_src from "./navigation-menu/custom-links?raw";
+import d_navigation_menu_nested from "./navigation-menu/nested";
+import d_navigation_menu_nested_src from "./navigation-menu/nested?raw";
+import d_navigation_menu_placement from "./navigation-menu/placement";
+import d_navigation_menu_placement_src from "./navigation-menu/placement?raw";
+import d_navigation_menu_theming from "./navigation-menu/theming";
+import d_navigation_menu_theming_src from "./navigation-menu/theming?raw";
+import d_navigation_menu_vertical from "./navigation-menu/vertical";
+import d_navigation_menu_vertical_src from "./navigation-menu/vertical?raw";
 import d_number_field_basic from "./number-field/basic";
 import d_number_field_basic_src from "./number-field/basic?raw";
 import d_number_field_form from "./number-field/form";
@@ -489,6 +523,26 @@ import d_toggle_group_segmented from "./toggle-group/segmented";
 import d_toggle_group_segmented_src from "./toggle-group/segmented?raw";
 import d_toggle_group_single from "./toggle-group/single";
 import d_toggle_group_single_src from "./toggle-group/single?raw";
+import d_toolbar_basic from "./toolbar/basic";
+import d_toolbar_basic_src from "./toolbar/basic?raw";
+import d_toolbar_composition from "./toolbar/composition";
+import d_toolbar_composition_src from "./toolbar/composition?raw";
+import d_toolbar_disabled from "./toolbar/disabled";
+import d_toolbar_disabled_src from "./toolbar/disabled?raw";
+import d_toolbar_editor from "./toolbar/editor";
+import d_toolbar_editor_src from "./toolbar/editor?raw";
+import d_toolbar_groups from "./toolbar/groups";
+import d_toolbar_groups_src from "./toolbar/groups?raw";
+import d_toolbar_input from "./toolbar/input";
+import d_toolbar_input_src from "./toolbar/input?raw";
+import d_toolbar_link from "./toolbar/link";
+import d_toolbar_link_src from "./toolbar/link?raw";
+import d_toolbar_orientation from "./toolbar/orientation";
+import d_toolbar_orientation_src from "./toolbar/orientation?raw";
+import d_toolbar_sizes from "./toolbar/sizes";
+import d_toolbar_sizes_src from "./toolbar/sizes?raw";
+import d_toolbar_variants from "./toolbar/variants";
+import d_toolbar_variants_src from "./toolbar/variants?raw";
 import d_tooltip_basic from "./tooltip/basic";
 import d_tooltip_basic_src from "./tooltip/basic?raw";
 import d_tooltip_delay from "./tooltip/delay";
@@ -602,6 +656,23 @@ export type DemoId =
   | "menu/submenu"
   | "menu/theming"
   | "menu/trigger"
+  | "menubar/application"
+  | "menubar/basic"
+  | "menubar/disabled"
+  | "menubar/orientation"
+  | "menubar/theming"
+  | "menubar/triggers"
+  | "menubar/variants"
+  | "navigation-menu/active"
+  | "navigation-menu/arrow"
+  | "navigation-menu/basic"
+  | "navigation-menu/columns"
+  | "navigation-menu/controlled"
+  | "navigation-menu/custom-links"
+  | "navigation-menu/nested"
+  | "navigation-menu/placement"
+  | "navigation-menu/theming"
+  | "navigation-menu/vertical"
   | "number-field/basic"
   | "number-field/form"
   | "number-field/format"
@@ -739,6 +810,16 @@ export type DemoId =
   | "toggle-group/orientation"
   | "toggle-group/segmented"
   | "toggle-group/single"
+  | "toolbar/basic"
+  | "toolbar/composition"
+  | "toolbar/disabled"
+  | "toolbar/editor"
+  | "toolbar/groups"
+  | "toolbar/input"
+  | "toolbar/link"
+  | "toolbar/orientation"
+  | "toolbar/sizes"
+  | "toolbar/variants"
   | "tooltip/basic"
   | "tooltip/delay"
   | "tooltip/placement"
@@ -850,6 +931,23 @@ const REGISTRY: Record<DemoId, Demo> = {
   "menu/submenu": { Component: d_menu_submenu, source: d_menu_submenu_src, file: "menu/submenu.tsx" },
   "menu/theming": { Component: d_menu_theming, source: d_menu_theming_src, file: "menu/theming.tsx" },
   "menu/trigger": { Component: d_menu_trigger, source: d_menu_trigger_src, file: "menu/trigger.tsx" },
+  "menubar/application": { Component: d_menubar_application, source: d_menubar_application_src, file: "menubar/application.tsx" },
+  "menubar/basic": { Component: d_menubar_basic, source: d_menubar_basic_src, file: "menubar/basic.tsx" },
+  "menubar/disabled": { Component: d_menubar_disabled, source: d_menubar_disabled_src, file: "menubar/disabled.tsx" },
+  "menubar/orientation": { Component: d_menubar_orientation, source: d_menubar_orientation_src, file: "menubar/orientation.tsx" },
+  "menubar/theming": { Component: d_menubar_theming, source: d_menubar_theming_src, file: "menubar/theming.tsx" },
+  "menubar/triggers": { Component: d_menubar_triggers, source: d_menubar_triggers_src, file: "menubar/triggers.tsx" },
+  "menubar/variants": { Component: d_menubar_variants, source: d_menubar_variants_src, file: "menubar/variants.tsx" },
+  "navigation-menu/active": { Component: d_navigation_menu_active, source: d_navigation_menu_active_src, file: "navigation-menu/active.tsx" },
+  "navigation-menu/arrow": { Component: d_navigation_menu_arrow, source: d_navigation_menu_arrow_src, file: "navigation-menu/arrow.tsx" },
+  "navigation-menu/basic": { Component: d_navigation_menu_basic, source: d_navigation_menu_basic_src, file: "navigation-menu/basic.tsx" },
+  "navigation-menu/columns": { Component: d_navigation_menu_columns, source: d_navigation_menu_columns_src, file: "navigation-menu/columns.tsx" },
+  "navigation-menu/controlled": { Component: d_navigation_menu_controlled, source: d_navigation_menu_controlled_src, file: "navigation-menu/controlled.tsx" },
+  "navigation-menu/custom-links": { Component: d_navigation_menu_custom_links, source: d_navigation_menu_custom_links_src, file: "navigation-menu/custom-links.tsx" },
+  "navigation-menu/nested": { Component: d_navigation_menu_nested, source: d_navigation_menu_nested_src, file: "navigation-menu/nested.tsx" },
+  "navigation-menu/placement": { Component: d_navigation_menu_placement, source: d_navigation_menu_placement_src, file: "navigation-menu/placement.tsx" },
+  "navigation-menu/theming": { Component: d_navigation_menu_theming, source: d_navigation_menu_theming_src, file: "navigation-menu/theming.tsx" },
+  "navigation-menu/vertical": { Component: d_navigation_menu_vertical, source: d_navigation_menu_vertical_src, file: "navigation-menu/vertical.tsx" },
   "number-field/basic": { Component: d_number_field_basic, source: d_number_field_basic_src, file: "number-field/basic.tsx" },
   "number-field/form": { Component: d_number_field_form, source: d_number_field_form_src, file: "number-field/form.tsx" },
   "number-field/format": { Component: d_number_field_format, source: d_number_field_format_src, file: "number-field/format.tsx" },
@@ -987,6 +1085,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "toggle-group/orientation": { Component: d_toggle_group_orientation, source: d_toggle_group_orientation_src, file: "toggle-group/orientation.tsx" },
   "toggle-group/segmented": { Component: d_toggle_group_segmented, source: d_toggle_group_segmented_src, file: "toggle-group/segmented.tsx" },
   "toggle-group/single": { Component: d_toggle_group_single, source: d_toggle_group_single_src, file: "toggle-group/single.tsx" },
+  "toolbar/basic": { Component: d_toolbar_basic, source: d_toolbar_basic_src, file: "toolbar/basic.tsx" },
+  "toolbar/composition": { Component: d_toolbar_composition, source: d_toolbar_composition_src, file: "toolbar/composition.tsx" },
+  "toolbar/disabled": { Component: d_toolbar_disabled, source: d_toolbar_disabled_src, file: "toolbar/disabled.tsx" },
+  "toolbar/editor": { Component: d_toolbar_editor, source: d_toolbar_editor_src, file: "toolbar/editor.tsx" },
+  "toolbar/groups": { Component: d_toolbar_groups, source: d_toolbar_groups_src, file: "toolbar/groups.tsx" },
+  "toolbar/input": { Component: d_toolbar_input, source: d_toolbar_input_src, file: "toolbar/input.tsx" },
+  "toolbar/link": { Component: d_toolbar_link, source: d_toolbar_link_src, file: "toolbar/link.tsx" },
+  "toolbar/orientation": { Component: d_toolbar_orientation, source: d_toolbar_orientation_src, file: "toolbar/orientation.tsx" },
+  "toolbar/sizes": { Component: d_toolbar_sizes, source: d_toolbar_sizes_src, file: "toolbar/sizes.tsx" },
+  "toolbar/variants": { Component: d_toolbar_variants, source: d_toolbar_variants_src, file: "toolbar/variants.tsx" },
   "tooltip/basic": { Component: d_tooltip_basic, source: d_tooltip_basic_src, file: "tooltip/basic.tsx" },
   "tooltip/delay": { Component: d_tooltip_delay, source: d_tooltip_delay_src, file: "tooltip/delay.tsx" },
   "tooltip/placement": { Component: d_tooltip_placement, source: d_tooltip_placement_src, file: "tooltip/placement.tsx" },
