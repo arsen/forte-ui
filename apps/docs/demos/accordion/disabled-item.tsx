@@ -1,13 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Accordion } from "@dofortech/pretty-ui";
 
-const width: CSSProperties = { inlineSize: "min(32rem, 100%)" };
+const width = "w-full max-w-lg";
 
 export default function AccordionDisabledItem() {
   return (
-    <Accordion.Root variant="contained" defaultValue={["plan"]} style={width}>
+    <Accordion.Root variant="contained" defaultValue={["plan"]} className={width}>
       <Accordion.Item value="plan">
         <Accordion.Header>
           <Accordion.Trigger>Plan</Accordion.Trigger>

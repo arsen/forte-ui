@@ -38,24 +38,13 @@ const REVIEWS: Review[] = [
   },
 ];
 
-const stack = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-2)",
-  inlineSize: "min(24rem, 100%)",
-} as const;
+const stack = "flex w-full max-w-sm flex-col gap-2";
 
-const rows = { display: "flex", flexDirection: "column" } as const;
+const rows = "flex flex-col";
 
-const row = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "var(--pui-space-4)",
-  paddingBlock: "var(--pui-space-2)",
-  borderBlockStart: "1px solid var(--pui-color-border-muted)",
-} as const;
+const row = "flex justify-between gap-4 border-t border-border-muted py-2";
 
-const label = { color: "var(--pui-color-foreground-muted)" } as const;
+const label = "text-foreground-muted";
 
 export default function DrawerControlled() {
   // Two pieces of state, not one. `open` is what the drawer is told; `review`
@@ -70,7 +59,7 @@ export default function DrawerControlled() {
   }
 
   return (
-    <div style={stack}>
+    <div className={stack}>
       {REVIEWS.map((item) => (
         <Button
           key={item.id}
@@ -108,13 +97,13 @@ export default function DrawerControlled() {
               <>
                 <Drawer.Title>{review.title}</Drawer.Title>
                 <Drawer.Description>{review.summary}</Drawer.Description>
-                <div style={rows}>
-                  <div style={row}>
-                    <span style={label}>Author</span>
+                <div className={rows}>
+                  <div className={row}>
+                    <span className={label}>Author</span>
                     <span>{review.author}</span>
                   </div>
-                  <div style={row}>
-                    <span style={label}>Branch</span>
+                  <div className={row}>
+                    <span className={label}>Branch</span>
                     <span>{review.branch}</span>
                   </div>
                 </div>

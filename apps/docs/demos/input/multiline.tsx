@@ -4,7 +4,7 @@ import { Field, Input } from "@dofortech/pretty-ui";
 
 export default function InputMultiline() {
   return (
-    <div style={{ inlineSize: "min(26rem, 100%)" }}>
+    <div className="w-full max-w-[26rem]">
       <Field.Root name="notes">
         <Field.Label>Release notes</Field.Label>
         {/* Swapping the element out is all it takes — the styles follow the

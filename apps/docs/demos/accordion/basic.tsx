@@ -1,13 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Accordion } from "@dofortech/pretty-ui";
 
-const width: CSSProperties = { inlineSize: "min(32rem, 100%)" };
+const width = "w-full max-w-lg";
 
 export default function AccordionBasic() {
   return (
-    <Accordion.Root defaultValue={["shipping"]} style={width}>
+    <Accordion.Root defaultValue={["shipping"]} className={width}>
       <Accordion.Item value="shipping">
         <Accordion.Header>
           <Accordion.Trigger>When will my order ship?</Accordion.Trigger>

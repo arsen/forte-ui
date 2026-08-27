@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Field, Switch } from "@dofortech/pretty-ui";
 
 const SETTINGS = [
@@ -24,39 +23,22 @@ const SETTINGS = [
   },
 ];
 
-const panel: CSSProperties = {
-  inlineSize: "min(30rem, 100%)",
-  border: "1px solid var(--pui-color-border-muted)",
-  borderRadius: "var(--pui-radius-surface)",
-  backgroundColor: "var(--pui-color-panel)",
-};
+const panel =
+  "w-full max-w-[30rem] rounded-surface border border-border-muted bg-panel";
 
 // Field.Root is a column by default. This row layout is the one thing the
 // component cannot guess, so the demo sets it — everything else (the id, the
 // aria-describedby, the label and description styling) comes from Field.
-const row: CSSProperties = {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "var(--pui-space-5)",
-  padding: "var(--pui-space-4)",
-};
+const row = "flex-row items-center justify-between gap-5 p-4";
 
 export default function SwitchSettingsList() {
   return (
-    <div style={panel}>
+    <div className={panel}>
       {SETTINGS.map((setting, index) => (
         <Field.Root
           key={setting.id}
           name={setting.id}
-          style={
-            index === 0
-              ? row
-              : {
-                  ...row,
-                  borderBlockStart: "1px solid var(--pui-color-border-muted)",
-                }
-          }
+          className={index === 0 ? row : `${row} border-t border-border-muted`}
         >
           {/* The label sits beside the switch rather than around it, which is
             * the whole reason this needs no `nativeButton`: Field points the

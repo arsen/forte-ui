@@ -19,7 +19,7 @@ export default function FormServerErrors() {
   const [pending, setPending] = React.useState(false);
 
   return (
-    <div style={{ inlineSize: "min(24rem, 100%)" }}>
+    <div className="w-full max-w-sm">
       <Form
         errors={errors}
         // Base UI mirrors `errors` into its own state and drops a field's
@@ -41,7 +41,7 @@ export default function FormServerErrors() {
           <Field.Error />
         </Field.Root>
 
-        <Button type="submit" loading={pending} style={{ alignSelf: "flex-start" }}>
+        <Button type="submit" loading={pending} className="self-start">
           Sign up
         </Button>
       </Form>

@@ -6,7 +6,7 @@ import { Button, Tooltip } from "@dofortech/pretty-ui";
 export default function TooltipWithProvider() {
   return (
     <Tooltip.Provider delay={400}>
-      <div style={{ display: "flex", gap: "0.25rem" }}>
+      <div className="flex gap-1">
         <Tooltip.Root>
           <Tooltip.Trigger
             aria-label="Bold"

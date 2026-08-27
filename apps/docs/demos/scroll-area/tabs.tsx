@@ -15,11 +15,11 @@ const SECTIONS = [
 
 export default function ScrollAreaTabs() {
   return (
-    <Tabs.Root defaultValue="overview" style={{ width: "min(30rem, 100%)" }}>
+    <Tabs.Root defaultValue="overview" className="w-full max-w-[30rem]">
       {/* The padding gives the horizontal scrollbar a lane of its own below the
           rail. Without it the track overlays the rail and the sliding
           indicator, and the two read as one smudged line. */}
-      <ScrollArea.Root style={{ paddingBlockEnd: "var(--pui-space-3)" }}>
+      <ScrollArea.Root className="pb-3">
         <ScrollArea.Viewport>
           <ScrollArea.Content>
             <Tabs.List aria-label="Project sections">

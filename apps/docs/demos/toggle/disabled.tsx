@@ -4,8 +4,8 @@ import { Toggle, ToggleGroup } from "@dofortech/pretty-ui";
 
 export default function ToggleDisabled() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)", justifyItems: "start" }}>
-      <div style={{ display: "flex", gap: "var(--pui-space-2)" }}>
+    <div className="grid justify-items-start gap-4">
+      <div className="flex gap-2">
         {/* Disabled keeps whichever state it is in — the point is that the
           * user can still read the setting, just not change it. */}
         <Toggle disabled>Off and locked</Toggle>

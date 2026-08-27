@@ -10,7 +10,7 @@ const REGIONS = {
 
 export default function FieldWithSelect() {
   return (
-    <div style={{ inlineSize: "min(24rem, 100%)" }}>
+    <div className="w-full max-w-sm">
       <Field.Root name="region">
         {/* nativeLabel={false} because the control is a <button>. A native
           * <label> would hand the trigger its :hover state and open the popup

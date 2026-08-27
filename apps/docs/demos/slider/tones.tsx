@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Slider } from "@dofortech/pretty-ui";
 
 const tones = [
@@ -10,14 +9,11 @@ const tones = [
   { tone: "neutral", label: "Neutral", value: 25 },
 ] as const;
 
-const column: CSSProperties = {
-  display: "grid",
-  gap: "var(--pui-space-5)",
-};
+const column = "grid gap-5";
 
 export default function SliderTones() {
   return (
-    <div style={column}>
+    <div className={column}>
       {tones.map(({ tone, label, value }) => (
         // `tone` swaps the indicator fill, the thumb's ring and its halo in
         // one move. The rail stays neutral in every tone — it is the empty

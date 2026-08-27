@@ -4,17 +4,7 @@ import { Button, Separator } from "@dofortech/pretty-ui";
 
 export default function SeparatorToolbar() {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "var(--pui-space-2)",
-        padding: "var(--pui-space-2)",
-        border: "1px solid var(--pui-color-border)",
-        borderRadius: "var(--pui-radius-surface)",
-        background: "var(--pui-color-panel)",
-      }}
-    >
+    <div className="flex items-center gap-2 rounded-surface border border-border bg-panel p-2">
       <Button variant="ghost" size="sm">Undo</Button>
       <Button variant="ghost" size="sm">Redo</Button>
 

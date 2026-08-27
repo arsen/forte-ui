@@ -1,21 +1,13 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Collapsible } from "@dofortech/pretty-ui";
 
-const column: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-3)",
-  inlineSize: "min(32rem, 100%)",
-  fontSize: "var(--pui-font-size-2)",
-  lineHeight: "var(--pui-line-height-normal)",
-};
+const column = "flex w-full max-w-lg flex-col gap-3 text-2 leading-normal";
 
 export default function CollapsibleBasic() {
   return (
-    <div style={column}>
-      <p style={{ margin: 0 }}>
+    <div className={column}>
+      <p className="m-0">
         Your export will include every project you own, as newline-delimited
         JSON, and a link will be emailed to you when it is ready.
       </p>

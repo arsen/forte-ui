@@ -4,7 +4,7 @@ import { Checkbox, Field, Fieldset, Input, Switch } from "@dofortech/pretty-ui";
 
 export default function FieldsetDisabled() {
   return (
-    <div style={{ inlineSize: "min(28rem, 100%)" }}>
+    <div className="w-full max-w-md">
       {/* `disabled` on a <fieldset> is native, so it reaches every control
         * inside — including ones this library knows nothing about. */}
       <Fieldset.Root disabled>

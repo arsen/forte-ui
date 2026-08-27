@@ -10,7 +10,7 @@ const sizes = [
 
 export default function SwitchSizes() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)" }}>
+    <div className="grid gap-4">
       {sizes.map(({ size, label }) => (
         <Field.Root key={size}>
           <Field.Label>

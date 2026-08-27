@@ -32,23 +32,10 @@ function Icon({ children }: { children: React.ReactNode }) {
 // so this row — which spans the full width of the popup — would otherwise
 // swallow every press in the empty space either side of the buttons, and
 // outside-press dismissal would stop working in a band across the screen.
-const pager = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "var(--pui-control-gap)",
-  pointerEvents: "none",
-} as const;
+const pager = "pointer-events-none flex justify-center gap-(--pui-control-gap)";
 
-const preview = {
-  display: "grid",
-  placeItems: "center",
-  blockSize: "10rem",
-  borderRadius: "var(--pui-radius-3)",
-  background: "var(--pui-color-panel)",
-  color: "var(--pui-color-foreground-muted)",
-  fontFamily: "var(--pui-font-mono)",
-  fontSize: "var(--pui-font-size-1)",
-} as const;
+const preview =
+  "grid h-[10rem] place-items-center rounded-3 bg-panel font-mono text-1 text-foreground-muted";
 
 export default function DialogOutsidePopup() {
   const [index, setIndex] = React.useState(0);
@@ -74,7 +61,7 @@ export default function DialogOutsidePopup() {
           // A direct child of the popup, so it gets its clicks back without
           // any help — and `flex-end` puts it clear of the panel's corner
           // rather than inside it.
-          style={{ alignSelf: "flex-end" }}
+          className="self-end"
           render={<Button iconOnly size="sm" tone="neutral" />}
         >
           <Icon>
@@ -87,14 +74,14 @@ export default function DialogOutsidePopup() {
           <Dialog.Description>
             {asset.size} · {asset.weight}
           </Dialog.Description>
-          <div style={preview}>{asset.name}</div>
+          <div className={preview}>{asset.name}</div>
         </Dialog.Surface>
 
-        <div style={pager}>
+        <div className={pager}>
           <Button
             size="sm"
             tone="neutral"
-            style={{ pointerEvents: "auto" }}
+            className="pointer-events-auto"
             disabled={index === 0}
             onClick={() => setIndex((i) => i - 1)}
           >
@@ -103,7 +90,7 @@ export default function DialogOutsidePopup() {
           <Button
             size="sm"
             tone="neutral"
-            style={{ pointerEvents: "auto" }}
+            className="pointer-events-auto"
             disabled={index === ASSETS.length - 1}
             onClick={() => setIndex((i) => i + 1)}
           >

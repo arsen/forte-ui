@@ -3,14 +3,10 @@
 import * as React from "react";
 import { Radio, RadioGroup } from "@dofortech/pretty-ui";
 
-const rowStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "var(--pui-control-gap)",
-  // A plain <label> is not one of ours, so it carries none of Field.Label's
-  // styling — including the pointer cursor it gets for wrapping a control.
-  cursor: "pointer",
-};
+// `cursor-pointer` is not decoration: a plain <label> is not one of ours, so it
+// carries none of Field.Label's styling — including the pointer cursor it gets
+// for wrapping a control.
+const row = "flex cursor-pointer items-center gap-(--pui-control-gap)";
 
 export default function RadioLabelling() {
   const groupLabelId = React.useId();
@@ -26,14 +22,7 @@ export default function RadioLabelling() {
         * Each OPTION is named by an enclosing <label>. That works because
         * Radio renders a <span> with a hidden <input> beside it, and the input
         * is what the label resolves to. */}
-      <div
-        id={groupLabelId}
-        style={{
-          marginBlockEnd: "var(--pui-space-2)",
-          fontSize: "var(--pui-font-size-2)",
-          fontWeight: "var(--pui-font-weight-medium)",
-        }}
-      >
+      <div id={groupLabelId} className="mb-2 text-2 font-medium">
         Merge strategy
       </div>
 
@@ -41,17 +30,17 @@ export default function RadioLabelling() {
         aria-labelledby={groupLabelId}
         name="merge-strategy"
         defaultValue="squash"
-        style={{ gap: "var(--pui-space-2)" }}
+        className="gap-2"
       >
-        <label style={rowStyle}>
+        <label className={row}>
           <Radio value="merge" />
           Create a merge commit
         </label>
-        <label style={rowStyle}>
+        <label className={row}>
           <Radio value="squash" />
           Squash and merge
         </label>
-        <label style={rowStyle}>
+        <label className={row}>
           <Radio value="rebase" />
           Rebase and merge
         </label>

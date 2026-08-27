@@ -17,14 +17,14 @@ const RELEASES = [
 
 export default function ScrollAreaBasic() {
   return (
-    <ScrollArea.Root style={{ maxHeight: "13rem", width: "min(30rem, 100%)" }}>
+    <ScrollArea.Root className="max-h-[13rem] w-full max-w-[30rem]">
       <ScrollArea.Viewport aria-label="Release notes">
-        <ScrollArea.Content style={{ paddingInlineEnd: "var(--pui-space-4)" }}>
-          <div style={{ display: "grid", gap: "var(--pui-space-3)" }}>
+        <ScrollArea.Content className="pe-4">
+          <div className="grid gap-3">
             {RELEASES.map(([version, note]) => (
               <div key={version}>
-                <p style={{ margin: 0, fontWeight: "var(--pui-font-weight-medium)" }}>{version}</p>
-                <p style={{ margin: 0, color: "var(--pui-color-foreground-muted)" }}>{note}</p>
+                <p className="m-0 font-medium">{version}</p>
+                <p className="m-0 text-foreground-muted">{note}</p>
               </div>
             ))}
           </div>

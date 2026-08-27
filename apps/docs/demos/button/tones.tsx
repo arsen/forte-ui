@@ -6,9 +6,9 @@ const variants = ["solid", "soft", "outline", "ghost"] as const;
 
 export default function ButtonTones() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-3)" }}>
+    <div className="grid gap-3">
       {variants.map((variant) => (
-        <div key={variant} style={{ display: "flex", gap: "var(--pui-space-2)" }}>
+        <div key={variant} className="flex gap-2">
           <Button variant={variant} tone="primary">
             Publish
           </Button>

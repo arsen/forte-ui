@@ -35,21 +35,11 @@ const RELEASES: [string, string][] = [
   ["3.9.0", "Reusable workflows accept typed inputs."],
 ];
 
-const entry = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-1)",
-  paddingBlock: "var(--pui-space-3)",
-  borderBlockStart: "1px solid var(--pui-color-border-muted)",
-} as const;
+const entry = "flex flex-col gap-1 border-t border-border-muted py-3";
 
-const version = {
-  fontWeight: "var(--pui-font-weight-semibold)",
-  fontFamily: "var(--pui-font-mono)",
-  fontSize: "var(--pui-font-size-1)",
-} as const;
+const version = "font-mono text-1 font-semibold";
 
-const note = { color: "var(--pui-color-foreground-muted)" } as const;
+const note = "text-foreground-muted";
 
 export default function DrawerScrollable() {
   return (
@@ -65,9 +55,9 @@ export default function DrawerScrollable() {
           </Drawer.Description>
           <div>
             {RELEASES.map(([v, text]) => (
-              <div key={v} style={entry}>
-                <span style={version}>{v}</span>
-                <span style={note}>{text}</span>
+              <div key={v} className={entry}>
+                <span className={version}>{v}</span>
+                <span className={note}>{text}</span>
               </div>
             ))}
           </div>

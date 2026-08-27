@@ -4,7 +4,7 @@ import { Toggle, ToggleGroup } from "@dofortech/pretty-ui";
 
 export default function ToggleGroupAppearance() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)", justifyItems: "start" }}>
+    <div className="grid justify-items-start gap-4">
       {/* `variant`, `tone` and `size` set on the group become the default for
         * every toggle inside it, so a strip stays uniform without repeating
         * three props per item. */}

@@ -11,20 +11,9 @@ import {
 // numbers at or below 1 are read as a fraction of the viewport.
 const SNAP_POINTS: DrawerSnapPoint[] = ["10rem", 0.55, 1];
 
-const list = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-2)",
-  margin: 0,
-  padding: 0,
-  listStyle: "none",
-} as const;
+const list = "m-0 flex list-none flex-col gap-2 p-0";
 
-const item = {
-  padding: "var(--pui-space-3)",
-  borderRadius: "var(--pui-radius-control)",
-  backgroundColor: "var(--pui-color-panel)",
-} as const;
+const item = "rounded-control bg-panel p-3";
 
 export default function DrawerSnapPoints() {
   const [snapPoint, setSnapPoint] = React.useState<DrawerSnapPoint | null>(
@@ -48,7 +37,7 @@ export default function DrawerSnapPoints() {
           <Drawer.Description>
             Drag the sheet up for the full list, or down to put it away.
           </Drawer.Description>
-          <ul style={list}>
+          <ul className={list}>
             {[
               "Ostbahnhof — 2 min",
               "Rosenheimer Platz — 4 min",
@@ -57,7 +46,7 @@ export default function DrawerSnapPoints() {
               "Karlsplatz — 12 min",
               "Hauptbahnhof — 15 min",
             ].map((stop) => (
-              <li key={stop} style={item}>
+              <li key={stop} className={item}>
                 {stop}
               </li>
             ))}

@@ -34,14 +34,7 @@ export default function CheckboxIndeterminate() {
           </Field.Label>
         </Field.Item>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--pui-space-2)",
-            marginInlineStart: "var(--pui-space-6)",
-          }}
-        >
+        <div className="ms-6 flex flex-col gap-2">
           {permissions.map((permission) => (
             <Field.Item key={permission.value}>
               <Field.Label>

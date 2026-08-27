@@ -3,10 +3,7 @@
 import type { CSSProperties } from "react";
 import { Field, Slider } from "@dofortech/pretty-ui";
 
-const column: CSSProperties = {
-  display: "grid",
-  gap: "var(--pui-space-5)",
-};
+const column = "grid gap-5";
 
 // The documented escape hatch for a slider that fills its container: the root
 // is `inline-size: var(--pui-slider-length)` capped at 100%, so pointing the
@@ -16,7 +13,7 @@ const fullWidth = { "--pui-slider-length": "100%" } as CSSProperties;
 
 export default function SliderDisabled() {
   return (
-    <div style={column}>
+    <div className={column}>
       {/* `disabled` on the Field rather than on the Slider: it takes
         * precedence over the control's own prop and dims the description with
         * it, so the reason the setting is unavailable does not sit at full

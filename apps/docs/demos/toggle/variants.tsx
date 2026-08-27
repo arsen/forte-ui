@@ -7,26 +7,14 @@ const VARIANTS = ["solid", "soft", "outline"] as const;
 
 export default function ToggleVariants() {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "auto auto auto",
-        alignItems: "center",
-        gap: "var(--pui-space-3) var(--pui-space-4)",
-      }}
-    >
+    <div className="grid grid-cols-[auto_auto_auto] items-center gap-x-4 gap-y-3">
       {VARIANTS.map((variant) => (
         // Both states side by side, because the variant only decides what "on"
         // looks like. Every variant is chromeless when off — apart from
         // `outline`, which keeps its border so you can still see where the
         // button is before anything is pressed.
         <React.Fragment key={variant}>
-          <span
-            style={{
-              color: "var(--pui-color-foreground-muted)",
-              fontSize: "var(--pui-font-size-1)",
-            }}
-          >
+          <span className="text-1 text-foreground-muted">
             {variant}
           </span>
           <Toggle variant={variant}>Off</Toggle>

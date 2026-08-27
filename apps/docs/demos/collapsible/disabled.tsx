@@ -1,18 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Collapsible } from "@dofortech/pretty-ui";
 
-const stack: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-4)",
-  inlineSize: "min(32rem, 100%)",
-};
+const stack = "flex w-full max-w-lg flex-col gap-4";
 
 export default function CollapsibleDisabled() {
   return (
-    <div style={stack}>
+    <div className={stack}>
       <Collapsible.Root variant="contained" disabled>
         <Collapsible.Trigger>Invoices</Collapsible.Trigger>
         <Collapsible.Panel>

@@ -25,15 +25,13 @@ const CLAUSES = [
 // `position: fixed; inset: 0` with its own padding, so 100% is the screen less
 // that padding. Without a cap the popup grows to fit its content and the
 // viewport scrolls instead, which is the default behaviour this demo replaces.
-const popup = { maxBlockSize: "100%" } as const;
+const popup = "max-h-full";
 
 // `flex: 1 1 auto` gives the scroll region every pixel the title and footer do
 // not use. `minBlockSize: 0` is what lets it *shrink*: a flex item's automatic
 // minimum size is its content, so without this it refuses to go below the full
 // height of the terms and hands the overflow straight back to the popup.
-const scroller = { flex: "1 1 auto", minBlockSize: 0 } as const;
-
-const clause = { margin: 0 } as const;
+const scroller = "min-h-0 flex-auto";
 
 export default function DialogScrollInside() {
   return (
@@ -41,25 +39,19 @@ export default function DialogScrollInside() {
       <Dialog.Trigger render={<Button variant="outline" />}>
         Read the terms
       </Dialog.Trigger>
-      <Dialog.Popup style={popup}>
+      <Dialog.Popup className={popup}>
         <Dialog.Title>Terms of service</Dialog.Title>
         <Dialog.Description>Last updated 1 August 2026.</Dialog.Description>
         {/* Name the region. A scrollable box is announced as a group with no
             name of its own, and Base UI makes it a real tab stop whenever it
             can scroll. */}
-        <ScrollArea.Root style={scroller}>
+        <ScrollArea.Root className={scroller}>
           <ScrollArea.Viewport aria-label="Terms of service">
-            <ScrollArea.Content
-              style={{
-                display: "grid",
-                gap: "var(--pui-space-4)",
-                // Clear of the overlay scrollbar, so the last words of a line
-                // are never sitting under the thumb.
-                paddingInlineEnd: "var(--pui-space-4)",
-              }}
-            >
+            {/* `pe-4` keeps the text clear of the overlay scrollbar, so the
+                last words of a line are never sitting under the thumb. */}
+            <ScrollArea.Content className="grid gap-4 pe-4">
               {CLAUSES.map((text) => (
-                <p key={text} style={clause}>
+                <p key={text} className="m-0">
                   {text}
                 </p>
               ))}

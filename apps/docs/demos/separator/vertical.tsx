@@ -4,14 +4,7 @@ import { Separator } from "@dofortech/pretty-ui";
 
 export default function SeparatorVertical() {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "var(--pui-space-3)",
-        color: "var(--pui-color-foreground-muted)",
-      }}
-    >
+    <div className="flex items-center gap-3 text-foreground-muted">
       <span>Draft</span>
       <Separator orientation="vertical" />
       <span>Edited 3 minutes ago</span>

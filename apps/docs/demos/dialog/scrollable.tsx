@@ -22,8 +22,6 @@ const CLAUSES = [
   "16. Governing law. These terms are governed by the law of the place our company is registered, and both sides agree to attempt mediation before starting proceedings.",
 ];
 
-const clause = { margin: 0 } as const;
-
 export default function DialogScrollable() {
   const popupRef = React.useRef<HTMLDivElement>(null);
 
@@ -43,7 +41,7 @@ export default function DialogScrollable() {
         <Dialog.Title>Terms of service</Dialog.Title>
         <Dialog.Description>Last updated 1 August 2026.</Dialog.Description>
         {CLAUSES.map((text) => (
-          <p key={text} style={clause}>
+          <p key={text} className="m-0">
             {text}
           </p>
         ))}

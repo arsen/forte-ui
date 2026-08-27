@@ -23,7 +23,7 @@ export default function RadioForm() {
   > | null>(null);
 
   return (
-    <div style={{ inlineSize: "min(26rem, 100%)" }}>
+    <div className="w-full max-w-[26rem]">
       <Form onFormSubmit={(values) => setSubmitted(values)}>
         {/* Fieldset.Legend names the whole section. The Field.Root inside
           * carries the `name` that the value is submitted under — the group
@@ -71,23 +71,13 @@ export default function RadioForm() {
           </Field.Root>
         </Fieldset.Root>
 
-        <Button type="submit" style={{ alignSelf: "flex-start" }}>
+        <Button type="submit" className="self-start">
           Continue
         </Button>
       </Form>
 
       {submitted ? (
-        <pre
-          style={{
-            marginBlockStart: "var(--pui-space-5)",
-            padding: "var(--pui-space-4)",
-            borderRadius: "var(--pui-radius-surface)",
-            backgroundColor: "var(--pui-color-panel)",
-            fontFamily: "var(--pui-font-mono)",
-            fontSize: "var(--pui-font-size-1)",
-            overflowX: "auto",
-          }}
-        >
+        <pre className="mt-5 overflow-x-auto rounded-surface bg-panel p-4 font-mono text-1">
           {JSON.stringify(submitted, null, 2)}
         </pre>
       ) : null}

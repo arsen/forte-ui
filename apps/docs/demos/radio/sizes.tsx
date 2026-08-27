@@ -10,13 +10,7 @@ const SIZES = [
 
 export default function RadioSizes() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--pui-space-5)",
-      }}
-    >
+    <div className="flex flex-col gap-5">
       {SIZES.map(({ size, label }) => (
         // One group per size, each showing both states — the dot is what
         // changes with the size, and it only exists on the selected option.

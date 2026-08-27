@@ -4,7 +4,7 @@ import { Field, Switch } from "@dofortech/pretty-ui";
 
 export default function SwitchDisabled() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)" }}>
+    <div className="grid gap-4">
       {/* `disabled` on the Field, not on the Switch: it takes precedence over
         * the control's own prop and dims the label with it, so the reason the
         * setting is unavailable does not sit at full contrast beside a

@@ -1,16 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Slider } from "@dofortech/pretty-ui";
 
-const column: CSSProperties = {
-  display: "grid",
-  gap: "var(--pui-space-5)",
-};
+const column = "grid gap-5";
 
 export default function SliderLabeling() {
   return (
-    <div style={column}>
+    <div className={column}>
       {/* A visible label. Slider.Label renders a <div> wired to every thumb's
         * hidden input with aria-labelledby — a native <label> could only point
         * at one control, which would leave the second thumb of a range slider

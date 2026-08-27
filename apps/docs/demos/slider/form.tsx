@@ -16,7 +16,7 @@ export default function SliderForm() {
   > | null>(null);
 
   return (
-    <div style={{ inlineSize: "min(26rem, 100%)" }}>
+    <div className="w-full max-w-[26rem]">
       <Form onFormSubmit={(values) => setSubmitted(values)}>
         {/* A single-thumb slider submits like any other control: give the name
           * to the Field and the hidden <input type="range"> carries it. */}
@@ -62,23 +62,13 @@ export default function SliderForm() {
           </Fieldset.Root>
         </Field.Root>
 
-        <Button type="submit" style={{ alignSelf: "flex-start" }}>
+        <Button type="submit" className="self-start">
           Save settings
         </Button>
       </Form>
 
       {submitted ? (
-        <pre
-          style={{
-            marginBlockStart: "var(--pui-space-5)",
-            padding: "var(--pui-space-4)",
-            borderRadius: "var(--pui-radius-surface)",
-            backgroundColor: "var(--pui-color-panel)",
-            fontFamily: "var(--pui-font-mono)",
-            fontSize: "var(--pui-font-size-1)",
-            overflowX: "auto",
-          }}
-        >
+        <pre className="mt-5 overflow-x-auto rounded-surface bg-panel p-4 font-mono text-1">
           {JSON.stringify(submitted, null, 2)}
         </pre>
       ) : null}

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import type { CSSProperties } from "react";
 import { Accordion, Button } from "@dofortech/pretty-ui";
 
 const SECTIONS = [
@@ -12,21 +11,16 @@ const SECTIONS = [
 
 const ALL = SECTIONS.map((section) => section.value);
 
-const stack: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-3)",
-  inlineSize: "min(32rem, 100%)",
-};
+const stack = "flex w-full max-w-lg flex-col gap-3";
 
-const bar: CSSProperties = { display: "flex", gap: "var(--pui-space-2)" };
+const bar = "flex gap-2";
 
 export default function AccordionControlled() {
   const [open, setOpen] = React.useState<string[]>(["scope"]);
 
   return (
-    <div style={stack}>
-      <div style={bar}>
+    <div className={stack}>
+      <div className={bar}>
         <Button variant="soft" size="sm" onClick={() => setOpen(ALL)}>
           Expand all
         </Button>

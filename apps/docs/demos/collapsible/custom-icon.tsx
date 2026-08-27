@@ -1,14 +1,8 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Collapsible } from "@dofortech/pretty-ui";
 
-const stack: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-4)",
-  inlineSize: "min(32rem, 100%)",
-};
+const stack = "flex w-full max-w-lg flex-col gap-4";
 
 /* A solid caret rather than the default outlined chevron. Pointing DOWN, so
  * the trigger's 180° flip lands it pointing up — a marker that is symmetric
@@ -17,13 +11,7 @@ const stack: CSSProperties = {
  * box that already has one. */
 function CaretDownIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      style={{ display: "block" }}
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" className="block">
       <path d="M8 11 4 6h8z" />
     </svg>
   );
@@ -31,7 +19,7 @@ function CaretDownIcon() {
 
 export default function CollapsibleCustomIcon() {
   return (
-    <div style={stack}>
+    <div className={stack}>
       <Collapsible.Root variant="contained">
         <Collapsible.Trigger icon={<CaretDownIcon />}>
           A different marker

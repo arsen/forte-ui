@@ -4,13 +4,7 @@ import { Checkbox, Field } from "@dofortech/pretty-ui";
 
 export default function CheckboxDisabled() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--pui-space-3)",
-      }}
-    >
+    <div className="flex flex-col gap-3">
       <Field.Root name="require-review">
         <Field.Label>
           <Checkbox defaultChecked />

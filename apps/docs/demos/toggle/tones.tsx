@@ -6,7 +6,7 @@ const TONES = ["primary", "secondary", "danger", "neutral"] as const;
 
 export default function ToggleTones() {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--pui-space-2)" }}>
+    <div className="flex flex-wrap gap-2">
       {/* `tone` only reaches the pressed state — an unpressed toggle looks the
         * same in all four, which is deliberate: off is off. Each one here
         * starts pressed so the difference is visible. */}

@@ -11,19 +11,13 @@ export default function ToggleGroupSingle() {
   const mode = value[0];
 
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-3)", justifyItems: "start" }}>
+    <div className="grid justify-items-start gap-3">
       <ToggleGroup segmented value={value} onValueChange={setValue} aria-label="Render quality">
         <Toggle value="fast">Fast</Toggle>
         <Toggle value="balanced">Balanced</Toggle>
         <Toggle value="best">Best</Toggle>
       </ToggleGroup>
-      <p
-        style={{
-          margin: 0,
-          color: "var(--pui-color-foreground-muted)",
-          fontSize: "var(--pui-font-size-1)",
-        }}
-      >
+      <p className="m-0 text-1 text-foreground-muted">
         {mode ? `Rendering at ${mode} quality.` : "Nothing selected — using the project default."}
       </p>
     </div>
