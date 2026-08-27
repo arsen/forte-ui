@@ -1,6 +1,7 @@
 import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Input",
@@ -112,22 +113,7 @@ The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
 `--pui-radius-*` — are the exception: this component only reads those, so
 re-pointing them from `:root` or a theme scope moves every input at once.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-input-height` | Control height (reset per `size`) | `var(--pui-control-h-md)` |
-| `--pui-input-padding-x` | Inline padding (reset per `size`) | `var(--pui-control-px-md)` |
-| `--pui-input-font-size` | Font size (reset per `size`) | `var(--pui-font-size-2)` |
-| `--pui-input-radius` | Corner radius | `var(--pui-radius-control)` |
-| `--pui-input-border-width` | Border width | `1px` |
-| `--pui-input-bg` | Background (reset per `variant`) | `var(--pui-color-background)` |
-| `--pui-input-bg-hover` | Background on hover | `var(--pui-color-panel-hover)` |
-| `--pui-input-fg` | Text colour | `var(--pui-color-foreground)` |
-| `--pui-input-placeholder-fg` | Placeholder colour | `var(--pui-color-foreground-muted)` |
-| `--pui-input-border-color` | Border colour (reset per `variant`, and by `data-invalid`) | `var(--pui-color-border)` |
-| `--pui-input-border-color-hover` | Border colour on hover | `var(--pui-color-border-strong)` |
-| `--pui-input-caret-color` | Caret colour | `var(--pui-color-primary)` |
-| `--pui-input-selection-bg` | Selection background | `var(--pui-color-primary-soft)` |
-| `--pui-input-selection-fg` | Selection text colour | `var(--pui-color-primary-text)` |
+<ThemingTable component="Input" />
 
 ## API reference
 

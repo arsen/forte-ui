@@ -1,6 +1,7 @@
 import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Spinner",
@@ -191,22 +192,7 @@ them on the spinner itself — through `className` or an inline `style` — rath
 than on an ancestor: the component declares its own defaults on the root
 element, and an element's own declaration beats an inherited value.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-spinner-size` | Diameter of the indicator. `size` sets `1rem` / `1.5rem` / `2rem`; everything below that is a fraction of it follows. | `1.5rem` |
-| `--pui-spinner-thickness` | Ring stroke and halo border. | `max(2px, calc(var(--pui-spinner-size) / 8))` |
-| `--pui-spinner-duration` | One full cycle. `variant="pulse"` raises it to `--pui-duration-loop-pulse`. | `var(--pui-duration-loop-spin)` |
-| `--pui-spinner-gap` | Space between the indicator and a visible label. | `var(--pui-control-gap)` |
-| `--pui-spinner-color` | The indicator's colour. Becomes the indicator's `color`, and every part fills with `currentColor`. | `var(--pui-color-primary)` |
-| `--pui-spinner-track` | The faint full ring the comet travels along. Set it to `transparent` for a bare arc. | `color-mix(in oklab, var(--pui-spinner-color) 18%, transparent)` |
-| `--pui-spinner-label-color` | Colour of a visible label. | `var(--pui-color-foreground-muted)` |
-| `--pui-spinner-label-size` | Font size of a visible label. Retuned by `size`. | `var(--pui-font-size-2)` |
-| `--pui-spinner-dot-dim` | How far a dot fades at the bottom of its hop. | `0.25` |
-| `--pui-spinner-dot-travel` | How high a dot hops. Collapses to `0px` under reduced motion, because `--pui-travel-sm` does. | `min(var(--pui-travel-sm), calc(var(--pui-spinner-size) / 5))` |
-| `--pui-spinner-bar-dim` | How far a bar fades at the back of the sweep. | `0.15` |
-| `--pui-spinner-bar-width` | Thickness of one spoke. | `calc(var(--pui-spinner-size) / 9)` |
-| `--pui-spinner-bar-length` | Length of one spoke. | `calc(var(--pui-spinner-size) / 3.2)` |
-| `--pui-spinner-ripple-min` | Scale a halo starts from, as a factor. Gated on `--pui-motion-ok`, so it is exactly `1` under reduced motion and the halo holds still. | `calc(1 - 0.6 * var(--pui-motion-ok))` |
+<ThemingTable component="Spinner" />
 
 <Callout kind="note">
   `--pui-spinner-track` derives from `--pui-spinner-color`, and a `var()` inside

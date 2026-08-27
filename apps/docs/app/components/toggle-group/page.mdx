@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Toggle Group",
@@ -170,14 +171,7 @@ The group declares its own properties on the group element; the toggles inside
 are themed through the `--pui-toggle-*` properties documented on
 [`Toggle`](/components/toggle).
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-toggle-group-gap` | Gap between toggles. | `var(--pui-space-2)`, or `var(--pui-space-1)` when `segmented` |
-| `--pui-toggle-group-padding` | Padding inside the strip. | `0px`, or `var(--pui-space-1)` when `segmented` |
-| `--pui-toggle-group-radius` | Corner radius of the strip. | `0px`, or `var(--pui-radius-4)` when `segmented` |
-| `--pui-toggle-group-bg` | Fill behind the strip. | `transparent`, or `var(--pui-color-panel)` when `segmented` |
-| `--pui-toggle-group-border-width` | Border width of the strip. | `1px` |
-| `--pui-toggle-group-border-color` | Border colour of the strip. | `transparent` |
+<ThemingTable component="Toggle" part="group" />
 
 <Callout kind="note">
   The strip always draws a 1px border, even when it has no colour. `transparent`

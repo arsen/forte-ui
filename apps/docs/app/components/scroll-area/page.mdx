@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Scroll Area",
@@ -164,18 +165,7 @@ There is no `prefers-reduced-motion` block in the stylesheet. The only motion in
 
 Every property below is declared on `ScrollArea.Root` and inherited by the parts inside it, which is also why an ancestor is the wrong place to set one — the root's own declaration wins over the inherited value. Override them on `ScrollArea.Root` itself, through its `className` or an inline `style`. To move every scroll area at once, re-point the global tokens in the Default column instead.
 
-| Property | What it controls | Default |
-| :-- | :-- | :-- |
-| `--pui-scroll-area-fade-size` | How far the fade reaches in from an edge, at most | `var(--pui-space-5)` |
-| `--pui-scroll-area-scrollbar-size` | Track thickness on both axes | `var(--pui-space-3)` |
-| `--pui-scroll-area-track-padding` | Inset between the track's edge and its thumb | `2px` |
-| `--pui-scroll-area-track-bg` | Track fill | `transparent` |
-| `--pui-scroll-area-track-bg-hover` | Track fill while the pointer is over it | `var(--pui-color-panel)` |
-| `--pui-scroll-area-thumb-bg` | Thumb fill | `var(--pui-color-border-strong)` |
-| `--pui-scroll-area-thumb-bg-hover` | Thumb fill on hover | `var(--pui-color-foreground-subtle)` |
-| `--pui-scroll-area-thumb-bg-active` | Thumb fill while being dragged | `var(--pui-color-foreground-muted)` |
-| `--pui-scroll-area-thumb-radius` | Corner radius of the track and thumb | `var(--pui-radius-pill)` |
-| `--pui-scroll-area-corner-bg` | Fill of the square between the two scrollbars | `transparent` |
+<ThemingTable component="ScrollArea" />
 
 A `border-radius` set on `ScrollArea.Root` is inherited by the viewport, which is the box that actually clips, so rounding the root rounds the scrolled content with it.
 

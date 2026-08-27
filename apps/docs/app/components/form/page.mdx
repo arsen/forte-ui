@@ -1,6 +1,7 @@
 import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Form",
@@ -79,9 +80,7 @@ undoing. It lays out as a column because a form is nearly always a stack of
 fields, and without it every consumer writes the same three declarations. Set
 `display` through `className` for anything else.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-form-gap` | Space between the form's children | `var(--pui-space-5)` |
+<ThemingTable component="Form" />
 
 `min-inline-size: 0` is set for the same reason it is on `Field` and
 `Fieldset`: a text input inside refuses to shrink below its ~20-character

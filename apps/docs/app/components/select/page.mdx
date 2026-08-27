@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Select",
@@ -155,41 +156,7 @@ The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
 those and never redeclares them, so re-pointing them on `:root` or on a theme
 scope does re-skin every select.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-select-label-fg` | Label text colour | `var(--pui-color-foreground)` |
-| `--pui-select-label-font-size` | Label font size | `var(--pui-font-size-2)` |
-| `--pui-select-label-font-weight` | Label font weight | `var(--pui-font-weight-medium)` |
-| `--pui-select-label-gap` | Space between label and trigger | `var(--pui-space-1)` |
-| `--pui-select-trigger-height` | Trigger height (reset per `size`) | `var(--pui-control-h-md)` |
-| `--pui-select-trigger-padding-x` | Trigger inline padding (reset per `size`) | `var(--pui-control-px-md)` |
-| `--pui-select-trigger-font-size` | Trigger font size (reset per `size`) | `var(--pui-font-size-2)` |
-| `--pui-select-trigger-gap` | Gap between value and icon | `var(--pui-control-gap)` |
-| `--pui-select-trigger-radius` | Trigger corner radius | `var(--pui-radius-control)` |
-| `--pui-select-trigger-border-width` | Trigger border width | `1px` |
-| `--pui-select-trigger-bg` | Trigger background (reset per `variant`) | `var(--pui-color-background)` |
-| `--pui-select-trigger-bg-hover` | Trigger background on hover | `var(--pui-color-panel-hover)` |
-| `--pui-select-trigger-bg-active` | Trigger background while pressed or open | `var(--pui-color-panel-active)` |
-| `--pui-select-trigger-fg` | Trigger text colour | `var(--pui-color-foreground)` |
-| `--pui-select-trigger-border-color` | Trigger border colour (reset per `variant`) | `var(--pui-color-border)` |
-| `--pui-select-backdrop-z-index` | Stacking of the optional `backdrop` layer | `49` |
-| `--pui-select-z-index` | Stacking of the positioner | `50` |
-| `--pui-select-positioner-min-height` | How tall the popup must be able to get before `alignItemWithTrigger` falls back to side placement — smaller falls back less often | `calc(var(--pui-control-h-md) * 2.5)` |
-| `--pui-select-popup-bg` | Popup surface colour | `var(--pui-color-overlay)` |
-| `--pui-select-popup-fg` | Popup text colour | `var(--pui-color-foreground)` |
-| `--pui-select-popup-radius` | Popup corner radius | `var(--pui-radius-surface)` |
-| `--pui-select-popup-shadow` | Popup shadow | `var(--pui-shadow-4)` |
-| `--pui-select-popup-overhang` | Extra width the popup claims past the trigger in `alignItemWithTrigger` mode | `var(--pui-space-5)` |
-| `--pui-select-item-px` | Inline padding shared by items and group labels | `var(--pui-space-3)` |
-| `--pui-select-item-gap` | Gap between the indicator column and the item text | `var(--pui-control-gap)` |
-| `--pui-select-item-indicator-size` | Width of the check-mark column | `var(--pui-space-4)` |
-| `--pui-select-list-padding-y` | Block padding inside the scrolling list | `var(--pui-space-1)` |
-| `--pui-select-scroll-arrow-size` | Height of a scroll arrow | `var(--pui-space-5)` |
-| `--pui-select-item-fg` | Item text colour | `var(--pui-color-foreground)` |
-| `--pui-select-item-bg-highlighted` | Background of the highlighted item | `var(--pui-color-primary-soft)` |
-| `--pui-select-item-fg-highlighted` | Text colour of the highlighted item | `var(--pui-color-primary-text)` |
-| `--pui-select-item-fg-selected` | Text colour of the selected item | `var(--pui-color-primary-text)` |
-| `--pui-select-item-font-size` | Item font size | `var(--pui-font-size-2)` |
+<ThemingTable component="Select" />
 
 ## API reference
 

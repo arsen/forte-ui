@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Checkbox",
@@ -187,27 +188,11 @@ them on the checkbox itself — through `className` or an inline `style` — rat
 than on an ancestor: the component declares its own defaults on the root
 element, and an element's own declaration beats an inherited value.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-checkbox-size` | Width and height of the painted box. `size="sm"` sets `0.875rem`, `size="lg"` sets `1.25rem`. | `1rem` |
-| `--pui-checkbox-radius` | Corner radius of the box. | `var(--pui-radius-2)` |
-| `--pui-checkbox-border-width` | Border width. | `1px` |
-| `--pui-checkbox-mark-width` | Stroke width of the tick and dash. Unitless on purpose — the value is in SVG user units inside a 16-unit viewBox, so the stroke scales with the box instead of thinning out at larger sizes. `size` retunes it: `2.25` for `sm`, `1.75` for `lg`. | `2` |
-| `--pui-checkbox-duration` | Colour transitions on the box and the fade of the indicator. | `var(--pui-duration-fast)` |
-| `--pui-checkbox-draw-duration` | How long the mark takes to draw in and out. | `var(--pui-duration-normal)` |
-| `--pui-checkbox-bg` | Fill while unchecked. | `var(--pui-color-background)` |
-| `--pui-checkbox-bg-hover` | Fill on hover while unchecked. | `var(--pui-color-panel-hover)` |
-| `--pui-checkbox-border-color` | Border colour while unchecked. | `var(--pui-color-border)` |
-| `--pui-checkbox-border-color-hover` | Border colour on hover while unchecked. | `var(--pui-color-border-strong)` |
-| `--pui-checkbox-fill` | Fill while checked or indeterminate. | `var(--pui-color-primary)` |
-| `--pui-checkbox-fill-hover` | Fill on hover while checked or indeterminate. | `var(--pui-color-primary-hover)` |
-| `--pui-checkbox-mark-color` | Colour of the tick and dash — it becomes the root's `color`, and the marks stroke with `currentColor`. | `var(--pui-color-on-primary)` |
+<ThemingTable component="Checkbox" part="root" />
 
 `CheckboxGroup` declares one property of its own:
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-checkbox-group-gap` | Gap between items in the group. | `var(--pui-space-2)`, or `var(--pui-space-4)` when `orientation="horizontal"` |
+<ThemingTable component="Checkbox" part="group" />
 
 The three `-hover` values only ever apply on devices that report hover support,
 so a touch device never sticks in a hover colour after a tap.

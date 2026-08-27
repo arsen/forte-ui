@@ -30,23 +30,39 @@
      * specificity — or an inline `style`. To move every checkbox at once,
      * re-point the global tokens on the right-hand side below, which this
      * file only reads and never re-declares. */
+    /** Width and height of the painted box. `size="sm"` sets `0.875rem`,
+     * `size="lg"` sets `1.25rem`. */
     --pui-checkbox-size: 1rem;
+    /** Corner radius of the box. */
     --pui-checkbox-radius: var(--pui-radius-2);
+    /** Border width. */
     --pui-checkbox-border-width: 1px;
-    /* Unitless: SVG user units inside the 16-unit viewBox, so the stroke
-     * scales with the box instead of thinning out at larger sizes. */
+    /** Stroke width of the tick and dash. Unitless on purpose — the value is in
+     * SVG user units inside a 16-unit viewBox, so the stroke scales with the
+     * box instead of thinning out at larger sizes. `size` retunes it: `2.25`
+     * for `sm`, `1.75` for `lg`. */
     --pui-checkbox-mark-width: 2;
+    /** Colour transitions on the box and the fade of the indicator. */
     --pui-checkbox-duration: var(--pui-duration-fast);
     /* The draw-in. A duration, never a travel/scale token. */
+    /** How long the mark takes to draw in and out. */
     --pui-checkbox-draw-duration: var(--pui-duration-normal);
 
     /* Colour slots, filled in per tone below. */
+    /** Fill while unchecked. */
     --pui-checkbox-bg: var(--pui-color-background);
+    /** Fill on hover while unchecked. */
     --pui-checkbox-bg-hover: var(--pui-color-panel-hover);
+    /** Border colour while unchecked. */
     --pui-checkbox-border-color: var(--pui-color-border);
+    /** Border colour on hover while unchecked. */
     --pui-checkbox-border-color-hover: var(--pui-color-border-strong);
+    /** Fill while checked or indeterminate. */
     --pui-checkbox-fill: var(--pui-color-primary);
+    /** Fill on hover while checked or indeterminate. */
     --pui-checkbox-fill-hover: var(--pui-color-primary-hover);
+    /** Colour of the tick and dash — it becomes the root's `color`, and the
+     * marks stroke with `currentColor`. */
     --pui-checkbox-mark-color: var(--pui-color-on-primary);
 
     box-sizing: border-box;
@@ -235,6 +251,8 @@
 
   /* Group ----------------------------------------------------------------- */
   .group {
+    /** Gap between items in the group. `var(--pui-space-4)` when
+     * `orientation="horizontal"`. */
     --pui-checkbox-group-gap: var(--pui-space-2);
 
     display: flex;

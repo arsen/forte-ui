@@ -1,6 +1,7 @@
 import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Separator",
@@ -123,14 +124,7 @@ Nothing here transitions. A separator has no states, so there is nothing to
 animate, and a colour transition would only make it lag behind the rest of the
 page on a theme switch.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-separator-color` | Line colour | `var(--pui-color-border-muted)` |
-| `--pui-separator-thickness` | Line thickness | `1px` |
-| `--pui-separator-style` | Line style; `variant` sets this | `solid` |
-| `--pui-separator-spacing` | Margin along the axis being separated | `0px` |
-| `--pui-separator-inset` | Margin across it — how far in from the edges | `0px` |
-| `--pui-separator-min-length` | Length floor for a vertical rule with nothing to stretch against | `1lh` |
+<ThemingTable component="Separator" />
 
 State is on `data-orientation` and `data-variant`, so a consumer can reach both
 from plain CSS or a Tailwind arbitrary variant

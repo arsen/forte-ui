@@ -52,9 +52,13 @@
    * Renders a <div>, not a <label>; Base UI wires it to the trigger with
    * aria-labelledby, so clicking it focuses the trigger without opening. */
   .label {
+    /** Label text colour */
     --pui-select-label-fg: var(--pui-color-foreground);
+    /** Label font size */
     --pui-select-label-font-size: var(--pui-font-size-2);
+    /** Label font weight */
     --pui-select-label-font-weight: var(--pui-font-weight-medium);
+    /** Space between label and trigger */
     --pui-select-label-gap: var(--pui-space-1);
 
     display: block;
@@ -80,18 +84,29 @@
      * them on the trigger itself (`className` on `Select.Trigger`, whose rule
      * is unlayered and so beats this layer) or re-point the global tokens
      * below, which this file only ever reads. */
+    /** Trigger height (reset per `size`) */
     --pui-select-trigger-height: var(--pui-control-h-md);
+    /** Trigger inline padding (reset per `size`) */
     --pui-select-trigger-padding-x: var(--pui-control-px-md);
+    /** Trigger font size (reset per `size`) */
     --pui-select-trigger-font-size: var(--pui-font-size-2);
+    /** Gap between value and icon */
     --pui-select-trigger-gap: var(--pui-control-gap);
+    /** Trigger corner radius */
     --pui-select-trigger-radius: var(--pui-radius-control);
+    /** Trigger border width */
     --pui-select-trigger-border-width: 1px;
 
     /* Colour slots, filled in per variant below. */
+    /** Trigger background (reset per `variant`) */
     --pui-select-trigger-bg: var(--pui-color-background);
+    /** Trigger background on hover */
     --pui-select-trigger-bg-hover: var(--pui-color-panel-hover);
+    /** Trigger background while pressed or open */
     --pui-select-trigger-bg-active: var(--pui-color-panel-active);
+    /** Trigger text colour */
     --pui-select-trigger-fg: var(--pui-color-foreground);
+    /** Trigger border colour (reset per `variant`) */
     --pui-select-trigger-border-color: var(--pui-color-border);
 
     box-sizing: border-box;
@@ -270,6 +285,7 @@
     /* One below the positioner's 50, and declared locally because the
      * backdrop is the positioner's SIBLING inside the portal — nothing on the
      * positioner can reach it. */
+    /** Stacking of the optional `backdrop` layer */
     --pui-select-backdrop-z-index: 49;
 
     z-index: var(--pui-select-backdrop-z-index);
@@ -291,7 +307,10 @@
    * never hit-tests the positioner itself, so switching it off and back on
    * for the popup is free. */
   .positioner {
+    /** Stacking of the positioner */
     --pui-select-z-index: 50;
+    /** How tall the popup must be able to get before `alignItemWithTrigger`
+     * falls back to side placement — smaller falls back less often */
     --pui-select-positioner-min-height: calc(var(--pui-control-h-md) * 2.5);
 
     z-index: var(--pui-select-z-index);
@@ -304,13 +323,19 @@
   /* Popup ------------------------------------------------------------------ */
   .popup {
     /* Surface knobs. */
+    /** Popup surface colour */
     --pui-select-popup-bg: var(--pui-color-overlay);
+    /** Popup text colour */
     --pui-select-popup-fg: var(--pui-color-foreground);
+    /** Popup corner radius */
     --pui-select-popup-radius: var(--pui-radius-surface);
+    /** Popup shadow */
     --pui-select-popup-shadow: var(--pui-shadow-4);
     /* Extra width claimed in alignItemWithTrigger mode, so the item text can
      * sit over the trigger's value text while the check indicator and the
      * end padding still have room outside the trigger's box. */
+    /** Extra width the popup claims past the trigger in `alignItemWithTrigger`
+     * mode */
     --pui-select-popup-overhang: var(--pui-space-5);
 
     /* Motion knobs. The gesture is a vertical UNFOLD, not a zoom: only the
@@ -340,8 +365,11 @@
     /* Layout knobs shared by List, Item and GroupLabel. They live here
      * because the group label has to indent past the check indicator to line
      * its text up with the item text, and it is not an Item descendant. */
+    /** Inline padding shared by items and group labels */
     --pui-select-item-px: var(--pui-space-3);
+    /** Gap between the indicator column and the item text */
     --pui-select-item-gap: var(--pui-control-gap);
+    /** Width of the check-mark column */
     --pui-select-item-indicator-size: var(--pui-space-4);
 
     box-sizing: border-box;
@@ -473,6 +501,7 @@
    * corners. `scroll-padding-block` keeps a keyboard-focused row from coming
    * to rest underneath a scroll arrow (SC 2.4.11). */
   .list {
+    /** Block padding inside the scrolling list */
     --pui-select-list-padding-y: var(--pui-space-1);
 
     box-sizing: border-box;
@@ -557,6 +586,7 @@
    * and typeahead on its own, and every item stays reachable without them.
    * They are aria-hidden by Base UI for exactly that reason. */
   .scrollArrow {
+    /** Height of a scroll arrow */
     --pui-select-scroll-arrow-size: var(--pui-space-5);
 
     box-sizing: border-box;
@@ -630,10 +660,15 @@
    * `[data-highlighted]` (fill) at once. Pointer hover sets the same
    * attribute, which is why there is no separate `:hover` rule. */
   .item {
+    /** Item text colour */
     --pui-select-item-fg: var(--pui-color-foreground);
+    /** Background of the highlighted item */
     --pui-select-item-bg-highlighted: var(--pui-color-primary-soft);
+    /** Text colour of the highlighted item */
     --pui-select-item-fg-highlighted: var(--pui-color-primary-text);
+    /** Text colour of the selected item */
     --pui-select-item-fg-selected: var(--pui-color-primary-text);
+    /** Item font size */
     --pui-select-item-font-size: var(--pui-font-size-2);
 
     box-sizing: border-box;

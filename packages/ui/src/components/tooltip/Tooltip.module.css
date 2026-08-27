@@ -53,6 +53,7 @@
    * app's own scale without forking.
    * --------------------------------------------------------------------- */
   .positioner {
+    /** Stacking order of the positioner */
     --pui-tooltip-z-index: 50;
 
     z-index: var(--pui-tooltip-z-index);
@@ -68,20 +69,33 @@
      * unlayered consumer rule beats `pretty-ui.components` whatever its
      * specificity — or re-point the global tokens on the right-hand side,
      * which the popup only reads and never re-declares. */
+    /** Popup and arrow fill */
     --pui-tooltip-bg: var(--pui-gray-12);
+    /** Text colour */
     --pui-tooltip-fg: var(--pui-gray-1);
+    /** Corner radius */
     --pui-tooltip-radius: var(--pui-radius-2);
+    /** Top and bottom padding */
     --pui-tooltip-padding-block: var(--pui-space-1);
+    /** Left and right padding */
     --pui-tooltip-padding-inline: var(--pui-space-2);
+    /** Text size, and the `em` basis the arrow is sized from */
     --pui-tooltip-font-size: var(--pui-font-size-1);
+    /** Text weight */
     --pui-tooltip-font-weight: var(--pui-font-weight-medium);
+    /** Popup shadow (removed in forced-colors mode) */
     --pui-tooltip-shadow: var(--pui-shadow-2);
+    /** Width cap, further clamped to the space the positioner reports as
+     * available */
     --pui-tooltip-max-width: 18rem;
+    /** How far the popup slides in from, per side */
     --pui-tooltip-travel: var(--pui-travel-sm);
     /* Sized in `em` so the arrow tracks --pui-tooltip-font-size. Declared
      * here rather than on .arrow so a consumer can retune both parts from one
      * place; .arrow reads them with the same values as fallbacks. */
+    /** Arrow base width */
     --pui-tooltip-arrow-width: 1em;
+    /** Arrow height, and the distance it is pushed out from the popup */
     --pui-tooltip-arrow-height: 0.5em;
 
     /* Enter/exit displacement, resolved per side just below. Defaults to the

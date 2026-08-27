@@ -82,11 +82,16 @@
     /* One below the viewport's 40, and declared locally because the backdrop
      * is the viewport's SIBLING inside the portal — nothing on the viewport
      * can reach it. Set it through `backdropClassName`. */
+    /** Stacking band for the scrim; set through `backdropClassName` */
     --pui-drawer-backdrop-z-index: 39;
+    /** How long the scrim takes to clear; set through `backdropClassName`.
+     * Dropped to `var(--pui-duration-fast)` after a swipe. */
     --pui-drawer-backdrop-duration: var(--pui-duration-normal);
+    /** Curve the scrim clears on; set through `backdropClassName` */
     --pui-drawer-backdrop-ease: var(--pui-ease-standard);
-    /* How dark the scrim is allowed to get at its lightest. Zero for an
-     * ordinary drawer, where clearing completely IS the point. */
+    /* Zero for an ordinary drawer, where clearing completely IS the point. */
+    /** How faint the scrim may get while the drawer is still open. `0.4` on a
+     * modal drawer with snap points. */
     --pui-drawer-backdrop-floor: 0;
 
     /* Restated from `.pui-scrim` so the @supports override below has an
@@ -173,6 +178,7 @@
      * Tooltip opened INSIDE a drawer is above it whichever order the two
      * portals happen to land in. Matches Dialog, so the two slot into an
      * app's scale together. `viewportClassName` reaches it. */
+    /** Stacking band for the drawer; set through `viewportClassName` */
     --pui-drawer-z-index: 40;
 
     /* Declared HERE and not on the popup, which is the one exception to this
@@ -182,6 +188,8 @@
      * travel to clear the screen. The popup is the viewport's child, so
      * leaving it undeclared there lets it INHERIT this value — one
      * declaration, both facts, no way to set one and forget the other. */
+    /** Gap between the drawer and the edge of the screen; set through
+     * `viewportClassName`. `var(--pui-space-3)` when `variant="floating"`. */
     --pui-drawer-inset: 0px;
 
     box-sizing: border-box;
@@ -220,25 +228,39 @@
      *
      * `--pui-drawer-inset` is the one knob deliberately absent from this
      * list — see the note on `.viewport`. */
+    /** Popup background */
     --pui-drawer-bg: var(--pui-color-overlay);
+    /** Popup text colour */
     --pui-drawer-fg: var(--pui-color-foreground);
+    /** Corner radius — two corners for `edge`, four for `floating` */
     --pui-drawer-radius: var(--pui-radius-surface);
+    /** Padding inside the popup */
     --pui-drawer-padding: var(--pui-surface-p);
+    /** Gap between the popup's children, and between the content's */
     --pui-drawer-gap: var(--pui-space-4);
+    /** Popup shadow */
     --pui-drawer-shadow: var(--pui-shadow-4);
+    /** Base font size inside the popup */
     --pui-drawer-font-size: var(--pui-font-size-2);
     /* No width token exists in the inventory (widths are layout, not theme),
      * so the size scale lives in this knob and is overridable per app. */
+    /** Extent along the drawer's own axis; what the `size` prop sets — `18rem`
+     * for `sm`, `32rem` for `lg`, `100%` for `full`. */
     --pui-drawer-size: 24rem;
-    /* How far the drawer's background extends past its outer edge to cover a
-     * wrong-way overdrag. See the note at the top of the file. */
+    /* See the note at the top of the file. */
+    /** How far the surface extends past its outer edge to cover an overdrag.
+     * `0px` when `variant="floating"`. */
     --pui-drawer-bleed: var(--pui-space-8);
 
     /* Enter/exit gesture. Broken out into knobs so an app can retune the feel
      * without restating the transition. */
+    /** Length of the opening slide */
     --pui-drawer-duration: var(--pui-duration-spring-precise);
+    /** Curve of the opening slide */
     --pui-drawer-ease: var(--pui-ease-spring-precise);
+    /** Length of the closing slide, before the velocity scalar */
     --pui-drawer-exit-duration: var(--pui-duration-normal);
+    /** Curve of the closing slide */
     --pui-drawer-exit-ease: var(--pui-ease-exit);
 
     /* Nested stacking. The parent shrinks toward its own outer edge — see the
@@ -252,8 +274,11 @@
      * colour, so a 4% size difference reads as one continuous panel with a
      * seam across it rather than as two. The dim is what separates the
      * layers. */
+    /** How much each nested drawer shrinks its parent */
     --pui-drawer-nested-scale-step: 0.04;
+    /** Colour the parent dims itself with under a nested drawer */
     --pui-drawer-nested-scrim: var(--pui-scrim-color);
+    /** How long the parent takes to recede under a child */
     --pui-drawer-nested-duration: var(--pui-duration-spring-precise);
 
     /* The unit vector, pointing at the edge this drawer rests against. Zero
@@ -535,11 +560,15 @@
    * pill would be squashed to nothing by a tall sibling.
    * ---------------------------------------------------------------------- */
   .handle {
+    /** Long edge of the grab pill */
     --pui-drawer-handle-length: 2.25rem;
+    /** Short edge of the grab pill */
     --pui-drawer-handle-thickness: 0.25rem;
+    /** Grab pill colour */
     --pui-drawer-handle-color: var(--pui-color-border-strong);
     /* How far a side drawer's grip sits from the edge it hugs. Small enough to
      * stay inside the popup's padding, so it never collides with content. */
+    /** How far a `left`/`right` grip sits from the edge it hugs */
     --pui-drawer-handle-inset: var(--pui-space-2);
 
     flex: none;
@@ -598,6 +627,8 @@
   /* Content ---------------------------------------------------------------- */
   .content {
     /* Side drawers are already narrow, so there is nothing to cap. */
+    /** Maximum width of `Drawer.Content`, which then centres itself. `32rem` on
+     * a `top`/`bottom` drawer. */
     --pui-drawer-content-max-inline-size: 100%;
 
     /* This, and not the popup, is the drawer's scroll container.
@@ -700,7 +731,9 @@
    * opens it.
    * ---------------------------------------------------------------------- */
   .swipeArea {
+    /** Width of the swipe-to-open strip */
     --pui-drawer-swipe-area-size: var(--pui-space-6);
+    /** Stacking band for that strip */
     --pui-drawer-swipe-area-z-index: 38;
 
     box-sizing: border-box;

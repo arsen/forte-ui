@@ -13,6 +13,7 @@
  */
 @layer pretty-ui.components {
   .root {
+    /** Space between the legend and each field */
     --pui-fieldset-gap: var(--pui-space-4);
 
     box-sizing: border-box;
@@ -41,8 +42,11 @@
    * A <div>, not a <legend> — see Fieldset.tsx for why — so it needs no UA
    * reset of its own and lays out as an ordinary block. */
   .legend {
+    /** Legend colour */
     --pui-fieldset-legend-fg: var(--pui-color-foreground);
+    /** Legend font size */
     --pui-fieldset-legend-font-size: var(--pui-font-size-3);
+    /** Legend font weight */
     --pui-fieldset-legend-font-weight: var(--pui-font-weight-semibold);
 
     margin: 0;

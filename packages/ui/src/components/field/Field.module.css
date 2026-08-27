@@ -26,6 +26,7 @@
      * things rather than two: at 4px the label, the control and the
      * description read as one undifferentiated block instead of as a label
      * above a control with a note under it. */
+    /** Vertical rhythm between label, control, description and error */
     --pui-field-gap: var(--pui-space-2);
     /* How far a description or an error is indented when the label WRAPS its
      * control — see the rule below. Declared here rather than on the parts
@@ -39,6 +40,8 @@
      * that width exactly — written as the token, not as `1rem`, so density and
      * any re-pointing of the scale carry through; a field built on `sm` or
      * `lg` controls wants this set explicitly. */
+    /** Indent for a description or error under a *wrapping* label, so it lines
+     * up with the label text rather than the checkbox */
     --pui-field-indent: calc(var(--pui-space-4) + var(--pui-control-gap));
 
     display: flex;
@@ -56,9 +59,13 @@
 
   /* Label ----------------------------------------------------------------- */
   .label {
+    /** Label colour */
     --pui-field-label-fg: var(--pui-color-foreground);
+    /** Label font size */
     --pui-field-label-font-size: var(--pui-font-size-2);
+    /** Label font weight */
     --pui-field-label-font-weight: var(--pui-font-weight-medium);
+    /** Gap between a wrapped control and its label text */
     --pui-field-label-gap: var(--pui-control-gap);
 
     /* A row, so a label that WRAPS its control — the Checkbox and Switch
@@ -114,7 +121,9 @@
 
   /* Description ----------------------------------------------------------- */
   .description {
+    /** Description colour */
     --pui-field-description-fg: var(--pui-color-foreground-muted);
+    /** Description font size */
     --pui-field-description-font-size: var(--pui-font-size-1);
 
     margin: 0;
@@ -137,7 +146,9 @@
    * reverses mid-flight instead of snapping, and Base UI keeps the outgoing
    * element mounted (awaiting getAnimations()) until the exit finishes. */
   .error {
+    /** Error colour */
     --pui-field-error-fg: var(--pui-color-danger-text);
+    /** Error font size */
     --pui-field-error-font-size: var(--pui-font-size-1);
 
     margin: 0;

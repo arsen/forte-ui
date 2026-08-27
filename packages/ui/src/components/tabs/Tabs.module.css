@@ -29,6 +29,8 @@
      * by setting these on the root element (an unlayered consumer rule beats
      * this layer whatever its specificity); re-skin every tab set by
      * re-pointing the global tokens they resolve to. */
+    /** Corner radius of a tab, and of the panel. A `line` tab applies it only to
+     * the two corners away from the rail, capped by the row below */
     --pui-tabs-radius: var(--pui-radius-control);
     /* Same radius, capped at half the tab's height, for the two corners a line
      * tab actually rounds. Its other two are square (see the Tab section), and
@@ -43,24 +45,42 @@
      * the inline-start edge vertically, but the height is what constrains it
      * either way. Derived, not fixed, so `none` stays square and the default
      * and `soft` presets stay exactly as they were. */
+    /** The cap on those two corners. A `line` tab's other two are square, and
+     * CSS only shrinks an oversized radius to fit the corners sharing its edge
+     * — so without a cap a full-round radius rounds one all the way across the
+     * tab's height and leaves a tombstone rather than a tab */
     --pui-tabs-radius-line: min(var(--pui-tabs-radius), calc(var(--pui-tabs-height) / 2));
+    /** Space between adjacent tabs in the strip */
     --pui-tabs-gap: var(--pui-space-1);
+    /** Space between the strip and the panel */
     --pui-tabs-content-gap: var(--pui-space-4);
+    /** Height of a tab */
     --pui-tabs-height: var(--pui-control-h-md);
+    /** Inline padding inside a tab */
     --pui-tabs-padding-x: var(--pui-control-px-md);
+    /** Tab label size */
     --pui-tabs-font-size: var(--pui-font-size-2);
+    /** Tab label weight */
     --pui-tabs-font-weight: var(--pui-font-weight-medium);
 
     /* Strip */
+    /** Background of the strip */
     --pui-tabs-list-bg: transparent;
+    /** Padding inside the strip */
     --pui-tabs-list-padding: 0px;
+    /** Corner radius of the strip */
     --pui-tabs-list-radius: 0px;
+    /** Thickness of the rail (line variant only) */
     --pui-tabs-rail-width: 1px;
+    /** Colour of the rail (line variant only) */
     --pui-tabs-rail-color: var(--pui-color-border-muted);
 
     /* Tab label */
+    /** Label colour of an inactive tab */
     --pui-tabs-tab-color: var(--pui-color-foreground-muted);
+    /** Label colour on hover */
     --pui-tabs-tab-color-hover: var(--pui-color-foreground);
+    /** Label colour of the active tab */
     --pui-tabs-tab-color-active: var(--pui-color-primary-text);
     /* Hover is a colour change on the label and its icon, in BOTH variants:
      * the tabs are the only interactive thing in the strip, so a fill adds no
@@ -68,14 +88,20 @@
      * variant it also puts a second, differently-shaped box behind a tab that
      * the indicator is already about to underline. Left as a token rather than
      * dropped so a consumer who does want a fill can set it back. */
+    /** Tab background on hover — `transparent` in both variants, since hover is
+     * carried by the label colour alone; set it to opt a fill back in */
     --pui-tabs-tab-bg-hover: transparent;
 
     /* Indicator */
+    /** Fill of the sliding indicator */
     --pui-tabs-indicator-color: var(--pui-color-primary);
+    /** Thickness of the indicator bar (line variant only) */
     --pui-tabs-indicator-size: 2px;
+    /** Corner radius of the indicator */
     --pui-tabs-indicator-radius: var(--pui-radius-pill);
 
     /* Panel */
+    /** Padding inside the panel */
     --pui-tabs-panel-padding: 0px;
 
     box-sizing: border-box;

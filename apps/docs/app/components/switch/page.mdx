@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Switch",
@@ -157,21 +158,7 @@ ancestor has no effect — the element's own declaration wins over an inherited 
 on the switch itself, through the `className` prop (an unlayered rule beats the library's
 `@layer pretty-ui.components`, whatever its specificity) or an inline `style`.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-switch-track-width` | Track width, and the input the travel distance is derived from. | `2.25rem` (`sm` `1.75rem`, `lg` `2.75rem`) |
-| `--pui-switch-track-height` | Track height. | `1.25rem` (`sm` `1rem`, `lg` `1.5rem`) |
-| `--pui-switch-thumb-size` | Thumb width and height. | `0.875rem` (`sm` `0.625rem`, `lg` `1.125rem`) |
-| `--pui-switch-padding` | Inset between the track and the thumb. | `0.125rem` |
-| `--pui-switch-border-width` | Track border width. | `1px` |
-| `--pui-switch-radius` | Track corner radius. | `var(--pui-radius-pill)` |
-| `--pui-switch-track-bg` | Track fill. | `var(--pui-color-panel)`, swapped to `var(--pui-color-primary)` when checked |
-| `--pui-switch-track-bg-hover` | Track fill on hover, on pointer devices only. | `var(--pui-color-panel-hover)`, swapped to `var(--pui-color-primary-hover)` when checked |
-| `--pui-switch-track-border` | Track border colour. | `var(--pui-color-foreground-subtle)`, `var(--pui-color-primary)` when checked, `var(--pui-color-danger-border)` when invalid inside a field |
-| `--pui-switch-thumb-bg` | Thumb fill. | `var(--pui-color-foreground-subtle)`, swapped to `var(--pui-color-on-primary)` when checked |
-| `--pui-switch-thumb-fg` | Checkmark colour. | `var(--pui-color-panel)`, swapped to `var(--pui-color-primary)` when checked |
-| `--pui-switch-thumb-shadow` | Thumb shadow. | `var(--pui-shadow-1)` |
-| `--pui-switch-travel` | Distance the thumb moves when checked. | `calc(track-width - thumb-size - 2 * padding - 2 * border-width)` |
+<ThemingTable component="Switch" />
 
 `--pui-switch-travel` is derived from the four size properties above it, so resizing the track is
 enough to keep the thumb landing flush against the far end — you rarely want to set it by hand.

@@ -28,7 +28,8 @@
     },
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
-    "./docs-data/props.json": "./docs-data/props.json"
+    "./docs-data/props.json": "./docs-data/props.json",
+    "./docs-data/theming.json": "./docs-data/theming.json"
   },
   "publishConfig": {
     "access": "public"
@@ -41,7 +42,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node scripts/check-contrast.mjs --fine",
     "clean": "rm -rf dist .turbo",
-    "docgen": "node scripts/docgen.mjs"
+    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -62,10 +63,11 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.3",
     "glob": "^13.0.6",
+    "postcss": "^8.5.26",
     "react": "^19.2.8",
     "react-docgen-typescript": "^2.4.0",
-    "tailwind-merge": "^3.6.0",
     "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.6.0",
     "typescript": "~5.9.3",
     "vite": "^8.1.5",
     "vite-plugin-dts": "^5.0.3",

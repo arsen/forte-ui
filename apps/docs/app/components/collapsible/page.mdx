@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Collapsible",
@@ -128,32 +129,10 @@ Every property below is declared on `Collapsible.Root`, which is also why an anc
 
 Defaults are the `plain` variant; the Contained column gives the value only where the two differ.
 
-| Property | Controls | Default (`plain`) | `contained` |
-| :-- | :-- | :-- | :-- |
-| `--pui-collapsible-radius` | Corner radius of the card. The trigger takes the same radius, so its focus ring follows the card rather than being shaved by the card's own clip — squaring off its bottom two corners while the panel is open | `0px` | `var(--pui-radius-surface)` |
-| `--pui-collapsible-bg` | Background behind the whole component | `transparent` | `var(--pui-color-panel)` |
-| `--pui-collapsible-border-width` | Border around the card | `0px` | `1px` |
-| `--pui-collapsible-border-color` | Colour of that border | `var(--pui-color-border-muted)` | — |
-| `--pui-collapsible-trigger-width` | How wide the button is. `fit-content` is what makes the plain trigger exactly as wide as its own label | `fit-content` | `100%` |
-| `--pui-collapsible-trigger-px` | Inline padding of the trigger | `0px` | `var(--pui-space-3)` |
-| `--pui-collapsible-trigger-py` | Block padding of the trigger | `var(--pui-space-1)` | `var(--pui-space-3)` |
-| `--pui-collapsible-trigger-gap` | Space between the label and the marker — a minimum, once the trigger is full width | `var(--pui-control-gap)` | `var(--pui-space-4)` |
-| `--pui-collapsible-trigger-bg` | Trigger background at rest | `transparent` | — |
-| `--pui-collapsible-trigger-bg-hover` | Trigger background on hover. Unset in `plain`, where the colour change below is the cue instead | `var(--pui-collapsible-trigger-bg)` | `var(--pui-color-panel-hover)` |
-| `--pui-collapsible-trigger-color` | Label colour | `var(--pui-color-foreground)` | — |
-| `--pui-collapsible-trigger-color-hover` | Label colour on hover | `var(--pui-color-primary-text)` | unchanged from rest |
-| `--pui-collapsible-trigger-font-size` | Label size | `var(--pui-font-size-2)` | — |
-| `--pui-collapsible-trigger-font-weight` | Label weight | `var(--pui-font-weight-medium)` | — |
-| `--pui-collapsible-icon-color` | Marker colour when closed | `currentColor` | `var(--pui-color-foreground-subtle)` |
-| `--pui-collapsible-icon-color-open` | Marker colour when open | `currentColor` | `var(--pui-color-foreground)` |
-| `--pui-collapsible-icon-rotate` | How far the marker turns when the panel opens | `180deg` | — |
-| `--pui-collapsible-panel-px` | Inline padding of the panel content | `0px` | `var(--pui-space-3)` |
-| `--pui-collapsible-panel-pt` | Block-start padding of the panel content | `var(--pui-space-2)` | `0px` — the trigger's own padding already separates the two |
-| `--pui-collapsible-panel-pb` | Block-end padding of the panel content | `0px` | `var(--pui-space-4)` |
-| `--pui-collapsible-panel-color` | Body text colour | `var(--pui-color-foreground-muted)` | — |
-| `--pui-collapsible-panel-font-size` | Body text size | `var(--pui-font-size-2)` | — |
-| `--pui-collapsible-duration` | Length of the height change, and of the content's slide | `var(--pui-duration-normal)` | — |
-| `--pui-collapsible-ease` | Curve for both. Deliberately not a spring: overshooting `height` flashes a band of empty background under the last line before settling | `var(--pui-ease-standard)` | — |
+<ThemingTable
+  component="Collapsible"
+  variantColumn={{ header: "`contained`", baseHeader: "Default (`plain`)", match: 'data-variant="contained"' }}
+/>
 
 `variant="contained"` is itself implemented by overriding these on the root, plus one structural declaration — `overflow: hidden`, which clips the trigger's hover fill and anything you paint behind the panel to the card's curve. That clip is also why the trigger's focus ring is inset in `contained` and outset in `plain`. Setting the knobs yourself on a contained collapsible still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 

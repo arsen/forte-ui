@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Accordion",
@@ -141,32 +142,7 @@ There is no `prefers-reduced-motion` block in the accordion stylesheet, and none
 
 Every property below is declared on `Accordion.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Accordion.Root` itself, through its `className` or an inline `style`. To move every accordion at once, re-point the global tokens in the Default column instead: `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
 
-| Property | Controls | Default |
-| :-- | :-- | :-- |
-| `--pui-accordion-gap` | Space between items | `0px` |
-| `--pui-accordion-item-radius` | Corner radius of an item. The trigger takes the same radius, so its focus ring follows the card rather than being shaved by the card's own clip — squaring off its bottom two corners while the panel is open | `0px` |
-| `--pui-accordion-item-bg` | Background of an item | `transparent` |
-| `--pui-accordion-item-border-width` | Border around an item (the `contained` card) | `0px` |
-| `--pui-accordion-item-border-color` | Colour of that border | `var(--pui-color-border-muted)` |
-| `--pui-accordion-divider-width` | Thickness of the hairline between rows (`divided` only) | `1px` |
-| `--pui-accordion-divider-color` | Colour of that hairline | `var(--pui-color-border-muted)` |
-| `--pui-accordion-trigger-px` | Inline padding of a row | `var(--pui-space-3)` |
-| `--pui-accordion-trigger-py` | Block padding of a row | `var(--pui-space-3)` |
-| `--pui-accordion-trigger-gap` | Minimum space between the label and the icon | `var(--pui-space-4)` |
-| `--pui-accordion-trigger-bg` | Row background at rest | `transparent` |
-| `--pui-accordion-trigger-bg-hover` | Row background on hover — one step up from whatever the row sits on | `var(--pui-color-panel)` |
-| `--pui-accordion-trigger-color` | Heading colour | `var(--pui-color-foreground)` |
-| `--pui-accordion-trigger-font-size` | Heading size | `var(--pui-font-size-2)` |
-| `--pui-accordion-trigger-font-weight` | Heading weight | `var(--pui-font-weight-medium)` |
-| `--pui-accordion-icon-color` | Chevron colour when closed | `var(--pui-color-foreground-subtle)` |
-| `--pui-accordion-icon-color-open` | Chevron colour when open | `var(--pui-color-foreground)` |
-| `--pui-accordion-icon-rotate` | How far the chevron turns when the panel opens | `180deg` |
-| `--pui-accordion-panel-px` | Inline padding of the panel content | `var(--pui-accordion-trigger-px)` |
-| `--pui-accordion-panel-pb` | Block-end padding of the panel content. There is no block-start knob — the trigger's own bottom padding already separates the two | `var(--pui-space-4)` |
-| `--pui-accordion-panel-color` | Body text colour | `var(--pui-color-foreground-muted)` |
-| `--pui-accordion-panel-font-size` | Body text size | `var(--pui-font-size-2)` |
-| `--pui-accordion-duration` | Length of the height change, and of the content's slide | `var(--pui-duration-normal)` |
-| `--pui-accordion-ease` | Curve for both. Deliberately not a spring: overshooting `height` flashes a band of empty background under the last line before settling | `var(--pui-ease-standard)` |
+<ThemingTable component="Accordion" />
 
 `variant="contained"` is itself implemented by overriding five of these on the root — `--pui-accordion-gap`, `--pui-accordion-item-radius`, `--pui-accordion-item-bg`, `--pui-accordion-item-border-width` and `--pui-accordion-trigger-bg-hover`. Setting them yourself on a contained accordion still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 

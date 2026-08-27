@@ -35,34 +35,47 @@
      * by setting them via `className` or `style` (an unlayered consumer rule
      * beats this layer at any specificity); re-skin every spinner by
      * re-pointing the global tokens on the right-hand side. */
+    /** Diameter of the indicator. `size` sets `1rem` / `1.5rem` / `2rem`;
+     * everything else is a fraction of it and follows on its own. */
     --pui-spinner-size: 1.5rem;
-    /* Ring stroke and halo border. The floor matters at `sm`, where an eighth
-     * of 16px is 2px exactly and anything thinner starts to disappear against
-     * a light surface. */
+    /* The floor matters at `sm`, where an eighth of 16px is 2px exactly and
+     * anything thinner starts to disappear against a light surface. */
+    /** Ring stroke and halo border. */
     --pui-spinner-thickness: max(2px, calc(var(--pui-spinner-size) / 8));
+    /** Space between the indicator and a visible label. */
     --pui-spinner-gap: var(--pui-control-gap);
-    /* One cycle. Overridden to the slower loop for `pulse` below — a halo that
-     * breathes at the ring's rate reads as agitated rather than ambient. */
+    /* Overridden to the slower loop for `pulse` below — a halo that breathes
+     * at the ring's rate reads as agitated rather than ambient. */
+    /** One full cycle. `variant="pulse"` raises it to
+     * `--pui-duration-loop-pulse`. */
     --pui-spinner-duration: var(--pui-duration-loop-spin);
 
+    /** The indicator's colour. Becomes the indicator's `color`, and every part
+     * fills with `currentColor`. */
     --pui-spinner-color: var(--pui-color-primary);
-    /* The faint full ring the comet travels along. It derives from
-     * `--pui-spinner-color`, and `var()` inside an unregistered custom
-     * property is substituted where the property is DECLARED — so overriding
-     * the colour on an ancestor leaves this stale. Override on the spinner
-     * itself, where both declarations meet, and it re-derives. */
+    /* Derives from `--pui-spinner-color`, and `var()` inside an unregistered
+     * custom property is substituted where the property is DECLARED — so
+     * overriding the colour on an ancestor leaves this stale. Override on
+     * the spinner itself, where both declarations meet, and it re-derives. */
+    /** The faint full ring the comet travels along. Set it to `transparent` for
+     * a bare arc. */
     --pui-spinner-track: color-mix(in oklab, var(--pui-spinner-color) 18%, transparent);
 
+    /** Colour of a visible label. */
     --pui-spinner-label-color: var(--pui-color-foreground-muted);
+    /** Font size of a visible label. Retuned by `size`. */
     --pui-spinner-label-size: var(--pui-font-size-2);
 
-    /* How far a dot dims at the bottom of its hop, and a bar at the back of
-     * the sweep. Never 0: a part that vanishes outright makes the count of
-     * dots look unstable, and the bar ring loses its shape. */
+    /* Never 0: a part that vanishes outright makes the count of dots look
+     * unstable, and the bar ring loses its shape. */
+    /** How far a dot fades at the bottom of its hop. */
     --pui-spinner-dot-dim: 0.25;
+    /** How far a bar fades at the back of the sweep. */
     --pui-spinner-bar-dim: 0.15;
 
+    /** Thickness of one spoke. */
     --pui-spinner-bar-width: calc(var(--pui-spinner-size) / 9);
+    /** Length of one spoke. */
     --pui-spinner-bar-length: calc(var(--pui-spinner-size) / 3.2);
 
     /* The hop height. `min()` of a travel token and a fraction of the size
@@ -70,13 +83,15 @@
      * flat 4px would throw a 4px dot most of its own height, and it collapses
      * to 0px under reduced motion because `--pui-travel-sm` does — `min(0px,
      * anything positive)` is 0px. No media query, no `--pui-motion-ok`. */
+    /** How high a dot hops. Collapses to `0px` under reduced motion, because
+     * `--pui-travel-sm` does. */
     --pui-spinner-dot-travel: min(var(--pui-travel-sm), calc(var(--pui-spinner-size) / 5));
 
-    /* Radius the halo starts from, as a scale factor. Gated on
-     * `--pui-motion-ok` per rule 11: 0.4 normally, exactly 1 under reduced
-     * motion, so the halo stops travelling and only cross-fades. It
-     * interpolates toward 1 rather than toward 0 — a scale token driven to 0
-     * would collapse the element to nothing instead of holding still. */
+    /* Gated per rule 11: it interpolates toward 1 rather than toward 0 — a
+     * scale token driven to 0 would collapse the element to nothing instead
+     * of holding still. */
+    /** Scale a halo starts from, as a factor. Gated on `--pui-motion-ok`, so it
+     * is exactly `1` under reduced motion and the halo holds still. */
     --pui-spinner-ripple-min: calc(1 - 0.6 * var(--pui-motion-ok));
 
     box-sizing: border-box;

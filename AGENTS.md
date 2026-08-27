@@ -62,6 +62,7 @@ pnpm --filter @dofortech/pretty-ui-docs registry  # regenerate the demo registry
 | `packages/ui/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `pnpm ... tokens` |
 | `packages/ui/src/styles/motion.css` | `scripts/motion.mjs` | `pnpm ... tokens` |
 | `packages/ui/docs-data/props.json` | component TSX doc comments | `pnpm ... docgen` |
+| `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `pnpm ... docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `pnpm ... registry` |
 
 If a value is missing, add it to the **table** in `ramp.mjs` / `motion.mjs` and
@@ -99,11 +100,15 @@ which does not re-run `tokens` or `docgen`.
 | a value in `scripts/ramp.mjs` | `tokens`, then `check:contrast` |
 | a value in `scripts/motion.mjs` | `tokens` |
 | a prop — added, renamed, removed, retyped, or its JSDoc | `docgen` |
+| a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
 
-Nothing to regenerate when you edit a component's `.module.css` or `.tsx` body,
-an MDX page, a docs component, or the *contents* of an existing demo —
-`registry.ts` keys on the file set only, and `?raw` re-reads the bytes at build.
+Nothing to regenerate when you edit an MDX page, a docs component, the
+*contents* of an existing demo (`registry.ts` keys on the file set only, and
+`?raw` re-reads the bytes at build), or the parts of a `.module.css` / `.tsx`
+body that carry no doc comments — but a custom-property declaration under a
+`/** … */` doc comment is published to `theming.json`, name and default
+included, so touching one is a `docgen` change like editing a prop.
 
 `check:contrast` pairs with `ramp.mjs` alone. It is the only thing that catches
 a curve tweak silently dropping one hue band below AA, so do not skip it there
@@ -216,7 +221,10 @@ matters goes in a `.pui-visually-hidden` span.
 it is unusually strict here — read any existing `.module.css` header. A comment
 that restates the code is noise; a comment that records the bug the line
 prevents is the reason this codebase is maintainable. Match the density and the
-tone of the file you are editing.
+tone of the file you are editing. The one sanctioned "what" comment is the
+`/** … */` doc comment above a theming-knob declaration: it is not a comment so
+much as published documentation — `theming-docgen` ships it to the docs site —
+and it coexists with, never replaces, a `/* why */` note on the same knob.
 
 ---
 
@@ -529,7 +537,12 @@ base rules without a single `!important`.
 7. Inside a `.module.css`, `.pui-*` selectors are **local** — CSS Modules hashes
    them and they match nothing. Wrap as `:global(.pui-icon)`, or better, target
    the element (`svg`) or rely on `currentColor`.
-8. Write the doc comments on the props — `docgen` turns them into the prop table.
+8. Write the doc comments on the props — `docgen` turns them into the prop
+   table. Same for the knobs: a `/** … */` doc comment directly above a
+   `--pui-<component>-*` declaration publishes it (name, declared default,
+   part, and every reassigning selector) to `theming.json`, which is where the
+   docs' `<ThemingTable />` reads from. A knob without one does not appear.
+   Plain `/* … */` comments stay private — the why/what split is deliberate.
 9. Add demos in `apps/docs/demos/<name>/`, regenerate the registry, and write
    the MDX page. Demos are imported twice from the same file (once to render,
    once through `?raw`), so the code shown is provably the code that runs —

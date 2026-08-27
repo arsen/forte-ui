@@ -68,20 +68,38 @@
      * an inline `style`; re-skin every slider by re-pointing the global tokens
      * on the right-hand side, which this file only reads. The parts below are
      * descendants and consume these by inheritance. */
+    /** Control length: `inline-size` when horizontal, `block-size` when
+     * vertical. Capped at `100%` of the container; `10rem` when vertical. */
     --pui-slider-length: 16rem;
+    /** Rail thickness, and one of the two inputs the control padding derives
+     * from. `size` retunes it: `3px` for `sm`, `6px` for `lg`. */
     --pui-slider-track-thickness: 4px;
+    /** Thumb width and height. `size` retunes it: `0.875rem` for `sm`, `1.25rem`
+     * for `lg`. */
     --pui-slider-thumb-size: 1rem;
+    /** Thickness of the thumb's ring. */
     --pui-slider-thumb-border-width: 2px;
+    /** Rail and indicator corner radius. */
     --pui-slider-radius: var(--pui-radius-pill);
+    /** Gap between the label/value row and the control. */
     --pui-slider-gap: var(--pui-space-2);
 
     /* Colour slots, swapped wholesale by [data-tone] below. */
+    /** Rail fill — the empty part of the range. */
     --pui-slider-track-bg: var(--pui-color-border-muted);
+    /** Fill of the selected part. Swapped per `tone`. */
     --pui-slider-indicator-bg: var(--pui-color-primary);
+    /** Thumb fill. */
     --pui-slider-thumb-bg: var(--pui-color-background);
+    /** Thumb ring colour. Swapped per `tone`, and
+     * `var(--pui-color-danger-border)` when invalid inside a field. */
     --pui-slider-thumb-border: var(--pui-color-primary);
+    /** Thumb shadow. */
     --pui-slider-thumb-shadow: var(--pui-shadow-1);
+    /** Base colour the halo is mixed from. Swapped per `tone`. */
     --pui-slider-thumb-halo-color: var(--pui-color-primary);
+    /** How much of that colour survives the mix toward `transparent`. `30%` for
+     * `tone="neutral"`. */
     --pui-slider-thumb-halo-strength: 48%;
     /* The halo is a soft ring that fades in around the handle on hover and
      * while dragging. It is a box-shadow on the thumb's ::before rather than a
@@ -101,22 +119,30 @@
      * var() inside an unregistered custom property is substituted where it is
      * DECLARED — which is also what lets the [data-tone] blocks below rewrite
      * only the colour and get the mix recomputed for free. */
+    /** The resolved halo colour. Derived from the two above; set it directly to
+     * bypass them. */
     --pui-slider-thumb-halo: color-mix(
       in oklab,
       var(--pui-slider-thumb-halo-color) var(--pui-slider-thumb-halo-strength),
       transparent
     );
+    /** Current halo radius. Set by hover and drag; set it yourself for a halo
+     * that is always on. */
     --pui-slider-thumb-halo-size: 0px;
+    /** Halo radius in those states. It stands down while the focus ring is up,
+     * so the ring's outer tone is not covered. `size` retunes it: `4px` for
+     * `sm`, `6px` for `lg`. */
     --pui-slider-thumb-halo-size-active: 5px;
 
-    /* Derived: how far the control is padded out past the rail. Two floors,
-     * whichever is larger — the 24x24 minimum target of SC 2.5.8, and enough
-     * room for the thumb (which is wider than the rail) plus a little air. It
+    /* Two floors, whichever is larger — the 24x24 minimum target of SC 2.5.8,
+     * and enough room for the thumb (which is wider than the rail) plus a
+     * little air. It
      * is declared on the same element as the three inputs it reads, because an
      * unregistered custom property is substituted where it is DECLARED: on an
      * ancestor it would freeze at the ancestor's values, and here it re-derives
      * correctly for every [data-size] block below, which only rewrite the
      * inputs. */
+    /** How far the control is padded past the rail — the SC 2.5.8 target. */
     --pui-slider-control-padding: max(
       calc((var(--pui-target-min) - var(--pui-slider-track-thickness)) / 2),
       calc(
