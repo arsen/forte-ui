@@ -7,7 +7,8 @@ import { TOC, type TocHeading } from "./toc-registry";
 import { EYEBROW, NAV_LINK, NAV_LINK_ACTIVE, STICKY_COLUMN } from "./styles";
 
 /**
- * The "On this page" rail — the right-hand column of the shell.
+ * The "On this page" rail — the right-hand column of the shell, and the same
+ * list inside `TocDrawer` on a screen too narrow to carry a third column.
  *
  * ---------------------------------------------------------------------------
  * A generated seed, reconciled against the DOM
@@ -193,12 +194,47 @@ function scrollToHeading(el: HTMLElement) {
   frame = requestAnimationFrame(step);
 }
 
-export function Toc() {
+
+/**
+ * Everything a heading link does BESIDES moving the page, plus the move.
+ *
+ * `preventDefault` on the anchor drops three things the browser did for free,
+ * and they are most of what a #fragment is for: the URL worth copying, the
+ * history entry Back returns through, and the focus position — without which a
+ * keyboard user is sent to a section and then tabs on from the rail they left.
+ * `preventScroll` stops the focus call undoing the animation it was made for.
+ *
+ * `focus: false` is for the DRAWER copy of the rail, and only for the focus
+ * half. Scrolling from inside an open drawer is fine — Base UI's scroll lock
+ * is `overflow: hidden` on the body, which stops the READER scrolling and not
+ * a `scrollTo` — but a focus call is not: the drawer traps focus while it is
+ * open and hands it back to the trigger when it closes, so this one would be
+ * overwritten twice. The drawer names the heading in `finalFocus` instead and
+ * lets Base UI place it. `tabIndex` is set either way, because that is what
+ * makes the heading focusable at all.
+ */
+export function goToHeading(target: HTMLElement, { focus = true } = {}) {
+  history.pushState(null, "", `#${target.id}`);
+  target.tabIndex = -1;
+  if (focus) target.focus({ preventScroll: true });
+  scrollToHeading(target);
+}
+
+/**
+ * The headings of the current route — the seed, reconciled against the DOM.
+ *
+ * Both renderers of the rail run this, rather than one of them lifting the
+ * result to the other through context or a handle. The cost is a second
+ * `MutationObserver` on `#main` doing a `querySelectorAll` per batch, which is
+ * nothing beside what it buys: the drawer and the column stay two independent
+ * components, and neither has to be mounted for the other to work. What is NOT
+ * cheap to run twice is the scroll spy below, so that one takes a switch.
+ */
+export function useTocHeadings(): TocHeading[] {
   const pathname = usePathname();
   const seed = TOC[pathname] ?? NONE;
 
   const [headings, setHeadings] = useState<TocHeading[]>(seed);
-  const [active, setActive] = useState<string | null>(null);
 
   /* Adjusting state during render — React's sanctioned answer to "the input
    * changed, drop the derived state". The rail lives in the ROOT layout, so a
@@ -209,7 +245,6 @@ export function Toc() {
   if (seededFor !== pathname) {
     setSeededFor(pathname);
     setHeadings(seed);
-    setActive(null);
   }
 
   /* Re-collect on navigation, then keep watching. The watch is not
@@ -232,15 +267,38 @@ export function Toc() {
     return () => observer.disconnect();
   }, [pathname]);
 
-  /* Which heading is "current".
-   *
-   * Deliberately a scroll read rather than an IntersectionObserver: the
-   * observer answers "which headings are on screen", and the honest answer is
-   * regularly "none of them" — a section longer than the viewport scrolls its
-   * heading away and leaves the rail with nothing to highlight. Comparing
-   * positions against a single line always has an answer. */
+  return headings;
+}
+
+/**
+ * Which heading is "current".
+ *
+ * Deliberately a scroll read rather than an IntersectionObserver: the observer
+ * answers "which headings are on screen", and the honest answer is regularly
+ * "none of them" — a section longer than the viewport scrolls its heading away
+ * and leaves the rail with nothing to highlight. Comparing positions against a
+ * single line always has an answer.
+ *
+ * `enabled` exists for the drawer, which renders this list only while it is
+ * open. A rAF-throttled scroll listener measuring every heading on the page is
+ * the one part of the rail worth not running twice — and worth not running at
+ * all for a list nobody can see.
+ */
+export function useActiveHeading(headings: TocHeading[], enabled = true) {
+  const [active, setActive] = useState<string | null>(null);
+
+  /* Same during-render reset as above, and for a sharper reason: heading ids
+   * REPEAT across routes — every component page has an `#import` — so carrying
+   * the previous page's active id into the first render of the next one
+   * highlights a real row, briefly and wrongly. */
+  const [trackedFor, setTrackedFor] = useState(headings);
+  if (trackedFor !== headings) {
+    setTrackedFor(headings);
+    setActive(null);
+  }
+
   useEffect(() => {
-    if (headings.length === 0) return;
+    if (!enabled || headings.length === 0) return;
 
     let frame = 0;
 
@@ -304,7 +362,68 @@ export function Toc() {
       window.removeEventListener("resize", schedule);
       resize.disconnect();
     };
-  }, [headings]);
+  }, [headings, enabled]);
+
+  return active;
+}
+
+/**
+ * The list of heading links, shared by the column and the drawer.
+ *
+ * `onSelect` receives the heading ELEMENT rather than its id, so a caller that
+ * has to defer the jump does not have to look it up a second time and risk
+ * finding nothing.
+ */
+export function TocList({
+  headings,
+  active,
+  onSelect = goToHeading,
+}: {
+  headings: TocHeading[];
+  active: string | null;
+  onSelect?: (target: HTMLElement) => void;
+}) {
+  return (
+    /* No Preflight on this site, so the UA marker and padding are still there
+     * and have to be removed by hand. */
+    <ul className="m-0 list-none p-0">
+      {headings.map((heading) => (
+        <li key={heading.id}>
+          <a
+            className={cn(
+              NAV_LINK,
+              /* Indented and a step down, so the shape of the page is
+               * legible without reading a single word of it. */
+              heading.depth === 3 && "ps-5 text-1",
+              heading.id === active && cn(NAV_LINK_ACTIVE, "font-medium"),
+            )}
+            /* `aria-current="location"` rather than `"page"`: the sidebar
+             * already owns which PAGE you are on, and two elements claiming
+             * `page` in one document is a contradiction a screen reader
+             * reads out. */
+            aria-current={heading.id === active ? "location" : undefined}
+            href={`#${heading.id}`}
+            onClick={(event) => {
+              /* Leave the browser the clicks it does better: a new tab, a
+               * new window, a saved link. */
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              const target = document.getElementById(heading.id);
+              if (!target) return;
+              event.preventDefault();
+              onSelect(target);
+            }}
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function Toc() {
+  const headings = useTocHeadings();
+  const active = useActiveHeading(headings);
 
   /* One entry is not a table of contents, it is a link to where you already
    * are. The grid track is a fixed width, so dropping out here leaves the
@@ -316,51 +435,7 @@ export function Toc() {
       <p className={cn(EYEBROW, "mt-0 mb-2 px-2")} id="toc-label">
         On this page
       </p>
-      {/* No Preflight on this site, so the UA marker and padding are still
-        * there and have to be removed by hand. */}
-      <ul className="m-0 list-none p-0">
-        {headings.map((heading) => (
-          <li key={heading.id}>
-            <a
-              className={cn(
-                NAV_LINK,
-                /* Indented and a step down, so the shape of the page is
-                 * legible without reading a single word of it. */
-                heading.depth === 3 && "ps-5 text-1",
-                heading.id === active && cn(NAV_LINK_ACTIVE, "font-medium"),
-              )}
-              /* `aria-current="location"` rather than `"page"`: the sidebar
-                * already owns which PAGE you are on, and two elements claiming
-                * `page` in one document is a contradiction a screen reader
-                * reads out. */
-              aria-current={heading.id === active ? "location" : undefined}
-              href={`#${heading.id}`}
-              onClick={(event) => {
-                /* Leave the browser the clicks it does better: a new tab, a
-                 * new window, a saved link. */
-                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                const target = document.getElementById(heading.id);
-                if (!target) return;
-                event.preventDefault();
-                scrollToHeading(target);
-
-                /* preventDefault dropped three things the browser did for
-                 * free, and they are most of what a #fragment is for: the URL
-                 * worth copying, the history entry Back returns through, and
-                 * the focus position — without which a keyboard user is sent
-                 * to a section and then tabs on from the rail they left.
-                 * `preventScroll` stops the focus call undoing the animation
-                 * it was made for. */
-                history.pushState(null, "", `#${heading.id}`);
-                target.tabIndex = -1;
-                target.focus({ preventScroll: true });
-              }}
-            >
-              {heading.text}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <TocList headings={headings} active={active} />
     </nav>
   );
 }
