@@ -38,7 +38,12 @@ export function Callout({ kind = "note", children }: { kind?: Kind; children: Re
     // more: it is how a reader inspecting the page tells the three apart.
     <aside
       className={cn(
-        "my-5 grid grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-surface border border-border-muted bg-panel p-4 text-2",
+        // Capped at the measure like the prose around it. A callout is running
+        // text with a box drawn round it, so it follows the paragraphs rather
+        // than the tables — and without the cap it would stretch the full
+        // column while `max-w-measure` on its inner <p> held the text at 48rem,
+        // leaving a short line adrift in a very wide box.
+        "my-5 grid max-w-measure grid-cols-[auto_minmax(0,1fr)] gap-3 rounded-surface border border-border-muted bg-panel p-4 text-2",
         tone.surface,
       )}
       data-kind={kind}

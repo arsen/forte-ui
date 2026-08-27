@@ -23,15 +23,30 @@ import { PROSE_H1, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/component
  * proves it useful: markdown written inside `<Callout>` still goes through MDX,
  * so it still gets the typography, which is what a callout wants.
  *
- * The prose measure is not here — it belongs to the page wrapper, so it is a
- * `max-w-prose` on the container in `app/components/layout.tsx`.
+ * ---------------------------------------------------------------------------
+ * Where the measure lives
+ * ---------------------------------------------------------------------------
+ * On the running-text elements below, and not on the page wrapper. The wrapper
+ * is the obvious place for it — a line length is a property of the column, not
+ * of the paragraph — but it is the column that the tables, demos and code
+ * blocks share, and they want every pixel the shell can give them. Putting the
+ * cap on `p`, `ul` and `ol` keeps prose at 48rem while a prop table spans the
+ * page. See the header of `app/components/layout.tsx`.
  */
 
 type El<T extends keyof React.JSX.IntrinsicElements> = ComponentPropsWithoutRef<T>;
 
 /* `scroll-mt-anchor` on every anchored heading keeps it clear of the sticky
- * header when a #fragment lands on it (WCAG SC 2.4.11). */
+ * header when a #fragment lands on it (WCAG SC 2.4.11). It is also what the
+ * section rail reads back to decide which heading is current, so the two can
+ * never disagree about where a section starts — see `components/toc.tsx`. */
 const HEADING = "scroll-mt-anchor font-semibold";
+
+/* Running text stops at the measure even though its column no longer does.
+ * Headings are exempt on purpose: a heading is one short line that is scanned,
+ * not read, and capping it would leave it looking indented against the table
+ * or demo underneath it. */
+const PROSE_MEASURE = "max-w-measure";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -50,18 +65,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4 className={cn(HEADING, "mt-5 mb-2 text-3", className)} {...props} />
     ),
 
+    /* `max-w-measure` here rather than on the page wrapper — see above. It is
+     * on the running-text elements only, so a table or a demo beside them still
+     * uses the full column. */
     p: ({ className, ...props }: El<"p">) => (
-      <p className={cn("mb-4 text-pretty", className)} {...props} />
+      <p className={cn(PROSE_MEASURE, "mb-4 text-pretty", className)} {...props} />
     ),
 
     /* No `list-style` on purpose. Without Preflight the UA markers are intact,
      * and the UA alternates them by depth — the checkbox page nests one list,
      * and a `list-disc` here would flatten level two back to a solid bullet. */
     ul: ({ className, ...props }: El<"ul">) => (
-      <ul className={cn("mb-4 ps-5", className)} {...props} />
+      <ul className={cn(PROSE_MEASURE, "mb-4 ps-5", className)} {...props} />
     ),
     ol: ({ className, ...props }: El<"ol">) => (
-      <ol className={cn("mb-4 ps-5", className)} {...props} />
+      <ol className={cn(PROSE_MEASURE, "mb-4 ps-5", className)} {...props} />
     ),
     li: ({ className, ...props }: El<"li">) => (
       <li className={cn("mb-1", className)} {...props} />

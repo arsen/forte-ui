@@ -109,7 +109,13 @@
   --spacing-header: 3.5rem;
   --spacing-anchor: 5rem;
 
-  --container-shell: 84rem;
+  /* The shell is close to full-bleed on purpose. Three columns have to fit —
+   * the component list, the page, and the section rail — and at 84rem the page
+   * column was the one that gave way: a prop table with five columns scrolled
+   * inside itself on a display with 400px of empty gutter on either side. The
+   * cap is not a measure, it is a stop for ultra-wide displays, where a header
+   * spanning 3000px stops reading as one row. */
+  --container-shell: 120rem;
   /* NOT `--container-prose`: Tailwind ships a `max-w-prose` of its own (65ch)
    * and it takes precedence, so the utility silently measured 65 characters
    * instead of 48rem. "Measure" is the typographic name for the thing anyway. */

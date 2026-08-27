@@ -36,6 +36,8 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the pretty-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
+  components/sidebar.tsx           the page list — the shell's left column
+  components/toc.tsx               the section rail — the shell's right column
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   mdx-components.tsx               the prose typography, per element
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
@@ -513,6 +515,14 @@ demo is authored in the demo's own file and never passes through the mapping.
 That is why the old `margin: revert-layer` rule aimed at the demo frame is
 gone.
 
+The measure lives there too, and this is the one place it is worth knowing
+where it is NOT. A component page's column is full width — a prop table, a
+sixteen-cell demo and a long import line all want the room, and capping the
+whole column capped them along with the prose. So `max-w-measure` sits on `p`,
+`ul` and `ol` in the element mapping (and on `Callout`, which is running text
+in a box), while everything else spans the column. Anything new that is running
+text needs the cap said out loud; anything tabular or visual does not.
+
 Layer order still matters: `pretty-ui.* → docs → theme, base, components,
 utilities`, declared at the top of
 [`apps/docs/app/globals.css`](apps/docs/app/globals.css) and fixed by the
@@ -549,7 +559,10 @@ base rules without a single `!important`.
    which is also why their layout is Tailwind rather than a `style` object; see
    *Styling the docs site* above.
 10. Add the page to the `NAV` array in
-    [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx).
+    [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx). The
+    right-hand "On this page" rail needs nothing — it reads the rendered `h2`
+    and `h3` ids off the page, so a new section appears in it as soon as you
+    write the heading.
 
 ### Before you call it done
 

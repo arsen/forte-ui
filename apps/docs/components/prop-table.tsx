@@ -57,7 +57,12 @@ export function PropTable({ component, only }: { component: string; only?: strin
                   <span className="ms-[2px] text-danger-text" title="Required">*</span>
                 ) : null}
               </th>
-              <td className={TABLE_CELL}>
+              {/* The floor is what stops `wrap-anywhere` below from being read
+                * as "this column can be one character wide": auto table layout
+                * sizes a column from its min-content width, and anywhere-breaking
+                * makes that a single glyph — so `boolean` came out as "boolea/n"
+                * next to a description column with room to spare. */}
+              <td className={cn(TABLE_CELL, "min-w-[14ch]")}>
                 {/* Long unions must wrap rather than force the whole table
                   * wide, and they break at no natural point — hence anywhere. */}
                 <code className="font-mono text-[0.85em] text-foreground-muted wrap-anywhere">

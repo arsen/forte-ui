@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
-import { EYEBROW, STICKY_COLUMN } from "./styles";
+import { EYEBROW, NAV_LINK, NAV_LINK_ACTIVE, STICKY_COLUMN } from "./styles";
 
 type NavItem = { title: string; href: string; badge?: string };
 type NavGroup = { title: string; items: NavItem[] };
@@ -61,12 +61,7 @@ export function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={cn(
-                    "relative block rounded-2 px-2 py-1 text-2 font-medium",
-                    "transition-[color,background-color] duration-fast ease-standard",
-                    "text-foreground-muted hover:bg-panel-hover hover:text-foreground",
-                    active && "bg-primary-soft text-primary-text",
-                  )}
+                  className={cn(NAV_LINK, "font-medium", active && NAV_LINK_ACTIVE)}
                   aria-current={active ? "page" : undefined}
                 >
                   {item.title}

@@ -45,6 +45,24 @@ export const EYEBROW =
   "text-1 font-semibold uppercase tracking-[0.06em] text-foreground-subtle";
 
 /**
+ * A row in one of the two navigation rails: the component list on the left, the
+ * "On this page" rail on the right.
+ *
+ * They have to agree. The two columns sit either side of the same page and read
+ * as one piece of chrome, so a hover colour changed on one and not the other is
+ * visible without leaving the viewport.
+ */
+export const NAV_LINK = [
+  "relative block rounded-2 px-2 py-1 text-2",
+  "transition-[color,background-color] duration-fast ease-standard",
+  "text-foreground-muted hover:bg-panel-hover hover:text-foreground",
+].join(" ");
+
+/** The current row — the page you are on, or the section you are reading. */
+export const NAV_LINK_ACTIVE = "bg-primary-soft text-primary-text";
+
+
+/**
  * The page title and standfirst.
  *
  * Two pages need them: every MDX page, through the element mapping in

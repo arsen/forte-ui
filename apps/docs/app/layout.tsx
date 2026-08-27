@@ -8,11 +8,10 @@ import type { Metadata } from "next";
 import "@dofortech/pretty-ui/theme.css";
 import "./globals.css";
 import "./tailwind.css";
-import { cn } from "@/lib/cn";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Sidebar } from "@/components/sidebar";
-import { STICKY_COLUMN } from "@/components/styles";
+import { Toc } from "@/components/toc";
 
 export const metadata: Metadata = {
   title: { default: "pretty-ui", template: "%s · pretty-ui" },
@@ -86,9 +85,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="mx-auto grid w-full max-w-shell grid-cols-[15rem_minmax(0,1fr)_14rem] gap-5 px-4 max-toc:grid-cols-[15rem_minmax(0,1fr)] max-nav:grid-cols-[minmax(0,1fr)]">
               <Sidebar />
               <main className="min-w-0 pt-7 pb-8" id="main">{children}</main>
-              {/* Placeholder for the table of contents. Shares the sidebar's
-                * column shape so the two agree about the sticky offset. */}
-              <div className={cn(STICKY_COLUMN, "max-toc:hidden")} />
+              {/* The section rail. It renders nothing on a page with fewer than
+                * two headings, and the track is a fixed width either way, so
+                * the centre column does not shift between pages. */}
+              <Toc />
             </div>
           </div>
         </TooltipProvider>
