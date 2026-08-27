@@ -15,6 +15,18 @@ export type {
   AccordionPanelProps,
 } from "./components/accordion";
 
+export { Avatar } from "./components/avatar";
+export type {
+  AvatarSize,
+  AvatarShape,
+  AvatarVariant,
+  AvatarTone,
+  AvatarRootProps,
+  AvatarImageProps,
+  AvatarFallbackProps,
+  AvatarGroupProps,
+} from "./components/avatar";
+
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
 

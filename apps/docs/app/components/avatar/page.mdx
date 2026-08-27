@@ -1,0 +1,147 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Avatar",
+  description:
+    "A picture of a person or a thing, with something sensible to show when the picture is missing, slow or broken.",
+};
+
+# Avatar
+
+An avatar is mostly a promise about the *absence* of a picture. The photo is the easy half; the half that decides whether a member list looks finished is what fills the circle while the image is in flight, when the URL 404s, and when there is no URL at all. Base UI's primitive owns that state machine — it preloads the image off-screen and only mounts the `<img>` once the load actually succeeds — and this component gives it a box, a fallback, and a way to stack several of them.
+
+<DemoBlock id="avatar/basic" />
+
+## Import
+
+```tsx
+import { Avatar } from "@dofortech/pretty-ui";
+```
+
+`Avatar` is a namespace of four parts. `Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` are Base UI's anatomy; `Avatar.Group` is layout added here, with no state of its own.
+
+```tsx
+<Avatar.Root>
+  <Avatar.Image src={user.photo} alt={user.name} />
+  <Avatar.Fallback label={user.name}>{initials}</Avatar.Fallback>
+</Avatar.Root>
+```
+
+Both children are optional and neither is ever rendered speculatively: exactly one of them is in the DOM at a time, chosen by the image's loading status. An avatar with no `Avatar.Image` is a perfectly ordinary avatar — the fallback simply never gets replaced.
+
+## Examples
+
+### Sizes
+
+Five presets, `xs` through `xl`, spanning `1.5rem` to `4rem`. Only one property changes between them: the initials, the icon and the `rounded` corner are all fractions of `--pui-avatar-size`, so a size the presets do not cover is one custom property rather than four.
+
+<DemoBlock id="avatar/sizes" />
+
+### Shape
+
+`circle` is the convention for people and the default. `rounded` and `square` read as an object instead — a workspace, a repository, a bot — which is a useful distinction to keep when both appear in the same list.
+
+<DemoBlock id="avatar/shapes" />
+
+`circle` stays a circle under `data-pui-radius="none"`. That preset squares off the library's corners, and a caller who wrote `shape="circle"` was describing the thing, not decorating it. `rounded` does follow the preset, because there roundness is the styling.
+
+### Variants and tones
+
+The two axes the rest of the library uses. `variant` is how loud the fallback is — `soft` is a tinted disc, `solid` fills with the tone itself, `outline` is a ring around nothing — and `tone` is which semantic colour set it draws from.
+
+<DemoBlock id="avatar/variants" />
+
+Both only decide what shows while there is **no image**: a loaded photo covers the fill entirely. `outline` is the exception and the reason it exists — its edge sits outside the picture, so it is the one treatment that survives the photo arriving.
+
+<Callout kind="note">
+  Rotating the tone across a list is the cheapest way to make initials tell people apart, and it is safe here because colour is never carrying the difference on its own — the initials already differ. Deriving the tone from a hash of the name keeps it stable between sessions, which matters more than the hue itself.
+</Callout>
+
+### When the image is missing
+
+`Avatar.Fallback` renders whenever the image has not loaded — which covers "still loading", "404", "blocked by the network" and "there was never a `src`" with the same code path.
+
+<DemoBlock id="avatar/fallback" />
+
+The middle avatar's `src` points at a file that does not exist. Nothing torn ever paints, because the `<img>` element is not mounted until a preload of the same URL has already succeeded.
+
+`delay` on `Avatar.Fallback` holds the fallback back for a number of milliseconds. It defaults to `0`, which is right whenever the fallback *is* the avatar: a non-zero delay also withholds it during server rendering, so an initials-only avatar would ship as an empty disc and pop in a tenth of a second later. Set it to around `120` when there is an `Avatar.Image` beside it — a cached image is not decoded until after hydration, so at `0` the initials paint and are immediately replaced on every load. The cost is an empty disc for the same span on a slow connection, which is the trade the prop exists to let you make.
+
+### Groups
+
+`Avatar.Group` overlaps its children into a stack and draws a ring around each one so the overlap reads as separation rather than as a smear.
+
+<DemoBlock id="avatar/group" />
+
+It is layout and nothing else — no state, no context, no props. Every avatar keeps its own `size`, `shape`, `variant` and `tone`; the group only pulls each child back by `--pui-avatar-group-overlap` and pushes a ring onto every descendant `Avatar.Root`. That ring is a real border on a pseudo-element rather than a `box-shadow`, so it is still there under forced colours, where shadows are stripped and a stack of avatars would otherwise fuse into one blob.
+
+Children paint in DOM order, so the last one is on top. Put an overflow counter there — it is where the eye finishes, and it is the element most likely to be a link.
+
+The overlap is a **length**, not a fraction of the avatar's size. The avatar's size is declared on the avatar's own root, and the margin has to be applied to whatever the group's direct child is — which may be a tooltip trigger or a list item wrapping the avatar rather than the avatar itself. A length works in every case; a fraction would silently collapse to nothing as soon as anyone wrapped a child.
+
+### Presence and badges
+
+There is no presence part, and there does not need to be one. `Avatar.Root` is `position: relative` and deliberately does **not** clip its overflow — each part rounds itself off with `border-radius: inherit` instead — so a status dot, a small count or a verification tick is an ordinary absolutely-positioned child.
+
+<DemoBlock id="avatar/presence" />
+
+## Accessibility
+
+An avatar is a picture, and the accessibility question is always the same one: *does this element have to name the person, or is their name already on screen next to it?*
+
+`alt` on `Avatar.Image` is **required**, because there is no defensible default. Pass the person's name when the avatar is the only thing identifying them, and `""` when their name is written beside it — a photo announced as "Ada Lovelace" immediately before the text "Ada Lovelace" is worse than a photo announced as nothing.
+
+<Callout kind="a11y">
+  The fallback's initials are not the alt text. "AL" is a visual shorthand and reads as two letters — so `Avatar.Fallback` takes a `label`, which hides the children from the accessibility tree and announces the label in their place. Use it whenever the fallback is what identifies someone, and leave it off when the name is already adjacent or when the fallback is a decorative icon.
+</Callout>
+
+A group of avatars needs the same treatment one level up. Each avatar names itself, so a stack reads as a list of people rather than as a single graphic — but nothing says what the stack *is*. If the grouping carries meaning, give the group an accessible name and, where the members are genuinely a list, render it as one with `render`.
+
+Decorative icons inside a fallback take `aria-hidden="true"`, and a presence dot is decoration too: the status has to be available as text somewhere, per SC 1.4.1, which is what the demo above does.
+
+Every text pair the component can produce clears AA. The tones draw the same slots the rest of the library does — `-11` on `-3` for `soft`, `-11` on `-1` for `outline`, `on-primary` on `-9` for `solid` — and those are the pairs the contrast harness sweeps across ~119k seeds, so initials stay legible whatever the brand colour is.
+
+Under forced colours the fallback gains a `CanvasText` border. Backgrounds are replaced with system colours in that mode, so every variant's fill would otherwise collapse to `Canvas` and the avatar would dissolve into the page — while an image avatar survives untouched, because bitmaps are left alone. The group's ring needs no such rule: it is already a border, and `border-color` is remapped rather than stripped.
+
+### Motion
+
+One transition, on one property. The image fades in over `--pui-duration-fast` once it has loaded, and fades out again if a later `src` fails.
+
+It is a transition rather than a keyframe animation for the usual reason: a `src` that changes twice in quick succession reverses from wherever the fade got to instead of snapping back and restarting. There is no scale and no travel, so there is nothing for reduced motion to collapse — and nothing that needs collapsing. The duration token shortens itself, and a fade is the one enter effect that stays legible when it does. There is no `prefers-reduced-motion` block in this stylesheet.
+
+The root is a one-cell grid with the image and the fallback both placed in that cell. Base UI keeps an outgoing image mounted until its exit transition finishes, and for those frames the fallback is mounted too; in normal flow that would be two boxes side by side, doubling the avatar's width and snapping it back.
+
+## Theming
+
+Everything below is declared on `Avatar.Root` itself, which is also why an ancestor is the wrong place to set one — the element's own declaration beats an inherited value. Override them on `Avatar.Root` through its `className` or a `style` object, or re-point the global tokens in the Default column to move every avatar at once.
+
+<ThemingTable component="Avatar" part="root" />
+
+`Avatar.Group` has three of its own. They are declared on the group and reach the avatars through a descendant selector rather than by inheritance, for the same reason: an avatar's own `--pui-avatar-ring-width` would beat anything the group merely passed down.
+
+<ThemingTable component="Avatar" part="group" />
+
+State is on `data-size`, `data-shape`, `data-variant` and `data-tone`, so a consumer can reach any of it from plain CSS or a Tailwind arbitrary variant — `data-[shape=square]:...` — without a wrapper element.
+
+## API reference
+
+Each part forwards every prop it does not consume to its Base UI counterpart. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS. All four parts take `render` for changing the underlying element.
+
+### Avatar.Root
+
+<PropTable component="AvatarRoot" />
+
+### Avatar.Image
+
+<PropTable component="AvatarImage" />
+
+### Avatar.Fallback
+
+<PropTable component="AvatarFallback" />
+
+### Avatar.Group
+
+<PropTable component="AvatarGroup" />
