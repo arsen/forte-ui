@@ -30,6 +30,32 @@ import { Dialog, AlertDialog } from "@dofortech/pretty-ui";
 
 ## Examples
 
+### A close button in the corner
+
+`Dialog.Title` is the popup's accessible name and `Dialog.Description` is announced straight after it, so between them they tell the user what this dialog is before they reach anything inside it. Sit the pair in a row with a `Dialog.Close iconOnly` and you have the header most dialogs want.
+
+<DemoBlock id="dialog/header" />
+
+Three details there are load-bearing.
+
+**The heading column has to carry the popup's own gap.** The stylesheet tightens `Dialog.Description` under `Dialog.Title` with a *negative* top margin — `calc(var(--pui-space-1) - var(--pui-dialog-gap))` — which cancels the popup's gap and leaves a single step between the two. Wrap them in a plain `<div>` and the gap goes away while the margin stays, so the description rides up onto the title. Give the wrapper `gap: var(--pui-dialog-gap)` and the pair spaces itself exactly as it does when both are direct children of the popup.
+
+**`iconOnly` needs an `aria-label`.** There is no text in the button to announce, so without one it is read out as "button". The styling already holds the 24px minimum hit target from WCAG SC 2.5.8, and pulls the button back into the popup's padding with a negative margin so the × sits in the corner rather than indented from it.
+
+**A close button at the top is also the `initialFocus` fix.** Focus lands on the first tabbable element in the popup and the browser scrolls it into view — which is why a long dialog opens at the wrong end of itself unless you intervene. Put the × first in the DOM and it *is* the first tabbable element, so the dialog opens at the top with no `initialFocus` at all. See [Scrolling outside the dialog](#scrolling-outside-the-dialog).
+
+A corner × and a footer are not alternatives. The × is the escape hatch that is always in the same place; the footer is where the decision lives. A dialog that only asks a question can skip the ×; one the user might simply be reading should have it.
+
+### Footer alignment
+
+`Dialog.Footer` is a wrapping flex row with the standard action-row spacing, and `align` decides how the buttons are distributed along it.
+
+<DemoBlock id="dialog/footer-align" />
+
+`end` is the default and the one to reach for: the confirm lands closest to where the eye leaves the dialog. `between` pushes the two apart, which is what makes a destructive action harder to hit by accident — it is what the [alert dialog above](#destructive-confirmation) uses. `center` suits a single acknowledgement, and `start` a dialog read strictly top to bottom.
+
+The row wraps, so on a narrow screen the buttons stack and the alignment applies per line. In a `size="fullscreen"` dialog the footer also gets `margin-block-start: auto` and sinks to the bottom edge, whichever `align` it carries.
+
 ### Destructive confirmation
 
 Use `AlertDialog` when the user has to answer before anything else happens. It is always modal and never closes on an outside press — there is deliberately no `modal` or `disablePointerDismissal` prop on `AlertDialog.Root`. Escape still closes it, so a dialog that offers no `AlertDialog.Close` would be dismissible by keyboard and by nothing else. Always give it at least one.
@@ -62,6 +88,18 @@ The open gesture changes on its own here. `origin="trigger"` aims the scale at t
 
 Focus needs nothing extra in the usual case. With no trigger to return to, Base UI restores the element that was focused before the dialog opened — the row you clicked. Point `finalFocus` on `Dialog.Popup` at a ref for the cases where that element is not the right answer: a dialog opened by a timer or a route change, where nothing was focused, or one whose opening control has been removed from the page by the time it closes.
 
+### A form in a dialog
+
+A form inside a dialog raises one question the dialog itself cannot answer: what closes it. The answer is that the form does.
+
+<DemoBlock id="dialog/form" />
+
+**The submit button is not a `Dialog.Close`.** `Dialog.Close` closes on press — before the browser has validated anything — so composing the two would dismiss the dialog with an empty required field and submit nothing. Keep the submit button an ordinary `Button type="submit"`, own the open state, and close from `onFormSubmit`, which only runs once every field passes. Cancel stays a real `Dialog.Close`: it is a close control and nothing else.
+
+Wrap `Dialog.Footer` in the `<Form>` along with the fields, as the demo does, and the submit button is the form's own submit button with no `form={id}` attribute to keep in sync. `Dialog.Footer` is a plain `<div>`, so it nests inside a form without complaint.
+
+An anchored popup opened *inside* a dialog — the `Select` here — needs nothing either. Both portal to `<body>`, and the dialog viewport sits at `--pui-dialog-z-index: 40`, one band under the 50 the anchored popups use, so the select's list is above the dialog whichever order the two portals happen to land in.
+
 ### Nested dialogs
 
 A dialog opened from inside another one stacks: the parent slides down by `--pui-dialog-nested-offset` per level, shrinks by `--pui-dialog-nested-scale-step`, and dims itself. Base UI drives this through the `--nested-dialogs` counter and the `[data-nested-dialog-open]` attribute, and suppresses the child's backdrop so the parent stays visible behind it rather than being scrimmed twice. Pass `forceBackdrop` to a nested `Dialog.Popup` if it genuinely needs its own scrim.
@@ -80,7 +118,7 @@ Style that scroll container with `viewportClassName` — for example to pin a di
 
 Note the `initialFocus` on the popup, which is not decoration. On open, focus moves to the first tabbable element inside the popup, and the browser scrolls whatever it focuses into view. Here the first tabbable element is **Decline**, sixteen clauses down — so without it the terms open at the *end* of the terms, with the whole document already scrolled past. Pointing `initialFocus` at the popup itself leaves the viewport where it starts and still announces the title and description.
 
-The default is right whenever the dialog fits on screen, which is why it is the default. Override it in any dialog long enough to scroll, or give the popup a tabbable element at the top — a `Dialog.Close iconOnly` in the corner does the job on its own.
+The default is right whenever the dialog fits on screen, which is why it is the default. Override it in any dialog long enough to scroll, or give the popup a tabbable element at the top — a `Dialog.Close iconOnly` in the corner does the job on its own, and is the header from [A close button in the corner](#a-close-button-in-the-corner).
 
 ### Scrolling inside the dialog
 
