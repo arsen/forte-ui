@@ -1,0 +1,298 @@
+/*
+ * OTP Field
+ *
+ * A row of single-character inputs that between them hold ONE value. That
+ * split — many elements, one value — is what every decision here answers to.
+ *
+ * The axes are the same two Input carries, and deliberately so:
+ *   data-size      slot size and font size (sm/md/lg)
+ *   data-variant   how much weight a slot carries (outline/soft/underline)
+ *
+ * `ghost` is the one variant from Input that is missing, and its absence is
+ * the point. A slot with no boundary at all leaves nothing to count, and how
+ * many characters the code has is the single thing this component exists to
+ * communicate before the user has typed anything. `underline` is the quiet
+ * end of the scale instead: one rule per slot, still countable.
+ *
+ * Every knob is declared on `.root` and reaches the slots by INHERITANCE, the
+ * way Slider's are. A slot is not something a consumer addresses one at a time
+ * — they are a set, and a value set on the set is what "re-skin the field"
+ * means here. It is also what lets `.separator` size itself against the slots
+ * without a context or a second prop.
+ *
+ * Base UI puts the whole field state on every part: `data-complete`,
+ * `data-filled`, `data-disabled`, `data-readonly`, plus `data-invalid` /
+ * `data-valid` / `data-dirty` / `data-touched` / `data-focused` when there is
+ * a `Field.Root` above. Only `data-complete` and `data-invalid` are styled.
+ * `data-focused` is on EVERY slot whenever any one of them has focus, so it
+ * cannot mark the active slot — `:focus-visible` and the ring do that — and
+ * recolouring a control the moment it is merely touched is noise.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared HERE, on the field's root, so a value set on
+     * an ancestor is only INHERITED and loses to this declaration. To re-skin
+     * one field set them on the root through `className` (an unlayered
+     * consumer rule beats `@layer pretty-ui.components` at any specificity) or
+     * an inline `style`; to move every field at once, re-point the global
+     * tokens on the right-hand side, which this file only reads and never
+     * re-declares. The slots and the separator are descendants and consume
+     * these by inheritance. */
+    /** Slot width and height — the slots are square (reset per `size`) */
+    --pui-otp-field-slot-size: var(--pui-control-h-md);
+    /** Font size of the character in a slot (reset per `size`) */
+    --pui-otp-field-font-size: var(--pui-font-size-3);
+    /* Not `--pui-control-gap`: that value drops to 4px under
+     * `data-pui-density="compact"`, and 4px is less than the focus ring needs
+     * to clear its slot (2px offset + 2px width), so a focused slot's ring
+     * would sit on top of its neighbour's border. */
+    /** Gap between slots */
+    --pui-otp-field-gap: var(--pui-space-2);
+    /** Length of the dash `OTPField.Separator` draws between slot groups */
+    --pui-otp-field-separator-length: var(--pui-space-3);
+    /** Slot corner radius (`0px` for `variant="underline"`) */
+    --pui-otp-field-radius: var(--pui-radius-control);
+    /** Slot border width (reset per `variant`) */
+    --pui-otp-field-border-width: 1px;
+
+    /* Colour slots, filled in per variant below. */
+    /** Slot background (reset per `variant`) */
+    --pui-otp-field-bg: var(--pui-color-background);
+    /** Slot background on hover */
+    --pui-otp-field-bg-hover: var(--pui-color-panel-hover);
+    /** Character colour */
+    --pui-otp-field-fg: var(--pui-color-foreground);
+    /** Slot border colour (reset per `variant`, and again when the value is
+     * complete or the field is invalid) */
+    --pui-otp-field-border-color: var(--pui-color-border);
+    /** Slot border colour on hover */
+    --pui-otp-field-border-color-hover: var(--pui-color-border-strong);
+    /** Caret colour */
+    --pui-otp-field-caret-color: var(--pui-color-primary);
+    /** Selection background — visible on every focus, because Base UI selects
+     * a slot's character when you land on it so the next keypress replaces it */
+    --pui-otp-field-selection-bg: var(--pui-color-primary-soft);
+    /** Selection text colour */
+    --pui-otp-field-selection-fg: var(--pui-color-primary-text);
+    /** Colour of the dash `OTPField.Separator` draws */
+    --pui-otp-field-separator-color: var(--pui-color-border-strong);
+
+    display: flex;
+    align-items: center;
+    gap: var(--pui-otp-field-gap);
+    /* Slots have a fixed size and must not shrink, so a long code on a narrow
+     * screen has to go somewhere. Wrapping keeps it inside the column; the
+     * alternative is a row that overflows and hands the whole PAGE a
+     * horizontal scrollbar. */
+    flex-wrap: wrap;
+    /* Without this the row is a block box and stretches to its container, so
+     * `justify-content` would be the only way to place it — and a field that
+     * is 260px of content in a 600px box would still report itself as 600px
+     * wide to anything measuring it. */
+    inline-size: fit-content;
+    max-inline-size: 100%;
+  }
+
+  .input {
+    box-sizing: border-box;
+    /* Square. A slot holds exactly one character, so there is no content to
+     * size against, and a width in `ch` would move with the font. */
+    inline-size: var(--pui-otp-field-slot-size);
+    block-size: var(--pui-otp-field-slot-size);
+    /* A native <input> has an intrinsic min-content width of roughly 20
+     * characters, which flexbox honours — without this every slot is 20
+     * characters wide and the row overflows on the first render. */
+    min-inline-size: 0;
+    /* The other half of the same problem: `flex-shrink` defaults to 1, so a
+     * row that does not fit would squash the slots instead of wrapping. */
+    flex: none;
+    padding: 0;
+    margin: 0;
+    border: var(--pui-otp-field-border-width) solid var(--pui-otp-field-border-color);
+    border-radius: var(--pui-otp-field-radius);
+
+    background-color: var(--pui-otp-field-bg);
+    color: var(--pui-otp-field-fg);
+    caret-color: var(--pui-otp-field-caret-color);
+
+    /* A UA stylesheet gives form controls their own font, not the page's, so
+     * an input left alone is the one control in the set that does not match
+     * the others. */
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-otp-field-font-size);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    text-align: center;
+
+    /* The UA `text` cursor is correct here and is left alone — see the cursor
+     * table in AGENTS.md. A slot is a region you place a caret in, not an
+     * element that performs an action on click. */
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .input::selection {
+    background-color: var(--pui-otp-field-selection-bg);
+    color: var(--pui-otp-field-selection-fg);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  @media (hover: hover) {
+    /* `:not([readonly])` and not `:not([data-readonly])`: Base UI puts
+     * `data-readonly` on the root AND on every slot, but only the slots get
+     * the native attribute, and this rule only ever matches a slot. */
+    .input:hover:not([data-disabled], [readonly]) {
+      background-color: var(--pui-otp-field-bg-hover);
+      border-color: var(--pui-otp-field-border-color-hover);
+    }
+  }
+
+  /* The dim goes on the ROOT rather than on each slot so the separators fade
+   * with them — and so overlapping edges cannot double up, which is what
+   * per-element opacity on a row of adjacent boxes produces. */
+  .root[data-disabled] {
+    opacity: 0.55;
+  }
+
+  .input[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Read-only still shows its value and its text is still selectable, so it
+   * must not look disabled — only inert. The UA `text` cursor stays, for the
+   * same reason it stays on a read-only Input. */
+  .input[readonly] {
+    --pui-otp-field-bg: var(--pui-color-panel);
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  /* The slot tracks `--pui-control-h-*`, so a field sits at the same height as
+   * an Input or a Select.Trigger at every `data-pui-density`. The smallest
+   * combination — `sm` at `compact` — is 24px square, which is exactly the
+   * SC 2.5.8 floor; nothing here may go below the control scale. */
+  .root[data-size="sm"] {
+    --pui-otp-field-slot-size: var(--pui-control-h-sm);
+    --pui-otp-field-font-size: var(--pui-font-size-2);
+  }
+
+  .root[data-size="md"] {
+    --pui-otp-field-slot-size: var(--pui-control-h-md);
+    --pui-otp-field-font-size: var(--pui-font-size-3);
+  }
+
+  .root[data-size="lg"] {
+    --pui-otp-field-slot-size: var(--pui-control-h-lg);
+    --pui-otp-field-font-size: var(--pui-font-size-5);
+  }
+
+  /* Variants -------------------------------------------------------------- */
+  .root[data-variant="outline"] {
+    --pui-otp-field-bg: var(--pui-color-background);
+    --pui-otp-field-border-color: var(--pui-color-border);
+  }
+
+  .root[data-variant="soft"] {
+    --pui-otp-field-bg: var(--pui-color-panel);
+    /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
+     * keeps the slots outlined there while staying invisible normally. The
+     * hover colour goes with it, or hovering a soft field would draw a
+     * boundary that is not part of the design. */
+    --pui-otp-field-border-color: transparent;
+    --pui-otp-field-border-color-hover: transparent;
+  }
+
+  .root[data-variant="underline"] {
+    --pui-otp-field-bg: transparent;
+    --pui-otp-field-border-width: 0px;
+    /* A rule under a slot has no corners to round, and a bottom-only border
+     * DOES follow `border-radius`: under `data-pui-radius="pill"` the same
+     * declaration would draw a semicircle under every character. */
+    --pui-otp-field-radius: 0px;
+  }
+
+  /* Width only. Reassigning the colour here as well would beat the validity
+   * rules below on specificity ((0,2,0) each, and this one matches later), so
+   * an invalid underlined field would keep its ordinary rule. */
+  .input[data-variant="underline"] {
+    border-block-end-width: 2px;
+  }
+
+  /* Completion ------------------------------------------------------------ */
+  /* The one state worth painting: it is the answer to "did that last keypress
+   * land, or did the paste drop a character?", which the row of slots cannot
+   * otherwise give at a glance. Complete is not the same as correct, and it
+   * deliberately does not use a success colour — the server has not been asked
+   * yet. */
+  .input[data-complete] {
+    --pui-otp-field-border-color: var(--pui-color-primary-border);
+    /* The hover colour goes with it. Without this line, running the pointer
+     * across a finished code repaints it as an ordinary empty field — the one
+     * moment the cue is least welcome to disappear. */
+    --pui-otp-field-border-color-hover: var(--pui-color-primary);
+  }
+
+  /* Validity -------------------------------------------------------------- */
+  /* After the completion block, because a wrong code is complete AND invalid
+   * and the two rules tie at (0,2,0) — document order is the whole of what
+   * decides which boundary a rejected code shows. */
+  .input[data-invalid] {
+    --pui-otp-field-border-color: var(--pui-color-danger-border);
+    --pui-otp-field-border-color-hover: var(--pui-color-danger);
+    --pui-otp-field-caret-color: var(--pui-color-danger);
+  }
+
+  /* Separator ------------------------------------------------------------- */
+  /* Every declaration is (0,2,0) on purpose. `Separator` sets these on its own
+   * `.root` at (0,1,0), and the two files are separate CSS Modules in the same
+   * cascade layer — so at equal specificity the winner would be whichever
+   * stylesheet the bundler happened to emit second. Being a step more specific
+   * is the only stable way to restyle a composed component's own part. */
+  .root .separator {
+    --pui-separator-color: var(--pui-otp-field-separator-color);
+    --pui-separator-thickness: 2px;
+    /* A horizontal rule between two slots is an empty block box, and a block
+     * box's inline size inside a flex ROW is its content size — zero. It needs
+     * a length of its own or the dash never paints. */
+    inline-size: var(--pui-otp-field-separator-length);
+    /* `Separator` sets `align-self: stretch` for the case where a rule has to
+     * span its container. Here the block size is pinned to 0, so `stretch`
+     * cannot apply and the item falls back to flex-start — the dash would
+     * hang off the top edge of the slots rather than sitting between them. */
+    align-self: center;
+  }
+}
+
+/* Forced colours ---------------------------------------------------------- */
+/* Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+ * beat the rules above by layer alone — no `!important`, no padded selectors.
+ *
+ * A slot is a real <input>, so the UA does assign it system colours. What it
+ * does not do is give the `soft` and `underline` variants a boundary: `soft`
+ * paints its border `transparent`, which forced-colors replaces with a system
+ * colour of its own choosing rather than with the field's edge, and
+ * `underline` has no border on three sides at all. Restating a full 1px box
+ * for every variant is what keeps the slots countable, which is the whole
+ * job — a user who cannot see how many characters the code has cannot tell
+ * whether they have finished typing it. */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .input {
+      border-width: 1px;
+      background-color: Field;
+      color: FieldText;
+      border-color: FieldText;
+    }
+
+    /* `opacity: 1` comes from the generic `[data-disabled]` remedy in
+     * patterns.css, which applies at zero specificity through `:where()`; the
+     * colours it also sets would lose to the (0,1,0) rule above, so the ones
+     * this component needs are restated. */
+    .input[data-disabled] {
+      background-color: Canvas;
+      color: GrayText;
+      border-color: GrayText;
+    }
+  }
+}

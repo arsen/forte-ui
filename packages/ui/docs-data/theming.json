@@ -2437,6 +2437,204 @@
       }
     ]
   },
+  "OTPField": {
+    "name": "OTPField",
+    "tokens": [
+      {
+        "name": "--pui-otp-field-slot-size",
+        "value": "var(--pui-control-h-md)",
+        "description": "Slot width and height — the slots are square (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-font-size",
+        "value": "var(--pui-font-size-3)",
+        "description": "Font size of the character in a slot (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-3)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-5)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between slots",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-separator-length",
+        "value": "var(--pui-space-3)",
+        "description": "Length of the dash `OTPField.Separator` draws between slot groups",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Slot corner radius (`0px` for `variant=\"underline\"`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"underline\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-border-width",
+        "value": "1px",
+        "description": "Slot border width (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"underline\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Slot background (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".input[readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"underline\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Slot background on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Character colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Slot border colour (reset per `variant`, and again when the value is complete or the field is invalid)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".input[data-complete]",
+            "value": "var(--pui-color-primary-border)"
+          },
+          {
+            "selector": ".input[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Slot border colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".input[data-complete]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".input[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".input[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-otp-field-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background — visible on every focus, because Base UI selects a slot's character when you land on it so the next keypress replaces it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-otp-field-separator-color",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Colour of the dash `OTPField.Separator` draws",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Popover": {
     "name": "Popover",
     "tokens": [
