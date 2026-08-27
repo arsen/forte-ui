@@ -1,0 +1,310 @@
+/*
+ * Progress — the linear bar
+ *
+ * One element is both the fill and the indeterminate sweep, and Base UI is
+ * what makes that possible: `Progress.Indicator` writes
+ *
+ *   determinate     inline-start: 0 · height: inherit · width: <percent>%
+ *   indeterminate   nothing at all
+ *
+ * So the determinate rules below add colour and a radius to geometry that is
+ * already correct, and the indeterminate rules — which only match when there
+ * is no inline geometry to fight — are free to position the same element
+ * absolutely and animate it. Two consequences to respect:
+ *
+ * 1. `.track` must have an explicit `block-size`. The fill inherits it, and an
+ *    `auto`-height track leaves it with nothing to inherit.
+ * 2. Nothing here may set the fill's `width` while determinate. The inline
+ *    style wins anyway, and it is the value.
+ *
+ * Motion. The fill DOES transition its width, which is the opposite of the
+ * call made in `Slider.module.css` — and the difference is who writes the
+ * value. A slider's indicator is rewritten on every pointermove, so a
+ * transition restarts every frame and the fill ends up chasing a target that
+ * has already moved. A progress value arrives from a network or a job queue at
+ * human cadence, seconds or hundreds of milliseconds apart, and each step is
+ * exactly what a transition is for: a discrete jump with a start and an end.
+ * Under reduced motion `--pui-duration-normal` shortens to 120ms rather than
+ * disappearing, because a fill that teleports is harder to read, not easier.
+ *
+ * The indeterminate sweep is a `--pui-motion-ok`-gated translate plus an
+ * always-running opacity breathe — the same arrangement `Spinner`'s ring uses,
+ * for the same reason. Under reduced motion the translate collapses to nothing
+ * and the breathe (a no-op at full motion, where `--pui-pulse-dip` is 1)
+ * becomes the entire "still working" cue. The segment also WIDENS to the full
+ * rail there: a 35% bar frozen against the start edge is indistinguishable
+ * from a determinate bar stuck at 35%, which is the one thing an indeterminate
+ * bar must never look like.
+ *
+ * `--pui-duration-loop-sweep` is 1400ms in every motion state, including
+ * `data-pui-motion="off"`. Loop durations are never collapsed here: a
+ * repeating animation driven to 1ms flashes at ~1000Hz, which is a WCAG 2.3.1
+ * seizure hazard rather than an accessibility win.
+ *
+ * Contrast. The fill against the rail is the load-bearing pair, and both sides
+ * are tokens that move together with the seed. It is not the only channel the
+ * value travels on — `Progress.Value` prints the number as text, and the
+ * accessible tree carries `aria-valuenow` — so the bar is readable even where
+ * the two colours are close.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on Progress.Root, so an ancestor's
+     * value is only INHERITED and never wins over this declaration. Re-skin
+     * one bar by setting them on the root through `className` (an unlayered
+     * consumer rule beats `@layer pretty-ui.components` at any specificity) or
+     * an inline `style`; re-skin every bar by re-pointing the global tokens on
+     * the right-hand side, which this file only reads. */
+    /** Length of the bar. `100%` by default — a progress bar is a status
+     * readout, and status readouts want the width of whatever they are
+     * reporting on. */
+    --pui-progress-length: 100%;
+    /** Rail thickness, which the fill inherits. `size` retunes it: `4px` for
+     * `sm`, `10px` for `lg`. */
+    --pui-progress-thickness: 6px;
+    /** Rail and fill corner radius. Follows `data-pui-radius`, so a `none`
+     * preset squares the bar off — unlike a circle's roundness, a bar's is
+     * taste rather than meaning. */
+    --pui-progress-radius: var(--pui-radius-pill);
+    /** Gap between the label/value row and the rail. */
+    --pui-progress-gap: var(--pui-space-2);
+
+    /* Colour slots, swapped wholesale by [data-tone] below. */
+    /** Rail fill — the part that has not happened yet. Stays neutral in every
+     * tone. */
+    --pui-progress-track-bg: var(--pui-color-border-muted);
+    /** The fill itself. Swapped per `tone`. Consumed through the `background`
+     * shorthand rather than `background-color`, so a gradient is a legal value
+     * here as well as a colour — at the cost of the colour transition, which a
+     * gradient cannot have. */
+    --pui-progress-indicator-bg: var(--pui-color-primary);
+    /** Colour of the label. */
+    --pui-progress-label-color: var(--pui-color-foreground);
+    /** Colour of the readout. */
+    --pui-progress-value-color: var(--pui-color-foreground-muted);
+    /** Font size of the label and the readout together. Retuned by `size`. */
+    --pui-progress-label-size: var(--pui-font-size-2);
+
+    /** How long the fill takes to travel to a new value. Shortens under
+     * reduced motion rather than disappearing — a fill that teleports is
+     * harder to read, not easier. */
+    --pui-progress-duration: var(--pui-duration-normal);
+    /** One full pass of the indeterminate segment. Never collapsed, in any
+     * motion state; see the note at the top of this file. */
+    --pui-progress-loop-duration: var(--pui-duration-loop-sweep);
+    /** How much of the rail the indeterminate segment covers, as a fraction.
+     * It is a plain number rather than a length because the sweep divides by
+     * it to work out how far to travel. */
+    --pui-progress-shuttle: 0.35;
+    /* Derived here, on the same element as the two inputs, because a var()
+     * inside an unregistered custom property is substituted where it is
+     * DECLARED — on an ancestor this would freeze at the ancestor's motion
+     * state and stop responding to a subtree `data-pui-motion`. */
+    /** The segment's resolved width: `--pui-progress-shuttle` of the rail
+     * normally, the whole rail under reduced motion. */
+    --pui-progress-shuttle-size: calc(
+      (
+          var(--pui-progress-shuttle) +
+            (1 - var(--pui-progress-shuttle)) * var(--pui-motion-off)
+        ) * 100%
+    );
+
+    box-sizing: border-box;
+    /* Two columns so Label and Value share the first row — label left, value
+     * right — with Track spanning both underneath. A bar rendered with only a
+     * Track is then a one-row grid and needs no special case, and the gap
+     * disappears with the row that was using it. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--pui-progress-gap);
+    inline-size: var(--pui-progress-length);
+    /* So an explicitly-sized bar inside a narrower column shrinks instead of
+     * overflowing it. */
+    max-inline-size: 100%;
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+
+    /* Chrome, not a control: nothing here performs an action on click, so it
+     * takes `default` per the cursor table in CONTRIBUTING.md. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * `size` is thickness, not length. A bar's length belongs to the layout it
+   * sits in, which is why it is a token rather than one of three steps. */
+  .root[data-size="sm"] {
+    --pui-progress-thickness: 4px;
+    --pui-progress-label-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="md"] {
+    --pui-progress-thickness: 6px;
+    --pui-progress-label-size: var(--pui-font-size-2);
+  }
+
+  .root[data-size="lg"] {
+    --pui-progress-thickness: 10px;
+    --pui-progress-label-size: var(--pui-font-size-3);
+  }
+
+  /* Tones ------------------------------------------------------------------
+   * One slot moves. The rail is deliberately left out of every block: it is
+   * the empty part of the bar, and a tinted rail competes with the fill it
+   * exists to contrast against. */
+  .root[data-tone="primary"] {
+    --pui-progress-indicator-bg: var(--pui-color-primary);
+  }
+
+  .root[data-tone="secondary"] {
+    --pui-progress-indicator-bg: var(--pui-color-secondary);
+  }
+
+  .root[data-tone="success"] {
+    --pui-progress-indicator-bg: var(--pui-color-success);
+  }
+
+  .root[data-tone="warning"] {
+    --pui-progress-indicator-bg: var(--pui-color-warning);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-progress-indicator-bg: var(--pui-color-danger);
+  }
+
+  .root[data-tone="neutral"] {
+    --pui-progress-indicator-bg: var(--pui-color-foreground);
+  }
+
+  /* Label and value -------------------------------------------------------- */
+  .label {
+    grid-column: 1;
+    font-size: var(--pui-progress-label-size);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-normal);
+    color: var(--pui-progress-label-color);
+  }
+
+  .value {
+    grid-column: 2;
+    justify-self: end;
+    font-size: var(--pui-progress-label-size);
+    line-height: var(--pui-line-height-normal);
+    color: var(--pui-progress-value-color);
+    /* Without tabular figures the readout changes width as the digits change,
+     * which makes a bar counting up to 100% jitter its own label row. */
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Track ------------------------------------------------------------------ */
+  .track {
+    grid-column: 1 / -1;
+    position: relative;
+    box-sizing: border-box;
+    inline-size: 100%;
+    /* Explicit, never `auto` — the fill sizes its cross axis with
+     * `height: inherit`. */
+    block-size: var(--pui-progress-thickness);
+    border-radius: var(--pui-progress-radius);
+    background-color: var(--pui-progress-track-bg);
+    /* Clips both the fill's leading cap at low values and the indeterminate
+     * segment as it enters and leaves. `position: relative` above is the
+     * containing block that segment is positioned against. */
+    overflow: hidden;
+  }
+
+  /* Indicator -------------------------------------------------------------- */
+  .indicator {
+    border-radius: var(--pui-progress-radius);
+    /* The shorthand, so the knob above accepts a gradient as readily as a
+     * colour. It resets `background-image` on the way past, which is what
+     * keeps a tone change from leaving a previous gradient underneath. */
+    background: var(--pui-progress-indicator-bg);
+    /* `width` is a layout-triggering property, and animating one is normally
+     * the wrong answer. It is the right one here: the element is a single
+     * box with no children to reflow, and the value changes at human cadence
+     * rather than once a frame. See the note at the top of this file for the
+     * case where it is NOT — Slider's identical-looking indicator. */
+    transition:
+      width var(--pui-progress-duration) var(--pui-ease-standard),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Indeterminate ----------------------------------------------------------
+   * Reached only when Base UI has written no inline geometry, so there is
+   * nothing to override and nothing that can be left stale by the switch back.
+   *
+   * The travel is expressed in percentages of the SEGMENT, which is how
+   * `translate` resolves them — hence the division: at 35% of the rail, one
+   * segment-width is 35% of the rail, so 100% / 0.35 of itself carries its
+   * start edge exactly one full rail across. `-100%` parks it just off the
+   * start edge. Multiplying by `--pui-direction` is what makes it sweep toward
+   * the reading direction's end in RTL as well; `translate` is physical and
+   * has no logical form. */
+  .indicator[data-indeterminate] {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--pui-progress-shuttle-size);
+    /* Matches the animation's first frame, so the segment does not flash at
+     * its untranslated position on the frame before the animation starts. */
+    translate: calc(-100% * var(--pui-direction) * var(--pui-motion-ok));
+    animation:
+      pui-progress-sweep var(--pui-progress-loop-duration) var(--pui-ease-in-out) infinite,
+      pui-progress-breathe var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
+    /* There is no width to transition here, and leaving the declaration above
+     * in place would put a 240ms transition on the segment's width every time
+     * `--pui-motion-off` flipped. */
+    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Keyframes --------------------------------------------------------------- */
+  @keyframes pui-progress-sweep {
+    from {
+      translate: calc(-100% * var(--pui-direction) * var(--pui-motion-ok));
+    }
+
+    to {
+      translate: calc(
+        100% / var(--pui-progress-shuttle) * var(--pui-direction) * var(--pui-motion-ok)
+      );
+    }
+  }
+
+  /* A no-op at full motion, where `--pui-pulse-dip` is exactly 1. Under
+   * reduced motion it is 0.45 and this is the only thing still moving. */
+  @keyframes pui-progress-breathe {
+    50% {
+      opacity: var(--pui-pulse-dip);
+    }
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ *
+ * A `<div>` gets no system colours from the UA the way a native `<progress>`
+ * would, so the rail and the fill have to be separated by hand. The rail's
+ * boundary is drawn with `outline` rather than `border`, because a border
+ * would change the box and throw the fill's `height: inherit` off by its width
+ * in exactly this one mode.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .track {
+      background-color: Canvas;
+      outline: 1px solid CanvasText;
+    }
+
+    /* `background-image` is one of the things forced colours does NOT remap, so
+     * a gradient fill would keep its brand hues and paint straight over the
+     * system colour below it. */
+    .indicator {
+      background-color: Highlight;
+      background-image: none;
+    }
+  }
+}

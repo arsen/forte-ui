@@ -143,6 +143,26 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_progress_basic from "./progress/basic";
+import d_progress_basic_src from "./progress/basic?raw";
+import d_progress_circle_sizes from "./progress/circle-sizes";
+import d_progress_circle_sizes_src from "./progress/circle-sizes?raw";
+import d_progress_circle from "./progress/circle";
+import d_progress_circle_src from "./progress/circle?raw";
+import d_progress_formatting from "./progress/formatting";
+import d_progress_formatting_src from "./progress/formatting?raw";
+import d_progress_indeterminate from "./progress/indeterminate";
+import d_progress_indeterminate_src from "./progress/indeterminate?raw";
+import d_progress_reduced_motion from "./progress/reduced-motion";
+import d_progress_reduced_motion_src from "./progress/reduced-motion?raw";
+import d_progress_sizes from "./progress/sizes";
+import d_progress_sizes_src from "./progress/sizes?raw";
+import d_progress_theming from "./progress/theming";
+import d_progress_theming_src from "./progress/theming?raw";
+import d_progress_tones from "./progress/tones";
+import d_progress_tones_src from "./progress/tones?raw";
+import d_progress_upload from "./progress/upload";
+import d_progress_upload_src from "./progress/upload?raw";
 import d_radio_basic from "./radio/basic";
 import d_radio_basic_src from "./radio/basic?raw";
 import d_radio_controlled from "./radio/controlled";
@@ -352,6 +372,16 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "progress/basic"
+  | "progress/circle-sizes"
+  | "progress/circle"
+  | "progress/formatting"
+  | "progress/indeterminate"
+  | "progress/reduced-motion"
+  | "progress/sizes"
+  | "progress/theming"
+  | "progress/tones"
+  | "progress/upload"
   | "radio/basic"
   | "radio/controlled"
   | "radio/descriptions"
@@ -493,6 +523,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "progress/basic": { Component: d_progress_basic, source: d_progress_basic_src, file: "progress/basic.tsx" },
+  "progress/circle-sizes": { Component: d_progress_circle_sizes, source: d_progress_circle_sizes_src, file: "progress/circle-sizes.tsx" },
+  "progress/circle": { Component: d_progress_circle, source: d_progress_circle_src, file: "progress/circle.tsx" },
+  "progress/formatting": { Component: d_progress_formatting, source: d_progress_formatting_src, file: "progress/formatting.tsx" },
+  "progress/indeterminate": { Component: d_progress_indeterminate, source: d_progress_indeterminate_src, file: "progress/indeterminate.tsx" },
+  "progress/reduced-motion": { Component: d_progress_reduced_motion, source: d_progress_reduced_motion_src, file: "progress/reduced-motion.tsx" },
+  "progress/sizes": { Component: d_progress_sizes, source: d_progress_sizes_src, file: "progress/sizes.tsx" },
+  "progress/theming": { Component: d_progress_theming, source: d_progress_theming_src, file: "progress/theming.tsx" },
+  "progress/tones": { Component: d_progress_tones, source: d_progress_tones_src, file: "progress/tones.tsx" },
+  "progress/upload": { Component: d_progress_upload, source: d_progress_upload_src, file: "progress/upload.tsx" },
   "radio/basic": { Component: d_radio_basic, source: d_radio_basic_src, file: "radio/basic.tsx" },
   "radio/controlled": { Component: d_radio_controlled, source: d_radio_controlled_src, file: "radio/controlled.tsx" },
   "radio/descriptions": { Component: d_radio_descriptions, source: d_radio_descriptions_src, file: "radio/descriptions.tsx" },

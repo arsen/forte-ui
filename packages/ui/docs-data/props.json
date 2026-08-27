@@ -1042,6 +1042,164 @@
       }
     ]
   },
+  "ProgressRoot": {
+    "name": "ProgressRoot",
+    "description": "Groups every part of the bar and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a two-column grid: `Label` and\n`Value` share the first row, and `Track` spans both underneath.\n\n`value` is required and `null` is a meaningful setting — it is how you say\n\"this is running and I cannot say how far along it is\", which switches every\npart below into the indeterminate animation.\n\n```tsx\n<Progress.Root value={62}>\n  <Progress.Label>Uploading</Progress.Label>\n  <Progress.Value />\n  <Progress.Track>\n    <Progress.Indicator />\n  </Progress.Track>\n</Progress.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "ProgressSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Thickness of the bar and the size of the label row — `4px`, `6px` or\n`10px` of track. The bar's *length* is not a size: it fills its container\nby default, and `--pui-progress-length` is the knob for anything else."
+      },
+      {
+        "name": "tone",
+        "type": "ProgressTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the fill draws from. The rail stays neutral in\nevery tone — it is the part that has *not* happened yet, and colouring it\nwould compete with the fill it exists to contrast against."
+      }
+    ]
+  },
+  "ProgressLabel": {
+    "name": "ProgressLabel",
+    "description": "Names what is being waited on. Renders a `<span>` wired to the root with\n`aria-labelledby`, so it is the bar's accessible name — a progress bar\nwithout one announces a bare percentage and leaves the listener to guess\nwhat it is a percentage of.\n\nWrap it in `.pui-visually-hidden` when the surrounding page already says it\nin words; that keeps the name in the accessibility tree without repeating it\non screen.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressValue": {
+    "name": "ProgressValue",
+    "description": "The readout, formatted as a percentage by default. Renders an\n`aria-hidden` `<span>` — the root already publishes the same number through\n`aria-valuenow`, and announcing it twice is worse than once.\n\nIt renders **nothing** while the bar is indeterminate, which is the point:\nthere is no number to show, and a \"0%\" that never moves is a lie. Pass a\nfunction child to say something there instead:\n\n```tsx\n<Progress.Value>\n  {(formatted, value) => (value == null ? \"Working…\" : formatted)}\n</Progress.Value>\n```\n\nSet `format` on `Progress.Root` for units other than percent — `{ style:\n\"unit\", unit: \"megabyte\" }` turns the readout into \"38 MB\" while the bar\nkeeps filling from `min` to `max`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressTrack": {
+    "name": "ProgressTrack",
+    "description": "The rail the fill runs along, and the only part with an explicit thickness —\n`Indicator` sizes its cross axis with `height: inherit`, so a track left to\nsize itself leaves the fill with nothing to inherit and it collapses to\nzero.\n\nIt also clips: the fill carries the same radius, so at 3% the rounded cap is\ncut to a sliver of the rail's own end rather than shrinking into a dot.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressIndicator": {
+    "name": "ProgressIndicator",
+    "description": "The fill. Base UI gives it an inline `width: <percent>%` while the bar is\ndeterminate and *no* inline geometry at all while it is indeterminate, which\nis what lets one element be both the fill and the sweeping segment — see the\nnote at the top of `Progress.module.css`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleRoot": {
+    "name": "ProgressCircleRoot",
+    "description": "Groups every part of the ring and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a grid where `Track` and `Value`\nshare one cell — which is what centres the readout inside the ring — and\n`Label` sits in a second row that only exists if you render one.\n\n`value` is required and `null` means indeterminate: the readout disappears\nand the arc starts rotating.\n\n```tsx\n<ProgressCircle.Root value={62}>\n  <ProgressCircle.Track>\n    <ProgressCircle.Indicator />\n  </ProgressCircle.Track>\n  <ProgressCircle.Value />\n  <ProgressCircle.Label>Uploading</ProgressCircle.Label>\n</ProgressCircle.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "ProgressSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Diameter of the ring — `2.5rem`, `3.5rem` or `5rem`. The stroke is\nmeasured in the ring's own coordinate space rather than in pixels, so it\nscales with the diameter and a `sm` circle is a smaller ring rather than a\nthinner one."
+      },
+      {
+        "name": "tone",
+        "type": "ProgressTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the arc draws from. The rail behind it stays\nneutral in every tone."
+      }
+    ]
+  },
+  "ProgressCircleTrack": {
+    "name": "ProgressCircleTrack",
+    "description": "The ring's canvas and the rail behind the arc. Renders an `<svg>` on a\n`0 0 100 100` viewBox — Base UI's `Track` is a `<div>` by default and is\nre-rendered through its `render` prop, which is also what keeps the\n`data-complete` / `data-progressing` / `data-indeterminate` attributes on\nit.\n\nThe viewBox is what makes the stroke width scale: everything inside is\nmeasured against a ring 100 units across, and the size of a unit is whatever\n`--pui-progress-circle-size` says.\n\n`render` is intentionally not forwarded. Replacing the `<svg>` would take\nthe coordinate space every rule in the stylesheet is written against with\nit, and the failure is silent — a ring that simply does not draw.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleIndicator": {
+    "name": "ProgressCircleIndicator",
+    "description": "The arc. A `<circle>` with `pathLength=\"100\"`, which renormalises its\ncircumference to 100 units so `stroke-dashoffset` can be driven straight\nfrom the percentage without anyone computing 2πr — including when\n`--pui-progress-circle-thickness` changes the radius out from under it.\n\nBase UI still writes its inline `width` / `height` / `inset-inline-start`\nhere while the bar is determinate. None of the three applies to a `<circle>`\nin CSS, so they are inert; the value reaches the arc through\n`--pui-progress-circle-percent` on the root instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleValue": {
+    "name": "ProgressCircleValue",
+    "description": "The readout, centred inside the ring. Renders an `aria-hidden` `<span>` —\nthe root already publishes the number through `aria-valuenow`.\n\nIt renders nothing while the ring is indeterminate. Pass a function child to\nput something else there, and keep it short: at `sm` the ring's inner\ndiameter is under 30px, and anything longer than three characters will need\n`size=\"lg\"` or a label underneath instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ProgressCircleLabel": {
+    "name": "ProgressCircleLabel",
+    "description": "Names what is being waited on, underneath the ring. Renders a `<span>` wired\nto the root with `aria-labelledby`, so it is the ring's accessible name.\n\nIts row in the grid only exists when it is rendered, so a ring without a\nlabel has no dangling gap under it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "Radio": {
     "name": "Radio",
     "description": "One option in a `RadioGroup`, built on Base UI's unstyled `Radio` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Item`.\n\nA radio only means anything inside a `RadioGroup`: the group owns the value,\nand it is what makes the set one tab stop with the arrow keys moving between\noptions. A lone `<Radio />` renders, but nothing can ever select it.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-disabled`, `data-readonly`, and the `Field` validity attributes) on\nboth the root and the indicator, and every visual decision is a\n`--pui-radio-*` custom property, so it can be re-skinned from plain CSS or\ntargeted with Tailwind arbitrary variants (`data-[checked]:...`) without\nwrapping.",
