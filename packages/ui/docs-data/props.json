@@ -1647,6 +1647,160 @@
       }
     ]
   },
+  "NumberFieldRoot": {
+    "name": "NumberFieldRoot",
+    "description": "Groups every part of the number field and owns its value. Renders a `<div>`\nlaid out as a column, so a `ScrubArea` wrapping the label sits above the\n`Group`.\n\nThe value is a `number | null`, never a string: `null` is the empty field,\nwhich is what makes \"cleared\" distinguishable from zero. `format` takes\n`Intl.NumberFormatOptions`, so currency, percent and unit displays are a prop\nrather than a wrapper.\n\n```tsx\n<NumberField.Root defaultValue={100} min={0} max={999}>\n  <NumberField.ScrubArea>\n    <Field.Label>Width</Field.Label>\n  </NumberField.ScrubArea>\n  <NumberField.Group>\n    <NumberField.Decrement />\n    <NumberField.Input />\n    <NumberField.Increment />\n  </NumberField.Group>\n</NumberField.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "NumberFieldSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the control. Height, inline padding, stepper width and font size\nall move together, and the numbers come from the same `--pui-control-*`\ntokens `Input` and `Select.Trigger` read — so the three line up on one row\nat every `data-pui-density` setting."
+      },
+      {
+        "name": "variant",
+        "type": "NumberFieldVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the control carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance — the\nsame three `Input` has."
+      }
+    ]
+  },
+  "NumberFieldGroup": {
+    "name": "NumberFieldGroup",
+    "description": "The bordered shell holding the steppers and the input. Renders a `<div>`, and\nit — not the input — is the element that looks like the control: the input\ninside it is borderless and transparent, so the three segments read as one\nbox.\n\nWhich is why the group carries `.pui-focus-ring-within` rather than the input\ncarrying `.pui-focus-ring`. Focusing the text field rings the whole control,\nthe way focusing an `Input` rings the whole input — and since the steppers are\nnot tab stops, that is the only ring anyone sees by default. An app that puts\nthem back in the tab order gets an inset ring on the button instead; the\nstylesheet suppresses the group's ring in that case so the two never stack.\n\nThe one thing that DOES stack is an app-level global `:focus-visible` rule.\nIt outranks every `pretty-ui` layer by design, so it re-rings the input this\ncomponent deliberately left unringed, and the control wears two rings — a\nrounded one around the group and a square-cornered one around the middle\nsegment. Scope such a rule away from parts a component already rings:\n`:focus-visible:not(:where(.pui-focus-ring-within *))`.\n\n`data-scrubbing` lands here while a `ScrubArea` drag is running, which is\nwhat ties the drag happening on the label back to the value it is changing.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the group to fill the width of its container. Only needed outside\na `Field.Root` — a field is a flex column, so a group inside one already\nstretches."
+      }
+    ]
+  },
+  "NumberFieldInput": {
+    "name": "NumberFieldInput",
+    "description": "The text field itself. Renders an `<input>` that is borderless and\ntransparent — `Group` draws the box around it.\n\nThe digits are set in `tabular-nums`. That is not typographic polish: during\na scrub the value changes every few pixels of pointer movement, and\nproportional figures make the number visibly breathe as the digits change\nwidth. Tabular figures hold still.\n\nBase UI gives it `aria-roledescription=\"Number field\"` and wires it to a\n`Field.Label` above; the label names it, the role description explains it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NumberFieldIncrement": {
+    "name": "NumberFieldIncrement",
+    "description": "The stepper that increases the value. Renders a `<button>`.\n\nBase UI gives it `aria-label=\"Increase\"` and `aria-controls` pointing at the\ninput, so the default glyph needs no label of its own — and `tabIndex={-1}`,\nso it is a pointer affordance rather than a tab stop. That is the right shape\nfor a spin button: the arrow keys already step the value from the field\nitself, and two extra stops per field would cost keyboard users presses\nwithout adding a capability.\n\nHolding it repeats, and the modifier keys apply to a press as well —\n<kbd>Alt</kbd> steps by `smallStep`, <kbd>Shift</kbd> by `largeStep`.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<PlusIcon />",
+        "description": "Glyph to render. Defaults to a plus sign."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NumberFieldDecrement": {
+    "name": "NumberFieldDecrement",
+    "description": "The stepper that decreases the value. Renders a `<button>`, labelled\n\"Decrease\" by Base UI and outside the tab order for the same reason\n`Increment` is.\n\nPut it before `Input` in the markup. The order is physical, not logical: it\nis what makes the minus land on the start edge, and it flips with `dir=\"rtl\"`\non its own because the group is a flex row and its corner radii are logical.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<MinusIcon />",
+        "description": "Glyph to render. Defaults to a minus sign."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NumberFieldScrubArea": {
+    "name": "NumberFieldScrubArea",
+    "description": "The click-and-drag surface. Renders a `<span>`, and is normally wrapped\naround the field's label — dragging sideways over the word \"Width\" changes\nthe width, which is the interaction Figma and Blender taught everyone.\n\nScrubbing is invisible unless the component says so, so three cues ship by\ndefault and they cover three different moments:\n\n1. **At rest** — the `grip`, a double-headed arrow after the label. This is\n   the only cue present before the user has done anything, and the only one a\n   touch user ever sees, so it is on by default.\n2. **On hover** — a resize cursor (`ew-resize` / `ns-resize`, per\n   `direction`) and a panel wash behind the label.\n3. **During the drag** — `data-scrubbing` tints this area and the `Group`'s\n   border, and the `cursor` stands in for the pointer the lock has hidden.\n\nThe resize cursor is a deliberate exception to the library's pointer rule.\n`cursor: pointer` promises \"click me and something happens\", and clicking a\nscrub area does nothing at all — the value only moves once the pointer does.\nThe resize cursor is the one the platform already uses for exactly this\ngesture.\n\n```tsx\n<NumberField.ScrubArea direction=\"vertical\" pixelSensitivity={3}>\n  <Field.Label>Opacity</Field.Label>\n</NumberField.ScrubArea>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "cursor",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Render a `ScrubAreaCursor` with the default glyph.\n\nScrubbing takes a pointer lock, and a locked pointer is an INVISIBLE one —\nwithout a stand-in the user drags with no cursor at all. That is why this\ndefaults to on. Set it to `false` when you want to supply your own, and\nrender `<NumberField.ScrubAreaCursor>` inside the scrub area yourself."
+      },
+      {
+        "name": "direction",
+        "type": "NumberFieldScrubDirection",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Axis the pointer has to travel along. Also picks the resize cursor and the\nrotation of both scrub glyphs."
+      },
+      {
+        "name": "grip",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Render the double-headed arrow after the children.\n\nThis is the whole reason a scrub area is discoverable: nothing else about a\nlabel suggests it can be dragged, and a cursor change only arrives once the\npointer is already on it. Turn it off when the surrounding design carries\nthe affordance some other way — never just to tidy the layout."
+      }
+    ]
+  },
+  "NumberFieldScrubAreaCursor": {
+    "name": "NumberFieldScrubAreaCursor",
+    "description": "The stand-in for the mouse pointer while a scrub is running. Renders a\n`<span>` portalled to `<body>` and positioned by Base UI, only while the drag\nis live.\n\n`ScrubArea` renders one for you; reach for this directly only to supply a\ndifferent glyph, and pass `cursor={false}` to the scrub area when you do.\n\nTwo consequences of the portal are worth knowing. It does not inherit a\n`.pui-theme` scope, so it paints from whatever the document root resolves —\nthe same trade every portalled surface in this library makes. And Base UI\nwrites `transform` on it on every pointer move, so nothing here may animate\nor set that property.\n\nIt does not render at all in Safari (which shifts the layout when a pointer\nlock is taken) or after a denied lock; the native cursor stays visible in\nboth cases, so the drag still works — it just looks ordinary.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ScrubCursorIcon />",
+        "description": "Glyph to render. Defaults to a haloed double-headed arrow, rotated to match\nthe scrub area's `direction`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "PopoverRoot": {
     "name": "PopoverRoot",
     "description": "Groups one popover's trigger and popup, and owns its open state. Renders no\nDOM element, so it takes no `className`, `style` or `ref`.",

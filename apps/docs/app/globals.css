@@ -66,8 +66,23 @@
 
   /* The docs site opts into the library's focus-ring pattern globally rather
    * than defining a competing one — a second ring implementation is how the two
-   * drift apart. */
-  :focus-visible {
+   * drift apart.
+   *
+   * The `:not()` is load-bearing, and it is narrower than it looks. This layer
+   * is declared AFTER every `pretty-ui` layer, so this rule does not merely
+   * fill a gap — it overrides `.pui-focus-ring` itself, and with it any
+   * component that deliberately rings something other than the element holding
+   * focus. `.pui-focus-ring-within` is exactly that case: the ring goes on a
+   * wrapper and the focus lands on a control inside it, so the wrapper and the
+   * control both drew one and the component wore two rings at once. NumberField
+   * found it (the group rings, the input inside it holds focus) and Slider has
+   * the same shape, its visually-hidden range input having hidden the bug.
+   *
+   * Excluding only descendants of a ringing wrapper, rather than every
+   * `[data-pui]` element, keeps this rule as the backstop it is meant to be for
+   * anything the library leaves unringed. `:where()` keeps the specificity at
+   * (0,1,0). */
+  :focus-visible:not(:where(.pui-focus-ring-within *)) {
     outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
     outline-offset: var(--pui-focus-ring-offset);
     box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);

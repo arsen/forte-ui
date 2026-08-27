@@ -2437,6 +2437,386 @@
       }
     ]
   },
+  "NumberField": {
+    "name": "NumberField",
+    "tokens": [
+      {
+        "name": "--pui-number-field-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Space between the scrub area and the group",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Control height (reset per `size`)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".group[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".group[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-border-width",
+        "value": "1px",
+        "description": "Border width",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-separator-width",
+        "value": "1px",
+        "description": "Rule between a stepper and the input",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-separator-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of the rule between a stepper and the input (reset per `variant`)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Background (reset per `variant`)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".group[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".group[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".group[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour (reset per `variant`, by `data-invalid`, and while scrubbing)",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-scrubbing]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".group[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".group[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".group[data-variant=\"ghost\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".group[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-scrubbing]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".group[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-input-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding (reset per `size`)",
+        "part": "input",
+        "overrides": [
+          {
+            "selector": ".input[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".input[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".input[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-input-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size (reset per `size`)",
+        "part": "input",
+        "overrides": [
+          {
+            "selector": ".input[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".input[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".input[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-input-width",
+        "value": "5ch",
+        "description": "Room for the DIGITS at rest, before any `fullWidth` stretching. The inline padding is added to it below rather than eaten out of it, so the knob means what it says: `5ch` is five characters of room, not a box five characters wide with the padding taken out of the middle",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-text-align",
+        "value": "center",
+        "description": "Where the digits sit. `center` because the field is flanked by two steppers; `end` reads better in a table of figures",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-placeholder-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Placeholder colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-input-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "input",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-icon-size",
+        "value": "var(--pui-font-size-3)",
+        "description": "Stepper glyph size (reset per `size`)",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Stepper glyph colour",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-fg-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Stepper glyph colour on hover",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Stepper background on hover",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-bg-active",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Stepper background while held",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-stepper-press-scale",
+        "value": "var(--pui-scale-press)",
+        "description": "How far a stepper squashes while held",
+        "part": "stepper",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the label and the grip",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-padding-x",
+        "value": "var(--pui-space-1)",
+        "description": "Inline padding of the drag surface, and the negative margin that keeps the label optically aligned with the group under it",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of the drag surface",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-bg",
+        "value": "transparent",
+        "description": "Background of the drag surface (reset while scrubbing)",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea:hover:not([data-disabled], [data-readonly])",
+            "value": "var(--pui-number-field-scrub-bg-hover)"
+          },
+          {
+            "selector": ".scrubArea[data-scrubbing]",
+            "value": "var(--pui-color-primary-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background of the drag surface on hover",
+        "part": "scrubArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-grip-fg",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Grip colour (reset while scrubbing)",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea[data-scrubbing]",
+            "value": "var(--pui-color-primary-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-grip-opacity",
+        "value": "0.7",
+        "description": "How present the grip is at rest. It has to read as an affordance without competing with the label it sits beside",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea:hover:not([data-disabled], [data-readonly])",
+            "value": "1"
+          },
+          {
+            "selector": ".scrubArea[data-scrubbing]",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor",
+        "value": "ew-resize",
+        "description": "The pointer shown over the drag surface. Reset to `ns-resize` by `direction=\"vertical\"`",
+        "part": "scrubArea",
+        "overrides": [
+          {
+            "selector": ".scrubArea[data-direction=\"vertical\"]",
+            "value": "ns-resize"
+          },
+          {
+            "selector": ".scrubArea[data-disabled], .scrubArea[data-readonly]",
+            "value": "default"
+          }
+        ]
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-z-index",
+        "value": "60",
+        "description": "Stacking order of the stand-in pointer. One band above `Tooltip`: it replaces the mouse cursor, so nothing may cover it",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Fill of the stand-in pointer",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-halo",
+        "value": "var(--pui-color-background)",
+        "description": "The halo painted behind the fill, so the glyph stays readable over whatever the drag happens to cross",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      },
+      {
+        "name": "--pui-number-field-scrub-cursor-halo-width",
+        "value": "3px",
+        "description": "Halo thickness",
+        "part": "scrubAreaCursor",
+        "overrides": []
+      }
+    ]
+  },
   "Popover": {
     "name": "Popover",
     "tokens": [

@@ -129,6 +129,20 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { NumberField } from "./components/number-field";
+export type {
+  NumberFieldSize,
+  NumberFieldVariant,
+  NumberFieldScrubDirection,
+  NumberFieldRootProps,
+  NumberFieldGroupProps,
+  NumberFieldInputProps,
+  NumberFieldIncrementProps,
+  NumberFieldDecrementProps,
+  NumberFieldScrubAreaProps,
+  NumberFieldScrubAreaCursorProps,
+} from "./components/number-field";
+
 export { Popover } from "./components/popover";
 export type {
   PopoverSize,
