@@ -38,6 +38,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   components/styles.ts             class strings two components have to agree on
   components/sidebar.tsx           the page list — the shell's left column
   components/toc.tsx               the section rail — the shell's right column
+  components/toc-registry.ts       GENERATED — the rail's server-rendered seed
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   mdx-components.tsx               the prose typography, per element
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
@@ -52,6 +53,7 @@ pnpm typecheck                              # the real gate — there is no lint
 pnpm --filter @dofortech/pretty-ui test     # contrast harness (--fine sweep)
 pnpm --filter @dofortech/pretty-ui tokens   # regenerate generated CSS
 pnpm --filter @dofortech/pretty-ui-docs registry  # regenerate the demo registry
+pnpm --filter @dofortech/pretty-ui-docs toc       # regenerate the "On this page" seed
 ```
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
@@ -66,6 +68,7 @@ pnpm --filter @dofortech/pretty-ui-docs registry  # regenerate the demo registry
 | `packages/ui/docs-data/props.json` | component TSX doc comments | `pnpm ... docgen` |
 | `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `pnpm ... docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `pnpm ... registry` |
+| `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `pnpm ... toc` |
 
 If a value is missing, add it to the **table** in `ramp.mjs` / `motion.mjs` and
 regenerate. Never patch the output.
@@ -89,9 +92,9 @@ the blocks from one table makes that class of mistake impossible. Do not
 
 ### When to run a generator
 
-A cold `pnpm dev` or `pnpm build` runs all four for you: turbo's `dev` depends
+A cold `pnpm dev` or `pnpm build` runs all five for you: turbo's `dev` depends
 on `^build`, and the library's `build` is `tokens && docgen && vite build`,
-while the docs' `dev` and `build` both start with `build-registry`.
+while the docs' `dev` and `build` both start with `build-registry && build-toc`.
 
 **So you only run these by hand after changing something while the dev server
 is already running.** What the library leaves running is `vite build --watch`,
@@ -104,13 +107,22 @@ which does not re-run `tokens` or `docgen`.
 | a prop — added, renamed, removed, retyped, or its JSDoc | `docgen` |
 | a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
+| an `##` / `###` heading in a `page.mdx` — added, renamed, reordered, removed | `toc` |
 
-Nothing to regenerate when you edit an MDX page, a docs component, the
-*contents* of an existing demo (`registry.ts` keys on the file set only, and
+Nothing to regenerate when you edit the prose of an MDX page, a docs component,
+the *contents* of an existing demo (`registry.ts` keys on the file set only, and
 `?raw` re-reads the bytes at build), or the parts of a `.module.css` / `.tsx`
 body that carry no doc comments — but a custom-property declaration under a
 `/** … */` doc comment is published to `theming.json`, name and default
 included, so touching one is a `docgen` change like editing a prop.
+
+`toc` is the one that is safe to forget, and deliberately so. `toc-registry.ts`
+is a SEED: it exists to put the "On this page" rail in the server HTML, because
+the rail is rendered by the root layout and a layout cannot read its child
+page's `tableOfContents` export. `Toc` then reconciles it against the rendered
+headings on mount, so a heading renamed mid-session shows the NEW heading — the
+stale seed costs a re-render nobody sees, not a wrong rail. Run it anyway
+before committing, or the file lands in the diff on somebody else's next build.
 
 `check:contrast` pairs with `ramp.mjs` alone. It is the only thing that catches
 a curve tweak silently dropping one hue band below AA, so do not skip it there
@@ -559,10 +571,11 @@ base rules without a single `!important`.
    which is also why their layout is Tailwind rather than a `style` object; see
    *Styling the docs site* above.
 10. Add the page to the `NAV` array in
-    [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx). The
-    right-hand "On this page" rail needs nothing — it reads the rendered `h2`
-    and `h3` ids off the page, so a new section appears in it as soon as you
-    write the heading.
+    [`apps/docs/components/sidebar.tsx`](apps/docs/components/sidebar.tsx), and
+    run `toc` so the right-hand "On this page" rail is in the server HTML for
+    the new route. It will find the headings without you — reading them off the
+    rendered page is what it falls back to — but until the seed is regenerated
+    they arrive a frame after hydration instead of with the document.
 
 ### Before you call it done
 
