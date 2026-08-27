@@ -198,30 +198,26 @@ cn("p-4", condition && "p-6"); // -> "p-6" when condition holds
 `tailwind-merge` is an *optional* peer dependency — install it alongside the
 package to use this subpath; apps that never import it pay nothing.
 
-If your app adds its own `@theme` keys, the shipped `cn` cannot know them, so
-build your own from the underlying config (a plain data object, exported
-separately precisely for this):
+If your app adds its own `@theme` keys, the bare `cn` cannot know them —
+extend it with `createCn`, which takes the same `{ extend, override }` shape
+as tailwind-merge itself and *appends* your names to the library's scales:
 
 ```ts
-import { clsx, type ClassValue } from "clsx";
-import { extendTailwindMerge } from "tailwind-merge";
-import { tailwindMergeConfig } from "@dofortech/pretty-ui/tailwind-merge";
+import { createCn } from "@dofortech/pretty-ui/cn";
 
-const { theme, classGroups } = tailwindMergeConfig.extend;
-
-const twMerge = extendTailwindMerge({
+export const cn = createCn({
   extend: {
     theme: {
-      ...theme,
-      // extend, don't replace, or `p-surface` stops merging
-      spacing: [...theme.spacing, "header"],
+      spacing: ["header"], // lands beside the library's `surface`
+      animate: ["reveal"],
     },
-    classGroups,
   },
 });
-
-export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 ```
+
+For setups that are not `cn`-shaped at all, the underlying
+`tailwindMergeConfig` stays exported from `@dofortech/pretty-ui/tailwind-merge`
+as a plain data object.
 
 Colours need no entry — the colour scale already matches any name — and
 neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names

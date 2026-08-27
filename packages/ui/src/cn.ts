@@ -16,17 +16,41 @@
  * Tailwind (or bring their own merger) never pay for it. `clsx` ships with
  * the package either way.
  *
- * If your app adds its own `@theme` keys, do not use this `cn` — a helper
- * that does not know your names cannot merge them. Build your own from the
- * config instead, spreading your keys into its arrays the way
- * `tailwind-merge.ts`'s header shows.
+ * An app that adds its own `@theme` keys cannot use the bare `cn` — a helper
+ * that does not know a name never merges it — but does not have to rebuild
+ * the config either:
+ *
+ *   export const cn = createCn({
+ *     extend: { theme: { spacing: ["header"], animate: ["reveal"] } },
+ *   });
+ *
+ * The extension goes through tailwind-merge's `mergeConfigs`, whose `extend`
+ * APPENDS to a scale rather than replacing it — `spacing: ["header"]` lands
+ * beside the library's `surface`, not instead of it. That is the reason this
+ * factory exists: hand-spreading `tailwindMergeConfig` into your own
+ * `extendTailwindMerge` call works too, but one forgotten spread silently
+ * drops a library scale, and `p-surface` stops merging with nothing to say
+ * why.
  */
 import { clsx, type ClassValue } from "clsx";
-import { extendTailwindMerge } from "tailwind-merge";
+import {
+  extendTailwindMerge,
+  mergeConfigs,
+  type ConfigExtension,
+} from "tailwind-merge";
 import { tailwindMergeConfig } from "./tailwind-merge";
 
-const twMerge = extendTailwindMerge(tailwindMergeConfig);
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+/**
+ * Build a `cn` that knows the bridge's scales plus your own additions.
+ * Accepts the same `{ extend, override }` shape as tailwind-merge itself.
+ */
+export function createCn(extension?: ConfigExtension<string, string>) {
+  const twMerge = extension
+    ? extendTailwindMerge(tailwindMergeConfig, (config) =>
+        mergeConfigs(config, extension),
+      )
+    : extendTailwindMerge(tailwindMergeConfig);
+  return (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 }
+
+export const cn = createCn();
