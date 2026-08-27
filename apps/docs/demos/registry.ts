@@ -143,6 +143,28 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_popover_basic from "./popover/basic";
+import d_popover_basic_src from "./popover/basic?raw";
+import d_popover_controlled from "./popover/controlled";
+import d_popover_controlled_src from "./popover/controlled?raw";
+import d_popover_detached_trigger from "./popover/detached-trigger";
+import d_popover_detached_trigger_src from "./popover/detached-trigger?raw";
+import d_popover_form from "./popover/form";
+import d_popover_form_src from "./popover/form?raw";
+import d_popover_modal from "./popover/modal";
+import d_popover_modal_src from "./popover/modal?raw";
+import d_popover_multiple_triggers from "./popover/multiple-triggers";
+import d_popover_multiple_triggers_src from "./popover/multiple-triggers?raw";
+import d_popover_open_on_hover from "./popover/open-on-hover";
+import d_popover_open_on_hover_src from "./popover/open-on-hover?raw";
+import d_popover_placement from "./popover/placement";
+import d_popover_placement_src from "./popover/placement?raw";
+import d_popover_scrollable from "./popover/scrollable";
+import d_popover_scrollable_src from "./popover/scrollable?raw";
+import d_popover_sizes from "./popover/sizes";
+import d_popover_sizes_src from "./popover/sizes?raw";
+import d_popover_viewport from "./popover/viewport";
+import d_popover_viewport_src from "./popover/viewport?raw";
 import d_progress_basic from "./progress/basic";
 import d_progress_basic_src from "./progress/basic?raw";
 import d_progress_circle_sizes from "./progress/circle-sizes";
@@ -372,6 +394,17 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "popover/basic"
+  | "popover/controlled"
+  | "popover/detached-trigger"
+  | "popover/form"
+  | "popover/modal"
+  | "popover/multiple-triggers"
+  | "popover/open-on-hover"
+  | "popover/placement"
+  | "popover/scrollable"
+  | "popover/sizes"
+  | "popover/viewport"
   | "progress/basic"
   | "progress/circle-sizes"
   | "progress/circle"
@@ -523,6 +556,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "popover/basic": { Component: d_popover_basic, source: d_popover_basic_src, file: "popover/basic.tsx" },
+  "popover/controlled": { Component: d_popover_controlled, source: d_popover_controlled_src, file: "popover/controlled.tsx" },
+  "popover/detached-trigger": { Component: d_popover_detached_trigger, source: d_popover_detached_trigger_src, file: "popover/detached-trigger.tsx" },
+  "popover/form": { Component: d_popover_form, source: d_popover_form_src, file: "popover/form.tsx" },
+  "popover/modal": { Component: d_popover_modal, source: d_popover_modal_src, file: "popover/modal.tsx" },
+  "popover/multiple-triggers": { Component: d_popover_multiple_triggers, source: d_popover_multiple_triggers_src, file: "popover/multiple-triggers.tsx" },
+  "popover/open-on-hover": { Component: d_popover_open_on_hover, source: d_popover_open_on_hover_src, file: "popover/open-on-hover.tsx" },
+  "popover/placement": { Component: d_popover_placement, source: d_popover_placement_src, file: "popover/placement.tsx" },
+  "popover/scrollable": { Component: d_popover_scrollable, source: d_popover_scrollable_src, file: "popover/scrollable.tsx" },
+  "popover/sizes": { Component: d_popover_sizes, source: d_popover_sizes_src, file: "popover/sizes.tsx" },
+  "popover/viewport": { Component: d_popover_viewport, source: d_popover_viewport_src, file: "popover/viewport.tsx" },
   "progress/basic": { Component: d_progress_basic, source: d_progress_basic_src, file: "progress/basic.tsx" },
   "progress/circle-sizes": { Component: d_progress_circle_sizes, source: d_progress_circle_sizes_src, file: "progress/circle-sizes.tsx" },
   "progress/circle": { Component: d_progress_circle, source: d_progress_circle_src, file: "progress/circle.tsx" },
