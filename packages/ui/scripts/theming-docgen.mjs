@@ -2,13 +2,14 @@
  * Extracts each component's theming tokens from its .module.css into
  * docs-data/theming.json — the CSS twin of docgen.mjs.
  *
- * The contract mirrors JSDoc on props: a `/** … *\/` doc comment directly
- * above a custom-property declaration publishes that declaration. The name
- * and the default value are read from the declaration itself, so a renamed
- * knob or a changed default updates the docs table automatically — only the
- * prose can go stale, and it lives next to the declaration it describes.
- * Plain `/* … *\/` comments stay what they have always been here: private
- * notes on why, invisible to the docs.
+ * The contract mirrors JSDoc on props: a doc comment (block comment whose
+ * body starts with a second `*`) directly above a custom-property
+ * declaration publishes that declaration. The name and the default value are
+ * read from the declaration itself, so a renamed knob or a changed default
+ * updates the docs table automatically — only the prose can go stale, and it
+ * lives next to the declaration it describes. Plain `/* … *\/` comments stay
+ * what they have always been here: private notes on why, invisible to the
+ * docs.
  *
  * Each published token also records:
  *   part       the CSS Modules class of the rule that declares it ("root",
@@ -18,104 +19,46 @@
  *              with its selector — how `[data-size]` / `[data-variant]`
  *              reassignments reach the docs without being hand-copied.
  *
+ * Parsing is postcss, not regex, so the extraction survives formatting the
+ * house style happens not to produce — a missing final semicolon, unusual
+ * whitespace — instead of silently dropping a declaration.
+ *
  *   pnpm --filter @dofortech/pretty-ui docgen
  */
 import { mkdirSync, writeFileSync, readdirSync, existsSync, readFileSync } from "node:fs";
 import { join, basename } from "node:path";
 import { fileURLToPath } from "node:url";
+import postcss from "postcss";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const componentsDir = join(root, "src/components");
 
-/**
- * Scans one stylesheet for custom-property declarations.
- *
- * A real CSS parser is overkill: the files are house-styled CSS Modules, and
- * all the scanner must not be fooled by is comments, quoted strings, and
- * nesting (declarations inside `@keyframes` are animation frames, not
- * defaults). Returns every declaration with its enclosing selector and, when
- * one directly precedes it, its doc comment.
- */
-function scan(css) {
-  const decls = [];
-  /** Selector text for each open block, innermost last. */
-  const stack = [];
-  let pending = ""; // text since the last structural boundary
-  let doc = null; // a `/**` comment with only whitespace seen since
-  let i = 0;
-
-  while (i < css.length) {
-    const ch = css[i];
-
-    if (ch === "/" && css[i + 1] === "*") {
-      const end = css.indexOf("*/", i + 2);
-      const body = css.slice(i + 2, end === -1 ? css.length : end);
-      // `/**` marks a doc comment — but only the declaration directly under
-      // it may claim it, so any body text is thrown away.
-      doc = body.startsWith("*")
-        ? body
-            .slice(1)
-            .split("\n")
-            .map((l) => l.replace(/^\s*\*?\s?/, ""))
-            .join(" ")
-            .replace(/\s+/g, " ")
-            .trim()
-        : null;
-      i = end === -1 ? css.length : end + 2;
-      continue;
-    }
-
-    if (ch === '"' || ch === "'") {
-      const close = css.indexOf(ch, i + 1);
-      pending += css.slice(i, close === -1 ? css.length : close + 1);
-      i = close === -1 ? css.length : close + 1;
-      continue;
-    }
-
-    if (ch === "{") {
-      stack.push(pending.trim());
-      pending = "";
-      doc = null;
-      i++;
-      continue;
-    }
-
-    if (ch === "}" ) {
-      stack.pop();
-      pending = "";
-      doc = null;
-      i++;
-      continue;
-    }
-
-    if (ch === ";") {
-      const m = pending.trim().match(/^(--[\w-]+)\s*:\s*([\s\S]+)$/);
-      const inKeyframes = stack.some((s) => s.startsWith("@keyframes"));
-      if (m && stack.length && !inKeyframes) {
-        decls.push({
-          name: m[1],
-          value: m[2].replace(/\s+/g, " ").trim(),
-          selector: stack[stack.length - 1],
-          doc,
-        });
-      }
-      pending = "";
-      doc = null;
-      i++;
-      continue;
-    }
-
-    // Something other than a declaration directly under the doc comment (a
-    // selector, an at-rule, a normal property): the comment documents
-    // nothing. `-` is exempt because `--pui-…` is what we hope comes next.
-    if (doc !== null && !/\s/.test(ch) && pending.trim() === "" && ch !== "-") {
-      doc = null;
-    }
-    pending += ch;
-    i++;
+/** Inside `@keyframes` a custom-property declaration is an animation frame,
+ * not a default. */
+function inKeyframes(node) {
+  for (let p = node.parent; p; p = p.parent) {
+    if (p.type === "atrule" && p.name.endsWith("keyframes")) return true;
   }
+  return false;
+}
 
-  return decls;
+/**
+ * The doc comment for a declaration: the comment node directly above it —
+ * postcss strips the comment markers, so `/** x *\/` arrives as text `* x` —
+ * with nothing but its own indentation in between (a blank line breaks the
+ * attachment, same as a JSDoc separated from its prop would).
+ */
+function docComment(decl) {
+  const prev = decl.prev();
+  if (prev?.type !== "comment" || !prev.text.startsWith("*")) return null;
+  if (/\n\s*\n/.test(decl.raws.before ?? "")) return null;
+  return prev.text
+    .slice(1)
+    .split("\n")
+    .map((l) => l.replace(/^\s*\*?\s?/, ""))
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /** @type {Record<string, {name:string, tokens:any[]}>} */
@@ -126,7 +69,18 @@ for (const dir of readdirSync(componentsDir).sort()) {
   for (const f of readdirSync(full).sort()) {
     if (!f.endsWith(".module.css")) continue;
     const component = basename(f, ".module.css");
-    const decls = scan(readFileSync(join(full, f), "utf8"));
+    const ast = postcss.parse(readFileSync(join(full, f), "utf8"), { from: join(full, f) });
+
+    const decls = [];
+    ast.walkDecls(/^--/, (decl) => {
+      if (inKeyframes(decl) || decl.parent.type !== "rule") return;
+      decls.push({
+        name: decl.prop,
+        value: decl.value.replace(/\s+/g, " ").trim(),
+        selector: decl.parent.selector.replace(/\s+/g, " "),
+        doc: docComment(decl),
+      });
+    });
 
     const tokens = decls
       .filter((d) => d.doc)

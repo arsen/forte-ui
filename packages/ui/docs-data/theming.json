@@ -367,7 +367,7 @@
             "value": "var(--pui-button-tone-soft)"
           },
           {
-            "selector": ".root[data-tone=\"neutral\"][data-variant=\"ghost\"],\n  .root[data-tone=\"neutral\"][data-variant=\"outline\"]",
+            "selector": ".root[data-tone=\"neutral\"][data-variant=\"ghost\"], .root[data-tone=\"neutral\"][data-variant=\"outline\"]",
             "value": "var(--pui-color-panel-hover)"
           }
         ]
@@ -395,7 +395,7 @@
             "value": "var(--pui-button-tone-soft-hover)"
           },
           {
-            "selector": ".root[data-tone=\"neutral\"][data-variant=\"ghost\"],\n  .root[data-tone=\"neutral\"][data-variant=\"outline\"]",
+            "selector": ".root[data-tone=\"neutral\"][data-variant=\"ghost\"], .root[data-tone=\"neutral\"][data-variant=\"outline\"]",
             "value": "var(--pui-color-panel-active)"
           }
         ]
@@ -1527,7 +1527,7 @@
         "part": "content",
         "overrides": [
           {
-            "selector": ".popup[data-side=\"top\"] .content,\n  .popup[data-side=\"bottom\"] .content",
+            "selector": ".popup[data-side=\"top\"] .content, .popup[data-side=\"bottom\"] .content",
             "value": "32rem"
           }
         ]
