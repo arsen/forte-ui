@@ -205,6 +205,8 @@
     --pui-color-success-text: var(--pui-success-11);
     --pui-color-warning: var(--pui-warning-9);
     --pui-color-warning-text: var(--pui-warning-11);
+    --pui-color-info: var(--pui-info-9);
+    --pui-color-info-text: var(--pui-info-11);
   }
 }
 

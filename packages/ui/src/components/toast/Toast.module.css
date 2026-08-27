@@ -1,0 +1,612 @@
+/*
+ * Toast
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Provider  →  Portal  →  Viewport  →  Root  →  Content  →  Icon / Title /
+ *                                                             Description /
+ *                                                             Action / Close
+ *
+ * `Provider` renders no DOM element, so there is no rule for it; the viewport
+ * carries the layout knobs and each toast root carries the surface knobs.
+ *
+ * ---------------------------------------------------------------------------
+ * The stack, and the four variables Base UI measures for it
+ * ---------------------------------------------------------------------------
+ * Toasts are absolutely positioned siblings pinned to ONE edge of the
+ * viewport, not a flow column. That is what lets them overlap into a deck when
+ * collapsed and fan out when the pointer arrives, with no layout thrash and no
+ * JavaScript beyond the measurements Base UI already takes:
+ *
+ *   --toast-index             0 for the newest toast, counting backwards
+ *   --toast-offset-y          total height of every toast in front of this one
+ *   --toast-height            this toast's own measured height
+ *   --toast-frontmost-height  the front toast's height, set on the viewport
+ *
+ * Collapsed, each card steps back by `--pui-toast-peek` and shrinks by
+ * `--pui-toast-stack-scale`. Expanded, it moves by the real height of
+ * everything in front of it plus one gap per step, and returns to full size.
+ * The two states are the same three properties with different values, so the
+ * transition between them is a plain interpolation.
+ *
+ * `--toast-offset-y` accumulates in DOM order, and the newest toast is first,
+ * so it is always "how far back does this card sit" regardless of which edge
+ * the stack is pinned to. `--pui-toast-stack-direction` is the sign that turns
+ * that into a physical direction: -1 for a bottom stack (cards recede upwards)
+ * and 1 for a top one.
+ *
+ * ---------------------------------------------------------------------------
+ * Which property does what, and why they are not interchangeable
+ * ---------------------------------------------------------------------------
+ *   translate / scale   the STACK. Independent properties, so the enter and
+ *                       exit gesture can compose on top instead of fighting
+ *                       them for `transform`.
+ *   transform           the enter/exit gesture, AND the swipe. Base UI writes
+ *                       an inline `transform` while a toast is being dragged
+ *                       and reads it back with `getComputedStyle().transform`
+ *                       — which does NOT see the independent properties. So
+ *                       the stack offsets survive a drag untouched, and the
+ *                       drag composes on top of them, exactly as intended.
+ *   height              the collapsed clamp. See the note on `.root`.
+ *
+ * ---------------------------------------------------------------------------
+ * Motion notes
+ * ---------------------------------------------------------------------------
+ *  - No `prefers-reduced-motion` block. The one literal geometry here is the
+ *    enter/exit travel, and it is gated on `--pui-motion-ok`; the durations
+ *    shorten on their own. The collapsed stack's peek and scale are
+ *    deliberately NOT gated — they are a static arrangement rather than an
+ *    animation, and flattening them would remove the only sign that more than
+ *    one toast is waiting.
+ *  - Enter and exit are transitions on `[data-starting-style]` /
+ *    `[data-ending-style]`, so a toast dismissed while it is still arriving
+ *    reverses instead of snapping.
+ *  - Nothing here animates `infinite`. Base UI awaits
+ *    `Promise.all(root.getAnimations().map(a => a.finished))` before removing
+ *    a dismissed toast, and an infinite animation never settles — the toast
+ *    would stay in the DOM for the life of the page. The `loading` spinner is
+ *    therefore a DESCENDANT of the root; `getAnimations()` is not called with
+ *    `subtree: true`.
+ *  - The expand/collapse runs on `--pui-duration-move`, the token for
+ *    positional moves whose distance is measured at runtime — which is
+ *    literally what `--toast-offset-y` is.
+ */
+@layer pretty-ui.components {
+  /* Viewport ---------------------------------------------------------------
+   * A fixed box the size of the FRONT toast, pinned to one corner or edge.
+   *
+   * Sizing it to the front toast rather than to the stack is what keeps the
+   * hover target honest: the collapsed deck is exactly that tall, so the
+   * viewport does not reach out across the corner of the page. Everything
+   * beyond it — the cards peeking behind, the whole fan once expanded — is an
+   * absolutely positioned descendant that overflows the box and is still, for
+   * hover and focus purposes, inside it.
+   * ---------------------------------------------------------------------- */
+  .viewport {
+    /** Gap between the stack and the edge of the screen */
+    --pui-toast-viewport-inset: var(--pui-space-4);
+    /** Width of a toast. Shrinks on its own on a screen narrower than this. */
+    --pui-toast-width: 22rem;
+    /** Gap between toasts once the stack is expanded */
+    --pui-toast-gap: var(--pui-space-3);
+    /** How much of each card behind the front one shows */
+    --pui-toast-peek: var(--pui-space-3);
+    /** How much each card behind the front one shrinks, per step */
+    --pui-toast-stack-scale: 0.05;
+    /* Above the dialog band (40) and the anchored-popup band (50), because a
+     * toast raised by an action taken INSIDE a dialog has to be visible over
+     * it — that is most of what toasts are for. Re-point it to slot the stack
+     * into an app's own scale. */
+    /** Stacking order of the whole stack */
+    --pui-toast-z-index: 60;
+
+    box-sizing: border-box;
+    position: fixed;
+    z-index: var(--pui-toast-z-index);
+    /* `100%` is the containing block: the screen for a fixed viewport, the
+     * container for a contained one. So the same expression keeps the stack
+     * off both edges in either mode, with no viewport units and no scrollbar
+     * arithmetic. */
+    inline-size: min(
+      var(--pui-toast-width),
+      calc(100% - 2 * var(--pui-toast-viewport-inset))
+    );
+    block-size: var(--toast-frontmost-height, 0px);
+
+    /* The box has to be transparent to the pointer, or it would sit over the
+     * corner of the page and swallow clicks whenever a toast was on screen —
+     * including, on a phone, most of the width of whatever is underneath.
+     * `.root` takes it back. Base UI's hover/focus handlers are on the
+     * viewport but fire from the cards by bubbling, so expansion still
+     * works. */
+    pointer-events: none;
+  }
+
+  /* A contained viewport pins to its container instead of to the screen.
+   * Driven by the `container` prop's presence rather than by a second prop:
+   * a contained stack that stayed `fixed` would render in the screen corner
+   * while the container it was scoped to sat somewhere else, and nothing about
+   * the markup would say why. */
+  .viewport[data-contained] {
+    position: absolute;
+  }
+
+  .viewport[data-position^="top"] {
+    inset-block-start: var(--pui-toast-viewport-inset);
+  }
+
+  .viewport[data-position^="bottom"] {
+    inset-block-end: var(--pui-toast-viewport-inset);
+  }
+
+  .viewport[data-position$="-start"] {
+    inset-inline-start: var(--pui-toast-viewport-inset);
+  }
+
+  .viewport[data-position$="-end"] {
+    inset-inline-end: var(--pui-toast-viewport-inset);
+  }
+
+  /* Centred, via auto margins against a definite inline size rather than a
+   * 50% offset and a translate — `translate` is physical and would need
+   * `--pui-direction`, while auto margins are direction-agnostic and leave
+   * `translate` free for the stack. */
+  .viewport[data-position="top"],
+  .viewport[data-position="bottom"] {
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  /* Root ------------------------------------------------------------------- */
+  .root {
+    /* Component tokens, declared HERE on the card: an element's own
+     * declaration beats an inherited one, and the stack is portalled to
+     * <body>, so an ancestor of the thing that raised the toast is not even in
+     * the tree. Consumers set them through `className` on `Toast.Item` (an
+     * unlayered rule beats this layer whatever its specificity) or re-point
+     * the global tokens below, which this file only ever reads. */
+    /** Card background */
+    --pui-toast-bg: var(--pui-color-overlay);
+    /** Card text colour */
+    --pui-toast-fg: var(--pui-color-foreground);
+    /** Corner radius */
+    --pui-toast-radius: var(--pui-radius-surface);
+    /** Padding inside the card */
+    --pui-toast-padding: var(--pui-space-4);
+    /** Gap between the icon, the text and the buttons */
+    --pui-toast-content-gap: var(--pui-space-3);
+    /** Card shadow */
+    --pui-toast-shadow: var(--pui-shadow-3);
+    /* A toast is the one floating surface in the library with nothing behind
+     * it: a dialog has a scrim, a select popup has a trigger it visibly grew
+     * out of, and both are looked at because the user just opened them. A
+     * toast arrives unannounced over whatever the page happens to be showing,
+     * and `--pui-color-overlay` is `--pui-gray-1` — the same value as
+     * `--pui-color-background`, so on a plain page the card is its own
+     * background plus a shadow, and shadows are the first thing to disappear
+     * on a low-contrast display or under forced colors.
+     *
+     * It matters twice over for the deck: the cards behind the front one show
+     * as ~12px strips of that same colour, so without an edge the stack reads
+     * as one card rather than three. `.pui-hc-surface` already puts a 1px
+     * transparent border on the box, so this only colours it — the box model
+     * does not change, and the forced-colors rule in the a11y layer still
+     * repaints it CanvasText. */
+    /** Hairline around the card */
+    --pui-toast-border: var(--pui-color-border);
+    /** Icon colour. `data-type` re-points it per status. */
+    --pui-toast-accent: var(--pui-color-foreground-muted);
+    /** Which way the stack recedes: `-1` for a bottom stack, `1` for a top one */
+    --pui-toast-stack-direction: -1;
+    /* A percentage of the card's own height, so it is the same gesture for a
+     * one-line toast and a four-line one. Gated on `--pui-motion-ok` because
+     * it is a literal rather than a `--pui-travel-*` token — under reduced
+     * motion it lands on `0%` and the fade is left to carry the arrival. */
+    /** How far the card slides in from, as a share of its own height */
+    --pui-toast-enter-travel: 100%;
+    /** Length of the arriving gesture */
+    --pui-toast-enter-duration: var(--pui-duration-normal);
+    /* Spring over `normal` rather than over `--pui-duration-spring-snappy`:
+     * the whole curve still plays, overshoot included, just compressed. This
+     * is the pairing `Dialog` already uses, and matching it is the point — a
+     * toast that took 400ms to arrive read as heavier than the dialog it was
+     * reporting on. */
+    /** Curve of the arriving gesture */
+    --pui-toast-enter-ease: var(--pui-ease-spring-snappy);
+    /* Shorter than the arrival: a dismissal is something the user has already
+     * decided on and only needs confirming. */
+    /** Length of the leaving gesture */
+    --pui-toast-exit-duration: var(--pui-duration-fast);
+    /** Curve of the leaving gesture */
+    --pui-toast-exit-ease: var(--pui-ease-exit);
+
+    box-sizing: border-box;
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    /* The newest toast is FIRST in the DOM, and among positioned siblings the
+     * last one painted wins — so without this the oldest card in the deck is
+     * drawn over the newest, and since a card behind hides its own text the
+     * front toast reads as a blank rectangle. Counting down from 0 restores
+     * the order the stack is built in. The negative values stay inside the
+     * viewport's own stacking context (it is positioned with a z-index of its
+     * own), and the viewport paints no background for them to fall behind. */
+    z-index: calc(-1 * var(--toast-index, 0));
+
+    border: 1px solid var(--pui-toast-border);
+    border-radius: var(--pui-toast-radius);
+    background-color: var(--pui-toast-bg);
+    color: var(--pui-toast-fg);
+    box-shadow: var(--pui-toast-shadow);
+
+    font-family: var(--pui-font-sans);
+    line-height: var(--pui-line-height-normal);
+
+    /* Handed back from the viewport, which is `pointer-events: none` so the
+     * empty box around the cards does not eat clicks meant for the page. */
+    pointer-events: auto;
+    /* The scale shrinks each card toward the edge the stack is pinned to, so
+     * the deck's pinned edges stay flush and only the far edge steps back. */
+    transform-origin: 50% 100%;
+
+    /* The collapsed deck: every card takes the front card's height, so a tall
+     * toast behind a short one does not stick out and break the illusion of
+     * one deck. `height`, not `block-size`, on purpose — Base UI measures a
+     * toast by writing `style.height = "auto"` and reading it back, and an
+     * inline `height` only reliably outranks a `height` declaration.
+     *
+     * `--toast-height` is absent for a toast that is on its way out (the store
+     * zeroes it so the cards behind can close the gap, and Base UI omits the
+     * variable for a falsy height), so the expanded rule below falls back to
+     * `auto` and an exiting card keeps its shape while it slides away instead
+     * of collapsing into the line. */
+    height: var(--toast-frontmost-height, auto);
+    translate: 0
+      calc(
+        var(--pui-toast-stack-direction) * var(--toast-index, 0) *
+          var(--pui-toast-peek)
+      );
+    scale: calc(1 - var(--toast-index, 0) * var(--pui-toast-stack-scale));
+
+    transition:
+      opacity var(--pui-toast-enter-duration) var(--pui-ease-standard),
+      transform var(--pui-toast-enter-duration) var(--pui-toast-enter-ease),
+      height var(--pui-duration-move) var(--pui-ease-standard),
+      translate var(--pui-duration-move) var(--pui-ease-standard),
+      scale var(--pui-duration-move) var(--pui-ease-standard);
+  }
+
+  /* A top stack grows downwards, and its cards shrink toward the top edge. */
+  .viewport[data-position^="top"] .root {
+    --pui-toast-stack-direction: 1;
+    --pui-toast-enter-travel: -100%;
+
+    inset-block-start: 0;
+    inset-block-end: auto;
+    transform-origin: 50% 0;
+  }
+
+  /* Expanded: real distances, full size, natural height. Triggered by hover,
+   * by focus moving into the stack, and by the window losing focus — so a
+   * toast raised while the user was in another tab is fanned out and waiting
+   * when they come back. */
+  .root[data-expanded] {
+    height: var(--toast-height, auto);
+    translate: 0
+      calc(
+        var(--pui-toast-stack-direction) *
+          (
+            var(--toast-offset-y, 0px) + var(--toast-index, 0) *
+              var(--pui-toast-gap)
+          )
+      );
+    scale: 1;
+  }
+
+  /* The hover bridge -------------------------------------------------------
+   * Fanned out, the cards are separated by `--pui-toast-gap` of empty space,
+   * and the viewport underneath is `pointer-events: none` so it cannot eat
+   * clicks meant for the page. Between two cards that leaves a dead strip: the
+   * pointer moving from one toast to the next passes through it, the viewport
+   * sees a `mouseleave`, the deck collapses — and then re-expands a frame
+   * later when the pointer lands on the next card. Reading down a stack of
+   * three made it jump twice.
+   *
+   * So each expanded card carries a transparent box half a gap deep on both
+   * block edges. A pseudo-element hit-tests as its originating element, so the
+   * bridge IS the card as far as the pointer is concerned, and consecutive
+   * bridges meet in the middle of every gap. The extra pixel is slop against
+   * sub-pixel card positions — two bridges overlapping costs nothing, whereas
+   * a hairline between them is the whole bug back again.
+   *
+   * Only while expanded: collapsed, the cards overlap by everything but the
+   * peek and there is no gap to bridge. `z-index: -1` keeps it under the
+   * card's own background — it is transparent, but it must never sit over the
+   * close button — and stays inside the card's stacking context, which the
+   * `z-index` above already established.
+   * ---------------------------------------------------------------------- */
+  .root[data-expanded]::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block: calc(-0.5 * var(--pui-toast-gap) - 1px);
+    z-index: -1;
+  }
+
+  /* Beyond the provider's `limit`. Base UI keeps these mounted and `inert`
+   * rather than dropping them, so they can take their turn as the cards in
+   * front are dismissed — they are hidden here, not removed. */
+  .root[data-limited] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Arriving and leaving are the same move in opposite directions, so a toast
+   * dismissed while it is still sliding in simply runs back out the way it
+   * came. */
+  .root[data-starting-style],
+  .root[data-ending-style] {
+    opacity: 0;
+    transform: translateY(
+      calc(var(--pui-toast-enter-travel) * var(--pui-motion-ok))
+    );
+  }
+
+  .root[data-ending-style] {
+    transition:
+      opacity var(--pui-toast-exit-duration) var(--pui-toast-exit-ease),
+      transform var(--pui-toast-exit-duration) var(--pui-toast-exit-ease),
+      height var(--pui-duration-move) var(--pui-ease-standard),
+      translate var(--pui-duration-move) var(--pui-ease-standard),
+      scale var(--pui-duration-move) var(--pui-ease-standard);
+  }
+
+  /* A swiped toast leaves the way it was pushed, continuing from wherever the
+   * finger let go — `--toast-swipe-movement-*` is the distance already
+   * travelled, so adding a card's width or height to it carries the movement
+   * on rather than restarting it. Base UI freezes the transition during the
+   * drag itself and hands it back here on release. */
+  .root[data-ending-style][data-swipe-direction="right"] {
+    transform: translateX(calc(var(--toast-swipe-movement-x) + 100%));
+  }
+
+  .root[data-ending-style][data-swipe-direction="left"] {
+    transform: translateX(calc(var(--toast-swipe-movement-x) - 100%));
+  }
+
+  .root[data-ending-style][data-swipe-direction="down"] {
+    transform: translateY(calc(var(--toast-swipe-movement-y) + 100%));
+  }
+
+  .root[data-ending-style][data-swipe-direction="up"] {
+    transform: translateY(calc(var(--toast-swipe-movement-y) - 100%));
+  }
+
+  /* While a toast is being dragged it must not lag behind the finger, so Base
+   * UI writes `transition: none` inline for the duration. Nothing to do here —
+   * the note exists so that nobody adds an `!important` transition and
+   * wonders why swiping feels rubbery. */
+
+  /* Status accents ---------------------------------------------------------
+   * The step-11 colours, which are the ones the ramp guarantees against a
+   * panel background. The card itself stays neutral: tinting five surfaces
+   * would need five new soft tokens and would still leave the type carried by
+   * colour alone. The glyph shapes and the text do that instead — see the
+   * icon set in Toast.tsx (WCAG SC 1.4.1).
+   * ---------------------------------------------------------------------- */
+  .root[data-type="success"] {
+    --pui-toast-accent: var(--pui-color-success-text);
+  }
+
+  .root[data-type="error"] {
+    --pui-toast-accent: var(--pui-color-danger-text);
+  }
+
+  .root[data-type="warning"] {
+    --pui-toast-accent: var(--pui-color-warning-text);
+  }
+
+  .root[data-type="info"] {
+    --pui-toast-accent: var(--pui-color-info-text);
+  }
+
+  .root[data-type="loading"] {
+    --pui-toast-accent: var(--pui-color-primary-text);
+  }
+
+  /* Content ----------------------------------------------------------------
+   * One row: glyph, text, action, close. Any of the three may render nothing —
+   * the parts decide that themselves, from the toast — so the same rule has to
+   * serve a bare one-line message and a full card.
+   *
+   * Flex rather than grid, and that is the whole reason. A four-column grid
+   * keeps its gaps whether or not the tracks have anything in them, so a toast
+   * with no action and no close button would carry two gaps' worth of dead
+   * space against its trailing edge. Flex only puts a gap between things that
+   * exist. It also means a custom `renderToast` is not silently bound to four
+   * children.
+   * ---------------------------------------------------------------------- */
+  .content {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--pui-toast-content-gap);
+    padding: var(--pui-toast-padding);
+    font-size: var(--pui-font-size-2);
+
+    transition: opacity var(--pui-duration-move) var(--pui-ease-standard);
+  }
+
+  /* A card behind the front one shows as a blank edge, not as two overlapping
+   * paragraphs. It comes back as the stack fans out — which is the moment the
+   * text becomes readable anyway. */
+  .content[data-behind]:not([data-expanded]) {
+    opacity: 0;
+  }
+
+  /* Takes every pixel the glyph and the buttons do not. `min-inline-size: 0`
+   * is what lets it give them back: a flex item's automatic minimum size is
+   * its content, so without it one long unbroken word in the description would
+   * push the close button off the card rather than wrapping. */
+  .body {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-space-1);
+  }
+
+  .title {
+    margin: 0;
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    color: var(--pui-toast-fg);
+  }
+
+  .description {
+    margin: 0;
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+    /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body
+     * copy. */
+    color: var(--pui-color-foreground-muted);
+  }
+
+  /* Icon -------------------------------------------------------------------
+   * `pointer-events: none` so the glyph is transparent to the swipe gesture:
+   * Base UI starts a drag from the toast root, and a decorative child that
+   * captured the pointer would leave a dead strip the toast could not be
+   * flicked from.
+   * ---------------------------------------------------------------------- */
+  .icon {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-toast-accent);
+    pointer-events: none;
+  }
+
+  .glyph {
+    display: block;
+    inline-size: var(--pui-space-4);
+    block-size: var(--pui-space-4);
+  }
+
+  /* Action ----------------------------------------------------------------
+   * A quiet button rather than a `Button` composed through `render`, so the
+   * default layout costs no extra import — `render={<Button size="sm" />}` is
+   * there when a louder one is wanted, and these styles step aside for it.
+   * ---------------------------------------------------------------------- */
+  .action {
+    box-sizing: border-box;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-block-size: max(var(--pui-control-h-sm), var(--pui-target-min));
+    padding-inline: var(--pui-control-px-sm);
+    margin: 0;
+    border: 1px solid var(--pui-color-border);
+    border-radius: var(--pui-radius-control);
+
+    background-color: var(--pui-color-panel);
+    color: var(--pui-color-foreground);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .action:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+    }
+  }
+
+  .action:active:not([data-disabled]) {
+    background-color: var(--pui-color-panel-active);
+  }
+
+  .action[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Close ------------------------------------------------------------------
+   * Square, quiet, and never below the 24px minimum target from SC 2.5.8.
+   * Pinned to the top of the row rather than centred: on a card whose
+   * description runs to three lines a centred "×" floats in the middle of the
+   * text, and every other corner control on the page sits in the corner.
+   * ---------------------------------------------------------------------- */
+  .close {
+    box-sizing: border-box;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    inline-size: var(--pui-target-min);
+    block-size: var(--pui-target-min);
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: var(--pui-radius-control);
+
+    background-color: transparent;
+    color: var(--pui-color-foreground-muted);
+
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .close:hover {
+      background-color: var(--pui-color-panel-hover);
+      color: var(--pui-color-foreground);
+    }
+  }
+
+  .close:active {
+    background-color: var(--pui-color-panel-active);
+  }
+}
+
+/* Forced colors ------------------------------------------------------------
+ * Ordered after `pretty-ui.components`, so these win on layer order alone —
+ * specificity is not what decides it. See CONTRIBUTING.md.
+ * ------------------------------------------------------------------------ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* Every shadow is stripped, so the deck loses the one thing separating the
+     * cards from each other. `.pui-hc-surface` already repaints each root as
+     * an opaque Canvas box with a CanvasText outline, which is exactly the
+     * separation that is needed — this only makes sure the cards behind stay
+     * opaque, since a see-through card would show the one below it straight
+     * through the outline and the deck would read as a single scribbled box. */
+    .root {
+      background-color: Canvas;
+    }
+
+    /* The accent is the only thing distinguishing the status glyphs once
+     * forced colors has flattened every colour to CanvasText — which is why
+     * the four glyphs are four different SHAPES. Nothing to restore here; the
+     * declaration is left explicit so a future tint on the card cannot quietly
+     * take the glyph's contrast with it. */
+    .icon {
+      color: CanvasText;
+    }
+  }
+}

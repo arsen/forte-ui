@@ -1,0 +1,340 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Toast",
+  description:
+    "Short, transient messages raised from anywhere in the app, with a hook that gives you one method per kind of news.",
+};
+
+# Toast
+
+A toast reports something that has already happened — a save that went through, a request that did not — without taking the user out of what they were doing. It arrives in a corner, announces itself, and leaves on a timer.
+
+Two pieces make one: `Toast.Provider` near the root of the app, and `useToast()` wherever something happens worth mentioning.
+
+<DemoBlock id="toast/basic" />
+
+## Import
+
+```tsx
+import { Toast, useToast } from "@dofortech/pretty-ui";
+```
+
+## Setup
+
+Mount the provider once, above everything that might raise a toast:
+
+```tsx
+import { Toast } from "@dofortech/pretty-ui";
+
+export default function App({ children }) {
+  return (
+    <Toast.Provider position="bottom-end" timeout={5000} limit={3}>
+      {children}
+    </Toast.Provider>
+  );
+}
+```
+
+That is the whole setup. The stack comes with the provider rather than being a second thing to remember — Base UI keeps `Provider` and `Viewport` apart, which is the right primitive and the wrong default here, because a provider without a viewport fails *silently*: every `toast.success()` returns a perfectly good id, the store fills up, and nothing is ever drawn. Pass `viewport={false}` when you want to place `Toast.Viewport` yourself.
+
+`Toast.Provider` renders no DOM element of its own, and the stack is portalled to `<body>`, so it does not matter where in the tree it sits as long as it is above the components that use the hook.
+
+<Callout>
+The demos on this page pass `container` so the stack is scoped to the demo frame and picks up its theme, direction and reduced-motion toggles. In an app you leave `container` off and the stack pins itself to the screen.
+</Callout>
+
+## The hook
+
+`useToast()` returns one object with a method per kind of news:
+
+```tsx
+const toast = useToast();
+
+toast.success("Profile saved");
+toast.error("Could not save", { description: "Check your connection." });
+toast.warning("Storage is nearly full");
+toast.info("Version 4.2 is now live");
+toast.loading("Uploading…");
+```
+
+Every one of them takes either a message or a full options object, and the two forms mean the same thing — a bare message becomes the `title`, which is the field that gets announced:
+
+```tsx
+toast.success("Profile saved");
+toast.success({ title: "Profile saved" });
+toast.success("Profile saved", { description: "Everyone in the workspace can see it." });
+```
+
+`toast.show()` is the same call with the type left open, for a plain message or an app-specific type of your own:
+
+```tsx
+toast.show("Nothing in particular happened");
+toast.show({ title: "Deploy queued", type: "deploy" });
+```
+
+`type` lands on `data-type`, so a type the library does not know still reaches your CSS (`[data-pui="toast"][data-type="deploy"]`) — it just gets the neutral glyph and accent.
+
+Every method keeps the same identity for the life of the provider, so one pulled out by destructuring — `const { success } = useToast()` — is safe in a dependency array. The object itself is rebuilt whenever `toasts` changes, which is the only way a live list can be live.
+
+## Examples
+
+### Controlling a toast after it appears
+
+Every method returns a **handle** rather than a bare `hide` function, because dismissing is only one of the three things worth doing with a toast you just raised:
+
+```tsx
+const { id, close, update } = toast.loading("Uploading avatar.png");
+```
+
+`close()` dismisses it. `update()` rewrites it in place — same card, same position in the stack, no second toast — which is what turns "Uploading…" into "Uploaded". `id` is the toast's identity, generated unless you passed one.
+
+Every field in an update *replaces* the old one; nothing is merged, `data` included. So a toast raised with `dismissible: false` has to say so again if the update should keep it — which the demo below does the other way round, restoring the close button once the upload has finished.
+
+<DemoBlock id="toast/handle" />
+
+A `loading` toast never auto-dismisses, whatever `timeout` says: there is no honest length of time to guess for an operation that has not finished. Resolving it into another type re-arms the timer, so the success card above leaves on its own.
+
+The other way round is `options.id`. Showing a toast with an id that is already on screen updates that toast and restarts its timer instead of stacking a second copy — which is how a save-status or connection toast stays one card however often the event fires:
+
+```tsx
+toast.info("Reconnecting…", { id: "connection" });
+```
+
+### Following a promise
+
+`toast.promise()` is the whole loading → resolved sequence in one call. It returns the promise you gave it, rejection intact, so it is a pass-through rather than a replacement for handling the error.
+
+<DemoBlock id="toast/promise" />
+
+`success` and `error` may each be a message, an options object, or a function of the settled value — which is the form to reach for whenever the message should say what actually happened rather than that something did.
+
+### An action button
+
+`action` is one button inside the toast: `{ label, ...button props }`.
+
+<DemoBlock id="toast/action" />
+
+Clicking it does not close the toast on its own. That is deliberate — an action that can fail has to be able to say so — so close it from the handler once the work is done, as the demo does.
+
+<Callout kind="a11y">
+An action inside a toast is on a timer, and a timer is a hard deadline for anyone who reads slowly, navigates by keyboard, or uses a screen reader. Timers pause while the stack is hovered or focused, which covers most of it, but an action that is the *only* way to do something (the undo with no menu entry) belongs somewhere permanent as well. WCAG SC 2.2.1 is about exactly this.
+</Callout>
+
+### Stacking, and how long a toast stays
+
+Toasts collapse into a deck: the newest in front, the ones behind stepped back and shrunk, their text hidden. Hover it, or move focus into it, and the deck fans out into a readable list.
+
+<DemoBlock id="toast/stacking" />
+
+**`limit` on the provider is how many cards the deck shows**, three by default, and it is the only knob for it — collapsed and expanded are the same set of toasts in two arrangements, so there is nothing separate to configure. Raise it to five and five cards stack. The ones past the limit are not thrown away: they are marked `data-limited` and hidden, and take their turn as the ones in front are dismissed.
+
+`timeout` is the default life of a toast in milliseconds, and `0` means "until it is closed". A toast can override it per call. Three things pause the countdown, and all three are the same idea — a toast should not expire while nobody is in a position to read it:
+
+- the pointer is over the stack,
+- focus is inside it,
+- the window is in the background.
+
+That last one matters more than it sounds: without it, every toast raised while the user was in another tab would be gone before they came back.
+
+`toast.close(id)` closes one; `toast.close()` closes all.
+
+### Position
+
+`position` on the provider puts the stack in one of six places. `start` and `end` are the *inline* edges, so `bottom-end` is bottom-right in a left-to-right page and bottom-left in a right-to-left one, with nothing to configure — flip the RTL toggle below and watch it move.
+
+<DemoBlock id="toast/positions" />
+
+A top stack grows downwards and its cards shrink toward the top edge; a bottom stack does the mirror image. Both are the same three declarations with the sign flipped, through `--pui-toast-stack-direction`.
+
+Swipe-to-dismiss follows the position too: away from the edge the stack is pinned to, plus both inline directions. Both, rather than only the one matching `start` / `end`, because the gesture is physical while the position is logical — accepting either is both simpler and more forgiving. Override it with `swipeDirection`, or pass `[]` to turn it off.
+
+### Custom contents
+
+`renderToast` replaces the default layout. Return a `Toast.Item` — it is what carries the stacking geometry, the swipe gesture and the focus handling — and compose whatever goes inside it from the parts.
+
+<DemoBlock id="toast/custom" />
+
+Each part still defaults its content from the toast, so a custom arrangement does not mean restating the text: `Toast.Title` renders the toast's `title`, `Toast.Description` its `description`, `Toast.Action` its `action`. Each of them renders **nothing** when the toast has no such field, which is why the default layout can list all of them unconditionally.
+
+Anything you put in `options.data` arrives untouched on `toast.data`. Two keys there are read by `Toast.Item` itself — `icon` and `dismissible` — and both have a shorthand at the top level:
+
+```tsx
+toast.show("Repository starred", { icon: <StarIcon />, dismissible: false });
+```
+
+`Toast.Content` lays its children out in a row with `align-items: center`. It is flex rather than a fixed grid precisely so a custom render is not bound to four children — give the element that should absorb the free space `flex: 1` and `min-inline-size: 0`.
+
+### Outside React
+
+Plenty of the things worth reporting do not happen inside a component: a fetch wrapper, a store, a socket handler. `Toast.createManager()` gives you the same API as a plain object.
+
+<DemoBlock id="toast/manager" />
+
+```ts
+// toaster.ts
+import { Toast } from "@dofortech/pretty-ui";
+export const toaster = Toast.createManager();
+
+// api.ts — no React anywhere
+toaster.error("Request failed: 503");
+```
+
+Connect it with `toastManager` on the provider, passing the manager's `base`.
+
+A manager delivers to a *mounted* provider and nowhere else — the provider subscribes in an effect, so a call made before that runs, at module load or during the first server render, is dropped rather than queued. Raising toasts from events, which is where they belong, never runs into it.
+
+It has everything `useToast()` has except `toasts` — a plain object has nothing to re-render when the list changes, so reading the list there would hand back a snapshot that is already stale. Use the hook when you need the list.
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["F6"], description: "Moves focus into the toast stack from anywhere on the page, and back out again." },
+  { keys: ["Tab"], description: "Moves through the buttons inside the focused toast, then on to the next toast." },
+  { keys: ["Shift + Tab"], description: "Moves backwards; from the stack itself, returns focus to where it was before." },
+  { keys: ["Esc"], description: "Closes the focused toast." },
+]} />
+
+The viewport is a polite live region, so a toast is announced when it appears without interrupting whatever the screen reader was saying. Each toast is a `dialog` labelled by its `Toast.Title` and described by its `Toast.Description` — which is why a bare message becomes the title rather than the description.
+
+`priority: "high"` promotes one toast to an assertive announcement and an `alertdialog`. Reserve it for something that has to be heard now; a routine confirmation announced assertively cuts off whatever the user was reading.
+
+<Callout kind="a11y">
+Nothing that matters should exist **only** in a toast. It is announced once, it cannot be scrolled back to, and on a phone it may be behind the keyboard. An error the user has to act on belongs next to the thing that failed — a `Field.Error`, a banner, a dialog — with the toast as at most a second copy.
+</Callout>
+
+<Callout kind="a11y">
+Timers pause on hover, on focus, and while the window is in the background, but they still run. Anything with a deadline that a slow reader would miss needs a permanent home as well (WCAG SC 2.2.1). Setting `timeout={0}` on the provider turns the timer off entirely and is a reasonable default for an app whose messages are all consequential.
+</Callout>
+
+The four status glyphs are four distinct **shapes** — a tick, a cross, a triangle, an "i" — and not four colourings of one dot. Colour alone would carry no information for a colour-blind reader, and none at all in forced-colors mode, where every glyph repaints in one system colour (WCAG SC 1.4.1). The text carries the meaning in any case; the glyph is `aria-hidden`.
+
+`Toast.Close` is hidden from assistive technology while the deck is collapsed and revealed once the stack is hovered or focused, so it is announced exactly when it is reachable. Moving focus into the stack expands it, which is what makes that work for a keyboard user.
+
+## Theming
+
+Every property below is declared on the element it styles: the first six on the viewport, the rest on each toast card. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect — and the stack is portalled to `<body>`, so an ancestor of the code that raised the toast could not reach it in any case.
+
+Set the viewport's through `className` on `Toast.Provider` (which forwards it to the viewport) and the card's through `className` on `Toast.Item`. An unlayered rule beats the library's `@layer pretty-ui.components` whatever its specificity, so a plain class is enough — no `!important`.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every toast.
+
+`--pui-toast-border` is the hairline around the card, and it is the one place a toast parts company with the library's other floating surfaces, which rely on a shadow and nothing else. A dialog has a scrim behind it and a select popup visibly grew out of its trigger; a toast arrives unannounced over whatever the page happens to be showing, and `--pui-color-overlay` is the same value as `--pui-color-background`. It matters twice over for the deck, whose cards behind the front one show as ~12px strips of exactly that colour — without an edge the stack reads as one card rather than three.
+
+The card stays neutral in all five types, and only the glyph is coloured. Tinting five surfaces would need five new soft tokens and would still leave the type carried by colour alone; the glyph shapes and the text do that job instead. `--pui-toast-accent` is the one knob to re-point if you want a type to read louder — or set `--pui-toast-bg` under a `[data-type=...]` selector of your own.
+
+<ThemingTable component="Toast" />
+
+### Motion
+
+The stack is four numbers Base UI measures and one CSS rule for each state. `--toast-index` is how far back a card sits, `--toast-offset-y` is the total height of everything in front of it, `--toast-height` is its own, and `--toast-frontmost-height` is the front card's. Collapsed, a card steps back by `--pui-toast-peek` and shrinks by `--pui-toast-stack-scale`; expanded, it moves by the real distance and returns to full size. The transition between the two is a plain interpolation of the same three properties, on `--pui-duration-move` — the token for positional moves whose distance is only known at runtime.
+
+Which property carries what is load-bearing, and the three are not interchangeable:
+
+- **`translate` and `scale`** carry the stack, as independent properties.
+- **`transform`** carries the arrival, the departure and the swipe, composing on top. Base UI writes an inline `transform` while a toast is being dragged and reads it back with `getComputedStyle().transform`, which does not see the independent properties — so a drag leaves the stack offsets untouched and simply adds to them.
+- **`height`** clamps every card in the collapsed deck to the front card's height, so a tall toast behind a short one does not stick out and break the illusion of one deck.
+
+Arriving and leaving are the same move in opposite directions — the card slides in from beyond the edge and back out the way it came — so a toast dismissed while it is still arriving reverses instead of snapping. A swiped toast leaves in the direction it was pushed, continuing from wherever the finger let go rather than restarting from zero.
+
+Each expanded card carries a transparent bridge half a gap deep on both block edges, and it is not decoration. Fanned out, the cards are separated by `--pui-toast-gap` of empty space, and the viewport underneath is `pointer-events: none` so it cannot swallow clicks meant for the page — which leaves a dead strip between every pair of cards. A pointer crossing one takes the stack with it: the viewport sees a `mouseleave`, the deck collapses, and it re-expands a frame later when the pointer lands on the next card. Reading down a stack of three made it jump twice. A pseudo-element hit-tests as the element that owns it, so the bridge *is* the card as far as the pointer is concerned, and consecutive bridges meet in the middle of every gap.
+
+The `loading` spinner is a *descendant* of the toast root and not the root itself. Base UI waits on `root.getAnimations()` before removing a dismissed toast, and an infinite animation's promise never settles, so a spinning root would sit in the DOM for the life of the page. `getAnimations()` is not called with `subtree: true`, which is what makes a child safe.
+
+Reduced motion needs no work from you. The only literal geometry here is the enter and exit travel, and it is gated on `--pui-motion-ok`; the durations shorten on their own, leaving the fade. The collapsed deck's peek and scale are deliberately *not* collapsed — they are a static arrangement rather than an animation, and flattening them would remove the only sign that more than one toast is waiting.
+
+## API reference
+
+### useToast()
+
+Returns one object. Every method below is stable between renders.
+
+| Member | Signature | What it does |
+| :-- | :-- | :-- |
+| `show` | `(message, options?) => ToastHandle` | Shows a toast of any type. |
+| `success` | `(message, options?) => ToastHandle` | Shows a `success` toast. |
+| `error` | `(message, options?) => ToastHandle` | Shows an `error` toast. |
+| `warning` | `(message, options?) => ToastHandle` | Shows a `warning` toast. |
+| `info` | `(message, options?) => ToastHandle` | Shows an `info` toast. |
+| `loading` | `(message, options?) => ToastHandle` | Shows a `loading` toast. Never auto-dismisses. |
+| `promise` | `(promise, { loading, success, error }) => Promise` | Follows a promise. Returns it, rejection intact. |
+| `update` | `(id, message, options?) => void` | Rewrites a toast in place by id. |
+| `close` | `(id?) => void` | Closes one toast, or every toast. |
+| `toasts` | `ToastObject[]` | Every toast in the store, newest first, including the ones leaving. |
+
+`message` is either a `ReactNode` — which becomes the `title` — or a `ToastOptions` object. When both are given, the object wins field by field.
+
+### ToastHandle
+
+| Member | Signature | What it does |
+| :-- | :-- | :-- |
+| `id` | `string` | The toast's id. |
+| `close` | `() => void` | Closes this toast. Safe after it has already gone. |
+| `update` | `(message, options?) => void` | Rewrites this toast in place. |
+
+### ToastOptions
+
+| Prop | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `title` | `ReactNode` | — | The headline, and the toast's accessible name. |
+| `description` | `ReactNode` | — | The second line, and its accessible description. |
+| `type` | `"success" \| "error" \| "warning" \| "info" \| "loading" \| string` | — | Which glyph and accent to use. Lands on `data-type`. |
+| `timeout` | `number` | provider's | Milliseconds before it dismisses itself; `0` never. Ignored for `loading`. |
+| `priority` | `"low" \| "high"` | `"low"` | `"high"` announces assertively and renders an `alertdialog`. |
+| `id` | `string` | generated | Reuse an id to update that toast instead of stacking a second one. |
+| `action` | `{ label: ReactNode } & button props` | — | One button inside the toast. |
+| `icon` | `ReactNode \| false` | type's glyph | Replaces the glyph; `false` removes the column. |
+| `dismissible` | `boolean` | `true` | Whether the close button renders. |
+| `onClose` | `() => void` | — | Called when the toast closes, however it was closed. |
+| `onRemove` | `() => void` | — | Called once it has finished animating out. |
+| `data` | `object` | — | Custom data, reaching `renderToast` untouched. |
+
+### Toast.createManager()
+
+Returns everything `useToast()` returns except `toasts`, plus `base` — the Base UI manager to hand to the provider's `toastManager` prop.
+
+### Toast.Provider
+
+<PropTable component="ToastProvider" />
+
+`Toast.Provider` renders no DOM element of its own; every prop below that is not `children`, `timeout`, `limit`, `toastManager` or `viewport` is forwarded to the viewport it renders, along with `className` and any other `<div>` prop.
+
+### Toast.Viewport
+
+<PropTable component="ToastViewport" />
+
+Render it yourself only when the stack has to go somewhere specific, and pass `viewport={false}` to the provider so there is not a second one. It collapses Base UI's `Portal` → `Viewport` and the loop over the toasts into one element.
+
+### Toast.Item
+
+<PropTable component="ToastItem" />
+
+Wraps Base UI's `Root` around its `Content`. Every `Root` prop is forwarded — `render`, `id`, `style` and the rest. Omit `children` for the standard layout.
+
+### Toast.Icon
+
+<PropTable component="ToastIcon" />
+
+### Toast.Title
+
+<PropTable component="ToastTitle" />
+
+### Toast.Description
+
+<PropTable component="ToastDescription" />
+
+### Toast.Action
+
+<PropTable component="ToastAction" />
+
+Pass `render={<Button size="sm" />}` to compose it with a styled button; its own quiet styling steps aside when `render` is present, so the two never fight over the cascade.
+
+### Toast.Close
+
+<PropTable component="ToastClose" />
+
+Carries `aria-label="Close"` and a "×" by default; both are overridable.

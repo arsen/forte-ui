@@ -4026,6 +4026,182 @@
       }
     ]
   },
+  "Toast": {
+    "name": "Toast",
+    "tokens": [
+      {
+        "name": "--pui-toast-viewport-inset",
+        "value": "var(--pui-space-4)",
+        "description": "Gap between the stack and the edge of the screen",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-width",
+        "value": "22rem",
+        "description": "Width of a toast. Shrinks on its own on a screen narrower than this.",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Gap between toasts once the stack is expanded",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-peek",
+        "value": "var(--pui-space-3)",
+        "description": "How much of each card behind the front one shows",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-stack-scale",
+        "value": "0.05",
+        "description": "How much each card behind the front one shrinks, per step",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-z-index",
+        "value": "60",
+        "description": "Stacking order of the whole stack",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Card background",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Card text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-padding",
+        "value": "var(--pui-space-4)",
+        "description": "Padding inside the card",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-content-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Gap between the icon, the text and the buttons",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-shadow",
+        "value": "var(--pui-shadow-3)",
+        "description": "Card shadow",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-border",
+        "value": "var(--pui-color-border)",
+        "description": "Hairline around the card",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-accent",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Icon colour. `data-type` re-points it per status.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-type=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-type=\"error\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-type=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-type=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          },
+          {
+            "selector": ".root[data-type=\"loading\"]",
+            "value": "var(--pui-color-primary-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toast-stack-direction",
+        "value": "-1",
+        "description": "Which way the stack recedes: `-1` for a bottom stack, `1` for a top one",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".viewport[data-position^=\"top\"] .root",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toast-enter-travel",
+        "value": "100%",
+        "description": "How far the card slides in from, as a share of its own height",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".viewport[data-position^=\"top\"] .root",
+            "value": "-100%"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toast-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the arriving gesture",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-enter-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "Curve of the arriving gesture",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the leaving gesture",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toast-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the leaving gesture",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Toggle": {
     "name": "Toggle",
     "tokens": [
