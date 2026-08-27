@@ -5059,6 +5059,224 @@
       }
     ]
   },
+  "ToolbarRoot": {
+    "name": "ToolbarRoot",
+    "description": "A strip of related controls that behaves as one tab stop, built on Base UI's\n`Toolbar` primitive. Renders a `<div role=\"toolbar\">`.\n\n```tsx\n<Toolbar.Root aria-label=\"Formatting\">\n  <Toolbar.Button iconOnly aria-label=\"Undo\">…</Toolbar.Button>\n  <Toolbar.Separator />\n  <Toolbar.Button>Publish</Toolbar.Button>\n</Toolbar.Root>\n```\n\nThe point of the component is the keyboard contract, not the row: Tab moves\n*past* the whole bar in one press and the arrow keys move between its\ncontrols. That is what stops a nine-button formatting bar from costing nine\npresses to skip.\n\nThe bar has no accessible name of its own — `role=\"toolbar\"` is not a\nlabelable element — so give it `aria-label`, or point `aria-labelledby` at\nyour own heading.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disable every item in the toolbar. Items stay focusable — see the note on\n`Toolbar.Button`'s `focusableWhenDisabled`."
+      },
+      {
+        "name": "orientation",
+        "type": "ToolbarOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Direction the items are laid out in, and the axis the arrow keys move\nalong. This is not layout only: Base UI binds the arrows to the named\naxis, so a vertical toolbar answers to Up and Down and leaves Left and\nRight to the page — and to any text input inside it."
+      },
+      {
+        "name": "size",
+        "type": "ToolbarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the bar, and the default size of every `Toolbar.Button`,\n`Toolbar.Input` and `Toolbar.Link` inside it. An item's own `size` still\nwins."
+      },
+      {
+        "name": "variant",
+        "type": "ToolbarVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much chrome the bar itself carries. `plain` is a bare row with no\nsurface — right when the toolbar sits on a panel that already has one.\n`panel` fills; `outline` draws a border on the page background.\n\nIt says nothing about the controls inside: a `plain` bar can still hold\nsolid buttons, and a `panel` bar quiet ones."
+      },
+      {
+        "name": "wrap",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Let the items wrap onto more than one line when the bar runs out of room,\ninstead of overflowing it. Roving focus follows DOM order either way, so\nwrapping costs the keyboard nothing.\n\nIgnored while `orientation=\"vertical\"`."
+      }
+    ]
+  },
+  "ToolbarGroup": {
+    "name": "ToolbarGroup",
+    "description": "A cluster of related items inside a toolbar. Renders a `<div role=\"group\">`.\n\nIt is a *visual and semantic* grouping, not a keyboard one: the arrow keys\nstill run the length of the whole bar, and a group is what tells a reader\n(and a screen reader) that these three buttons answer the same question. The\ngap inside a group is tighter than the gap between them, which is the whole\nof the visual difference.\n\nLike the root it takes no implicit name — give it `aria-label` when the\ngrouping is not obvious from the items themselves.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disable every item in the group. Composes with the root's `disabled` —\neither one being true disables the item."
+      }
+    ]
+  },
+  "ToolbarButton": {
+    "name": "ToolbarButton",
+    "description": "A button that is part of the toolbar's roving focus. Renders a `<button>`.\n\nLeft alone it is a [`Button`](/components/button) — every variant, tone and\nsize, and the same `iconOnly` and `loading` behaviour — that happens to be\nreachable with the arrow keys. Given `render`, it is whatever you passed,\nstill reachable with the arrow keys and nothing else changed.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "focusableWhenDisabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Keep the item focusable while it is disabled, rather than removing it from\nthe bar's roving focus.\n\n`true` by default, and that default is the ARIA authoring practice for a\ntoolbar rather than a stylistic choice: a disabled control that vanishes\nfrom the arrow-key order silently changes what every other key press does,\nand the user has no way to find out *why* an action they expected is\nmissing. Focusable-and-disabled keeps it announced, with its disabled\nstate, in the position they expect it."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon, holding the 24×24\nminimum hit target from WCAG SC 2.5.8. Always pair with `aria-label` —\nan icon is not an accessible name.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show a busy indicator and block interaction.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "loadingLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "\"Loading\"",
+        "description": "Announced to assistive technology while `loading` is true.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, ToolbarButtonState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered button with another element or component. This is\nhow a menu, a select, a dialog or a toggle joins the bar's keyboard\norder — `render={<Toggle iconOnly />}`,\n`render={<Select.Trigger />}`.\n\nThe default `Button` styling steps aside when this is present, so the two\nnever fight over the cascade; the rendered component keeps its own look."
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the button. Inherited from `Toolbar.Root` when left unset.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "tone",
+        "type": "ButtonTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the button draws from. `neutral` by default, for\nthe same reason `variant` is `ghost`.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the button carries. Defaults to `ghost` rather than\n`Button`'s `solid`: a toolbar is a strip of peers, and a row of solid\nbuttons has no hierarchy left to spend on the one that matters. Give the\nprimary action `variant=\"solid\"` explicitly.\n\nIgnored when `render` is set — the rendered component brings its own\nstyling."
+      }
+    ]
+  },
+  "ToolbarLink": {
+    "name": "ToolbarLink",
+    "description": "A link that is part of the toolbar's roving focus. Renders an `<a>`.\n\nIt is drawn as a link and not as a button on purpose: it navigates, and the\nunderline is the only cue that says so before it is clicked. A link cannot\nbe disabled — HTML has no such state for `<a>` — so it always holds its\nplace in the arrow-key order, even inside a `disabled` toolbar.\n\nUse `render` for a router link: `render={<Link href=\"/docs\" />}`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "ToolbarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the link, matching the controls beside it. Inherited from\n`Toolbar.Root` when left unset."
+      }
+    ]
+  },
+  "ToolbarInput": {
+    "name": "ToolbarInput",
+    "description": "A text input that is part of the toolbar's roving focus. Renders an\n`<input>`.\n\nThe arrow keys do the right thing without configuration: while the caret has\nsomewhere left to go inside the field, Left and Right move the caret; at\neither end they hand the key back to the toolbar and focus moves on. Home\nand End are never taken — a toolbar does not bind them — so they jump the\ncaret as they would in any field. That is Base UI's own handling, and it is\nthe reason to reach for this rather than dropping a bare `Input` into the\nbar — a bare one is not in the roving order at all, so Tab is the only way\npast it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the input to fill the space left over in the bar.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, ToolbarInputState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered input with another element or component. The default\n`Input` styling steps aside when this is present."
+      },
+      {
+        "name": "size",
+        "type": "ToolbarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the control. Inherited from `Toolbar.Root` when left unset.\n\nThis shadows the native `size` attribute, exactly as `Input`'s does.\n\nIgnored when `render` is set."
+      },
+      {
+        "name": "variant",
+        "type": "InputVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the control carries.\n\nIgnored when `render` is set."
+      }
+    ]
+  },
+  "ToolbarSeparator": {
+    "name": "ToolbarSeparator",
+    "description": "A rule between two clusters of toolbar items. Renders a\n`<div role=\"separator\">`.\n\nIt is a divider, not a stop: the arrow keys pass straight over it, since it\nis not a composite item. Reach for it between groups that answer different\nquestions — formatting and alignment, say — and let the group gap carry the\nrest.\n\nThis is a separate part from [`Separator`](/components/separator) rather than\na use of it, for two reasons: Base UI derives the orientation from the\ntoolbar's own, and a rule inside a bar insets from the bar's padding instead\nof spanning it edge to edge.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "ToolbarOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the rule runs. Defaults to the *opposite* of the toolbar's\norientation — a horizontal bar gets vertical rules — which is almost\nalways what you want, so leave it unset."
+      }
+    ]
+  },
   "TooltipProvider": {
     "name": "TooltipProvider",
     "description": "Shares one hover delay across every tooltip beneath it. Renders no DOM\nelement.\n\nMount it once near the root of the app. Without it each tooltip waits out\nits own delay, so sweeping across a toolbar feels sticky.",

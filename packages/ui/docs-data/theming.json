@@ -6364,6 +6364,254 @@
       }
     ]
   },
+  "Toolbar": {
+    "name": "Toolbar",
+    "tokens": [
+      {
+        "name": "--pui-toolbar-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between items. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-padding",
+        "value": "var(--pui-space-2)",
+        "description": "Padding inside the bar. `size` re-points it; `variant=\"plain\"` drops it to `0`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          },
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius. `variant=\"plain\"` drops it to `0`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-bg",
+        "value": "transparent",
+        "description": "Fill behind the bar. `variant` sets it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-border-width",
+        "value": "1px",
+        "description": "Border width.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-border-color",
+        "value": "transparent",
+        "description": "Border colour. `variant` sets it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"], .root[data-variant=\"outline\"]",
+            "value": "CanvasText"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-shadow",
+        "value": "none",
+        "description": "Drop shadow. Unset by default — a toolbar is part of the page, not a surface floating over it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-group-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Gap between items inside the group. Tighter than the bar's own gap, which is what makes a cluster read as one.",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-thickness",
+        "value": "1px",
+        "description": "Line thickness.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-color",
+        "value": "var(--pui-color-border)",
+        "description": "Line colour.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-inset",
+        "value": "var(--pui-space-1)",
+        "description": "How far the rule stops short of the bar's inner edges.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-separator-min-length",
+        "value": "1lh",
+        "description": "Length floor for a rule with nothing to stretch against.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height. `size` re-points it.",
+        "part": "link",
+        "overrides": [
+          {
+            "selector": ".link[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".link[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".link[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-link-padding-x",
+        "value": "var(--pui-space-2)",
+        "description": "Inline padding.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius — for the hover fill and the focus ring, which both need to match the buttons beside it.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label size. `size` re-points it.",
+        "part": "link",
+        "overrides": [
+          {
+            "selector": ".link[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".link[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".link[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-link-color",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Label colour.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill on hover.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-underline-color",
+        "value": "color-mix( in oklab, currentcolor 45%, transparent )",
+        "description": "Underline colour.",
+        "part": "link",
+        "overrides": [
+          {
+            "selector": ".link:hover",
+            "value": "currentcolor"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toolbar-link-underline-offset",
+        "value": "0.15em",
+        "description": "Distance between the text baseline and its underline.",
+        "part": "link",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toolbar-link-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Colour transitions between states.",
+        "part": "link",
+        "overrides": []
+      }
+    ]
+  },
   "Tooltip": {
     "name": "Tooltip",
     "tokens": [

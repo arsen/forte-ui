@@ -370,6 +370,19 @@ export type {
   ToggleGroupOrientation,
 } from "./components/toggle";
 
+export { Toolbar } from "./components/toolbar";
+export type {
+  ToolbarOrientation,
+  ToolbarVariant,
+  ToolbarSize,
+  ToolbarRootProps,
+  ToolbarGroupProps,
+  ToolbarButtonProps,
+  ToolbarLinkProps,
+  ToolbarInputProps,
+  ToolbarSeparatorProps,
+} from "./components/toolbar";
+
 export { Tooltip } from "./components/tooltip";
 export type {
   TooltipProviderProps,
