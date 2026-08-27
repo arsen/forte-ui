@@ -197,6 +197,316 @@
       }
     ]
   },
+  "Avatar": {
+    "name": "Avatar",
+    "tokens": [
+      {
+        "name": "--pui-avatar-size",
+        "value": "2.5rem",
+        "description": "Both dimensions of the box. `size` re-points it; everything else here is a fraction of it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"xs\"]",
+            "value": "1.5rem"
+          },
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "2rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "2.5rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "3rem"
+          },
+          {
+            "selector": ".root[data-size=\"xl\"]",
+            "value": "4rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-radius",
+        "value": "50%",
+        "description": "Corner radius. `shape` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-shape=\"circle\"]",
+            "value": "50%"
+          },
+          {
+            "selector": ".root[data-shape=\"rounded\"]",
+            "value": "min(var(--pui-radius-surface), calc(var(--pui-avatar-size) / 4))"
+          },
+          {
+            "selector": ".root[data-shape=\"square\"]",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-font-size",
+        "value": "calc(var(--pui-avatar-size) * 0.4)",
+        "description": "Size of the initials. Proportional so one `--pui-avatar-size` override is enough; re-point it at a `--pui-font-size-*` token to put the type scale back in charge.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Weight of the initials.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-icon-size",
+        "value": "calc(var(--pui-avatar-size) * 0.55)",
+        "description": "Size of an `svg` inside the fallback.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "How long the image takes to fade in once it has loaded.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-ring-width",
+        "value": "0px",
+        "description": "Width of the ring drawn OUTSIDE the box. `0px`, not `0` — it is negated in a `calc()` below, which needs a unit to keep the length valid.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".group .root",
+            "value": "var(--pui-avatar-group-ring-width)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-ring-color",
+        "value": "var(--pui-color-background)",
+        "description": "Colour of that ring. It should match whatever the avatar sits on, so the gap it punches reads as background rather than as a stroke.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".group .root",
+            "value": "var(--pui-avatar-group-ring-color)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-tone-solid",
+        "value": "var(--pui-gray-12)",
+        "description": "Tone's solid fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-12)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-tone-on-solid",
+        "value": "var(--pui-gray-1)",
+        "description": "Text colour on the solid fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-1)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-on-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-on-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-tone-soft",
+        "value": "var(--pui-gray-3)",
+        "description": "Tone's tinted fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-3)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-tone-text",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour on the tinted fill, and for `outline`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-tone-border",
+        "value": "var(--pui-color-border)",
+        "description": "Edge colour for `outline`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-bg",
+        "value": "var(--pui-avatar-tone-soft)",
+        "description": "Fill behind the fallback. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-avatar-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-avatar-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-fg",
+        "value": "var(--pui-avatar-tone-text)",
+        "description": "Colour of the initials or icon. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-avatar-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-avatar-tone-on-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-avatar-tone-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-border-width",
+        "value": "0px",
+        "description": "Border width. `1px` for `variant=\"outline\"`, `0px` otherwise.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "1px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-border-color",
+        "value": "transparent",
+        "description": "Border colour. The tone's border for `variant=\"outline\"`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-avatar-tone-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-group-overlap",
+        "value": "var(--pui-space-3)",
+        "description": "How far each avatar slides under the one before it. A length, so it is independent of what the children are; tuned for `size=\"md\"`, so raise it for a group of larger avatars.",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-group-ring-width",
+        "value": "2px",
+        "description": "Width of the ring the group draws around every avatar inside it.",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-group-ring-color",
+        "value": "var(--pui-color-background)",
+        "description": "Colour of that ring. Change it to the surface the group sits on — the default assumes the page background.",
+        "part": "group",
+        "overrides": []
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "tokens": [

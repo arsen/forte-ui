@@ -92,6 +92,107 @@
       }
     ]
   },
+  "AvatarRoot": {
+    "name": "AvatarRoot",
+    "description": "The avatar box. Holds an `Avatar.Image`, an `Avatar.Fallback`, or both —\nBase UI mounts whichever the image's loading status calls for.\n\nIt is a one-cell grid, and both parts are placed in that cell. Stacking them\nin flow would put the outgoing image *beside* the fallback for the frames it\nspends fading out, doubling the avatar's width and snapping it back.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "shape",
+        "type": "AvatarShape",
+        "required": false,
+        "defaultValue": "circle",
+        "description": "The silhouette. `circle` is the convention for people; `rounded` and\n`square` read as an object — a workspace, a repository, a bot.\n\n`circle` stays a circle under `data-pui-radius=\"none\"`, because you asked\nfor one. Only `rounded` follows the radius preset."
+      },
+      {
+        "name": "size",
+        "type": "AvatarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Diameter of the avatar — `1.5rem` through `4rem`. Everything inside is a\nfraction of it, so the initials, the icon and the corner radius all follow\nwithout a second prop."
+      },
+      {
+        "name": "tone",
+        "type": "AvatarTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the fallback draws from. Rotating the tone\nacross a list is the cheapest way to make initials tell people apart —\nbut colour is never the only cue, since the initials themselves differ."
+      },
+      {
+        "name": "variant",
+        "type": "AvatarVariant",
+        "required": false,
+        "defaultValue": "soft",
+        "description": "How loud the fallback is. `soft` is a tinted disc with tone-coloured\ninitials, `solid` fills with the tone itself, `outline` is a ring around\nnothing.\n\nThis only decides what shows while there is no image — a loaded image\ncovers the fill entirely. `outline` is the exception: its border sits\noutside the picture and stays visible either way."
+      }
+    ]
+  },
+  "AvatarImage": {
+    "name": "AvatarImage",
+    "description": "The picture. Base UI preloads `src` off-screen and only mounts this element\nonce the load succeeds, so a broken URL never paints a torn-image glyph —\nthe fallback simply stays.\n\nThe image is cropped to the box with `object-fit: cover`, so a portrait, a\nlandscape and a square all read the same.",
+    "props": [
+      {
+        "name": "alt",
+        "type": "string",
+        "required": true,
+        "defaultValue": null,
+        "description": "What the picture shows. Required, because there is no sensible guess: the\nfallback's initials are gone the moment the image loads, so an avatar with\nno alt text and no adjacent name leaves the person unidentifiable.\n\nPass the person's name when the avatar is the only thing naming them, and\n`\"\"` when their name is already written beside it — a photo repeated as\n\"Jane Doe Jane Doe\" is worse than no alt at all."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AvatarFallback": {
+    "name": "AvatarFallback",
+    "description": "What shows when there is no image, or when the image fails: initials, an\nicon, a `+3` counter.\n\nAn `svg` child is sized to `--pui-avatar-icon-size` automatically, so a\nlucide or Heroicons glyph needs no wrapper and no size prop of its own.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How long to wait before showing the fallback, in milliseconds.\n\nLeft at Base UI's `0`, which is right whenever the fallback IS the avatar:\na non-zero delay withholds it during server rendering too, so an\ninitials-only avatar would ship as an empty disc and pop in a tenth of a\nsecond later.\n\nSet it to ~100–150ms when there is an `Avatar.Image` beside it. A cached\nimage is not decoded until after hydration, so at `0` the initials paint\nand are replaced on every load; a short wait swallows that flash, at the\ncost of an empty disc for the same span on a slow connection."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "The person or thing this avatar stands for, for assistive technology only.\n\nInitials are a visual shorthand and read as noise — \"J D\" — so passing a\nlabel hides the children from the accessibility tree and announces this\ninstead. Leave it unset when the name is already written next to the\navatar, or when the fallback is a decorative icon."
+      }
+    ]
+  },
+  "AvatarGroup": {
+    "name": "AvatarGroup",
+    "description": "A row of avatars that overlap, for \"who is on this\".\n\nBase UI has no group primitive — there is no state and no interaction to\nmodel — so this is layout and nothing else: a flex row, a negative\n`margin-inline-start` on every child but the first, and a ring pushed onto\neach descendant `Avatar.Root` so the overlap reads as a stack rather than a\nsmear. Every avatar keeps its own `size`, `shape` and `tone`.\n\nLater children paint over earlier ones, which is why a `+3` counter belongs\nlast: it ends up on top, where the eye finishes.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",
