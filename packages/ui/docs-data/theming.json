@@ -244,7 +244,7 @@
           },
           {
             "selector": ".root[data-shape=\"square\"]",
-            "value": "0"
+            "value": "0px"
           }
         ]
       },
@@ -481,6 +481,119 @@
           {
             "selector": ".root[data-variant=\"outline\"]",
             "value": "var(--pui-avatar-tone-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-badge-size",
+        "value": "calc(var(--pui-avatar-size) * 0.3)",
+        "description": "Diameter of the badge, and its minimum width once it has content. A fraction of the avatar, so `size` and any `--pui-avatar-size` override carry the badge with them.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-inset",
+        "value": "calc(0.2929 * var(--pui-avatar-radius))",
+        "description": "How far the badge's CENTRE sits in from the corner of the box. The default puts it on the avatar's own outline, whatever `shape` is; `0` hangs it on the box corner, and a larger value pulls it inside.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-ring-width",
+        "value": "2px",
+        "description": "Width of the ring that separates the badge from the picture under it. A border, not a shadow, for the reason in note 3.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-ring-color",
+        "value": "var(--pui-avatar-ring-color)",
+        "description": "Colour of that ring. Follows the avatar's own ring by default, so a badge inside a group picks up the group's ring colour for free and a lone avatar falls back to the page background.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-radius",
+        "value": "calc(var(--pui-avatar-badge-size) / 2)",
+        "description": "Corner radius. Half the badge's own height, which is a disc while the badge is square and a true pill once content widens it — `50%` would bend that pill into an ellipse. Derived rather than pointed at `--pui-radius-pill` for the reason `shape=\"circle\"` avoids the radius scale too: a round presence dot is the meaning, not the styling, so it must survive `data-pui-radius=\"none\"`.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-font-size",
+        "value": "calc(var(--pui-avatar-size) * 0.18)",
+        "description": "Size of any text inside.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Weight of that text.",
+        "part": "badge",
+        "overrides": []
+      },
+      {
+        "name": "--pui-avatar-badge-bg",
+        "value": "var(--pui-gray-12)",
+        "description": "Fill. Set by `tone`.",
+        "part": "badge",
+        "overrides": [
+          {
+            "selector": ".badge[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-12)"
+          },
+          {
+            "selector": ".badge[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".badge[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".badge[data-tone=\"success\"]",
+            "value": "var(--pui-color-success)"
+          },
+          {
+            "selector": ".badge[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning)"
+          },
+          {
+            "selector": ".badge[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-avatar-badge-fg",
+        "value": "var(--pui-gray-1)",
+        "description": "Colour of the content. Set by `tone`, and paired with the fill so a count or a tick clears AA on every one of them.",
+        "part": "badge",
+        "overrides": [
+          {
+            "selector": ".badge[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-1)"
+          },
+          {
+            "selector": ".badge[data-tone=\"primary\"]",
+            "value": "var(--pui-color-on-primary)"
+          },
+          {
+            "selector": ".badge[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-on-secondary)"
+          },
+          {
+            "selector": ".badge[data-tone=\"success\"]",
+            "value": "var(--pui-color-on-success)"
+          },
+          {
+            "selector": ".badge[data-tone=\"warning\"]",
+            "value": "var(--pui-color-on-warning)"
+          },
+          {
+            "selector": ".badge[data-tone=\"danger\"]",
+            "value": "var(--pui-color-on-danger)"
           }
         ]
       },

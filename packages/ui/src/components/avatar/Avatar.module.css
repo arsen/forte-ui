@@ -23,14 +23,23 @@
  *
  * 2. There is no `overflow: hidden` on the root, and there must not be. Each
  *    part clips itself with `border-radius: inherit`, which leaves the root
- *    free to carry the thing everybody eventually adds — a presence dot, a
- *    small badge — hanging over its edge. `overflow: hidden` would swallow it,
+ *    free to carry `Avatar.Badge` — and whatever a consumer hangs off the
+ *    corner beside it — over its edge. `overflow: hidden` would swallow it,
  *    and the ring below with it.
  *
  * 3. The ring is a pseudo-element with a BORDER rather than a `box-shadow`.
  *    Shadows are stripped under forced colours, so a group of avatars would
  *    fuse into one blob for exactly the users who can least afford it; a
  *    border is remapped to `CanvasText` and keeps separating them.
+ *
+ *    It is `::before` and not `::after`, which is load-bearing now that a
+ *    badge exists. Both are absolutely positioned with `z-index: auto`, so
+ *    they paint in tree order — and `::after` comes after every child, which
+ *    would draw the group's 2px ring across the half of the badge that hangs
+ *    outside the avatar and bite a chord out of it. `::before` precedes the
+ *    children and paints under them. The alternative was a `z-index` on the
+ *    badge, which needs a stacking context on the root to stay contained, and
+ *    the root deliberately does not open one — see `.root`.
  *
  * Everything inside is a fraction of `--pui-avatar-size`, so a consumer who
  * wants a 96px avatar sets one property and the initials, the icon and the
@@ -93,10 +102,13 @@
     --pui-avatar-border-color: transparent;
 
     box-sizing: border-box;
-    /* The containing block for the ring below, and for whatever a consumer
-     * hangs off the corner. `relative` alone deliberately — no stacking
-     * context is wanted, so that sibling avatars in a group keep stacking in
-     * plain DOM order. */
+    /* The containing block for the ring, for `.badge`, and for whatever a
+     * consumer hangs off the corner. `relative` alone deliberately — no
+     * stacking context is wanted, so that sibling avatars in a group keep
+     * stacking in plain DOM order, and so a consumer who needs a badge to sit
+     * ON TOP of the next avatar in a group can still lift it with a `z-index`
+     * rather than finding it trapped. That is why the ring is `::before`:
+     * paint order inside the avatar is settled by tree order instead. */
     position: relative;
     /* One cell, and both parts sit in it — see note 1 in the header. */
     display: inline-grid;
@@ -128,7 +140,7 @@
    * It is `position: absolute`, which is what keeps it out of the grid: an
    * in-flow pseudo-element on a grid container is a grid ITEM, and would open
    * a second row that the fixed block-size then has to overflow. */
-  .root::after {
+  .root::before {
     content: "";
     position: absolute;
     /* An absolutely positioned child is placed against the PADDING box, so the
@@ -251,8 +263,13 @@
     --pui-avatar-radius: min(var(--pui-radius-surface), calc(var(--pui-avatar-size) / 4));
   }
 
+  /* `0px`, not `0`: the badge multiplies this radius to find the corner, and a
+   * math function may not mix a <number> with a length — a bare zero would
+   * make that calc() invalid and drop the badge at its static position in the
+   * top-inline-start corner. Identical on `border-radius` itself, which is why
+   * it only broke one derivation away. */
   .root[data-shape="square"] {
-    --pui-avatar-radius: 0;
+    --pui-avatar-radius: 0px;
   }
 
   /* Tones ------------------------------------------------------------------
@@ -310,6 +327,177 @@
     --pui-avatar-fg: var(--pui-avatar-tone-text);
     --pui-avatar-border-width: 1px;
     --pui-avatar-border-color: var(--pui-avatar-tone-border);
+  }
+
+  /* Badge -----------------------------------------------------------------
+   * A presence dot, a small count, a verification tick. Absolutely positioned
+   * against the root, which is why the root must not clip — see note 2.
+   *
+   * The whole point of the part is the placement, because the placement is
+   * arithmetic and it depends on two props. A dot at `inset: 0` sits on the
+   * corner of the BOX, and the box's corner is not on the avatar's outline
+   * unless the avatar is a square. What you want is the point where the 45°
+   * diagonal crosses the outline, and for a corner of radius `r` that point is
+   * `r - r/√2 ≈ 0.2929r` in from the box corner. For a circle `r` is `50%` and
+   * the expression yields `14.645%`; for `square` it yields `0`; for `rounded`
+   * it tracks whatever `data-pui-radius` currently makes the corner. One
+   * expression, all three shapes, and it stays right when a consumer overrides
+   * `--pui-avatar-radius` by hand.
+   *
+   * Sizing it as a fraction of the avatar is the other half. The hand-rolled
+   * version of this is always a fixed length, which looks correct at exactly
+   * one `size` — at `xl` the dot floats off the disc, at `xs` it is half the
+   * avatar — because the offset that centres it on the outline moves with the
+   * avatar and a fixed dot's does not.
+   */
+  .badge {
+    /** Diameter of the badge, and its minimum width once it has content. A
+     * fraction of the avatar, so `size` and any `--pui-avatar-size` override
+     * carry the badge with them. */
+    --pui-avatar-badge-size: calc(var(--pui-avatar-size) * 0.3);
+    /** How far the badge's CENTRE sits in from the corner of the box. The
+     * default puts it on the avatar's own outline, whatever `shape` is; `0`
+     * hangs it on the box corner, and a larger value pulls it inside. */
+    --pui-avatar-badge-inset: calc(0.2929 * var(--pui-avatar-radius));
+    /** Width of the ring that separates the badge from the picture under it.
+     * A border, not a shadow, for the reason in note 3. */
+    --pui-avatar-badge-ring-width: 2px;
+    /** Colour of that ring. Follows the avatar's own ring by default, so a
+     * badge inside a group picks up the group's ring colour for free and a
+     * lone avatar falls back to the page background. */
+    --pui-avatar-badge-ring-color: var(--pui-avatar-ring-color);
+    /** Corner radius. Half the badge's own height, which is a disc while the
+     * badge is square and a true pill once content widens it — `50%` would
+     * bend that pill into an ellipse. Derived rather than pointed at
+     * `--pui-radius-pill` for the reason `shape="circle"` avoids the radius
+     * scale too: a round presence dot is the meaning, not the styling, so it
+     * must survive `data-pui-radius="none"`. */
+    --pui-avatar-badge-radius: calc(var(--pui-avatar-badge-size) / 2);
+    /** Size of any text inside. */
+    --pui-avatar-badge-font-size: calc(var(--pui-avatar-size) * 0.18);
+    /** Weight of that text. */
+    --pui-avatar-badge-font-weight: var(--pui-font-weight-medium);
+
+    /* Filled in per tone below; this is the `neutral` set. */
+    /** Fill. Set by `tone`. */
+    --pui-avatar-badge-bg: var(--pui-gray-12);
+    /** Colour of the content. Set by `tone`, and paired with the fill so a
+     * count or a tick clears AA on every one of them. */
+    --pui-avatar-badge-fg: var(--pui-gray-1);
+
+    /* The offset from the box corner to the badge's near EDGE. The border is
+     * added back because an absolutely positioned child is placed against the
+     * padding box, so `variant="outline"` would otherwise pull the badge a
+     * pixel inwards on two sides. Same correction the ring makes. */
+    --pui-avatar-badge-offset: calc(
+      var(--pui-avatar-badge-inset) - var(--pui-avatar-badge-size) / 2 -
+        var(--pui-avatar-border-width)
+    );
+
+    box-sizing: border-box;
+    position: absolute;
+    inset-block-end: var(--pui-avatar-badge-offset);
+    inset-inline-end: var(--pui-avatar-badge-offset);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* `min-inline-size`, so a bare dot is a circle and a `12` grows into a
+     * pill. It grows toward the avatar's centre, since the inline-end edge is
+     * the one that is pinned. */
+    min-inline-size: var(--pui-avatar-badge-size);
+    block-size: var(--pui-avatar-badge-size);
+    /* Tuned against `min-inline-size`, not chosen for looks. Content plus this
+     * padding plus the two borders has to stay UNDER the min for a single
+     * glyph, or a tick and a one-digit count come out as ellipses instead of
+     * discs; it only has to show up once there are two digits. */
+    padding-inline: calc(var(--pui-avatar-badge-size) * 0.1);
+
+    border: var(--pui-avatar-badge-ring-width) solid var(--pui-avatar-badge-ring-color);
+    border-radius: var(--pui-avatar-badge-radius);
+    background-color: var(--pui-avatar-badge-bg);
+    color: var(--pui-avatar-badge-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-avatar-badge-font-size);
+    font-weight: var(--pui-avatar-badge-font-weight);
+    line-height: 1;
+    /* Digits in a count should not shift the pill's width as they change. */
+    font-variant-numeric: tabular-nums;
+
+    /* Decoration, not a control — and it sits over an avatar that may itself
+     * be composed into a link. Letting it swallow those clicks would put a
+     * dead spot on the corner of every clickable avatar. */
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Two rules rather than four. `^=` and `$=` split the placement on its own
+   * axes, which is what the name already does. The opposite inset has to be
+   * reset to `auto`, or both would apply and the badge would stretch. */
+  .badge[data-placement^="top"] {
+    inset-block-start: var(--pui-avatar-badge-offset);
+    inset-block-end: auto;
+  }
+
+  .badge[data-placement$="start"] {
+    inset-inline-start: var(--pui-avatar-badge-offset);
+    inset-inline-end: auto;
+  }
+
+  .badgeContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 0;
+  }
+
+  /* Element selector, not `.pui-icon` — that is local inside a CSS module and
+   * would match nothing, and it sets `fill: currentColor`, which turns a
+   * stroked tick into a blob. */
+  .badgeContent svg {
+    /* Off the badge token, not a percentage: a percentage would resolve
+     * against `.badgeContent`, which is sized by its content — the svg. */
+    inline-size: calc(var(--pui-avatar-badge-size) * 0.5);
+    block-size: calc(var(--pui-avatar-badge-size) * 0.5);
+  }
+
+  /* Badge tones -----------------------------------------------------------
+   * Two slots each, and both are always set together: the fill and the text
+   * that has to stay legible on it. `success` and `warning` are the reason
+   * `--pui-color-on-success` / `--pui-color-on-warning` exist — warning-9 is a
+   * light amber and takes near-BLACK, so a badge that assumed "solid means
+   * white" would ship a 1.8:1 count. The pairs are asserted in
+   * check-contrast.mjs. */
+  .badge[data-tone="neutral"] {
+    --pui-avatar-badge-bg: var(--pui-gray-12);
+    --pui-avatar-badge-fg: var(--pui-gray-1);
+  }
+
+  .badge[data-tone="primary"] {
+    --pui-avatar-badge-bg: var(--pui-color-primary);
+    --pui-avatar-badge-fg: var(--pui-color-on-primary);
+  }
+
+  .badge[data-tone="secondary"] {
+    --pui-avatar-badge-bg: var(--pui-color-secondary);
+    --pui-avatar-badge-fg: var(--pui-color-on-secondary);
+  }
+
+  .badge[data-tone="success"] {
+    --pui-avatar-badge-bg: var(--pui-color-success);
+    --pui-avatar-badge-fg: var(--pui-color-on-success);
+  }
+
+  .badge[data-tone="warning"] {
+    --pui-avatar-badge-bg: var(--pui-color-warning);
+    --pui-avatar-badge-fg: var(--pui-color-on-warning);
+  }
+
+  .badge[data-tone="danger"] {
+    --pui-avatar-badge-bg: var(--pui-color-danger);
+    --pui-avatar-badge-fg: var(--pui-color-on-danger);
   }
 
   /* Group ------------------------------------------------------------------
@@ -370,6 +558,36 @@
      * separation for free. */
     .fallback {
       border: 1px solid CanvasText;
+    }
+
+    /* The badge is worse off than the fallback, because both of its colours
+     * are backgrounds as far as forced colours is concerned: the fill is
+     * remapped to `Canvas` and so is the ring, so the dot vanishes into the
+     * avatar instead of merely losing its tone. `CanvasText` on `Canvas`
+     * redraws it as a visible disc — and it reads the same for every tone,
+     * which is correct rather than a compromise: colour was never allowed to
+     * be the only cue anyway (SC 1.4.1), so the status is already written out
+     * somewhere for the badge to be redundant with.
+     *
+     * The ring keeps its width and turns into the outline, which is what
+     * separates the disc from the photo when both are `Canvas`. */
+    .badge {
+      border-color: CanvasText;
+      background-color: Canvas;
+      color: CanvasText;
+    }
+
+    /* A dot has no content, so its FILL is the whole shape — and the rule
+     * above just flattened that to `Canvas`. Paint it back as `CanvasText`
+     * and hand the ring the opposite colour, so the disc still has a gap
+     * around it where it overlaps a photo. A badge with a count keeps the
+     * treatment above instead: there the fill is the backdrop for text, and
+     * inverting it would take the text down with it. `data-dot` marks the
+     * difference because CSS cannot — `:has(.badgeContent > *)` would miss a
+     * bare text node like `3` and invert exactly the case that must not be. */
+    .badge[data-dot] {
+      background-color: CanvasText;
+      border-color: Canvas;
     }
   }
 }

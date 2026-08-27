@@ -125,6 +125,26 @@ const CHECKS = [
   { id: "gray-7 vs gray-1",  min: 1.4, pair: (r, g) => CR(g[7], g[1]) },
 ];
 
+/* --------------------------------------------------------------------------
+ * Fixed pairs — the status colours.
+ *
+ * These hues are pinned in tokens.css and do not move with the seed, so they
+ * are checked once rather than swept: there is no grid to sweep. They are here
+ * anyway because nothing else would catch them. `--pui-warning-9` is a light
+ * amber, so its `on-` token is near-BLACK while the other two are near-white,
+ * and a plausible-looking edit that made them uniform would ship a 1.8:1 label
+ * with no test to say so.
+ *
+ * Keep the literals in sync with tokens.css; they are duplicated for the same
+ * reason the curve is — this file re-implements what the CSS declares.
+ * ------------------------------------------------------------------------ */
+const NEAR_WHITE = [0.995, 0, 0], NEAR_BLACK = [0.145, 0, 0];
+const FIXED = [
+  { id: "on-danger vs danger-9",   min: 4.5, fg: NEAR_WHITE, bg: [0.552, 0.211, 24] },
+  { id: "on-success vs success-9", min: 4.5, fg: NEAR_WHITE, bg: [0.545, 0.148, 152] },
+  { id: "on-warning vs warning-9", min: 4.5, fg: NEAR_BLACK, bg: [0.812, 0.163, 82] },
+];
+
 const FINE = process.argv.includes("--fine");
 const fineC = Array.from({ length: 29 }, (_, i) => 0.02 + i * 0.01);
 const fineL = Array.from({ length: 46 }, (_, i) => 0.45 + i * 0.01);
@@ -160,5 +180,13 @@ for (const mode of ["light", "dark"]) {
     console.log(`  ${ok ? "PASS" : "FAIL"}  ${chk.id.padEnd(19)} min ${cr.toFixed(2).padStart(6)}  (need ${chk.min})   worst: ${seed}`);
   }
 }
+console.log("\nFIXED — status colours (seed-independent)");
+for (const chk of FIXED) {
+  const cr = CR(oklchToLinear(...chk.fg), oklchToLinear(...chk.bg));
+  const ok = cr >= chk.min;
+  if (!ok) failures++;
+  console.log(`  ${ok ? "PASS" : "FAIL"}  ${chk.id.padEnd(23)} min ${cr.toFixed(2).padStart(6)}  (need ${chk.min})`);
+}
+
 console.log(failures ? `\n${failures} check(s) FAILED` : "\nAll contrast checks passed.");
 process.exit(failures ? 1 : 0);

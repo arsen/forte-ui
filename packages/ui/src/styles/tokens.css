@@ -207,6 +207,24 @@
     --pui-color-warning-text: var(--pui-warning-11);
     --pui-color-info: var(--pui-info-9);
     --pui-color-info-text: var(--pui-info-11);
+
+    /* Text on a solid status fill. Literals, not the auto-contrast expression
+     * the brand tones use: those hues are fixed above, so the answer is known
+     * at author time and there is nothing for `contrast-color()` to decide.
+     *
+     * The two are not the same colour, and that is the point of having them.
+     * `--pui-warning-9` is a light amber — white on it measures 1.82:1, a
+     * failure a component guessing "solid fill means white text" would ship
+     * silently. `--pui-success-9` sits almost exactly on the white/black
+     * crossover: 4.54:1 white against 4.56:1 black, so it clears AA either way
+     * and by very little. check-contrast.mjs asserts all three pairs, which is
+     * what stops a future nudge to a status hue from quietly breaking one.
+     *
+     * There is deliberately no `--pui-color-on-info` yet: nothing paints text
+     * on `--pui-info-9`, and the answer there is NOT white (4.15:1). Add it
+     * with a matching assertion the day something needs it. */
+    --pui-color-on-success: oklch(0.995 0 0);
+    --pui-color-on-warning: oklch(0.145 0 0);
   }
 }
 
@@ -334,17 +352,24 @@
    * on whatever it inherited. `none` zeroes the scale itself, so a nested
    * `soft` that only re-pointed `--pui-radius-control` at `--pui-radius-5`
    * would resolve it against its ancestor's zero and stay square. */
+  /* `0px` and not `0`, and the unit is load-bearing. A bare `0` in a custom
+   * property is a <number>, and a math function may not mix a number with a
+   * length: `min(var(--pui-radius-surface), 12px)` becomes invalid at
+   * computed-value time under this preset, taking every value derived from it
+   * down with it. On `border-radius` itself the two are identical, so the
+   * breakage only ever showed up one derivation later — which is exactly the
+   * kind of silent var() failure that is hard to find. */
   [data-pui-radius="none"] {
-    --pui-radius-1: 0;
-    --pui-radius-2: 0;
-    --pui-radius-3: 0;
-    --pui-radius-4: 0;
-    --pui-radius-5: 0;
-    --pui-radius-6: 0;
-    --pui-radius-full: 0;
-    --pui-radius-control: 0;
-    --pui-radius-surface: 0;
-    --pui-radius-pill: 0;
+    --pui-radius-1: 0px;
+    --pui-radius-2: 0px;
+    --pui-radius-3: 0px;
+    --pui-radius-4: 0px;
+    --pui-radius-5: 0px;
+    --pui-radius-6: 0px;
+    --pui-radius-full: 0px;
+    --pui-radius-control: 0px;
+    --pui-radius-surface: 0px;
+    --pui-radius-pill: 0px;
   }
 
   [data-pui-radius="soft"] {

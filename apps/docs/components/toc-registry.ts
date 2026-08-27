@@ -45,6 +45,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "avatarroot", text: "Avatar.Root", depth: 3 },
     { id: "avatarimage", text: "Avatar.Image", depth: 3 },
     { id: "avatarfallback", text: "Avatar.Fallback", depth: 3 },
+    { id: "avatarbadge", text: "Avatar.Badge", depth: 3 },
     { id: "avatargroup", text: "Avatar.Group", depth: 3 },
   ],
   "/components/button": [

@@ -21,12 +21,13 @@ An avatar is mostly a promise about the *absence* of a picture. The photo is the
 import { Avatar } from "@dofortech/pretty-ui";
 ```
 
-`Avatar` is a namespace of four parts. `Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` are Base UI's anatomy; `Avatar.Group` is layout added here, with no state of its own.
+`Avatar` is a namespace of five parts. `Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` are Base UI's anatomy; `Avatar.Badge` and `Avatar.Group` are added here, and neither has state of its own.
 
 ```tsx
 <Avatar.Root>
   <Avatar.Image src={user.photo} alt={user.name} />
   <Avatar.Fallback label={user.name}>{initials}</Avatar.Fallback>
+  <Avatar.Badge tone="success" label="Online" />
 </Avatar.Root>
 ```
 
@@ -84,9 +85,23 @@ The overlap is a **length**, not a fraction of the avatar's size. The avatar's s
 
 ### Presence and badges
 
-There is no presence part, and there does not need to be one. `Avatar.Root` is `position: relative` and deliberately does **not** clip its overflow — each part rounds itself off with `border-radius: inherit` instead — so a status dot, a small count or a verification tick is an ordinary absolutely-positioned child.
+`Avatar.Badge` hangs a presence dot, a small count or a verification tick on the corner. It is `position: absolute` against the root, which is why the root deliberately does **not** clip its overflow — each part rounds itself off with `border-radius: inherit` instead, leaving the edge free.
 
 <DemoBlock id="avatar/presence" />
+
+The part earns its place on the arithmetic, which is the half a hand-rolled `<span>` gets wrong. A dot at `inset: 0` sits on the corner of the **box**, and the corner of the box is not on the avatar's outline unless the avatar is a square. The point where the 45° diagonal crosses a corner of radius `r` is `0.2929r` in from the box corner — `14.645%` for a circle, `0` for `square`, and whatever `data-pui-radius` currently makes the corner for `rounded`. One expression covers all three shapes, and it stays right when you override `--pui-avatar-radius` by hand.
+
+Sizing is the other half, and the two are the same bug. `--pui-avatar-badge-size` is a fraction of `--pui-avatar-size`, so the offset that centres the dot on the outline moves with the avatar. A fixed length looks correct at exactly one `size`: at `xl` the dot floats off the disc, and at `xs` it is half the avatar.
+
+<DemoBlock id="avatar/badge" />
+
+Content widens the badge into a pill, growing inward from the pinned edge — `--pui-avatar-badge-size` becomes its `min-inline-size` rather than its width, so `4` stays a disc and `12` does not become an ellipse. `--pui-avatar-badge-ring-color` follows `--pui-avatar-ring-color` by default, so a badge inside a group picks up the group's ring colour without being told and a lone avatar falls back to the page background.
+
+`placement` matters most in a group. Avatars overlap toward the inline-start, so every avatar but the last has its inline-end corner painted over by the next one — put the dots on `bottom-start` there, or badge only the last avatar.
+
+<Callout>
+  The badge is `pointer-events: none`. An avatar composed as a link or a button — `<Avatar.Root render={<a />}>` — would otherwise get a dead spot on the corner exactly where the badge sits.
+</Callout>
 
 ## Accessibility
 
@@ -100,7 +115,11 @@ An avatar is a picture, and the accessibility question is always the same one: *
 
 A group of avatars needs the same treatment one level up. Each avatar names itself, so a stack reads as a list of people rather than as a single graphic — but nothing says what the stack *is*. If the grouping carries meaning, give the group an accessible name and, where the members are genuinely a list, render it as one with `render`.
 
-Decorative icons inside a fallback take `aria-hidden="true"`, and a presence dot is decoration too: the status has to be available as text somewhere, per SC 1.4.1, which is what the demo above does.
+Decorative icons inside a fallback take `aria-hidden="true"`, and a bare `Avatar.Badge` is decoration too — it is hidden from the accessibility tree unless you pass `label`. That is the right default only because the status has to be available as text somewhere regardless, per SC 1.4.1: the presence demo writes "Online" beside the avatar and passes no `label`, because announcing it twice is worse than announcing it once.
+
+A badge with visible content is never decoration, so it stays in the tree whether or not you name it — hiding a `+3` on the absence of a prop would be a silent deletion. `label` then does what it does on `Avatar.Fallback`: it replaces what is announced, so `4` can read as "4 unread messages" instead of as the number four.
+
+Under forced colours the badge needs more help than the fallback does, because both of its colours are backgrounds as far as that mode is concerned — the fill and the ring are each remapped to `Canvas`, and the dot disappears into the avatar rather than merely losing its tone. A bare dot is repainted as a `CanvasText` disc with a `Canvas` ring around it; a badge with content keeps a `Canvas` fill so its text stays legible. Every tone looks identical there, which is correct rather than a compromise — colour was never allowed to be the only cue.
 
 Every text pair the component can produce clears AA. The tones draw the same slots the rest of the library does — `-11` on `-3` for `soft`, `-11` on `-1` for `outline`, `on-primary` on `-9` for `solid` — and those are the pairs the contrast harness sweeps across ~119k seeds, so initials stay legible whatever the brand colour is.
 
@@ -124,11 +143,17 @@ Everything below is declared on `Avatar.Root` itself, which is also why an ances
 
 <ThemingTable component="Avatar" part="group" />
 
-State is on `data-size`, `data-shape`, `data-variant` and `data-tone`, so a consumer can reach any of it from plain CSS or a Tailwind arbitrary variant — `data-[shape=square]:...` — without a wrapper element.
+`Avatar.Badge` declares its own, and they are set on the **badge**, not on the root: an element's own declaration beats an inherited one, so `--pui-avatar-badge-size` on `Avatar.Root` would be ignored.
+
+<ThemingTable component="Avatar" part="badge" />
+
+State is on `data-size`, `data-shape`, `data-variant` and `data-tone`, and on the badge it is `data-tone`, `data-placement` and `data-dot` — the last set only while the badge is empty, which is the flag the forced-colors rule needs and CSS cannot work out for itself. All of it is reachable from plain CSS or a Tailwind arbitrary variant — `data-[shape=square]:...` — without a wrapper element.
 
 ## API reference
 
-Each part forwards every prop it does not consume to its Base UI counterpart. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS. All four parts take `render` for changing the underlying element.
+`Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` forward every prop they do not consume to their Base UI counterpart, and take `render` for changing the underlying element. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS.
+
+`Avatar.Badge` and `Avatar.Group` have no Base UI counterpart to forward to. They are `<span>`s and take the whole span surface, `ref` included, but no `render`.
 
 ### Avatar.Root
 
@@ -141,6 +166,10 @@ Each part forwards every prop it does not consume to its Base UI counterpart. `A
 ### Avatar.Fallback
 
 <PropTable component="AvatarFallback" />
+
+### Avatar.Badge
+
+<PropTable component="AvatarBadge" />
 
 ### Avatar.Group
 

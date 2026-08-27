@@ -3,15 +3,15 @@
 import { Avatar } from "@dofortech/pretty-ui";
 
 const PEOPLE = [
-  { name: "Ada Lovelace", src: "/avatars/ada.svg", initials: "AL", status: "Online", dot: "bg-success" },
-  { name: "Bea Rivera", src: "/avatars/bea.svg", initials: "BR", status: "Away", dot: "bg-warning" },
-  { name: "Cyrus Bell", src: "/avatars/cyrus.svg", initials: "CB", status: "Offline", dot: "bg-foreground-subtle" },
-];
+  { name: "Ada Lovelace", src: "/avatars/ada.svg", initials: "AL", status: "Online", tone: "success" },
+  { name: "Bea Rivera", src: "/avatars/bea.svg", initials: "BR", status: "Away", tone: "warning" },
+  { name: "Cyrus Bell", src: "/avatars/cyrus.svg", initials: "CB", status: "Offline", tone: "neutral" },
+] as const;
 
-/* There is no presence part, and there does not need to be one: the root is
- * `position: relative` and does NOT clip its overflow, so a dot is an ordinary
- * absolutely-positioned child. The ring around it is the page background, which
- * is what separates the dot from the photo underneath. */
+/* `Avatar.Badge` works out where the corner is: the offset that lands a dot on
+ * the avatar's outline is a fraction of the radius, so it is right for every
+ * `size` and every `shape` without a second prop. No `label` here, because the
+ * status is written beside the avatar and would otherwise be announced twice. */
 export default function AvatarPresence() {
   return (
     <div className="flex flex-wrap gap-6">
@@ -20,14 +20,11 @@ export default function AvatarPresence() {
           <Avatar.Root size="lg">
             <Avatar.Image src={person.src} alt="" />
             <Avatar.Fallback>{person.initials}</Avatar.Fallback>
-            <span
-              aria-hidden="true"
-              className={`absolute end-0 bottom-0 size-3 rounded-pill border-2 border-background ${person.dot}`}
-            />
+            <Avatar.Badge tone={person.tone} />
           </Avatar.Root>
           <div className="grid">
             <span className="text-2 font-medium">{person.name}</span>
-            {/* The status is text, not a colour: SC 1.4.1 again. */}
+            {/* The status is text, not a colour: SC 1.4.1. */}
             <span className="text-1 text-foreground-muted">{person.status}</span>
           </div>
         </div>

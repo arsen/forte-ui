@@ -180,6 +180,40 @@
       }
     ]
   },
+  "AvatarBadge": {
+    "name": "AvatarBadge",
+    "description": "A presence dot, a small count, or a verification tick, hung on the corner of\nthe avatar.\n\nBase UI has no badge primitive — there is no state to model — so this is\nplacement and paint, which is exactly the part worth having in the library:\nthe offset that lands a dot on the avatar's outline is `0.2929 × radius`\nfrom the corner of the box, it differs per `shape`, and it only stays right\nif the badge's size scales with the avatar. A hand-rolled `<span>` with a\nfixed size and `inset: 0` looks correct at one `size` and drifts at the\nothers.\n\nIt is `pointer-events: none`, so an avatar composed as a link or a button\nkeeps its whole hit box.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "What the badge means, for assistive technology.\n\nA bare dot is decoration and is hidden from the accessibility tree unless\nyou pass this. A badge with visible content stays in the tree either way —\n`label` then replaces what is announced, the way it does on\n`Avatar.Fallback`, so `4` can read as \"4 unread messages\".\n\nLeave it unset when the status is already written next to the avatar."
+      },
+      {
+        "name": "placement",
+        "type": "AvatarBadgePlacement",
+        "required": false,
+        "defaultValue": "bottom-end",
+        "description": "Which corner it sits on.\n\n`bottom-end` is the convention, and it is also the corner a group covers:\navatars in an `Avatar.Group` overlap toward the inline-start, so every\navatar but the last has its inline-end corner painted over by the next\none. Use `bottom-start` there, or badge only the last avatar."
+      },
+      {
+        "name": "tone",
+        "type": "AvatarBadgeTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the badge draws from. `success`, `warning` and\n`danger` are the presence set — online, away, do-not-disturb — and the\nbrand tones suit a count or a verification tick.\n\nColour is never the only cue: pass `label`, or write the status out beside\nthe avatar, so the badge is repeating something rather than saying it."
+      }
+    ]
+  },
   "AvatarGroup": {
     "name": "AvatarGroup",
     "description": "A row of avatars that overlap, for \"who is on this\".\n\nBase UI has no group primitive — there is no state and no interaction to\nmodel — so this is layout and nothing else: a flex row, a negative\n`margin-inline-start` on every child but the first, and a ring pushed onto\neach descendant `Avatar.Root` so the overlap reads as a stack rather than a\nsmear. Every avatar keeps its own `size`, `shape` and `tone`.\n\nLater children paint over earlier ones, which is why a `+3` counter belongs\nlast: it ends up on top, where the eye finishes.",
