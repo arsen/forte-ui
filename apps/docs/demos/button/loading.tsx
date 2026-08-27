@@ -21,7 +21,7 @@ export default function ButtonLoading() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid justify-items-start gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3">
       <Button type="submit" loading={saving} loadingLabel="Saving notification settings">
         Save settings
       </Button>

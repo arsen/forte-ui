@@ -19,6 +19,20 @@ import d_accordion_disabled_item from "./accordion/disabled-item";
 import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
 import d_accordion_multiple from "./accordion/multiple";
 import d_accordion_multiple_src from "./accordion/multiple?raw";
+import d_avatar_basic from "./avatar/basic";
+import d_avatar_basic_src from "./avatar/basic?raw";
+import d_avatar_fallback from "./avatar/fallback";
+import d_avatar_fallback_src from "./avatar/fallback?raw";
+import d_avatar_group from "./avatar/group";
+import d_avatar_group_src from "./avatar/group?raw";
+import d_avatar_presence from "./avatar/presence";
+import d_avatar_presence_src from "./avatar/presence?raw";
+import d_avatar_shapes from "./avatar/shapes";
+import d_avatar_shapes_src from "./avatar/shapes?raw";
+import d_avatar_sizes from "./avatar/sizes";
+import d_avatar_sizes_src from "./avatar/sizes?raw";
+import d_avatar_variants from "./avatar/variants";
+import d_avatar_variants_src from "./avatar/variants?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
 import d_button_icon_only from "./button/icon-only";
@@ -260,6 +274,13 @@ export type DemoId =
   | "accordion/controlled"
   | "accordion/disabled-item"
   | "accordion/multiple"
+  | "avatar/basic"
+  | "avatar/fallback"
+  | "avatar/group"
+  | "avatar/presence"
+  | "avatar/shapes"
+  | "avatar/sizes"
+  | "avatar/variants"
   | "button/as-link"
   | "button/icon-only"
   | "button/loading"
@@ -386,6 +407,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
   "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
   "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
+  "avatar/basic": { Component: d_avatar_basic, source: d_avatar_basic_src, file: "avatar/basic.tsx" },
+  "avatar/fallback": { Component: d_avatar_fallback, source: d_avatar_fallback_src, file: "avatar/fallback.tsx" },
+  "avatar/group": { Component: d_avatar_group, source: d_avatar_group_src, file: "avatar/group.tsx" },
+  "avatar/presence": { Component: d_avatar_presence, source: d_avatar_presence_src, file: "avatar/presence.tsx" },
+  "avatar/shapes": { Component: d_avatar_shapes, source: d_avatar_shapes_src, file: "avatar/shapes.tsx" },
+  "avatar/sizes": { Component: d_avatar_sizes, source: d_avatar_sizes_src, file: "avatar/sizes.tsx" },
+  "avatar/variants": { Component: d_avatar_variants, source: d_avatar_variants_src, file: "avatar/variants.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },

@@ -1,0 +1,375 @@
+/*
+ * Avatar
+ *
+ * Two axes, the same two the rest of the library uses:
+ *   data-variant  how loud the FALLBACK is (soft/solid/outline)
+ *   data-tone     which semantic colour set it draws from
+ * plus two that are about the box rather than the paint — `data-size` and
+ * `data-shape`.
+ *
+ * Only the fallback is themed, because a loaded image covers the fill
+ * completely; `outline` is the exception, and deliberately so — its edge sits
+ * outside the picture, so it is the one variant that still says something once
+ * the photo arrives.
+ *
+ * Three structural decisions carry the whole file:
+ *
+ * 1. The root is a one-cell GRID, and image and fallback are both placed in
+ *    that cell. Base UI keeps an outgoing image mounted until its exit
+ *    transition finishes, and for those frames the fallback is mounted too —
+ *    in normal flow that is two boxes side by side, which doubles the avatar's
+ *    width and snaps it back. Overlapping them costs nothing and removes the
+ *    whole class of bug.
+ *
+ * 2. There is no `overflow: hidden` on the root, and there must not be. Each
+ *    part clips itself with `border-radius: inherit`, which leaves the root
+ *    free to carry the thing everybody eventually adds — a presence dot, a
+ *    small badge — hanging over its edge. `overflow: hidden` would swallow it,
+ *    and the ring below with it.
+ *
+ * 3. The ring is a pseudo-element with a BORDER rather than a `box-shadow`.
+ *    Shadows are stripped under forced colours, so a group of avatars would
+ *    fuse into one blob for exactly the users who can least afford it; a
+ *    border is remapped to `CanvasText` and keeps separating them.
+ *
+ * Everything inside is a fraction of `--pui-avatar-size`, so a consumer who
+ * wants a 96px avatar sets one property and the initials, the icon and the
+ * `rounded` corner all follow.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared HERE, on the avatar itself, so a value set on
+     * an ancestor is only INHERITED and loses to these — which is also why
+     * `.group` re-declares two of them through a descendant selector rather
+     * than setting them on itself. Re-skin one avatar by setting them via
+     * `className` or `style` (an unlayered consumer rule beats this layer at
+     * any specificity); re-skin every avatar by re-pointing the global tokens
+     * on the right-hand side. */
+    /** Both dimensions of the box. `size` re-points it; everything else here
+     * is a fraction of it. */
+    --pui-avatar-size: 2.5rem;
+    /** Corner radius. `shape` re-points it. */
+    --pui-avatar-radius: 50%;
+    /** Size of the initials. Proportional so one `--pui-avatar-size` override
+     * is enough; re-point it at a `--pui-font-size-*` token to put the type
+     * scale back in charge. */
+    --pui-avatar-font-size: calc(var(--pui-avatar-size) * 0.4);
+    /** Weight of the initials. */
+    --pui-avatar-font-weight: var(--pui-font-weight-medium);
+    /** Size of an `svg` inside the fallback. */
+    --pui-avatar-icon-size: calc(var(--pui-avatar-size) * 0.55);
+    /** How long the image takes to fade in once it has loaded. */
+    --pui-avatar-duration: var(--pui-duration-fast);
+
+    /* The ring is off by default: it is a separation device, and a lone avatar
+     * has nothing to be separated from. `Avatar.Group` switches it on. */
+    /** Width of the ring drawn OUTSIDE the box. `0px`, not `0` — it is negated
+     * in a `calc()` below, which needs a unit to keep the length valid. */
+    --pui-avatar-ring-width: 0px;
+    /** Colour of that ring. It should match whatever the avatar sits on, so
+     * the gap it punches reads as background rather than as a stroke. */
+    --pui-avatar-ring-color: var(--pui-color-background);
+
+    /* Per-tone palette. Overridden by [data-tone]; neutral is the default. */
+    /** Tone's solid fill */
+    --pui-avatar-tone-solid: var(--pui-gray-12);
+    /** Text colour on the solid fill */
+    --pui-avatar-tone-on-solid: var(--pui-gray-1);
+    /** Tone's tinted fill */
+    --pui-avatar-tone-soft: var(--pui-gray-3);
+    /** Text colour on the tinted fill, and for `outline` */
+    --pui-avatar-tone-text: var(--pui-color-foreground);
+    /** Edge colour for `outline` */
+    --pui-avatar-tone-border: var(--pui-color-border);
+
+    /* Filled in per variant below; this is the `soft` set. */
+    /** Fill behind the fallback. Set by `variant` from the tone. */
+    --pui-avatar-bg: var(--pui-avatar-tone-soft);
+    /** Colour of the initials or icon. Set by `variant` from the tone. */
+    --pui-avatar-fg: var(--pui-avatar-tone-text);
+    /** Border width. `1px` for `variant="outline"`, `0px` otherwise. */
+    --pui-avatar-border-width: 0px;
+    /** Border colour. The tone's border for `variant="outline"`. */
+    --pui-avatar-border-color: transparent;
+
+    box-sizing: border-box;
+    /* The containing block for the ring below, and for whatever a consumer
+     * hangs off the corner. `relative` alone deliberately — no stacking
+     * context is wanted, so that sibling avatars in a group keep stacking in
+     * plain DOM order. */
+    position: relative;
+    /* One cell, and both parts sit in it — see note 1 in the header. */
+    display: inline-grid;
+    inline-size: var(--pui-avatar-size);
+    block-size: var(--pui-avatar-size);
+    /* Avatars usually live in a flex row of names and metadata, and a squashed
+     * circle reads as a rendering fault rather than as a tight layout. */
+    flex-shrink: 0;
+
+    border: var(--pui-avatar-border-width) solid var(--pui-avatar-border-color);
+    border-radius: var(--pui-avatar-radius);
+    background-color: var(--pui-avatar-bg);
+    color: var(--pui-avatar-fg);
+
+    /* Sits the avatar on the line box when it is used inline beside text. */
+    vertical-align: middle;
+
+    /* Chrome, not a control: nothing here performs an action on click, so it
+     * takes `default` per the cursor table in AGENTS.md. An avatar that IS a
+     * link or a button is composed — `<Avatar.Root render={<a />}>` — and
+     * inherits that element's pointer along with its semantics. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* The ring — see note 3 in the header.
+   *
+   * It is `position: absolute`, which is what keeps it out of the grid: an
+   * in-flow pseudo-element on a grid container is a grid ITEM, and would open
+   * a second row that the fixed block-size then has to overflow. */
+  .root::after {
+    content: "";
+    position: absolute;
+    /* An absolutely positioned child is placed against the PADDING box, so the
+     * border has to be added back to land the ring exactly `ring-width`
+     * outside the border box — otherwise `variant="outline"` in a group draws
+     * the ring on top of its own edge. */
+    inset: calc(-1 * (var(--pui-avatar-ring-width) + var(--pui-avatar-border-width)));
+    border: var(--pui-avatar-ring-width) solid var(--pui-avatar-ring-color);
+    /* The ring's box is wider than the avatar's by twice the ring, so its
+     * radius has to grow by the ring to stay concentric. For a circle the sum
+     * exceeds 50% and the UA scales every corner back to exactly half the box,
+     * which is a circle again — so one expression covers all three shapes. */
+    border-radius: calc(var(--pui-avatar-radius) + var(--pui-avatar-ring-width));
+    /* Decorative, and it sits over the avatar's own edge. */
+    pointer-events: none;
+  }
+
+  .image {
+    grid-area: 1 / 1;
+    /* An `<img>` is inline by default, and the descender space under an inline
+     * box would show as a sliver of `--pui-avatar-bg` along the bottom. */
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    /* Portrait, landscape and square all have to read as the same avatar. */
+    object-fit: cover;
+    border-radius: inherit;
+
+    opacity: 1;
+    /* A transition rather than a keyframe animation, per the house rule: a
+     * `src` that changes twice in quick succession reverses from wherever the
+     * fade got to instead of restarting. Base UI also waits on this to finish
+     * before unmounting the outgoing image, which is safe because no duration
+     * token ever reaches 0s. */
+    transition: opacity var(--pui-avatar-duration) var(--pui-ease-standard);
+  }
+
+  /* Opacity only — no scale, no travel. There is nothing here that collapses
+   * under reduced motion, and nothing that needs to: the duration token
+   * shortens itself, and a fade is the one enter effect that stays legible
+   * when it does. */
+  .image[data-starting-style],
+  .image[data-ending-style] {
+    opacity: 0;
+  }
+
+  .fallback {
+    grid-area: 1 / 1;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    /* Two characters is the contract. A third is an authoring mistake, and
+     * clipping it keeps the mistake inside the circle instead of letting it
+     * shove the layout around. */
+    overflow: hidden;
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-avatar-font-size);
+    font-weight: var(--pui-avatar-font-weight);
+    line-height: var(--pui-line-height-tight);
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Lets the clip above actually happen: a flex item defaults to
+     * `min-width: auto` and refuses to shrink below its content. */
+    min-inline-size: 0;
+  }
+
+  /* Targeted as an element rather than through `.pui-icon`, which is local
+   * inside a CSS module and would match nothing — and which sets
+   * `fill: currentColor`, turning a stroked outline icon into a blob. */
+  .content svg {
+    inline-size: var(--pui-avatar-icon-size);
+    block-size: var(--pui-avatar-icon-size);
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * One property each. The type, the icon and the `rounded` corner are all
+   * fractions of it and follow on their own. */
+  .root[data-size="xs"] {
+    --pui-avatar-size: 1.5rem;
+  }
+
+  .root[data-size="sm"] {
+    --pui-avatar-size: 2rem;
+  }
+
+  .root[data-size="md"] {
+    --pui-avatar-size: 2.5rem;
+  }
+
+  .root[data-size="lg"] {
+    --pui-avatar-size: 3rem;
+  }
+
+  .root[data-size="xl"] {
+    --pui-avatar-size: 4rem;
+  }
+
+  /* Shapes ----------------------------------------------------------------- */
+
+  /* `50%`, not `--pui-radius-full`: under `data-pui-radius="none"` that token
+   * is 0, and a caller who asked for `shape="circle"` did not ask for a
+   * square. Same test as `--pui-radio-radius` and the Spinner's ring —
+   * roundness here is the meaning, not the styling. */
+  .root[data-shape="circle"] {
+    --pui-avatar-radius: 50%;
+  }
+
+  /* `rounded` IS styling, so it does follow the radius preset — and `min()`
+   * collapses it to 0 under `data-pui-radius="none"` with no extra rule. The
+   * second term is what keeps a 24px avatar from coming out almost circular:
+   * a flat 12px corner on a 24px box is nearly half of it. */
+  .root[data-shape="rounded"] {
+    --pui-avatar-radius: min(var(--pui-radius-surface), calc(var(--pui-avatar-size) / 4));
+  }
+
+  .root[data-shape="square"] {
+    --pui-avatar-radius: 0;
+  }
+
+  /* Tones ------------------------------------------------------------------
+   * Five slots each, and the variants below decide which of them becomes the
+   * fill, the text and the edge. The pairs are the ones the contrast harness
+   * guarantees: `-11 on -3` and `-11 on -1` for soft and outline, `on-primary`
+   * on `-9` for solid — so initials clear AA in every combination. */
+  .root[data-tone="neutral"] {
+    --pui-avatar-tone-solid: var(--pui-gray-12);
+    --pui-avatar-tone-on-solid: var(--pui-gray-1);
+    --pui-avatar-tone-soft: var(--pui-gray-3);
+    --pui-avatar-tone-text: var(--pui-color-foreground);
+    --pui-avatar-tone-border: var(--pui-color-border);
+  }
+
+  .root[data-tone="primary"] {
+    --pui-avatar-tone-solid: var(--pui-color-primary);
+    --pui-avatar-tone-on-solid: var(--pui-color-on-primary);
+    --pui-avatar-tone-soft: var(--pui-color-primary-soft);
+    --pui-avatar-tone-text: var(--pui-color-primary-text);
+    --pui-avatar-tone-border: var(--pui-color-primary-border);
+  }
+
+  .root[data-tone="secondary"] {
+    --pui-avatar-tone-solid: var(--pui-color-secondary);
+    --pui-avatar-tone-on-solid: var(--pui-color-on-secondary);
+    --pui-avatar-tone-soft: var(--pui-color-secondary-soft);
+    --pui-avatar-tone-text: var(--pui-color-secondary-text);
+    --pui-avatar-tone-border: var(--pui-color-secondary-border);
+  }
+
+  .root[data-tone="danger"] {
+    --pui-avatar-tone-solid: var(--pui-color-danger);
+    --pui-avatar-tone-on-solid: var(--pui-color-on-danger);
+    --pui-avatar-tone-soft: var(--pui-color-danger-soft);
+    --pui-avatar-tone-text: var(--pui-color-danger-text);
+    --pui-avatar-tone-border: var(--pui-color-danger-border);
+  }
+
+  /* Variants --------------------------------------------------------------- */
+  .root[data-variant="soft"] {
+    --pui-avatar-bg: var(--pui-avatar-tone-soft);
+    --pui-avatar-fg: var(--pui-avatar-tone-text);
+  }
+
+  .root[data-variant="solid"] {
+    --pui-avatar-bg: var(--pui-avatar-tone-solid);
+    --pui-avatar-fg: var(--pui-avatar-tone-on-solid);
+  }
+
+  /* The only variant that survives the image loading, because its edge is the
+   * one part of the treatment the picture does not cover. */
+  .root[data-variant="outline"] {
+    --pui-avatar-bg: transparent;
+    --pui-avatar-fg: var(--pui-avatar-tone-text);
+    --pui-avatar-border-width: 1px;
+    --pui-avatar-border-color: var(--pui-avatar-tone-border);
+  }
+
+  /* Group ------------------------------------------------------------------
+   * Layout only. No state, no context, no props: a flex row, a negative
+   * inline-start margin on every child but the first, and a ring pushed onto
+   * the avatars so the overlap reads as a stack.
+   *
+   * The margin is on `> * + *` rather than on `.root` so that a wrapper — a
+   * tooltip trigger, a link, a list item — can sit between the group and the
+   * avatar without the overlap silently disappearing. That is also why the
+   * overlap is a LENGTH and not a fraction of `--pui-avatar-size`: the size
+   * is declared on the avatar's own root, and a wrapper in between would have
+   * no value to multiply. */
+  .group {
+    /** How far each avatar slides under the one before it. A length, so it is
+     * independent of what the children are; tuned for `size="md"`, so raise it
+     * for a group of larger avatars. */
+    --pui-avatar-group-overlap: var(--pui-space-3);
+    /** Width of the ring the group draws around every avatar inside it. */
+    --pui-avatar-group-ring-width: 2px;
+    /** Colour of that ring. Change it to the surface the group sits on — the
+     * default assumes the page background. */
+    --pui-avatar-group-ring-color: var(--pui-color-background);
+
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .group > * + * {
+    margin-inline-start: calc(-1 * var(--pui-avatar-group-overlap));
+  }
+
+  /* Declared ON the avatar, not on the group. `.root` declares these itself,
+   * and an element's own declaration beats an inherited value however near the
+   * ancestor is — so a group that set them on itself would be ignored by every
+   * avatar in it. `.group .root` is (0,2,0) and outranks `.root`'s (0,1,0),
+   * which is what lets the group re-skin children it does not own. */
+  .group .root {
+    --pui-avatar-ring-width: var(--pui-avatar-group-ring-width);
+    --pui-avatar-ring-color: var(--pui-avatar-group-ring-color);
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* Backgrounds are replaced with system colours here, so every variant's
+     * fill collapses to `Canvas` and a fallback avatar dissolves into the page
+     * — while an image avatar survives untouched, because bitmaps are left
+     * alone. Give the fallback a real border: `border-color` IS remapped, to
+     * `CanvasText`, so one declaration redraws the missing edge for soft,
+     * solid and outline alike.
+     *
+     * The ring needs nothing: it is already a border, so a group keeps its
+     * separation for free. */
+    .fallback {
+      border: 1px solid CanvasText;
+    }
+  }
+}
