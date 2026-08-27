@@ -6,14 +6,7 @@ const VARIANTS = ["outline", "soft", "ghost"] as const;
 
 export default function InputVariants() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--pui-space-3)",
-        inlineSize: "min(22rem, 100%)",
-      }}
-    >
+    <div className="flex w-full max-w-[22rem] flex-col gap-3">
       {VARIANTS.map((variant) => (
         <Input
           key={variant}

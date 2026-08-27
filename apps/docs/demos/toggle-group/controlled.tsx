@@ -14,7 +14,7 @@ export default function ToggleGroupControlled() {
   const [columns, setColumns] = React.useState<string[]>(["status", "updated"]);
 
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-3)", justifyItems: "start" }}>
+    <div className="grid justify-items-start gap-3">
       {/* `value` + `onValueChange` rather than `defaultValue`. The value is
         * always an array, including when `multiple` is off — it is then empty
         * or holds exactly one entry, so the same handler shape works either
@@ -33,13 +33,7 @@ export default function ToggleGroupControlled() {
           </Toggle>
         ))}
       </ToggleGroup>
-      <p
-        style={{
-          margin: 0,
-          color: "var(--pui-color-foreground-muted)",
-          fontSize: "var(--pui-font-size-1)",
-        }}
-      >
+      <p className="m-0 text-1 text-foreground-muted">
         {columns.length === 0
           ? "No extra columns."
           : `Showing: ${columns.join(", ")}.`}

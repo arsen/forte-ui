@@ -22,15 +22,12 @@ const SCOPES = [
 
 export default function FieldItems() {
   return (
-    <div style={{ inlineSize: "min(26rem, 100%)" }}>
+    <div className="w-full max-w-[26rem]">
       {/* One Field.Root names the group; one Field.Item per row gives each
         * member its own label and description without opening a second field. */}
       <Field.Root name="scopes">
         <Field.Label nativeLabel={false}>Token scopes</Field.Label>
-        <CheckboxGroup
-          defaultValue={["read"]}
-          style={{ gap: "var(--pui-space-3)" }}
-        >
+        <CheckboxGroup defaultValue={["read"]} className="gap-3">
           {SCOPES.map((scope) => (
             <Field.Item key={scope.value}>
               <Field.Label>

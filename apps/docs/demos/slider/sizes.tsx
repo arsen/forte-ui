@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Slider } from "@dofortech/pretty-ui";
 
 const sizes = [
@@ -9,14 +8,11 @@ const sizes = [
   { size: "lg", label: "Large" },
 ] as const;
 
-const column: CSSProperties = {
-  display: "grid",
-  gap: "var(--pui-space-5)",
-};
+const column = "grid gap-5";
 
 export default function SliderSizes() {
   return (
-    <div style={column}>
+    <div className={column}>
       {sizes.map(({ size, label }) => (
         // The rail and the thumb scale together, and the control's padding is
         // derived from both — so every size keeps a 24px pointer target even

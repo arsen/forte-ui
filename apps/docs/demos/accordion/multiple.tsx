@@ -1,13 +1,12 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Accordion } from "@dofortech/pretty-ui";
 
-const width: CSSProperties = { inlineSize: "min(32rem, 100%)" };
+const width = "w-full max-w-lg";
 
 export default function AccordionMultiple() {
   return (
-    <Accordion.Root multiple defaultValue={["cpu", "memory"]} style={width}>
+    <Accordion.Root multiple defaultValue={["cpu", "memory"]} className={width}>
       <Accordion.Item value="cpu">
         <Accordion.Header>
           <Accordion.Trigger>CPU</Accordion.Trigger>

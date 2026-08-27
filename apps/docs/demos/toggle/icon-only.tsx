@@ -25,7 +25,7 @@ function Icon({ children }: { children: ReactNode }) {
 
 export default function ToggleIconOnly() {
   return (
-    <div style={{ display: "flex", gap: "var(--pui-space-1)" }}>
+    <div className="flex gap-1">
       {/* `iconOnly` squares the button and pins its width to at least 24px, so
         * the hit target still clears WCAG SC 2.5.8 at `size="sm"`. An icon is
         * not an accessible name, so every one of these needs `aria-label`. */}

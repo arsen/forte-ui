@@ -35,24 +35,13 @@ const JOBS: Job[] = [
   },
 ];
 
-const stack = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-2)",
-  inlineSize: "min(24rem, 100%)",
-} as const;
+const stack = "flex w-full max-w-sm flex-col gap-2";
 
-const rows = { display: "flex", flexDirection: "column" } as const;
+const rows = "flex flex-col";
 
-const row = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "var(--pui-space-4)",
-  paddingBlock: "var(--pui-space-2)",
-  borderBlockStart: "1px solid var(--pui-color-border-muted)",
-} as const;
+const row = "flex justify-between gap-4 border-t border-border-muted py-2";
 
-const label = { color: "var(--pui-color-foreground-muted)" } as const;
+const label = "text-foreground-muted";
 
 export default function DialogControlled() {
   // Two pieces of state, not one. `open` is what the dialog is told; `job` is
@@ -67,7 +56,7 @@ export default function DialogControlled() {
   }
 
   return (
-    <div style={stack}>
+    <div className={stack}>
       {JOBS.map((item) => (
         <Button
           key={item.id}
@@ -104,13 +93,13 @@ export default function DialogControlled() {
             <>
               <Dialog.Title>{job.name}</Dialog.Title>
               <Dialog.Description>{job.schedule}</Dialog.Description>
-              <div style={rows}>
-                <div style={row}>
-                  <span style={label}>Last run</span>
+              <div className={rows}>
+                <div className={row}>
+                  <span className={label}>Last run</span>
                   <span>{job.lastRun}</span>
                 </div>
-                <div style={row}>
-                  <span style={label}>Duration</span>
+                <div className={row}>
+                  <span className={label}>Duration</span>
                   <span>{job.duration}</span>
                 </div>
               </div>

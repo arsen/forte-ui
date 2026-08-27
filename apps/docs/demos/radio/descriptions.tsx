@@ -22,17 +22,14 @@ const VISIBILITY = [
 
 export default function RadioDescriptions() {
   return (
-    <div style={{ inlineSize: "min(26rem, 100%)" }}>
+    <div className="w-full max-w-[26rem]">
       <Field.Root name="visibility">
         <Field.Label nativeLabel={false}>Visibility</Field.Label>
         {/* One Field.Item per option: it gives each row its own label AND its
           * own description, wired to that radio with aria-describedby, without
           * opening a second field. A plain <p> under the label would be read
           * out as part of the group instead, or not at all. */}
-        <RadioGroup
-          defaultValue="internal"
-          style={{ gap: "var(--pui-space-3)" }}
-        >
+        <RadioGroup defaultValue="internal" className="gap-3">
           {VISIBILITY.map((option) => (
             <Field.Item key={option.value}>
               <Field.Label>

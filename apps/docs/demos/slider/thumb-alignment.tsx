@@ -3,13 +3,13 @@
 import type { CSSProperties } from "react";
 import { Slider } from "@dofortech/pretty-ui";
 
-const column: CSSProperties = {
-  display: "grid",
-  gap: "var(--pui-space-5)",
-};
+const column = "grid gap-5";
 
 // A guide line at each end of the control, so where the thumb comes to rest is
-// visible rather than something you have to take on trust.
+// visible rather than something you have to take on trust. One of the few
+// things here that stays a style object rather than becoming utilities: four
+// co-indexed background properties spelled as `bg-[...]` arbitrary values are
+// a class string nobody can read, and none of it is layout or typography.
 const guides: CSSProperties = {
   backgroundImage:
     "linear-gradient(var(--pui-color-danger-border), var(--pui-color-danger-border))," +
@@ -21,7 +21,7 @@ const guides: CSSProperties = {
 
 export default function SliderThumbAlignment() {
   return (
-    <div style={column}>
+    <div className={column}>
       <Slider.Root defaultValue={100} style={guides}>
         <Slider.Label>center — the default</Slider.Label>
         <Slider.Control>

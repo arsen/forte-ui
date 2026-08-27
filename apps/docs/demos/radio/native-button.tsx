@@ -3,26 +3,14 @@
 import * as React from "react";
 import { Radio, RadioGroup } from "@dofortech/pretty-ui";
 
-const rowStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "var(--pui-control-gap)",
-  cursor: "pointer",
-};
+const row = "flex cursor-pointer items-center gap-(--pui-control-gap)";
 
 export default function RadioNativeButton() {
   const groupLabelId = React.useId();
 
   return (
     <div>
-      <div
-        id={groupLabelId}
-        style={{
-          marginBlockEnd: "var(--pui-space-2)",
-          fontSize: "var(--pui-font-size-2)",
-          fontWeight: "var(--pui-font-weight-medium)",
-        }}
-      >
+      <div id={groupLabelId} className="mb-2 text-2 font-medium">
         Theme
       </div>
 
@@ -30,19 +18,19 @@ export default function RadioNativeButton() {
         aria-labelledby={groupLabelId}
         name="theme"
         defaultValue="system"
-        style={{ gap: "var(--pui-space-2)" }}
+        className="gap-2"
       >
         {/* Sibling label. `nativeButton` tells Base UI the rendered element
           * really is a <button> — and it also moves `id` from the hidden input
           * onto the root, which is the whole reason htmlFor resolves here. */}
-        <div style={rowStyle}>
+        <div className={row}>
           <Radio
             value="system"
             id="theme-system"
             nativeButton
             render={<button type="button" />}
           />
-          <label htmlFor="theme-system" style={{ cursor: "pointer" }}>
+          <label htmlFor="theme-system" className="cursor-pointer">
             Match my system
           </label>
         </div>
@@ -56,7 +44,7 @@ export default function RadioNativeButton() {
           value="light"
           nativeButton
           render={(props) => (
-            <label style={rowStyle}>
+            <label className={row}>
               <button type="button" {...props} />
               Always light
             </label>
@@ -67,7 +55,7 @@ export default function RadioNativeButton() {
           value="dark"
           nativeButton
           render={(props) => (
-            <label style={rowStyle}>
+            <label className={row}>
               <button type="button" {...props} />
               Always dark
             </label>

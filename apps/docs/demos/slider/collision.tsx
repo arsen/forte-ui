@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Slider } from "@dofortech/pretty-ui";
 
 const behaviours = [
@@ -21,22 +20,15 @@ const behaviours = [
   },
 ] as const;
 
-const column: CSSProperties = {
-  display: "grid",
-  gap: "var(--pui-space-5)",
-};
+const column = "grid gap-5";
 
-const hint: CSSProperties = {
-  margin: 0,
-  fontSize: "var(--pui-font-size-1)",
-  color: "var(--pui-color-foreground-muted)",
-};
+const hint = "m-0 text-1 text-foreground-muted";
 
 export default function SliderCollision() {
   return (
-    <div style={column}>
+    <div className={column}>
       {behaviours.map(({ value, label, hint: text }) => (
-        <div key={value} style={{ display: "grid", gap: "var(--pui-space-1)" }}>
+        <div key={value} className="grid gap-1">
           {/* `minStepsBetweenValues` is the companion knob: it keeps a gap
             * between the two values whichever collision behaviour is in use. */}
           <Slider.Root
@@ -54,7 +46,7 @@ export default function SliderCollision() {
               </Slider.Track>
             </Slider.Control>
           </Slider.Root>
-          <p style={hint}>{text}</p>
+          <p className={hint}>{text}</p>
         </div>
       ))}
     </div>

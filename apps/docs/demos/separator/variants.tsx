@@ -1,28 +1,17 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { Separator } from "@dofortech/pretty-ui";
 
 const VARIANTS = ["solid", "dashed", "dotted"] as const;
 
-const label: CSSProperties = {
-  fontFamily: "var(--pui-font-mono)",
-  fontSize: "var(--pui-font-size-1)",
-  color: "var(--pui-color-foreground-muted)",
-};
+const label = "font-mono text-1 text-foreground-muted";
 
 export default function SeparatorVariants() {
   return (
-    <div
-      style={{
-        display: "grid",
-        gap: "var(--pui-space-4)",
-        inlineSize: "min(30rem, 100%)",
-      }}
-    >
+    <div className="grid w-full max-w-[30rem] gap-4">
       {VARIANTS.map((variant) => (
-        <div key={variant} style={{ display: "grid", gap: "var(--pui-space-2)" }}>
-          <span style={label}>{variant}</span>
+        <div key={variant} className="grid gap-2">
+          <span className={label}>{variant}</span>
           <Separator variant={variant} />
         </div>
       ))}

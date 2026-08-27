@@ -2,11 +2,7 @@
 
 import { Button, Dialog, Switch } from "@dofortech/pretty-ui";
 
-const row = {
-  display: "flex",
-  alignItems: "center",
-  gap: "var(--pui-space-3)",
-} as const;
+const row = "flex items-center gap-3";
 
 export default function DialogBasic() {
   return (
@@ -19,11 +15,11 @@ export default function DialogBasic() {
         <Dialog.Description>
           These details are visible to everyone in the workspace.
         </Dialog.Description>
-        <label style={row}>
+        <label className={row}>
           <Switch defaultChecked />
           Show my email address
         </label>
-        <label style={row}>
+        <label className={row}>
           <Switch />
           Show my local time
         </label>

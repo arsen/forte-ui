@@ -3,15 +3,11 @@
 import type { CSSProperties } from "react";
 import { Slider } from "@dofortech/pretty-ui";
 
-const row: CSSProperties = {
-  display: "flex",
-  gap: "var(--pui-space-6)",
-  alignItems: "flex-start",
-};
+const row = "flex items-start gap-6";
 
 export default function SliderVertical() {
   return (
-    <div style={row}>
+    <div className={row}>
       {/* Vertical turns the same parts 90°: the root becomes one centred
         * column, and --pui-slider-length now describes the block axis. Up and
         * Right increase the value in both orientations. */}

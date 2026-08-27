@@ -21,21 +21,11 @@ export default function ButtonLoading() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "grid", gap: "var(--pui-space-3)", justifyItems: "start" }}
-    >
+    <form onSubmit={handleSubmit} className="grid justify-items-start gap-3">
       <Button type="submit" loading={saving} loadingLabel="Saving notification settings">
         Save settings
       </Button>
-      <p
-        role="status"
-        style={{
-          margin: 0,
-          fontSize: "var(--pui-font-size-1)",
-          color: "var(--pui-color-foreground-muted)",
-        }}
-      >
+      <p role="status" className="m-0 text-1 text-foreground-muted">
         {savedAt ? `Settings saved at ${savedAt}` : "No changes saved yet"}
       </p>
     </form>

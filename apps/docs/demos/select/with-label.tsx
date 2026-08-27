@@ -12,7 +12,7 @@ const languages = {
 
 export default function SelectWithLabel() {
   return (
-    <div style={{ width: "16rem" }}>
+    <div className="w-[16rem]">
       <Select.Root items={languages} defaultValue="en">
         <Select.Label>Interface language</Select.Label>
         <Select.Trigger fullWidth>

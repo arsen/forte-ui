@@ -15,18 +15,10 @@ const LOG = `12:04:01.229  info   build    resolved 1,284 modules in 3.1s
 
 export default function ScrollAreaBothAxes() {
   return (
-    <ScrollArea.Root style={{ height: "9rem", width: "min(34rem, 100%)" }}>
+    <ScrollArea.Root className="h-[9rem] w-full max-w-[34rem]">
       <ScrollArea.Viewport aria-label="Build log">
         <ScrollArea.Content>
-          <pre
-            style={{
-              margin: 0,
-              fontFamily: "var(--pui-font-mono)",
-              fontSize: "var(--pui-font-size-1)",
-              lineHeight: "var(--pui-line-height-normal)",
-              color: "var(--pui-color-foreground-muted)",
-            }}
-          >
+          <pre className="m-0 font-mono text-1 leading-normal text-foreground-muted">
             {LOG}
           </pre>
         </ScrollArea.Content>

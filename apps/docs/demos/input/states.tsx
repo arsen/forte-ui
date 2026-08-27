@@ -4,14 +4,7 @@ import { Field, Input } from "@dofortech/pretty-ui";
 
 export default function InputStates() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--pui-space-4)",
-        inlineSize: "min(22rem, 100%)",
-      }}
-    >
+    <div className="flex w-full max-w-[22rem] flex-col gap-4">
       <Field.Root>
         <Field.Label>Placeholder</Field.Label>
         <Input placeholder="Nothing typed yet" />

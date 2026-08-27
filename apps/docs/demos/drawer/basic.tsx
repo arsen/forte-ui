@@ -2,11 +2,7 @@
 
 import { Button, Drawer, Switch } from "@dofortech/pretty-ui";
 
-const row = {
-  display: "flex",
-  alignItems: "center",
-  gap: "var(--pui-space-3)",
-} as const;
+const row = "flex items-center gap-3";
 
 export default function DrawerBasic() {
   return (
@@ -20,15 +16,15 @@ export default function DrawerBasic() {
           <Drawer.Description>
             Narrow the result list. Changes apply as you make them.
           </Drawer.Description>
-          <label style={row}>
+          <label className={row}>
             <Switch defaultChecked />
             Only show open issues
           </label>
-          <label style={row}>
+          <label className={row}>
             <Switch />
             Assigned to me
           </label>
-          <label style={row}>
+          <label className={row}>
             <Switch />
             Has a linked pull request
           </label>

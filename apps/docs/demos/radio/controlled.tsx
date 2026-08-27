@@ -15,7 +15,7 @@ export default function RadioControlled() {
   const note = CADENCES.find((c) => c.value === cadence)?.note;
 
   return (
-    <div style={{ inlineSize: "min(24rem, 100%)" }}>
+    <div className="w-full max-w-sm">
       <Field.Root name="cadence">
         <Field.Label nativeLabel={false}>Email me</Field.Label>
         {/* `value` + `onValueChange` rather than `defaultValue`. The callback's

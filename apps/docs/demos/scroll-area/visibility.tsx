@@ -9,13 +9,13 @@ export default function ScrollAreaVisibility() {
     <ScrollArea.Root
       fade={false}
       scrollbarVisibility="always"
-      style={{ maxHeight: "11rem", width: "min(22rem, 100%)" }}
+      className="max-h-[11rem] w-full max-w-[22rem]"
     >
       <ScrollArea.Viewport aria-label="Rows">
-        <ScrollArea.Content style={{ paddingInlineEnd: "var(--pui-space-4)" }}>
-          <div style={{ display: "grid", gap: "var(--pui-space-2)" }}>
+        <ScrollArea.Content className="pe-4">
+          <div className="grid gap-2">
             {LINES.map((line) => (
-              <p key={line} style={{ margin: 0 }}>
+              <p key={line} className="m-0">
                 {line}
               </p>
             ))}

@@ -4,13 +4,7 @@ import { Field, Radio, RadioGroup } from "@dofortech/pretty-ui";
 
 export default function RadioDisabled() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--pui-space-6)",
-      }}
-    >
+    <div className="flex flex-col gap-6">
       <Field.Root name="plan">
         <Field.Label nativeLabel={false}>Plan</Field.Label>
         <RadioGroup defaultValue="team">

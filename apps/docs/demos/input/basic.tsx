@@ -4,7 +4,7 @@ import { Field, Input } from "@dofortech/pretty-ui";
 
 export default function InputBasic() {
   return (
-    <div style={{ inlineSize: "min(22rem, 100%)" }}>
+    <div className="w-full max-w-[22rem]">
       <Field.Root name="project">
         <Field.Label>Project name</Field.Label>
         <Input placeholder="acme-website" />

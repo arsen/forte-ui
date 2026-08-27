@@ -2,13 +2,7 @@
 
 import { Button, Drawer } from "@dofortech/pretty-ui";
 
-const hint = {
-  maxInlineSize: "22rem",
-  margin: 0,
-  color: "var(--pui-color-foreground-muted)",
-  fontSize: "var(--pui-font-size-1)",
-  textAlign: "center",
-} as const;
+const hint = "m-0 max-w-[22rem] text-center text-1 text-foreground-muted";
 
 export default function DrawerSwipeArea() {
   return (
@@ -20,7 +14,7 @@ export default function DrawerSwipeArea() {
       <Drawer.Trigger render={<Button variant="outline" />}>
         Open navigation
       </Drawer.Trigger>
-      <p style={hint}>
+      <p className={hint}>
         Drag inward from the left edge of the window to open this one without
         touching the button. The button stays, because a gesture nobody can see
         is a gesture most people never find.

@@ -4,14 +4,7 @@ import { Checkbox, Field, Switch } from "@dofortech/pretty-ui";
 
 export default function FieldCheckboxAndSwitch() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--pui-space-5)",
-        inlineSize: "min(24rem, 100%)",
-      }}
-    >
+    <div className="flex w-full max-w-sm flex-col gap-5">
       {/* A control with no text of its own goes INSIDE the label. The label
         * lays itself out as a row and takes a pointer cursor because clicking
         * it now toggles the control. */}

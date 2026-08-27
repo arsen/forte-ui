@@ -14,30 +14,17 @@ const REGIONS = [
 
 export default function ScrollAreaHorizontal() {
   return (
-    <ScrollArea.Root style={{ width: "min(30rem, 100%)" }}>
+    <ScrollArea.Root className="w-full max-w-[30rem]">
       <ScrollArea.Viewport aria-label="Deployment regions">
-        <ScrollArea.Content style={{ paddingBlockEnd: "var(--pui-space-4)" }}>
-          <div style={{ display: "flex", gap: "var(--pui-space-3)" }}>
+        <ScrollArea.Content className="pb-4">
+          <div className="flex gap-3">
             {REGIONS.map(([id, city]) => (
               <div
                 key={id}
-                style={{
-                  flex: "0 0 auto",
-                  width: "9rem",
-                  padding: "var(--pui-space-4)",
-                  borderRadius: "var(--pui-radius-surface)",
-                  backgroundColor: "var(--pui-color-panel)",
-                }}
+                className="w-[9rem] flex-none rounded-surface bg-panel p-4"
               >
-                <p style={{ margin: 0, fontWeight: "var(--pui-font-weight-medium)" }}>{city}</p>
-                <p
-                  style={{
-                    margin: 0,
-                    color: "var(--pui-color-foreground-muted)",
-                    fontFamily: "var(--pui-font-mono)",
-                    fontSize: "var(--pui-font-size-1)",
-                  }}
-                >
+                <p className="m-0 font-medium">{city}</p>
+                <p className="m-0 font-mono text-1 text-foreground-muted">
                   {id}
                 </p>
               </div>

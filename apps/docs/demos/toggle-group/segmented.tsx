@@ -4,7 +4,7 @@ import { Toggle, ToggleGroup } from "@dofortech/pretty-ui";
 
 export default function ToggleGroupSegmented() {
   return (
-    <div style={{ display: "grid", gap: "var(--pui-space-4)", justifyItems: "start" }}>
+    <div className="grid justify-items-start gap-4">
       {/* `segmented` puts one padded panel behind the whole set — the same
         * surface, padding and radius Tabs uses for its `pill` variant, so a
         * segmented group and a pill tab strip on one screen read as the same
@@ -26,7 +26,7 @@ export default function ToggleGroupSegmented() {
       {/* `fullWidth` fills the container and splits it equally between the
         * toggles, which is the shape a segmented control is usually asked for
         * on narrow screens. */}
-      <div style={{ inlineSize: "min(26rem, 100%)" }}>
+      <div className="w-full max-w-[26rem]">
         <ToggleGroup
           segmented
           fullWidth

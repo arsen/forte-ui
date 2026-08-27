@@ -11,23 +11,13 @@ const PLANS: Plan[] = [
   { id: "business", name: "Business", price: "$480 / mo", seats: "up to 50 seats" },
 ];
 
-const rows = { display: "flex", flexDirection: "column" } as const;
+const rows = "flex flex-col";
 
-const row = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "var(--pui-space-4)",
-  paddingBlock: "var(--pui-space-2)",
-  borderBlockStart: "1px solid var(--pui-color-border-muted)",
-} as const;
+const row = "flex justify-between gap-4 border-t border-border-muted py-2";
 
-const label = { color: "var(--pui-color-foreground-muted)" } as const;
+const label = "text-foreground-muted";
 
-const options = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "var(--pui-space-2)",
-} as const;
+const options = "flex flex-col gap-2";
 
 export default function DrawerNested() {
   const [plan, setPlan] = React.useState<Plan>(PLANS[1]!);
@@ -45,17 +35,17 @@ export default function DrawerNested() {
             Renews on 3 September, billed to the card ending 4242.
           </Drawer.Description>
 
-          <div style={rows}>
-            <div style={row}>
-              <span style={label}>Plan</span>
+          <div className={rows}>
+            <div className={row}>
+              <span className={label}>Plan</span>
               <span>{plan.name}</span>
             </div>
-            <div style={row}>
-              <span style={label}>Included</span>
+            <div className={row}>
+              <span className={label}>Included</span>
               <span>{plan.seats}</span>
             </div>
-            <div style={row}>
-              <span style={label}>Next invoice</span>
+            <div className={row}>
+              <span className={label}>Next invoice</span>
               <span>{plan.price}</span>
             </div>
           </div>
@@ -72,7 +62,7 @@ export default function DrawerNested() {
                 <Drawer.Description>
                   The change takes effect at the next renewal.
                 </Drawer.Description>
-                <div style={options}>
+                <div className={options}>
                   {PLANS.map((p) => (
                     // Drawer.Close both dismisses this sheet and hands the
                     // choice back to the parent. Swiping the sheet away or
