@@ -36,13 +36,14 @@
   },
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs && node scripts/build-motion.mjs",
+    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs",
+    "generate": "pnpm run tokens && pnpm run docgen",
     "check:contrast": "node scripts/check-contrast.mjs",
-    "build": "pnpm run tokens && pnpm run docgen && vite build",
+    "build": "pnpm run generate && vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
     "test": "node scripts/check-contrast.mjs --fine",
-    "clean": "rm -rf dist .turbo",
-    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs"
+    "clean": "rm -rf dist .turbo"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

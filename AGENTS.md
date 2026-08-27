@@ -49,12 +49,38 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
 ```bash
 pnpm dev                                    # docs site at :3000
 pnpm build                                  # everything
+pnpm generate                               # re-run ALL five generators
 pnpm typecheck                              # the real gate — there is no linter
-pnpm --filter @dofortech/pretty-ui test     # contrast harness (--fine sweep)
-pnpm --filter @dofortech/pretty-ui tokens   # regenerate generated CSS
-pnpm --filter @dofortech/pretty-ui-docs registry  # regenerate the demo registry
-pnpm --filter @dofortech/pretty-ui-docs toc       # regenerate the "On this page" seed
+pnpm test                                   # contrast harness (--fine sweep)
 ```
+
+`pnpm generate` is the one to reach for after editing a source of truth while
+the dev server is already running — it fans out to `generate` in both packages
+(`tokens && docgen` in the library, `registry && toc` in the docs) and they run
+in parallel, since neither docs generator reads anything the library builds.
+Under a second, and it is deliberately **not** turbo-cached: these scripts write
+checked-in files, so a cache hit on an unchanged input set would leave a hand
+edit to `tokens.color.css` or `registry.ts` sitting in the tree — the exact
+drift the command exists to repair.
+
+Each generator still has its own script when you want just one:
+
+```bash
+pnpm --filter @dofortech/pretty-ui tokens         # the generated CSS
+pnpm --filter @dofortech/pretty-ui docgen         # props.json + theming.json
+pnpm --filter @dofortech/pretty-ui check:contrast # the ramp gate
+pnpm --filter @dofortech/pretty-ui-docs registry  # the demo registry
+pnpm --filter @dofortech/pretty-ui-docs toc       # the "On this page" seed
+```
+
+`check:contrast` is deliberately outside `generate` — it is a gate, not a
+generator, and it writes nothing.
+
+Every root script is `turbo run <task>`, never the `turbo <task>` shorthand.
+`generate` is *also* a built-in turbo command (the plop-based code generator)
+and the shorthand loses to it, dropping into an interactive "add a custom
+generator?" prompt instead of running the task. `run` everywhere means the next
+task name to collide does not repeat this.
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
 `typecheck` and `check:contrast` are the gates that actually catch things.
@@ -63,12 +89,14 @@ pnpm --filter @dofortech/pretty-ui-docs toc       # regenerate the "On this page
 
 | File | Source of truth | Regenerate with |
 | :-- | :-- | :-- |
-| `packages/ui/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `pnpm ... tokens` |
-| `packages/ui/src/styles/motion.css` | `scripts/motion.mjs` | `pnpm ... tokens` |
-| `packages/ui/docs-data/props.json` | component TSX doc comments | `pnpm ... docgen` |
-| `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `pnpm ... docgen` |
-| `apps/docs/demos/registry.ts` | the files in `demos/` | `pnpm ... registry` |
-| `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `pnpm ... toc` |
+| `packages/ui/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `tokens` |
+| `packages/ui/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
+| `packages/ui/docs-data/props.json` | component TSX doc comments | `docgen` |
+| `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
+| `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
+| `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `toc` |
+
+`pnpm generate` from the root runs every row of that table.
 
 If a value is missing, add it to the **table** in `ramp.mjs` / `motion.mjs` and
 regenerate. Never patch the output.
@@ -93,8 +121,11 @@ the blocks from one table makes that class of mistake impossible. Do not
 ### When to run a generator
 
 A cold `pnpm dev` or `pnpm build` runs all five for you: turbo's `dev` depends
-on `^build`, and the library's `build` is `tokens && docgen && vite build`,
-while the docs' `dev` and `build` both start with `build-registry && build-toc`.
+on `^build`, and both packages' `build` now starts with their own `generate` —
+`generate && vite build` in the library, `generate && next build` in the docs.
+That chaining is why the per-package `generate` scripts exist at all rather than
+only the root one: it keeps the build's generator list and `pnpm generate`'s
+from drifting apart.
 
 **So you only run these by hand after changing something while the dev server
 is already running.** What the library leaves running is `vite build --watch`,

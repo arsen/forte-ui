@@ -20,6 +20,26 @@
       "cache": false,
       "persistent": true
     },
+    // Never cached. These five scripts write CHECKED-IN files, so a cache hit
+    // on an unchanged input set would leave a hand-edit to tokens.color.css or
+    // registry.ts sitting in the tree -- the exact drift `pnpm generate` exists
+    // to repair. They run in well under a second; caching buys nothing and
+    // costs the guarantee. No dependsOn either: neither docs generator reads
+    // anything the library builds, so both packages run in parallel.
+    "generate": {
+      "cache": false
+    },
+    "tokens": {
+      "outputs": [
+        "src/styles/tokens.color.css",
+        "src/styles/motion.css"
+      ]
+    },
+    "docgen": {
+      "outputs": [
+        "docs-data/**"
+      ]
+    },
     "lint": {
       "dependsOn": [
         "^build"
@@ -30,22 +50,11 @@
         "^build"
       ]
     },
-    "clean": {
-      "cache": false
-    },
-    "docgen": {
-      "outputs": [
-        "docs-data/**"
-      ]
-    },
-    "tokens": {
-      "outputs": [
-        "src/styles/tokens.color.css",
-        "src/styles/motion.css"
-      ]
-    },
     "test": {
       "dependsOn": []
+    },
+    "clean": {
+      "cache": false
     }
   }
 }

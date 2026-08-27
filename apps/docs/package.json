@@ -4,12 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/build-registry.mjs && node scripts/build-toc.mjs && next dev -p 3000",
-    "build": "node scripts/build-registry.mjs && node scripts/build-toc.mjs && next build",
-    "start": "next start -p 3000",
-    "typecheck": "tsc --noEmit",
     "registry": "node scripts/build-registry.mjs",
-    "toc": "node scripts/build-toc.mjs"
+    "toc": "node scripts/build-toc.mjs",
+    "generate": "pnpm run registry && pnpm run toc",
+    "dev": "pnpm run generate && next dev -p 3000",
+    "build": "pnpm run generate && next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@dofortech/pretty-ui": "workspace:*",
