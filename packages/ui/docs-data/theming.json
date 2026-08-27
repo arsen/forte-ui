@@ -2437,6 +2437,201 @@
       }
     ]
   },
+  "Menu": {
+    "name": "Menu",
+    "tokens": [
+      {
+        "name": "--pui-menu-backdrop-z-index",
+        "value": "49",
+        "description": "Stacking order of the backdrop",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-z-index",
+        "value": "50",
+        "description": "Stacking order of the positioner",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Popup surface colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Popup text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Popup shadow (stripped by the browser in forced-colors mode, which is why the element also carries `.pui-hc-surface`)",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the popup from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-padding-y",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding above the first row and below the last",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-min-width",
+        "value": "12rem",
+        "description": "Smallest width the popup will take",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-max-width",
+        "value": "20rem",
+        "description": "Width cap, further clamped to the space the positioner reports as available",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-item-px",
+        "value": "var(--pui-space-3)",
+        "description": "Inline padding shared by rows, group labels and separators",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-item-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between a row's indicator, its label and its shortcut",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-item-indicator-size",
+        "value": "var(--pui-space-4)",
+        "description": "Width of the tick / dot column on checkable rows",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-item-icon-size",
+        "value": "var(--pui-space-4)",
+        "description": "Size a leading icon dropped into a row is drawn at",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the popup slides in from, per side",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-enter-scale",
+        "value": "var(--pui-scale-enter)",
+        "description": "Scale the popup grows from and shrinks back to",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-enter-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "Curve of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-menu-item-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Row text colour",
+        "part": "item",
+        "overrides": [
+          {
+            "selector": ".item[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menu-item-bg-highlighted",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the highlighted row",
+        "part": "item",
+        "overrides": [
+          {
+            "selector": ".item[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menu-item-fg-highlighted",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the highlighted row",
+        "part": "item",
+        "overrides": [
+          {
+            "selector": ".item[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-menu-item-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Row font size",
+        "part": "item",
+        "overrides": []
+      }
+    ]
+  },
   "Popover": {
     "name": "Popover",
     "tokens": [

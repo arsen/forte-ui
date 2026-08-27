@@ -167,6 +167,28 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_menu_basic from "./menu/basic";
+import d_menu_basic_src from "./menu/basic?raw";
+import d_menu_checkbox_items from "./menu/checkbox-items";
+import d_menu_checkbox_items_src from "./menu/checkbox-items?raw";
+import d_menu_disabled from "./menu/disabled";
+import d_menu_disabled_src from "./menu/disabled?raw";
+import d_menu_groups from "./menu/groups";
+import d_menu_groups_src from "./menu/groups?raw";
+import d_menu_links from "./menu/links";
+import d_menu_links_src from "./menu/links?raw";
+import d_menu_placement from "./menu/placement";
+import d_menu_placement_src from "./menu/placement?raw";
+import d_menu_radio_items from "./menu/radio-items";
+import d_menu_radio_items_src from "./menu/radio-items?raw";
+import d_menu_shortcuts from "./menu/shortcuts";
+import d_menu_shortcuts_src from "./menu/shortcuts?raw";
+import d_menu_submenu from "./menu/submenu";
+import d_menu_submenu_src from "./menu/submenu?raw";
+import d_menu_theming from "./menu/theming";
+import d_menu_theming_src from "./menu/theming?raw";
+import d_menu_trigger from "./menu/trigger";
+import d_menu_trigger_src from "./menu/trigger?raw";
 import d_popover_basic from "./popover/basic";
 import d_popover_basic_src from "./popover/basic?raw";
 import d_popover_controlled from "./popover/controlled";
@@ -446,6 +468,17 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "menu/basic"
+  | "menu/checkbox-items"
+  | "menu/disabled"
+  | "menu/groups"
+  | "menu/links"
+  | "menu/placement"
+  | "menu/radio-items"
+  | "menu/shortcuts"
+  | "menu/submenu"
+  | "menu/theming"
+  | "menu/trigger"
   | "popover/basic"
   | "popover/controlled"
   | "popover/detached-trigger"
@@ -628,6 +661,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "menu/basic": { Component: d_menu_basic, source: d_menu_basic_src, file: "menu/basic.tsx" },
+  "menu/checkbox-items": { Component: d_menu_checkbox_items, source: d_menu_checkbox_items_src, file: "menu/checkbox-items.tsx" },
+  "menu/disabled": { Component: d_menu_disabled, source: d_menu_disabled_src, file: "menu/disabled.tsx" },
+  "menu/groups": { Component: d_menu_groups, source: d_menu_groups_src, file: "menu/groups.tsx" },
+  "menu/links": { Component: d_menu_links, source: d_menu_links_src, file: "menu/links.tsx" },
+  "menu/placement": { Component: d_menu_placement, source: d_menu_placement_src, file: "menu/placement.tsx" },
+  "menu/radio-items": { Component: d_menu_radio_items, source: d_menu_radio_items_src, file: "menu/radio-items.tsx" },
+  "menu/shortcuts": { Component: d_menu_shortcuts, source: d_menu_shortcuts_src, file: "menu/shortcuts.tsx" },
+  "menu/submenu": { Component: d_menu_submenu, source: d_menu_submenu_src, file: "menu/submenu.tsx" },
+  "menu/theming": { Component: d_menu_theming, source: d_menu_theming_src, file: "menu/theming.tsx" },
+  "menu/trigger": { Component: d_menu_trigger, source: d_menu_trigger_src, file: "menu/trigger.tsx" },
   "popover/basic": { Component: d_popover_basic, source: d_popover_basic_src, file: "popover/basic.tsx" },
   "popover/controlled": { Component: d_popover_controlled, source: d_popover_controlled_src, file: "popover/controlled.tsx" },
   "popover/detached-trigger": { Component: d_popover_detached_trigger, source: d_popover_detached_trigger_src, file: "popover/detached-trigger.tsx" },
