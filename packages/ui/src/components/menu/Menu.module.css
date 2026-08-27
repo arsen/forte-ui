@@ -105,6 +105,72 @@
   }
 
   /* ------------------------------------------------------------------------
+   * Trigger inside a Menubar
+   *
+   * A menu bar is a row of words, not a row of buttons, so the standalone
+   * chrome above comes off: no border, no panel fill, and a tighter inline
+   * padding. What replaces it is the strip item a desktop menu bar draws.
+   *
+   * This block is in THIS file, and not in Menubar.module.css, because of what
+   * it has to select. `.trigger` is applied only when the consumer passed no
+   * `render` — a trigger handed over to our own `<Button>` keeps that button's
+   * look — and CSS Modules hashes the class, so it can only be named from
+   * inside the file that declares it. The alternative available from
+   * Menubar.module.css is `[data-pui="menu-trigger"]`, which matches the
+   * `render` case too and would silently flatten a button the consumer chose.
+   *
+   * The knobs are declared the other way round, on `.root` in
+   * Menubar.module.css, where they are the BAR's theming surface and reach
+   * these triggers by inheritance (a `Menu.Root` renders no element, so the
+   * triggers are the bar's own children). Rename one on either side and this
+   * rule quietly stops painting: a `var()` with nothing behind it is invalid
+   * at computed-value time and the property falls back to inheritance.
+   *
+   * Every selector here is one step more specific than the base rule it
+   * overrides — `[data-popup-open]` included, which needs its own rule rather
+   * than riding on the block above, since `.trigger[data-popup-open]` and
+   * `[data-pui="menubar"] .trigger` tie at (0,2,0).
+   * --------------------------------------------------------------------- */
+  [data-pui="menubar"] .trigger {
+    /* Never squeezed by a neighbour: the label is already `nowrap`, so a
+     * shrunk trigger would spill its text over the next one rather than
+     * truncate. */
+    flex: none;
+    height: var(--pui-menubar-trigger-height);
+    padding-inline: var(--pui-menubar-trigger-px);
+    border-width: 0;
+    border-radius: var(--pui-menubar-trigger-radius);
+
+    background-color: var(--pui-menubar-trigger-bg);
+    color: var(--pui-menubar-trigger-fg);
+
+    font-size: var(--pui-menubar-trigger-font-size);
+    font-weight: var(--pui-menubar-trigger-font-weight);
+  }
+
+  /* A vertical bar stretches its triggers to the strip's width, so the labels
+   * need to start at the reading edge — centred, they would sit in a ragged
+   * column with nothing lining up. */
+  [data-pui="menubar"][data-orientation="vertical"] .trigger {
+    justify-content: flex-start;
+  }
+
+  @media (hover: hover) {
+    [data-pui="menubar"] .trigger:hover:not([data-disabled]) {
+      background-color: var(--pui-menubar-trigger-bg-hover);
+    }
+  }
+
+  /* The open trigger wears the same soft-primary pair as the highlighted row
+   * inside its popup, so the two read as one surface — and so the bar still
+   * says which menu produced the list now covering its neighbours. */
+  [data-pui="menubar"] .trigger:active:not([data-disabled]),
+  [data-pui="menubar"] .trigger[data-popup-open] {
+    background-color: var(--pui-menubar-trigger-bg-open);
+    color: var(--pui-menubar-trigger-fg-open);
+  }
+
+  /* ------------------------------------------------------------------------
    * Backdrop
    *
    * Off by default and opt-in through `backdrop` on `Menu.Popup`. A menu is a
@@ -661,6 +727,14 @@
      * forced-colors would flatten to Canvas, losing the trail back. The same
      * system pair the generic `[data-highlighted]` rule uses puts it back. */
     .item[data-popup-open]:not([data-disabled]) {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    /* And the same for the menubar trigger whose menu is open, for the same
+     * reason: its fill is the only thing marking which menu the popup on
+     * screen belongs to. */
+    [data-pui="menubar"] .trigger[data-popup-open]:not([data-disabled]) {
       background-color: Highlight;
       color: HighlightText;
     }

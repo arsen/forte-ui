@@ -59,6 +59,7 @@ const NAV: NavGroup[] = [
       { title: "Form", href: "/components/form" },
       { title: "Input", href: "/components/input" },
       { title: "Menu", href: "/components/menu" },
+      { title: "Menubar", href: "/components/menubar" },
       { title: "Navigation Menu", href: "/components/navigation-menu" },
       { title: "Number Field", href: "/components/number-field" },
       { title: "OTP Field", href: "/components/otp-field" },
