@@ -82,9 +82,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ThemeToggle />
               </div>
             </header>
-            <div className="mx-auto grid w-full max-w-shell grid-cols-[15rem_minmax(0,1fr)_14rem] gap-5 px-4 max-toc:grid-cols-[15rem_minmax(0,1fr)] max-nav:grid-cols-[minmax(0,1fr)]">
+            <div className="grid w-full max-w-shell grid-cols-[15rem_minmax(0,1fr)_14rem] gap-5 px-4 max-toc:grid-cols-[15rem_minmax(0,1fr)] max-nav:grid-cols-[minmax(0,1fr)]">
               <Sidebar />
-              <main className="min-w-0 pt-7 pb-8" id="main">{children}</main>
+              <main className="min-w-0 pt-7 pb-8 max-w-6xl mx-auto" id="main">{children}</main>
               {/* The section rail. It renders nothing on a page with fewer than
                 * two headings, and the track is a fixed width either way, so
                 * the centre column does not shift between pages. */}
