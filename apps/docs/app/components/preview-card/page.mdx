@@ -1,0 +1,329 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Preview Card",
+  description:
+    "A card that shows where a link goes, revealed by resting on it — supplementary by design, and never the only route to what it holds.",
+};
+
+# Preview Card
+
+A card that previews a link's destination, revealed by resting on the link. It
+is the Wikipedia hover-summary and the profile card behind an `@mention`: a
+courtesy for anyone with a pointer, and never the only way to the content.
+
+<DemoBlock id="preview-card/basic" />
+
+## Preview card, popover, or tooltip?
+
+All three are anchored surfaces. What separates them is who the content is for,
+and how it is reached.
+
+| | Opens on | Announced | Reachable by keyboard | Holds |
+| :-- | :-- | :-- | :-- | :-- |
+| **Preview Card** | hover, focus, after a long delay | no | no — Tab goes past it | a summary of the link |
+| [**Popover**](/components/popover) | press, and hover on request | yes | yes — it is tabbable | anything that matters |
+| [**Tooltip**](/components/tooltip) | hover, focus | as the trigger's label | n/a | a label for a control |
+
+The test is what happens if the surface never appears. If the user would miss
+it, the content belongs in a popover; this component is for the case where the
+card is a shortcut and the link itself is the answer.
+
+<Callout kind="a11y">
+
+**Nothing in a preview card may be the only route to itself.** The popup is
+portalled to the end of `<body>` and nothing moves focus into it, so Tab from
+the link continues into the page rather than into the card. A pointer user can
+move into the card and click a link there — a keyboard user cannot reach it at
+all. Whatever the card shows, the destination has to show too.
+
+</Callout>
+
+## Import
+
+```tsx
+import { PreviewCard } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+`PreviewCard.Popup` collapses Base UI's `Portal` and `Positioner` into one
+part, so the common case is a single element. Its props are drawn from all
+three.
+
+```tsx
+<PreviewCard.Root>
+  <PreviewCard.Trigger href="/u/ada" />
+  <PreviewCard.Popup>
+    <PreviewCard.Arrow />
+    <PreviewCard.Viewport />
+  </PreviewCard.Popup>
+</PreviewCard.Root>
+```
+
+There is no `Title`, `Description`, `Close` or `Footer` here, and their absence
+is the component. A popover has them because they wire up `aria-labelledby`,
+`aria-describedby` and a way out — a card that is never announced and never
+focused has nothing to wire, and nothing to escape from. The popup is a flex
+column with a gap; the layout inside it is yours.
+
+### The trigger is a link
+
+`PreviewCard.Trigger` renders an `<a>`, so **give it an `href`**. Without one
+the element is not focusable and not announced as a link, which strands the
+keyboard user — the one person for whom the card was never going to be the
+point. For a router link, pass it through `render`:
+
+```tsx
+<PreviewCard.Trigger render={<Link href="/u/ada" />}>@ada</PreviewCard.Trigger>
+```
+
+A link that wraps across lines anchors the card to the line the pointer is
+actually on, not to the union rectangle of all its lines. That happens without
+configuration.
+
+<DemoBlock id="preview-card/inline" />
+
+### The arrow
+
+There is no `arrow` prop. **Render `<PreviewCard.Arrow />` as a child of
+`PreviewCard.Popup`** and the wedge appears, pointing back at the link; leave it
+out and the card is a plain rectangle. It positions and rotates itself from the
+side the card resolved to, and takes the card's own fill and hairline, so a
+re-skinned card re-skins the arrow with it.
+
+Two things to know. `sideOffset` has to leave room for it — the default 8px
+clears the default arrow, so only a smaller offset is a problem. And with a
+`PreviewCard.Viewport`, keep the arrow *outside* the viewport, as a direct child
+of the popup: the viewport clips, and the arrow lives past the card's edge.
+
+## Examples
+
+### Sides
+
+`side` on `PreviewCard.Popup` picks the edge the card opens from, and `align`
+moves it along that edge. Both are hints: the card flips to the opposite side
+when it would overflow the collision boundary, which is why the `left` and
+`right` cards below may land elsewhere in a narrow frame. Alongside the four
+physical sides, `"inline-start"` and `"inline-end"` follow writing direction
+instead of staying pinned to a physical edge.
+
+<DemoBlock id="preview-card/placement" />
+
+### Sizes
+
+`size` sets a width **cap**, not a width. The card shrinks to fit its content
+and only grows this wide when the content asks for it — and it is clamped again
+to whatever room the positioner reports as available, so a wide card on a narrow
+screen narrows rather than overflowing.
+
+<DemoBlock id="preview-card/sizes" />
+
+### Timing
+
+`delay` on `PreviewCard.Trigger` is how long the pointer has to rest before the
+card opens, and it is the setting that decides whether the component reads as
+helpful or as a rash. The default is **600ms** — long enough that crossing a
+link on the way somewhere else never opens anything. `closeDelay` (default
+**300ms**) is how long the card lingers after the pointer leaves.
+
+<DemoBlock id="preview-card/delay" />
+
+`closeDelay` is not the whole journey from link to card. Base UI grants a safe
+polygon over the gap, so the pointer may cut the corner diagonally without the
+card closing under it; the delay is the tolerance for overshooting, not for the
+trip.
+
+<Callout kind="note">
+
+**Focus opens the card too, after the same `delay`.** Tabbing to the link
+reveals it — which is a preview, not a trap, since Tab moves straight on to the
+next link in the page and the card closes behind it. Escape closes it early.
+
+</Callout>
+
+### Beyond a profile
+
+The popup is a flex column with a padding and a gap, and both are knobs, so a
+card with edge-to-edge media turns them off and puts the padding back on the
+text below. What it must *not* do is add `overflow: clip` to hold the media
+inside the corners: the `Arrow` is a child of the popup and is placed outside
+its box, so clipping would eat the wedge. Round the media itself instead.
+
+<DemoBlock id="preview-card/media" />
+
+### Multiple links, one card
+
+One `PreviewCard.Root` can serve every mention in a paragraph. Each link hands
+the popup a `payload`, and the popup reads it from the render-function form of
+`Root`'s children — so the card is written once and only one popup element is
+ever mounted.
+
+<DemoBlock id="preview-card/multiple-triggers" />
+
+Guard on `payload` being undefined. It is undefined before the first open, and
+again while the card animates out, because Base UI keeps the popup mounted until
+the exit transition finishes.
+
+### Animating between links
+
+`PreviewCard.Viewport` animates that swap. It keeps a clone of the outgoing
+panel mounted for the length of the transition, slides the two past each other
+in the direction the new link lies, and resizes the card to follow.
+
+<DemoBlock id="preview-card/viewport" />
+
+Wrap only the content that changes, and keep `PreviewCard.Arrow` **outside** the
+viewport. Without a viewport the content still swaps correctly — it just cuts
+rather than sliding, which is the right choice when the panels are similar
+enough that the movement would be noise.
+
+### Controlled
+
+A controlled card has two pieces of state: `open`, and `triggerId` naming the
+link it is anchored to. There is no separate `onTriggerIdChange` — the trigger
+that caused the change arrives on `onOpenChange`'s event details, so both are
+updated from the one handler. Changing `triggerId` alone re-anchors the card
+without closing it.
+
+<DemoBlock id="preview-card/controlled" />
+
+### Detached triggers
+
+`PreviewCard.createHandle()` connects a `PreviewCard.Root` to links that are not
+its children, for when declaring the card beside every mention is not practical.
+Pass the same handle to the root and to every trigger. The handle is also an
+imperative remote: `open(triggerId)` and `close()`.
+
+<DemoBlock id="preview-card/detached-trigger" />
+
+Create the handle **outside render**. One made during render is a new object on
+every pass, and the root and its triggers stop recognising each other. `open()`
+takes a trigger id rather than a payload — the card still has to be anchored to
+something — so give each detached trigger an explicit `id`.
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves to the link, which opens the card after the trigger delay. Tabbing again moves to the next element in the page — not into the card.",
+    },
+    {
+      keys: ["Esc"],
+      description: "Closes the card, leaving focus on the link.",
+    },
+    {
+      keys: ["Enter"],
+      description: "Follows the link, as on any other link.",
+    },
+  ]}
+/>
+
+The card carries no `role`, no `aria-haspopup` and no `aria-describedby`, and
+Base UI leaves it that way on purpose. A screen reader announces the link as an
+ordinary link and the card never interrupts — which is the correct behaviour for
+a surface holding a summary of the page the link already names, and the reason
+the content rule at the top of this page is absolute.
+
+Two consequences worth stating plainly:
+
+- **Anything actionable in the card is pointer-only.** The card stays open while
+  the pointer is inside it, so a link in there is clickable; a keyboard user
+  never gets to it. Repeat it on the destination.
+- **There is no touch story.** The card opens on hover and on focus, neither of
+  which a touch tap produces. On a phone the link is simply a link, which is why
+  the link has to be enough.
+
+<Callout kind="warn">
+
+**A card that fires the instant the pointer arrives is a bug people report as
+"the page is flickering".** With `delay={0}`, sweeping across a paragraph of
+mentions opens and abandons a card per word. Keep the default unless the link is
+alone on the screen.
+
+</Callout>
+
+In forced-colors mode the card's shadow is stripped by the browser, so the
+component carries a transparent border that becomes the visible system-coloured
+boundary, and the arrow is drawn as two SVG paths rather than the traditional
+CSS-border triangle, which would degrade into a filled rectangle. The trigger
+carries `.pui-link`, so it repaints as `LinkText` with an underline. Reduced
+motion is handled by the motion tokens: the travel collapses to `0px` and the
+scale to exactly `1`, leaving a plain opacity fade.
+
+## Theming
+
+Every value below is a custom property you can override.
+`--pui-preview-card-z-index` is declared on the positioner, the three
+`--pui-preview-card-trigger-*` values on the trigger, the viewport pair on the
+viewport, and everything else on the popup.
+
+<ThemingTable component="PreviewCard" />
+
+Where you set these matters. Each one is declared on its own element, so setting
+it on an ancestor, on `:root` or on a theme scope has no effect — an element's
+own declaration wins over an inherited value. Override them on the element that
+declares them: `className` on `PreviewCard.Popup` for most,
+`positionerClassName` for the stacking one, `className` on
+`PreviewCard.Trigger` for the link. The portal makes the ancestor route doubly
+useless: the popup renders on `document.body`, so nothing above the *link* is an
+ancestor of it in the first place.
+
+To re-skin every card at once, re-point the global tokens the defaults resolve
+to — `--pui-color-overlay`, `--pui-color-border`, `--pui-color-primary-text`,
+`--pui-radius-surface`, `--pui-surface-p`, `--pui-shadow-4`, `--pui-space-*`,
+`--pui-font-*`, `--pui-travel-sm`. The card only reads those and never
+re-declares them, so a value set on `:root` or a theme scope does reach it.
+
+Two defaults differ from `Popover`'s deliberately, and both are about a surface
+nobody asked for. The entrance runs on `--pui-ease-emphasized` rather than a
+spring: a popover answers a press and can afford some snap, while an overshoot
+on something that appeared because the reader held still reads as the page
+twitching. And the trigger's underline is a muted `color-mix` of its own text
+colour, so a paragraph with six mentions in it does not turn into six rules of
+solid accent.
+
+The stylesheet also computes `--pui-preview-card-enter-x` /
+`--pui-preview-card-enter-y` from `--pui-preview-card-travel` and the resolved
+`data-side`, and `--pui-preview-card-viewport-x` from
+`--pui-preview-card-viewport-travel` and `data-activation-direction`. They are
+internal; change the travel tokens instead.
+
+## API reference
+
+### PreviewCard.Root
+
+<PropTable component="PreviewCardRoot" />
+
+### PreviewCard.Trigger
+
+<PropTable component="PreviewCardTrigger" />
+
+### PreviewCard.Popup
+
+Renders the portal, the positioner and the popup as one part, so its props are
+drawn from all three.
+
+<PropTable component="PreviewCardPopup" />
+
+### PreviewCard.Arrow
+
+<PropTable component="PreviewCardArrow" />
+
+### PreviewCard.Viewport
+
+<PropTable component="PreviewCardViewport" />
+
+### PreviewCard.createHandle
+
+`PreviewCard.createHandle<Payload>()` returns a handle connecting a
+`PreviewCard.Root` to detached `PreviewCard.Trigger`s. Pass it to the `handle`
+prop of both. It also exposes `open(triggerId)`, `close()` and `isOpen`, which
+take effect only while a root using the handle is mounted.

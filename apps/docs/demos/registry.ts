@@ -211,6 +211,26 @@ import d_popover_sizes from "./popover/sizes";
 import d_popover_sizes_src from "./popover/sizes?raw";
 import d_popover_viewport from "./popover/viewport";
 import d_popover_viewport_src from "./popover/viewport?raw";
+import d_preview_card_basic from "./preview-card/basic";
+import d_preview_card_basic_src from "./preview-card/basic?raw";
+import d_preview_card_controlled from "./preview-card/controlled";
+import d_preview_card_controlled_src from "./preview-card/controlled?raw";
+import d_preview_card_delay from "./preview-card/delay";
+import d_preview_card_delay_src from "./preview-card/delay?raw";
+import d_preview_card_detached_trigger from "./preview-card/detached-trigger";
+import d_preview_card_detached_trigger_src from "./preview-card/detached-trigger?raw";
+import d_preview_card_inline from "./preview-card/inline";
+import d_preview_card_inline_src from "./preview-card/inline?raw";
+import d_preview_card_media from "./preview-card/media";
+import d_preview_card_media_src from "./preview-card/media?raw";
+import d_preview_card_multiple_triggers from "./preview-card/multiple-triggers";
+import d_preview_card_multiple_triggers_src from "./preview-card/multiple-triggers?raw";
+import d_preview_card_placement from "./preview-card/placement";
+import d_preview_card_placement_src from "./preview-card/placement?raw";
+import d_preview_card_sizes from "./preview-card/sizes";
+import d_preview_card_sizes_src from "./preview-card/sizes?raw";
+import d_preview_card_viewport from "./preview-card/viewport";
+import d_preview_card_viewport_src from "./preview-card/viewport?raw";
 import d_progress_basic from "./progress/basic";
 import d_progress_basic_src from "./progress/basic?raw";
 import d_progress_circle_sizes from "./progress/circle-sizes";
@@ -490,6 +510,16 @@ export type DemoId =
   | "popover/scrollable"
   | "popover/sizes"
   | "popover/viewport"
+  | "preview-card/basic"
+  | "preview-card/controlled"
+  | "preview-card/delay"
+  | "preview-card/detached-trigger"
+  | "preview-card/inline"
+  | "preview-card/media"
+  | "preview-card/multiple-triggers"
+  | "preview-card/placement"
+  | "preview-card/sizes"
+  | "preview-card/viewport"
   | "progress/basic"
   | "progress/circle-sizes"
   | "progress/circle"
@@ -683,6 +713,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "popover/scrollable": { Component: d_popover_scrollable, source: d_popover_scrollable_src, file: "popover/scrollable.tsx" },
   "popover/sizes": { Component: d_popover_sizes, source: d_popover_sizes_src, file: "popover/sizes.tsx" },
   "popover/viewport": { Component: d_popover_viewport, source: d_popover_viewport_src, file: "popover/viewport.tsx" },
+  "preview-card/basic": { Component: d_preview_card_basic, source: d_preview_card_basic_src, file: "preview-card/basic.tsx" },
+  "preview-card/controlled": { Component: d_preview_card_controlled, source: d_preview_card_controlled_src, file: "preview-card/controlled.tsx" },
+  "preview-card/delay": { Component: d_preview_card_delay, source: d_preview_card_delay_src, file: "preview-card/delay.tsx" },
+  "preview-card/detached-trigger": { Component: d_preview_card_detached_trigger, source: d_preview_card_detached_trigger_src, file: "preview-card/detached-trigger.tsx" },
+  "preview-card/inline": { Component: d_preview_card_inline, source: d_preview_card_inline_src, file: "preview-card/inline.tsx" },
+  "preview-card/media": { Component: d_preview_card_media, source: d_preview_card_media_src, file: "preview-card/media.tsx" },
+  "preview-card/multiple-triggers": { Component: d_preview_card_multiple_triggers, source: d_preview_card_multiple_triggers_src, file: "preview-card/multiple-triggers.tsx" },
+  "preview-card/placement": { Component: d_preview_card_placement, source: d_preview_card_placement_src, file: "preview-card/placement.tsx" },
+  "preview-card/sizes": { Component: d_preview_card_sizes, source: d_preview_card_sizes_src, file: "preview-card/sizes.tsx" },
+  "preview-card/viewport": { Component: d_preview_card_viewport, source: d_preview_card_viewport_src, file: "preview-card/viewport.tsx" },
   "progress/basic": { Component: d_progress_basic, source: d_progress_basic_src, file: "progress/basic.tsx" },
   "progress/circle-sizes": { Component: d_progress_circle_sizes, source: d_progress_circle_sizes_src, file: "progress/circle-sizes.tsx" },
   "progress/circle": { Component: d_progress_circle, source: d_progress_circle_src, file: "progress/circle.tsx" },
