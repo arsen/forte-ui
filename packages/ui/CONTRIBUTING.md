@@ -140,6 +140,13 @@ Only these exist. Anything else is a typo, and a typo in a `var()` fails
 silently — the declaration becomes invalid at computed-value time and the
 element inherits instead.
 
+This list is hand-maintained prose and can drift. The generated, authoritative
+inventory is [`docs-data/tokens.json`](docs-data/tokens.json) — every `--pui-*`
+declaration in `src/styles/*.css` with its default, every overriding selector
+(presets, dark mode, forced colours), and its `@property` registration where
+one exists. `pnpm --filter @dofortech/pretty-ui docgen` rebuilds it. When this
+list and that file disagree, the file is right; fix the list.
+
 **accent** (12)
 `--pui-accent-1` · `--pui-accent-10` · `--pui-accent-11` · `--pui-accent-12` · `--pui-accent-2` · `--pui-accent-3` · `--pui-accent-4` · `--pui-accent-5` · `--pui-accent-6` · `--pui-accent-7` · `--pui-accent-8` · `--pui-accent-9`
 

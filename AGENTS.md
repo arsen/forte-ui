@@ -95,6 +95,7 @@ task name to collide does not repeat this.
 | `packages/ui/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
 | `packages/ui/docs-data/props.json` | component TSX doc comments | `docgen` |
 | `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
+| `packages/ui/docs-data/tokens.json` | every `--pui-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
 | `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `toc` |
 
@@ -139,6 +140,7 @@ which does not re-run `tokens` or `docgen`.
 | a value in `scripts/motion.mjs` | `tokens` |
 | a prop — added, renamed, removed, retyped, or its JSDoc | `docgen` |
 | a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
+| any `--pui-*` declaration in `src/styles/*.css` — added, renamed, removed, its value or selector | `docgen` (rebuilds `tokens.json`; after a `ramp.mjs` / `motion.mjs` change run `tokens` first) |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
 | an `##` / `###` heading in a `page.mdx` — added, renamed, reordered, removed | `toc` |
 
@@ -194,8 +196,12 @@ colour function — where one malformed value would poison everything derived fr
 it — or when it must animate, or needs a guaranteed fallback if no rule matched
 (that is `--pui-direction`).
 
-Then add the name to the inventory in `CONTRIBUTING.md` by hand. Nothing
-regenerates that list, which is exactly how `--pui-direction` went missing.
+Then run `docgen` — `tokens-docgen.mjs` rebuilds
+`packages/ui/docs-data/tokens.json`, the generated inventory of every global
+token — and add the name to the readable list in `CONTRIBUTING.md` by hand.
+Nothing regenerates that prose list, which is exactly how `--pui-direction`
+went missing from it; when the two disagree, `tokens.json` is the one that is
+right.
 
 **Generated output outranks any prose that describes it.** No script writes a
 `.md` file — every list of tokens, props or demos appearing in documentation is

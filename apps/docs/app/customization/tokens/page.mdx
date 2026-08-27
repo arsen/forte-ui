@@ -1,0 +1,144 @@
+import { Callout } from "@/components/callout";
+import { TokenTable } from "@/components/token-table";
+
+export const metadata = {
+  title: "Design tokens",
+  description:
+    "The complete reference of pretty-ui's global CSS variables — colour, spacing, typography, radius, elevation and motion — generated from the shipped stylesheets.",
+};
+
+# Design tokens
+
+Everything visual in pretty-ui resolves through a CSS custom property. Components never contain a hardcoded colour, size or duration — which is why re-pointing a token restyles every component at once, coherently. This page is the global token reference; the tables are generated from the shipped stylesheets at build time, so they cannot drift from what actually renders. Per-component knobs (`--pui-button-*`, `--pui-dialog-*`, …) are a separate mechanism documented on [Styling components](/customization/styling) and on each component's own page.
+
+## How to override a token
+
+Set it on `:root`, or on a [theme scope](/customization/theming#scoped-themes) to affect one subtree:
+
+```css
+:root {
+  --pui-radius-control: var(--pui-radius-2);
+  --pui-shadow-2: 0 2px 8px oklch(0 0 0 / 0.12);
+}
+```
+
+Your CSS always wins. The library ships every rule inside `@layer pretty-ui.*`, and layered rules lose to unlayered author CSS regardless of specificity — no `!important` needed, ever.
+
+Two things to know before overriding:
+
+- **A typo fails silently.** `var(--pui-color-pannel)` is not an error — the declaration simply becomes invalid at computed-value time and the element inherits instead. Check names against these tables.
+- **Preset-owned tokens live on `:root` alone.** Tokens marked *rewritten by presets* below are what `data-pui-radius` and `data-pui-density` rewrite. Overriding one on `:root` moves the default, but any [preset](/customization/presets) attribute on an ancestor still wins for its subtree.
+
+## Colour
+
+The accent, secondary and gray ramps — `--pui-accent-1…12`, `--pui-secondary-1…12`, `--pui-gray-1…12` — are **derived** from the seeds described on the [Theming](/customization/theming) page, in both light and dark mode. Prefer changing the seed over overriding ramp steps: the derivation is what keeps the palette coherent and the contrast pairs certified.
+
+Components consume the ramps through semantic aliases, which are the right level for surgical overrides — they re-derive per scope and follow light/dark automatically when you assign them a ramp step:
+
+### Surfaces, text and borders
+
+<TokenTable
+  prefixes={[
+    "--pui-color-background",
+    "--pui-color-panel",
+    "--pui-color-overlay",
+    "--pui-color-foreground",
+    "--pui-color-border",
+  ]}
+  label="Surface, text and border colour tokens"
+/>
+
+### Brand
+
+<TokenTable
+  prefixes={[
+    "--pui-color-primary",
+    "--pui-color-secondary",
+    "--pui-color-on-primary",
+    "--pui-color-on-secondary",
+  ]}
+  label="Brand colour tokens"
+/>
+
+### Status
+
+Status hues are fixed rather than seed-derived — a brand colour must not be able to make an error look reassuring. The aliases below are what components read; behind them sit fixed ramp steps (`--pui-danger-2…11`, `--pui-success-*`, `--pui-warning-*`, `--pui-info-*`) you can retune if your palette needs different alarm colours.
+
+<TokenTable
+  prefixes={[
+    "--pui-color-danger",
+    "--pui-color-success",
+    "--pui-color-warning",
+    "--pui-color-info",
+    "--pui-color-on-danger",
+    "--pui-color-on-success",
+    "--pui-color-on-warning",
+  ]}
+  label="Status colour tokens"
+/>
+
+### Focus ring
+
+The ring is two tones that contrast with *each other*, so one boundary always clears 3:1 against whatever sits behind the control (WCAG SC 1.4.11) — a single accent-coloured ring cannot promise that.
+
+<TokenTable
+  prefixes={["--pui-focus-ring", "--pui-color-focus-ring"]}
+  label="Focus ring tokens"
+/>
+
+<Callout kind="warn">
+  Colour overrides leave the certified path. The shipped derivation is swept against ~119,000 seeds and every promised pair holds AA; the moment you assign a semantic colour token by hand, that guarantee is yours to re-verify. Non-colour tokens — spacing, radius, typography, elevation, motion — carry no such caveat.
+</Callout>
+
+## Spacing
+
+An eight-step scale on a 4px base. Components use it for all internal padding and gaps.
+
+<TokenTable families={["space"]} label="Spacing tokens" />
+
+## Typography
+
+<TokenTable families={["font", "line", "letter"]} label="Typography tokens" />
+
+## Radius
+
+The numbered scale plus the three semantic radii components actually read. Prefer overriding the semantic ones — or better, a [radius preset](/customization/presets#radius), which is the form that nests correctly.
+
+<TokenTable families={["radius"]} label="Radius tokens" />
+
+## Controls and density
+
+Control heights, padding and the surface metrics — the group the [density presets](/customization/presets#density) rewrite.
+
+<TokenTable families={["control", "surface", "list", "target"]} label="Control and density tokens" />
+
+<Callout kind="a11y">
+  `--pui-target-min` is 24px because WCAG SC 2.5.8 says so. Deriving a smaller control from these tokens is possible and wrong.
+</Callout>
+
+## Elevation
+
+<TokenTable families={["shadow", "scrim", "glass"]} label="Elevation tokens" />
+
+## Motion
+
+Durations, travels and scales. The reduced-motion behaviour is built into the tokens themselves — under the OS preference or a `data-pui-motion` attribute, travels collapse to `0px` and scales to `1` while durations only shorten — so consuming these tokens gives you correct reduced-motion handling without writing a media query. The spring easings (`--pui-ease-spring-*`) are sampled damped-oscillator curves; each pairs with its matching `--pui-duration-spring-*`, and truncating a spring with a shorter duration looks broken.
+
+<TokenTable
+  families={["duration", "travel", "scale", "spin", "pulse"]}
+  label="Motion tokens"
+/>
+
+<Callout kind="note">
+  The loop durations are the exception that never collapses: a spinner at 1ms would strobe, and WCAG SC 2.3.1 treats that as a flashing hazard. Loading indicators stay slow everywhere.
+</Callout>
+
+## For tooling
+
+This same inventory ships in the package as machine-readable JSON — every token with its default, its typed registration where one exists, and every overriding selector:
+
+```ts
+import tokens from "@dofortech/pretty-ui/docs-data/tokens.json";
+```
+
+These tables are rendered from that file, as is anything else that needs the full token surface — theme editors, lint rules, design-tool sync.

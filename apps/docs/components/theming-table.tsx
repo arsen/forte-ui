@@ -131,7 +131,7 @@ export function ThemingTable({
  * used — `code` and *emphasis* — and nothing else on purpose: they are CSS
  * comments first, and anything richer belongs in the page's prose.
  */
-function inline(text: string): ReactNode {
+export function inline(text: string): ReactNode {
   return text.split("`").map((chunk, i) =>
     i % 2 === 1 ? (
       <code key={i}>{chunk}</code>

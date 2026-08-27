@@ -1,0 +1,54 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Presets",
+  description:
+    "Radius, density and motion are data attributes — put one on any element and it retunes that whole subtree, no CSS required.",
+};
+
+# Presets
+
+Three coordinated retunings ship as plain data attributes: corner radius, control density, and motion. Put one on `<html>` to set the app's personality, or on any element to change just that subtree — a preset is inherited CSS custom properties, so it costs nothing and needs no wrapper component.
+
+```html
+<html data-pui-radius="pill" data-pui-density="compact">
+```
+
+Each attribute rewrites a group of tokens as a **complete statement, not a patch**: `data-pui-radius="soft"` restates the whole radius scale, so nesting presets behaves predictably — the nearest ancestor's setting wins in full, never a blend of two.
+
+## Radius
+
+`data-pui-radius` accepts `none`, `soft` and `pill`. It rewrites the radius scale (`--pui-radius-1`…`6`, `--pui-radius-full`) and the three semantic radii components actually read — `--pui-radius-control` for buttons and inputs, `--pui-radius-surface` for cards, dialogs and popups, `--pui-radius-pill` for the always-round shapes.
+
+<DemoBlock id="presets/radius" />
+
+Omit the attribute for the default scale. `none` squares everything including the pill shapes; `soft` moves each semantic radius one step up the scale; `pill` makes controls fully round while surfaces stay at a card-like radius.
+
+## Density
+
+`data-pui-density` accepts `compact` and `spacious`. It rewrites the control metrics — heights, horizontal padding, gaps, surface padding and list-item padding — so every component resizes together and vertical rhythm stays consistent:
+
+<DemoBlock id="presets/density" />
+
+<Callout kind="a11y">
+  `compact` is the floor, by design: a small control under it lands at exactly 24px, the minimum target size WCAG SC 2.5.8 requires. There is deliberately no denser preset, and you should not build one — anything smaller fails the success criterion.
+</Callout>
+
+## Motion
+
+`data-pui-motion` accepts `reduce`, `off` and `full`. The library's motion is pure CSS driven by tokens, and the preset rewrites those tokens for the subtree:
+
+- **`reduce`** matches the OS "reduce motion" preference exactly — it is the same token set, so an in-page toggle and the system setting can never disagree (WCAG SC 2.3.3). Geometry collapses to zero — travels become `0px`, scales become `1` — while opacity fades survive at shortened durations, because a fade is the part reduced-motion users benefit from keeping.
+- **`off`** goes further: fades drop to 1ms as well. Interaction is effectively instant.
+- **`full`** is an explicit opt back in that overrides the OS preference — for a subtree where motion *is* the content, like a demo of the motion system itself. Do not reach for it just because an app prefers its animations; the OS setting is the user talking.
+
+<Callout kind="note">
+  Durations never reach `0s`, even under `off` — at exactly zero the browser creates no transition object, `transitionend` never fires, and code awaiting it deadlocks. The floor is `1ms`. Spinner and pulse loops keep their real durations everywhere: a 1ms loop would be a flashing hazard (WCAG SC 2.3.1), so loading indicators stay visible, they just stop travelling.
+</Callout>
+
+## How presets and scoped themes interact
+
+Presets and [theme scopes](/customization/theming#scoped-themes) are independent axes. A `data-pui-*` attribute needs no scope class — it works on any element — and it carries **into** nested `.pui-theme` scopes: a demo frame with its own seed inside a `pill`-radius page still renders pill controls, until an element inside it sets its own `data-pui-radius`.
+
+If you need geometry a preset does not offer, override the underlying tokens instead — `--pui-radius-control` and friends are listed on the [Design tokens](/customization/tokens) page. Set them on `:root` (where the defaults live), and prefer the presets where they fit: a preset is the only form that nests correctly under other presets, since each one restates its whole group.

@@ -259,6 +259,10 @@ import d_popover_sizes from "./popover/sizes";
 import d_popover_sizes_src from "./popover/sizes?raw";
 import d_popover_viewport from "./popover/viewport";
 import d_popover_viewport_src from "./popover/viewport?raw";
+import d_presets_density from "./presets/density";
+import d_presets_density_src from "./presets/density?raw";
+import d_presets_radius from "./presets/radius";
+import d_presets_radius_src from "./presets/radius?raw";
 import d_preview_card_basic from "./preview-card/basic";
 import d_preview_card_basic_src from "./preview-card/basic?raw";
 import d_preview_card_controlled from "./preview-card/controlled";
@@ -383,6 +387,10 @@ import d_spinner_tones from "./spinner/tones";
 import d_spinner_tones_src from "./spinner/tones?raw";
 import d_spinner_variants from "./spinner/variants";
 import d_spinner_variants_src from "./spinner/variants?raw";
+import d_styling_knobs from "./styling/knobs";
+import d_styling_knobs_src from "./styling/knobs?raw";
+import d_styling_parts from "./styling/parts";
+import d_styling_parts_src from "./styling/parts?raw";
 import d_switch_basic from "./switch/basic";
 import d_switch_basic_src from "./switch/basic?raw";
 import d_switch_disabled from "./switch/disabled";
@@ -401,6 +409,8 @@ import d_tabs_vertical from "./tabs/vertical";
 import d_tabs_vertical_src from "./tabs/vertical?raw";
 import d_tabs_with_icons from "./tabs/with-icons";
 import d_tabs_with_icons_src from "./tabs/with-icons?raw";
+import d_tailwind_utilities from "./tailwind/utilities";
+import d_tailwind_utilities_src from "./tailwind/utilities?raw";
 import d_textarea_auto_resize from "./textarea/auto-resize";
 import d_textarea_auto_resize_src from "./textarea/auto-resize?raw";
 import d_textarea_basic from "./textarea/basic";
@@ -417,6 +427,8 @@ import d_textarea_validation from "./textarea/validation";
 import d_textarea_validation_src from "./textarea/validation?raw";
 import d_textarea_variants from "./textarea/variants";
 import d_textarea_variants_src from "./textarea/variants?raw";
+import d_theming_scoped from "./theming/scoped";
+import d_theming_scoped_src from "./theming/scoped?raw";
 import d_toast_action from "./toast/action";
 import d_toast_action_src from "./toast/action?raw";
 import d_toast_basic from "./toast/basic";
@@ -598,6 +610,8 @@ export type DemoId =
   | "popover/scrollable"
   | "popover/sizes"
   | "popover/viewport"
+  | "presets/density"
+  | "presets/radius"
   | "preview-card/basic"
   | "preview-card/controlled"
   | "preview-card/delay"
@@ -660,6 +674,8 @@ export type DemoId =
   | "spinner/theming"
   | "spinner/tones"
   | "spinner/variants"
+  | "styling/knobs"
+  | "styling/parts"
   | "switch/basic"
   | "switch/disabled"
   | "switch/settings-list"
@@ -669,6 +685,7 @@ export type DemoId =
   | "tabs/pill"
   | "tabs/vertical"
   | "tabs/with-icons"
+  | "tailwind/utilities"
   | "textarea/auto-resize"
   | "textarea/basic"
   | "textarea/character-count"
@@ -677,6 +694,7 @@ export type DemoId =
   | "textarea/states"
   | "textarea/validation"
   | "textarea/variants"
+  | "theming/scoped"
   | "toast/action"
   | "toast/basic"
   | "toast/custom"
@@ -833,6 +851,8 @@ const REGISTRY: Record<DemoId, Demo> = {
   "popover/scrollable": { Component: d_popover_scrollable, source: d_popover_scrollable_src, file: "popover/scrollable.tsx" },
   "popover/sizes": { Component: d_popover_sizes, source: d_popover_sizes_src, file: "popover/sizes.tsx" },
   "popover/viewport": { Component: d_popover_viewport, source: d_popover_viewport_src, file: "popover/viewport.tsx" },
+  "presets/density": { Component: d_presets_density, source: d_presets_density_src, file: "presets/density.tsx" },
+  "presets/radius": { Component: d_presets_radius, source: d_presets_radius_src, file: "presets/radius.tsx" },
   "preview-card/basic": { Component: d_preview_card_basic, source: d_preview_card_basic_src, file: "preview-card/basic.tsx" },
   "preview-card/controlled": { Component: d_preview_card_controlled, source: d_preview_card_controlled_src, file: "preview-card/controlled.tsx" },
   "preview-card/delay": { Component: d_preview_card_delay, source: d_preview_card_delay_src, file: "preview-card/delay.tsx" },
@@ -895,6 +915,8 @@ const REGISTRY: Record<DemoId, Demo> = {
   "spinner/theming": { Component: d_spinner_theming, source: d_spinner_theming_src, file: "spinner/theming.tsx" },
   "spinner/tones": { Component: d_spinner_tones, source: d_spinner_tones_src, file: "spinner/tones.tsx" },
   "spinner/variants": { Component: d_spinner_variants, source: d_spinner_variants_src, file: "spinner/variants.tsx" },
+  "styling/knobs": { Component: d_styling_knobs, source: d_styling_knobs_src, file: "styling/knobs.tsx" },
+  "styling/parts": { Component: d_styling_parts, source: d_styling_parts_src, file: "styling/parts.tsx" },
   "switch/basic": { Component: d_switch_basic, source: d_switch_basic_src, file: "switch/basic.tsx" },
   "switch/disabled": { Component: d_switch_disabled, source: d_switch_disabled_src, file: "switch/disabled.tsx" },
   "switch/settings-list": { Component: d_switch_settings_list, source: d_switch_settings_list_src, file: "switch/settings-list.tsx" },
@@ -904,6 +926,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tabs/pill": { Component: d_tabs_pill, source: d_tabs_pill_src, file: "tabs/pill.tsx" },
   "tabs/vertical": { Component: d_tabs_vertical, source: d_tabs_vertical_src, file: "tabs/vertical.tsx" },
   "tabs/with-icons": { Component: d_tabs_with_icons, source: d_tabs_with_icons_src, file: "tabs/with-icons.tsx" },
+  "tailwind/utilities": { Component: d_tailwind_utilities, source: d_tailwind_utilities_src, file: "tailwind/utilities.tsx" },
   "textarea/auto-resize": { Component: d_textarea_auto_resize, source: d_textarea_auto_resize_src, file: "textarea/auto-resize.tsx" },
   "textarea/basic": { Component: d_textarea_basic, source: d_textarea_basic_src, file: "textarea/basic.tsx" },
   "textarea/character-count": { Component: d_textarea_character_count, source: d_textarea_character_count_src, file: "textarea/character-count.tsx" },
@@ -912,6 +935,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "textarea/states": { Component: d_textarea_states, source: d_textarea_states_src, file: "textarea/states.tsx" },
   "textarea/validation": { Component: d_textarea_validation, source: d_textarea_validation_src, file: "textarea/validation.tsx" },
   "textarea/variants": { Component: d_textarea_variants, source: d_textarea_variants_src, file: "textarea/variants.tsx" },
+  "theming/scoped": { Component: d_theming_scoped, source: d_theming_scoped_src, file: "theming/scoped.tsx" },
   "toast/action": { Component: d_toast_action, source: d_toast_action_src, file: "toast/action.tsx" },
   "toast/basic": { Component: d_toast_basic, source: d_toast_basic_src, file: "toast/basic.tsx" },
   "toast/custom": { Component: d_toast_custom, source: d_toast_custom_src, file: "toast/custom.tsx" },
