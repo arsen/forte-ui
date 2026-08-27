@@ -1379,6 +1379,166 @@
       }
     ]
   },
+  "ColorPicker": {
+    "name": "ColorPicker",
+    "tokens": [
+      {
+        "name": "--pui-color-picker-width",
+        "value": "17rem",
+        "description": "Width of the picker. The panel shrinks below it rather than overflowing a narrow container.",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-padding",
+        "value": "var(--pui-space-3)",
+        "description": "Padding inside the panel",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Vertical gap between the panel's parts",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius of the standalone panel; the popover surface keeps `--pui-popover-radius`",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-area-height",
+        "value": "8.5rem",
+        "description": "Height of the saturation/brightness canvas",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-area-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of the canvas and the swatches",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-thumb-size",
+        "value": "0.875rem",
+        "description": "Diameter of the canvas handle",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-thumb-ring",
+        "value": "2px",
+        "description": "Thickness of the ring around both kinds of handle",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-thumb-border",
+        "value": "#ffffff",
+        "description": "Ring colour of the rail handles",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-thumb-outline",
+        "value": "rgb(0 0 0 / 0.35)",
+        "description": "The hairline outside that ring, which is what keeps a white handle visible on a pale yellow",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-rail-thickness",
+        "value": "0.75rem",
+        "description": "Thickness of the hue and opacity rails",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-rail-thumb-size",
+        "value": "1.125rem",
+        "description": "Diameter of a rail handle",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-rail-radius",
+        "value": "var(--pui-radius-pill)",
+        "description": "Corner radius of the rails",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-swatch-size",
+        "value": "1.25rem",
+        "description": "Size of the swatch grid's cells; the grid takes the panel's width and the cells stretch to fill it, so this is a minimum",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-swatch-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between swatches",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-swatch-radius",
+        "value": "var(--pui-radius-1)",
+        "description": "Corner radius of one swatch",
+        "part": "panel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-color-picker-checker-size",
+        "value": "8px",
+        "description": "Side of one square of the checkerboard drawn behind translucent colour",
+        "part": "panel",
+        "overrides": [
+          {
+            "selector": ".trigger",
+            "value": "6px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-color-picker-checker-light",
+        "value": "var(--pui-color-background)",
+        "description": "The checkerboard's light square",
+        "part": "panel",
+        "overrides": [
+          {
+            "selector": ".trigger",
+            "value": "var(--pui-color-background)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-color-picker-checker-dark",
+        "value": "var(--pui-color-border)",
+        "description": "The checkerboard's dark square",
+        "part": "panel",
+        "overrides": [
+          {
+            "selector": ".trigger",
+            "value": "var(--pui-color-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-color-picker-trigger-swatch-size",
+        "value": "1rem",
+        "description": "Size of the swatch inside the trigger",
+        "part": "trigger",
+        "overrides": []
+      }
+    ]
+  },
   "Dialog": {
     "name": "Dialog",
     "tokens": [

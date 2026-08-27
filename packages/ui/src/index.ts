@@ -47,6 +47,31 @@ export type {
   CollapsiblePanelProps,
 } from "./components/collapsible";
 
+export { ColorPicker, DEFAULT_SWATCHES } from "./components/color-picker";
+export type {
+  ColorPickerFormat,
+  ColorPickerChangeReason,
+  ColorPickerChangeDetails,
+  ColorPickerRootProps,
+  ColorPickerTriggerProps,
+  ColorPickerPopupProps,
+  ColorPickerPanelProps,
+  ColorPickerRowProps,
+  ColorPickerAreaProps,
+  ColorPickerHueSliderProps,
+  ColorPickerAlphaSliderProps,
+  ColorPickerSwatchesProps,
+  ColorPickerSwatchProps,
+  ColorPickerPreviewProps,
+  ColorPickerValueProps,
+  ColorPickerFormatProps,
+  ColorPickerInputProps,
+  ColorPickerEyeDropperProps,
+  ColorPickerHiddenInputProps,
+  Hsva,
+  Rgba,
+} from "./components/color-picker";
+
 export { Dialog, AlertDialog } from "./components/dialog";
 export type {
   DialogSize,

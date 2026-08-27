@@ -446,6 +446,577 @@
       }
     ]
   },
+  "ColorPickerRoot": {
+    "name": "ColorPickerRoot",
+    "description": "Owns the colour and the format, and renders no DOM element of its own — so\nit takes neither `className` nor `ref`.\n\nIt also renders a `Popover.Root`, which is what lets `ColorPicker.Trigger`\nand `ColorPicker.Popup` exist without the consumer wiring a popover by hand.\nA picker built out of `ColorPicker.Panel` alone simply never uses it: the\npopover root renders nothing until a trigger and a popup are present.\n\n```tsx\n<ColorPicker.Root defaultValue=\"#7c3aed\">\n  <ColorPicker.Trigger>Brand colour</ColorPicker.Trigger>\n  <ColorPicker.Popup>\n    <ColorPicker.Area />\n    <ColorPicker.HueSlider />\n    <ColorPicker.Row>\n      <ColorPicker.Format />\n      <ColorPicker.Input />\n    </ColorPicker.Row>\n  </ColorPicker.Popup>\n</ColorPicker.Root>\n```",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The picker's parts."
+      },
+      {
+        "name": "defaultFormat",
+        "type": "ColorPickerFormat",
+        "required": false,
+        "defaultValue": "hex",
+        "description": "The notation the picker starts in."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the popover is open when it first mounts. Only relevant when the\npicker is used with `ColorPicker.Trigger` and `ColorPicker.Popup`."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "defaultValue": "#000000",
+        "description": "The colour the picker starts on when it is uncontrolled."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether every part ignores interaction."
+      },
+      {
+        "name": "format",
+        "type": "ColorPickerFormat",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which notation `value` is written in. Pass it with `onFormatChange` to\ncontrol the format."
+      },
+      {
+        "name": "formats",
+        "type": "readonly ColorPickerFormat[]",
+        "required": false,
+        "defaultValue": "[\"hex\", \"rgb\", \"hsl\", \"oklch\"]",
+        "description": "The notations `ColorPicker.Format` offers, in order. Narrow it to the one\nyour app stores — a design tool that writes OKLCH has no use for a HEX\noption that silently rounds."
+      },
+      {
+        "name": "modal",
+        "type": "boolean | \"trap-focus\"",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the popover takes the page over while it is open. See\n`Popover.Root`'s own `modal` for the three settings."
+      },
+      {
+        "name": "onFormatChange",
+        "type": "((format: ColorPickerFormat) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the format changes. Switching format also re-emits the\ncurrent colour through `onValueChange` with reason `\"format-change\"`, so\na controlled `value` never disagrees with the notation on screen."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean, eventDetails: PopoverRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the popover wants to open or close."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: string, details: ColorPickerChangeDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called on every change, including each frame of a drag. `value` is\nwritten in the current `format`; `details` carries the same colour as\nHSVA and RGBA, plus what moved it."
+      },
+      {
+        "name": "onValueCommitted",
+        "type": "((value: string, details: ColorPickerChangeDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when an interaction ENDS — pointer up, a keyboard step, a swatch\npress, a committed text entry. This is the one to persist from: a drag\nacross the area fires `onValueChange` once per pointer move and this once."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the popover is currently open. Pass it with `onOpenChange` to\ncontrol the popover."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "The selected colour, as a CSS colour string. Pass it with\n`onValueChange` to control the picker.\n\nAccepts `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`, `oklch()`,\n`oklab()` and `transparent`, in both the legacy comma form and the modern\nspace form. A string that cannot be read is ignored rather than throwing,\nso a half-typed value in your own state never blanks the picker. Named\ncolours (`rebeccapurple`) are not accepted — see the docs page."
+      }
+    ]
+  },
+  "ColorPickerHueSlider": {
+    "name": "ColorPickerHueSlider",
+    "description": "The hue rail — 0° to 360°, one degree per arrow key and ten per Page Up.\n\nHue is the axis the canvas cannot show, since the canvas is a slice through\none hue. Rendering an `Area` without this leaves the user stuck in whichever\nhue the value arrived in.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name for the rail."
+      }
+    ]
+  },
+  "ColorPickerAlphaSlider": {
+    "name": "ColorPickerAlphaSlider",
+    "description": "The opacity rail — 0% to 100% over a checkerboard.\n\nRendering it is what turns alpha on: the picker omits alpha from every\nformat while the colour is fully opaque, so a picker without this rail emits\n`#7c3aed` rather than `#7c3aedff` and needs no prop to say so. A\n`defaultValue` that already carries alpha keeps it either way.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name for the rail."
+      }
+    ]
+  },
+  "ColorPickerFormatSelect": {
+    "name": "ColorPickerFormatSelect",
+    "description": "Picks the notation the value is written in, from the `formats` allowed on\n`ColorPicker.Root`. Composes this library's own `Select`.\n\nChanging it rewrites the value rather than the colour: the same colour comes\nback out as `#7c3aed`, `rgb(124 58 237)`, `hsl(262.1 83.3% 57.8%)` or\n`oklch(0.5413 0.2466 293.01)` — which is also why HEX rounds and the other\nthree do not.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the trigger. Applied after the internal\nstyles so consumer utilities (e.g. Tailwind) win without needing\n`!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name for the control."
+      }
+    ]
+  },
+  "ColorPickerTrigger": {
+    "name": "ColorPickerTrigger",
+    "description": "The button that opens the picker. Renders a `<button>` showing the current\ncolour as a swatch, followed by whatever children you give it.\n\nThe colour is also announced, in a visually hidden span: colour is the one\nthing a swatch cannot convey to a screen reader, and a trigger reading only\n\"Brand colour\" leaves out the entire answer.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The trigger's visible label. The current colour is announced after it, so\na trigger with no children is still named."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "hideSwatch",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Hide the built-in swatch, for a trigger that shows the colour some other\nway — a filled button, an icon that inherits it."
+      }
+    ]
+  },
+  "ColorPickerPopup": {
+    "name": "ColorPickerPopup",
+    "description": "The picker on a popover surface, anchored to `ColorPicker.Trigger`.\n\nWraps `Popover.Popup` and takes all of its props — `side`, `align`,\n`sideOffset`, `initialFocus` and the rest — so placement is tuned the same\nway it is on a popover.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "\"center\"",
+        "description": "How the popup lines up with the trigger along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Shifts the popup along the alignment axis, in pixels, or a function\nreturning one."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The element the popup positions against, when it should not be the\ntrigger. Accepts an element, a ref, a getter, or a virtual element — a\ntext selection or a right-click point."
+      },
+      {
+        "name": "arrow",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Render the wedge pointing back at the trigger.\n\nA boolean here where `Popover` wants a child element, because this\ncomponent's children are the picker's own parts and an `Arrow` mixed in\namong them would be layout, not chrome. `ColorPicker.Arrow` is still\nexported for the rare popup that composes its own header."
+      },
+      {
+        "name": "arrowPadding",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a scrim behind the popup. Off by default — a popover normally\nleaves the page visible and usable. Turn it on with `modal` on\n`Popover.Root`, where the page is already inert and the scrim is what\nsays so."
+      },
+      {
+        "name": "backdropClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--pui-popover-backdrop-z-index` goes."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The picker's parts."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup surface. Applied after the\ninternal styles so consumer utilities (e.g. Tailwind) win without needing\n`!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "How the popup reacts when it would overflow the boundary — whether it\nflips, shifts, or stays put."
+      },
+      {
+        "name": "collisionBoundary",
+        "type": "Boundary",
+        "required": false,
+        "defaultValue": "\"clipping-ancestors\"",
+        "description": "The boundary the popup tries to stay inside of."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space, in pixels, kept between the popup and the collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the portal renders. Defaults to `document.body`; point it at a\ncontainer when the popup has to live inside a specific stacking or shadow\nroot."
+      },
+      {
+        "name": "disableAnchorTracking",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the popup re-measuring the anchor on scroll and resize. Cheaper,\nbut the popup drifts if the anchor moves."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the portal — and therefore the popup — in the DOM while the popover\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
+      },
+      {
+        "name": "panelClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the inner panel — the element that owns the\npadding and the column layout."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--pui-popover-z-index`."
+      },
+      {
+        "name": "positionMethod",
+        "type": "\"absolute\" | \"fixed\"",
+        "required": false,
+        "defaultValue": "\"absolute\"",
+        "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "\"bottom\"",
+        "description": "Which side of the trigger to place the popup on. Flips automatically to\navoid collisions. `\"inline-start\"` / `\"inline-end\"` follow writing\ndirection."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap between trigger and popup, in pixels, or a function returning one.\nWhen an `Arrow` is rendered this must exceed the arrow's height or the\narrow overlaps the trigger; the default leaves room for the default\narrow."
+      },
+      {
+        "name": "size",
+        "type": "PopoverSize",
+        "required": false,
+        "defaultValue": "\"md\"",
+        "description": "Width cap for the popup. The popup shrinks to fit its content and only\ngrows to this width when the content asks for it, so this is a ceiling\nrather than a fixed measure. Further clamped to the space the positioner\nreports as available."
+      },
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the popup glued to the trigger while it scrolls out of view instead\nof letting it detach."
+      }
+    ]
+  },
+  "ColorPickerArrow": {
+    "name": "ColorPickerArrow",
+    "description": "The wedge pointing back at the trigger. `ColorPicker.Popup` renders one by\ndefault; this is here for a popup that turns `arrow` off and places its own.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--pui-popover-bg`, so a custom skin usually needs nothing here."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ColorPickerPanel": {
+    "name": "ColorPickerPanel",
+    "description": "The picker laid out in the page rather than in a popover. Renders a `<div>`\nas a column, with the same padding, surface and width as\n`ColorPicker.Popup`'s inner panel — the two share one rule, so a picker\nmoved from one to the other does not change shape.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ColorPickerRow": {
+    "name": "ColorPickerRow",
+    "description": "The compact control row: eyedropper, preview, format and text field sitting\non one line.\n\nA plain `<div>` rather than a Base UI part, the way `Popover.Footer` is. It\nexists because that row is the piece of chrome every second picker grows,\nand left to each consumer it is re-invented with a different gap each time —\none that stops the text field from shrinking below its content and pushing\nthe panel wider than the popup it sits in.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ColorPickerArea": {
+    "name": "ColorPickerArea",
+    "description": "The saturation/brightness canvas — the part that makes this a colour picker\nrather than a swatch list. Renders a `<div>` with a draggable thumb and two\nnested `<input type=\"range\">`.\n\nThe two inputs are the whole accessibility story. A 2D field has no ARIA\nrole of its own, so it is expressed as what it actually is: two ranges that\nhappen to share a thumb. Each is a real slider to assistive technology and\nto the keyboard — arrow keys, Home, End and Page Up/Down all work without\nthis component implementing any of them — and an arrow key across the axes\nmoves focus to the other input, so the value that changes is the value that\ngets announced.\n\nThe canvas does NOT mirror under RTL, and that is deliberate: it is a\npicture of a colour space, not a line of text, and the hue that sits on the\nleft of every other colour tool in the world should not move because the\nsurrounding paragraph runs the other way. The hue and alpha rails DO mirror,\nbecause they are sliders and a slider's start follows the writing direction.",
+    "props": [
+      {
+        "name": "brightnessLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Brightness",
+        "description": "Accessible name for the vertical axis."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "saturationLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Saturation",
+        "description": "Accessible name for the horizontal axis."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0.01",
+        "description": "How far one arrow key moves each axis, as a fraction of the axis.\n`Shift` multiplies it by ten, as it does on the sliders."
+      }
+    ]
+  },
+  "ColorPickerSwatches": {
+    "name": "ColorPickerSwatches",
+    "description": "A grid of preset colours. Renders a `<div>` with `role=\"radiogroup\"`.\n\nRadio semantics, not a row of buttons, because that is what the control\nactually is: a set of mutually exclusive options where at most one is\ncurrent. It buys the whole keyboard convention with it — one tab stop for\nthe group, arrow keys between swatches, and selection following focus — so a\ntwenty-four colour palette costs a keyboard user one Tab instead of\ntwenty-four.\n\nThe colours come from `colors`; children are not read. That is what lets the\ngroup know its own order, which is what arrow keys and the single tab stop\nare computed from. For a palette you want to build element by element, use\n`ColorPicker.Swatch` on its own — outside a group each swatch is an\nindependent toggle.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "colors",
+        "type": "readonly string[]",
+        "required": false,
+        "defaultValue": "[\n  \"#ffffff\", \"#f4f4f5\", \"#d4d4d8\", \"#a1a1aa\", \"#71717a\", \"#3f3f46\", \"#18181b\", \"#000000\",\n  \"#ef4444\", \"#f97316\", \"#f59e0b\", \"#eab308\", \"#84cc16\", \"#22c55e\", \"#10b981\", \"#14b8a6\",\n  \"#06b6d4\", \"#0ea5e9\", \"#3b82f6\", \"#6366f1\", \"#8b5cf6\", \"#a855f7\", \"#d946ef\", \"#ec4899\",\n]",
+        "description": "The palette, as CSS colour strings. Anything `value` accepts works here,\nincluding translucent colours."
+      },
+      {
+        "name": "columns",
+        "type": "number",
+        "required": false,
+        "defaultValue": "8",
+        "description": "How many swatches per row. Also the arrow-key stride, so Up and Down move\nbetween rows rather than by one."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name for the group."
+      }
+    ]
+  },
+  "ColorPickerSwatch": {
+    "name": "ColorPickerSwatch",
+    "description": "One preset colour. Renders a `<button>`.\n\nInside `ColorPicker.Swatches` it is a radio in that group. On its own it is\na toggle button carrying `aria-pressed` — a lone `role=\"radio\"` would\npromise a group that does not exist.\n\nSelection is decided by comparing eight-bit colour, not strings, so a swatch\nwritten `#f00` is still shown as current when the value reads\n`rgb(255 0 0)`.",
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "defaultValue": null,
+        "description": "The colour this swatch sets, as a CSS colour string."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name. Defaults to the colour string, which is the only thing\nthat is reliably true about it — a name of your own (\"Brand primary\") is\nbetter wherever you have one."
+      }
+    ]
+  },
+  "ColorPickerPreview": {
+    "name": "ColorPickerPreview",
+    "description": "A chip filled with the current colour, over a checkerboard so a translucent\nvalue is legible. Renders a `<div>`.\n\nDecorative: `aria-hidden`, because the colour it shows is already announced\nby the trigger and readable in `ColorPicker.Input`, and a third announcement\nof the same value on every drag frame is noise.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ColorPickerValue": {
+    "name": "ColorPickerValue",
+    "description": "The current colour as text, in the current format. Renders a `<span>` in the\nmono face with tabular figures, so the readout does not change width as the\ndigits change under a drag.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ColorPickerInput": {
+    "name": "ColorPickerInput",
+    "description": "A text field holding the colour in the current format. Renders an `<input>`.\n\nIt is the picker's precision instrument and its paste target — and, for\nanyone who cannot use a canvas at all, the route to an exact colour that the\ncanvas is not.\n\nWhile it has focus the field keeps the text the user is typing, not the\nformatted value: rewriting `#7c3` to `#77cc33` mid-keystroke would move the\ncaret and make the field impossible to type into. Every keystroke that\nparses is applied immediately, so the panel previews as you type; one that\ndoes not is left alone and marked `data-invalid`. Blur restores the\ncanonical text, so an abandoned edit cannot leave the field disagreeing with\nthe colour.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name for the field."
+      }
+    ]
+  },
+  "ColorPickerEyeDropper": {
+    "name": "ColorPickerEyeDropper",
+    "description": "Samples a colour from anywhere on the screen, through the browser's\nEyeDropper API. Renders a `<button>` — or nothing at all where the API is\nmissing, which today is Firefox and every browser on iOS.\n\nRendering nothing is the point: this is a shortcut to a colour the rest of\nthe picker can already reach, so its absence costs a user nothing, while a\nbutton that opens no eyedropper costs them a click and their confidence in\nthe rest of the panel. The detection runs in an effect rather than during\nrender because the server cannot know the answer, and guessing there is what\nproduces a hydration mismatch.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pick a colour from the screen",
+        "description": "Accessible name for the button."
+      }
+    ]
+  },
+  "ColorPickerHiddenInput": {
+    "name": "ColorPickerHiddenInput",
+    "description": "Submits the colour with a form. Renders `<input type=\"hidden\">`.\n\nPlace it next to `ColorPicker.Trigger`, NOT inside `ColorPicker.Popup`. The\npopup is portalled to `<body>` and unmounted while it is closed, so a hidden\ninput in there is outside the form's element tree even when it exists, and\nmissing entirely by the time anything is submitted.",
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "defaultValue": null,
+        "description": "The field name the colour is submitted under."
+      }
+    ]
+  },
   "DialogTrigger": {
     "name": "DialogTrigger",
     "description": "A button that opens the dialog.\n\nRenders a `<button>`. Pass `render={<Button />}` to compose it with a\nstyled button — the trigger's own neutral styling steps aside when `render`\nis present, so the two never fight over the cascade.",

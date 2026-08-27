@@ -81,6 +81,28 @@ import d_collapsible_custom_icon from "./collapsible/custom-icon";
 import d_collapsible_custom_icon_src from "./collapsible/custom-icon?raw";
 import d_collapsible_disabled from "./collapsible/disabled";
 import d_collapsible_disabled_src from "./collapsible/disabled?raw";
+import d_color_picker_alpha from "./color-picker/alpha";
+import d_color_picker_alpha_src from "./color-picker/alpha?raw";
+import d_color_picker_basic from "./color-picker/basic";
+import d_color_picker_basic_src from "./color-picker/basic?raw";
+import d_color_picker_controlled from "./color-picker/controlled";
+import d_color_picker_controlled_src from "./color-picker/controlled?raw";
+import d_color_picker_disabled from "./color-picker/disabled";
+import d_color_picker_disabled_src from "./color-picker/disabled?raw";
+import d_color_picker_eyedropper from "./color-picker/eyedropper";
+import d_color_picker_eyedropper_src from "./color-picker/eyedropper?raw";
+import d_color_picker_form from "./color-picker/form";
+import d_color_picker_form_src from "./color-picker/form?raw";
+import d_color_picker_formats from "./color-picker/formats";
+import d_color_picker_formats_src from "./color-picker/formats?raw";
+import d_color_picker_inline from "./color-picker/inline";
+import d_color_picker_inline_src from "./color-picker/inline?raw";
+import d_color_picker_swatches from "./color-picker/swatches";
+import d_color_picker_swatches_src from "./color-picker/swatches?raw";
+import d_color_picker_theming from "./color-picker/theming";
+import d_color_picker_theming_src from "./color-picker/theming?raw";
+import d_color_picker_trigger from "./color-picker/trigger";
+import d_color_picker_trigger_src from "./color-picker/trigger?raw";
 import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
@@ -363,6 +385,17 @@ export type DemoId =
   | "collapsible/controlled"
   | "collapsible/custom-icon"
   | "collapsible/disabled"
+  | "color-picker/alpha"
+  | "color-picker/basic"
+  | "color-picker/controlled"
+  | "color-picker/disabled"
+  | "color-picker/eyedropper"
+  | "color-picker/form"
+  | "color-picker/formats"
+  | "color-picker/inline"
+  | "color-picker/swatches"
+  | "color-picker/theming"
+  | "color-picker/trigger"
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/controlled"
@@ -525,6 +558,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "collapsible/controlled": { Component: d_collapsible_controlled, source: d_collapsible_controlled_src, file: "collapsible/controlled.tsx" },
   "collapsible/custom-icon": { Component: d_collapsible_custom_icon, source: d_collapsible_custom_icon_src, file: "collapsible/custom-icon.tsx" },
   "collapsible/disabled": { Component: d_collapsible_disabled, source: d_collapsible_disabled_src, file: "collapsible/disabled.tsx" },
+  "color-picker/alpha": { Component: d_color_picker_alpha, source: d_color_picker_alpha_src, file: "color-picker/alpha.tsx" },
+  "color-picker/basic": { Component: d_color_picker_basic, source: d_color_picker_basic_src, file: "color-picker/basic.tsx" },
+  "color-picker/controlled": { Component: d_color_picker_controlled, source: d_color_picker_controlled_src, file: "color-picker/controlled.tsx" },
+  "color-picker/disabled": { Component: d_color_picker_disabled, source: d_color_picker_disabled_src, file: "color-picker/disabled.tsx" },
+  "color-picker/eyedropper": { Component: d_color_picker_eyedropper, source: d_color_picker_eyedropper_src, file: "color-picker/eyedropper.tsx" },
+  "color-picker/form": { Component: d_color_picker_form, source: d_color_picker_form_src, file: "color-picker/form.tsx" },
+  "color-picker/formats": { Component: d_color_picker_formats, source: d_color_picker_formats_src, file: "color-picker/formats.tsx" },
+  "color-picker/inline": { Component: d_color_picker_inline, source: d_color_picker_inline_src, file: "color-picker/inline.tsx" },
+  "color-picker/swatches": { Component: d_color_picker_swatches, source: d_color_picker_swatches_src, file: "color-picker/swatches.tsx" },
+  "color-picker/theming": { Component: d_color_picker_theming, source: d_color_picker_theming_src, file: "color-picker/theming.tsx" },
+  "color-picker/trigger": { Component: d_color_picker_trigger, source: d_color_picker_trigger_src, file: "color-picker/trigger.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },
