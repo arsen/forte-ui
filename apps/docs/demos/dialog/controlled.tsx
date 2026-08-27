@@ -70,9 +70,7 @@ export default function DialogControlled() {
       ))}
 
       {/* No Dialog.Trigger anywhere: the rows above are ordinary buttons that
-          happen to set state, and the dialog only ever reads it. With no
-          trigger to measure, the popup falls back to the centred open gesture
-          on its own — `origin="trigger"` has nothing to aim at. */}
+          happen to set state, and the dialog only ever reads it. */}
       <Dialog.Root
         open={open}
         // Every exit reports here — Escape, an outside press and Dialog.Close

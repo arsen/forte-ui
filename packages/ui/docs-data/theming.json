@@ -1787,10 +1787,6 @@
         "part": "popup",
         "overrides": [
           {
-            "selector": ".popup[data-origin]",
-            "value": "0px"
-          },
-          {
             "selector": ".popup[data-size=\"fullscreen\"]",
             "value": "var(--pui-travel-page)"
           }
@@ -1802,10 +1798,6 @@
         "description": "Scale the popup grows from. `1` when `size=\"fullscreen\"`.",
         "part": "popup",
         "overrides": [
-          {
-            "selector": ".popup[data-origin]",
-            "value": "calc(1 - 0.15 * var(--pui-motion-ok))"
-          },
           {
             "selector": ".popup[data-size=\"fullscreen\"]",
             "value": "1"
@@ -1833,10 +1825,6 @@
         "part": "popup",
         "overrides": [
           {
-            "selector": ".popup[data-origin]",
-            "value": "0px"
-          },
-          {
             "selector": ".popup[data-size=\"fullscreen\"]",
             "value": "var(--pui-travel-page)"
           }
@@ -1848,10 +1836,6 @@
         "description": "Scale the popup shrinks to. `1` when `size=\"fullscreen\"`.",
         "part": "popup",
         "overrides": [
-          {
-            "selector": ".popup[data-origin]",
-            "value": "calc(1 - 0.1 * var(--pui-motion-ok))"
-          },
           {
             "selector": ".popup[data-size=\"fullscreen\"]",
             "value": "1"

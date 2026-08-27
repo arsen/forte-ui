@@ -17,11 +17,18 @@ import type {
   AlertDialogTriggerProps as BaseAlertDialogTriggerProps,
 } from "@base-ui/react/alert-dialog";
 import { clsx } from "clsx";
+// The built-in dialogs behind `useDialog()` are compositions of the library's
+// own controls, so they are reached for here the way `ColorPicker` reaches for
+// `Popover`. Nothing above this line imports them, so a consumer who only ever
+// renders `Dialog.Root` still tree-shakes all four away.
+import { Button, type ButtonTone } from "../button";
+import { Field } from "../field";
+import { Form } from "../form";
+import { Input } from "../input";
 import styles from "./Dialog.module.css";
 
 export type DialogSize = "sm" | "md" | "lg" | "fullscreen";
 export type DialogFooterAlign = "start" | "center" | "end" | "between";
-export type DialogOrigin = "trigger" | "center";
 
 /* -------------------------------------------------------------------------
  * Root
@@ -163,165 +170,6 @@ export const AlertDialogTrigger = React.forwardRef(
  * Popup
  * ---------------------------------------------------------------------- */
 
-/** Marks a popup that has been aimed at its trigger; the stylesheet keys off it. */
-const ORIGIN_ATTR = "data-origin";
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
-}
-
-/**
- * The trigger that opened this popup, or `null` when there isn't one — a
- * dialog opened programmatically, through `defaultOpen`, or from a detached
- * handle whose trigger has since unmounted.
- *
- * Base UI points every trigger at its popup with `aria-controls`, so the
- * relationship is already in the DOM and needs no extra wiring. `CSS.escape`
- * because the id is generated and is not guaranteed to be a bare identifier.
- */
-function findTrigger(popup: HTMLElement): HTMLElement | null {
-  const id = popup.id;
-  if (!id) {
-    return null;
-  }
-  const selector = `[aria-controls="${typeof CSS !== "undefined" && CSS.escape ? CSS.escape(id) : id}"]`;
-  return popup.ownerDocument.querySelector<HTMLElement>(selector);
-}
-
-/**
- * The popup's *layout* box.
- *
- * `getBoundingClientRect()` reports the box after transforms, and at the
- * moment this runs the popup is sitting in its starting style — scaled down
- * and offset. That is precisely the transform whose origin is being computed,
- * so measuring through it would feed the result back into itself.
- *
- * Transitions are suppressed around the measurement because
- * `getBoundingClientRect()` forces a style flush: without it the browser sees
- * `transform` change to `none` and back as two separate style changes and
- * starts a transition toward each.
- */
-function measureLayoutRect(el: HTMLElement): DOMRect {
-  const { transition, transform } = el.style;
-  el.style.transition = "none";
-  el.style.transform = "none";
-  const rect = el.getBoundingClientRect();
-  el.style.transform = transform;
-  // Flush the restored transform while transitions are still off, so it is the
-  // value the enter transition starts from rather than something to animate to.
-  void el.offsetHeight;
-  el.style.transition = transition;
-  return rect;
-}
-
-/**
- * Points the popup's `transform-origin` at the centre of the trigger that
- * opened it, in pixels relative to the popup's top-left corner.
- *
- * Only measurement happens here — every duration, curve and scale stays in the
- * stylesheet, where it remains overridable and where reduced motion already
- * neutralises it.
- *
- * The origin is clamped to one popup-width/height outside the box on each
- * side. Past that the scale stops reading as "it grew out of the button" and
- * starts reading as the dialog being flung across the screen, because the
- * further the origin is from the popup, the more of the scale is expressed as
- * translation.
- */
-function aimAtTrigger(el: HTMLElement): void {
-  const trigger = findTrigger(el);
-  if (trigger == null) {
-    el.removeAttribute(ORIGIN_ATTR);
-    return;
-  }
-
-  const t = trigger.getBoundingClientRect();
-  // A trigger that is display:none or has been scrolled out of a collapsed
-  // container measures as an empty box; aiming at it would put the origin in
-  // the top-left of the viewport.
-  if (t.width === 0 && t.height === 0) {
-    el.removeAttribute(ORIGIN_ATTR);
-    return;
-  }
-
-  const p = measureLayoutRect(el);
-  if (p.width === 0 || p.height === 0) {
-    el.removeAttribute(ORIGIN_ATTR);
-    return;
-  }
-
-  const x = clamp(t.left + t.width / 2 - p.left, -p.width, p.width * 2);
-  const y = clamp(t.top + t.height / 2 - p.top, -p.height, p.height * 2);
-
-  el.style.setProperty("--pui-dialog-origin-x", `${Math.round(x)}px`);
-  el.style.setProperty("--pui-dialog-origin-y", `${Math.round(y)}px`);
-  el.setAttribute(ORIGIN_ATTR, "");
-}
-
-/**
- * Returns a ref callback for the popup that keeps its transform origin aimed
- * at the trigger.
- *
- * A ref callback and not an effect, for two reasons. The popup element does
- * not exist when `Dialog.Popup` mounts — Base UI's `Portal` renders nothing
- * until the dialog opens — so an effect on this component would run once at
- * page load against a null ref and never fire again when the element finally
- * appeared. And the measurement has to land before the browser paints the
- * starting style, or the first frame is drawn from the centre and the dialog
- * visibly jumps; ref callbacks run during commit, ahead of paint.
- *
- * A `keepMounted` popup keeps the same element across opens, so the callback
- * alone would only aim it once. Watching for Base UI re-applying
- * `[data-starting-style]` re-aims it on every subsequent open, and covers the
- * case where the trigger has moved in between.
- *
- * The observer is torn down from the callback itself rather than from an
- * effect cleanup: React 18 ignores a function returned from a ref callback,
- * and this package supports React 18.
- */
-function useTriggerOrigin(
-  enabled: boolean,
-): (node: HTMLDivElement | null) => void {
-  const observerRef = React.useRef<MutationObserver | null>(null);
-
-  React.useEffect(
-    () => () => {
-      observerRef.current?.disconnect();
-      observerRef.current = null;
-    },
-    [],
-  );
-
-  return React.useCallback(
-    (node: HTMLDivElement | null) => {
-      observerRef.current?.disconnect();
-      observerRef.current = null;
-
-      if (node == null) {
-        return;
-      }
-      if (!enabled) {
-        node.removeAttribute(ORIGIN_ATTR);
-        return;
-      }
-
-      aimAtTrigger(node);
-
-      const observer = new MutationObserver(() => {
-        if (node.hasAttribute("data-starting-style")) {
-          aimAtTrigger(node);
-        }
-      });
-      observer.observe(node, {
-        attributes: true,
-        attributeFilter: ["data-starting-style"],
-      });
-      observerRef.current = observer;
-    },
-    [enabled],
-  );
-}
-
 export interface DialogPopupProps
   extends Omit<BaseDialogPopupProps, "className"> {
   /**
@@ -373,20 +221,6 @@ export interface DialogPopupProps
    */
   viewportClassName?: string;
   /**
-   * Where the open and close scale grows from.
-   *
-   * `"trigger"` aims it at the centre of the button that opened the dialog, so
-   * the surface reads as growing out of that button and collapsing back into
-   * it. `"center"` keeps the centred gesture.
-   *
-   * `"trigger"` falls back to the centred gesture on its own whenever there is
-   * no trigger to aim at — a dialog opened programmatically or through
-   * `defaultOpen` — and is ignored for `size="fullscreen"`, where a sheet
-   * covering the screen has no meaningful point to grow from.
-   * @default "trigger"
-   */
-  origin?: DialogOrigin;
-  /**
    * Additional class name(s) for the popup itself. Applied after the internal
    * styles so consumer utilities (e.g. Tailwind) win without needing
    * `!important`.
@@ -417,30 +251,12 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
       forceBackdrop = false,
       backdropClassName,
       viewportClassName,
-      origin = "trigger",
       className,
       children,
       ...props
     },
     ref,
   ) {
-    const aimOrigin = useTriggerOrigin(
-      origin === "trigger" && size !== "fullscreen",
-    );
-    // The origin hook needs the popup element, and so may the consumer, so the
-    // two refs are merged rather than one shadowing the other.
-    const popupRef = React.useCallback(
-      (node: HTMLDivElement | null) => {
-        aimOrigin(node);
-        if (typeof ref === "function") {
-          ref(node);
-        } else if (ref != null) {
-          ref.current = node;
-        }
-      },
-      [ref, aimOrigin],
-    );
-
     return (
       <BaseDialog.Portal keepMounted={keepMounted} container={container}>
         {backdrop ? (
@@ -456,7 +272,7 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
           data-pui="dialog-viewport"
         >
           <BaseDialog.Popup
-            ref={popupRef}
+            ref={ref}
             // The popup is programmatically focused when the dialog opens by
             // touch, and that focus is keyboard-visible when it opens by
             // keyboard — so it needs a real ring, not the UA default.
@@ -678,6 +494,1025 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
 );
 
 /* -------------------------------------------------------------------------
+ * Programmatic dialogs — options
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The fields every built-in dialog understands.
+ *
+ * `title` and `description` are the two fields a toast takes, and they mean
+ * the same thing here — which is why `dialog.confirm("Delete this?")` becomes
+ * the *title* rather than the body. The title is the dialog's accessible name,
+ * and a dialog without one is announced as just "dialog".
+ */
+export interface DialogMessageOptions {
+  /** The question or the statement, and the dialog's accessible name. */
+  title?: React.ReactNode;
+  /** A second line under it, and the dialog's accessible description. */
+  description?: React.ReactNode;
+  /**
+   * Maximum width of the popup. These dialogs hold a sentence and two
+   * buttons, so they start narrower than a composed one.
+   * @default "sm"
+   */
+  size?: DialogSize;
+  /**
+   * Tone of the button that answers the dialog. Reach for `"danger"` whenever
+   * the answer destroys something — it also moves the footer to
+   * `align="between"`, which pushes the safe button away from it.
+   * @default "primary"
+   */
+  tone?: ButtonTone;
+  /**
+   * Additional class name(s) for the popup — the place to set a
+   * `--pui-dialog-*` knob for one call.
+   */
+  className?: string;
+}
+
+/** Options for `dialog.alert()`. */
+export interface DialogAlertOptions extends DialogMessageOptions {
+  /**
+   * Label of the single acknowledging button.
+   * @default the provider's `labels.ok`, "OK"
+   */
+  okLabel?: React.ReactNode;
+}
+
+/** Options for `dialog.confirm()`. */
+export interface DialogConfirmOptions extends DialogMessageOptions {
+  /**
+   * Label of the button that resolves the promise with `true`.
+   * @default the provider's `labels.confirm`, "Confirm"
+   */
+  confirmLabel?: React.ReactNode;
+  /**
+   * Label of the button that resolves it with `false`.
+   * @default the provider's `labels.cancel`, "Cancel"
+   */
+  cancelLabel?: React.ReactNode;
+  /**
+   * How the two buttons are distributed along the footer.
+   * @default `"between"` when `tone` is `"danger"`, `"end"` otherwise
+   */
+  align?: DialogFooterAlign;
+}
+
+/** Options for `dialog.confirmWithInput()`. */
+export interface DialogConfirmWithInputOptions extends DialogConfirmOptions {
+  /**
+   * The exact string the user has to type before the confirm button enables.
+   * Surrounding whitespace is ignored, since a pasted value often carries a
+   * trailing space and that is not a different answer.
+   */
+  confirmValue: string;
+  /**
+   * Label above the input.
+   * @default the provider's `labels.confirmInput`, "Type <confirmValue> to confirm"
+   */
+  inputLabel?: React.ReactNode;
+  /**
+   * Placeholder inside the input.
+   * @default `confirmValue`
+   */
+  placeholder?: string;
+  /**
+   * Whether the typed value has to match `confirmValue`'s case. Leave it on
+   * for a destructive action: an answer that has to be typed exactly is the
+   * whole point of the pattern.
+   * @default true
+   */
+  caseSensitive?: boolean;
+}
+
+/**
+ * What a component rendered by `dialog.show()` receives.
+ *
+ * It renders the *contents* of the dialog — normally one `Dialog.Popup` — and
+ * not the root. The provider owns the root, which is what lets it stack the
+ * dialog on whatever is already open, hold the entry in the tree until the
+ * exit transition ends, and guarantee that the promise settles even when the
+ * dialog is dismissed by Escape rather than answered by a button.
+ */
+export interface CustomDialogProps<Payload = void, Result = void> {
+  /** The second argument `dialog.show()` was called with. */
+  payload: Payload;
+  /**
+   * Answers the dialog: resolves the promise with `result` and starts the exit
+   * transition. Stable for the life of the dialog, and safe to call twice —
+   * the first answer is the one that is kept.
+   */
+  close: (result: Result) => void;
+  /**
+   * Dismisses the dialog: resolves the promise with `dismissValue` — the same
+   * thing Escape and an outside press do. It exists because `close()` demands
+   * a `Result`, and a cancel button has none to give.
+   */
+  dismiss: () => void;
+}
+
+/** A component that can be handed to `dialog.show()`. */
+export type CustomDialogComponent<Payload = void, Result = void> =
+  React.ComponentType<CustomDialogProps<Payload, Result>>;
+
+/** Options for `dialog.show()`. */
+export interface DialogShowOptions<Result = void> {
+  /**
+   * Render an `AlertDialog.Root` instead of a `Dialog.Root`: always modal,
+   * never dismissed by a press outside it. Use it when the dialog asks a
+   * question that has to be answered.
+   * @default false
+   */
+  alert?: boolean;
+  /**
+   * What the promise resolves to when the dialog is dismissed — Escape, an
+   * outside press, the provider unmounting — rather than answered through
+   * `close()`.
+   * @default undefined
+   */
+  dismissValue?: Result;
+}
+
+/* -------------------------------------------------------------------------
+ * Programmatic dialogs — labels
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The copy the built-in dialogs put on screen that the call site does not
+ * supply. Override it on `Dialog.Provider` — that is the translation seam, and
+ * it is the reason `confirm()` can take a message and nothing else.
+ */
+export interface DialogLabels {
+  /** The single button on `alert()`. */
+  ok: React.ReactNode;
+  /** The affirmative button on `confirm()` and `confirmWithInput()`. */
+  confirm: React.ReactNode;
+  /** The dismissing button on both. */
+  cancel: React.ReactNode;
+  /** The label above the input on `confirmWithInput()`. */
+  confirmInput: (confirmValue: string) => React.ReactNode;
+}
+
+const DEFAULT_DIALOG_LABELS: DialogLabels = {
+  ok: "OK",
+  confirm: "Confirm",
+  cancel: "Cancel",
+  confirmInput: (confirmValue) => (
+    <>
+      Type <strong>{confirmValue}</strong> to confirm
+    </>
+  ),
+};
+
+const DialogLabelsContext = React.createContext<DialogLabels>(
+  DEFAULT_DIALOG_LABELS,
+);
+
+/* -------------------------------------------------------------------------
+ * Programmatic dialogs — the stack
+ * ---------------------------------------------------------------------- */
+
+/** One dialog on the stack, waiting to be answered. */
+interface DialogEntry {
+  id: string;
+  /**
+   * `false` starts the exit transition. The entry stays in the tree until
+   * `onOpenChangeComplete` reports the transition has ended — remove it on the
+   * close *request* instead and the dialog vanishes rather than leaving.
+   */
+  open: boolean;
+  /**
+   * The dialog this one is rendered *inside*, or `null` for one rendered at the
+   * top of the tree. Decided when the dialog opens — it is whichever dialog was
+   * on screen at that moment — and never revised.
+   *
+   * Fixed at that moment for a reason. A dialog opened while another is still
+   * animating out (`await confirm()` then `await alert()`, which is the most
+   * ordinary sequence there is) must NOT become that dialog's child: the parent
+   * would be removed the instant its exit finished, taking its subtree's
+   * position in the React tree with it, and the child would remount mid-enter —
+   * or, if it had already been answered, never be removed at all.
+   */
+  parentId: string | null;
+  /** Whether the root is an `AlertDialog.Root` rather than a `Dialog.Root`. */
+  alert: boolean;
+  Content: CustomDialogComponent<unknown, unknown>;
+  payload: unknown;
+  /** Resolves the promise the opening call handed back. */
+  resolve: (result: unknown) => void;
+  /** What that promise resolves to when the dialog is dismissed, not answered. */
+  dismissValue: unknown;
+  /** Records the answer and starts the exit. Stable for the entry's life. */
+  close: (result: unknown) => void;
+  /** `close()` with the dismissal value. Stable for the entry's life. */
+  dismiss: () => void;
+}
+
+/**
+ * The shared list behind a provider and, when there is one, a manager.
+ *
+ * Not exported: the only two things that touch it are `Dialog.Provider` and
+ * the API built over it, and a manager carries its store in a module-level
+ * `WeakMap` rather than on a public field.
+ */
+interface DialogStore {
+  subscribe: (listener: () => void) => () => void;
+  getSnapshot: () => readonly DialogEntry[];
+  open: <Payload, Result>(init: {
+    alert: boolean;
+    Content: CustomDialogComponent<Payload, Result>;
+    payload: Payload;
+    dismissValue: Result;
+  }) => Promise<Result>;
+  /** Drops an entry once its exit transition has finished. */
+  remove: (id: string) => void;
+  closeTop: () => void;
+  closeAll: () => void;
+  /** Empties the stack, settling everything on it. */
+  clear: () => void;
+}
+
+/**
+ * The empty stack, shared by every store.
+ *
+ * One frozen array rather than a fresh `[]` per store, because
+ * `useSyncExternalStore` compares snapshots by identity and calls
+ * `getServerSnapshot` on every server render — a new array each time is an
+ * infinite loop during SSR.
+ */
+const NO_DIALOGS: readonly DialogEntry[] = Object.freeze([]);
+
+let dialogCount = 0;
+
+function createDialogStore(): DialogStore {
+  let entries: readonly DialogEntry[] = NO_DIALOGS;
+  const listeners = new Set<() => void>();
+  /**
+   * Ids whose promise has already resolved. A dialog settles exactly once: the
+   * answer is recorded by a button, and the close it triggers arrives a moment
+   * later carrying the *dismissal* value, which must not overwrite it.
+   */
+  const settled = new Set<string>();
+
+  function emit(): void {
+    for (const listener of listeners) {
+      listener();
+    }
+  }
+
+  function find(id: string): DialogEntry | undefined {
+    return entries.find((entry) => entry.id === id);
+  }
+
+  /** The dialog currently on screen, past any that are on their way out. */
+  function topmostOpen(): DialogEntry | undefined {
+    for (let index = entries.length - 1; index >= 0; index -= 1) {
+      const entry = entries[index];
+      if (entry != null && entry.open) {
+        return entry;
+      }
+    }
+    return undefined;
+  }
+
+  function settle(entry: DialogEntry, result: unknown): void {
+    if (settled.has(entry.id)) {
+      return;
+    }
+    settled.add(entry.id);
+    entry.resolve(result);
+  }
+
+  function setOpen(id: string, open: boolean): void {
+    const entry = find(id);
+    if (entry == null || entry.open === open) {
+      return;
+    }
+    entries = entries.map((current) =>
+      current.id === id ? { ...current, open } : current,
+    );
+    emit();
+  }
+
+  const store: DialogStore = {
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+
+    getSnapshot() {
+      return entries;
+    },
+
+    open({ alert, Content, payload, dismissValue }) {
+      return new Promise((resolve) => {
+        dialogCount += 1;
+        const id = `pui-dialog-${dialogCount}`;
+        const entry: DialogEntry = {
+          id,
+          open: true,
+          // The dialog on screen right now, if there is one — not simply the
+          // last entry, which may be one that has been answered and is only
+          // still here to finish leaving.
+          parentId: topmostOpen()?.id ?? null,
+          alert,
+          // The stack is heterogeneous — every entry pairs a different payload
+          // type with a different result type — and the two are tied together
+          // at the call site, which is the only place that can check them.
+          Content: Content as CustomDialogComponent<unknown, unknown>,
+          payload,
+          resolve: resolve as (result: unknown) => void,
+          dismissValue,
+          close: (result) => {
+            const current = find(id);
+            if (current != null) {
+              settle(current, result);
+            }
+            setOpen(id, false);
+          },
+          dismiss: () => {
+            entry.close(dismissValue);
+          },
+        };
+        entries = [...entries, entry];
+        emit();
+      });
+    },
+
+    remove(id) {
+      const entry = find(id);
+      if (entry == null) {
+        return;
+      }
+      settle(entry, entry.dismissValue);
+      // Anything opened from this dialog moves up to take its place. Normally
+      // there is nothing to move — a dialog cannot be answered while another
+      // one covers it — but code holding the `close` from an earlier `show()`
+      // can do it anyway, and a child left pointing at a parent that no longer
+      // exists would be rendered at no level at all: gone from the screen,
+      // still on the stack, its promise pending for good. Re-parenting costs
+      // those children a remount and is the cheaper of the two.
+      entries = entries
+        .filter((current) => current.id !== id)
+        .map((current) =>
+          current.parentId === id
+            ? { ...current, parentId: entry.parentId }
+            : current,
+        );
+      settled.delete(id);
+      emit();
+    },
+
+    closeTop() {
+      const entry = topmostOpen();
+      if (entry != null) {
+        settle(entry, entry.dismissValue);
+        setOpen(entry.id, false);
+      }
+    },
+
+    closeAll() {
+      const open = entries.filter((entry) => entry.open);
+      if (open.length === 0) {
+        return;
+      }
+      for (const entry of open) {
+        settle(entry, entry.dismissValue);
+      }
+      entries = entries.map((entry) =>
+        entry.open ? { ...entry, open: false } : entry,
+      );
+      emit();
+    },
+
+    clear() {
+      if (entries.length === 0) {
+        return;
+      }
+      const previous = entries;
+      entries = NO_DIALOGS;
+      emit();
+      for (const entry of previous) {
+        settle(entry, entry.dismissValue);
+      }
+      settled.clear();
+    },
+  };
+
+  return store;
+}
+
+/* -------------------------------------------------------------------------
+ * Programmatic dialogs — the API
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Whether the argument is an options object rather than a bare message.
+ *
+ * `ReactNode` and the options objects overlap on exactly two shapes — a React
+ * element and an array, both of which are objects — so both are ruled out by
+ * name. `Toast` makes the same test for the same reason; they are not shared
+ * because they guard different option shapes, and neither module should have
+ * to import the other to decide what a message is.
+ */
+function isDialogOptions<Options extends DialogMessageOptions>(
+  value: React.ReactNode | Options,
+): value is Options {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    !React.isValidElement(value)
+  );
+}
+
+/** `confirm("Delete this?")` and `confirm({ title: "Delete this?" })` agree. */
+function normalizeMessage<Options extends DialogMessageOptions>(
+  options: React.ReactNode | Options,
+): Options {
+  return isDialogOptions(options) ? options : ({ title: options } as Options);
+}
+
+/**
+ * The dialog API — what `useDialog()` returns, and what
+ * `Dialog.createManager()` gives you outside React.
+ *
+ * Every method resolves when the user answers or dismisses the dialog, not
+ * when it finishes animating away: an `await dialog.confirm()` continues the
+ * moment the decision is made.
+ */
+export interface DialogApi {
+  /**
+   * Shows a message that has to be acknowledged. Resolves when it is.
+   *
+   * A bare message becomes the `title`, which is the dialog's accessible name.
+   */
+  alert: (options: React.ReactNode | DialogAlertOptions) => Promise<void>;
+  /**
+   * Asks a yes-or-no question. Resolves to `true` when the user confirms, and
+   * to `false` for every other way out — Cancel, Escape, the provider
+   * unmounting.
+   */
+  confirm: (options: React.ReactNode | DialogConfirmOptions) => Promise<boolean>;
+  /**
+   * Asks a yes-or-no question whose confirm button stays disabled until the
+   * user types `confirmValue`. The pattern for a delete that cannot be undone.
+   */
+  confirmWithInput: (options: DialogConfirmWithInputOptions) => Promise<boolean>;
+  /**
+   * Shows a component of your own and resolves with whatever it passes to
+   * `close()`. Resolves to `dismissValue` — `undefined` unless you say
+   * otherwise — when it is dismissed instead.
+   */
+  show: <Payload, Result = void>(
+    Component: CustomDialogComponent<Payload, Result>,
+    payload: Payload,
+    options?: DialogShowOptions<Result>,
+  ) => Promise<Result | undefined>;
+  /** Dismisses the topmost dialog, exactly as Escape does. */
+  close: () => void;
+  /** Dismisses every dialog on the stack. */
+  closeAll: () => void;
+}
+
+/**
+ * A manager from `Dialog.createManager()`. Same methods as `useDialog()`,
+ * usable from anywhere.
+ */
+export type DialogManager = DialogApi;
+
+/**
+ * Which store a manager pushes onto.
+ *
+ * A `WeakMap` rather than a field on the manager, so that the store — which is
+ * machinery, not API — never appears in the manager's type and cannot be
+ * reached into. `Dialog.Provider` is the only reader.
+ */
+const MANAGER_STORES = new WeakMap<DialogManager, DialogStore>();
+
+/** One implementation for both `useDialog()` and `Dialog.createManager()`. */
+function createDialogApi(store: DialogStore): DialogApi {
+  return {
+    alert(options) {
+      return store.open<DialogAlertOptions, void>({
+        alert: true,
+        Content: DialogAlertView,
+        payload: normalizeMessage(options),
+        dismissValue: undefined,
+      });
+    },
+
+    confirm(options) {
+      return store.open<DialogConfirmOptions, boolean>({
+        alert: true,
+        Content: DialogConfirmView,
+        payload: normalizeMessage(options),
+        dismissValue: false,
+      });
+    },
+
+    confirmWithInput(options) {
+      return store.open<DialogConfirmWithInputOptions, boolean>({
+        alert: true,
+        Content: DialogConfirmWithInputView,
+        payload: options,
+        dismissValue: false,
+      });
+    },
+
+    // Written out rather than inferred from `DialogApi`, because a contextual
+    // type parameter cannot be *named* inside the implementation, and the call
+    // to `store.open` below has to name both.
+    show<Payload, Result = void>(
+      Component: CustomDialogComponent<Payload, Result>,
+      payload: Payload,
+      options?: DialogShowOptions<Result>,
+    ): Promise<Result | undefined> {
+      return store.open<Payload, Result>({
+        alert: options?.alert ?? false,
+        Content: Component,
+        payload,
+        // `dismissValue` is optional and `undefined` is its documented
+        // default, which is exactly what the return type widens to. The store
+        // itself has no opinion — it hands back whatever it was given.
+        dismissValue: options?.dismissValue as Result,
+      });
+    },
+
+    close() {
+      store.closeTop();
+    },
+
+    closeAll() {
+      store.closeAll();
+    },
+  };
+}
+
+/**
+ * Creates a dialog manager that works outside React.
+ *
+ * ```ts
+ * // dialogs.ts
+ * export const dialogs = Dialog.createManager();
+ *
+ * // anywhere — an API client, a router guard, a store
+ * if (await dialogs.confirm("Discard your draft?")) discard();
+ *
+ * // app root
+ * <Dialog.Provider manager={dialogs}>…</Dialog.Provider>
+ * ```
+ *
+ * Pass the manager itself, not something inside it — unlike `Toast.Provider`,
+ * which has a Base UI manager underneath to hand over.
+ *
+ * A dialog opened before a provider has mounted is *queued* rather than
+ * dropped, because a dropped one would leave its promise pending for the life
+ * of the page. It appears as soon as a provider mounts. If none ever does, the
+ * `await` never returns — so mount the provider at the root, once.
+ */
+export function createDialogManager(): DialogManager {
+  const store = createDialogStore();
+  const manager = createDialogApi(store);
+  MANAGER_STORES.set(manager, store);
+  return manager;
+}
+
+/* -------------------------------------------------------------------------
+ * Programmatic dialogs — the built-in views
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The header both built-ins share. Either field may be left out, but a dialog
+ * with neither has no accessible name, so `alert("…")` and `confirm("…")`
+ * route a bare message to the title.
+ */
+function DialogMessageHeader({
+  title,
+  description,
+}: Pick<DialogMessageOptions, "title" | "description">): React.JSX.Element {
+  return (
+    <>
+      {title == null ? null : <DialogTitle>{title}</DialogTitle>}
+      {description == null ? null : (
+        <DialogDescription>{description}</DialogDescription>
+      )}
+    </>
+  );
+}
+
+function DialogAlertView({
+  payload,
+  close,
+}: CustomDialogProps<DialogAlertOptions, void>): React.JSX.Element {
+  const labels = React.useContext(DialogLabelsContext);
+  const {
+    title,
+    description,
+    size = "sm",
+    tone = "primary",
+    okLabel = labels.ok,
+    className,
+  } = payload;
+
+  return (
+    <DialogPopup size={size} className={className}>
+      <DialogMessageHeader title={title} description={description} />
+      <DialogFooter>
+        {/* Deliberately not a `Dialog.Close`. A close button flips the open
+            state on press, so the dialog would already be closing while this
+            handler decided what to resolve with — and whichever of the two ran
+            second would win. `close()` records the answer and starts the exit,
+            in that order, every time. */}
+        <Button
+          tone={tone}
+          onClick={() => {
+            close();
+          }}
+        >
+          {okLabel}
+        </Button>
+      </DialogFooter>
+    </DialogPopup>
+  );
+}
+
+function DialogConfirmView({
+  payload,
+  close,
+}: CustomDialogProps<DialogConfirmOptions, boolean>): React.JSX.Element {
+  const labels = React.useContext(DialogLabelsContext);
+  const {
+    title,
+    description,
+    size = "sm",
+    tone = "primary",
+    confirmLabel = labels.confirm,
+    cancelLabel = labels.cancel,
+    // A destructive answer gets the two buttons pushed apart, which is what
+    // makes a mis-aimed click far less likely. Everything else reads better
+    // with the confirm next to where the eye leaves the dialog.
+    align = tone === "danger" ? "between" : "end",
+    className,
+  } = payload;
+
+  return (
+    <DialogPopup size={size} className={className}>
+      <DialogMessageHeader title={title} description={description} />
+      <DialogFooter align={align}>
+        {/* Cancel comes first in the DOM, so it is the first tabbable element
+            and takes focus when the dialog opens. On a destructive question
+            the safe answer is the one that should already be selected. */}
+        <Button
+          variant="soft"
+          tone="neutral"
+          onClick={() => {
+            close(false);
+          }}
+        >
+          {cancelLabel}
+        </Button>
+        <Button
+          tone={tone}
+          onClick={() => {
+            close(true);
+          }}
+        >
+          {confirmLabel}
+        </Button>
+      </DialogFooter>
+    </DialogPopup>
+  );
+}
+
+function DialogConfirmWithInputView({
+  payload,
+  close,
+}: CustomDialogProps<DialogConfirmWithInputOptions, boolean>): React.JSX.Element {
+  const labels = React.useContext(DialogLabelsContext);
+  const {
+    title,
+    description,
+    size = "sm",
+    // Typing a value out is a friction that only earns its place in front of
+    // something irreversible, so this one defaults destructive.
+    tone = "danger",
+    confirmValue,
+    inputLabel = labels.confirmInput(confirmValue),
+    placeholder = confirmValue,
+    confirmLabel = labels.confirm,
+    cancelLabel = labels.cancel,
+    align = "between",
+    caseSensitive = true,
+    className,
+  } = payload;
+
+  const [typed, setTyped] = React.useState("");
+
+  // Trimmed because the value is usually pasted, and a trailing space is not a
+  // different answer — only a way to fail the check without seeing why.
+  const candidate = typed.trim();
+  const matches = caseSensitive
+    ? candidate === confirmValue
+    : candidate.toLowerCase() === confirmValue.toLowerCase();
+
+  return (
+    <DialogPopup size={size} className={className}>
+      <DialogMessageHeader title={title} description={description} />
+      {/* A form, so Enter confirms once the value matches. The submit button is
+          disabled until then, and a disabled default button suppresses implicit
+          submission — so the keyboard and the pointer unlock at the same
+          moment, with no second condition to keep in sync. */}
+      <Form
+        onFormSubmit={() => {
+          close(true);
+        }}
+      >
+        <Field.Root name="pui-dialog-confirm">
+          <Field.Label>{inputLabel}</Field.Label>
+          {/* First tabbable element in the popup, so it takes focus on open. */}
+          <Input
+            value={typed}
+            onValueChange={(value) => setTyped(value)}
+            placeholder={placeholder}
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+        </Field.Root>
+        <DialogFooter align={align}>
+          <Button
+            variant="soft"
+            tone="neutral"
+            onClick={() => {
+              close(false);
+            }}
+          >
+            {cancelLabel}
+          </Button>
+          <Button type="submit" tone={tone} disabled={!matches}>
+            {confirmLabel}
+          </Button>
+        </DialogFooter>
+      </Form>
+    </DialogPopup>
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * Programmatic dialogs — the provider
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Every dialog whose parent is `parentId`, and everything opened from them.
+ *
+ * The recursion is the design. Base UI decides a dialog is nested by looking
+ * for a parent `Root` *in the React tree*, so a stack rendered flat would draw
+ * a second backdrop over the first dialog and skip the step-back the
+ * stylesheet already implements. Rendering each dialog inside the one that was
+ * on screen when it opened gets the nesting for free.
+ *
+ * A forest rather than a single chain, because two dialogs can be on screen
+ * without one being inside the other: the one that has just been answered and
+ * is animating out, and the one its answer opened. Those are siblings — see
+ * `parentId` — and each keeps its own backdrop, which is right, because
+ * neither is stacked on the other.
+ */
+function DialogStackLevel({
+  entries,
+  parentId,
+  store,
+}: {
+  entries: readonly DialogEntry[];
+  parentId: string | null;
+  store: DialogStore;
+}): React.JSX.Element | null {
+  const level = entries.filter((entry) => entry.parentId === parentId);
+  if (level.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {level.map((entry) => (
+        // Keyed by id, so that a dialog can never inherit the DOM — or the
+        // state — of one that stood in the same place before it.
+        <DialogStackNode
+          key={entry.id}
+          entry={entry}
+          entries={entries}
+          store={store}
+        />
+      ))}
+    </>
+  );
+}
+
+/**
+ * `useLayoutEffect`, except on the server, where React warns that it does
+ * nothing. Only the stack below needs it, and only on the client — the server
+ * renders an empty stack — but the warning fires on the hook being *called*,
+ * so the swap has to happen anyway.
+ */
+const useIsoLayoutEffect =
+  typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
+
+/**
+ * One dialog on the stack, and everything opened from it.
+ *
+ * `opened` is what gives the dialog its entrance. Base UI seeds its transition
+ * state from `open` on the FIRST render — `useState(open)` — so a `Root` that
+ * mounts already open is treated as having always been open: no
+ * `[data-starting-style]`, no enter transition, the popup simply appears. A
+ * dialog raised by a call always mounts that way, since the entry that creates
+ * it is created open. Mounting closed and opening in a layout effect gives Base
+ * UI the false→true edge it is watching for, and costs no frame: the effect
+ * runs before paint, so the popup is painted once, already carrying its
+ * starting style.
+ */
+function DialogStackNode({
+  entry,
+  entries,
+  store,
+}: {
+  entry: DialogEntry;
+  entries: readonly DialogEntry[];
+  store: DialogStore;
+}): React.JSX.Element {
+  const [opened, setOpened] = React.useState(false);
+  useIsoLayoutEffect(() => {
+    setOpened(true);
+  }, []);
+
+  const { Content } = entry;
+  const rootProps = {
+    open: entry.open && opened,
+    onOpenChange: (open: boolean) => {
+      // Escape, an outside press, a nested dialog closing its parent — any
+      // close that did not come through `close()`. Both halves matter: this
+      // root is CONTROLLED, so a request that is only settled and not also
+      // recorded leaves `entry.open` true, and Base UI re-syncs the popup back
+      // open on the next render of the provider. Settling is a no-op once an
+      // answer has been recorded, so a button that already ran keeps its
+      // result and this only ever supplies the dismissal value.
+      if (!open) {
+        entry.dismiss();
+      }
+    },
+    onOpenChangeComplete: (open: boolean) => {
+      if (!open) {
+        store.remove(entry.id);
+      }
+    },
+    children: (
+      <>
+        <Content
+          payload={entry.payload}
+          close={entry.close}
+          dismiss={entry.dismiss}
+        />
+        <DialogStackLevel
+          entries={entries}
+          parentId={entry.id}
+          store={store}
+        />
+      </>
+    ),
+  };
+
+  return entry.alert ? (
+    <AlertDialogRoot {...rootProps} />
+  ) : (
+    <DialogRoot {...rootProps} />
+  );
+}
+
+const DialogApiContext = React.createContext<DialogApi | null>(null);
+
+export interface DialogProviderProps {
+  /** The part of the app that can open dialogs. */
+  children?: React.ReactNode;
+  /**
+   * A manager from `Dialog.createManager()`. Pass one and the provider drives
+   * that manager's stack instead of its own, which is what lets code outside
+   * React open a dialog. `useDialog()` reaches the same stack either way.
+   */
+  manager?: DialogManager;
+  /**
+   * Overrides for the built-in button labels — the only copy `alert()`,
+   * `confirm()` and `confirmWithInput()` put on screen that the call site does
+   * not supply. Set it once here instead of passing `okLabel` and
+   * `cancelLabel` to every call; this is the translation seam.
+   */
+  labels?: Partial<DialogLabels>;
+}
+
+/**
+ * Enables `useDialog()` underneath it, and renders whatever is opened.
+ *
+ * ```tsx
+ * <Dialog.Provider>
+ *   <App />
+ * </Dialog.Provider>
+ * ```
+ *
+ * Mount it once, above everything that might ask a question. It renders no DOM
+ * element of its own and every dialog is portalled to `<body>`, so where it
+ * sits in the tree does not matter beyond that.
+ *
+ * The stack it renders is *nested*: a dialog opened while another is on screen
+ * becomes that dialog's child, which is what makes the parent step back and
+ * dim instead of being covered by a second backdrop.
+ */
+export function DialogProvider({
+  children,
+  manager,
+  labels,
+}: DialogProviderProps): React.JSX.Element {
+  // `useState`'s initialiser and not `useMemo`: a store rebuilt on a re-render
+  // would strand every promise already waiting on the old one.
+  const [ownStore] = React.useState(createDialogStore);
+
+  let store = ownStore;
+  if (manager != null) {
+    const managerStore = MANAGER_STORES.get(manager);
+    if (managerStore == null) {
+      throw new Error(
+        "Dialog.Provider's `manager` prop needs an object from Dialog.createManager().",
+      );
+    }
+    store = managerStore;
+  }
+
+  const entries = React.useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+  );
+
+  const api = React.useMemo(() => createDialogApi(store), [store]);
+
+  const resolvedLabels = React.useMemo(
+    () =>
+      labels == null ? DEFAULT_DIALOG_LABELS : { ...DEFAULT_DIALOG_LABELS, ...labels },
+    [labels],
+  );
+
+  // A dialog that leaves the screen with the provider was answered by nobody,
+  // and its promise would otherwise stay pending for the life of the page — an
+  // `await dialog.confirm()` that never returns. Settling each one with its
+  // dismissal value is what Escape would have done.
+  React.useEffect(
+    () => () => {
+      store.clear();
+    },
+    [store],
+  );
+
+  return (
+    <DialogApiContext.Provider value={api}>
+      <DialogLabelsContext.Provider value={resolvedLabels}>
+        {children}
+        <DialogStackLevel entries={entries} parentId={null} store={store} />
+      </DialogLabelsContext.Provider>
+    </DialogApiContext.Provider>
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * useDialog
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Opens dialogs from inside a component, and waits for the answer.
+ *
+ * ```tsx
+ * const dialog = useDialog();
+ *
+ * if (await dialog.confirm("Delete this draft?")) {
+ *   await deleteDraft();
+ * }
+ * ```
+ *
+ * Must be called under a `Dialog.Provider`.
+ *
+ * The object and every method on it keep the same identity for the life of the
+ * provider, so both the object and one pulled out by destructuring are safe in
+ * a dependency array.
+ */
+export function useDialog(): DialogApi {
+  const api = React.useContext(DialogApiContext);
+  if (api == null) {
+    throw new Error(
+      "useDialog() must be called under a <Dialog.Provider>. Mount one above this component.",
+    );
+  }
+  return api;
+}
+
+/* -------------------------------------------------------------------------
  * Namespaces
  * ---------------------------------------------------------------------- */
 
@@ -699,6 +1534,10 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
  *   </Dialog.Popup>
  * </Dialog.Root>
  * ```
+ *
+ * `Dialog.Provider` and `useDialog()` are the other way to reach the same
+ * surface — a dialog opened by a call and awaited for its answer, for the
+ * questions that have no button on screen to hang a `Root` off.
  */
 export const Dialog = {
   Root: DialogRoot,
@@ -709,8 +1548,12 @@ export const Dialog = {
   Description: DialogDescription,
   Close: DialogClose,
   Footer: DialogFooter,
+  /** Enables `useDialog()` underneath it, and renders what it opens. */
+  Provider: DialogProvider,
   /** Creates a handle that connects a `Dialog.Root` to detached triggers. */
   createHandle: BaseDialog.createHandle,
+  /** Creates a dialog manager usable outside React. */
+  createManager: createDialogManager,
 };
 
 /**

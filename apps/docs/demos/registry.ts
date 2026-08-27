@@ -127,6 +127,14 @@ import d_dialog_scrollable from "./dialog/scrollable";
 import d_dialog_scrollable_src from "./dialog/scrollable?raw";
 import d_dialog_sizes from "./dialog/sizes";
 import d_dialog_sizes_src from "./dialog/sizes?raw";
+import d_dialog_use_dialog_custom from "./dialog/use-dialog-custom";
+import d_dialog_use_dialog_custom_src from "./dialog/use-dialog-custom?raw";
+import d_dialog_use_dialog_manager from "./dialog/use-dialog-manager";
+import d_dialog_use_dialog_manager_src from "./dialog/use-dialog-manager?raw";
+import d_dialog_use_dialog_nested from "./dialog/use-dialog-nested";
+import d_dialog_use_dialog_nested_src from "./dialog/use-dialog-nested?raw";
+import d_dialog_use_dialog from "./dialog/use-dialog";
+import d_dialog_use_dialog_src from "./dialog/use-dialog?raw";
 import d_drawer_basic from "./drawer/basic";
 import d_drawer_basic_src from "./drawer/basic?raw";
 import d_drawer_controlled from "./drawer/controlled";
@@ -524,6 +532,10 @@ export type DemoId =
   | "dialog/scroll-inside"
   | "dialog/scrollable"
   | "dialog/sizes"
+  | "dialog/use-dialog-custom"
+  | "dialog/use-dialog-manager"
+  | "dialog/use-dialog-nested"
+  | "dialog/use-dialog"
   | "drawer/basic"
   | "drawer/controlled"
   | "drawer/floating"
@@ -755,6 +767,10 @@ const REGISTRY: Record<DemoId, Demo> = {
   "dialog/scroll-inside": { Component: d_dialog_scroll_inside, source: d_dialog_scroll_inside_src, file: "dialog/scroll-inside.tsx" },
   "dialog/scrollable": { Component: d_dialog_scrollable, source: d_dialog_scrollable_src, file: "dialog/scrollable.tsx" },
   "dialog/sizes": { Component: d_dialog_sizes, source: d_dialog_sizes_src, file: "dialog/sizes.tsx" },
+  "dialog/use-dialog-custom": { Component: d_dialog_use_dialog_custom, source: d_dialog_use_dialog_custom_src, file: "dialog/use-dialog-custom.tsx" },
+  "dialog/use-dialog-manager": { Component: d_dialog_use_dialog_manager, source: d_dialog_use_dialog_manager_src, file: "dialog/use-dialog-manager.tsx" },
+  "dialog/use-dialog-nested": { Component: d_dialog_use_dialog_nested, source: d_dialog_use_dialog_nested_src, file: "dialog/use-dialog-nested.tsx" },
+  "dialog/use-dialog": { Component: d_dialog_use_dialog, source: d_dialog_use_dialog_src, file: "dialog/use-dialog.tsx" },
   "drawer/basic": { Component: d_drawer_basic, source: d_drawer_basic_src, file: "drawer/basic.tsx" },
   "drawer/controlled": { Component: d_drawer_controlled, source: d_drawer_controlled_src, file: "drawer/controlled.tsx" },
   "drawer/floating": { Component: d_drawer_floating, source: d_drawer_floating_src, file: "drawer/floating.tsx" },

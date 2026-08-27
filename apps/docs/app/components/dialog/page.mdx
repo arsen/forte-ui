@@ -84,8 +84,6 @@ Two things are easy to get wrong.
 
 Still close from inside the dialog with `Dialog.Close` rather than a button calling `setOpen(false)`. The state change is identical; what differs is that `Dialog.Close` is announced as the dialog's close control, and it stays wired up if the dialog later becomes uncontrolled again.
 
-The open gesture changes on its own here. `origin="trigger"` aims the scale at the button that opened the dialog, and with no `Dialog.Trigger` in the tree there is nothing to aim at — so the popup falls back to growing from its own centre. Nothing to configure; see [Growing out of the trigger](#growing-out-of-the-trigger).
-
 Focus needs nothing extra in the usual case. With no trigger to return to, Base UI restores the element that was focused before the dialog opened — the row you clicked. Point `finalFocus` on `Dialog.Popup` at a ref for the cases where that element is not the right answer: a dialog opened by a timer or a route change, where nothing was focused, or one whose opening control has been removed from the page by the time it closes.
 
 ### A form in a dialog
@@ -150,6 +148,181 @@ Two things to know:
 This is the whole reason `Dialog.Surface` exists. While a modal dialog is open everything outside `Dialog.Popup` is inert, so a close button genuinely moved out of the popup is not merely unstyled — it is not in the tab order, and a touch screen-reader user cannot land on it at all. Keeping the element inside the popup and moving the *paint* to an inner element is what lets the design put it outside without taking it away.
 </Callout>
 
+## Programmatic dialogs
+
+Some questions have no button on screen to hang a `Dialog.Root` off. A save fails and the app has to ask whether to retry; a navigation guard has to ask before throwing away a draft; a fetch wrapper gets a `409` and has to ask who wins. Writing those as JSX means hoisting a boolean, a payload and a "what did they answer" callback into a component that has nothing else to do with the dialog.
+
+`useDialog()` is the other shape: open the dialog with a call, and `await` the answer.
+
+<DemoBlock id="dialog/use-dialog" />
+
+```tsx
+const dialog = useDialog();
+
+if (await dialog.confirm("Discard this draft?")) {
+  await discardDraft();
+}
+```
+
+Two pieces make one, exactly as with `Toast`: `Dialog.Provider` near the root of the app, and `useDialog()` wherever a question comes up.
+
+### Setup
+
+```tsx
+import { Dialog } from "@dofortech/pretty-ui";
+
+export default function App({ children }) {
+  return <Dialog.Provider>{children}</Dialog.Provider>;
+}
+```
+
+That is the whole setup. The provider renders no DOM element of its own and every dialog is portalled to `<body>`, so where it sits does not matter beyond being above the components that ask questions. Mount one, at the root.
+
+`labels` is the one thing worth setting on it — the copy the built-in dialogs put on screen that the call site does not supply:
+
+```tsx
+<Dialog.Provider
+  labels={{
+    ok: "Verstanden",
+    confirm: "Bestätigen",
+    cancel: "Abbrechen",
+    confirmInput: (value) => <>Tippen Sie <strong>{value}</strong> zum Bestätigen</>,
+  }}
+>
+```
+
+Set it once here rather than passing `okLabel` and `cancelLabel` to every call. This is the translation seam, and it is the reason `dialog.confirm("Delete this?")` can take a message and nothing else.
+
+### The three built-ins
+
+`alert()` states something that has to be acknowledged, and resolves when it is. `confirm()` asks a yes-or-no question and resolves to a boolean. `confirmWithInput()` is `confirm()` with the confirm button disabled until the user types a value back — the pattern for a delete that cannot be undone.
+
+```tsx
+await dialog.alert("Your export is ready");
+
+const ok = await dialog.confirm({
+  title: "Delete “Orbit landing page”?",
+  description: "The project and its 42 deployments are removed immediately.",
+  tone: "danger",
+  confirmLabel: "Delete project",
+});
+
+const sure = await dialog.confirmWithInput({
+  title: "Delete “Orbit landing page”?",
+  confirmValue: "orbit-landing",
+});
+```
+
+All three take either a full options object or a bare message, and the two forms mean the same thing — a bare message becomes the **title**:
+
+```tsx
+dialog.confirm("Discard this draft?");
+dialog.confirm({ title: "Discard this draft?" });
+```
+
+`title` and `description` are the same two fields a toast takes, and they mean the same thing here: the title is the dialog's accessible name, the description is announced after it. That is why a bare message becomes the title rather than the body — a dialog with no `Dialog.Title` is announced as just "dialog".
+
+Four details are decided for you, and each is a decision the composed API leaves open:
+
+**All three are `AlertDialog`s.** They interrupt to ask something, so they are always modal and never dismissed by a press outside them. Escape still closes them — which resolves `confirm()` to `false`, the same as Cancel.
+
+**`tone` is the only styling axis.** It colours the answering button, and `"danger"` also moves the footer to `align="between"`, pushing the safe answer away from the destructive one. There is no `severity` prop: `variant` and `tone` are the library's two axes and a third would be a third vocabulary for the same idea.
+
+**Focus lands on the safe answer.** Cancel comes first in the DOM, so it is the first tabbable element in the popup and takes focus when the dialog opens. In `confirmWithInput()` the input comes first instead, which is where the user has to go anyway.
+
+**`confirmWithInput()` unlocks the keyboard and the pointer together.** The value is matched with surrounding whitespace trimmed — a pasted value often carries a trailing space, and that is not a different answer — case-sensitively unless you pass `caseSensitive: false`. The confirm button is a form submit button, so Enter confirms; while it is disabled the browser suppresses implicit submission too, so there is no second condition to keep in sync.
+
+### Dialogs of your own
+
+`show()` takes a component and a payload, and resolves with whatever that component passes to `close()`.
+
+<DemoBlock id="dialog/use-dialog-custom" />
+
+The component renders the **contents** of the dialog — one `Dialog.Popup` — and not the root. The provider owns the root, which is what buys three things the component would otherwise have to get right itself: the dialog stacks on whatever is already open, it stays in the tree until its exit transition ends rather than vanishing, and its promise settles even when it is dismissed instead of answered.
+
+```tsx
+function ChooseEnvironment({ payload, close }: CustomDialogProps<{ current: string }, string>) {
+  return (
+    <Dialog.Popup size="sm">
+      <Dialog.Title>Deploy to…</Dialog.Title>
+      {/* … */}
+    </Dialog.Popup>
+  );
+}
+
+const chosen = await dialog.show(ChooseEnvironment, { current: "staging" });
+```
+
+`show()` returns `Promise<Result | undefined>`, and the `undefined` is not pedantry — Escape, an outside press and the provider unmounting all end the dialog without an answer, so the call site has to say what happens then. Give it something to resolve with instead if `undefined` is awkward:
+
+```tsx
+const chosen = await dialog.show(ChooseEnvironment, payload, { dismissValue: "staging" });
+```
+
+There are two ways to end a custom dialog and they mean different things. `close(result)` is an **answer** — the promise gets that value. `dismiss()` is a **dismissal** — the promise gets `dismissValue`, exactly as Escape would. It exists because `close()` demands a `Result` and a cancel button has none to give. A plain `Dialog.Close` inside the popup works too and counts as a dismissal, which is the shape to reach for when the cancel button has no condition on it.
+
+Pass `{ alert: true }` to render an `AlertDialog.Root` instead: always modal, no outside-press dismissal, for a dialog of your own that also has to be answered.
+
+### Stacking
+
+A dialog opened while another is on screen stacks on it — the parent steps back, shrinks and dims, exactly as [nested dialogs](#nested-dialogs) do — because that is literally what it is. The provider renders its stack **nested**, each dialog inside the one below it.
+
+<DemoBlock id="dialog/use-dialog-nested" />
+
+That is not an implementation detail you can ignore, because it is what `useDialog()` inside a dialog gets you: a custom dialog can `await dialog.confirm(…)` and the confirmation lands on top of it rather than beside it. Base UI decides a dialog is nested by looking for a parent `Root` **in the React tree**, so a stack rendered as siblings would draw a second backdrop over the first dialog and skip the step-back entirely.
+
+Escape closes the topmost dialog only, so a stack unwinds one level at a time. `dialog.close()` does the same thing from code; `dialog.closeAll()` dismisses the whole stack, resolving every pending promise on the way out.
+
+**A dialog opened after another one has been answered is not stacked on it**, and that distinction is the reason this works at all. Each dialog's parent is decided once, when it opens, and it is whichever dialog is *on screen* at that moment — not simply the last one, which may be one that has already been answered and is still finishing its exit. So the most ordinary sequence there is —
+
+```tsx
+if (await dialog.confirm("Publish to production?")) {
+  await dialog.alert("Publishing. You will get an email when the build finishes.");
+}
+```
+
+— renders the two as siblings: the first fades out while the second fades in, each with its own scrim, neither stepped back. Stack them instead and the second would be a child of a dialog that is about to be removed, and it would remount mid-enter as it took the parent's place in the tree.
+
+### Outside React
+
+Plenty of the code that needs to ask a question is not a component: a fetch wrapper, a router guard, a store. `Dialog.createManager()` gives you the same API as a plain object.
+
+<DemoBlock id="dialog/use-dialog-manager" />
+
+```ts
+// dialogs.ts
+import { Dialog } from "@dofortech/pretty-ui";
+export const dialogs = Dialog.createManager();
+
+// api.ts — no React anywhere
+if (response.status === 409 && (await dialogs.confirm("Overwrite the newer version?"))) {
+  await save({ force: true });
+}
+```
+
+Connect it with `manager` on the provider. Pass the manager itself — unlike `Toast.Provider`, there is no Base UI primitive underneath to hand a different object to.
+
+A dialog opened before a provider has mounted is **queued**, not dropped, which is where this parts company with `Toast.createManager()`. A dropped toast costs a message; a dropped dialog would leave its promise pending for the life of the page, and the `await` behind it would never return. It appears as soon as a provider mounts. If none ever does, the `await` never returns either — so mount the provider at the root, once.
+
+`useDialog()` under a provider that was given a manager reaches the same stack, so the two are not separate queues.
+
+### What settles the promise
+
+Every method resolves when the user answers or dismisses, **not** when the dialog finishes animating away. An `await dialog.confirm()` continues the moment the decision is made; the popup is still fading out behind the work it unblocked.
+
+| It ends by | `alert()` | `confirm()` and `confirmWithInput()` | `show()` |
+| :-- | :-- | :-- | :-- |
+| the affirmative button | resolves | `true` | whatever `close()` was given |
+| Cancel, or `dismiss()` | — | `false` | `dismissValue` |
+| Escape | resolves | `false` | `dismissValue` |
+| an outside press | never happens | never happens | `dismissValue`, unless `alert: true` |
+| `dialog.close()` / `closeAll()` | resolves | `false` | `dismissValue` |
+| the provider unmounting | resolves | `false` | `dismissValue` |
+
+That last row is the one worth knowing about. A dialog that leaves the screen with its provider — a route change, a hot reload, a boundary catching an error — was answered by nobody, and its promise would otherwise stay pending forever. The provider settles every dialog it is holding as it unmounts, with the same value Escape would have produced.
+
+A dialog settles exactly **once**. The answering buttons record the result before they start the close, and the close request that follows carries the dismissal value; the first of the two wins, so a `confirm()` answered `true` does not turn into `false` on the way out.
+
 ## Accessibility
 
 <KeyboardTable rows={[
@@ -177,6 +350,14 @@ Give every dialog a `Dialog.Title`. If the design has no room for a visible one,
 </Callout>
 
 The popup itself carries a focus ring, because it is the element that receives focus on a touch-opened or keyboard-opened dialog. In forced-colors mode its shadow is stripped by the OS, so it also draws a border to keep its boundary visible.
+
+<Callout kind="a11y">
+A dialog opened by `useDialog()` has no trigger, so there is nothing for focus to return to by that route. Base UI restores the element that was focused before it opened — the button whose handler made the call — which is the right answer nearly every time. It is not the right answer when the dialog was opened by something with no focused element behind it: a timer, a socket message, a route guard. Focus lands on `<body>` there, and the next Tab starts from the top of the page. Give the user somewhere to land in those cases — move focus yourself once the promise resolves.
+</Callout>
+
+<Callout kind="a11y">
+`dialog.alert("…")` and `dialog.confirm("…")` route a bare message to the **title**, not the description, and that is the accessibility reason rather than a layout one: the title is the popup's `aria-labelledby`, and a dialog with no accessible name is announced as just "dialog". A call that passes only a `description` has the same problem — pass a `title` too.
+</Callout>
 
 ## Theming
 
@@ -207,13 +388,7 @@ The scrim is part of the same gesture: it holds for the popup's full exit rather
 
 A `size="fullscreen"` sheet has no visible edges for a scale to work against, so it drops the scale entirely and travels further instead.
 
-#### Growing out of the trigger
-
-By default the popup scales from the centre of the button that opened it rather than from its own centre, so it reads as growing out of that button and collapsing back into it. `Dialog.Popup` finds the trigger through the `aria-controls` Base UI already puts on it, measures it, and writes the offset into `--pui-dialog-origin-x` / `--pui-dialog-origin-y`. Nothing else moves into JavaScript: every duration, curve and scale stays in the stylesheet.
-
-When the origin is off-centre the scale *is* the movement — every point in the popup slides toward the origin as it shrinks — so the separate translate drops to zero and the scale goes deeper (`0.85` in, `0.9` out) to compensate. The origin is clamped to one popup-width and one popup-height outside the box. Past that the effect stops reading as "it grew out of the button" and starts reading as the dialog being flung in from off-screen, because the further the origin sits from the popup, the more of the scale is expressed as translation.
-
-Set `origin="center"` to keep the centred gesture. It also falls back to centred on its own whenever there is nothing to aim at — a dialog opened programmatically or through `defaultOpen` — and it is skipped for `size="fullscreen"`, where a sheet covering the screen has no meaningful point to grow from.
+A dialog raised by `useDialog()` gets the same entrance as one opened by a trigger, and that takes one deliberate step. Base UI seeds its transition state from `open` on a root's first render, so a `Dialog.Root` that mounts *already* open is treated as having always been open — no `[data-starting-style]`, no enter transition, the popup simply appears. It is the same reason a `defaultOpen` dialog does not animate in. The provider therefore mounts each dialog closed and opens it in a layout effect, which gives Base UI the false→true edge it watches for and costs no frame: the effect runs before paint, so the popup is painted once, already carrying its starting style.
 
 Reduced motion needs no work from you: the travel tokens collapse to `0px`, `--pui-scale-enter` to `1`, `--pui-dialog-exit-scale` resolves to exactly `1` through `--pui-motion-ok`, and the durations shorten — leaving the fade, which is the part reduced-motion users still want. There is no component-level `prefers-reduced-motion` override to fight.
 
@@ -262,3 +437,69 @@ Pass `render={<Button />}` to compose the trigger with a styled button. Its own 
 ### Dialog.Root and AlertDialog.Root
 
 Neither root renders a DOM element, so neither accepts `className`, `style` or `ref`, and neither appears in the generated tables above. `Dialog.Root` forwards Base UI's root props unchanged; `AlertDialog.Root` forwards the same set minus `modal` and `disablePointerDismissal`. Both namespaces also expose `createHandle()` for driving a dialog from triggers rendered outside its `Root`.
+
+### useDialog()
+
+Returns one object. It and every method on it keep the same identity for the life of the provider, so both the object and one pulled out by destructuring are safe in a dependency array.
+
+| Member | Signature | What it does |
+| :-- | :-- | :-- |
+| `alert` | `(message \| options) => Promise<void>` | States something that has to be acknowledged. |
+| `confirm` | `(message \| options) => Promise<boolean>` | Asks a yes-or-no question. |
+| `confirmWithInput` | `(options) => Promise<boolean>` | Asks one whose confirm button unlocks on a typed value. |
+| `show` | `(Component, payload, options?) => Promise<Result \| undefined>` | Shows a component of your own. |
+| `close` | `() => void` | Dismisses the topmost dialog, exactly as Escape does. |
+| `closeAll` | `() => void` | Dismisses every dialog on the stack. |
+
+`message` is either a `ReactNode` — which becomes the `title` — or the options object. Calling the hook outside a `Dialog.Provider` throws.
+
+### Dialog.Provider
+
+<PropTable component="DialogProvider" />
+
+### Built-in dialog options
+
+`alert()`, `confirm()` and `confirmWithInput()` share the first five; the rest are per method. Anything left out falls back to the provider's `labels`.
+
+| Option | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `title` | `ReactNode` | — | The question or statement, and the dialog's accessible name. |
+| `description` | `ReactNode` | — | A second line under it, and its accessible description. |
+| `size` | `DialogSize` | `"sm"` | Maximum width of the popup. |
+| `tone` | `ButtonTone` | `"primary"` | Tone of the answering button. `confirmWithInput()` defaults to `"danger"`. |
+| `className` | `string` | — | Class name(s) for the popup — where a one-off `--pui-dialog-*` knob goes. |
+| `okLabel` | `ReactNode` | `labels.ok` | `alert()` only. Label of the single button. |
+| `confirmLabel` | `ReactNode` | `labels.confirm` | Label of the button that resolves `true`. |
+| `cancelLabel` | `ReactNode` | `labels.cancel` | Label of the button that resolves `false`. |
+| `align` | `DialogFooterAlign` | `"between"` when `tone` is `"danger"`, else `"end"` | How the two buttons are distributed. |
+| `confirmValue` | `string` | required | `confirmWithInput()` only. What has to be typed. |
+| `inputLabel` | `ReactNode` | `labels.confirmInput(confirmValue)` | Label above the input. |
+| `placeholder` | `string` | `confirmValue` | Placeholder inside the input. |
+| `caseSensitive` | `boolean` | `true` | Whether the typed value has to match case. |
+
+### DialogLabels
+
+The provider's `labels` prop takes any subset of these.
+
+| Member | Type | Default |
+| :-- | :-- | :-- |
+| `ok` | `ReactNode` | `"OK"` |
+| `confirm` | `ReactNode` | `"Confirm"` |
+| `cancel` | `ReactNode` | `"Cancel"` |
+| `confirmInput` | `(confirmValue: string) => ReactNode` | `Type <strong>{value}</strong> to confirm` |
+
+### CustomDialogProps
+
+What a component handed to `dialog.show()` receives.
+
+| Member | Type | What it does |
+| :-- | :-- | :-- |
+| `payload` | `Payload` | The second argument `show()` was called with. |
+| `close` | `(result: Result) => void` | Answers the dialog and starts the exit. Safe to call twice. |
+| `dismiss` | `() => void` | Ends it with `dismissValue`, exactly as Escape does. |
+
+`DialogShowOptions` is the third argument to `show()`: `alert` (default `false`) renders an `AlertDialog.Root` instead of a `Dialog.Root`, and `dismissValue` (default `undefined`) is what the promise resolves to when the dialog is dismissed rather than answered.
+
+### Dialog.createManager()
+
+Returns everything `useDialog()` returns, as a plain object usable outside React. Hand it to `Dialog.Provider`'s `manager` prop — the manager itself, not something inside it.

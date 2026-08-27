@@ -75,7 +75,7 @@ export type {
   Rgba,
 } from "./components/color-picker";
 
-export { Dialog, AlertDialog } from "./components/dialog";
+export { Dialog, AlertDialog, useDialog } from "./components/dialog";
 export type {
   DialogSize,
   DialogFooterAlign,
@@ -89,6 +89,17 @@ export type {
   DialogFooterProps,
   AlertDialogRootProps,
   AlertDialogTriggerProps,
+  DialogProviderProps,
+  DialogApi,
+  DialogManager,
+  DialogLabels,
+  DialogMessageOptions,
+  DialogAlertOptions,
+  DialogConfirmOptions,
+  DialogConfirmWithInputOptions,
+  DialogShowOptions,
+  CustomDialogProps,
+  CustomDialogComponent,
 } from "./components/dialog";
 
 export { Drawer } from "./components/drawer";

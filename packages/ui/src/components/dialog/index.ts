@@ -1,4 +1,10 @@
-export { Dialog, AlertDialog } from "./Dialog";
+export {
+  Dialog,
+  AlertDialog,
+  useDialog,
+  DialogProvider,
+  createDialogManager,
+} from "./Dialog";
 export type {
   DialogSize,
   DialogFooterAlign,
@@ -12,4 +18,15 @@ export type {
   DialogFooterProps,
   AlertDialogRootProps,
   AlertDialogTriggerProps,
+  DialogProviderProps,
+  DialogApi,
+  DialogManager,
+  DialogLabels,
+  DialogMessageOptions,
+  DialogAlertOptions,
+  DialogConfirmOptions,
+  DialogConfirmWithInputOptions,
+  DialogShowOptions,
+  CustomDialogProps,
+  CustomDialogComponent,
 } from "./Dialog";

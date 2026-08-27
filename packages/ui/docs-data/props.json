@@ -1051,6 +1051,33 @@
       }
     ]
   },
+  "DialogProvider": {
+    "name": "DialogProvider",
+    "description": "Enables `useDialog()` underneath it, and renders whatever is opened.\n\n```tsx\n<Dialog.Provider>\n  <App />\n</Dialog.Provider>\n```\n\nMount it once, above everything that might ask a question. It renders no DOM\nelement of its own and every dialog is portalled to `<body>`, so where it\nsits in the tree does not matter beyond that.\n\nThe stack it renders is *nested*: a dialog opened while another is on screen\nbecomes that dialog's child, which is what makes the parent step back and\ndim instead of being covered by a second backdrop.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The part of the app that can open dialogs."
+      },
+      {
+        "name": "labels",
+        "type": "Partial<DialogLabels>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Overrides for the built-in button labels — the only copy `alert()`,\n`confirm()` and `confirmWithInput()` put on screen that the call site does\nnot supply. Set it once here instead of passing `okLabel` and\n`cancelLabel` to every call; this is the translation seam."
+      },
+      {
+        "name": "manager",
+        "type": "DialogApi",
+        "required": false,
+        "defaultValue": null,
+        "description": "A manager from `Dialog.createManager()`. Pass one and the provider drives\nthat manager's stack instead of its own, which is what lets code outside\nReact open a dialog. `useDialog()` reaches the same stack either way."
+      }
+    ]
+  },
   "DialogTrigger": {
     "name": "DialogTrigger",
     "description": "A button that opens the dialog.\n\nRenders a `<button>`. Pass `render={<Button />}` to compose it with a\nstyled button — the trigger's own neutral styling steps aside when `render`\nis present, so the two never fight over the cascade.",
@@ -1122,13 +1149,6 @@
         "required": false,
         "defaultValue": "false",
         "description": "Keep the portal — and therefore the popup — in the DOM while the dialog\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
-      },
-      {
-        "name": "origin",
-        "type": "DialogOrigin",
-        "required": false,
-        "defaultValue": "trigger",
-        "description": "Where the open and close scale grows from.\n\n`\"trigger\"` aims it at the centre of the button that opened the dialog, so\nthe surface reads as growing out of that button and collapsing back into\nit. `\"center\"` keeps the centred gesture.\n\n`\"trigger\"` falls back to the centred gesture on its own whenever there is\nno trigger to aim at — a dialog opened programmatically or through\n`defaultOpen` — and is ignored for `size=\"fullscreen\"`, where a sheet\ncovering the screen has no meaningful point to grow from."
       },
       {
         "name": "size",
