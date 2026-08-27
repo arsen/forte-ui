@@ -1,0 +1,218 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Context Menu",
+  description:
+    "A menu that opens at the pointer on right click or long press, over a region of the page rather than off a button.",
+};
+
+# Context Menu
+
+A menu that opens **at the pointer**, on right click or long press, over a
+region of the page rather than off a button. It is the same list of commands
+[Menu](/components/menu) renders — literally the same components below the
+trigger — anchored to where the user clicked instead of to a control.
+
+<DemoBlock id="context-menu/basic" />
+
+<Callout kind="warn">
+  A context menu is an *accelerator*, never the only route to a command. Nothing
+  on the page announces that a region has one, no keyboard opens it, and on
+  touch it costs a half-second press that many people never discover. Every
+  command in here needs a visible home as well — the [example
+  below](#pair-it-with-a-visible-menu) is the pattern.
+</Callout>
+
+## Import
+
+```tsx
+import { ContextMenu } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+Only `Root` and `Trigger` are new. Everything below the trigger — the popup,
+every row kind, the groups, the separators, the submenus — **is** the `Menu`
+component: Base UI re-exports the Menu parts under its `context-menu` entry
+point, and so does this library, so `ContextMenu.Item` and `Menu.Item` are one
+function rather than two that look alike.
+
+Three things follow from that, and they are the ones worth knowing:
+
+- The rows are themed with the `--pui-menu-*` knobs, not `--pui-context-menu-*`.
+  The trigger is the only part with properties of its own.
+- The parts carry the Menu markers — `data-pui="menu-popup"`,
+  `data-pui="menu-item"` — so a consumer who re-skins menu rows from plain CSS
+  re-skins both menus at once, which is almost always what they meant.
+- A list of rows can be handed to either popup without a wrapper deciding which
+  namespace to render from.
+
+## Examples
+
+### Pair it with a visible menu
+
+The context menu supplements a `<Menu>` button on the same card. `Actions()` is
+written once and dropped into both popups — the rows are the same components, so
+nothing has to branch on which menu is rendering them.
+
+<DemoBlock id="context-menu/with-menu" />
+
+### One region per row
+
+A single root around a whole list would open the same menu wherever the pointer
+was, and nothing would say which row it meant. Give each row its own
+`<ContextMenu.Root>` instead. `render={<li />}` keeps the trigger inside the
+list's content model — a bare `<div>` child of a `<ul>` is invalid HTML.
+
+The ring on the region while its menu is open is doing real work here: the popup
+opens at the pointer and usually covers the row that produced it, so without the
+ring there is nothing left on screen tying the two together.
+
+<DemoBlock id="context-menu/rows" />
+
+### Checkable rows
+
+`<ContextMenu.CheckboxItem>` and `<ContextMenu.RadioItem>` behave exactly as
+they do in a dropdown, including the `closeOnClick={false}` default that lets a
+run of toggles be set in one visit.
+
+<DemoBlock id="context-menu/checkable" />
+
+### Submenus
+
+`<ContextMenu.SubmenuRoot>` is `<Menu.SubmenuRoot>`, and its popup still needs no
+positioning props. The nesting wins over the context menu's anchor-to-the-pointer
+placement, so a submenu opens sideways off its row exactly as it would in a
+dropdown.
+
+<DemoBlock id="context-menu/submenu" />
+
+### Disabled
+
+`disabled` on `<ContextMenu.Root>` turns the region off entirely — and the
+browser's own context menu comes back, because the trigger stops calling
+`preventDefault` on the event.
+
+<DemoBlock id="context-menu/disabled" />
+
+## Placement
+
+There is nothing to place. `<ContextMenu.Popup>` reads the nesting from
+`<ContextMenu.Root>` and anchors itself to the point the pointer was at, with
+the offsets that land its corner on the cursor; it flips and shifts to stay
+inside the viewport from there. `side`, `align`, `sideOffset` and `alignOffset`
+are all still accepted and still override, but passing `side` in particular opts
+the popup out of pointer anchoring and back onto the anchor rectangle — which
+for a context menu is a zero-sized box at the click, so the result is a menu a
+few pixels away from where it should be.
+
+<Callout kind="note">
+  The popup positions itself with `position: fixed` here rather than
+  `absolute`, which Base UI switches on for context menus: the anchor is a point
+  in the viewport, not an element that scrolls with the page.
+</Callout>
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    { keys: ["Shift + F10", "Menu key"], description: "Fires the platform's context-menu event on the focused element. If that element is inside a ContextMenu.Trigger the event bubbles up to it and this menu opens — so the region is keyboard-reachable exactly when it already contains something focusable, and not otherwise." },
+    { keys: ["Arrow Down", "Arrow Up"], description: "Once the menu is open, moves the highlight between rows." },
+    { keys: ["Arrow Right"], description: "On a submenu trigger, opens the submenu and highlights its first row. Mirrored under RTL." },
+    { keys: ["Arrow Left"], description: "Inside a submenu, closes it and returns the highlight to the row that opened it. Mirrored under RTL." },
+    { keys: ["Home", "End"], description: "Highlights the first or the last row." },
+    { keys: ["A–Z"], description: "Typeahead: highlights the first row whose text matches what you type." },
+    { keys: ["Enter", "Space"], description: "Activates the highlighted row." },
+    { keys: ["Esc"], description: "Closes the menu. Inside a submenu it closes only that submenu, unless closeParentOnEsc is set." },
+  ]}
+/>
+
+`<ContextMenu.Trigger>` renders a plain `<div>` with no `tabindex`, no role and
+no ARIA, and none of that is an omission: a region that opens a menu on right
+click is not a button, and labelling it as one would promise a keyboard
+behaviour it does not have. It takes no tab stop of its own, so nothing lands on
+it and nothing announces it.
+
+What it does get is the first row of the table. The context-menu key fires a
+real `contextmenu` event on whatever is focused, and that event **bubbles** — so
+a trigger wrapping a link, a button or any other focusable element is reachable
+from the keyboard through that element, with no extra work. A trigger wrapping
+inert content is not reachable at all. Once the menu *is* open it is an ordinary
+menu and behaves exactly like [Menu](/components/menu#accessibility), roving
+tabindex and all.
+
+<Callout kind="a11y">
+  That bubbling route is a bonus, not a plan: it depends on the region happening
+  to contain a focusable element, and on the user knowing the key. It does not
+  replace the visible control. Screen reader users, keyboard-only users, and
+  anyone on a device without a right mouse button should be able to reach these
+  commands through the `<Menu>` button. Base UI says the same in its own usage
+  guidelines, and it is the one rule this component cannot enforce for you.
+</Callout>
+
+<Callout kind="note">
+  A long press on touch opens the menu after 500ms — and, on a region with
+  selectable text, starts a text selection at the same moment. The library does
+  **not** set `user-select: none` for you: the case a context menu is most at
+  home in is an editor, where the selection is exactly what the commands act on.
+  Add `select-none` (or `user-select: none`) to the trigger yourself on the
+  regions where the text is chrome rather than content, as every demo on this
+  page does.
+</Callout>
+
+## Theming
+
+The trigger declares three properties, all of them about the ring that marks the
+region while its menu is open. Everything else on screen belongs to
+[Menu](/components/menu#theming) — the popup surface, the rows, the separators,
+the motion — and is set through the `--pui-menu-*` knobs on the parts that
+declare them.
+
+Like every knob in the library these are declared on the element that owns them,
+so an ancestor's value is only inherited and loses. Set them on the trigger
+itself through `className` or a `style` object; the popup is portalled to
+`<body>`, so an ancestor of the trigger cannot reach it in any case.
+
+<DemoBlock id="context-menu/theming" />
+
+<ThemingTable component="ContextMenu" />
+
+## API reference
+
+### ContextMenu.Root
+
+Groups every part and owns the open state. It renders no DOM element, so it
+takes neither `className` nor `ref`, and it forwards Base UI's own
+`ContextMenu.Root` props unchanged — `open`, `defaultOpen`, `onOpenChange`,
+`disabled`, `orientation`, `loopFocus`, `highlightItemOnHover`,
+`closeParentOnEsc`, `actionsRef` and `onOpenChangeComplete`.
+
+Four of `Menu.Root`'s props are deliberately absent, because there is no trigger
+element to hang them on: `modal` (a context menu is always modal), `openOnHover`
+with its `delay` and `closeDelay`, and the `handle` / `triggerId` pair that lets
+a detached trigger drive a dropdown.
+
+### ContextMenu.Trigger
+
+<PropTable component="ContextMenuTrigger" />
+
+### ContextMenu.Popup
+
+`Menu.Popup` — the whole floating half of the anatomy (portal, optional
+backdrop, positioner and popup) as one part, with the placement defaults
+switched to pointer anchoring.
+
+<PropTable component="MenuPopup" />
+
+### The rest of the namespace
+
+`Item`, `LinkItem`, `CheckboxItem`, `RadioGroup`, `RadioItem`, `Group`,
+`GroupLabel`, `Separator`, `SubmenuRoot`, `SubmenuTrigger` and `Shortcut` are
+the `Menu` parts, unchanged. Their props are documented on the [Menu
+page](/components/menu#api-reference), and their types are exported under both
+names — `ContextMenuItemProps` is an alias of `MenuItemProps`, not a second
+interface.

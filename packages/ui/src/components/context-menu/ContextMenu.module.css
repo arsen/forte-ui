@@ -1,0 +1,80 @@
+/*
+ * ContextMenu
+ *
+ * One rule, and the shortness is the design rather than an omission. Base UI's
+ * `context-menu` entry point re-exports the Menu parts unchanged —
+ * `ContextMenu.Popup` IS `Menu.Popup`, `ContextMenu.Item` IS `Menu.Item` — so
+ * the popup, the rows, the separators and every `--pui-menu-*` knob they
+ * declare are already styled by `menu/Menu.module.css` and are deliberately
+ * not restated here. Two stylesheets for one surface would have to be kept
+ * pixel-identical by hand, and the first divergence would show up only in
+ * whichever of the two menus nobody had open at the time.
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Root  →  Trigger
+ *         →  Portal  →  Backdrop
+ *                    →  Positioner  →  Popup  →  … (see Menu.module.css)
+ *
+ * `Root` renders no DOM element, so there is no `.root` rule; the trigger is
+ * the only element this component styles.
+ */
+
+@layer pretty-ui.components {
+  /* ------------------------------------------------------------------------
+   * Trigger
+   *
+   * A REGION, not a control. It wraps whatever the app already renders — a
+   * card, a table row, a canvas — so this rule adds as close to nothing as it
+   * can: no background, no padding, no `display`, and no `cursor`, so the
+   * content underneath keeps the affordances it came with (a caret over text,
+   * an arrow over an image). There is also no `.pui-focus-ring`: the element
+   * is not focusable, which is exactly why a context menu can never be the
+   * only route to a command.
+   *
+   * `user-select` is left alone for the same reason. A long press on touch
+   * will start a text selection as well as opening the menu, which looks
+   * untidy — but the fix is `user-select: none` from the consumer, on the
+   * regions where the text is not meant to be selected. Imposing it here would
+   * break the case a context menu is most at home in: an editor, where the
+   * selection is the thing the commands act on.
+   * --------------------------------------------------------------------- */
+  .trigger {
+    /** Colour of the ring that marks the region while its menu is open */
+    --pui-context-menu-trigger-ring-color: var(--pui-color-primary);
+    /** Width of that ring. Set it to 0 to leave the region unmarked */
+    --pui-context-menu-trigger-ring-width: 2px;
+    /* Drawn INSIDE the region's own box by default, which is what the negative
+     * value buys: a trigger is usually flush inside a card or a list, and an
+     * outward ring would be shaved off by the first ancestor with
+     * `overflow: hidden`. Pass a positive length when the region has room
+     * around it. */
+    /** How far the ring sits outside the region's box; negative draws it
+     * inside */
+    --pui-context-menu-trigger-ring-offset: calc(
+      -1 * var(--pui-context-menu-trigger-ring-width)
+    );
+
+    /* A long press is a tap that has not finished, so Android and iOS paint
+     * their tap highlight over the whole region for the half-second before the
+     * menu appears. Base UI already suppresses the iOS callout inline; this is
+     * the other half. */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Which region produced the menu. A context menu opens at the pointer rather
+   * than off an element, so without this there is nothing on screen tying the
+   * two together — and the popup often covers the very thing that was clicked.
+   *
+   * `outline` rather than a background or a border: it follows the element's
+   * own `border-radius`, costs no layout, and paints over whatever the region
+   * already draws instead of replacing it. There is no transition, and that is
+   * not an oversight — `outline-style` goes from `none` to `solid` and is not
+   * interpolatable, so the alternative is a permanently declared transparent
+   * outline, which forced-colors mode would repaint as a system colour and
+   * leave ringing every trigger on the page at all times. */
+  .trigger[data-popup-open] {
+    outline: var(--pui-context-menu-trigger-ring-width) solid
+      var(--pui-context-menu-trigger-ring-color);
+    outline-offset: var(--pui-context-menu-trigger-ring-offset);
+  }
+}

@@ -8,22 +8,70 @@ import styles from "./Menu.module.css";
 export type MenuItemTone = "neutral" | "danger";
 
 /* -------------------------------------------------------------------------
- * Submenu context
+ * Placement context
  *
  * Not a re-implementation of anything Base UI owns — it exists so that
- * `<Menu.Popup>` can pick submenu-appropriate placement defaults on its own.
+ * `<Menu.Popup>` can pick placement defaults appropriate to what opened it.
  * A top-level menu drops below its trigger; a submenu opens sideways off the
- * row that spawned it, and gets there through a different set of defaults
- * (`side`, `align`, and two negative offsets that tuck it against the parent).
+ * row that spawned it; a context menu is not anchored to an element at all but
+ * to the point the pointer was at. Each wants a different set of defaults, and
+ * the popup is the part that has to supply them — a consumer writing
+ * `<Menu.Popup>` inside a `<Menu.SubmenuRoot>` should not have to restate the
+ * four positioning props that make it a submenu.
  *
  * Base UI does publish a `useMenuSubmenuRootContext`, but only from a deep
  * module path that is not in the package's `exports` map — reaching for it
  * would break on the first release that reshuffles the file tree. This is one
- * boolean across a boundary we already own, since `Menu.SubmenuRoot` wraps
- * Base UI's anyway.
+ * enum across a boundary we already own, since `Menu.SubmenuRoot` and
+ * `ContextMenu.Root` both wrap Base UI's own.
  * ---------------------------------------------------------------------- */
 
-const SubmenuContext = React.createContext(false);
+/**
+ * What opened the popup, which is what decides its placement defaults.
+ *
+ * Internal: the three providers are `Menu.Root`, `Menu.SubmenuRoot` and
+ * `ContextMenu.Root`, and nothing else may set it.
+ */
+export type MenuPlacementKind = "menu" | "submenu" | "context-menu";
+
+/** @internal — see `MenuPlacementKind`. Not exported from the package. */
+export const MenuPlacementContext =
+  React.createContext<MenuPlacementKind>("menu");
+
+/**
+ * The positioning props `<Menu.Popup>` supplies when the consumer passes none.
+ *
+ * `context-menu` leaves all three UNDEFINED, and that is the whole point of the
+ * row. Base UI's positioner has its own context-menu branch: it swaps the
+ * anchor for the point the pointer was at, and then — only if no `side` was
+ * given — applies `sideOffset: -5` and `alignOffset: 2`, which are what put the
+ * popup's corner ON the cursor rather than a gap away from it. Passing
+ * `side="bottom"` here would silently opt every context menu out of those two
+ * offsets and drop the popup below the click instead of at it.
+ *
+ * A `Menu.Root` inside a `<Menubar>` takes the `menu` row, since a menubar
+ * menu does drop below its trigger. That is right for the horizontal bar and
+ * carried over unchanged from the boolean this table replaced — but note it is
+ * a decision now: Base UI would pick `inline-end` for a VERTICAL bar if `side`
+ * were left unset, and `"bottom"` overrides it. Give the bar its own row here
+ * rather than reaching for `side` at each call site if that ever needs fixing.
+ */
+const PLACEMENT_DEFAULTS: Record<
+  MenuPlacementKind,
+  {
+    side: PositionerProps["side"];
+    sideOffset: PositionerProps["sideOffset"];
+    alignOffset: PositionerProps["alignOffset"];
+  }
+> = {
+  menu: { side: "bottom", sideOffset: 4, alignOffset: 0 },
+  submenu: { side: "inline-end", sideOffset: -4, alignOffset: -4 },
+  "context-menu": {
+    side: undefined,
+    sideOffset: undefined,
+    alignOffset: undefined,
+  },
+};
 
 /* -------------------------------------------------------------------------
  * Icons
@@ -115,7 +163,16 @@ export type MenuRootProps<Payload = unknown> = BaseMenu.Root.Props<Payload>;
 export function MenuRoot<Payload = unknown>(
   props: MenuRootProps<Payload>,
 ): React.JSX.Element {
-  return <BaseMenu.Root<Payload> {...props} />;
+  return (
+    /* Restated rather than left to the context's own default, because this
+     * menu may be nested inside something that already set it — a `Menu.Root`
+     * rendered inside a `ContextMenu.Trigger`'s region is the real case, and
+     * without this reset its popup would inherit the context menu's
+     * anchored-to-the-pointer placement and open at the last right-click. */
+    <MenuPlacementContext.Provider value="menu">
+      <BaseMenu.Root<Payload> {...props} />
+    </MenuPlacementContext.Provider>
+  );
 }
 
 /* -------------------------------------------------------------------------
@@ -242,7 +299,8 @@ export interface MenuPopupProps extends Omit<BasePopupProps, "className"> {
    * resolve to left and right whatever `dir` says. An RTL app has to mount
    * `<DirectionProvider direction="rtl">` for them to mirror. The library's own
    * CSS reads the attribute, so everything else here flips without it.
-   * @default "bottom", or "inline-end" inside a `Menu.SubmenuRoot`
+   * @default "bottom"; "inline-end" inside a `Menu.SubmenuRoot`; the popup is
+   * anchored to the pointer instead inside a `ContextMenu.Root`
    */
   side?: PositionerProps["side"];
   /**
@@ -255,12 +313,12 @@ export interface MenuPopupProps extends Omit<BasePopupProps, "className"> {
   align?: PositionerProps["align"];
   /**
    * Gap in pixels between the trigger and the popup.
-   * @default 4, or -4 inside a `Menu.SubmenuRoot`
+   * @default 4; -4 inside a `Menu.SubmenuRoot`; -5 inside a `ContextMenu.Root`
    */
   sideOffset?: PositionerProps["sideOffset"];
   /**
    * Extra offset in pixels along the alignment axis.
-   * @default 0, or -4 inside a `Menu.SubmenuRoot`
+   * @default 0; -4 inside a `Menu.SubmenuRoot`; 2 inside a `ContextMenu.Root`
    */
   alignOffset?: PositionerProps["alignOffset"];
   /**
@@ -316,8 +374,10 @@ export interface MenuPopupProps extends Omit<BasePopupProps, "className"> {
  * Inside a `<Menu.SubmenuRoot>` the placement defaults change: the popup opens
  * off the inline end of the row rather than below it, and two negative offsets
  * tuck it against the parent so the first submenu item lines up with the
- * trigger row. Pass any of `side`, `align`, `sideOffset` or `alignOffset`
- * explicitly to override that.
+ * trigger row. Inside a `<ContextMenu.Root>` they change again — the popup is
+ * anchored to the point the pointer was at rather than to any element, and
+ * Base UI supplies the offsets that land its corner on the cursor. Pass any of
+ * `side`, `align`, `sideOffset` or `alignOffset` explicitly to override that.
  */
 export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
   function MenuPopup(
@@ -337,7 +397,7 @@ export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
     },
     ref,
   ) {
-    const isSubmenu = React.useContext(SubmenuContext);
+    const placement = PLACEMENT_DEFAULTS[React.useContext(MenuPlacementContext)];
 
     return (
       <BaseMenu.Portal container={container}>
@@ -350,10 +410,10 @@ export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
         <BaseMenu.Positioner
           className={clsx(styles.positioner, positionerClassName)}
           data-pui="menu-positioner"
-          side={side ?? (isSubmenu ? "inline-end" : "bottom")}
+          side={side ?? placement.side}
           align={align}
-          sideOffset={sideOffset ?? (isSubmenu ? -4 : 4)}
-          alignOffset={alignOffset ?? (isSubmenu ? -4 : 0)}
+          sideOffset={sideOffset ?? placement.sideOffset}
+          alignOffset={alignOffset ?? placement.alignOffset}
           collisionPadding={collisionPadding}
           anchor={anchor}
         >
@@ -839,9 +899,9 @@ export function MenuSubmenuRoot({
   ...props
 }: MenuSubmenuRootProps): React.JSX.Element {
   return (
-    <SubmenuContext.Provider value={true}>
+    <MenuPlacementContext.Provider value="submenu">
       <BaseMenu.SubmenuRoot {...props}>{children}</BaseMenu.SubmenuRoot>
-    </SubmenuContext.Provider>
+    </MenuPlacementContext.Provider>
   );
 }
 

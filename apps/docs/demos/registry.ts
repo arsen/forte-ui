@@ -105,6 +105,20 @@ import d_color_picker_theming from "./color-picker/theming";
 import d_color_picker_theming_src from "./color-picker/theming?raw";
 import d_color_picker_trigger from "./color-picker/trigger";
 import d_color_picker_trigger_src from "./color-picker/trigger?raw";
+import d_context_menu_basic from "./context-menu/basic";
+import d_context_menu_basic_src from "./context-menu/basic?raw";
+import d_context_menu_checkable from "./context-menu/checkable";
+import d_context_menu_checkable_src from "./context-menu/checkable?raw";
+import d_context_menu_disabled from "./context-menu/disabled";
+import d_context_menu_disabled_src from "./context-menu/disabled?raw";
+import d_context_menu_rows from "./context-menu/rows";
+import d_context_menu_rows_src from "./context-menu/rows?raw";
+import d_context_menu_submenu from "./context-menu/submenu";
+import d_context_menu_submenu_src from "./context-menu/submenu?raw";
+import d_context_menu_theming from "./context-menu/theming";
+import d_context_menu_theming_src from "./context-menu/theming?raw";
+import d_context_menu_with_menu from "./context-menu/with-menu";
+import d_context_menu_with_menu_src from "./context-menu/with-menu?raw";
 import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
@@ -587,6 +601,13 @@ export type DemoId =
   | "color-picker/swatches"
   | "color-picker/theming"
   | "color-picker/trigger"
+  | "context-menu/basic"
+  | "context-menu/checkable"
+  | "context-menu/disabled"
+  | "context-menu/rows"
+  | "context-menu/submenu"
+  | "context-menu/theming"
+  | "context-menu/with-menu"
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/controlled"
@@ -855,6 +876,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "color-picker/swatches": { Component: d_color_picker_swatches, source: d_color_picker_swatches_src, file: "color-picker/swatches.tsx" },
   "color-picker/theming": { Component: d_color_picker_theming, source: d_color_picker_theming_src, file: "color-picker/theming.tsx" },
   "color-picker/trigger": { Component: d_color_picker_trigger, source: d_color_picker_trigger_src, file: "color-picker/trigger.tsx" },
+  "context-menu/basic": { Component: d_context_menu_basic, source: d_context_menu_basic_src, file: "context-menu/basic.tsx" },
+  "context-menu/checkable": { Component: d_context_menu_checkable, source: d_context_menu_checkable_src, file: "context-menu/checkable.tsx" },
+  "context-menu/disabled": { Component: d_context_menu_disabled, source: d_context_menu_disabled_src, file: "context-menu/disabled.tsx" },
+  "context-menu/rows": { Component: d_context_menu_rows, source: d_context_menu_rows_src, file: "context-menu/rows.tsx" },
+  "context-menu/submenu": { Component: d_context_menu_submenu, source: d_context_menu_submenu_src, file: "context-menu/submenu.tsx" },
+  "context-menu/theming": { Component: d_context_menu_theming, source: d_context_menu_theming_src, file: "context-menu/theming.tsx" },
+  "context-menu/with-menu": { Component: d_context_menu_with_menu, source: d_context_menu_with_menu_src, file: "context-menu/with-menu.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },

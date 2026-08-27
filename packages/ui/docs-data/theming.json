@@ -1652,6 +1652,32 @@
       }
     ]
   },
+  "ContextMenu": {
+    "name": "ContextMenu",
+    "tokens": [
+      {
+        "name": "--pui-context-menu-trigger-ring-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Colour of the ring that marks the region while its menu is open",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-context-menu-trigger-ring-width",
+        "value": "2px",
+        "description": "Width of that ring. Set it to 0 to leave the region unmarked",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-context-menu-trigger-ring-offset",
+        "value": "calc( -1 * var(--pui-context-menu-trigger-ring-width) )",
+        "description": "How far the ring sits outside the region's box; negative draws it inside",
+        "part": "trigger",
+        "overrides": []
+      }
+    ]
+  },
   "Dialog": {
     "name": "Dialog",
     "tokens": [

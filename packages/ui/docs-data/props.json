@@ -1051,6 +1051,496 @@
       }
     ]
   },
+  "ContextMenuRoot": {
+    "name": "ContextMenuRoot",
+    "description": "Groups every part of the context menu and owns its open state. Renders no\nDOM element of its own, so it accepts neither `className` nor `ref`.\n\nForwards Base UI's own root props unchanged — `open`, `defaultOpen`,\n`onOpenChange`, `disabled`, `orientation`, `loopFocus`,\n`highlightItemOnHover`, `closeParentOnEsc` and `actionsRef`. Four of\n`Menu.Root`'s props are deliberately absent, because a context menu has no\ntrigger element to hang them on: `modal` (it is always modal), `openOnHover`\nwith its `delay` / `closeDelay`, and the `handle` / `triggerId` pair.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The `<ContextMenu.Trigger>` and its `<ContextMenu.Popup>`."
+      }
+    ]
+  },
+  "ContextMenuTrigger": {
+    "name": "ContextMenuTrigger",
+    "description": "The region that opens the menu on right click or long press. Renders a\n`<div>`.\n\nIt takes no tab stop and carries no ARIA of its own — a region that answers a\nright click is not a button, and saying otherwise would promise keyboard\nbehaviour it does not have. The platform's context-menu key (Shift+F10) does\nreach it when the region happens to wrap something focusable, since the\n`contextmenu` event that key fires bubbles; that is a bonus, not a plan.\n\nSo: **a context menu must never be the only route to an action.** Nothing\nannounces that a region has one. Put the same commands behind a visible\ncontrol — a `<Menu>` button on the card is the usual answer, and the docs\ncarry a worked example.\n\nLeft click does nothing here, so the trigger declares no cursor and lets the\ncontent it wraps keep its own — text stays a caret, an image stays an arrow.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The region that answers a right click or a long press — a card, a table\nrow, a canvas, a whole panel. It is ordinary content, not a control: the\ntrigger adds no styling of its own to it beyond marking it while its menu\nis open."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, ContextMenuTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component —\n`render={<tr />}` for a table row, `render={<li />}` inside a list, so the\ntrigger does not break the parent's content model."
+      }
+    ]
+  },
+  "MenuPopup": {
+    "name": "MenuPopup",
+    "description": "The floating surface holding the items. Renders a `<div>` with\n`role=\"menu\"`.\n\nThis one part renders the whole floating half of Base UI's anatomy —\n`Portal` → (`Backdrop`) → `Positioner` → `Popup` — because those elements\nare meaningless apart and each has a job the styles depend on: the\npositioner owns `--available-height` and `--transform-origin`, and the popup\nowns the surface and the scrolling.\n\nInside a `<Menu.SubmenuRoot>` the placement defaults change: the popup opens\noff the inline end of the row rather than below it, and two negative offsets\ntuck it against the parent so the first submenu item lines up with the\ntrigger row. Inside a `<ContextMenu.Root>` they change again — the popup is\nanchored to the point the pointer was at rather than to any element, and\nBase UI supplies the offsets that land its corner on the cursor. Pass any of\n`side`, `align`, `sideOffset` or `alignOffset` explicitly to override that.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "start",
+        "description": "How the popup aligns along the chosen side. Menus align to the trigger's\nstart edge rather than its centre, which is Base UI's own default — a\ncentred menu drifts left of a wide trigger and right of a narrow one, and\nthe reading edge is what a list of commands should line up on."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0; -4 inside a `Menu.SubmenuRoot`; 2 inside a `ContextMenu.Root`",
+        "description": "Extra offset in pixels along the alignment axis."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "An element to position the popup against instead of the trigger."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a dimming layer behind the popup. Off by default — a menu is a\nshort-lived list, not a mode — but useful on small screens where the\npopup covers most of the page."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The items, groups and separators to render."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup surface. Applied after the\ninternal styles so consumer utilities win without needing `!important`."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space to keep between the popup and the edge of its collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Render the popup into a different container instead of `<body>`."
+      },
+      {
+        "name": "finalFocus",
+        "type": "boolean | RefObject<HTMLElement | null> | ((closeType: InteractionType) => boolean | void | HTMLElement | null)",
+        "required": false,
+        "defaultValue": "the trigger",
+        "description": "Where focus goes when the menu closes. There is no `initialFocus`\ncounterpart: Base UI moves focus into the popup on open, to the first\nitem for a keyboard open and to the popup itself for a pointer one."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. This is the only way to reach\n`--pui-menu-z-index`, the one property declared there."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "\"bottom\"; \"inline-end\" inside a `Menu.SubmenuRoot`; the popup is\nanchored to the pointer instead inside a `ContextMenu.Root`",
+        "description": "Which side of the trigger the popup opens on. Flips automatically to\navoid collisions.\n\n`\"inline-start\"` / `\"inline-end\"` follow writing direction, but Base UI\ntakes that direction from its own `DirectionProvider` context and not from\nthe `dir` attribute — with no provider mounted it is `\"ltr\"`, so the two\nresolve to left and right whatever `dir` says. An RTL app has to mount\n`<DirectionProvider direction=\"rtl\">` for them to mirror. The library's own\nCSS reads the attribute, so everything else here flips without it."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "4; -4 inside a `Menu.SubmenuRoot`; -5 inside a `ContextMenu.Root`",
+        "description": "Gap in pixels between the trigger and the popup."
+      }
+    ]
+  },
+  "MenuItem": {
+    "name": "MenuItem",
+    "description": "One command in the menu. Renders a `<div>` with `role=\"menuitem\"`.\n\n`data-highlighted` is the focus analogue here: Base UI moves real DOM focus\nbetween rows with a roving tabindex, and (with `highlightItemOnHover`, on by\ndefault) pointer hover sets the same attribute. Because the popup scrolls,\nand a scroll container clips, the focus ring is applied inset via\n`data-focus-inset` so `overflow` cannot crop it.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item's label, plus anything else the row shows — a leading icon, a\ntrailing `<Menu.Shortcut>`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether choosing the item closes the menu. Leave it on for a command;\nturn it off for a row that only changes something on screen."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the item ignores user interaction. A disabled item stays in the\nlist, stays announced, and is still reached by the arrow keys and by\ntypeahead — so the command remains discoverable; it just cannot be run."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Plain-text label used for typeahead when `children` is not a string."
+      },
+      {
+        "name": "tone",
+        "type": "MenuItemTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the row draws from. `danger` is for an action\nthat destroys something, and is the only alternative offered: the\nhighlight already paints `--pui-color-primary-soft`, so a primary-toned\nrow would be indistinguishable from the row the user is currently on."
+      }
+    ]
+  },
+  "MenuLinkItem": {
+    "name": "MenuLinkItem",
+    "description": "A row that navigates rather than acting. Renders an `<a>` with\n`role=\"menuitem\"`, so it keeps the menu's arrow-key navigation and typeahead\nwhile still being a real link — middle-click, ⌘-click and \"copy link\naddress\" all work, which they do not on an item with an `onClick` that calls\n`router.push`.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The link's label, plus anything else the row shows."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether following the link closes the menu. Base UI leaves this off\nbecause a link that opens in a new tab leaves the menu's own page\nstanding — turn it on for a same-tab navigation."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the link goes."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Plain-text label used for typeahead when `children` is not a string."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, MenuLinkItemState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/settings\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behaviour."
+      }
+    ]
+  },
+  "MenuCheckboxItem": {
+    "name": "MenuCheckboxItem",
+    "description": "A row that toggles a setting. Renders a `<div>` with\n`role=\"menuitemcheckbox\"` and `aria-checked`.\n\nRendering one of these anywhere in a popup indents every other row in that\npopup to match, so labels stay in one column instead of stepping in and out\naround the tick marks — see `.popup:has(...)` in the stylesheet.",
+    "props": [
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the item is ticked. Pass it to control the item; use\n`defaultChecked` for the uncontrolled form."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item's label."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether choosing the item closes the menu. Off by default, which is what\nlets a run of toggles be set in one visit."
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the item starts out ticked."
+      },
+      {
+        "name": "indicator",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<CheckIcon />",
+        "description": "What marks the item as ticked. Rendered inside the indicator, which only\nmounts while the item is checked."
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "((checked: boolean, eventDetails: MenuRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the item is ticked or unticked."
+      }
+    ]
+  },
+  "MenuRadioGroup": {
+    "name": "MenuRadioGroup",
+    "description": "A set of rows where exactly one is chosen. Renders a `<div>` with\n`role=\"group\"`; it owns the value, so the items inside it carry only their\nown `value`.\n\nPut a `<Menu.GroupLabel>` inside it to name the set — Base UI associates the\ntwo the same way it does for `<Menu.Group>`.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The radio items, and any group label above them."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultValue",
+        "type": "any",
+        "required": false,
+        "defaultValue": null,
+        "description": "The value selected on first render."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the whole group ignores user interaction."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: any, eventDetails: MenuRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the selection changes."
+      },
+      {
+        "name": "value",
+        "type": "any",
+        "required": false,
+        "defaultValue": null,
+        "description": "The selected value. Pass it to control the group; use `defaultValue` for\nthe uncontrolled form."
+      }
+    ]
+  },
+  "MenuRadioItem": {
+    "name": "MenuRadioItem",
+    "description": "One choice in a `<Menu.RadioGroup>`. Renders a `<div>` with\n`role=\"menuitemradio\"` and `aria-checked`.\n\nThe default marker is a dot rather than a tick — the same distinction the\nplatform menus draw, and the only cue separating \"one of these\" from \"any of\nthese\" once both kinds of row share a popup.",
+    "props": [
+      {
+        "name": "value",
+        "type": "any",
+        "required": true,
+        "defaultValue": null,
+        "description": "The value this row selects in its `<Menu.RadioGroup>`."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item's label."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether choosing the item closes the menu. Off by default, matching\n`Menu.CheckboxItem`."
+      },
+      {
+        "name": "indicator",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<DotIcon />",
+        "description": "What marks the row as selected. Rendered inside the indicator, which only\nmounts while the item is the chosen one."
+      }
+    ]
+  },
+  "MenuGroup": {
+    "name": "MenuGroup",
+    "description": "Groups related items under a heading. Renders a `<div>` with\n`role=\"group\"`; Base UI associates it with the `<Menu.GroupLabel>` inside it\nautomatically, so the heading is announced with its members.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "MenuGroupLabel": {
+    "name": "MenuGroupLabel",
+    "description": "The heading for a `<Menu.Group>` or a `<Menu.RadioGroup>`. Renders a\n`<div>`, indented to the same column as the item labels below it.\n\nIt must be inside one of those two — the association is what makes it a\nheading rather than a line of text, and Base UI throws rather than render an\nunassociated one. For a caption that names the whole menu, use a separator\nand an ordinary `<Menu.Group>` around the rows it introduces.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "MenuSeparator": {
+    "name": "MenuSeparator",
+    "description": "A divider between runs of items. Renders a `<div>` with `role=\"separator\"`,\nso the grouping it draws is exposed to assistive technology rather than\nbeing a purely visual line.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "Orientation",
+        "required": false,
+        "defaultValue": "\"horizontal\"",
+        "description": "Orientation of the rule. A menu is a vertical list, so the divider\nbetween two runs of items is horizontal."
+      }
+    ]
+  },
+  "MenuSubmenuRoot": {
+    "name": "MenuSubmenuRoot",
+    "description": "Groups a submenu's trigger and popup. Renders no DOM element of its own, so\nit accepts neither `className` nor `ref`.\n\nIt goes *inside* the parent `<Menu.Popup>`, where its trigger takes the\nplace of an item. Everything below it opens sideways rather than downward —\n`<Menu.Popup>` reads that from here, so a submenu needs no positioning props\nof its own.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The submenu's `<Menu.SubmenuTrigger>` and its `<Menu.Popup>`."
+      }
+    ]
+  },
+  "MenuSubmenuTrigger": {
+    "name": "MenuSubmenuTrigger",
+    "description": "The row that opens a submenu. Renders a `<div>` with `role=\"menuitem\"` and\n`aria-haspopup=\"menu\"`.\n\nIt behaves as an item in every other way — it is highlighted, it answers\ntypeahead, and it opens on hover as well as on press, with Base UI's safe\ntriangle keeping the submenu up while the pointer travels diagonally toward\nit.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The row's label."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the row ignores user interaction."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ChevronIcon />",
+        "description": "The affordance at the end of the row. Defaults to a chevron, which is\nmirrored in RTL so it keeps pointing at the side the submenu opens on."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Plain-text label used for typeahead when `children` is not a string."
+      }
+    ]
+  },
+  "MenuShortcut": {
+    "name": "MenuShortcut",
+    "description": "The keyboard shortcut printed at the end of a row. Renders a `<span>`, and\nis not a Base UI part — it is here for the same reason `Dialog.Footer` is:\nevery second menu grows one, and left to each consumer it is re-invented\nwith a different colour and a different gap each time.\n\nIt is `aria-hidden`, deliberately. The glyphs menus print are read out as\n\"place of interest sign K\" or \"up arrowhead command P\" — worse than silence.\nPut the shortcut on the item instead, where assistive technology expects to\nfind it and where it is spelled in words:\n\n```tsx\n<Menu.Item aria-keyshortcuts=\"Meta+K\">\n  Search\n  <Menu.Shortcut>⌘K</Menu.Shortcut>\n</Menu.Item>\n```",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The keys, written the way they are printed — `⌘K`, `Ctrl+K`, `⇧⌘P`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "DialogProvider": {
     "name": "DialogProvider",
     "description": "Enables `useDialog()` underneath it, and renders whatever is opened.\n\n```tsx\n<Dialog.Provider>\n  <App />\n</Dialog.Provider>\n```\n\nMount it once, above everything that might ask a question. It renders no DOM\nelement of its own and every dialog is portalled to `<body>`, so where it\nsits in the tree does not matter beyond that.\n\nThe stack it renders is *nested*: a dialog opened while another is on screen\nbecomes that dialog's child, which is what makes the parent step back and\ndim instead of being covered by a second backdrop.",
@@ -1667,19 +2157,6 @@
       }
     ]
   },
-  "MenuSubmenuRoot": {
-    "name": "MenuSubmenuRoot",
-    "description": "Groups a submenu's trigger and popup. Renders no DOM element of its own, so\nit accepts neither `className` nor `ref`.\n\nIt goes *inside* the parent `<Menu.Popup>`, where its trigger takes the\nplace of an item. Everything below it opens sideways rather than downward —\n`<Menu.Popup>` reads that from here, so a submenu needs no positioning props\nof its own.",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The submenu's `<Menu.SubmenuTrigger>` and its `<Menu.Popup>`."
-      }
-    ]
-  },
   "MenuTrigger": {
     "name": "MenuTrigger",
     "description": "The button that opens the menu. Renders a `<button>`.\n\nBase UI wires it to the popup with `aria-haspopup=\"menu\"`, `aria-expanded`\nand `aria-controls`, so it needs no `aria-label` describing the menu itself.\nAn icon-only trigger still needs a name of its own, as any icon-only button\ndoes.",
@@ -1739,443 +2216,6 @@
         "required": false,
         "defaultValue": null,
         "description": "Replaces the rendered `<button>` with another element or component —\n`render={<Button variant=\"outline\" />}` is the common case. The trigger's\nown neutral styling steps aside when this is present, so the two never\nfight over the cascade."
-      }
-    ]
-  },
-  "MenuPopup": {
-    "name": "MenuPopup",
-    "description": "The floating surface holding the items. Renders a `<div>` with\n`role=\"menu\"`.\n\nThis one part renders the whole floating half of Base UI's anatomy —\n`Portal` → (`Backdrop`) → `Positioner` → `Popup` — because those elements\nare meaningless apart and each has a job the styles depend on: the\npositioner owns `--available-height` and `--transform-origin`, and the popup\nowns the surface and the scrolling.\n\nInside a `<Menu.SubmenuRoot>` the placement defaults change: the popup opens\noff the inline end of the row rather than below it, and two negative offsets\ntuck it against the parent so the first submenu item lines up with the\ntrigger row. Pass any of `side`, `align`, `sideOffset` or `alignOffset`\nexplicitly to override that.",
-    "props": [
-      {
-        "name": "align",
-        "type": "Align",
-        "required": false,
-        "defaultValue": "start",
-        "description": "How the popup aligns along the chosen side. Menus align to the trigger's\nstart edge rather than its centre, which is Base UI's own default — a\ncentred menu drifts left of a wide trigger and right of a narrow one, and\nthe reading edge is what a list of commands should line up on."
-      },
-      {
-        "name": "alignOffset",
-        "type": "number | OffsetFunction",
-        "required": false,
-        "defaultValue": "0, or -4 inside a `Menu.SubmenuRoot`",
-        "description": "Extra offset in pixels along the alignment axis."
-      },
-      {
-        "name": "anchor",
-        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
-        "required": false,
-        "defaultValue": null,
-        "description": "An element to position the popup against instead of the trigger."
-      },
-      {
-        "name": "backdrop",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Render a dimming layer behind the popup. Off by default — a menu is a\nshort-lived list, not a mode — but useful on small screens where the\npopup covers most of the page."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The items, groups and separators to render."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s) for the popup surface. Applied after the\ninternal styles so consumer utilities win without needing `!important`."
-      },
-      {
-        "name": "collisionPadding",
-        "type": "Padding",
-        "required": false,
-        "defaultValue": "5",
-        "description": "Space to keep between the popup and the edge of its collision boundary."
-      },
-      {
-        "name": "container",
-        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
-        "required": false,
-        "defaultValue": null,
-        "description": "Render the popup into a different container instead of `<body>`."
-      },
-      {
-        "name": "finalFocus",
-        "type": "boolean | RefObject<HTMLElement | null> | ((closeType: InteractionType) => boolean | void | HTMLElement | null)",
-        "required": false,
-        "defaultValue": "the trigger",
-        "description": "Where focus goes when the menu closes. There is no `initialFocus`\ncounterpart: Base UI moves focus into the popup on open, to the first\nitem for a keyboard open and to the popup itself for a pointer one."
-      },
-      {
-        "name": "positionerClassName",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. This is the only way to reach\n`--pui-menu-z-index`, the one property declared there."
-      },
-      {
-        "name": "side",
-        "type": "Side",
-        "required": false,
-        "defaultValue": "\"bottom\", or \"inline-end\" inside a `Menu.SubmenuRoot`",
-        "description": "Which side of the trigger the popup opens on. Flips automatically to\navoid collisions.\n\n`\"inline-start\"` / `\"inline-end\"` follow writing direction, but Base UI\ntakes that direction from its own `DirectionProvider` context and not from\nthe `dir` attribute — with no provider mounted it is `\"ltr\"`, so the two\nresolve to left and right whatever `dir` says. An RTL app has to mount\n`<DirectionProvider direction=\"rtl\">` for them to mirror. The library's own\nCSS reads the attribute, so everything else here flips without it."
-      },
-      {
-        "name": "sideOffset",
-        "type": "number | OffsetFunction",
-        "required": false,
-        "defaultValue": "4, or -4 inside a `Menu.SubmenuRoot`",
-        "description": "Gap in pixels between the trigger and the popup."
-      }
-    ]
-  },
-  "MenuItem": {
-    "name": "MenuItem",
-    "description": "One command in the menu. Renders a `<div>` with `role=\"menuitem\"`.\n\n`data-highlighted` is the focus analogue here: Base UI moves real DOM focus\nbetween rows with a roving tabindex, and (with `highlightItemOnHover`, on by\ndefault) pointer hover sets the same attribute. Because the popup scrolls,\nand a scroll container clips, the focus ring is applied inset via\n`data-focus-inset` so `overflow` cannot crop it.",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The item's label, plus anything else the row shows — a leading icon, a\ntrailing `<Menu.Shortcut>`."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "closeOnClick",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "true",
-        "description": "Whether choosing the item closes the menu. Leave it on for a command;\nturn it off for a row that only changes something on screen."
-      },
-      {
-        "name": "disabled",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether the item ignores user interaction. A disabled item stays in the\nlist, stays announced, and is still reached by the arrow keys and by\ntypeahead — so the command remains discoverable; it just cannot be run."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Plain-text label used for typeahead when `children` is not a string."
-      },
-      {
-        "name": "tone",
-        "type": "MenuItemTone",
-        "required": false,
-        "defaultValue": "neutral",
-        "description": "Which semantic colour set the row draws from. `danger` is for an action\nthat destroys something, and is the only alternative offered: the\nhighlight already paints `--pui-color-primary-soft`, so a primary-toned\nrow would be indistinguishable from the row the user is currently on."
-      }
-    ]
-  },
-  "MenuLinkItem": {
-    "name": "MenuLinkItem",
-    "description": "A row that navigates rather than acting. Renders an `<a>` with\n`role=\"menuitem\"`, so it keeps the menu's arrow-key navigation and typeahead\nwhile still being a real link — middle-click, ⌘-click and \"copy link\naddress\" all work, which they do not on an item with an `onClick` that calls\n`router.push`.",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The link's label, plus anything else the row shows."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "closeOnClick",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether following the link closes the menu. Base UI leaves this off\nbecause a link that opens in a new tab leaves the menu's own page\nstanding — turn it on for a same-tab navigation."
-      },
-      {
-        "name": "href",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Where the link goes."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Plain-text label used for typeahead when `children` is not a string."
-      },
-      {
-        "name": "render",
-        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, MenuLinkItemState>",
-        "required": false,
-        "defaultValue": null,
-        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/settings\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behaviour."
-      }
-    ]
-  },
-  "MenuCheckboxItem": {
-    "name": "MenuCheckboxItem",
-    "description": "A row that toggles a setting. Renders a `<div>` with\n`role=\"menuitemcheckbox\"` and `aria-checked`.\n\nRendering one of these anywhere in a popup indents every other row in that\npopup to match, so labels stay in one column instead of stepping in and out\naround the tick marks — see `.popup:has(...)` in the stylesheet.",
-    "props": [
-      {
-        "name": "checked",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": null,
-        "description": "Whether the item is ticked. Pass it to control the item; use\n`defaultChecked` for the uncontrolled form."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The item's label."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "closeOnClick",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether choosing the item closes the menu. Off by default, which is what\nlets a run of toggles be set in one visit."
-      },
-      {
-        "name": "defaultChecked",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether the item starts out ticked."
-      },
-      {
-        "name": "indicator",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": "<CheckIcon />",
-        "description": "What marks the item as ticked. Rendered inside the indicator, which only\nmounts while the item is checked."
-      },
-      {
-        "name": "onCheckedChange",
-        "type": "((checked: boolean, eventDetails: MenuRootChangeEventDetails) => void)",
-        "required": false,
-        "defaultValue": null,
-        "description": "Called when the item is ticked or unticked."
-      }
-    ]
-  },
-  "MenuRadioGroup": {
-    "name": "MenuRadioGroup",
-    "description": "A set of rows where exactly one is chosen. Renders a `<div>` with\n`role=\"group\"`; it owns the value, so the items inside it carry only their\nown `value`.\n\nPut a `<Menu.GroupLabel>` inside it to name the set — Base UI associates the\ntwo the same way it does for `<Menu.Group>`.",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The radio items, and any group label above them."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "defaultValue",
-        "type": "any",
-        "required": false,
-        "defaultValue": null,
-        "description": "The value selected on first render."
-      },
-      {
-        "name": "disabled",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether the whole group ignores user interaction."
-      },
-      {
-        "name": "onValueChange",
-        "type": "((value: any, eventDetails: MenuRootChangeEventDetails) => void)",
-        "required": false,
-        "defaultValue": null,
-        "description": "Called when the selection changes."
-      },
-      {
-        "name": "value",
-        "type": "any",
-        "required": false,
-        "defaultValue": null,
-        "description": "The selected value. Pass it to control the group; use `defaultValue` for\nthe uncontrolled form."
-      }
-    ]
-  },
-  "MenuRadioItem": {
-    "name": "MenuRadioItem",
-    "description": "One choice in a `<Menu.RadioGroup>`. Renders a `<div>` with\n`role=\"menuitemradio\"` and `aria-checked`.\n\nThe default marker is a dot rather than a tick — the same distinction the\nplatform menus draw, and the only cue separating \"one of these\" from \"any of\nthese\" once both kinds of row share a popup.",
-    "props": [
-      {
-        "name": "value",
-        "type": "any",
-        "required": true,
-        "defaultValue": null,
-        "description": "The value this row selects in its `<Menu.RadioGroup>`."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The item's label."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "closeOnClick",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether choosing the item closes the menu. Off by default, matching\n`Menu.CheckboxItem`."
-      },
-      {
-        "name": "indicator",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": "<DotIcon />",
-        "description": "What marks the row as selected. Rendered inside the indicator, which only\nmounts while the item is the chosen one."
-      }
-    ]
-  },
-  "MenuGroup": {
-    "name": "MenuGroup",
-    "description": "Groups related items under a heading. Renders a `<div>` with\n`role=\"group\"`; Base UI associates it with the `<Menu.GroupLabel>` inside it\nautomatically, so the heading is announced with its members.",
-    "props": [
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      }
-    ]
-  },
-  "MenuGroupLabel": {
-    "name": "MenuGroupLabel",
-    "description": "The heading for a `<Menu.Group>` or a `<Menu.RadioGroup>`. Renders a\n`<div>`, indented to the same column as the item labels below it.\n\nIt must be inside one of those two — the association is what makes it a\nheading rather than a line of text, and Base UI throws rather than render an\nunassociated one. For a caption that names the whole menu, use a separator\nand an ordinary `<Menu.Group>` around the rows it introduces.",
-    "props": [
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      }
-    ]
-  },
-  "MenuSeparator": {
-    "name": "MenuSeparator",
-    "description": "A divider between runs of items. Renders a `<div>` with `role=\"separator\"`,\nso the grouping it draws is exposed to assistive technology rather than\nbeing a purely visual line.",
-    "props": [
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "orientation",
-        "type": "Orientation",
-        "required": false,
-        "defaultValue": "\"horizontal\"",
-        "description": "Orientation of the rule. A menu is a vertical list, so the divider\nbetween two runs of items is horizontal."
-      }
-    ]
-  },
-  "MenuSubmenuTrigger": {
-    "name": "MenuSubmenuTrigger",
-    "description": "The row that opens a submenu. Renders a `<div>` with `role=\"menuitem\"` and\n`aria-haspopup=\"menu\"`.\n\nIt behaves as an item in every other way — it is highlighted, it answers\ntypeahead, and it opens on hover as well as on press, with Base UI's safe\ntriangle keeping the submenu up while the pointer travels diagonally toward\nit.",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The row's label."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "disabled",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Whether the row ignores user interaction."
-      },
-      {
-        "name": "icon",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": "<ChevronIcon />",
-        "description": "The affordance at the end of the row. Defaults to a chevron, which is\nmirrored in RTL so it keeps pointing at the side the submenu opens on."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Plain-text label used for typeahead when `children` is not a string."
-      }
-    ]
-  },
-  "MenuShortcut": {
-    "name": "MenuShortcut",
-    "description": "The keyboard shortcut printed at the end of a row. Renders a `<span>`, and\nis not a Base UI part — it is here for the same reason `Dialog.Footer` is:\nevery second menu grows one, and left to each consumer it is re-invented\nwith a different colour and a different gap each time.\n\nIt is `aria-hidden`, deliberately. The glyphs menus print are read out as\n\"place of interest sign K\" or \"up arrowhead command P\" — worse than silence.\nPut the shortcut on the item instead, where assistive technology expects to\nfind it and where it is spelled in words:\n\n```tsx\n<Menu.Item aria-keyshortcuts=\"Meta+K\">\n  Search\n  <Menu.Shortcut>⌘K</Menu.Shortcut>\n</Menu.Item>\n```",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "defaultValue": null,
-        "description": "The keys, written the way they are printed — `⌘K`, `Ctrl+K`, `⇧⌘P`."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
       }
     ]
   },
