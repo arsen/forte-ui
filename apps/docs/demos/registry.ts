@@ -111,6 +111,12 @@ import d_dialog_basic from "./dialog/basic";
 import d_dialog_basic_src from "./dialog/basic?raw";
 import d_dialog_controlled from "./dialog/controlled";
 import d_dialog_controlled_src from "./dialog/controlled?raw";
+import d_dialog_footer_align from "./dialog/footer-align";
+import d_dialog_footer_align_src from "./dialog/footer-align?raw";
+import d_dialog_form from "./dialog/form";
+import d_dialog_form_src from "./dialog/form?raw";
+import d_dialog_header from "./dialog/header";
+import d_dialog_header_src from "./dialog/header?raw";
 import d_dialog_nested from "./dialog/nested";
 import d_dialog_nested_src from "./dialog/nested?raw";
 import d_dialog_outside_popup from "./dialog/outside-popup";
@@ -418,6 +424,9 @@ export type DemoId =
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/controlled"
+  | "dialog/footer-align"
+  | "dialog/form"
+  | "dialog/header"
   | "dialog/nested"
   | "dialog/outside-popup"
   | "dialog/scroll-inside"
@@ -600,6 +609,9 @@ const REGISTRY: Record<DemoId, Demo> = {
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },
+  "dialog/footer-align": { Component: d_dialog_footer_align, source: d_dialog_footer_align_src, file: "dialog/footer-align.tsx" },
+  "dialog/form": { Component: d_dialog_form, source: d_dialog_form_src, file: "dialog/form.tsx" },
+  "dialog/header": { Component: d_dialog_header, source: d_dialog_header_src, file: "dialog/header.tsx" },
   "dialog/nested": { Component: d_dialog_nested, source: d_dialog_nested_src, file: "dialog/nested.tsx" },
   "dialog/outside-popup": { Component: d_dialog_outside_popup, source: d_dialog_outside_popup_src, file: "dialog/outside-popup.tsx" },
   "dialog/scroll-inside": { Component: d_dialog_scroll_inside, source: d_dialog_scroll_inside_src, file: "dialog/scroll-inside.tsx" },

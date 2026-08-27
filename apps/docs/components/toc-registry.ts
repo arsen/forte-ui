@@ -144,9 +144,12 @@ export const TOC: Record<string, TocHeading[]> = {
   "/components/dialog": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
+    { id: "a-close-button-in-the-corner", text: "A close button in the corner", depth: 3 },
+    { id: "footer-alignment", text: "Footer alignment", depth: 3 },
     { id: "destructive-confirmation", text: "Destructive confirmation", depth: 3 },
     { id: "sizes", text: "Sizes", depth: 3 },
     { id: "controlled", text: "Controlled", depth: 3 },
+    { id: "a-form-in-a-dialog", text: "A form in a dialog", depth: 3 },
     { id: "nested-dialogs", text: "Nested dialogs", depth: 3 },
     { id: "scrolling-outside-the-dialog", text: "Scrolling outside the dialog", depth: 3 },
     { id: "scrolling-inside-the-dialog", text: "Scrolling inside the dialog", depth: 3 },
