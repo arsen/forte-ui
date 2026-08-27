@@ -159,6 +159,22 @@ export type {
   MenuShortcutProps,
 } from "./components/menu";
 
+export { NavigationMenu } from "./components/navigation-menu";
+export type {
+  NavigationMenuVariant,
+  NavigationMenuColumns,
+  NavigationMenuRootProps,
+  NavigationMenuListProps,
+  NavigationMenuItemProps,
+  NavigationMenuTriggerProps,
+  NavigationMenuIconProps,
+  NavigationMenuContentProps,
+  NavigationMenuLinkProps,
+  NavigationMenuLinkTitleProps,
+  NavigationMenuLinkDescriptionProps,
+  NavigationMenuPopupProps,
+} from "./components/navigation-menu";
+
 export { NumberField } from "./components/number-field";
 export type {
   NumberFieldSize,

@@ -201,6 +201,26 @@ import d_menu_theming from "./menu/theming";
 import d_menu_theming_src from "./menu/theming?raw";
 import d_menu_trigger from "./menu/trigger";
 import d_menu_trigger_src from "./menu/trigger?raw";
+import d_navigation_menu_active from "./navigation-menu/active";
+import d_navigation_menu_active_src from "./navigation-menu/active?raw";
+import d_navigation_menu_arrow from "./navigation-menu/arrow";
+import d_navigation_menu_arrow_src from "./navigation-menu/arrow?raw";
+import d_navigation_menu_basic from "./navigation-menu/basic";
+import d_navigation_menu_basic_src from "./navigation-menu/basic?raw";
+import d_navigation_menu_columns from "./navigation-menu/columns";
+import d_navigation_menu_columns_src from "./navigation-menu/columns?raw";
+import d_navigation_menu_controlled from "./navigation-menu/controlled";
+import d_navigation_menu_controlled_src from "./navigation-menu/controlled?raw";
+import d_navigation_menu_custom_links from "./navigation-menu/custom-links";
+import d_navigation_menu_custom_links_src from "./navigation-menu/custom-links?raw";
+import d_navigation_menu_nested from "./navigation-menu/nested";
+import d_navigation_menu_nested_src from "./navigation-menu/nested?raw";
+import d_navigation_menu_placement from "./navigation-menu/placement";
+import d_navigation_menu_placement_src from "./navigation-menu/placement?raw";
+import d_navigation_menu_theming from "./navigation-menu/theming";
+import d_navigation_menu_theming_src from "./navigation-menu/theming?raw";
+import d_navigation_menu_vertical from "./navigation-menu/vertical";
+import d_navigation_menu_vertical_src from "./navigation-menu/vertical?raw";
 import d_number_field_basic from "./number-field/basic";
 import d_number_field_basic_src from "./number-field/basic?raw";
 import d_number_field_form from "./number-field/form";
@@ -581,6 +601,16 @@ export type DemoId =
   | "menu/submenu"
   | "menu/theming"
   | "menu/trigger"
+  | "navigation-menu/active"
+  | "navigation-menu/arrow"
+  | "navigation-menu/basic"
+  | "navigation-menu/columns"
+  | "navigation-menu/controlled"
+  | "navigation-menu/custom-links"
+  | "navigation-menu/nested"
+  | "navigation-menu/placement"
+  | "navigation-menu/theming"
+  | "navigation-menu/vertical"
   | "number-field/basic"
   | "number-field/form"
   | "number-field/format"
@@ -822,6 +852,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "menu/submenu": { Component: d_menu_submenu, source: d_menu_submenu_src, file: "menu/submenu.tsx" },
   "menu/theming": { Component: d_menu_theming, source: d_menu_theming_src, file: "menu/theming.tsx" },
   "menu/trigger": { Component: d_menu_trigger, source: d_menu_trigger_src, file: "menu/trigger.tsx" },
+  "navigation-menu/active": { Component: d_navigation_menu_active, source: d_navigation_menu_active_src, file: "navigation-menu/active.tsx" },
+  "navigation-menu/arrow": { Component: d_navigation_menu_arrow, source: d_navigation_menu_arrow_src, file: "navigation-menu/arrow.tsx" },
+  "navigation-menu/basic": { Component: d_navigation_menu_basic, source: d_navigation_menu_basic_src, file: "navigation-menu/basic.tsx" },
+  "navigation-menu/columns": { Component: d_navigation_menu_columns, source: d_navigation_menu_columns_src, file: "navigation-menu/columns.tsx" },
+  "navigation-menu/controlled": { Component: d_navigation_menu_controlled, source: d_navigation_menu_controlled_src, file: "navigation-menu/controlled.tsx" },
+  "navigation-menu/custom-links": { Component: d_navigation_menu_custom_links, source: d_navigation_menu_custom_links_src, file: "navigation-menu/custom-links.tsx" },
+  "navigation-menu/nested": { Component: d_navigation_menu_nested, source: d_navigation_menu_nested_src, file: "navigation-menu/nested.tsx" },
+  "navigation-menu/placement": { Component: d_navigation_menu_placement, source: d_navigation_menu_placement_src, file: "navigation-menu/placement.tsx" },
+  "navigation-menu/theming": { Component: d_navigation_menu_theming, source: d_navigation_menu_theming_src, file: "navigation-menu/theming.tsx" },
+  "navigation-menu/vertical": { Component: d_navigation_menu_vertical, source: d_navigation_menu_vertical_src, file: "navigation-menu/vertical.tsx" },
   "number-field/basic": { Component: d_number_field_basic, source: d_number_field_basic_src, file: "number-field/basic.tsx" },
   "number-field/form": { Component: d_number_field_form, source: d_number_field_form_src, file: "number-field/form.tsx" },
   "number-field/format": { Component: d_number_field_format, source: d_number_field_format_src, file: "number-field/format.tsx" },

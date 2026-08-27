@@ -2179,6 +2179,423 @@
       }
     ]
   },
+  "NavigationMenuRoot": {
+    "name": "NavigationMenuRoot",
+    "description": "Groups every part of the navigation menu and owns which panel is open.\nRenders a `<nav>` — or a `<div>` when it is nested inside another menu's\n`Content`, since one `<nav>` inside another announces two navigation\nlandmarks for one region.\n\nGive it an `aria-label` when a page has more than one: \"Main\" and \"Footer\"\nare what a screen-reader user picks between in a landmark list, and two\nunnamed navigations there are indistinguishable.",
+    "props": [
+      {
+        "name": "actionsRef",
+        "type": "RefObject<NavigationMenuRootActions | null>",
+        "required": false,
+        "defaultValue": null,
+        "description": "A ref to imperative actions. `actionsRef.current.unmount()` removes the\npopup immediately instead of waiting for its exit transition."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The `List` of items, and the `Popup` their panels are shown in."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "50",
+        "description": "How long the panel lingers after the pointer leaves, in milliseconds. It\nis what lets the pointer cross the gap between the bar and the panel; the\nstylesheet also bridges that gap, so this stays short."
+      },
+      {
+        "name": "defaultValue",
+        "type": "Value | null",
+        "required": false,
+        "defaultValue": "null",
+        "description": "The item whose panel is open on first render, by `value`."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "50",
+        "description": "How long the pointer must rest on a trigger before its panel opens, in\nmilliseconds. Only the FIRST open waits: once a panel is up, moving along\nthe bar swaps it immediately."
+      },
+      {
+        "name": "onOpenChangeComplete",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called after the closing transition has finished."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: Value | null, eventDetails: NavigationMenuRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the open item changes, with the new value and the reason —\n`trigger-hover`, `trigger-press`, `link-press`, `escape-key` and the rest."
+      },
+      {
+        "name": "orientation",
+        "type": "\"horizontal\" | \"vertical\"",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the list runs. `vertical` is what a nested menu inside a panel\nwants — it also swaps the arrow keys that move between triggers, and makes\nthe panel enter from above or below rather than from the side."
+      },
+      {
+        "name": "value",
+        "type": "Value | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item whose panel is open, by `value`. Pass it to control the menu; use\n`defaultValue` for the uncontrolled form. `null` closes it."
+      }
+    ]
+  },
+  "NavigationMenuList": {
+    "name": "NavigationMenuList",
+    "description": "The bar itself. Renders a `<ul>`.\n\nIt stamps its own `data-orientation` from the `Root` above it rather than\ninheriting the look through a descendant selector — see the note on\n`OrientationContext` for why that matters the moment a vertical menu is\nnested in a horizontal one.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The `NavigationMenu.Item`s that make up the bar."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavigationMenuItem": {
+    "name": "NavigationMenuItem",
+    "description": "One entry in the bar. Renders an `<li>`.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "A `Trigger` and its `Content`, or a single `Link` for an item that\nnavigates straight out without opening a panel."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "value",
+        "type": "any",
+        "required": false,
+        "defaultValue": null,
+        "description": "Identifies this item, and is what `Root`'s `value` / `defaultValue` name.\nGenerated automatically when omitted, so it is only needed to drive the\nmenu programmatically."
+      }
+    ]
+  },
+  "NavigationMenuIcon": {
+    "name": "NavigationMenuIcon",
+    "description": "The affordance saying a trigger opens a panel. Renders a `<span>` carrying\n`data-popup-open`, which is what the stylesheet rotates.\n\n`Trigger` renders one for you; reach for this part directly only when the\nglyph has to sit somewhere the trigger would not put it.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The glyph. `Trigger` supplies a chevron when you do not."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavigationMenuTrigger": {
+    "name": "NavigationMenuTrigger",
+    "description": "Opens an item's panel. Renders a `<button>`.\n\nIt opens on hover as well as on press, which is the behaviour that separates\na navigation menu from a `Menu` — the bar is a place to browse, so the panel\nfollows the pointer along it once one is open. Base UI wires\n`aria-expanded`, `aria-controls` and the roving focus, so an unnamed trigger\nneeds no extra ARIA beyond its own label.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The label, plus anything else the row shows."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The glyph inside the built-in `Icon`. Defaults to a chevron — pointing\ndown on a `plain` trigger, and along the inline axis on a `card` one,\nwhich is the direction each variant's panel actually arrives from. Pass\n`false` to drop it, or a node to replace it."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else, so Base UI supplies the\nkeyboard and role behaviour the element does not have natively."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, NavigationMenuTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component."
+      },
+      {
+        "name": "variant",
+        "type": "NavigationMenuVariant",
+        "required": false,
+        "defaultValue": "card",
+        "description": "How loud the row is. `plain` is the bar row; `card` is the block shape a\nnested menu's trigger takes inside a panel, where it has to sit level with\nthe `Link`s around it."
+      }
+    ]
+  },
+  "NavigationMenuContent": {
+    "name": "NavigationMenuContent",
+    "description": "One item's panel. Renders a `<div>`, which Base UI moves into the shared\npopup's viewport while the item is open.\n\nIt is a grid rather than a bare box because that is what every panel turns\nout to be, and `columns` is the only part of it that changes. Pass a\n`className` of your own for anything else — the layout rules here are all\ninside `@layer pretty-ui.components` and lose to unlayered author CSS.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The panel's `Link`s — or a nested `NavigationMenu.Root`, or any markup of\nyour own."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "columns",
+        "type": "NavigationMenuColumns",
+        "required": false,
+        "defaultValue": "1",
+        "description": "How many columns the children are laid out in. The grid collapses to\nfewer on its own when the panel is narrower than\n`--pui-navigation-menu-column-width`, so a three-column panel becomes one\ncolumn on a phone without a media query."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep the panel in the DOM while it is closed. Off by default; turn it on\nso the links are in the server-rendered HTML for crawlers."
+      }
+    ]
+  },
+  "NavigationMenuLink": {
+    "name": "NavigationMenuLink",
+    "description": "A link in the menu. Renders an `<a>`.\n\n`data-focus-inset` is not optional here: the popup's viewport clips, so a\nring drawn outside the link's own box would be shaved off along the panel's\nedge (SC 2.4.11).",
+    "props": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether this link is the page the user is on. Publishes `data-active` and\n`aria-current=\"page\"`, so the cue is not colour alone."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The label — usually a `LinkTitle` and a `LinkDescription`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether following the link closes the menu. Base UI leaves this off,\nbecause a link that opens a new tab leaves the menu's own page standing —\nturn it on for a same-tab navigation, and for a client-side route change\nthat would otherwise leave the panel open over the new page."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the link goes."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, NavigationMenuLinkState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/pricing\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behaviour."
+      },
+      {
+        "name": "variant",
+        "type": "NavigationMenuVariant",
+        "required": false,
+        "defaultValue": "card",
+        "description": "How loud the row is. `card` is the block inside a panel; `plain` is the\nbar row, for a top-level item that navigates straight out instead of\nopening a panel — it matches a `plain` `Trigger` so the two sit level in\nthe same list."
+      }
+    ]
+  },
+  "NavigationMenuLinkTitle": {
+    "name": "NavigationMenuLinkTitle",
+    "description": "The first line of a `card` link. Renders a `<span>` — deliberately not a\nheading, since the panel is a list of destinations rather than a section of\nthe page, and the link's own text is already its accessible name.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The link's headline."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavigationMenuLinkDescription": {
+    "name": "NavigationMenuLinkDescription",
+    "description": "The supporting line under a `LinkTitle`. Renders a `<span>`, not a `<p>`:\nit lives inside an `<a>`, and a paragraph is not permitted there.\n\nIt is part of the link's accessible name, which is usually what you want —\n\"Quick start, install and assemble your first component\" reads better in a\nlinks list than \"Quick start\" alone. Add `aria-hidden` to it when the text\nis decorative enough that repeating it costs more than it explains.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The supporting line."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavigationMenuPopup": {
+    "name": "NavigationMenuPopup",
+    "description": "The single floating surface every item's `Content` is shown in. Renders a\n`<nav>`, and takes no children — the panels come from the `Content` parts\nup in the list.\n\nThis one part renders the whole floating half of Base UI's anatomy —\n`Portal` → (`Backdrop`) → `Positioner` → `Popup` → (`Arrow`) → `Viewport` —\nbecause those elements are meaningless apart and each has a job the styles\ndepend on: the positioner owns `--available-width` / `--transform-origin`\nand the travel between triggers, the popup owns the surface and its resize,\nand the viewport clips the two panels sliding past each other.\n\nThere is exactly one of these per `Root`, and it is a sibling of the `List`.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "center",
+        "description": "How the panel aligns along that side. Centred on the active trigger,\nwhich is the alignment the sliding panel reads best under: it appears to\nhang from whichever trigger is open rather than from one end of the bar."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Extra offset in pixels along the alignment axis."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "An element to position the panel against instead of the active trigger."
+      },
+      {
+        "name": "arrow",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Draw a wedge pointing back at the active trigger. Off by default, and\nworth turning on when the panel is much wider than the trigger that opened\nit: the wedge slides along with the panel and is then the only thing\nnaming which item is open."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a dimming layer behind the panel. Off by default — a navigation bar\nis browsed, not modal — but useful on a phone where the panel covers most\nof the page."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup surface. Applied after the internal\nstyles so consumer utilities win without needing `!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which collision responses are allowed. Pass `{ side: \"none\" }` to stop a\npanel flipping above a header bar when the window is short — it will\nshrink and scroll instead of appearing on the wrong side of the thing it\nbelongs to."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Space to keep between the panel and the edge of its collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Render the panel into a different container instead of `<body>`."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep the popup mounted while the menu is closed."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup, and the element that carries the travel between\ntriggers. This is the only way to reach the four properties declared\nthere: `--pui-navigation-menu-z-index`, `--pui-navigation-menu-bridge`,\nand the `-move-duration` / `-move-ease` pair the popup inherits for its\nown resize."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "bottom",
+        "description": "Which side of the bar the panel opens on. Flips automatically to avoid\ncollisions unless `collisionAvoidance` says otherwise.\n\n`\"inline-start\"` / `\"inline-end\"` follow writing direction, but Base UI\ntakes that direction from its own `DirectionProvider` context and not from\nthe `dir` attribute — with no provider mounted it is `\"ltr\"`, so the two\nresolve to left and right whatever `dir` says. The library's own CSS reads\nthe attribute, so everything else here flips without it."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap in pixels between the bar and the panel. The stylesheet bridges this\ngap so the pointer can cross it without the panel closing — change\n`--pui-navigation-menu-bridge` to match if you change this."
+      }
+    ]
+  },
   "NumberFieldRoot": {
     "name": "NumberFieldRoot",
     "description": "Groups every part of the number field and owns its value. Renders a `<div>`\nlaid out as a column, so a `ScrubArea` wrapping the label sits above the\n`Group`.\n\nThe value is a `number | null`, never a string: `null` is the empty field,\nwhich is what makes \"cleared\" distinguishable from zero. `format` takes\n`Intl.NumberFormatOptions`, so currency, percent and unit displays are a prop\nrather than a wrapper.\n\n```tsx\n<NumberField.Root defaultValue={100} min={0} max={999}>\n  <NumberField.ScrubArea>\n    <Field.Label>Width</Field.Label>\n  </NumberField.ScrubArea>\n  <NumberField.Group>\n    <NumberField.Decrement />\n    <NumberField.Input />\n    <NumberField.Increment />\n  </NumberField.Group>\n</NumberField.Root>\n```",

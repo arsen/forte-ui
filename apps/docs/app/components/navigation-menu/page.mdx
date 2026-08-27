@@ -1,0 +1,350 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Navigation Menu",
+  description:
+    "A site navigation bar — a row of items, some of which open a panel of links in one shared popup that slides and resizes between them.",
+};
+
+# Navigation Menu
+
+A site navigation bar: a row of items, some of which open a panel of links.
+Reach for it when every row **navigates** — the product menu across the top of a
+marketing site, the section switcher in a docs header. If the rows run commands
+instead — duplicate, export, sign out — that is a [Menu](/components/menu), a
+different set of ARIA roles and a different set of keyboard expectations.
+
+<DemoBlock id="navigation-menu/basic" />
+
+The thing to notice is that there is **one** popup. Every item's `Content` is
+written up in the list, and Base UI moves the active one into a single shared
+surface — so the panel slides between triggers and resizes to whatever is now
+inside it, instead of one dropdown closing while its neighbour opens.
+
+## Import
+
+```tsx
+import { NavigationMenu } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+Base UI's anatomy, with the floating half collapsed into one part:
+
+```tsx
+<NavigationMenu.Root>
+  <NavigationMenu.List>
+    <NavigationMenu.Item>
+      <NavigationMenu.Trigger>
+        {/* an Icon is rendered for you */}
+      </NavigationMenu.Trigger>
+      <NavigationMenu.Content>
+        <NavigationMenu.Link>
+          <NavigationMenu.LinkTitle />
+          <NavigationMenu.LinkDescription />
+        </NavigationMenu.Link>
+      </NavigationMenu.Content>
+    </NavigationMenu.Item>
+  </NavigationMenu.List>
+
+  <NavigationMenu.Popup />
+</NavigationMenu.Root>
+```
+
+`<NavigationMenu.Popup>` renders `Portal` → (`Backdrop`) → `Positioner` →
+`Popup` → (`Arrow`) → `Viewport` as one part, the same way `Menu.Popup` does.
+Those elements are meaningless apart and each has a job the styles depend on:
+the positioner owns the travel between triggers and publishes
+`--available-width` and `--transform-origin`, the popup owns the surface and its
+resize, and the viewport clips the two panels sliding past each other. It takes
+no children — the panels come from the `Content` parts up in the list — and
+there is exactly one per `Root`.
+
+## Examples
+
+### Two variants, two parts
+
+`Trigger` and `Link` share one `variant` axis, because the two are
+interchangeable in both places they appear. A bar item either opens a panel
+(`Trigger`) or navigates straight out (`Link`); a panel row either opens a
+nested menu (`Trigger`) or navigates (`Link`).
+
+- **`plain`** is the bar row: control height, a label, an optional chevron. It
+  is a `Trigger`'s default.
+- **`card`** is the block inside a panel: a padded target holding a `LinkTitle`
+  and a `LinkDescription`. It is a `Link`'s default.
+
+Both draw from the same set of tokens per variant, which is what keeps a
+`plain` link and the triggers beside it exactly level — the classic symptom of
+styling the two parts separately is a bar where they differ by a pixel.
+
+### Columns
+
+`columns` on `Content` lays the panel out in one, two or three columns of
+`--pui-navigation-menu-column-width`.
+
+<DemoBlock id="navigation-menu/columns" />
+
+The grid drops to fewer columns on its own when the panel is narrower than one
+column, so a three-column panel becomes a single column on a phone without a
+media query. The panel's width is an absolute measure rather than a percentage
+because the popup around it is sized *from* it — a percentage would be circular
+— and it is capped again by `--pui-navigation-menu-content-inset` from the
+window edge, which is a hard bound that holds on the very first frame, before
+the positioner has published `--available-width`.
+
+A panel taller than the space between the bar and the edge of the window
+scrolls rather than being clipped: `Content` is capped at `--available-height`
+and scrolls inside the popup, which is capped at the same height. Both are
+published by the positioner. Native scrollbars stay visible while a panel is
+transitioning, so wrap a long panel in a
+[Scroll Area](/components/scroll-area) when that matters.
+
+### An arrow
+
+<DemoBlock id="navigation-menu/arrow" />
+
+Off by default, and worth turning on when the panel is much wider than the
+trigger that opened it: the wedge slides along with the panel on the same
+timing, and is then the clearest thing on screen naming which item is open.
+
+### The current page
+
+<DemoBlock id="navigation-menu/active" />
+
+`active` on a `Link` publishes `data-active` **and** `aria-current="page"`, so
+the cue is not colour alone. In a real app it comes from the router —
+`usePathname()` in Next.js, `useLocation()` in React Router.
+
+### Vertical
+
+<DemoBlock id="navigation-menu/vertical" />
+
+`orientation="vertical"` swaps which arrow keys move between triggers, and
+changes which axis the panel swap animates along. A vertical bar's panel belongs
+beside it rather than under it, so pass `side="inline-end"` to the popup.
+
+### Nested menus
+
+A whole `Root` can be nested inside a `Content`, with its own `Popup`.
+
+<DemoBlock id="navigation-menu/nested" />
+
+The nested root renders a `<div>` rather than a second `<nav>` — one `<nav>`
+inside another would announce two navigation landmarks for one region.
+`variant="card"` on the nested trigger is what makes it sit level with the links
+around it, and it takes an inline-axis chevron rather than the downward one,
+because that is the direction its panel actually arrives from. The chevron
+mirrors under RTL through `--pui-direction`.
+
+### Controlled
+
+<DemoBlock id="navigation-menu/controlled" />
+
+The open panel *is* the value: a nullish `value` means closed, so there is no
+separate `open` prop to keep in step with it. Give each `Item` a `value` when
+something outside the bar has to open a particular panel — otherwise Base UI
+generates one.
+
+### Client-side routing
+
+<DemoBlock id="navigation-menu/custom-links" />
+
+`render` hands the `<a>` to the router's own link component. Pass `href` to
+both: Base UI reads it to decide the element is a link, and the router reads it
+to route. `closeOnClick` is off by default, because a link that opens a new tab
+leaves this page and its menu standing — turn it on for a same-tab navigation,
+and for a client-side route change that would otherwise leave the panel hanging
+over the new page.
+
+### Placement
+
+<DemoBlock id="navigation-menu/placement" />
+
+`side` and `align` place the panel against the active trigger. Both are hints:
+the panel flips to the opposite side or shifts along the alignment axis rather
+than overflow the viewport. `align` defaults to `"center"` here rather than
+`Menu`'s `"start"` — a panel serving the whole bar should look like it hangs
+from whichever trigger is open, not from one end of the row.
+
+Pass `collisionAvoidance={{ side: "none" }}` to stop a panel flipping above a
+header bar in a short window; it will shrink and scroll instead of appearing on
+the wrong side of the thing it belongs to.
+
+<Callout kind="warn">
+  `inline-start` and `inline-end` are the logical sides, and they mirror under
+  RTL only if the app mounts Base UI's
+  [`DirectionProvider`](https://base-ui.com/react/utils/direction-provider).
+  Base UI resolves them from that React context, which defaults to `"ltr"` — it
+  does **not** read the `dir` attribute — so in an app that only sets `dir` they
+  land exactly where `left` and `right` do. Everything the library's own CSS
+  drives — text, padding, the card chevron, the bridge — flips without it.
+</Callout>
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], description: "Moves focus into the bar, and then out of it. The bar is a single tab stop — the other items are reached with the arrow keys." },
+    { keys: ["Arrow Right", "Arrow Left"], description: "Horizontal orientation: moves between items in the bar. Mirrored under RTL." },
+    { keys: ["Arrow Down", "Arrow Up"], description: "Vertical orientation: moves between items in the bar. With a horizontal bar, Arrow Down on an open trigger moves into its panel." },
+    { keys: ["Enter", "Space"], description: "Opens the focused trigger's panel, or follows the focused link." },
+    { keys: ["Home", "End"], description: "Moves to the first or last item in the bar." },
+    { keys: ["Esc"], description: "Closes the panel and returns focus to the trigger that opened it." },
+  ]}
+/>
+
+Panels open on **hover as well as press**, which is what separates a navigation
+menu from a `Menu`: the bar is a place to browse, so once one panel is up the
+others follow the pointer along the row. Only the first open waits for `delay`.
+
+That gap between the bar and the panel is real space, and a pointer crossing it
+is over neither. The positioner draws an invisible bridge across it —
+`--pui-navigation-menu-bridge`, paired with the popup's `sideOffset` — so
+reaching for a link does not close the panel on the way. Change one and change
+the other.
+
+<Callout kind="a11y">
+  Give every `NavigationMenu.Root` an `aria-label` when the page has more than
+  one navigation. It renders a `<nav>`, which is a landmark, and a landmark list
+  containing two unnamed navigations gives no way to tell them apart. All the
+  demos on this page do this.
+</Callout>
+
+The popup's viewport clips — that is what makes a swap read as one panel
+replacing another rather than two crossing in the open — so every link carries
+`data-focus-inset` and draws its focus ring inside its own box, where `overflow`
+cannot shave it off (SC 2.4.11). Rows are floored at `--pui-target-min` so a
+dense preset cannot take them under 24×24 (SC 2.5.8).
+
+Under forced colors the open trigger and the current page's link paint
+`Highlight` / `HighlightText` explicitly rather than letting their background be
+replaced with `Canvas`, which would leave both states indistinguishable from
+every other row. The popup carries `.pui-hc-surface`, whose transparent border
+becomes a system-coloured boundary once the shadow is stripped, and the arrow is
+two flat SVG paths rather than the traditional CSS-border triangle — a border
+triangle degrades into a filled rectangle when every border colour is forced to
+`CanvasText`.
+
+### Motion
+
+Three movements, all pure CSS, none of them running JavaScript per frame.
+
+**The panel travels.** Base UI writes the positioner's `top` / `left` / `right`
+/ `bottom` as inline styles and rewrites them whenever another trigger takes the
+popup over; the stylesheet transitions those four properties on
+`--pui-duration-move`. `[data-instant]` drops the transition for the changes
+that are not a considered move — a dismissal, or a first open with no previous
+position to travel from.
+
+**The popup resizes.** Base UI measures each panel and publishes `--popup-width`
+and `--popup-height` as custom properties on the popup, which consumes them as
+`width` and `height` and transitions both on the positioner's timing, so the
+travel and the resize read as one gesture. Both properties are *absent* on the
+first open, which makes the declaration invalid at computed-value time and
+leaves `width` at `auto` — that is how the popup gets its first measurement, and
+why neither `var()` has a fallback.
+
+**The panels cross.** `Content` carries `data-activation-direction` naming where
+the new trigger sits relative to the old one, so the incoming panel starts on
+that side and the outgoing one leaves towards the opposite. The two are
+overlapped rather than stacked — Base UI takes the outgoing one out of flow with
+an inline `position: absolute`, and the viewport is its containing block — so
+the popup is never as tall as both at once.
+
+That direction is one of only two places in the library where an inline-axis
+distance is **not** multiplied by `--pui-direction`. The usual rule assumes the
+intent is logical ("enter from the start edge"); this one is already physical,
+because Base UI derives the word from `getBoundingClientRect()`. Flipping it
+under RTL would throw the panel away from the trigger the user just reached for.
+
+Enter and exit are transitions on `[data-starting-style]` /
+`[data-ending-style]`, never keyframes, so a panel dismissed while it is still
+opening reverses instead of snapping.
+
+There is no `prefers-reduced-motion` block in the stylesheet at all. The tokens
+collapse their own geometry: `--pui-travel-sm` and `--pui-travel-lg` become
+`0px`, `--pui-scale-enter` becomes exactly `1`, and `--pui-duration-move`
+becomes `1ms` — so the panel appears in place, swaps without sliding, and jumps
+between triggers, with the opacity fade that reduced-motion users actually
+benefit from still intact.
+
+## Theming
+
+The bar's knobs are declared on `Root`; everything the panel needs — surface,
+layout, card rows, the arrow, the motion — is declared on `Popup`. That split is
+the portal: the popup is rendered into `<body>`, so nothing set on `Root` can
+reach it, and nothing set on the popup can reach the bar.
+
+Within each half the knobs are declared *once*, on the element every consumer of
+them is a descendant of, and the parts that read them deliberately do not
+redeclare their own defaults — which is what lets one `style` on `Popup` retune
+a whole panel, cards included.
+
+<DemoBlock id="navigation-menu/theming" />
+
+<ThemingTable component="NavigationMenu" />
+
+To move every navigation menu at once, re-point the global tokens in the Default
+column instead — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`,
+`--pui-control-*`, `--pui-font-*` and the motion tokens are only read here,
+never re-declared, so those do inherit from `:root` or a theme scope.
+
+The parts also expose their state as data attributes — `data-variant`,
+`data-orientation`, `data-columns`, `data-popup-open`, `data-active`,
+`data-side`, `data-align`, `data-activation-direction` — so a Tailwind arbitrary
+variant such as `data-[popup-open]:...` can target them without a wrapper.
+
+## API reference
+
+Each part forwards every prop it does not consume to its Base UI counterpart, so
+the tables below list what pretty-ui adds or changes the default of. Every part
+takes `render` for changing the underlying element.
+
+### NavigationMenu.Root
+
+<PropTable component="NavigationMenuRoot" />
+
+### NavigationMenu.List
+
+<PropTable component="NavigationMenuList" />
+
+### NavigationMenu.Item
+
+<PropTable component="NavigationMenuItem" />
+
+### NavigationMenu.Trigger
+
+<PropTable component="NavigationMenuTrigger" />
+
+### NavigationMenu.Icon
+
+<PropTable component="NavigationMenuIcon" />
+
+### NavigationMenu.Content
+
+<PropTable component="NavigationMenuContent" />
+
+### NavigationMenu.Link
+
+<PropTable component="NavigationMenuLink" />
+
+### NavigationMenu.LinkTitle
+
+<PropTable component="NavigationMenuLinkTitle" />
+
+### NavigationMenu.LinkDescription
+
+<PropTable component="NavigationMenuLinkDescription" />
+
+### NavigationMenu.Popup
+
+Renders the whole floating half of the anatomy — portal, optional backdrop,
+positioner, popup, optional arrow and viewport — as one part, and takes no
+children.
+
+<PropTable component="NavigationMenuPopup" />
