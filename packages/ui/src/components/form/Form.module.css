@@ -7,6 +7,7 @@
  */
 @layer pretty-ui.components {
   .root {
+    /** Space between the form's children */
     --pui-form-gap: var(--pui-space-5);
 
     box-sizing: border-box;

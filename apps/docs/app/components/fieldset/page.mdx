@@ -1,6 +1,7 @@
 import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Fieldset",
@@ -68,12 +69,7 @@ it wrap. `min-inline-size: 0` is the fix, and it is applied here.
 A fieldset is a grouping, not a painted box, so the border and padding are
 removed. Set them through `className` if you want the box back.
 
-| Property | Declared on | Controls | Default |
-| --- | --- | --- | --- |
-| `--pui-fieldset-gap` | `Fieldset.Root` | Space between the legend and each field | `var(--pui-space-4)` |
-| `--pui-fieldset-legend-fg` | `Fieldset.Legend` | Legend colour | `var(--pui-color-foreground)` |
-| `--pui-fieldset-legend-font-size` | `Fieldset.Legend` | Legend font size | `var(--pui-font-size-3)` |
-| `--pui-fieldset-legend-font-weight` | `Fieldset.Legend` | Legend font weight | `var(--pui-font-weight-semibold)` |
+<ThemingTable component="Fieldset" declaredOn />
 
 ## API reference
 

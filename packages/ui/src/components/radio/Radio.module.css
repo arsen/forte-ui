@@ -25,6 +25,8 @@
      * inline `style`. To move every radio at once, re-point the global tokens
      * on the right-hand side below, which this file only reads and never
      * re-declares. */
+    /** Width and height of the painted circle. `size="sm"` sets `0.875rem`,
+     * `size="lg"` sets `1.25rem`. */
     --pui-radio-size: 1rem;
     /* NOT `var(--pui-radius-full)`. The test for opting out of the radius
      * presets is whether roundness is MEANING rather than style; Button's
@@ -35,32 +37,49 @@
      * render a radio as a square indistinguishable from the checkbox next to
      * it. A consumer who wants that anyway sets
      * `--pui-radio-radius: var(--pui-radius-full)` and gets the preset back. */
+    /** Corner radius of the circle. */
     --pui-radio-radius: 50%;
+    /** Border width. */
     --pui-radio-border-width: 1px;
-    /* Unitless fraction of the circle rather than a length, so the dot keeps
-     * its proportion when `--pui-radio-size` is overridden to anything off the
-     * three-step scale. Retuned per size below for optical weight, the same way
-     * Checkbox retunes its stroke width. */
+    /* Retuned per size below for optical weight, the same way Checkbox
+     * retunes its stroke width. */
+    /** Size of the dot as a fraction of the circle. Unitless on purpose, so the
+     * dot keeps its proportion at any `--pui-radio-size`. `size` retunes it:
+     * `0.4` for `sm`, `0.36` for `lg`. */
     --pui-radio-dot-ratio: 0.375;
     /* Derived on the same element as the two inputs it reads — an unregistered
      * custom property is substituted where it is DECLARED, so deriving this on
      * an ancestor would freeze it at the ancestor's values. */
+    /** The dot's own width and height. Derived from the two above; set it
+     * directly to break the proportion. */
     --pui-radio-dot-size: calc(
       var(--pui-radio-size) * var(--pui-radio-dot-ratio)
     );
+    /** Colour transitions on the circle, the dot's fade, and the un-select. */
     --pui-radio-duration: var(--pui-duration-fast);
     /* The dot's pop. A spring, paired with its matching duration token (a
      * shorter one would truncate the bounce and look broken). */
+    /** How long the dot takes to pop in. */
     --pui-radio-pop-duration: var(--pui-duration-spring-snappy);
+    /** The easing that pop rides. Change it and change the duration with it — a
+     * spring truncated by a shorter duration looks broken. */
     --pui-radio-pop-ease: var(--pui-ease-spring-snappy);
 
     /* Colour slots, filled in per tone below. */
+    /** Fill while unselected. */
     --pui-radio-bg: var(--pui-color-background);
+    /** Fill on hover while unselected. */
     --pui-radio-bg-hover: var(--pui-color-panel-hover);
+    /** Border colour while unselected. */
     --pui-radio-border-color: var(--pui-color-border);
+    /** Border colour on hover while unselected. */
     --pui-radio-border-color-hover: var(--pui-color-border-strong);
+    /** Fill while selected. */
     --pui-radio-fill: var(--pui-color-primary);
+    /** Fill on hover while selected. */
     --pui-radio-fill-hover: var(--pui-color-primary-hover);
+    /** Colour of the dot — it becomes the root's `color`, and the dot paints
+     * with `currentColor`. */
     --pui-radio-dot-color: var(--pui-color-on-primary);
 
     box-sizing: border-box;
@@ -223,6 +242,8 @@
 
   /* Group ----------------------------------------------------------------- */
   .group {
+    /** Gap between options in the group. `var(--pui-space-4)` when
+     * `orientation="horizontal"`. */
     --pui-radio-group-gap: var(--pui-space-2);
 
     display: flex;

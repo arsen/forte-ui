@@ -1,0 +1,3616 @@
+{
+  "Accordion": {
+    "name": "Accordion",
+    "tokens": [
+      {
+        "name": "--pui-accordion-gap",
+        "value": "0px",
+        "description": "Space between items",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-accordion-item-radius",
+        "value": "0px",
+        "description": "Corner radius of an item. The trigger takes the same radius, so its focus ring follows the card rather than being shaved by the card's own clip — squaring off its bottom two corners while the panel is open",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-radius-surface)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-accordion-item-bg",
+        "value": "transparent",
+        "description": "Background of an item",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-accordion-item-border-width",
+        "value": "0px",
+        "description": "Border around an item (the `contained` card)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "1px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-accordion-item-border-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of that border",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-divider-width",
+        "value": "1px",
+        "description": "Thickness of the hairline between rows (`divided` only)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-divider-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of that hairline",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-px",
+        "value": "var(--pui-space-3)",
+        "description": "Inline padding of a row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-py",
+        "value": "var(--pui-space-3)",
+        "description": "Block padding of a row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-gap",
+        "value": "var(--pui-space-4)",
+        "description": "Minimum space between the label and the icon, so a label long enough to fill the row still cannot run into it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-bg",
+        "value": "transparent",
+        "description": "Row background at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-bg-hover",
+        "value": "var(--pui-color-panel)",
+        "description": "Row background on hover — one step up from whatever the row sits on",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-accordion-trigger-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Heading colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Heading size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-trigger-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Heading weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-icon-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Chevron colour when closed",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-icon-color-open",
+        "value": "var(--pui-color-foreground)",
+        "description": "Chevron colour when open",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-icon-rotate",
+        "value": "180deg",
+        "description": "How far the chevron turns when the panel opens",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-panel-px",
+        "value": "var(--pui-accordion-trigger-px)",
+        "description": "Inline padding of the panel content",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-panel-pb",
+        "value": "var(--pui-space-4)",
+        "description": "Block-end padding of the panel content. There is no block-start knob — the trigger's own bottom padding already separates the two",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-panel-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Body text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-panel-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Body text size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the height change, and of the content's slide",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-accordion-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve for both. Deliberately not a spring: overshooting `height` flashes a band of empty background under the last line before settling",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Button": {
+    "name": "Button",
+    "tokens": [
+      {
+        "name": "--pui-button-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Space between icon and label",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-border-width",
+        "value": "1px",
+        "description": "Border thickness (only `outline` gives it a colour)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Button height; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Horizontal padding; reassigned by `size`, and `0` when `iconOnly`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          },
+          {
+            "selector": ".root[data-icon-only]",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label size; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-spinner-size",
+        "value": "1em",
+        "description": "Diameter of the loading spinner",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-hover-lift",
+        "value": "var(--pui-control-hover-lift, 0px)",
+        "description": "How far the button rises on hover. Multiplied by `--pui-motion-ok`, so a literal value still collapses under reduced motion.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-hover-scale",
+        "value": "var(--pui-control-hover-scale, 1)",
+        "description": "How far the button grows on hover; also multiplied by `--pui-motion-ok`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-press-scale",
+        "value": "var(--pui-scale-press)",
+        "description": "How far the button squashes while held.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-bg",
+        "value": "transparent",
+        "description": "Resting background; filled in by `variant`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-button-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-button-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-bg-hover",
+        "value": "transparent",
+        "description": "Hover background",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-button-tone-solid-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-button-tone-soft-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-button-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "var(--pui-button-tone-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"][data-variant=\"ghost\"],\n  .root[data-tone=\"neutral\"][data-variant=\"outline\"]",
+            "value": "var(--pui-color-panel-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-bg-active",
+        "value": "transparent",
+        "description": "Pressed background",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-button-tone-solid-active)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-button-tone-soft-active)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-button-tone-soft-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "var(--pui-button-tone-soft-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"][data-variant=\"ghost\"],\n  .root[data-tone=\"neutral\"][data-variant=\"outline\"]",
+            "value": "var(--pui-color-panel-active)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label and icon colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-button-tone-on-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-button-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-button-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "var(--pui-button-tone-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-border-color",
+        "value": "transparent",
+        "description": "Border colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-button-tone-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-solid",
+        "value": "var(--pui-color-primary)",
+        "description": "Tone's solid fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-12)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-solid-hover",
+        "value": "var(--pui-color-primary-hover)",
+        "description": "Tone's solid fill on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-11)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-solid-active",
+        "value": "var(--pui-color-primary-active)",
+        "description": "Tone's solid fill when pressed",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-active)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-10)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-on-solid",
+        "value": "var(--pui-color-on-primary)",
+        "description": "Text colour on the solid fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-on-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-soft",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Tone's tinted fill, and the hover wash for `outline` and `ghost`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-danger-3)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-soft-hover",
+        "value": "var(--pui-color-primary-soft-hover)",
+        "description": "Tinted fill on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-danger-3)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-soft-active",
+        "value": "var(--pui-color-primary-soft-active)",
+        "description": "Tinted fill when pressed",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft-active)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-danger-7)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-5)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-text",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Label colour for `soft`, `outline` and `ghost`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-button-tone-border",
+        "value": "var(--pui-color-primary-border)",
+        "description": "Border colour for `outline`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-border)"
+          }
+        ]
+      }
+    ]
+  },
+  "Checkbox": {
+    "name": "Checkbox",
+    "tokens": [
+      {
+        "name": "--pui-checkbox-size",
+        "value": "1rem",
+        "description": "Width and height of the painted box. `size=\"sm\"` sets `0.875rem`, `size=\"lg\"` sets `1.25rem`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "0.875rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "1rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "1.25rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of the box.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-radius-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-radius-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-radius-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-border-width",
+        "value": "1px",
+        "description": "Border width.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-checkbox-mark-width",
+        "value": "2",
+        "description": "Stroke width of the tick and dash. Unitless on purpose — the value is in SVG user units inside a 16-unit viewBox, so the stroke scales with the box instead of thinning out at larger sizes. `size` retunes it: `2.25` for `sm`, `1.75` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "2.25"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "2"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "1.75"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Colour transitions on the box and the fade of the indicator.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-checkbox-draw-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long the mark takes to draw in and out.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-checkbox-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Fill while unchecked.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-checkbox-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill on hover while unchecked.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-checkbox-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour while unchecked.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover while unchecked.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-fill",
+        "value": "var(--pui-color-primary)",
+        "description": "Fill while checked or indeterminate.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-12)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-fill-hover",
+        "value": "var(--pui-color-primary-hover)",
+        "description": "Fill on hover while checked or indeterminate.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-11)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-mark-color",
+        "value": "var(--pui-color-on-primary)",
+        "description": "Colour of the tick and dash — it becomes the root's `color`, and the marks stroke with `currentColor`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-on-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-1)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-on-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-checkbox-group-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between items in the group. `var(--pui-space-4)` when `orientation=\"horizontal\"`.",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-orientation=\"horizontal\"]",
+            "value": "var(--pui-space-4)"
+          }
+        ]
+      }
+    ]
+  },
+  "Collapsible": {
+    "name": "Collapsible",
+    "tokens": [
+      {
+        "name": "--pui-collapsible-radius",
+        "value": "0px",
+        "description": "Corner radius of the card. The trigger takes the same radius, so its focus ring follows the card rather than being shaved by the card's own clip — squaring off its bottom two corners while the panel is open",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-radius-surface)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-bg",
+        "value": "transparent",
+        "description": "Background behind the whole component",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-border-width",
+        "value": "0px",
+        "description": "Border around the card",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "1px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-border-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of that border",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-trigger-width",
+        "value": "fit-content",
+        "description": "How wide the button is. `fit-content` is what makes the plain trigger exactly as wide as its own label",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "100%"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-trigger-px",
+        "value": "0px",
+        "description": "Inline padding of the trigger",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-trigger-py",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding of the trigger",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-trigger-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Space between the label and the marker — a minimum, once the trigger is full width",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-trigger-bg",
+        "value": "transparent",
+        "description": "Trigger background at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-trigger-bg-hover",
+        "value": "var(--pui-collapsible-trigger-bg)",
+        "description": "Trigger background on hover. Unset in `plain`, where the colour change below is the cue instead",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-panel-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-trigger-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-trigger-color-hover",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Label colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-collapsible-trigger-color)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-trigger-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-icon-color",
+        "value": "currentColor",
+        "description": "Marker colour when closed",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-foreground-subtle)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-icon-color-open",
+        "value": "currentColor",
+        "description": "Marker colour when open",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-icon-rotate",
+        "value": "180deg",
+        "description": "How far the marker turns when the panel opens",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-panel-px",
+        "value": "0px",
+        "description": "Inline padding of the panel content",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-panel-pt",
+        "value": "var(--pui-space-2)",
+        "description": "Block-start padding of the panel content",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-panel-pb",
+        "value": "0px",
+        "description": "Block-end padding of the panel content",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"contained\"]",
+            "value": "var(--pui-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-collapsible-panel-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Body text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-panel-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Body text size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the height change, and of the content's slide",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-collapsible-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve for both. Deliberately not a spring: overshooting `height` flashes a band of empty background under the last line before settling",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Dialog": {
+    "name": "Dialog",
+    "tokens": [
+      {
+        "name": "--pui-dialog-backdrop-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "How long the scrim takes to clear; set through `backdropClassName`",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-backdrop-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve the scrim clears on; set through `backdropClassName`",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-viewport-padding",
+        "value": "var(--pui-space-4)",
+        "description": "Gap between the popup and the edge of the screen. `size=\"fullscreen\"` drops it to `0px`.",
+        "part": "viewport",
+        "overrides": [
+          {
+            "selector": ".viewport[data-size=\"fullscreen\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Popup background",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Popup text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius. `size=\"fullscreen\"` squares it off to `0px`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-padding",
+        "value": "var(--pui-surface-p)",
+        "description": "Padding inside the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-gap",
+        "value": "var(--pui-space-4)",
+        "description": "Vertical gap between the popup's children",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Popup shadow",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Base font size inside the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-max-inline-size",
+        "value": "32rem",
+        "description": "Maximum popup width; what the `size` prop sets — `24rem` for `sm`, `48rem` for `lg`, `100%` for `fullscreen`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "24rem"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "32rem"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "48rem"
+          },
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "100%"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-nested-offset",
+        "value": "var(--pui-travel-lg)",
+        "description": "How far each nested dialog pushes its parent down",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-nested-scale-step",
+        "value": "0.04",
+        "description": "How much each nested dialog shrinks its parent",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-nested-duration",
+        "value": "var(--pui-duration-spring-precise)",
+        "description": "How long the parent takes to retreat under a child",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-enter-travel",
+        "value": "var(--pui-travel-md)",
+        "description": "How far the popup rises as it opens. `var(--pui-travel-page)` when `size=\"fullscreen\"`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-origin]",
+            "value": "0px"
+          },
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "var(--pui-travel-page)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-enter-scale",
+        "value": "var(--pui-scale-enter)",
+        "description": "Scale the popup grows from. `1` when `size=\"fullscreen\"`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-origin]",
+            "value": "calc(1 - 0.15 * var(--pui-motion-ok))"
+          },
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-enter-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "Curve of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-exit-travel",
+        "value": "var(--pui-travel-md)",
+        "description": "How far the popup sinks as it closes. `var(--pui-travel-page)` when `size=\"fullscreen\"`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-origin]",
+            "value": "0px"
+          },
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "var(--pui-travel-page)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-exit-scale",
+        "value": "calc(1 - 0.05 * var(--pui-motion-ok))",
+        "description": "Scale the popup shrinks to. `1` when `size=\"fullscreen\"`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-origin]",
+            "value": "calc(1 - 0.1 * var(--pui-motion-ok))"
+          },
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "--pui-dialog-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-exit-ease",
+        "value": "linear",
+        "description": "Curve the closing *geometry* runs on",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-dialog-exit-fade-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve the closing *fade* runs on",
+        "part": "popup",
+        "overrides": []
+      }
+    ]
+  },
+  "Drawer": {
+    "name": "Drawer",
+    "tokens": [
+      {
+        "name": "--pui-drawer-backdrop-z-index",
+        "value": "39",
+        "description": "Stacking band for the scrim; set through `backdropClassName`",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-backdrop-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long the scrim takes to clear; set through `backdropClassName`. Dropped to `var(--pui-duration-fast)` after a swipe.",
+        "part": "backdrop",
+        "overrides": [
+          {
+            "selector": ".backdrop[data-swipe-dismiss]",
+            "value": "var(--pui-duration-fast)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-drawer-backdrop-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve the scrim clears on; set through `backdropClassName`",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-backdrop-floor",
+        "value": "0",
+        "description": "How faint the scrim may get while the drawer is still open. `0.4` on a modal drawer with snap points.",
+        "part": "backdrop",
+        "overrides": [
+          {
+            "selector": ".backdrop[data-scrim-floor]",
+            "value": "0.4"
+          }
+        ]
+      },
+      {
+        "name": "--pui-drawer-z-index",
+        "value": "40",
+        "description": "Stacking band for the drawer; set through `viewportClassName`",
+        "part": "viewport",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-inset",
+        "value": "0px",
+        "description": "Gap between the drawer and the edge of the screen; set through `viewportClassName`. `var(--pui-space-3)` when `variant=\"floating\"`.",
+        "part": "viewport",
+        "overrides": [
+          {
+            "selector": ".viewport[data-variant=\"floating\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-drawer-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Popup background",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Popup text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius — two corners for `edge`, four for `floating`",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-padding",
+        "value": "var(--pui-surface-p)",
+        "description": "Padding inside the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-gap",
+        "value": "var(--pui-space-4)",
+        "description": "Gap between the popup's children, and between the content's",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Popup shadow",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Base font size inside the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-size",
+        "value": "24rem",
+        "description": "Extent along the drawer's own axis; what the `size` prop sets — `18rem` for `sm`, `32rem` for `lg`, `100%` for `full`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "18rem"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "24rem"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "32rem"
+          },
+          {
+            "selector": ".popup[data-size=\"full\"]",
+            "value": "100%"
+          }
+        ]
+      },
+      {
+        "name": "--pui-drawer-bleed",
+        "value": "var(--pui-space-8)",
+        "description": "How far the surface extends past its outer edge to cover an overdrag. `0px` when `variant=\"floating\"`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-variant=\"floating\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-drawer-duration",
+        "value": "var(--pui-duration-spring-precise)",
+        "description": "Length of the opening slide",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-ease",
+        "value": "var(--pui-ease-spring-precise)",
+        "description": "Curve of the opening slide",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-exit-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the closing slide, before the velocity scalar",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the closing slide",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-nested-scale-step",
+        "value": "0.04",
+        "description": "How much each nested drawer shrinks its parent",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-nested-scrim",
+        "value": "var(--pui-scrim-color)",
+        "description": "Colour the parent dims itself with under a nested drawer",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-nested-duration",
+        "value": "var(--pui-duration-spring-precise)",
+        "description": "How long the parent takes to recede under a child",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-handle-length",
+        "value": "2.25rem",
+        "description": "Long edge of the grab pill",
+        "part": "handle",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-handle-thickness",
+        "value": "0.25rem",
+        "description": "Short edge of the grab pill",
+        "part": "handle",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-handle-color",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Grab pill colour",
+        "part": "handle",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-handle-inset",
+        "value": "var(--pui-space-2)",
+        "description": "How far a `left`/`right` grip sits from the edge it hugs",
+        "part": "handle",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-content-max-inline-size",
+        "value": "100%",
+        "description": "Maximum width of `Drawer.Content`, which then centres itself. `32rem` on a `top`/`bottom` drawer.",
+        "part": "content",
+        "overrides": [
+          {
+            "selector": ".popup[data-side=\"top\"] .content,\n  .popup[data-side=\"bottom\"] .content",
+            "value": "32rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-drawer-swipe-area-size",
+        "value": "var(--pui-space-6)",
+        "description": "Width of the swipe-to-open strip",
+        "part": "swipeArea",
+        "overrides": []
+      },
+      {
+        "name": "--pui-drawer-swipe-area-z-index",
+        "value": "38",
+        "description": "Stacking band for that strip",
+        "part": "swipeArea",
+        "overrides": []
+      }
+    ]
+  },
+  "Field": {
+    "name": "Field",
+    "tokens": [
+      {
+        "name": "--pui-field-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Vertical rhythm between label, control, description and error",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-indent",
+        "value": "calc(var(--pui-space-4) + var(--pui-control-gap))",
+        "description": "Indent for a description or error under a *wrapping* label, so it lines up with the label text rather than the checkbox",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-label-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label colour",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-label-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label font size",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-label-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label font weight",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-label-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between a wrapped control and its label text",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-description-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Description colour",
+        "part": "description",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-description-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Description font size",
+        "part": "description",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-error-fg",
+        "value": "var(--pui-color-danger-text)",
+        "description": "Error colour",
+        "part": "error",
+        "overrides": []
+      },
+      {
+        "name": "--pui-field-error-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Error font size",
+        "part": "error",
+        "overrides": []
+      }
+    ]
+  },
+  "Fieldset": {
+    "name": "Fieldset",
+    "tokens": [
+      {
+        "name": "--pui-fieldset-gap",
+        "value": "var(--pui-space-4)",
+        "description": "Space between the legend and each field",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-fieldset-legend-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Legend colour",
+        "part": "legend",
+        "overrides": []
+      },
+      {
+        "name": "--pui-fieldset-legend-font-size",
+        "value": "var(--pui-font-size-3)",
+        "description": "Legend font size",
+        "part": "legend",
+        "overrides": []
+      },
+      {
+        "name": "--pui-fieldset-legend-font-weight",
+        "value": "var(--pui-font-weight-semibold)",
+        "description": "Legend font weight",
+        "part": "legend",
+        "overrides": []
+      }
+    ]
+  },
+  "Form": {
+    "name": "Form",
+    "tokens": [
+      {
+        "name": "--pui-form-gap",
+        "value": "var(--pui-space-5)",
+        "description": "Space between the form's children",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Input": {
+    "name": "Input",
+    "tokens": [
+      {
+        "name": "--pui-input-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Control height (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-border-width",
+        "value": "1px",
+        "description": "Border width",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Background (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-placeholder-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Placeholder colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour (reset per `variant`, and by `data-invalid`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Radio": {
+    "name": "Radio",
+    "tokens": [
+      {
+        "name": "--pui-radio-size",
+        "value": "1rem",
+        "description": "Width and height of the painted circle. `size=\"sm\"` sets `0.875rem`, `size=\"lg\"` sets `1.25rem`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "0.875rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "1rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "1.25rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-radius",
+        "value": "50%",
+        "description": "Corner radius of the circle.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-border-width",
+        "value": "1px",
+        "description": "Border width.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-dot-ratio",
+        "value": "0.375",
+        "description": "Size of the dot as a fraction of the circle. Unitless on purpose, so the dot keeps its proportion at any `--pui-radio-size`. `size` retunes it: `0.4` for `sm`, `0.36` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "0.4"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "0.375"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "0.36"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-dot-size",
+        "value": "calc( var(--pui-radio-size) * var(--pui-radio-dot-ratio) )",
+        "description": "The dot's own width and height. Derived from the two above; set it directly to break the proportion.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Colour transitions on the circle, the dot's fade, and the un-select.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-pop-duration",
+        "value": "var(--pui-duration-spring-snappy)",
+        "description": "How long the dot takes to pop in.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-pop-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "The easing that pop rides. Change it and change the duration with it — a spring truncated by a shorter duration looks broken.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Fill while unselected.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill on hover while unselected.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-radio-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour while unselected.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover while unselected.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-fill",
+        "value": "var(--pui-color-primary)",
+        "description": "Fill while selected.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-12)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-fill-hover",
+        "value": "var(--pui-color-primary-hover)",
+        "description": "Fill on hover while selected.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-11)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-dot-color",
+        "value": "var(--pui-color-on-primary)",
+        "description": "Colour of the dot — it becomes the root's `color`, and the dot paints with `currentColor`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-on-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-1)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-on-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-radio-group-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between options in the group. `var(--pui-space-4)` when `orientation=\"horizontal\"`.",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-orientation=\"horizontal\"]",
+            "value": "var(--pui-space-4)"
+          }
+        ]
+      }
+    ]
+  },
+  "ScrollArea": {
+    "name": "ScrollArea",
+    "tokens": [
+      {
+        "name": "--pui-scroll-area-fade-size",
+        "value": "var(--pui-space-5)",
+        "description": "How far the fade reaches in from an edge, at most",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-scrollbar-size",
+        "value": "var(--pui-space-3)",
+        "description": "Track thickness on both axes",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-track-padding",
+        "value": "2px",
+        "description": "Inset between the track's edge and its thumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-track-bg",
+        "value": "transparent",
+        "description": "Track fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-track-bg-hover",
+        "value": "var(--pui-color-panel)",
+        "description": "Track fill while the pointer is over it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-thumb-bg",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Thumb fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-thumb-bg-hover",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Thumb fill on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-thumb-bg-active",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Thumb fill while being dragged",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-thumb-radius",
+        "value": "var(--pui-radius-pill)",
+        "description": "Corner radius of the track and thumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-scroll-area-corner-bg",
+        "value": "transparent",
+        "description": "Fill of the square between the two scrollbars",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Select": {
+    "name": "Select",
+    "tokens": [
+      {
+        "name": "--pui-select-label-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label text colour",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-label-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label font size",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-label-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label font weight",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-label-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between label and trigger",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Trigger height (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-select-trigger-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Trigger inline padding (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-select-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Trigger font size (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-select-trigger-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between value and icon",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Trigger corner radius",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-border-width",
+        "value": "1px",
+        "description": "Trigger border width",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Trigger background (reset per `variant`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-select-trigger-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Trigger background on hover",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-bg-active",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Trigger background while pressed or open",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Trigger text colour",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-trigger-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Trigger border colour (reset per `variant`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-select-backdrop-z-index",
+        "value": "49",
+        "description": "Stacking of the optional `backdrop` layer",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-z-index",
+        "value": "50",
+        "description": "Stacking of the positioner",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-positioner-min-height",
+        "value": "calc(var(--pui-control-h-md) * 2.5)",
+        "description": "How tall the popup must be able to get before `alignItemWithTrigger` falls back to side placement — smaller falls back less often",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-popup-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Popup surface colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-popup-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Popup text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-popup-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Popup corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-popup-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Popup shadow",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-popup-overhang",
+        "value": "var(--pui-space-5)",
+        "description": "Extra width the popup claims past the trigger in `alignItemWithTrigger` mode",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-px",
+        "value": "var(--pui-space-3)",
+        "description": "Inline padding shared by items and group labels",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between the indicator column and the item text",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-indicator-size",
+        "value": "var(--pui-space-4)",
+        "description": "Width of the check-mark column",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-list-padding-y",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding inside the scrolling list",
+        "part": "list",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-scroll-arrow-size",
+        "value": "var(--pui-space-5)",
+        "description": "Height of a scroll arrow",
+        "part": "scrollArrow",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Item text colour",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-bg-highlighted",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the highlighted item",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-fg-highlighted",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the highlighted item",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-fg-selected",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the selected item",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-item-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Item font size",
+        "part": "item",
+        "overrides": []
+      }
+    ]
+  },
+  "Separator": {
+    "name": "Separator",
+    "tokens": [
+      {
+        "name": "--pui-separator-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Line colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-separator-thickness",
+        "value": "1px",
+        "description": "Line thickness",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-separator-style",
+        "value": "solid",
+        "description": "Line style; `variant` sets this",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"dashed\"]",
+            "value": "dashed"
+          },
+          {
+            "selector": ".root[data-variant=\"dotted\"]",
+            "value": "dotted"
+          }
+        ]
+      },
+      {
+        "name": "--pui-separator-spacing",
+        "value": "0px",
+        "description": "Margin along the axis being separated",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-separator-inset",
+        "value": "0px",
+        "description": "Margin across it — how far in from the edges",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-separator-min-length",
+        "value": "1lh",
+        "description": "Length floor for a vertical rule with nothing to stretch against",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Slider": {
+    "name": "Slider",
+    "tokens": [
+      {
+        "name": "--pui-slider-length",
+        "value": "16rem",
+        "description": "Control length: `inline-size` when horizontal, `block-size` when vertical. Capped at `100%` of the container; `10rem` when vertical.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-orientation=\"vertical\"]",
+            "value": "10rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-track-thickness",
+        "value": "4px",
+        "description": "Rail thickness, and one of the two inputs the control padding derives from. `size` retunes it: `3px` for `sm`, `6px` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "3px"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "4px"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "6px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-size",
+        "value": "1rem",
+        "description": "Thumb width and height. `size` retunes it: `0.875rem` for `sm`, `1.25rem` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "0.875rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "1rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "1.25rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-border-width",
+        "value": "2px",
+        "description": "Thickness of the thumb's ring.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-radius",
+        "value": "var(--pui-radius-pill)",
+        "description": "Rail and indicator corner radius.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between the label/value row and the control.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-track-bg",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Rail fill — the empty part of the range.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-indicator-bg",
+        "value": "var(--pui-color-primary)",
+        "description": "Fill of the selected part. Swapped per `tone`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Thumb fill.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-thumb-border",
+        "value": "var(--pui-color-primary)",
+        "description": "Thumb ring colour. Swapped per `tone`, and `var(--pui-color-danger-border)` when invalid inside a field.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-shadow",
+        "value": "var(--pui-shadow-1)",
+        "description": "Thumb shadow.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-thumb-halo-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Base colour the halo is mixed from. Swapped per `tone`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-halo-strength",
+        "value": "48%",
+        "description": "How much of that colour survives the mix toward `transparent`. `30%` for `tone=\"neutral\"`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "30%"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-halo",
+        "value": "color-mix( in oklab, var(--pui-slider-thumb-halo-color) var(--pui-slider-thumb-halo-strength), transparent )",
+        "description": "The resolved halo colour. Derived from the two above; set it directly to bypass them.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-slider-thumb-halo-size",
+        "value": "0px",
+        "description": "Current halo radius. Set by hover and drag; set it yourself for a halo that is always on.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".control:not([data-disabled]) .thumb:hover:not(:has(:focus-visible))",
+            "value": "var(--pui-slider-thumb-halo-size-active)"
+          },
+          {
+            "selector": ".root[data-dragging] .thumb:not(:has(:focus-visible))",
+            "value": "var(--pui-slider-thumb-halo-size-active)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-thumb-halo-size-active",
+        "value": "5px",
+        "description": "Halo radius in those states. It stands down while the focus ring is up, so the ring's outer tone is not covered. `size` retunes it: `4px` for `sm`, `6px` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "4px"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "5px"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "6px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-slider-control-padding",
+        "value": "max( calc((var(--pui-target-min) - var(--pui-slider-track-thickness)) / 2), calc( (var(--pui-slider-thumb-size) - var(--pui-slider-track-thickness)) / 2 + var(--pui-space-1) ) )",
+        "description": "How far the control is padded past the rail — the SC 2.5.8 target.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Spinner": {
+    "name": "Spinner",
+    "tokens": [
+      {
+        "name": "--pui-spinner-size",
+        "value": "1.5rem",
+        "description": "Diameter of the indicator. `size` sets `1rem` / `1.5rem` / `2rem`; everything else is a fraction of it and follows on its own.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "1rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "1.5rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "2rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-spinner-thickness",
+        "value": "max(2px, calc(var(--pui-spinner-size) / 8))",
+        "description": "Ring stroke and halo border.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Space between the indicator and a visible label.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-duration",
+        "value": "var(--pui-duration-loop-spin)",
+        "description": "One full cycle. `variant=\"pulse\"` raises it to `--pui-duration-loop-pulse`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"pulse\"]",
+            "value": "var(--pui-duration-loop-pulse)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-spinner-color",
+        "value": "var(--pui-color-primary)",
+        "description": "The indicator's colour. Becomes the indicator's `color`, and every part fills with `currentColor`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          },
+          {
+            "selector": ".root[data-tone=\"current\"]",
+            "value": "currentColor"
+          }
+        ]
+      },
+      {
+        "name": "--pui-spinner-track",
+        "value": "color-mix(in oklab, var(--pui-spinner-color) 18%, transparent)",
+        "description": "The faint full ring the comet travels along. Set it to `transparent` for a bare arc.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-label-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Colour of a visible label.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-label-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size of a visible label. Retuned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-spinner-dot-dim",
+        "value": "0.25",
+        "description": "How far a dot fades at the bottom of its hop.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-bar-dim",
+        "value": "0.15",
+        "description": "How far a bar fades at the back of the sweep.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-bar-width",
+        "value": "calc(var(--pui-spinner-size) / 9)",
+        "description": "Thickness of one spoke.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-bar-length",
+        "value": "calc(var(--pui-spinner-size) / 3.2)",
+        "description": "Length of one spoke.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-dot-travel",
+        "value": "min(var(--pui-travel-sm), calc(var(--pui-spinner-size) / 5))",
+        "description": "How high a dot hops. Collapses to `0px` under reduced motion, because `--pui-travel-sm` does.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-spinner-ripple-min",
+        "value": "calc(1 - 0.6 * var(--pui-motion-ok))",
+        "description": "Scale a halo starts from, as a factor. Gated on `--pui-motion-ok`, so it is exactly `1` under reduced motion and the halo holds still.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Switch": {
+    "name": "Switch",
+    "tokens": [
+      {
+        "name": "--pui-switch-track-width",
+        "value": "2.25rem",
+        "description": "Track width, and the input the travel distance is derived from. `size` retunes it: `1.75rem` for `sm`, `2.75rem` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "1.75rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "2.25rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "2.75rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-track-height",
+        "value": "1.25rem",
+        "description": "Track height. `size` retunes it: `1rem` for `sm`, `1.5rem` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "1rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "1.25rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "1.5rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-thumb-size",
+        "value": "0.875rem",
+        "description": "Thumb width and height. `size` retunes it: `0.625rem` for `sm`, `1.125rem` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "0.625rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "0.875rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "1.125rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-padding",
+        "value": "0.125rem",
+        "description": "Inset between the track and the thumb.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-switch-border-width",
+        "value": "1px",
+        "description": "Track border width.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-switch-radius",
+        "value": "var(--pui-radius-pill)",
+        "description": "Track corner radius.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-switch-track-bg",
+        "value": "var(--pui-color-panel)",
+        "description": "Track fill. Swapped to `var(--pui-color-primary)` when checked.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-checked]",
+            "value": "var(--pui-color-primary)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-track-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Track fill on hover, on pointer devices only. Swapped to `var(--pui-color-primary-hover)` when checked.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-checked]",
+            "value": "var(--pui-color-primary-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-track-border",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Track border colour. `var(--pui-color-primary)` when checked; `var(--pui-color-danger-border)` when invalid inside a field.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-checked]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-thumb-bg",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Thumb fill. Swapped to `var(--pui-color-on-primary)` when checked.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-checked]",
+            "value": "var(--pui-color-on-primary)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-thumb-fg",
+        "value": "var(--pui-color-panel)",
+        "description": "Checkmark colour. Swapped to `var(--pui-color-primary)` when checked.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-checked]",
+            "value": "var(--pui-color-primary)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-switch-thumb-shadow",
+        "value": "var(--pui-shadow-1)",
+        "description": "Thumb shadow.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-switch-travel",
+        "value": "calc( var(--pui-switch-track-width) - var(--pui-switch-thumb-size) - 2 * var(--pui-switch-padding) - 2 * var(--pui-switch-border-width) )",
+        "description": "Distance the thumb moves when checked.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Tabs": {
+    "name": "Tabs",
+    "tokens": [
+      {
+        "name": "--pui-tabs-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail, capped by the row below",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-radius-line",
+        "value": "min(var(--pui-tabs-radius), calc(var(--pui-tabs-height) / 2))",
+        "description": "The cap on those two corners. A `line` tab's other two are square, and CSS only shrinks an oversized radius to fit the corners sharing its edge — so without a cap a full-round radius rounds one all the way across the tab's height and leaves a tombstone rather than a tab",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between adjacent tabs in the strip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-content-gap",
+        "value": "var(--pui-space-4)",
+        "description": "Space between the strip and the panel",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height of a tab",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding inside a tab",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Tab label size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Tab label weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-list-bg",
+        "value": "transparent",
+        "description": "Background of the strip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"pill\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-tabs-list-padding",
+        "value": "0px",
+        "description": "Padding inside the strip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"pill\"]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-tabs-list-radius",
+        "value": "0px",
+        "description": "Corner radius of the strip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"pill\"]",
+            "value": "var(--pui-radius-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-tabs-rail-width",
+        "value": "1px",
+        "description": "Thickness of the rail (line variant only)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-rail-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of the rail (line variant only)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-tab-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Label colour of an inactive tab",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-tab-color-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label colour on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-tab-color-active",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Label colour of the active tab",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-tab-bg-hover",
+        "value": "transparent",
+        "description": "Tab background on hover — `transparent` in both variants, since hover is carried by the label colour alone; set it to opt a fill back in",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-indicator-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Fill of the sliding indicator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"pill\"]",
+            "value": "var(--pui-color-primary-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-tabs-indicator-size",
+        "value": "2px",
+        "description": "Thickness of the indicator bar (line variant only)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tabs-indicator-radius",
+        "value": "var(--pui-radius-pill)",
+        "description": "Corner radius of the indicator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"pill\"]",
+            "value": "var(--pui-radius-control)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-tabs-panel-padding",
+        "value": "0px",
+        "description": "Padding inside the panel",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Toggle": {
+    "name": "Toggle",
+    "tokens": [
+      {
+        "name": "--pui-toggle-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Height. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding. `iconOnly` sets it to `0`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          },
+          {
+            "selector": ".root[data-icon-only]",
+            "value": "0"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label size.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label weight.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between an icon and its label.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-border-width",
+        "value": "1px",
+        "description": "Border width, drawn in every variant — `outline` is the only one that gives it a colour.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Colour transitions between states.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-press-scale",
+        "value": "var(--pui-scale-press)",
+        "description": "How far the button squashes while held. Multiplied by `--pui-motion-ok`, so a literal value still collapses under reduced motion.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-bg",
+        "value": "transparent",
+        "description": "Fill while unpressed.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill on hover while unpressed.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Label colour while unpressed.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-fg-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label colour on hover while unpressed.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-border-color",
+        "value": "transparent",
+        "description": "Border colour while unpressed. `var(--pui-color-border)` for `variant=\"outline\"`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-bg-pressed",
+        "value": "var(--pui-toggle-tone-soft)",
+        "description": "Fill while pressed. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-toggle-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-toggle-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-toggle-tone-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-bg-pressed-hover",
+        "value": "var(--pui-toggle-tone-soft-hover)",
+        "description": "Fill on hover while pressed. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-toggle-tone-solid-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-toggle-tone-soft-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-toggle-tone-soft-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-fg-pressed",
+        "value": "var(--pui-toggle-tone-text)",
+        "description": "Label colour while pressed. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-toggle-tone-on-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-toggle-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-toggle-tone-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-border-color-pressed",
+        "value": "transparent",
+        "description": "Border colour while pressed. The tone's border for `variant=\"outline\"`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-toggle-tone-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-group-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between toggles. `var(--pui-space-1)` when `segmented`.",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-segmented]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-group-padding",
+        "value": "0px",
+        "description": "Padding inside the strip. `var(--pui-space-1)` when `segmented`.",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-segmented]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-group-radius",
+        "value": "0px",
+        "description": "Corner radius of the strip. `var(--pui-radius-4)` when `segmented`.",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-segmented]",
+            "value": "var(--pui-radius-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-group-bg",
+        "value": "transparent",
+        "description": "Fill behind the strip. `var(--pui-color-panel)` when `segmented`.",
+        "part": "group",
+        "overrides": [
+          {
+            "selector": ".group[data-segmented]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-toggle-group-border-width",
+        "value": "1px",
+        "description": "Border width of the strip.",
+        "part": "group",
+        "overrides": []
+      },
+      {
+        "name": "--pui-toggle-group-border-color",
+        "value": "transparent",
+        "description": "Border colour of the strip.",
+        "part": "group",
+        "overrides": []
+      }
+    ]
+  },
+  "Tooltip": {
+    "name": "Tooltip",
+    "tokens": [
+      {
+        "name": "--pui-tooltip-z-index",
+        "value": "50",
+        "description": "Stacking order of the positioner",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-bg",
+        "value": "var(--pui-gray-12)",
+        "description": "Popup and arrow fill",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-fg",
+        "value": "var(--pui-gray-1)",
+        "description": "Text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-padding-block",
+        "value": "var(--pui-space-1)",
+        "description": "Top and bottom padding",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-padding-inline",
+        "value": "var(--pui-space-2)",
+        "description": "Left and right padding",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Text size, and the `em` basis the arrow is sized from",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Text weight",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shadow",
+        "value": "var(--pui-shadow-2)",
+        "description": "Popup shadow (removed in forced-colors mode)",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-max-width",
+        "value": "18rem",
+        "description": "Width cap, further clamped to the space the positioner reports as available",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the popup slides in from, per side",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-arrow-width",
+        "value": "1em",
+        "description": "Arrow base width",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-arrow-height",
+        "value": "0.5em",
+        "description": "Arrow height, and the distance it is pushed out from the popup",
+        "part": "popup",
+        "overrides": []
+      }
+    ]
+  }
+}

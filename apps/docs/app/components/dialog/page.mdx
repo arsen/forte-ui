@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Dialog",
@@ -149,31 +150,7 @@ A `Dialog.Surface` changes none of this. It reads `--pui-dialog-bg`, `--pui-dial
 
 The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every dialog.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-dialog-viewport-padding` | Gap between the popup and the edge of the screen | `var(--pui-space-4)` (`0px` when `size="fullscreen"`) |
-| `--pui-dialog-bg` | Popup background | `var(--pui-color-overlay)` |
-| `--pui-dialog-fg` | Popup text colour | `var(--pui-color-foreground)` |
-| `--pui-dialog-radius` | Corner radius | `var(--pui-radius-surface)` (`0px` when `size="fullscreen"`) |
-| `--pui-dialog-padding` | Padding inside the popup | `var(--pui-surface-p)` |
-| `--pui-dialog-gap` | Vertical gap between the popup's children | `var(--pui-space-4)` |
-| `--pui-dialog-shadow` | Popup shadow | `var(--pui-shadow-4)` |
-| `--pui-dialog-font-size` | Base font size inside the popup | `var(--pui-font-size-2)` |
-| `--pui-dialog-max-inline-size` | Maximum popup width; what the `size` prop sets | `32rem` (`24rem` sm, `48rem` lg, `100%` fullscreen) |
-| `--pui-dialog-nested-offset` | How far each nested dialog pushes its parent down | `var(--pui-travel-lg)` |
-| `--pui-dialog-nested-scale-step` | How much each nested dialog shrinks its parent | `0.04` |
-| `--pui-dialog-nested-duration` | How long the parent takes to retreat under a child | `var(--pui-duration-spring-precise)` |
-| `--pui-dialog-enter-travel` | How far the popup rises as it opens | `var(--pui-travel-md)` (`var(--pui-travel-page)` when `size="fullscreen"`) |
-| `--pui-dialog-enter-scale` | Scale the popup grows from | `var(--pui-scale-enter)` (`1` when `size="fullscreen"`) |
-| `--pui-dialog-enter-duration` | Length of the opening gesture | `var(--pui-duration-normal)` |
-| `--pui-dialog-enter-ease` | Curve of the opening gesture | `var(--pui-ease-spring-snappy)` |
-| `--pui-dialog-exit-travel` | How far the popup sinks as it closes | `var(--pui-travel-md)` (`var(--pui-travel-page)` when `size="fullscreen"`) |
-| `--pui-dialog-exit-scale` | Scale the popup shrinks to | `calc(1 - 0.05 * var(--pui-motion-ok))` (`1` when `size="fullscreen"`) |
-| `--pui-dialog-exit-duration` | Length of the closing gesture | `var(--pui-duration-fast)` |
-| `--pui-dialog-exit-ease` | Curve the closing *geometry* runs on | `linear` |
-| `--pui-dialog-exit-fade-ease` | Curve the closing *fade* runs on | `var(--pui-ease-exit)` |
-| `--pui-dialog-backdrop-exit-duration` | How long the scrim takes to clear; set through `backdropClassName` | `var(--pui-duration-fast)` |
-| `--pui-dialog-backdrop-exit-ease` | Curve the scrim clears on; set through `backdropClassName` | `var(--pui-ease-exit)` |
+<ThemingTable component="Dialog" />
 
 ### Motion
 

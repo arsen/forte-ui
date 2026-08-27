@@ -52,6 +52,7 @@
 
     /* How far the fade reaches in from an edge, at most. The actual size is
      * this or the remaining scroll distance, whichever is smaller. */
+    /** How far the fade reaches in from an edge, at most */
     --pui-scroll-area-fade-size: var(--pui-space-5);
 
     /* Track thickness, on both axes. SC 2.5.8 asks for 24x24 targets and this
@@ -60,17 +61,26 @@
      * 24px of it. That exception is what makes 12px legitimate, and it stops
      * being true if you put anything else against that edge — raise this for a
      * coarse-pointer layout, or if you crowd the track. */
+    /** Track thickness on both axes */
     --pui-scroll-area-scrollbar-size: var(--pui-space-3);
     /* Inset between track edge and thumb. Base UI measures the track's padding
      * when it sizes the thumb, so this stays a real padding rather than a
      * margin on the thumb. */
+    /** Inset between the track's edge and its thumb */
     --pui-scroll-area-track-padding: 2px;
+    /** Track fill */
     --pui-scroll-area-track-bg: transparent;
+    /** Track fill while the pointer is over it */
     --pui-scroll-area-track-bg-hover: var(--pui-color-panel);
+    /** Thumb fill */
     --pui-scroll-area-thumb-bg: var(--pui-color-border-strong);
+    /** Thumb fill on hover */
     --pui-scroll-area-thumb-bg-hover: var(--pui-color-foreground-subtle);
+    /** Thumb fill while being dragged */
     --pui-scroll-area-thumb-bg-active: var(--pui-color-foreground-muted);
+    /** Corner radius of the track and thumb */
     --pui-scroll-area-thumb-radius: var(--pui-radius-pill);
+    /** Fill of the square between the two scrollbars */
     --pui-scroll-area-corner-bg: transparent;
 
     box-sizing: border-box;

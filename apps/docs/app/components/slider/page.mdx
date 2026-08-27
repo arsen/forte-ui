@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Slider",
@@ -193,25 +194,7 @@ What does animate is colour, and the halo around the handle on hover and while d
 
 Every property below is declared on `Slider.Root` and consumed by the parts underneath through inheritance. Setting one on an ancestor of the root has no effect — the root's own declaration wins over an inherited value. Override them on the root itself, through `className` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-slider-length` | Control length: `inline-size` when horizontal, `block-size` when vertical. Capped at `100%` of the container. | `16rem` (`10rem` when vertical) |
-| `--pui-slider-track-thickness` | Rail thickness, and one of the two inputs the control padding derives from. | `4px` (`sm` `3px`, `lg` `6px`) |
-| `--pui-slider-thumb-size` | Thumb width and height. | `1rem` (`sm` `0.875rem`, `lg` `1.25rem`) |
-| `--pui-slider-thumb-border-width` | Thickness of the thumb's ring. | `2px` |
-| `--pui-slider-radius` | Rail and indicator corner radius. | `var(--pui-radius-pill)` |
-| `--pui-slider-gap` | Gap between the label/value row and the control. | `var(--pui-space-2)` |
-| `--pui-slider-track-bg` | Rail fill — the empty part of the range. | `var(--pui-color-border-muted)` |
-| `--pui-slider-indicator-bg` | Fill of the selected part. | `var(--pui-color-primary)`, per `tone` |
-| `--pui-slider-thumb-bg` | Thumb fill. | `var(--pui-color-background)` |
-| `--pui-slider-thumb-border` | Thumb ring colour. | `var(--pui-color-primary)`, per `tone`, `var(--pui-color-danger-border)` when invalid inside a field |
-| `--pui-slider-thumb-shadow` | Thumb shadow. | `var(--pui-shadow-1)` |
-| `--pui-slider-thumb-halo-color` | Base colour the halo is mixed from. | `var(--pui-color-primary)`, per `tone` |
-| `--pui-slider-thumb-halo-strength` | How much of that colour survives the mix toward `transparent`. | `48%` (`neutral` `30%`) |
-| `--pui-slider-thumb-halo` | The resolved halo colour. Derived from the two above; set it directly to bypass them. | `color-mix(in oklab, <halo-color> <strength>, transparent)` |
-| `--pui-slider-thumb-halo-size` | Current halo radius. Set by hover and drag; set it yourself for a halo that is always on. | `0px` |
-| `--pui-slider-thumb-halo-size-active` | Halo radius in those states. It stands down while the focus ring is up, so the ring's outer tone is not covered. | `5px` (`sm` `4px`, `lg` `6px`) |
-| `--pui-slider-control-padding` | How far the control is padded past the rail — the SC 2.5.8 target. | `max(24px − thickness, thumb − thickness + 4px) ÷ 2` |
+<ThemingTable component="Slider" />
 
 `--pui-slider-control-padding` is derived from the rail thickness and the thumb size, so resizing either keeps the pointer target correct — you rarely want to set it by hand. Note that `thumbAlignment="edge"` measures it, so changing it also moves where an edge-aligned thumb rests.
 

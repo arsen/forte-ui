@@ -37,19 +37,35 @@
      * specificity — or an inline `style`. To move every switch at once,
      * re-point the global tokens on the right-hand side below, which this
      * file only reads and never re-declares. */
+    /** Track width, and the input the travel distance is derived from. `size`
+     * retunes it: `1.75rem` for `sm`, `2.75rem` for `lg`. */
     --pui-switch-track-width: 2.25rem;
+    /** Track height. `size` retunes it: `1rem` for `sm`, `1.5rem` for `lg`. */
     --pui-switch-track-height: 1.25rem;
+    /** Thumb width and height. `size` retunes it: `0.625rem` for `sm`,
+     * `1.125rem` for `lg`. */
     --pui-switch-thumb-size: 0.875rem;
+    /** Inset between the track and the thumb. */
     --pui-switch-padding: 0.125rem;
+    /** Track border width. */
     --pui-switch-border-width: 1px;
+    /** Track corner radius. */
     --pui-switch-radius: var(--pui-radius-pill);
 
     /* Colour slots, swapped wholesale by [data-checked] below. */
+    /** Track fill. Swapped to `var(--pui-color-primary)` when checked. */
     --pui-switch-track-bg: var(--pui-color-panel);
+    /** Track fill on hover, on pointer devices only. Swapped to
+     * `var(--pui-color-primary-hover)` when checked. */
     --pui-switch-track-bg-hover: var(--pui-color-panel-hover);
+    /** Track border colour. `var(--pui-color-primary)` when checked;
+     * `var(--pui-color-danger-border)` when invalid inside a field. */
     --pui-switch-track-border: var(--pui-color-foreground-subtle);
+    /** Thumb fill. Swapped to `var(--pui-color-on-primary)` when checked. */
     --pui-switch-thumb-bg: var(--pui-color-foreground-subtle);
+    /** Checkmark colour. Swapped to `var(--pui-color-primary)` when checked. */
     --pui-switch-thumb-fg: var(--pui-color-panel);
+    /** Thumb shadow. */
     --pui-switch-thumb-shadow: var(--pui-shadow-1);
 
     /* Derived, so a consumer who resizes the track gets the right travel for
@@ -57,6 +73,7 @@
      * the same element as the four inputs it reads — an unregistered custom
      * property is substituted where it is DECLARED, so deriving it on an
      * ancestor would freeze it at the ancestor's values. */
+    /** Distance the thumb moves when checked. */
     --pui-switch-travel: calc(
       var(--pui-switch-track-width) - var(--pui-switch-thumb-size) - 2 *
         var(--pui-switch-padding) - 2 * var(--pui-switch-border-width)

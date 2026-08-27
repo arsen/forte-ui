@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Radio",
@@ -243,29 +244,11 @@ on the radio itself — through `className` or an inline `style` — rather than
 an ancestor: the component declares its own defaults on the root element, and an
 element's own declaration beats an inherited value.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-radio-size` | Width and height of the painted circle. `size="sm"` sets `0.875rem`, `size="lg"` sets `1.25rem`. | `1rem` |
-| `--pui-radio-radius` | Corner radius of the circle. | `50%` |
-| `--pui-radio-border-width` | Border width. | `1px` |
-| `--pui-radio-dot-ratio` | Size of the dot as a fraction of the circle. Unitless on purpose, so the dot keeps its proportion at any `--pui-radio-size`. `size` retunes it: `0.4` for `sm`, `0.36` for `lg`. | `0.375` |
-| `--pui-radio-dot-size` | The dot's own width and height. Derived from the two above; set it directly to break the proportion. | `calc(var(--pui-radio-size) * var(--pui-radio-dot-ratio))` |
-| `--pui-radio-duration` | Colour transitions on the circle, the dot's fade, and the un-select. | `var(--pui-duration-fast)` |
-| `--pui-radio-pop-duration` | How long the dot takes to pop in. | `var(--pui-duration-spring-snappy)` |
-| `--pui-radio-pop-ease` | The easing that pop rides. Change it and change the duration with it — a spring truncated by a shorter duration looks broken. | `var(--pui-ease-spring-snappy)` |
-| `--pui-radio-bg` | Fill while unselected. | `var(--pui-color-background)` |
-| `--pui-radio-bg-hover` | Fill on hover while unselected. | `var(--pui-color-panel-hover)` |
-| `--pui-radio-border-color` | Border colour while unselected. | `var(--pui-color-border)` |
-| `--pui-radio-border-color-hover` | Border colour on hover while unselected. | `var(--pui-color-border-strong)` |
-| `--pui-radio-fill` | Fill while selected. | `var(--pui-color-primary)` |
-| `--pui-radio-fill-hover` | Fill on hover while selected. | `var(--pui-color-primary-hover)` |
-| `--pui-radio-dot-color` | Colour of the dot — it becomes the root's `color`, and the dot paints with `currentColor`. | `var(--pui-color-on-primary)` |
+<ThemingTable component="Radio" part="root" />
 
 `RadioGroup` declares one property of its own:
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-radio-group-gap` | Gap between options in the group. | `var(--pui-space-2)`, or `var(--pui-space-4)` when `orientation="horizontal"` |
+<ThemingTable component="Radio" part="group" />
 
 The three `-hover` values only ever apply on devices that report hover support,
 so a touch device never sticks in a hover colour after a tap.

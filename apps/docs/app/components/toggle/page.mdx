@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Toggle",
@@ -164,26 +165,7 @@ on the toggle itself — through `className` or an inline `style` — rather tha
 an ancestor: the component declares its own defaults on the root element, and an
 element's own declaration beats an inherited value.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-toggle-radius` | Corner radius. | `var(--pui-radius-control)` |
-| `--pui-toggle-height` | Height. `size` re-points it. | `var(--pui-control-h-md)` |
-| `--pui-toggle-padding-x` | Inline padding. `iconOnly` sets it to `0`. | `var(--pui-control-px-md)` |
-| `--pui-toggle-font-size` | Label size. | `var(--pui-font-size-2)` |
-| `--pui-toggle-font-weight` | Label weight. | `var(--pui-font-weight-medium)` |
-| `--pui-toggle-gap` | Gap between an icon and its label. | `var(--pui-control-gap)` |
-| `--pui-toggle-border-width` | Border width, drawn in every variant — `outline` is the only one that gives it a colour. | `1px` |
-| `--pui-toggle-duration` | Colour transitions between states. | `var(--pui-duration-fast)` |
-| `--pui-toggle-press-scale` | How far the button squashes while held. Multiplied by `--pui-motion-ok`, so a literal value still collapses under reduced motion. | `var(--pui-scale-press)` |
-| `--pui-toggle-bg` | Fill while unpressed. | `transparent` |
-| `--pui-toggle-bg-hover` | Fill on hover while unpressed. | `var(--pui-color-panel-hover)` |
-| `--pui-toggle-fg` | Label colour while unpressed. | `var(--pui-color-foreground-muted)` |
-| `--pui-toggle-fg-hover` | Label colour on hover while unpressed. | `var(--pui-color-foreground)` |
-| `--pui-toggle-border-color` | Border colour while unpressed. | `transparent`, or `var(--pui-color-border)` for `outline` |
-| `--pui-toggle-bg-pressed` | Fill while pressed. | Set by `variant` from the tone |
-| `--pui-toggle-bg-pressed-hover` | Fill on hover while pressed. | Set by `variant` from the tone |
-| `--pui-toggle-fg-pressed` | Label colour while pressed. | Set by `variant` from the tone |
-| `--pui-toggle-border-color-pressed` | Border colour while pressed. | `transparent`, or the tone's border for `outline` |
+<ThemingTable component="Toggle" part="root" />
 
 `tone` reassigns the seven `--pui-toggle-tone-*` properties the variants read
 from, so overriding one of those re-skins every variant at once, while

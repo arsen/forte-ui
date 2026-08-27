@@ -26,21 +26,35 @@
      * `@layer pretty-ui.components` at any specificity) or an inline `style`;
      * to move every input at once, re-point the global tokens on the
      * right-hand side, which this file only reads and never re-declares. */
+    /** Control height (reset per `size`) */
     --pui-input-height: var(--pui-control-h-md);
+    /** Inline padding (reset per `size`) */
     --pui-input-padding-x: var(--pui-control-px-md);
+    /** Font size (reset per `size`) */
     --pui-input-font-size: var(--pui-font-size-2);
+    /** Corner radius */
     --pui-input-radius: var(--pui-radius-control);
+    /** Border width */
     --pui-input-border-width: 1px;
 
     /* Colour slots, filled in per variant below. */
+    /** Background (reset per `variant`) */
     --pui-input-bg: var(--pui-color-background);
+    /** Background on hover */
     --pui-input-bg-hover: var(--pui-color-panel-hover);
+    /** Text colour */
     --pui-input-fg: var(--pui-color-foreground);
+    /** Placeholder colour */
     --pui-input-placeholder-fg: var(--pui-color-foreground-muted);
+    /** Border colour (reset per `variant`, and by `data-invalid`) */
     --pui-input-border-color: var(--pui-color-border);
+    /** Border colour on hover */
     --pui-input-border-color-hover: var(--pui-color-border-strong);
+    /** Caret colour */
     --pui-input-caret-color: var(--pui-color-primary);
+    /** Selection background */
     --pui-input-selection-bg: var(--pui-color-primary-soft);
+    /** Selection text colour */
     --pui-input-selection-fg: var(--pui-color-primary-text);
 
     box-sizing: border-box;

@@ -48,9 +48,15 @@
     /* Chrome. Zero in `plain`: the component contributes no box of its own, so
      * it can be dropped between two paragraphs without opening a second grid
      * to read. The `contained` block below turns all four on at once. */
+    /** Corner radius of the card. The trigger takes the same radius, so its
+     * focus ring follows the card rather than being shaved by the card's own
+     * clip — squaring off its bottom two corners while the panel is open */
     --pui-collapsible-radius: 0px;
+    /** Background behind the whole component */
     --pui-collapsible-bg: transparent;
+    /** Border around the card */
     --pui-collapsible-border-width: 0px;
+    /** Colour of that border */
     --pui-collapsible-border-color: var(--pui-color-border-muted);
 
     /* Trigger.
@@ -58,10 +64,17 @@
      * `fit-content` rather than `100%` is what separates the two variants:
      * in `plain` the button is exactly as wide as its own label, so nothing
      * to the side of the text is pressable and nothing claims to be. */
+    /** How wide the button is. `fit-content` is what makes the plain trigger
+     * exactly as wide as its own label */
     --pui-collapsible-trigger-width: fit-content;
+    /** Inline padding of the trigger */
     --pui-collapsible-trigger-px: 0px;
+    /** Block padding of the trigger */
     --pui-collapsible-trigger-py: var(--pui-space-1);
+    /** Space between the label and the marker — a minimum, once the trigger is
+     * full width */
     --pui-collapsible-trigger-gap: var(--pui-control-gap);
+    /** Trigger background at rest */
     --pui-collapsible-trigger-bg: transparent;
     /* Hover is a colour change on the label, not a fill.
      *
@@ -70,10 +83,16 @@
      * the label would claim only the label is pressable. Here the button IS
      * the label — `width: fit-content` — so recolouring it marks the whole hit
      * box exactly. `contained` restores the row and the fill along with it. */
+    /** Trigger background on hover. Unset in `plain`, where the colour change
+     * below is the cue instead */
     --pui-collapsible-trigger-bg-hover: var(--pui-collapsible-trigger-bg);
+    /** Label colour */
     --pui-collapsible-trigger-color: var(--pui-color-foreground);
+    /** Label colour on hover */
     --pui-collapsible-trigger-color-hover: var(--pui-color-primary-text);
+    /** Label size */
     --pui-collapsible-trigger-font-size: var(--pui-font-size-2);
+    /** Label weight */
     --pui-collapsible-trigger-font-weight: var(--pui-font-weight-medium);
 
     /* Icon. `currentColor` in `plain`, so the chevron travels with the label
@@ -81,8 +100,11 @@
      * in step — it sits one gap away from the text and reads as part of the
      * same word group. `contained` puts it at the far end of a wide row, where
      * it has to recede instead, and swaps in the Accordion's two greys. */
+    /** Marker colour when closed */
     --pui-collapsible-icon-color: currentColor;
+    /** Marker colour when open */
     --pui-collapsible-icon-color-open: currentColor;
+    /** How far the marker turns when the panel opens */
     --pui-collapsible-icon-rotate: 180deg;
 
     /* Panel. Unlike the Accordion, `plain` DOES get a block-start knob: its
@@ -90,10 +112,15 @@
      * a heading from its body on its own. `contained` zeroes it again, because
      * there the trigger's `--pui-space-3` already does the job and a second
      * helping double-spaces the row. */
+    /** Inline padding of the panel content */
     --pui-collapsible-panel-px: 0px;
+    /** Block-start padding of the panel content */
     --pui-collapsible-panel-pt: var(--pui-space-2);
+    /** Block-end padding of the panel content */
     --pui-collapsible-panel-pb: 0px;
+    /** Body text colour */
     --pui-collapsible-panel-color: var(--pui-color-foreground-muted);
+    /** Body text size */
     --pui-collapsible-panel-font-size: var(--pui-font-size-2);
 
     /* One duration and one curve for the height and the content's slide, so
@@ -101,7 +128,10 @@
      * curve on `height` pushes the panel past its own content and flashes a
      * band of empty background under the last line before settling back, and
      * the springs that do not overshoot are only slower ease-outs. */
+    /** Length of the height change, and of the content's slide */
     --pui-collapsible-duration: var(--pui-duration-normal);
+    /** Curve for both. Deliberately not a spring: overshooting `height` flashes
+     * a band of empty background under the last line before settling */
     --pui-collapsible-ease: var(--pui-ease-standard);
 
     box-sizing: border-box;

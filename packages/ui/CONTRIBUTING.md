@@ -22,7 +22,12 @@ durations, no literal radii. If a value is missing from the inventory below,
 add it to `scripts/ramp.mjs` or `scripts/motion.mjs` and regenerate — do not
 inline it. Component-level knobs are exposed as `--pui-<component>-*` custom
 properties declared at the top of the root rule, defaulting to semantic tokens,
-so a consumer can re-skin without forking.
+so a consumer can re-skin without forking. Give every knob a `/** … */` doc
+comment directly above its declaration — `scripts/theming-docgen.mjs` publishes
+it, together with the declared default, as the component's Theming table in the
+docs (`docs-data/theming.json`), exactly the way JSDoc on a prop becomes the
+prop table. A knob without one is invisible there; plain `/* … */` comments
+stay private.
 
 **2. Never write `@media (prefers-reduced-motion)` in a component file.** The
 motion tokens already collapse their own geometry: `--pui-travel-md` becomes

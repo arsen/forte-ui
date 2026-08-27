@@ -43,49 +43,73 @@
      * by re-pointing the global tokens they resolve to. */
 
     /* Item */
+    /** Space between items */
     --pui-accordion-gap: 0px;
+    /** Corner radius of an item. The trigger takes the same radius, so its focus
+     * ring follows the card rather than being shaved by the card's own clip —
+     * squaring off its bottom two corners while the panel is open */
     --pui-accordion-item-radius: 0px;
+    /** Background of an item */
     --pui-accordion-item-bg: transparent;
+    /** Border around an item (the `contained` card) */
     --pui-accordion-item-border-width: 0px;
+    /** Colour of that border */
     --pui-accordion-item-border-color: var(--pui-color-border-muted);
     /* The hairline BETWEEN rows, which is a different line from the card
      * outline above — `divided` has only the first, `contained` only the
      * second, and they are never both visible at once. */
+    /** Thickness of the hairline between rows (`divided` only) */
     --pui-accordion-divider-width: 1px;
+    /** Colour of that hairline */
     --pui-accordion-divider-color: var(--pui-color-border-muted);
 
     /* Trigger */
+    /** Inline padding of a row */
     --pui-accordion-trigger-px: var(--pui-space-3);
+    /** Block padding of a row */
     --pui-accordion-trigger-py: var(--pui-space-3);
-    /* Minimum space between the label and the icon, so a label long enough to
-     * fill the row still cannot run into it. */
+    /** Minimum space between the label and the icon, so a label long enough
+     * to fill the row still cannot run into it */
     --pui-accordion-trigger-gap: var(--pui-space-4);
+    /** Row background at rest */
     --pui-accordion-trigger-bg: transparent;
     /* One step up from whatever the row sits on: the page (gray-1) in
      * `divided`, the card (gray-2) in `contained` — see the variant block.
      * Unlike Tabs, the fill is not optional here. A row is a click target the
      * width of the container, and a colour change confined to the label would
      * claim only the label is pressable. */
+    /** Row background on hover — one step up from whatever the row sits on */
     --pui-accordion-trigger-bg-hover: var(--pui-color-panel);
+    /** Heading colour */
     --pui-accordion-trigger-color: var(--pui-color-foreground);
+    /** Heading size */
     --pui-accordion-trigger-font-size: var(--pui-font-size-2);
+    /** Heading weight */
     --pui-accordion-trigger-font-weight: var(--pui-font-weight-medium);
 
     /* Icon. `-subtle` is 3.73:1 — below the floor for text, fine for a
      * non-text indicator (SC 1.4.11), and `prefers-contrast: more` promotes
      * it anyway. It is never the only cue: `aria-expanded` and the panel
      * itself say the same thing. */
+    /** Chevron colour when closed */
     --pui-accordion-icon-color: var(--pui-color-foreground-subtle);
+    /** Chevron colour when open */
     --pui-accordion-icon-color-open: var(--pui-color-foreground);
+    /** How far the chevron turns when the panel opens */
     --pui-accordion-icon-rotate: 180deg;
 
     /* Panel. No block-start padding knob: the trigger's own bottom padding
      * already separates the two, and adding one on top of it double-spaces
      * every open row. Set `padding-block-start` through `contentClassName` if
      * the panel is given a background of its own. */
+    /** Inline padding of the panel content */
     --pui-accordion-panel-px: var(--pui-accordion-trigger-px);
+    /** Block-end padding of the panel content. There is no block-start knob —
+     * the trigger's own bottom padding already separates the two */
     --pui-accordion-panel-pb: var(--pui-space-4);
+    /** Body text colour */
     --pui-accordion-panel-color: var(--pui-color-foreground-muted);
+    /** Body text size */
     --pui-accordion-panel-font-size: var(--pui-font-size-2);
 
     /* One duration and one curve for the height and the content's slide, so
@@ -93,7 +117,10 @@
      * curve on `height` pushes the panel past its own content and flashes a
      * band of empty background under the last line before settling back, and
      * the springs that do not overshoot are only slower ease-outs. */
+    /** Length of the height change, and of the content's slide */
     --pui-accordion-duration: var(--pui-duration-normal);
+    /** Curve for both. Deliberately not a spring: overshooting `height` flashes
+     * a band of empty background under the last line before settling */
     --pui-accordion-ease: var(--pui-ease-standard);
 
     box-sizing: border-box;

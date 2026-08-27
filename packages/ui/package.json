@@ -28,7 +28,8 @@
     },
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
-    "./docs-data/props.json": "./docs-data/props.json"
+    "./docs-data/props.json": "./docs-data/props.json",
+    "./docs-data/theming.json": "./docs-data/theming.json"
   },
   "publishConfig": {
     "access": "public"
@@ -41,7 +42,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node scripts/check-contrast.mjs --fine",
     "clean": "rm -rf dist .turbo",
-    "docgen": "node scripts/docgen.mjs"
+    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

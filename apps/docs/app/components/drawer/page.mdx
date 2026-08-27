@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Drawer",
@@ -179,37 +180,7 @@ Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule b
 
 The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-drawer-z-index` | Stacking band for the drawer; set through `viewportClassName` | `40` |
-| `--pui-drawer-inset` | Gap between the drawer and the edge of the screen; set through `viewportClassName` | `0px` (`var(--pui-space-3)` when `variant="floating"`) |
-| `--pui-drawer-bg` | Popup background | `var(--pui-color-overlay)` |
-| `--pui-drawer-fg` | Popup text colour | `var(--pui-color-foreground)` |
-| `--pui-drawer-radius` | Corner radius — two corners for `edge`, four for `floating` | `var(--pui-radius-surface)` |
-| `--pui-drawer-padding` | Padding inside the popup | `var(--pui-surface-p)` |
-| `--pui-drawer-gap` | Gap between the popup's children, and between the content's | `var(--pui-space-4)` |
-| `--pui-drawer-shadow` | Popup shadow | `var(--pui-shadow-4)` |
-| `--pui-drawer-font-size` | Base font size inside the popup | `var(--pui-font-size-2)` |
-| `--pui-drawer-size` | Extent along the drawer's own axis; what the `size` prop sets | `24rem` (`18rem` sm, `32rem` lg, `100%` full) |
-| `--pui-drawer-bleed` | How far the surface extends past its outer edge to cover an overdrag | `var(--pui-space-8)` (`0px` when `variant="floating"`) |
-| `--pui-drawer-duration` | Length of the opening slide | `var(--pui-duration-spring-precise)` |
-| `--pui-drawer-ease` | Curve of the opening slide | `var(--pui-ease-spring-precise)` |
-| `--pui-drawer-exit-duration` | Length of the closing slide, before the velocity scalar | `var(--pui-duration-normal)` |
-| `--pui-drawer-exit-ease` | Curve of the closing slide | `var(--pui-ease-exit)` |
-| `--pui-drawer-nested-scale-step` | How much each nested drawer shrinks its parent | `0.04` |
-| `--pui-drawer-nested-scrim` | Colour the parent dims itself with under a nested drawer | `var(--pui-scrim-color)` |
-| `--pui-drawer-nested-duration` | How long the parent takes to recede under a child | `var(--pui-duration-spring-precise)` |
-| `--pui-drawer-content-max-inline-size` | Maximum width of `Drawer.Content`, which then centres itself | `32rem` on `top`/`bottom`, `100%` on `left`/`right` |
-| `--pui-drawer-handle-length` | Long edge of the grab pill | `2.25rem` |
-| `--pui-drawer-handle-thickness` | Short edge of the grab pill | `0.25rem` |
-| `--pui-drawer-handle-color` | Grab pill colour | `var(--pui-color-border-strong)` |
-| `--pui-drawer-handle-inset` | How far a `left`/`right` grip sits from the edge it hugs | `var(--pui-space-2)` |
-| `--pui-drawer-swipe-area-size` | Width of the swipe-to-open strip | `var(--pui-space-6)` |
-| `--pui-drawer-swipe-area-z-index` | Stacking band for that strip | `38` |
-| `--pui-drawer-backdrop-z-index` | Stacking band for the scrim; set through `backdropClassName` | `39` |
-| `--pui-drawer-backdrop-duration` | How long the scrim takes to clear; set through `backdropClassName` | `var(--pui-duration-normal)` (`var(--pui-duration-fast)` after a swipe) |
-| `--pui-drawer-backdrop-ease` | Curve the scrim clears on; set through `backdropClassName` | `var(--pui-ease-standard)` |
-| `--pui-drawer-backdrop-floor` | How faint the scrim may get while the drawer is still open | `0`, or `0.4` on a modal drawer with snap points |
+<ThemingTable component="Drawer" />
 
 `--pui-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
 

@@ -1,6 +1,7 @@
 import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Field",
@@ -152,18 +153,7 @@ by the parts below it, so one value on the root moves the whole field. The
 colour and font knobs stay on the part that paints them, so recolouring the
 error does not reach the description.
 
-| Property | Declared on | Controls | Default |
-| --- | --- | --- | --- |
-| `--pui-field-gap` | `Field.Root` | Vertical rhythm between label, control, description and error | `var(--pui-space-2)` |
-| `--pui-field-indent` | `Field.Root` | Indent for a description or error under a *wrapping* label, so it lines up with the label text rather than the checkbox | `calc(var(--pui-space-4) + var(--pui-control-gap))` |
-| `--pui-field-label-fg` | `Field.Label` | Label colour | `var(--pui-color-foreground)` |
-| `--pui-field-label-font-size` | `Field.Label` | Label font size | `var(--pui-font-size-2)` |
-| `--pui-field-label-font-weight` | `Field.Label` | Label font weight | `var(--pui-font-weight-medium)` |
-| `--pui-field-label-gap` | `Field.Label` | Gap between a wrapped control and its label text | `var(--pui-control-gap)` |
-| `--pui-field-description-fg` | `Field.Description` | Description colour | `var(--pui-color-foreground-muted)` |
-| `--pui-field-description-font-size` | `Field.Description` | Description font size | `var(--pui-font-size-1)` |
-| `--pui-field-error-fg` | `Field.Error` | Error colour | `var(--pui-color-danger-text)` |
-| `--pui-field-error-font-size` | `Field.Error` | Error font size | `var(--pui-font-size-1)` |
+<ThemingTable component="Field" declaredOn />
 
 `--pui-field-indent` defaults to an `md` Checkbox's width plus the label gap.
 It has to be a value rather than a measurement — the control declares its own

@@ -29,19 +29,30 @@
      * by setting them on the toggle (an unlayered consumer rule beats this
      * layer whatever its specificity); re-skin every toggle by re-pointing the
      * global tokens they resolve to. */
+    /** Corner radius. */
     --pui-toggle-radius: var(--pui-radius-control);
+    /** Height. `size` re-points it. */
     --pui-toggle-height: var(--pui-control-h-md);
+    /** Inline padding. `iconOnly` sets it to `0`. */
     --pui-toggle-padding-x: var(--pui-control-px-md);
+    /** Label size. */
     --pui-toggle-font-size: var(--pui-font-size-2);
+    /** Label weight. */
     --pui-toggle-font-weight: var(--pui-font-weight-medium);
+    /** Gap between an icon and its label. */
     --pui-toggle-gap: var(--pui-control-gap);
+    /** Border width, drawn in every variant — `outline` is the only one that
+     * gives it a colour. */
     --pui-toggle-border-width: 1px;
+    /** Colour transitions between states. */
     --pui-toggle-duration: var(--pui-duration-fast);
     /* Press feedback only. There is no hover lift or hover scale slot on a
      * toggle the way there is on Button: a toggle is normally one of several
      * in a strip, and a single item growing under the pointer breaks the
      * shared edge that makes the strip read as one control. A literal value is
      * safe anyway — it is multiplied by `--pui-motion-ok` at the point of use. */
+    /** How far the button squashes while held. Multiplied by `--pui-motion-ok`,
+     * so a literal value still collapses under reduced motion. */
     --pui-toggle-press-scale: var(--pui-scale-press);
 
     /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
@@ -55,16 +66,27 @@
 
     /* Off. Identical in all three variants apart from the border, so it is
      * stated once here rather than repeated per variant. */
+    /** Fill while unpressed. */
     --pui-toggle-bg: transparent;
+    /** Fill on hover while unpressed. */
     --pui-toggle-bg-hover: var(--pui-color-panel-hover);
+    /** Label colour while unpressed. */
     --pui-toggle-fg: var(--pui-color-foreground-muted);
+    /** Label colour on hover while unpressed. */
     --pui-toggle-fg-hover: var(--pui-color-foreground);
+    /** Border colour while unpressed. `var(--pui-color-border)` for
+     * `variant="outline"`. */
     --pui-toggle-border-color: transparent;
 
     /* On. Filled in per variant below; this is the `soft` set. */
+    /** Fill while pressed. Set by `variant` from the tone. */
     --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
+    /** Fill on hover while pressed. Set by `variant` from the tone. */
     --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
+    /** Label colour while pressed. Set by `variant` from the tone. */
     --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
+    /** Border colour while pressed. The tone's border for `variant="outline"`.
+ */
     --pui-toggle-border-color-pressed: transparent;
 
     box-sizing: border-box;
@@ -242,16 +264,22 @@
    * its own state, so neither is set in the TSX and neither may be assumed
    * absent. `data-segmented` and `data-full-width` are ours. */
   .group {
+    /** Gap between toggles. `var(--pui-space-1)` when `segmented`. */
     --pui-toggle-group-gap: var(--pui-space-2);
+    /** Padding inside the strip. `var(--pui-space-1)` when `segmented`. */
     --pui-toggle-group-padding: 0px;
+    /** Corner radius of the strip. `var(--pui-radius-4)` when `segmented`. */
     --pui-toggle-group-radius: 0px;
+    /** Fill behind the strip. `var(--pui-color-panel)` when `segmented`. */
     --pui-toggle-group-bg: transparent;
     /* Transparent rather than absent even when there is nothing to draw:
      * `transparent` is NOT preserved under forced colours — it is replaced
      * with a system colour — so declaring the border here is what lets the
      * segmented strip keep a visible boundary in high contrast without the
      * a11y block having to add a border and shift the layout by 2px. */
+    /** Border width of the strip. */
     --pui-toggle-group-border-width: 1px;
+    /** Border colour of the strip. */
     --pui-toggle-group-border-color: transparent;
 
     box-sizing: border-box;

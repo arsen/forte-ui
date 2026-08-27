@@ -22,18 +22,26 @@
      * button by setting these on the button (an unlayered consumer rule beats
      * this layer whatever its specificity); re-skin every button by
      * re-pointing the global tokens they resolve to. */
+    /** Corner radius */
     --pui-button-radius: var(--pui-radius-control);
+    /** Label weight */
     --pui-button-font-weight: var(--pui-font-weight-medium);
+    /** Space between icon and label */
     --pui-button-gap: var(--pui-control-gap);
+    /** Border thickness (only `outline` gives it a colour) */
     --pui-button-border-width: 1px;
+    /** Button height; reassigned by `size` */
     --pui-button-height: var(--pui-control-h-md);
+    /** Horizontal padding; reassigned by `size`, and `0` when `iconOnly` */
     --pui-button-padding-x: var(--pui-control-px-md);
+    /** Label size; reassigned by `size` */
     --pui-button-font-size: var(--pui-font-size-2);
-    /* Diameter of the loading Spinner. `1em`, so it tracks
-     * `--pui-button-font-size` and needs no per-size rule of its own — and so
-     * it stays in proportion if a consumer re-points the font size. Spinner's
-     * own `size` prop is not used here for the same reason: its `sm` is a flat
-     * 1rem, which is wider than the label beside it on a small button. */
+    /* `1em`, so it tracks `--pui-button-font-size` and needs no per-size rule
+     * of its own — and so it stays in proportion if a consumer re-points the
+     * font size. Spinner's own `size` prop is not used here for the same
+     * reason: its `sm` is a flat 1rem, which is wider than the label beside it
+     * on a small button. */
+    /** Diameter of the loading spinner */
     --pui-button-spinner-size: 1em;
 
     /* Motion slots. Hover geometry is identity by default: a button's hover
@@ -50,26 +58,45 @@
      * Literal values are safe in either slot: both are multiplied by
      * `--pui-motion-ok` at the point of use, so they collapse to identity
      * under reduced motion without the consumer having to know that. */
+    /** How far the button rises on hover. Multiplied by `--pui-motion-ok`, so a
+     * literal value still collapses under reduced motion. */
     --pui-button-hover-lift: var(--pui-control-hover-lift, 0px);
+    /** How far the button grows on hover; also multiplied by `--pui-motion-ok`.
+ */
     --pui-button-hover-scale: var(--pui-control-hover-scale, 1);
+    /** How far the button squashes while held. */
     --pui-button-press-scale: var(--pui-scale-press);
 
     /* Colour slots, filled in per tone + variant below. */
+    /** Resting background; filled in by `variant` */
     --pui-button-bg: transparent;
+    /** Hover background */
     --pui-button-bg-hover: transparent;
+    /** Pressed background */
     --pui-button-bg-active: transparent;
+    /** Label and icon colour */
     --pui-button-fg: var(--pui-color-foreground);
+    /** Border colour */
     --pui-button-border-color: transparent;
 
     /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
+    /** Tone's solid fill */
     --pui-button-tone-solid: var(--pui-color-primary);
+    /** Tone's solid fill on hover */
     --pui-button-tone-solid-hover: var(--pui-color-primary-hover);
+    /** Tone's solid fill when pressed */
     --pui-button-tone-solid-active: var(--pui-color-primary-active);
+    /** Text colour on the solid fill */
     --pui-button-tone-on-solid: var(--pui-color-on-primary);
+    /** Tone's tinted fill, and the hover wash for `outline` and `ghost` */
     --pui-button-tone-soft: var(--pui-color-primary-soft);
+    /** Tinted fill on hover */
     --pui-button-tone-soft-hover: var(--pui-color-primary-soft-hover);
+    /** Tinted fill when pressed */
     --pui-button-tone-soft-active: var(--pui-color-primary-soft-active);
+    /** Label colour for `soft`, `outline` and `ghost` */
     --pui-button-tone-text: var(--pui-color-primary-text);
+    /** Border colour for `outline` */
     --pui-button-tone-border: var(--pui-color-primary-border);
 
     box-sizing: border-box;

@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
 
 export const metadata = {
   title: "Tooltip",
@@ -169,21 +170,7 @@ opacity fade with no travel and no scale.
 Every value below is a custom property you can override. `--pui-tooltip-z-index`
 is declared on the positioner; all the others are declared on the popup.
 
-| Property | Controls | Default |
-| --- | --- | --- |
-| `--pui-tooltip-z-index` | Stacking order of the positioner | `50` |
-| `--pui-tooltip-bg` | Popup and arrow fill | `var(--pui-gray-12)` |
-| `--pui-tooltip-fg` | Text colour | `var(--pui-gray-1)` |
-| `--pui-tooltip-radius` | Corner radius | `var(--pui-radius-2)` |
-| `--pui-tooltip-padding-block` | Top and bottom padding | `var(--pui-space-1)` |
-| `--pui-tooltip-padding-inline` | Left and right padding | `var(--pui-space-2)` |
-| `--pui-tooltip-font-size` | Text size, and the `em` basis the arrow is sized from | `var(--pui-font-size-1)` |
-| `--pui-tooltip-font-weight` | Text weight | `var(--pui-font-weight-medium)` |
-| `--pui-tooltip-shadow` | Popup shadow (removed in forced-colors mode) | `var(--pui-shadow-2)` |
-| `--pui-tooltip-max-width` | Width cap, further clamped to the space the positioner reports as available | `18rem` |
-| `--pui-tooltip-travel` | How far the popup slides in from, per side | `var(--pui-travel-sm)` |
-| `--pui-tooltip-arrow-width` | Arrow base width | `1em` |
-| `--pui-tooltip-arrow-height` | Arrow height, and the distance it is pushed out from the popup | `0.5em` |
+<ThemingTable component="Tooltip" />
 
 The stylesheet also computes `--pui-tooltip-enter-x` and `--pui-tooltip-enter-y`
 from `--pui-tooltip-travel` and the resolved `data-side`. They are internal;

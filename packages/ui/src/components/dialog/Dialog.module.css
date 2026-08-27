@@ -78,7 +78,9 @@
      * `--pui-dialog-exit-fade-ease` below; they are declared separately
      * because the popup's cannot reach a sibling. Set them through
      * `backdropClassName`. */
+    /** How long the scrim takes to clear; set through `backdropClassName` */
     --pui-dialog-backdrop-exit-duration: var(--pui-duration-fast);
+    /** Curve the scrim clears on; set through `backdropClassName` */
     --pui-dialog-backdrop-exit-ease: var(--pui-ease-exit);
 
     /* Restated from `.pui-scrim` so the @supports override below has an
@@ -110,6 +112,8 @@
    * is still an outside press, so pointer dismissal keeps working.
    * ---------------------------------------------------------------------- */
   .viewport {
+    /** Gap between the popup and the edge of the screen. `size="fullscreen"`
+     * drops it to `0px`. */
     --pui-dialog-viewport-padding: var(--pui-space-4);
     /* Stacking is not optional here. `position: fixed` alone leaves the
      * viewport at `z-index: auto`, which paints in the same band as every
@@ -154,24 +158,36 @@
      * Consumers set them on the popup itself (`className` on `Dialog.Popup`,
      * whose rule is unlayered and so beats this layer) or re-point the global
      * tokens below, which this file only ever reads. */
+    /** Popup background */
     --pui-dialog-bg: var(--pui-color-overlay);
+    /** Popup text colour */
     --pui-dialog-fg: var(--pui-color-foreground);
+    /** Corner radius. `size="fullscreen"` squares it off to `0px`. */
     --pui-dialog-radius: var(--pui-radius-surface);
+    /** Padding inside the popup */
     --pui-dialog-padding: var(--pui-surface-p);
+    /** Vertical gap between the popup's children */
     --pui-dialog-gap: var(--pui-space-4);
+    /** Popup shadow */
     --pui-dialog-shadow: var(--pui-shadow-4);
+    /** Base font size inside the popup */
     --pui-dialog-font-size: var(--pui-font-size-2);
     /* No width token exists in the inventory (widths are layout, not theme),
      * so the size scale lives in these knobs and is overridable per app. */
+    /** Maximum popup width; what the `size` prop sets — `24rem` for `sm`,
+     * `48rem` for `lg`, `100%` for `fullscreen`. */
     --pui-dialog-max-inline-size: 32rem;
     /* How far each nested dialog pushes its parent down, and how much it
      * shrinks it. The travel token collapses to 0px under reduced motion;
      * the scale step is gated on --pui-motion-ok for the same reason. */
+    /** How far each nested dialog pushes its parent down */
     --pui-dialog-nested-offset: var(--pui-travel-lg);
+    /** How much each nested dialog shrinks its parent */
     --pui-dialog-nested-scale-step: 0.04;
     /* The parent's retreat is a layout move, not a pop: `spring-precise` is
      * the one spring in the set with no overshoot, so the surface settles
      * under the child instead of bouncing beneath it. */
+    /** How long the parent takes to retreat under a child */
     --pui-dialog-nested-duration: var(--pui-duration-spring-precise);
 
     /* Enter/exit gesture. Broken out into knobs so an app can retune the
@@ -180,7 +196,10 @@
      * rather than a literal so it lands on exactly 1 under reduced motion;
      * multiplying a scale by `ok` instead would collapse the popup to
      * nothing. */
+    /** How far the popup rises as it opens. `var(--pui-travel-page)` when
+     * `size="fullscreen"`. */
     --pui-dialog-enter-travel: var(--pui-travel-md);
+    /** Scale the popup grows from. `1` when `size="fullscreen"`. */
     --pui-dialog-enter-scale: var(--pui-scale-enter);
     /* `normal`, not `--pui-duration-spring-snappy`. The rule elsewhere is to
      * pair a spring easing with its own settle time, and that rule is about
@@ -191,19 +210,27 @@
      * indicator), and matching it is the point — at 400ms a dialog opened
      * from a `Button` read as noticeably heavier than the `Select` opened
      * from the control beside it. */
+    /** Length of the opening gesture */
     --pui-dialog-enter-duration: var(--pui-duration-normal);
+    /** Curve of the opening gesture */
     --pui-dialog-enter-ease: var(--pui-ease-spring-snappy);
+    /** How far the popup sinks as it closes. `var(--pui-travel-page)` when
+     * `size="fullscreen"`. */
     --pui-dialog-exit-travel: var(--pui-travel-md);
+    /** Scale the popup shrinks to. `1` when `size="fullscreen"`. */
     --pui-dialog-exit-scale: calc(1 - 0.05 * var(--pui-motion-ok));
     /* Shorter than the entrance, and deliberately so: an arrival has to
      * read as a surface settling into place, while a dismissal is something
      * the user has already decided on and only needs confirming. `fast` is
      * what every other popup in the set exits on. */
+    /** Length of the closing gesture */
     --pui-dialog-exit-duration: var(--pui-duration-fast);
     /* `linear` on purpose, and the one place in the library that wants it —
      * see the note at the top of the file. Nothing eases toward a resting
      * place here, because the popup is removed rather than arriving. */
+    /** Curve the closing *geometry* runs on */
     --pui-dialog-exit-ease: linear;
+    /** Curve the closing *fade* runs on */
     --pui-dialog-exit-fade-ease: var(--pui-ease-exit);
 
     box-sizing: border-box;
