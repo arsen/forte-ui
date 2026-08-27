@@ -494,7 +494,7 @@ function ArrowSvg() {
  * - **Never put important information only in a tooltip.** If a user who
  *   never sees it would be unable to operate or understand the UI, it does
  *   not belong here. Put it inline, or in a `Popover` if space is tight.
- * - **For an info affordance — the little "i" icon — use `Popover` with
+ * - **For an info affordance — the little "i" icon — use {@link Popover} with
  *   `openOnHover` on its trigger instead.** That version is reachable by
  *   touch and by assistive technology. The rule of thumb: if the trigger's
  *   purpose *is* to open the popup, it is a popover; if the trigger's purpose

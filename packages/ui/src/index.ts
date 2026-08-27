@@ -89,6 +89,21 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { Popover } from "./components/popover";
+export type {
+  PopoverSize,
+  PopoverFooterAlign,
+  PopoverRootProps,
+  PopoverTriggerProps,
+  PopoverPopupProps,
+  PopoverArrowProps,
+  PopoverTitleProps,
+  PopoverDescriptionProps,
+  PopoverCloseProps,
+  PopoverFooterProps,
+  PopoverViewportProps,
+} from "./components/popover";
+
 export { Radio, RadioGroup } from "./components/radio";
 export type {
   RadioProps,

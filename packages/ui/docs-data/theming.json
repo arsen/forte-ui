@@ -1854,6 +1854,178 @@
       }
     ]
   },
+  "Popover": {
+    "name": "Popover",
+    "tokens": [
+      {
+        "name": "--pui-popover-backdrop-z-index",
+        "value": "49",
+        "description": "Stacking order of the backdrop; set through `backdropClassName`",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-z-index",
+        "value": "50",
+        "description": "Stacking order of the positioner",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Popup surface colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Popup text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-padding",
+        "value": "var(--pui-surface-p)",
+        "description": "Padding inside the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Vertical gap between the popup's children",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Popup shadow (stripped by the browser in forced-colors mode, which is why the element also carries `.pui-hc-surface`)",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the popup from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline. The arrow's outline follows it.",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Base font size inside the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-max-width",
+        "value": "20rem",
+        "description": "Width cap, further clamped to the space the positioner reports as available; what the `size` prop sets — `16rem` for `sm`, `26rem` for `lg`",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "16rem"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "20rem"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "26rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-popover-arrow-width",
+        "value": "1em",
+        "description": "Arrow base width",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-arrow-height",
+        "value": "0.5em",
+        "description": "Arrow height, and the distance it is pushed out from the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the popup slides in from, per side",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-enter-scale",
+        "value": "var(--pui-scale-enter)",
+        "description": "Scale the popup grows from and shrinks back to",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-enter-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "Curve of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-resize-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long the popup takes to resize between two triggers' content; only in play when a `Popover.Viewport` is present",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-popover-viewport-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the incoming and outgoing content slide during a swap",
+        "part": "viewport",
+        "overrides": []
+      }
+    ]
+  },
   "Radio": {
     "name": "Radio",
     "tokens": [
