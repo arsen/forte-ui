@@ -475,6 +475,26 @@ import d_toggle_group_segmented from "./toggle-group/segmented";
 import d_toggle_group_segmented_src from "./toggle-group/segmented?raw";
 import d_toggle_group_single from "./toggle-group/single";
 import d_toggle_group_single_src from "./toggle-group/single?raw";
+import d_toolbar_basic from "./toolbar/basic";
+import d_toolbar_basic_src from "./toolbar/basic?raw";
+import d_toolbar_composition from "./toolbar/composition";
+import d_toolbar_composition_src from "./toolbar/composition?raw";
+import d_toolbar_disabled from "./toolbar/disabled";
+import d_toolbar_disabled_src from "./toolbar/disabled?raw";
+import d_toolbar_editor from "./toolbar/editor";
+import d_toolbar_editor_src from "./toolbar/editor?raw";
+import d_toolbar_groups from "./toolbar/groups";
+import d_toolbar_groups_src from "./toolbar/groups?raw";
+import d_toolbar_input from "./toolbar/input";
+import d_toolbar_input_src from "./toolbar/input?raw";
+import d_toolbar_link from "./toolbar/link";
+import d_toolbar_link_src from "./toolbar/link?raw";
+import d_toolbar_orientation from "./toolbar/orientation";
+import d_toolbar_orientation_src from "./toolbar/orientation?raw";
+import d_toolbar_sizes from "./toolbar/sizes";
+import d_toolbar_sizes_src from "./toolbar/sizes?raw";
+import d_toolbar_variants from "./toolbar/variants";
+import d_toolbar_variants_src from "./toolbar/variants?raw";
 import d_tooltip_basic from "./tooltip/basic";
 import d_tooltip_basic_src from "./tooltip/basic?raw";
 import d_tooltip_delay from "./tooltip/delay";
@@ -718,6 +738,16 @@ export type DemoId =
   | "toggle-group/orientation"
   | "toggle-group/segmented"
   | "toggle-group/single"
+  | "toolbar/basic"
+  | "toolbar/composition"
+  | "toolbar/disabled"
+  | "toolbar/editor"
+  | "toolbar/groups"
+  | "toolbar/input"
+  | "toolbar/link"
+  | "toolbar/orientation"
+  | "toolbar/sizes"
+  | "toolbar/variants"
   | "tooltip/basic"
   | "tooltip/delay"
   | "tooltip/placement"
@@ -959,6 +989,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "toggle-group/orientation": { Component: d_toggle_group_orientation, source: d_toggle_group_orientation_src, file: "toggle-group/orientation.tsx" },
   "toggle-group/segmented": { Component: d_toggle_group_segmented, source: d_toggle_group_segmented_src, file: "toggle-group/segmented.tsx" },
   "toggle-group/single": { Component: d_toggle_group_single, source: d_toggle_group_single_src, file: "toggle-group/single.tsx" },
+  "toolbar/basic": { Component: d_toolbar_basic, source: d_toolbar_basic_src, file: "toolbar/basic.tsx" },
+  "toolbar/composition": { Component: d_toolbar_composition, source: d_toolbar_composition_src, file: "toolbar/composition.tsx" },
+  "toolbar/disabled": { Component: d_toolbar_disabled, source: d_toolbar_disabled_src, file: "toolbar/disabled.tsx" },
+  "toolbar/editor": { Component: d_toolbar_editor, source: d_toolbar_editor_src, file: "toolbar/editor.tsx" },
+  "toolbar/groups": { Component: d_toolbar_groups, source: d_toolbar_groups_src, file: "toolbar/groups.tsx" },
+  "toolbar/input": { Component: d_toolbar_input, source: d_toolbar_input_src, file: "toolbar/input.tsx" },
+  "toolbar/link": { Component: d_toolbar_link, source: d_toolbar_link_src, file: "toolbar/link.tsx" },
+  "toolbar/orientation": { Component: d_toolbar_orientation, source: d_toolbar_orientation_src, file: "toolbar/orientation.tsx" },
+  "toolbar/sizes": { Component: d_toolbar_sizes, source: d_toolbar_sizes_src, file: "toolbar/sizes.tsx" },
+  "toolbar/variants": { Component: d_toolbar_variants, source: d_toolbar_variants_src, file: "toolbar/variants.tsx" },
   "tooltip/basic": { Component: d_tooltip_basic, source: d_tooltip_basic_src, file: "tooltip/basic.tsx" },
   "tooltip/delay": { Component: d_tooltip_delay, source: d_tooltip_delay_src, file: "tooltip/delay.tsx" },
   "tooltip/placement": { Component: d_tooltip_placement, source: d_tooltip_placement_src, file: "tooltip/placement.tsx" },

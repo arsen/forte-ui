@@ -1,0 +1,308 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Toolbar",
+  description:
+    "A strip of related controls that behaves as one tab stop, with the arrow keys moving between them.",
+};
+
+# Toolbar
+
+A container for a set of controls that belong together — formatting buttons, an
+editor's tools, a row of page actions. Renders a `<div role="toolbar">`.
+
+<DemoBlock id="toolbar/basic" />
+
+The point of the component is the **keyboard contract**, not the row. Tab moves
+past the whole bar in one press and the arrow keys move between its controls,
+which is what stops a nine-button formatting bar from costing nine presses to
+skip. A `<div>` with `display: flex` gets you the same picture and none of that.
+
+## Import
+
+```tsx
+import { Toolbar } from "@dofortech/pretty-ui";
+```
+
+```tsx
+<Toolbar.Root aria-label="Formatting">
+  <Toolbar.Group>
+    <Toolbar.Button iconOnly aria-label="Undo">…</Toolbar.Button>
+    <Toolbar.Button iconOnly aria-label="Redo">…</Toolbar.Button>
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Input aria-label="Search" placeholder="Find…" />
+  <Toolbar.Link href="/history">History</Toolbar.Link>
+  <Toolbar.Button variant="solid" tone="primary">Publish</Toolbar.Button>
+</Toolbar.Root>
+```
+
+## Examples
+
+### Groups and separators
+
+A `Toolbar.Group` is a visual and semantic cluster, not a keyboard one: the
+arrow keys still run the length of the whole bar. What changes is the gap —
+tighter inside a group than between them — so the eye groups the items before it
+reads them. Reach for a `Toolbar.Separator` between groups that answer different
+questions, and let the group gap carry the rest.
+
+<DemoBlock id="toolbar/groups" />
+
+There is no prop for pushing a cluster to the far end, because there is nothing
+for one to do that a margin does not: the bar is a flex container, so
+`className="ms-auto"` or `style={{ marginInlineStart: "auto" }}` on the group
+does it.
+
+<Callout kind="note">
+  A separator is not a stop. It is not a composite item, so the arrow keys pass
+  straight over it — it divides the bar for the eye without adding a press to
+  cross it.
+</Callout>
+
+### Variants
+
+`variant` decides how much chrome the **bar** carries, and says nothing about
+the controls inside: a `plain` bar can still hold solid buttons, and a `panel`
+bar quiet ones.
+
+<DemoBlock id="toolbar/variants" />
+
+`plain` also drops the padding to zero, and that is the point of it. With no
+surface to sit on, the padding would push the first control away from whatever
+the bar is aligned with — a heading, a text column, the editor below it — and a
+row of buttons that does not line up with the thing it acts on reads as a
+mistake.
+
+### Sizes
+
+`size` on the root is the default size of every `Toolbar.Button`,
+`Toolbar.Input` and `Toolbar.Link` inside it, so a bar stays one height without
+repeating the prop per control. An item's own `size` still wins.
+
+<DemoBlock id="toolbar/sizes" />
+
+This is React context rather than CSS inheritance, and it has to be. The size
+knobs are declared on each control's own root rule — the placement that lets you
+re-skin a single control, because an element's own declaration beats an
+inherited one — so a value set on the bar would be inherited and then
+immediately overwritten. The `data-size` attribute the rules key off is resolved
+in JavaScript and written onto each item.
+
+### Orientation
+
+`orientation="vertical"` stacks the items and moves the arrow keys onto the
+block axis. Separators flip with it: Base UI gives a rule the orientation
+*perpendicular* to the bar's, so a vertical toolbar gets horizontal rules
+without being told.
+
+<DemoBlock id="toolbar/orientation" />
+
+A `ToggleGroup` inside it needs telling too. Base UI's `ToggleGroup` skips its
+own roving focus in a toolbar, but `orientation` still drives its **layout** —
+left at the default it lays its toggles out in a row inside your column.
+
+<Callout kind="warn">
+  This is not layout only. Base UI binds the arrow keys to the named axis, so a
+  vertical toolbar answers to Up and Down and leaves Left and Right to the page —
+  and to any text input inside it. Laying controls out in a column with the
+  default `orientation="horizontal"` strands keyboard users on the wrong keys.
+</Callout>
+
+### Menus, selects and toggles
+
+Anything can join the bar's arrow-key order, and there are two directions to
+compose in. Which one to reach for depends on whether the other component has a
+look of its own to defend.
+
+<DemoBlock id="toolbar/composition" />
+
+`Toolbar.Button render={<Select.Trigger />}` is the direction for a component
+that must keep its own appearance — a select trigger has to read as a select.
+The default `Button` styling steps aside when `render` is present, so the two
+never fight over the cascade, and only the toolbar membership is added.
+
+`Menu.Trigger render={<Toolbar.Button />}` is the direction for a trigger with
+no look to defend: `Menu.Trigger`, `Dialog.Trigger`, `Popover.Trigger` and
+`Drawer.Trigger` all step aside for a `render` of their own, so this hands them
+the bar's quiet styling. The toolbar button reads the toolbar's context from
+where it sits, so `disabled` on the root still reaches it either way.
+
+<Callout kind="note">
+  A `ToggleGroup` needs neither. Base UI's `ToggleGroup` checks for a toolbar
+  above it and, finding one, skips its own roving focus so its toggles join the
+  bar's arrow-key order instead of opening a second keyboard mode inside it.
+  Drop the group straight in — as the first example does.
+
+  A **standalone** `Toggle`, one outside a group, is not a composite item on its
+  own and does need `Toolbar.Button render={<Toggle />}`.
+</Callout>
+
+### Text inputs
+
+`Toolbar.Input` is a text field that is part of the roving focus. The arrow keys
+do the right thing without configuration: while the caret has somewhere left to
+go inside the field, Left and Right move the caret; at either end they hand the
+key back to the toolbar and focus moves on. Home and End are never taken — a
+toolbar does not bind them — so they jump the caret as they would in any field.
+
+<DemoBlock id="toolbar/input" />
+
+That handling is the reason to reach for it rather than dropping a bare
+[`Input`](/components/input) into the bar — a bare one is not in the roving
+order at all, so Tab is the only way past it, and you have just paid for the
+tab stop the toolbar exists to save.
+
+### Links
+
+`Toolbar.Link` is drawn as a link and not as a button on purpose: it navigates,
+and the underline is the only cue that says so before it is clicked. Colour
+alone would fail SC 1.4.1 against the buttons beside it, which share the bar's
+text colour.
+
+<DemoBlock id="toolbar/link" />
+
+Use `render` for a router link — `render={<Link href="/docs" />}`.
+
+### Disabled
+
+`disabled` on the root reaches every item; on a `Toolbar.Group` it reaches that
+group's items and composes with the root's.
+
+<DemoBlock id="toolbar/disabled" />
+
+<Callout kind="a11y">
+  A disabled toolbar item keeps its place in the arrow-key order rather than
+  disappearing from it — that is `focusableWhenDisabled`, and it defaults to
+  `true` here because it is the ARIA authoring practice for a toolbar. A
+  disabled control that vanishes from the order silently changes what every
+  other key press does, and the user has no way to find out *why* an action they
+  expected is missing.
+</Callout>
+
+A link is the one thing `disabled` cannot reach: HTML has no disabled state for
+an `<a>`, so it stays live and focusable inside a disabled toolbar. Render it
+conditionally if it has to go away.
+
+### In an editor
+
+Everything the component is for, in one bar.
+
+<DemoBlock id="toolbar/editor" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus into the toolbar, landing on the last-focused item — or the first one — and out again in one press. The whole bar is a single tab stop.",
+    },
+    {
+      keys: ["ArrowRight", "ArrowDown"],
+      description:
+        "Moves focus to the next item, wrapping from the last to the first. Only the arrows on the toolbar's own axis are bound.",
+    },
+    {
+      keys: ["ArrowLeft", "ArrowUp"],
+      description: "Moves focus to the previous item, wrapping from the first to the last.",
+    },
+    {
+      keys: ["Home", "End"],
+      description:
+        "Not bound. Unlike Toggle Group and Tabs, a toolbar leaves these to the page — or to the caret, when the focused item is a text input.",
+    },
+    {
+      keys: ["Space", "Enter"],
+      description: "Activates the focused item. Moving focus never activates anything.",
+    },
+  ]}
+/>
+
+Set `loopFocus={false}` to stop the arrows wrapping at the ends.
+
+<Callout kind="note">
+  Home and End are deliberately absent from that list. Base UI leaves them
+  unbound in a toolbar — they are optional in the ARIA authoring practice for
+  one — which is a real difference from
+  [`Toggle Group`](/components/toggle-group) and [`Tabs`](/components/tabs),
+  where both keys do move focus. It is also what keeps them free for the text
+  input in the bar.
+</Callout>
+
+<Callout kind="a11y">
+  `Toolbar.Root` has no name of its own, and `role="toolbar"` is not a labelable
+  element — it cannot take a `<label>`. Give it `aria-label`, or point
+  `aria-labelledby` at your own heading. Without a name the grouping is
+  invisible to assistive technology and the controls read as a loose row of
+  buttons. The same goes for a `Toolbar.Group` whose purpose is not obvious from
+  its items.
+</Callout>
+
+Each icon-only item still needs a name of its own — an icon is not an accessible
+name — and `iconOnly` holds the 24×24 minimum hit target from SC 2.5.8 for you.
+
+## Theming
+
+<ThemingTable component="Toolbar" part="root" />
+
+The bar always draws a 1px border, even when it has no colour. `transparent` is
+not preserved under forced colours — it is replaced with a system colour — so
+declaring the border up front is what lets a `panel` bar keep a visible edge in
+high contrast, where its fill disappears, without the accessibility rules having
+to add a border and shift every item in the bar.
+
+### Group
+
+<ThemingTable component="Toolbar" part="group" />
+
+### Separator
+
+<ThemingTable component="Toolbar" part="separator" />
+
+The rule is painted with a **border**, never a `background-color`. A background
+is replaced with a system colour under forced colours, so a hairline drawn that
+way vanishes for exactly the users who most need the grouping cue; border
+colours are forced to `CanvasText` instead.
+
+### Link
+
+<ThemingTable component="Toolbar" part="link" />
+
+The controls inside the bar are themed through their own properties —
+`--pui-button-*` on [`Button`](/components/button), `--pui-input-*` on
+[`Input`](/components/input), `--pui-toggle-*` on [`Toggle`](/components/toggle).
+
+## API reference
+
+### Toolbar.Root
+
+<PropTable component="ToolbarRoot" />
+
+### Toolbar.Group
+
+<PropTable component="ToolbarGroup" />
+
+### Toolbar.Button
+
+<PropTable component="ToolbarButton" />
+
+Every other [`Button`](/components/button) prop passes through unchanged, as do
+Base UI's own `nativeButton` and `render`.
+
+### Toolbar.Link
+
+<PropTable component="ToolbarLink" />
+
+### Toolbar.Input
+
+<PropTable component="ToolbarInput" />
+
+### Toolbar.Separator
+
+<PropTable component="ToolbarSeparator" />

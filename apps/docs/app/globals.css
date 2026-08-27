@@ -48,8 +48,19 @@
   }
 
   /* Without these two a link is UA blue and underlined wherever it appears,
-   * which includes a Button rendered as an <a> and every link inside a demo. */
-  a {
+   * which includes a Button rendered as an <a> and every link inside a demo.
+   *
+   * The underline half skips `.pui-link`, and the exclusion is not cosmetic.
+   * This layer sits after every `pretty-ui.*` layer and layer order outranks
+   * specificity completely, so a flat `a { text-decoration: none }` beats the
+   * `text-decoration: underline` that `Toolbar.Link` and
+   * `PreviewCard.Trigger` declare in `pretty-ui.components` — and the
+   * underline is the only cue separating those two from the buttons and prose
+   * around them once the colour is gone, which is SC 1.4.1. `.pui-link` is
+   * the library's marker for exactly the parts that mean to look like links,
+   * so a Button rendered as an <a> and a `Menu.LinkItem` — neither of which
+   * carries it — still get the reset. */
+  a:not(.pui-link) {
     text-decoration: none;
   }
 
