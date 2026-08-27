@@ -49,6 +49,123 @@ function collect(main: HTMLElement): Heading[] {
   }));
 }
 
+/** Half of the line a heading comes to rest on after a #fragment jump. */
+const scrollPad = () =>
+  parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+
+/**
+ * The line a heading comes to rest on: the root's scroll-padding plus the
+ * heading's own `scroll-margin-top`. The two ADD, and on this site both are
+ * `--spacing-anchor`, so a heading parks 160px down and not the 80px either
+ * value suggests on its own. Both are read rather than restated — a rail that
+ * disagrees with where the browser stops highlights the section above the one
+ * under the reader's eye, and the animated jump below would scroll to a line
+ * the browser never uses.
+ */
+const anchorLine = (el: HTMLElement, pad = scrollPad()) =>
+  pad + (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
+
+/** A duration token in milliseconds. The tokens are authored in `ms`, but `s`
+ *  is legal CSS and computes as written, so both are read. */
+const durationMs = (name: string) => {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const value = parseFloat(raw);
+  if (!Number.isFinite(value)) return 0;
+  return raw.endsWith("ms") ? value : value * 1000;
+};
+
+/* Milliseconds per pixel travelled, held between the two duration tokens. At
+ * this rate a hop to the next heading lands on the `fast` floor and only a
+ * jump across most of the page reaches `slow`. */
+const MS_PER_PX = 0.25;
+
+/* Ease-out, the shape of `--pui-ease-standard`: leaves quickly, settles. It is
+ * written out instead of read from the token because a scroll offset is not a
+ * CSS property — there is nothing to hand a CSS easing to, and parsing
+ * `cubic-bezier()` only to re-solve it here is more machinery than the
+ * difference is worth. */
+const easeOut = (t: number) => 1 - (1 - t) ** 3;
+
+/* Input that would normally scroll cancels the animation where it stands, the
+ * way the browser's own smooth scroll yields to a wheel. A scroll you cannot
+ * escape is worse than a slow one. */
+const SCROLL_KEYS = new Set([
+  "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", "Tab", " ",
+]);
+
+/**
+ * Scroll to a heading on a duration that scales with the distance.
+ *
+ * `scroll-behavior: smooth` will not be hurried — its duration is the
+ * browser's to choose, and Blink spends most of a near-fixed budget however
+ * far it is going. That is why the SHORTEST hops, one heading to the next,
+ * are the ones that feel slowest: the same half-second buys 200px. Driving
+ * the scroll here buys back the one thing that matters, and nothing else.
+ *
+ * `behavior: "instant"` on every call below is load-bearing. `"auto"` means
+ * "consult `scroll-behavior`", and the root element carries `scroll-smooth`,
+ * so each frame would kick off a second smooth scroll of its own and the two
+ * would fight.
+ */
+function scrollToHeading(el: HTMLElement) {
+  const doc = document.documentElement;
+  const from = window.scrollY;
+
+  /* Clamped, because the last section usually cannot reach the line — asking
+   * for more scroll than the page has would leave the animation short of its
+   * own target, forever a few pixels from where it said it was going. */
+  const to = Math.max(
+    0,
+    Math.min(
+      el.getBoundingClientRect().top + from - anchorLine(el),
+      doc.scrollHeight - window.innerHeight,
+    ),
+  );
+  const distance = to - from;
+
+  /* The library's answer for scrolling under reduced motion is not a shorter
+   * animation but no animation: `a11y.css` forces `scroll-behavior: auto` on
+   * html, body and `.pui-scroll`. Reading `--pui-motion-ok` rather than
+   * matchMedia matches that through the in-page control too, which sets
+   * `data-pui-motion` and never touches the media query. */
+  const motionOk = parseFloat(getComputedStyle(doc).getPropertyValue("--pui-motion-ok"));
+  if (motionOk !== 1 || Math.abs(distance) < 1) {
+    window.scrollTo({ top: to, behavior: "instant" });
+    return;
+  }
+
+  const duration = Math.min(
+    durationMs("--pui-duration-slow"),
+    Math.max(durationMs("--pui-duration-fast"), Math.abs(distance) * MS_PER_PX),
+  );
+
+  const start = performance.now();
+  let frame = 0;
+
+  const stop = () => {
+    if (frame !== 0) cancelAnimationFrame(frame);
+    frame = 0;
+    window.removeEventListener("wheel", stop);
+    window.removeEventListener("touchstart", stop);
+    window.removeEventListener("keydown", onKey);
+  };
+  const onKey = (event: KeyboardEvent) => {
+    if (SCROLL_KEYS.has(event.key)) stop();
+  };
+
+  window.addEventListener("wheel", stop, { passive: true });
+  window.addEventListener("touchstart", stop, { passive: true });
+  window.addEventListener("keydown", onKey);
+
+  const step = (now: number) => {
+    const t = Math.min(1, (now - start) / duration);
+    window.scrollTo({ top: from + distance * easeOut(t), behavior: "instant" });
+    if (t < 1) frame = requestAnimationFrame(step);
+    else stop();
+  };
+  frame = requestAnimationFrame(step);
+}
+
 export function Toc() {
   const pathname = usePathname();
   const [headings, setHeadings] = useState<Heading[]>([]);
@@ -90,14 +207,10 @@ export function Toc() {
 
       const doc = document.documentElement;
 
-      /* Half of the line a heading comes to rest on after a #fragment jump.
-       * The other half is the heading's own `scroll-margin-top`, read below —
-       * the two ADD, and on this site both are `--spacing-anchor`, so a
-       * heading parks 160px down and not the 80px either value suggests on
-       * its own. Both are read rather than restated: a rail that disagrees
-       * with where the browser actually stops highlights the section above
-       * the one now under the reader's eye. */
-      const pad = parseFloat(getComputedStyle(doc).scrollPaddingTop) || 0;
+      /* Hoisted: `anchorLine` reads the root's scroll-padding itself, and
+       * doing that once per heading per frame is a style read the loop below
+       * does not need. */
+      const pad = scrollPad();
 
       /* The last section usually cannot reach the line — there is not enough
        * page left below it to scroll — so at the bottom it is current by
@@ -117,7 +230,7 @@ export function Toc() {
       for (const heading of headings) {
         const el = document.getElementById(heading.id);
         if (!el) continue;
-        const line = pad + (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
+        const line = anchorLine(el, pad);
         /* The +1 absorbs sub-pixel scroll positions — a heading parked at
          * 159.5px is at the line, and without the slack the rail flickers to
          * the previous section on a fractional-DPI display. */
@@ -180,6 +293,26 @@ export function Toc() {
                 * reads out. */
               aria-current={heading.id === active ? "location" : undefined}
               href={`#${heading.id}`}
+              onClick={(event) => {
+                /* Leave the browser the clicks it does better: a new tab, a
+                 * new window, a saved link. */
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                const target = document.getElementById(heading.id);
+                if (!target) return;
+                event.preventDefault();
+                scrollToHeading(target);
+
+                /* preventDefault dropped three things the browser did for
+                 * free, and they are most of what a #fragment is for: the URL
+                 * worth copying, the history entry Back returns through, and
+                 * the focus position — without which a keyboard user is sent
+                 * to a section and then tabs on from the rail they left.
+                 * `preventScroll` stops the focus call undoing the animation
+                 * it was made for. */
+                history.pushState(null, "", `#${heading.id}`);
+                target.tabIndex = -1;
+                target.focus({ preventScroll: true });
+              }}
             >
               {heading.text}
             </a>
