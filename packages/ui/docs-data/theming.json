@@ -4692,6 +4692,193 @@
       }
     ]
   },
+  "Textarea": {
+    "name": "Textarea",
+    "tokens": [
+      {
+        "name": "--pui-textarea-rows",
+        "value": "3",
+        "description": "Shortest the control can be, in rows (the `rows` prop writes this)",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-padding-y",
+        "value": "calc(var(--pui-textarea-padding-x) / 2)",
+        "description": "Block padding",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-line-height",
+        "value": "var(--pui-line-height-normal)",
+        "description": "Line height — also the unit the row counts above are measured in",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-border-width",
+        "value": "1px",
+        "description": "Border width",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Background (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-placeholder-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Placeholder colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour (reset per `variant`, and by `data-invalid`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-textarea-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-textarea-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Toast": {
     "name": "Toast",
     "tokens": [

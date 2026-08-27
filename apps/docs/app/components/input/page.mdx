@@ -69,12 +69,10 @@ stays.
 
 ### Multi-line
 
-There is no separate `Textarea` component. Swap the element out and the styles
-follow the tag: the fixed control height becomes a minimum, the block padding
-comes back, and `resize` is limited to the vertical axis so the box cannot
-escape the column it sits in.
-
-<DemoBlock id="input/multiline" />
+Use [Textarea](/components/textarea). It is the same `Field.Control` rendered
+as a `<textarea>`, wearing the same variants, sizes and colour slots, and it
+adds the things a paragraph needs that a control height cannot express — a
+height counted in rows, a growth ceiling, and `autoResize`.
 
 ## Accessibility
 

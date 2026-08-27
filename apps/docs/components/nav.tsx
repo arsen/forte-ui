@@ -60,6 +60,7 @@ const NAV: NavGroup[] = [
       { title: "Spinner", href: "/components/spinner" },
       { title: "Switch", href: "/components/switch" },
       { title: "Tabs", href: "/components/tabs" },
+      { title: "Textarea", href: "/components/textarea" },
       { title: "Toast", href: "/components/toast" },
       { title: "Toggle", href: "/components/toggle" },
       { title: "Toggle Group", href: "/components/toggle-group" },
