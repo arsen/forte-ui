@@ -25,11 +25,17 @@ export const metadata: Metadata = {
 
 // Runs before first paint so the page never flashes the wrong theme. Kept
 // deliberately tiny and inlined — an external script would defeat the purpose.
-// Two things are restored: the light/dark mode, and a Theme Studio config the
-// user chose to apply site-wide. The studio stores its resolved variables
-// alongside the config precisely so this stays a dumb replay with no colour
-// maths in the critical path.
-const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('pui-theme');if(t==='light'||t==='dark'){r.setAttribute('data-theme',t);}var s=JSON.parse(localStorage.getItem('pui-studio')||'null');if(s&&s.applyToSite&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-pui-'+d,s.root.data[d]);}}}catch(e){}})();`;
+// Two things are restored: the light/dark mode, and whatever the Theme Studio
+// was last set to — the studio always themes the whole site. It stores its
+// resolved variables alongside the config precisely so this stays a dumb replay
+// with no colour maths in the critical path.
+//
+// `data-theme` is always written, resolved against the OS when nothing is
+// stored, rather than left off to let the media query decide. It is what the
+// header toggle reads to label itself and what it flips, so an unset attribute
+// would mean neither the button nor the first click knows which way round the
+// page currently is.
+const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('pui-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}r.setAttribute('data-theme',t);var s=JSON.parse(localStorage.getItem('pui-studio')||'null');if(s&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-pui-'+d,s.root.data[d]);}}}catch(e){}})();`;
 
 // Visible only on focus. WCAG SC 2.4.1 Bypass Blocks — without it a keyboard
 // user tabs through the entire sidebar on every page load.
