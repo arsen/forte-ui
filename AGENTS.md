@@ -481,7 +481,7 @@ off rather than obviously broken. Add the path when you add the file.
 | `color: var(--pui-color-foreground-muted)` | `text-foreground-muted` |
 | `transition-duration: var(--pui-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
 | `inline-size: min(32rem, 100%)` | `w-full max-w-lg` — the `--container-*` scale is untouched |
-| the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-measure`, `max-w-hero` |
+| the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-hero` |
 | a layout breakpoint | `max-toc:`, `max-two-col:`, `max-split:`, `max-nav:` — named for the column that stops fitting |
 | any other token | `h-(--pui-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
 
@@ -574,13 +574,15 @@ demo is authored in the demo's own file and never passes through the mapping.
 That is why the old `margin: revert-layer` rule aimed at the demo frame is
 gone.
 
-The measure lives there too, and this is the one place it is worth knowing
-where it is NOT. A component page's column is full width — a prop table, a
-sixteen-cell demo and a long import line all want the room, and capping the
-whole column capped them along with the prose. So `max-w-measure` sits on `p`,
-`ul` and `ol` in the element mapping (and on `Callout`, which is running text
-in a box), while everything else spans the column. Anything new that is running
-text needs the cap said out loud; anything tabular or visual does not.
+There is no reading measure anywhere, and that is deliberate. A component
+page's column is full width — a prop table, a sixteen-cell demo and a long
+import line all want the room — and the paragraphs now run to the same right
+edge as the demo frame under them. A 48rem cap on `p` / `ul` / `ol` did exist,
+and it read as a layout bug: a paragraph stopping a couple of hundred pixels
+short of the code block beneath it looks broken, not readable. The only width
+on a component page is the page COLUMN's own cap in `app/layout.tsx`. Do not
+reintroduce a per-element one; `--container-measure` is gone from the theme
+along with it.
 
 Layer order still matters: `pretty-ui.* → docs → theme, base, components,
 utilities`, declared at the top of

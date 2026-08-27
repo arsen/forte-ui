@@ -115,10 +115,11 @@
    * sat empty beside it. The ultra-wide stop is on the page COLUMN instead, in
    * `layout.tsx`, and it is Tailwind's own `--container-6xl`: one number, used
    * once, with a name a reader already knows. */
-  /* NOT `--container-prose`: Tailwind ships a `max-w-prose` of its own (65ch)
-   * and it takes precedence, so the utility silently measured 65 characters
-   * instead of 48rem. "Measure" is the typographic name for the thing anyway. */
-  --container-measure: 48rem;
+  /* There is deliberately no `--container-measure` either. Running text used to
+   * stop at 48rem while the demo and table beside it spanned the column, which
+   * read as a broken layout rather than as a line length; the page column's cap
+   * is now the only width on a component page. The landing page keeps its own,
+   * because a hero has nothing wide beside it to disagree with. */
   --container-hero: 46rem;
 
   /* Layout breakpoints, named for the thing that changes rather than for a
