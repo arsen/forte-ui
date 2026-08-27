@@ -182,21 +182,6 @@
     --pui-input-border-color-hover: var(--pui-color-danger);
     --pui-input-caret-color: var(--pui-color-danger);
   }
-
-  /* Rendered as a <textarea> ---------------------------------------------- */
-  /* `<Input render={<textarea />} />` is a supported swap, and everything above
-   * applies to it except the fixed height. A tag selector rather than a prop:
-   * there is no second component here, only a different element. */
-  textarea.root {
-    block-size: auto;
-    min-block-size: var(--pui-input-height);
-    /* The fixed-height rules pin the text vertically; a textarea has to say so
-     * itself. Half the inline padding reads as the same optical inset. */
-    padding-block: calc(var(--pui-input-padding-x) / 2);
-    line-height: var(--pui-line-height-normal);
-    /* Horizontal resize escapes the column it sits in. */
-    resize: vertical;
-  }
 }
 
 /* Forced colours ---------------------------------------------------------- */

@@ -159,8 +159,6 @@ import d_form_server_errors from "./form/server-errors";
 import d_form_server_errors_src from "./form/server-errors?raw";
 import d_input_basic from "./input/basic";
 import d_input_basic_src from "./input/basic?raw";
-import d_input_multiline from "./input/multiline";
-import d_input_multiline_src from "./input/multiline?raw";
 import d_input_sizes from "./input/sizes";
 import d_input_sizes_src from "./input/sizes?raw";
 import d_input_states from "./input/states";
@@ -311,6 +309,22 @@ import d_tabs_vertical from "./tabs/vertical";
 import d_tabs_vertical_src from "./tabs/vertical?raw";
 import d_tabs_with_icons from "./tabs/with-icons";
 import d_tabs_with_icons_src from "./tabs/with-icons?raw";
+import d_textarea_auto_resize from "./textarea/auto-resize";
+import d_textarea_auto_resize_src from "./textarea/auto-resize?raw";
+import d_textarea_basic from "./textarea/basic";
+import d_textarea_basic_src from "./textarea/basic?raw";
+import d_textarea_character_count from "./textarea/character-count";
+import d_textarea_character_count_src from "./textarea/character-count?raw";
+import d_textarea_composer from "./textarea/composer";
+import d_textarea_composer_src from "./textarea/composer?raw";
+import d_textarea_sizes from "./textarea/sizes";
+import d_textarea_sizes_src from "./textarea/sizes?raw";
+import d_textarea_states from "./textarea/states";
+import d_textarea_states_src from "./textarea/states?raw";
+import d_textarea_validation from "./textarea/validation";
+import d_textarea_validation_src from "./textarea/validation?raw";
+import d_textarea_variants from "./textarea/variants";
+import d_textarea_variants_src from "./textarea/variants?raw";
 import d_toast_action from "./toast/action";
 import d_toast_action_src from "./toast/action?raw";
 import d_toast_basic from "./toast/basic";
@@ -442,7 +456,6 @@ export type DemoId =
   | "form/basic"
   | "form/server-errors"
   | "input/basic"
-  | "input/multiline"
   | "input/sizes"
   | "input/states"
   | "input/variants"
@@ -518,6 +531,14 @@ export type DemoId =
   | "tabs/pill"
   | "tabs/vertical"
   | "tabs/with-icons"
+  | "textarea/auto-resize"
+  | "textarea/basic"
+  | "textarea/character-count"
+  | "textarea/composer"
+  | "textarea/sizes"
+  | "textarea/states"
+  | "textarea/validation"
+  | "textarea/variants"
   | "toast/action"
   | "toast/basic"
   | "toast/custom"
@@ -624,7 +645,6 @@ const REGISTRY: Record<DemoId, Demo> = {
   "form/basic": { Component: d_form_basic, source: d_form_basic_src, file: "form/basic.tsx" },
   "form/server-errors": { Component: d_form_server_errors, source: d_form_server_errors_src, file: "form/server-errors.tsx" },
   "input/basic": { Component: d_input_basic, source: d_input_basic_src, file: "input/basic.tsx" },
-  "input/multiline": { Component: d_input_multiline, source: d_input_multiline_src, file: "input/multiline.tsx" },
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
@@ -700,6 +720,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tabs/pill": { Component: d_tabs_pill, source: d_tabs_pill_src, file: "tabs/pill.tsx" },
   "tabs/vertical": { Component: d_tabs_vertical, source: d_tabs_vertical_src, file: "tabs/vertical.tsx" },
   "tabs/with-icons": { Component: d_tabs_with_icons, source: d_tabs_with_icons_src, file: "tabs/with-icons.tsx" },
+  "textarea/auto-resize": { Component: d_textarea_auto_resize, source: d_textarea_auto_resize_src, file: "textarea/auto-resize.tsx" },
+  "textarea/basic": { Component: d_textarea_basic, source: d_textarea_basic_src, file: "textarea/basic.tsx" },
+  "textarea/character-count": { Component: d_textarea_character_count, source: d_textarea_character_count_src, file: "textarea/character-count.tsx" },
+  "textarea/composer": { Component: d_textarea_composer, source: d_textarea_composer_src, file: "textarea/composer.tsx" },
+  "textarea/sizes": { Component: d_textarea_sizes, source: d_textarea_sizes_src, file: "textarea/sizes.tsx" },
+  "textarea/states": { Component: d_textarea_states, source: d_textarea_states_src, file: "textarea/states.tsx" },
+  "textarea/validation": { Component: d_textarea_validation, source: d_textarea_validation_src, file: "textarea/validation.tsx" },
+  "textarea/variants": { Component: d_textarea_variants, source: d_textarea_variants_src, file: "textarea/variants.tsx" },
   "toast/action": { Component: d_toast_action, source: d_toast_action_src, file: "toast/action.tsx" },
   "toast/basic": { Component: d_toast_basic, source: d_toast_basic_src, file: "toast/basic.tsx" },
   "toast/custom": { Component: d_toast_custom, source: d_toast_custom_src, file: "toast/custom.tsx" },

@@ -1615,7 +1615,7 @@
   },
   "Input": {
     "name": "Input",
-    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control, swap the element out — the styles follow:\n\n```tsx\n<Input render={<textarea />} rows={4} />\n```\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control reach for `Textarea`, which is the same\n`Field.Control` rendered as a `<textarea>` and adds the things a paragraph of\ntext needs — row-based sizing, a growth ceiling, and `autoResize`.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -3042,6 +3042,82 @@
         "required": false,
         "defaultValue": "false",
         "description": "Whether the panel stays in the DOM while hidden. Required if you want the\nexit transition to play, or if the panel holds scroll position or\nuncommitted form state that should survive a round trip."
+      }
+    ]
+  },
+  "Textarea": {
+    "name": "Textarea",
+    "description": "A multi-line text control.\n\nBase UI has no textarea primitive, so this is built on `Field.Control` — the\nsame component `Input` is — rendered as a `<textarea>`. That is what makes it\nparticipate in a `Field` with no wiring: drop one inside a `Field.Root` and\nit picks up the label, the description, the error message, the `name` used on\nsubmit, and the validity attributes.\n\n```tsx\n<Field.Root name=\"bio\">\n  <Field.Label>Bio</Field.Label>\n  <Textarea rows={4} placeholder=\"Tell us about yourself\" />\n  <Field.Error />\n</Field.Root>\n```\n\nHeight is expressed in rows rather than pixels — `rows` is the floor,\n`maxRows` the ceiling, and `autoResize` moves between them as the user types.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-textarea-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "autoResize",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Grow with the content as the user types, between `rows` and `maxRows`.\n\nImplemented with the CSS `field-sizing` property where the browser has it,\nso there is no measurement, no reflow per keystroke and no inline height\non the element. Older engines fall back to a resize observer and a\n`scrollHeight` read, which behaves identically and costs a layout per\nchange.\n\nForces `resize` to `\"none\"`: a handle whose value the next keystroke\noverwrites is not a control."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the control to fill the width of its container. Only needed\noutside a `Field.Root` — a field is a flex column, so a textarea inside\none already stretches."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "defaultValue": null,
+        "description": "The number of rows the box may grow to before it starts scrolling\ninstead. Only a ceiling: a textarea shorter than this is unaffected.\nUnset means no ceiling."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: string, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element; }) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Callback fired when the value changes. Use when controlled."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, FieldControlState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replace the rendered element. Defaults to a `<textarea>`."
+      },
+      {
+        "name": "resize",
+        "type": "TextareaResize",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Which axes the user may drag the control along. `vertical` is the default\nbecause `both` lets the box escape the column it sits in — legitimate for\na full-width composer, wrong for a field in a form."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "defaultValue": "3",
+        "description": "The number of rows the box is at its shortest. Sets the native `rows`\nattribute and the floor the control can never shrink below — including\nunder `autoResize`, and including a drag on the resize handle."
+      },
+      {
+        "name": "size",
+        "type": "TextareaSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the control. Inline padding, block padding and font size move\ntogether, and the numbers come from the same `--pui-control-*` tokens\n`Input` and `Select.Trigger` read — so a textarea stacked under an input\nshares its optical inset at every `data-pui-density` setting.\n\nA `<textarea>` has no native `size` attribute, so unlike `Input` this\nshadows nothing."
+      },
+      {
+        "name": "variant",
+        "type": "TextareaVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the control carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance — the\nsame three `Input` has."
       }
     ]
   },

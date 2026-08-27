@@ -62,11 +62,9 @@ export interface InputProps
  * </Field.Root>
  * ```
  *
- * For a multi-line control, swap the element out — the styles follow:
- *
- * ```tsx
- * <Input render={<textarea />} rows={4} />
- * ```
+ * For a multi-line control reach for `Textarea`, which is the same
+ * `Field.Control` rendered as a `<textarea>` and adds the things a paragraph of
+ * text needs — row-based sizing, a growth ceiling, and `autoResize`.
  *
  * State is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,
  * `data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual

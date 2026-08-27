@@ -240,6 +240,14 @@ export type {
   TabsPanelProps,
 } from "./components/tabs";
 
+export { Textarea } from "./components/textarea";
+export type {
+  TextareaProps,
+  TextareaSize,
+  TextareaVariant,
+  TextareaResize,
+} from "./components/textarea";
+
 export { Toast, useToast } from "./components/toast";
 export type {
   ToastType,

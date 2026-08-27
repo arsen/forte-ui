@@ -1,0 +1,285 @@
+/*
+ * Textarea
+ *
+ * Input's multi-line counterpart, and deliberately the same two axes:
+ *   data-size      inline padding, block padding and font size (sm/md/lg)
+ *   data-variant   how much weight the control carries (outline/soft/ghost)
+ *
+ * The colour slots and the metrics are Input's, read from the same
+ * `--pui-control-*` tokens, so a textarea stacked under an input in a form
+ * shares its boundary, its optical inset and its invalid state at every
+ * density. That alignment is the reason not to invent a private scale here.
+ *
+ * What is NOT Input's is the height. A control height makes no sense for a box
+ * whose whole job is to be as tall as the text, so this file expresses height
+ * in ROWS instead — `min-block-size` is the floor, `max-block-size` the
+ * ceiling, and both are `calc(rows * 1lh + padding + border)`. `1lh` is the
+ * element's own computed line-height, so the arithmetic re-does itself for
+ * free at every size and every density; nothing here needs a pixel.
+ *
+ * Base UI has no textarea primitive, so the element is `Field.Control` rendered
+ * as a <textarea>. That is the same component Input is, which is why the whole
+ * field state arrives on `data-*` here too — `data-invalid`, `data-valid`,
+ * `data-dirty`, `data-touched`, `data-filled`, `data-focused`,
+ * `data-disabled` — with or without a `Field.Root` above it. Only
+ * `data-invalid` is styled, for Input's reason: the rest describe where the
+ * user is in the interaction, and recolouring a control the moment it is
+ * merely *touched* is noise.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared HERE, on the textarea itself, so a value set
+     * on an ancestor is only INHERITED and loses to this declaration. To
+     * re-skin one textarea set them via `className` (an unlayered consumer
+     * rule beats `@layer pretty-ui.components` at any specificity) or an
+     * inline `style`; to move every textarea at once, re-point the global
+     * tokens on the right-hand side, which this file only reads and never
+     * re-declares. */
+    /** Shortest the control can be, in rows (the `rows` prop writes this) */
+    --pui-textarea-rows: 3;
+    /**
+     * Tallest the control may grow to, in rows, before it scrolls instead
+     * (the `maxRows` prop writes this)
+     */
+    /* `infinity` rather than a big number or a second rule gated on an
+     * attribute: it makes `max-block-size` resolve to the largest length the
+     * engine supports, so the knob is a complete statement on its own and a
+     * consumer can set a ceiling from plain CSS without the component having
+     * been told about one in JSX. */
+    --pui-textarea-max-rows: infinity;
+    /** Inline padding (reset per `size`) */
+    --pui-textarea-padding-x: var(--pui-control-px-md);
+    /* Half the inline padding, which is the same optical inset once the text
+     * is set on a 1.5 line-height. Derived rather than declared per size, so
+     * one override moves both axes together. */
+    /** Block padding */
+    --pui-textarea-padding-y: calc(var(--pui-textarea-padding-x) / 2);
+    /** Font size (reset per `size`) */
+    --pui-textarea-font-size: var(--pui-font-size-2);
+    /** Line height — also the unit the row counts above are measured in */
+    --pui-textarea-line-height: var(--pui-line-height-normal);
+    /** Corner radius */
+    --pui-textarea-radius: var(--pui-radius-control);
+    /** Border width */
+    --pui-textarea-border-width: 1px;
+
+    /* Colour slots, filled in per variant below. */
+    /** Background (reset per `variant`) */
+    --pui-textarea-bg: var(--pui-color-background);
+    /** Background on hover */
+    --pui-textarea-bg-hover: var(--pui-color-panel-hover);
+    /** Text colour */
+    --pui-textarea-fg: var(--pui-color-foreground);
+    /** Placeholder colour */
+    --pui-textarea-placeholder-fg: var(--pui-color-foreground-muted);
+    /** Border colour (reset per `variant`, and by `data-invalid`) */
+    --pui-textarea-border-color: var(--pui-color-border);
+    /** Border colour on hover */
+    --pui-textarea-border-color-hover: var(--pui-color-border-strong);
+    /** Caret colour */
+    --pui-textarea-caret-color: var(--pui-color-primary);
+    /** Selection background */
+    --pui-textarea-selection-bg: var(--pui-color-primary-soft);
+    /** Selection text colour */
+    --pui-textarea-selection-fg: var(--pui-color-primary-text);
+
+    box-sizing: border-box;
+    display: block;
+    /* A <textarea> carries an intrinsic min-content width of roughly its
+     * `cols`, which makes it refuse to shrink inside a flex or grid column and
+     * pushes its container wider than the page. */
+    min-inline-size: 0;
+
+    /* Height, in rows. `1lh` is this element's own line-height, so both bounds
+     * follow `--pui-textarea-font-size` and the density preset without
+     * restating a number. The border term is what keeps the floor honest under
+     * `box-sizing: border-box`. */
+    min-block-size: calc(
+      var(--pui-textarea-rows) * 1lh + 2 * var(--pui-textarea-padding-y) + 2 *
+        var(--pui-textarea-border-width)
+    );
+    max-block-size: calc(
+      var(--pui-textarea-max-rows) * 1lh + 2 * var(--pui-textarea-padding-y) + 2
+        * var(--pui-textarea-border-width)
+    );
+
+    padding-block: var(--pui-textarea-padding-y);
+    padding-inline: var(--pui-textarea-padding-x);
+    margin: 0;
+    border: var(--pui-textarea-border-width) solid
+      var(--pui-textarea-border-color);
+    border-radius: var(--pui-textarea-radius);
+
+    background-color: var(--pui-textarea-bg);
+    color: var(--pui-textarea-fg);
+    caret-color: var(--pui-textarea-caret-color);
+
+    /* A UA stylesheet gives form controls their own font, not the page's, so a
+     * textarea left alone is the one control in the set that does not match
+     * the others — and on a textarea it is the difference between the page's
+     * text and a monospace-ish fallback across a whole paragraph. */
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-textarea-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    /* `normal`, not Input's `tight`: this is the only control in the set with
+     * more than one line, so the leading is prose leading. */
+    line-height: var(--pui-textarea-line-height);
+    text-align: start;
+
+    /* The UA `text` cursor is correct here and is left alone — see the cursor
+     * table in AGENTS.md. A text field is not "an element that performs an
+     * action on click"; it is a region you place a caret in. */
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3 applies
+   * with no exemption, and it is often the only thing naming the control. So
+   * `-muted` (5.82:1), not `-subtle` (3.73:1, non-text only). */
+  .root::placeholder {
+    color: var(--pui-textarea-placeholder-fg);
+    /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
+     * measured 5.82:1 back under AA. */
+    opacity: 1;
+  }
+
+  .root::selection {
+    background-color: var(--pui-textarea-selection-bg);
+    color: var(--pui-textarea-selection-fg);
+  }
+
+  /* Resize ---------------------------------------------------------------- */
+  /* Always written from the prop, so the attribute in the DOM and the axis the
+   * handle actually drags can never disagree. */
+  .root[data-resize="vertical"] {
+    resize: vertical;
+  }
+
+  .root[data-resize="none"] {
+    resize: none;
+  }
+
+  /* `both` is offered and is not the default: horizontal drag lets the box
+   * escape the column it sits in, which is right for a full-width composer and
+   * wrong for a field in a form. */
+  .root[data-resize="both"] {
+    resize: both;
+  }
+
+  /* Auto-resize ----------------------------------------------------------- */
+  /* One declaration, applied during layout, with the row bounds above still
+   * clamping it — no measurement, no reflow per keystroke, no inline height.
+   * Engines without `field-sizing` drop the declaration as unknown and get the
+   * `scrollHeight` fallback in Textarea.tsx instead, which produces the same
+   * geometry. Nothing here needs an @supports: the property IS the test. */
+  .root[data-auto-resize] {
+    field-sizing: content;
+  }
+
+  /* States ---------------------------------------------------------------- */
+  @media (hover: hover) {
+    .root:hover:not([data-disabled], [readonly]) {
+      background-color: var(--pui-textarea-bg-hover);
+      border-color: var(--pui-textarea-border-color-hover);
+    }
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    /* A handle that cannot be dragged must not offer itself. */
+    resize: none;
+  }
+
+  /* Read-only still shows its value and its text is still selectable, so it
+   * must not look disabled — only inert. The UA `text` cursor stays, because
+   * selecting and copying the value is the whole point of the state, and so
+   * does the resize handle: reading a long value is easier in a taller box. */
+  .root[readonly] {
+    --pui-textarea-bg: var(--pui-color-panel);
+  }
+
+  .root[data-full-width] {
+    inline-size: 100%;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  .root[data-size="sm"] {
+    --pui-textarea-padding-x: var(--pui-control-px-sm);
+    --pui-textarea-font-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="md"] {
+    --pui-textarea-padding-x: var(--pui-control-px-md);
+    --pui-textarea-font-size: var(--pui-font-size-2);
+  }
+
+  .root[data-size="lg"] {
+    --pui-textarea-padding-x: var(--pui-control-px-lg);
+    --pui-textarea-font-size: var(--pui-font-size-3);
+  }
+
+  /* Variants -------------------------------------------------------------- */
+  .root[data-variant="outline"] {
+    --pui-textarea-bg: var(--pui-color-background);
+    --pui-textarea-border-color: var(--pui-color-border);
+  }
+
+  .root[data-variant="soft"] {
+    --pui-textarea-bg: var(--pui-color-panel);
+    /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
+     * keeps the field outlined there while staying invisible normally. */
+    --pui-textarea-border-color: transparent;
+  }
+
+  .root[data-variant="ghost"] {
+    --pui-textarea-bg: transparent;
+    --pui-textarea-border-color: transparent;
+  }
+
+  /* Validity -------------------------------------------------------------- */
+  /* Only the boundary and the caret change. Recolouring the value text as well
+   * would make the user's own answer look like the error message — and on a
+   * textarea that is a whole paragraph of it.
+   *
+   * This block has to stay AFTER the variants: `.root[data-invalid]` and
+   * `.root[data-variant="soft"]` are both (0,2,0), so document order is the
+   * only thing deciding whether a failed `soft` field gets the danger boundary
+   * or the transparent one it inherits from its variant. */
+  .root[data-invalid] {
+    --pui-textarea-border-color: var(--pui-color-danger-border);
+    --pui-textarea-border-color-hover: var(--pui-color-danger);
+    --pui-textarea-caret-color: var(--pui-color-danger);
+  }
+}
+
+/* Forced colours ---------------------------------------------------------- */
+/* Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+ * beat the rules above by layer alone — no `!important`, no padded selectors.
+ *
+ * This really is a native <textarea>, so the UA does assign it system colours.
+ * What it does not do is undo the `soft`/`ghost` variants' `transparent`
+ * border, which forced-colors resolves to a system colour of its own choosing
+ * rather than to the field boundary. Restating the pair here keeps every
+ * variant looking like the same control. */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .root {
+      background-color: Field;
+      color: FieldText;
+      border-color: FieldText;
+    }
+
+    /* `opacity: 1` comes from the generic `[data-disabled]` remedy in
+     * patterns.css, which applies at zero specificity through `:where()`; the
+     * colours it also sets would lose to the (0,1,0) rule above, so the ones
+     * this component needs are restated. */
+    .root[data-disabled] {
+      background-color: Canvas;
+      color: GrayText;
+      border-color: GrayText;
+    }
+  }
+}
