@@ -1,0 +1,230 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Checkbox Group",
+  description:
+    "Shared state for a series of checkboxes: one array of ticked values, and a parent checkbox that summarises them.",
+};
+
+# Checkbox Group
+
+Shared state for a series of [`Checkbox`](/components/checkbox)es. Renders a
+`<div role="group">` and owns the list of ticked values, so the answer to a
+multiple-choice question is one array instead of one boolean per option.
+
+<DemoBlock id="checkbox-group/basic" />
+
+Unlike a [`RadioGroup`](/components/radio) or a
+[`ToggleGroup`](/components/toggle-group), this is **not** a keyboard mode.
+Every checkbox in the group stays its own tab stop, exactly as a run of native
+checkboxes would — grouping here is about state and about naming, and the
+arrow keys are left to the page.
+
+## Import
+
+```tsx
+import { Checkbox, CheckboxGroup } from "@dofortech/pretty-ui";
+```
+
+Give each `Checkbox` a `value`; the group's value is the list of ticked ones.
+A checkbox without a `value` can never appear in it, and stays a plain
+standalone checkbox holding its own state.
+
+## Examples
+
+### Labelling
+
+The group has no name of its own, and it cannot be given one with a `<label>` —
+a `<label>` resolves to a single control, and `role="group"` is not a labelable
+element. Point `aria-labelledby` at a heading you render yourself, and name each
+checkbox with an enclosing `<label>`.
+
+<DemoBlock id="checkbox-group/labelling" />
+
+The enclosing label works because `Checkbox` renders a `<span>` with a hidden
+`<input>` beside it, and the input is what the label resolves to. Inside a
+`Field.Root` — the pattern the rest of this page uses — a
+`Field.Label nativeLabel={false}` does the heading half for you, and a
+`Field.Item` per row does the other half.
+
+### Rendering as a native button
+
+Pass `nativeButton render={<button />}` when you want a real `<button>` instead
+of the default `<span>`. That also moves `id` from the hidden input onto the
+root, which is what makes a sibling `<label htmlFor>` resolve. For a button
+inside an enclosing label, use the render **callback** instead.
+
+<DemoBlock id="checkbox-group/native-button" />
+
+<Callout kind="warn">
+  With a plain `render={<button />}` inside a `<label>`, Base UI would put the
+  hidden `<input>` inside the label too, leaving it with two controls to resolve
+  to — and the one it picks is not the one you meant. The callback controls
+  where the button goes, so the input can stay outside.
+</Callout>
+
+### Orientation
+
+`orientation="horizontal"` lays the checkboxes out in a row instead of a
+column, and wraps when they run out of room.
+
+<DemoBlock id="checkbox-group/orientation" />
+
+<Callout kind="note">
+  This is layout only. A `ToggleGroup`'s `orientation` also decides which arrow
+  keys are bound, because the whole strip is one tab stop; a checkbox group has
+  no roving focus to redirect, so nothing about the keyboard changes here.
+</Callout>
+
+### Controlled
+
+Pass `value` and `onValueChange` for a controlled group, `defaultValue` for an
+uncontrolled one. The callback receives the new array first and Base UI's event
+details second.
+
+<DemoBlock id="checkbox-group/controlled" />
+
+Holding the array yourself is also what lets something outside the group write
+to it — a "select all" button, a URL parameter, a saved preset.
+
+### Parent checkbox
+
+Add `parent` to a checkbox and the group drives it: ticked when every child is
+ticked, mixed when only some are, unticked when none are. The mixed state draws
+a dash instead of a tick and reports `aria-checked="mixed"`.
+
+<DemoBlock id="checkbox-group/parent" />
+
+<Callout kind="warn">
+  `parent` only does something inside a `CheckboxGroup` that is **controlled**
+  (`value` and `onValueChange`) **and** given `allValues` — the full list of
+  child values, ticked or not, which is how the group tells "some" apart from
+  "all". Outside a group, or without `allValues`, the prop is ignored and you
+  get a plain checkbox.
+</Callout>
+
+Three details worth knowing about a parent checkbox:
+
+- Activating it while it is mixed ticks every child. Activating it again unticks
+  them all. A third activation restores the partial selection it started from.
+- It is left out of form submission: Base UI drops the `name` on a parent
+  checkbox, so only the children submit values.
+- Its `aria-controls` is built from ids the group generates for the children, so
+  do not pass your own `id` to a child checkbox inside a parent group — it
+  breaks the association.
+
+### Nested parent checkboxes
+
+A group can contain another group, each with its own parent. Nothing connects
+the two automatically, though: a row that is both a **value** in the outer group
+and the **parent** of the inner one is two facts about two different groups, and
+you keep them in step yourself.
+
+<DemoBlock id="checkbox-group/nested" />
+
+Two pieces of that are easy to miss. The outer parent cannot see the level
+below, so a partly-filled inner group has to be reported upwards with an
+explicit `indeterminate` — otherwise the top checkbox reads as empty while four
+sub-permissions are granted. And unticking the middle row should only clear the
+inner group when it was *completely* full, since that is the state the row was
+standing for; clearing a partial selection throws away choices the user made one
+level down.
+
+### Form integration
+
+Inside a `Form`, a `Field.Root` carries the `name` the array is submitted under.
+Render the fieldset **as** the group so that one element is both the
+`<fieldset>` Base UI names with its legend and the group that owns the value.
+
+<DemoBlock id="checkbox-group/form" />
+
+One thing that composition costs you: `Fieldset.Root` normally renders a real
+`<fieldset>`, and `disabled` on it works the native way — it reaches controls
+the library has never heard of. Rendered as the group it is a `<div>`, so put
+`disabled` on the `CheckboxGroup` or the `Field.Root` instead.
+
+<Callout kind="note">
+  A checkbox group has no `valueMissing` of its own — an empty array is a
+  perfectly valid value as far as the browser is concerned — so "pick at least
+  one" is a `validate` function, not `required`. `Field.Error` with no `match`
+  renders whatever message it returned.
+</Callout>
+
+### Disabled
+
+`disabled` on the group disables every checkbox in it. Put it on the
+surrounding `Field.Root` instead and the labels dim with the boxes, which is
+what keeps the reason an option is unavailable from sitting at full contrast
+beside a greyed-out control. One row at a time is `disabled` on that row's
+`Field.Item`, for exactly the same reason.
+
+<DemoBlock id="checkbox-group/disabled" />
+
+<Callout kind="a11y">
+  A disabled checkbox is removed from the tab order, so someone tabbing through
+  the form never lands on it and may not learn the option exists. If the options
+  need to stay discoverable — locked by a plan, set by an administrator, valid
+  but not editable right now — give each `Checkbox` `readOnly` instead. A
+  read-only checkbox stays focusable, announces `aria-readonly`, and ignores
+  clicks and Space.
+</Callout>
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves focus to the next checkbox. Every checkbox in the group is its own tab stop — the group is not a roving-focus widget.",
+    },
+    {
+      keys: ["Space"],
+      description:
+        "Toggles the focused checkbox. On a parent checkbox it drives the whole group — all, none, then back to the earlier partial selection.",
+    },
+    {
+      keys: ["Enter"],
+      description:
+        "Does not toggle. Inside a form it submits the form, matching a native checkbox.",
+    },
+  ]}
+/>
+
+<Callout kind="a11y">
+  `CheckboxGroup` renders a `role="group"` with no name of its own. Name it with
+  a `Field.Label nativeLabel={false}` inside a `Field.Root`, render it as a
+  `Fieldset.Root` with a `Fieldset.Legend`, or point `aria-labelledby` at your
+  own heading element. Without a name the grouping is invisible to assistive
+  technology and the checkboxes read as unrelated.
+</Callout>
+
+Each checkbox still needs its own name too — an enclosing `<label>`, a
+`Field.Item` with a `Field.Label`, or a sibling `<label htmlFor>` paired with
+`nativeButton`. See [`Checkbox`](/components/checkbox) for the rest: the mark,
+the mixed state, forced colours and motion all belong to the individual control.
+
+## Theming
+
+The group declares one property of its own; the checkboxes inside are themed
+through the `--pui-checkbox-*` properties documented on
+[`Checkbox`](/components/checkbox).
+
+<ThemingTable component="Checkbox" part="group" />
+
+## API reference
+
+### CheckboxGroup
+
+<PropTable component="CheckboxGroup" />
+
+`onValueChange`, `render` and the rest of Base UI's `CheckboxGroup` props pass
+through unchanged.
+
+### Checkbox
+
+See [`Checkbox`](/components/checkbox) for the full prop table.
