@@ -159,6 +159,13 @@ export type {
   MenuShortcutProps,
 } from "./components/menu";
 
+export { Menubar } from "./components/menubar";
+export type {
+  MenubarProps,
+  MenubarVariant,
+  MenubarOrientation,
+} from "./components/menubar";
+
 export { NumberField } from "./components/number-field";
 export type {
   NumberFieldSize,

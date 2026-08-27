@@ -1,0 +1,169 @@
+/*
+ * Menubar
+ *
+ * One element: the strip. Base UI's Menubar has no parts of its own — the
+ * menus inside it are ordinary `Menu` components — so this file styles the
+ * container and nothing else.
+ *
+ * Except that it also OWNS the look of the triggers, without being able to
+ * select them. `Menu.Trigger` applies its standalone-button class only when
+ * the consumer has not passed `render`, and that class is hashed by CSS
+ * Modules into `Menu.module.css`, out of reach from here. Restyling it from
+ * this file would mean matching `[data-pui="menu-trigger"]`, which also
+ * catches the `render={<Button …/>}` case and would flatten a button the
+ * consumer deliberately chose.
+ *
+ * So the rule lives at the bottom of `Menu.module.css`, keyed on
+ * `[data-pui="menubar"] .trigger` — the one selector that means "a trigger
+ * wearing its own chrome, inside our bar" — and the KNOBS it reads are
+ * declared here, on `.root`, where they belong: this is the Menubar's look,
+ * it is documented in the Menubar's theming table, and one declaration on the
+ * bar retunes every trigger in it. They reach the triggers by inheritance,
+ * which works because a `Menu.Root` renders no element of its own: the
+ * triggers are this element's direct children. Setting one on a single
+ * trigger still wins there, an own declaration beating an inherited value.
+ *
+ * The two halves of that contract have to move together. Renaming a
+ * `--pui-menubar-trigger-*` property here without editing the block in
+ * `Menu.module.css` leaves the declaration valid and the trigger unstyled —
+ * a `var()` that resolves to nothing is invalid at computed-value time and
+ * silently falls back to inheritance.
+ */
+
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens, declared here on the bar itself so an ancestor's
+     * value is only inherited and never wins. Re-skin one bar by setting
+     * these on the root element (an unlayered consumer rule beats this layer
+     * whatever its specificity); re-skin every bar by re-pointing the global
+     * tokens they resolve to. */
+
+    /* The strip ------------------------------------------------------------ */
+    /** Space between adjacent menu triggers */
+    --pui-menubar-gap: var(--pui-space-1);
+    /** Padding between the strip's edge and the triggers */
+    --pui-menubar-padding: 0px;
+    /** Corner radius of the strip */
+    --pui-menubar-radius: var(--pui-radius-control);
+    /** Strip background */
+    --pui-menubar-bg: transparent;
+    /* 0px rather than the transparent hairline a `contained` variant could
+     * then merely re-colour: `transparent` is NOT preserved in forced-colors
+     * mode — it is replaced with a system colour — so a plain bar would grow
+     * a box around itself for exactly the users who did not ask for one. The
+     * 2px of inline size the two variants differ by is invisible, since a bar
+     * is one variant for its whole life. */
+    /** Width of the hairline around the strip */
+    --pui-menubar-border-width: 0px;
+    /** Colour of that hairline */
+    --pui-menubar-border-color: var(--pui-color-border);
+
+    /* The triggers ---------------------------------------------------------
+     * Read by `[data-pui="menubar"] .trigger` in Menu.module.css — see the
+     * header. Every one of them is a `Menu.Trigger` property in effect, and
+     * is named for the bar because it only applies inside one. */
+    /** Height of a menu trigger in the bar */
+    --pui-menubar-trigger-height: var(--pui-control-h-md);
+    /** Inline padding inside a trigger. One step tighter than a standalone
+     * button's: a bar is a row of words, and `md` padding spaces them like
+     * buttons in a toolbar */
+    --pui-menubar-trigger-px: var(--pui-control-px-sm);
+    /** Corner radius of a trigger */
+    --pui-menubar-trigger-radius: var(--pui-radius-control);
+    /** Trigger font size */
+    --pui-menubar-trigger-font-size: var(--pui-font-size-2);
+    /** Trigger font weight */
+    --pui-menubar-trigger-font-weight: var(--pui-font-weight-medium);
+    /** Trigger text colour */
+    --pui-menubar-trigger-fg: var(--pui-color-foreground);
+    /** Trigger background at rest */
+    --pui-menubar-trigger-bg: transparent;
+    /** Trigger background on hover */
+    --pui-menubar-trigger-bg-hover: var(--pui-color-panel-hover);
+    /* The same soft-primary pair the highlighted row in the popup wears, so
+     * the trigger and the list it produced read as one surface — and so the
+     * bar still says which menu is open when the popup covers its
+     * neighbours. */
+    /** Background of the trigger whose menu is open */
+    --pui-menubar-trigger-bg-open: var(--pui-color-primary-soft);
+    /** Text colour of the trigger whose menu is open */
+    --pui-menubar-trigger-fg-open: var(--pui-color-primary-text);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* A bar wider than its container wraps rather than overflowing. Native
+     * menu bars clip instead, but they can fall back to an overflow menu the
+     * platform provides and this cannot — a second row of menus is reachable,
+     * a clipped one is not. */
+    flex-wrap: wrap;
+    gap: var(--pui-menubar-gap);
+    padding: var(--pui-menubar-padding);
+    border: var(--pui-menubar-border-width) solid
+      var(--pui-menubar-border-color);
+    border-radius: var(--pui-menubar-radius);
+    background-color: var(--pui-menubar-bg);
+
+    font-family: var(--pui-font-sans);
+  }
+
+  /* A column of menus. `stretch` rather than `center` so the triggers take the
+   * bar's width instead of each shrinking to its own label, which in a column
+   * reads as a ragged list rather than a rail. */
+  .root[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+
+  /* The bar as its own surface, for a page busy enough that a bare row of
+   * words would not read as a menu bar. The padding is what turns the
+   * triggers into items sitting *inside* something. */
+  .root[data-variant="contained"] {
+    --pui-menubar-padding: var(--pui-space-1);
+    --pui-menubar-border-width: 1px;
+    --pui-menubar-bg: var(--pui-color-panel);
+    /* The strip is already `panel`, so `panel-hover` would be the first step
+     * of a ramp the background has already taken. One further along keeps the
+     * hover as visible as it is on a plain bar. */
+    --pui-menubar-trigger-bg-hover: var(--pui-color-panel-active);
+  }
+
+  /* Base UI hands `disabled` to each trigger rather than marking the bar, so
+   * every trigger is already greyed and `not-allowed` (see `.trigger` in
+   * Menu.module.css). All that is left is the strip's own chrome — and it is
+   * `opacity`, deliberately NOT applied to the whole element: stacking two
+   * fades would make the triggers inside a contained bar fainter than the
+   * same triggers in a plain one. */
+  .root[data-disabled][data-variant="contained"] {
+    opacity: 0.55;
+  }
+}
+
+/*
+ * Forced colors (Windows High Contrast) — a separate block, after the
+ * components layer closes, because layer order outranks specificity and
+ * `a11y` is ordered last. See layers.css.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* `--pui-menubar-bg` is a background, and a background is replaced with a
+     * system colour here — the contained bar's panel becomes Canvas and the
+     * strip dissolves into the page. The border is already occupying the
+     * space; this only gives it a colour it will keep. */
+    .root[data-variant="contained"] {
+      border-color: CanvasText;
+    }
+
+    /* `opacity` is one of the few properties forced colors does NOT override,
+     * so the 55% above would survive and a disabled bar would read as merely
+     * a bit pale. GrayText is the system's own statement that something is
+     * unavailable, and the triggers inside are already getting it from the
+     * generic `[data-disabled]` rule in patterns.css. */
+    .root[data-disabled][data-variant="contained"] {
+      opacity: 1;
+      border-color: GrayText;
+    }
+  }
+}

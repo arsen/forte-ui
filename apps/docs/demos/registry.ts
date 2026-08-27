@@ -201,6 +201,20 @@ import d_menu_theming from "./menu/theming";
 import d_menu_theming_src from "./menu/theming?raw";
 import d_menu_trigger from "./menu/trigger";
 import d_menu_trigger_src from "./menu/trigger?raw";
+import d_menubar_application from "./menubar/application";
+import d_menubar_application_src from "./menubar/application?raw";
+import d_menubar_basic from "./menubar/basic";
+import d_menubar_basic_src from "./menubar/basic?raw";
+import d_menubar_disabled from "./menubar/disabled";
+import d_menubar_disabled_src from "./menubar/disabled?raw";
+import d_menubar_orientation from "./menubar/orientation";
+import d_menubar_orientation_src from "./menubar/orientation?raw";
+import d_menubar_theming from "./menubar/theming";
+import d_menubar_theming_src from "./menubar/theming?raw";
+import d_menubar_triggers from "./menubar/triggers";
+import d_menubar_triggers_src from "./menubar/triggers?raw";
+import d_menubar_variants from "./menubar/variants";
+import d_menubar_variants_src from "./menubar/variants?raw";
 import d_number_field_basic from "./number-field/basic";
 import d_number_field_basic_src from "./number-field/basic?raw";
 import d_number_field_form from "./number-field/form";
@@ -581,6 +595,13 @@ export type DemoId =
   | "menu/submenu"
   | "menu/theming"
   | "menu/trigger"
+  | "menubar/application"
+  | "menubar/basic"
+  | "menubar/disabled"
+  | "menubar/orientation"
+  | "menubar/theming"
+  | "menubar/triggers"
+  | "menubar/variants"
   | "number-field/basic"
   | "number-field/form"
   | "number-field/format"
@@ -822,6 +843,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "menu/submenu": { Component: d_menu_submenu, source: d_menu_submenu_src, file: "menu/submenu.tsx" },
   "menu/theming": { Component: d_menu_theming, source: d_menu_theming_src, file: "menu/theming.tsx" },
   "menu/trigger": { Component: d_menu_trigger, source: d_menu_trigger_src, file: "menu/trigger.tsx" },
+  "menubar/application": { Component: d_menubar_application, source: d_menubar_application_src, file: "menubar/application.tsx" },
+  "menubar/basic": { Component: d_menubar_basic, source: d_menubar_basic_src, file: "menubar/basic.tsx" },
+  "menubar/disabled": { Component: d_menubar_disabled, source: d_menubar_disabled_src, file: "menubar/disabled.tsx" },
+  "menubar/orientation": { Component: d_menubar_orientation, source: d_menubar_orientation_src, file: "menubar/orientation.tsx" },
+  "menubar/theming": { Component: d_menubar_theming, source: d_menubar_theming_src, file: "menubar/theming.tsx" },
+  "menubar/triggers": { Component: d_menubar_triggers, source: d_menubar_triggers_src, file: "menubar/triggers.tsx" },
+  "menubar/variants": { Component: d_menubar_variants, source: d_menubar_variants_src, file: "menubar/variants.tsx" },
   "number-field/basic": { Component: d_number_field_basic, source: d_number_field_basic_src, file: "number-field/basic.tsx" },
   "number-field/form": { Component: d_number_field_form, source: d_number_field_form_src, file: "number-field/form.tsx" },
   "number-field/format": { Component: d_number_field_format, source: d_number_field_format_src, file: "number-field/format.tsx" },
