@@ -89,6 +89,24 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { Progress, ProgressCircle } from "./components/progress";
+export type {
+  ProgressSize,
+  ProgressTone,
+  ProgressRootProps,
+  ProgressLabelProps,
+  ProgressValueProps,
+  ProgressTrackProps,
+  ProgressIndicatorProps,
+  ProgressCircleSize,
+  ProgressCircleTone,
+  ProgressCircleRootProps,
+  ProgressCircleTrackProps,
+  ProgressCircleIndicatorProps,
+  ProgressCircleValueProps,
+  ProgressCircleLabelProps,
+} from "./components/progress";
+
 export { Radio, RadioGroup } from "./components/radio";
 export type {
   RadioProps,

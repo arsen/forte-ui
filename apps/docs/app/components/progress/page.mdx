@@ -1,0 +1,291 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Progress",
+  description:
+    "A linear bar and a circular ring over one Base UI primitive, each of which is determinate or indeterminate depending on whether you pass a number or null.",
+};
+
+# Progress
+
+Use a progress indicator when a wait is long enough that the user wants to know
+where it is going. If you know how far along the work is, say so — that is the
+question a `Spinner` cannot answer. If you do not, pass `value={null}` and the
+same markup becomes an indeterminate indicator, which says "running" without
+pretending to know more than it does.
+
+<DemoBlock id="progress/upload" />
+
+Base UI ships one Progress primitive and it draws a bar. This library ships two
+components over it: **`Progress`**, the bar, and **`ProgressCircle`**, the ring.
+They share the primitive's state machine, its accessibility contract, its part
+names and its two axes, so everything below that is not about geometry applies
+to both.
+
+## Import
+
+```tsx
+import { Progress, ProgressCircle } from "@dofortech/pretty-ui";
+```
+
+## Which one
+
+| | Reach for it when |
+| --- | --- |
+| `Progress` | The full width is available and the value is worth comparing. A bar's length is comparable at a glance down a list of ten; a ring's angle is not. |
+| `ProgressCircle` | The width is not available — a card corner, a tile, a table cell, beside an avatar — or the indicator is the only thing in its box. |
+| `Spinner` | The wait is short and indeterminate, and a percentage would be noise. It is a smaller component with no value to report. |
+
+## Examples
+
+### Anatomy
+
+<DemoBlock id="progress/basic" />
+
+`Label` and `Value` share the first row of the root's grid — label to the
+inline start, value to the inline end — and `Track` spans both columns
+underneath. Render only a `Track` and the root is a one-row grid: the gap
+disappears with the row that was using it, so a bare bar needs no special case.
+
+`value` is a required prop on purpose. There is no sensible default for "how far
+along is this", and a bar that silently starts at zero is a bar that is lying
+until its first update lands.
+
+### Indeterminate
+
+<DemoBlock id="progress/indeterminate" />
+
+`value={null}` is the entire switch, and the markup does not otherwise change —
+which is the point. A task that starts out not knowing its total can start
+reporting one without remounting: the sweeping segment settles into the real
+value on the same transition the rest of the fill runs on, rather than
+unmounting and flashing an empty rail. The realistic version of that is the demo
+at the top of this page.
+
+`Value` renders **nothing** while indeterminate. That is deliberate: there is no
+number, and a "0%" that never moves is worse than no readout at all. Pass a
+function child to put words there instead.
+
+<Callout kind="note">
+  An indeterminate bar is a promise that something is happening, so do not leave
+  one running after the work has stopped. If a request can fail, render the
+  failure — an indicator that sweeps forever is indistinguishable from one that
+  is stuck, and the user has no way to tell which they are looking at.
+</Callout>
+
+### Sizes
+
+<DemoBlock id="progress/sizes" />
+
+`size` is **thickness, not length**. The bar fills its container in every size,
+because a bar's length belongs to the layout it sits in rather than to the
+component; `--pui-progress-length` is the knob for the cases where it does not.
+The label row scales with it.
+
+<DemoBlock id="progress/circle-sizes" />
+
+The ring's stroke is measured in its own coordinate space rather than in pixels,
+so it scales with the diameter and a `sm` ring is a smaller ring rather than a
+thinner one. It is also proportionally a little heavier at `sm`, because a
+stroke that reads well at 7% of 80px disappears at 40px.
+
+### Tones
+
+<DemoBlock id="progress/tones" />
+
+`tone` swaps exactly one slot — the fill, or the arc. The rail behind it stays
+neutral in every tone: it is the part that has *not* happened yet, and tinting
+it would compete with the thing it exists to contrast against.
+
+<DemoBlock id="progress/circle" />
+
+<Callout kind="note">
+  `success` on completion is the one tone change worth an extra prop. A full bar
+  and a nearly-full bar look alike at a glance, so the colour is what marks the
+  end state — see the demo at the top of the page, which flips to it at 100%.
+  Everything else should pick one tone and keep it: a bar that changes colour as
+  it fills reads as a warning that never arrives.
+</Callout>
+
+### Formatting the value
+
+<DemoBlock id="progress/formatting" />
+
+Three separate things can be said about one value, and they are separate props
+because they have different audiences:
+
+- **`format`** is an `Intl.NumberFormatOptions` bag applied to the clamped
+  value. It drives the visible readout *and* the default `aria-valuetext`
+  together, so the bar can fill from `min` to `max` while both say "412 MB".
+- **`Value`'s function child** replaces only what is painted. Use it for
+  something no number formatter produces — `3/5`, `Working…`.
+- **`getAriaValueText`** replaces only what is announced. This is the one that
+  usually matters: "3 of 5 steps done" is a sentence, and "60%" is a fact about
+  a bar rather than about the task.
+
+### Reduced motion
+
+<DemoBlock id="progress/reduced-motion" />
+
+Under `prefers-reduced-motion: reduce` the indeterminate sweep stops travelling
+and the ring stops rotating — the travel is gated on `--pui-motion-ok`, and the
+rotation is `--pui-spin-turn`, which collapses to `0turn`. A second animation
+that is always running, and is a no-op at full motion because `--pui-pulse-dip`
+is `1` there, becomes the visible cue as a slow opacity breathe. That is the
+same arrangement `Spinner`'s ring uses.
+
+The part that is specific to progress: the segment also **grows**. The bar's
+sweeping segment widens to the whole rail and the ring's arc closes into a full
+circle. A 35% segment frozen against the start edge is pixel-for-pixel a
+determinate bar stuck at 35%, and looking determinate is the one thing an
+indeterminate indicator must never do.
+
+<Callout kind="a11y">
+  No loop duration is ever shortened. `--pui-duration-loop-sweep` is 1400ms in
+  every motion state, including `data-pui-motion="off"`. The rest of the system
+  collapses durations toward `1ms`, but a *repeating* animation driven to 1ms
+  flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which is the opposite
+  of an accessibility win.
+</Callout>
+
+The determinate fill is the other way round. It **does** transition, and its
+duration shortens to 120ms under reduced motion rather than disappearing,
+because a fill that teleports between values is harder to read rather than
+easier.
+
+### Theming
+
+<DemoBlock id="progress/theming" />
+
+## Accessibility
+
+The root renders a `<div role="progressbar">` carrying `aria-valuemin`,
+`aria-valuemax`, `aria-valuenow` and `aria-valuetext`. While the value is
+`null` there is no `aria-valuenow` at all, which is exactly how the ARIA spec
+spells "indeterminate" — a `0` there would be a claim, not an absence.
+
+**Always give it a name.** `Progress.Label` is wired to the root through
+`aria-labelledby`, so it is the indicator's accessible name; without one, the
+bar announces a bare percentage and leaves the listener to work out what it is a
+percentage of. Where the surrounding page already says it in words, keep the
+label and hide it:
+
+```tsx
+<Progress.Label className="pui-visually-hidden">Uploading render.mov</Progress.Label>
+```
+
+`Value` is `aria-hidden`, because the root already publishes the same number
+through `aria-valuenow` and announcing it twice is worse than announcing it once.
+
+<Callout kind="warn">
+  Do not put the bar inside a live region. `role="progressbar"` is not one, and
+  that is the correct design: a value that ticks twenty times would be read out
+  twenty times. Announce the *moments* instead — started, finished, failed —
+  from a small `aria-live="polite"` element beside it, which is what the demo at
+  the top of this page does.
+</Callout>
+
+Under forced colours the bar's rail is redrawn as `Canvas` with a `CanvasText`
+outline and the fill becomes `Highlight`. The rail's boundary is an `outline`
+rather than a `border` on purpose: a border would change the box, and the fill
+sizes its cross axis with `height: inherit`.
+
+The ring needs a different fix for the same problem. Forced colours remaps
+`color`, `background-color` and `border-color` but leaves SVG `fill` and
+`stroke` alone, so a literal `stroke: var(--…)` would keep its brand hue against
+a system-coloured page. Both circles therefore paint with `currentColor` and
+take their colour from `color`, which the UA does remap — and because that would
+land both of them on `CanvasText` and flatten the ring into a plain circle, the
+`a11y` layer names `GrayText` and `Highlight` separately.
+
+There is nothing to focus and nothing to press, so neither component is in the
+tab order and both take `cursor: default` per the pointer rules.
+
+## Theming
+
+Every visual decision is a custom property declared on the component's own root.
+Set them on the root itself — through `className` or an inline `style` — rather
+than on an ancestor: the component declares its own defaults there, and an
+element's own declaration beats an inherited value.
+
+### Progress
+
+<ThemingTable component="Progress" />
+
+### ProgressCircle
+
+<ThemingTable component="ProgressCircle" />
+
+<Callout kind="note">
+  `--pui-progress-circle-thickness` is in **viewBox units** — 8 of the 100 the
+  ring is across, not 8 device pixels. That is what makes the stroke scale with
+  `--pui-progress-circle-size`. The radius is re-derived from it in CSS so a
+  heavy stroke stays inside the ring rather than spilling past it, which is why
+  the `r` attribute in the markup is only a fallback value.
+</Callout>
+
+## API reference
+
+The tables list what each part adds on top of Base UI. Everything else passes
+straight through.
+
+### Progress.Root
+
+Also takes Base UI's own root props unchanged: `value` (**required**; `null`
+means indeterminate), `min`, `max`, `format`, `locale`, `getAriaValueText`,
+`aria-valuetext`, `render` and `style`.
+
+<PropTable component="ProgressRoot" />
+
+### Progress.Label
+
+<PropTable component="ProgressLabel" />
+
+### Progress.Value
+
+Its `children` may be a function receiving `(formattedValue, value)`. While
+indeterminate the first argument is the string `"indeterminate"` and the second
+is `null`.
+
+<PropTable component="ProgressValue" />
+
+### Progress.Track
+
+<PropTable component="ProgressTrack" />
+
+### Progress.Indicator
+
+<PropTable component="ProgressIndicator" />
+
+### ProgressCircle.Root
+
+Takes the same Base UI root props as `Progress.Root`.
+
+<PropTable component="ProgressCircleRoot" />
+
+### ProgressCircle.Track
+
+Renders an `<svg>` rather than Base UI's `<div>`, so its `ref` is an
+`SVGSVGElement`. `render` is not forwarded — replacing the `<svg>` would take
+the `0 0 100 100` coordinate space every rule in the stylesheet is written
+against with it, and the failure would be a ring that silently does not draw.
+
+<PropTable component="ProgressCircleTrack" />
+
+### ProgressCircle.Indicator
+
+Renders a `<circle>`, so its `ref` is an `SVGCircleElement`. `render` is not
+forwarded, for the same reason as `Track`.
+
+<PropTable component="ProgressCircleIndicator" />
+
+### ProgressCircle.Value
+
+<PropTable component="ProgressCircleValue" />
+
+### ProgressCircle.Label
+
+<PropTable component="ProgressCircleLabel" />

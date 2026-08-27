@@ -1854,6 +1854,326 @@
       }
     ]
   },
+  "Progress": {
+    "name": "Progress",
+    "tokens": [
+      {
+        "name": "--pui-progress-length",
+        "value": "100%",
+        "description": "Length of the bar. `100%` by default — a progress bar is a status readout, and status readouts want the width of whatever they are reporting on.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-thickness",
+        "value": "6px",
+        "description": "Rail thickness, which the fill inherits. `size` retunes it: `4px` for `sm`, `10px` for `lg`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "4px"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "6px"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "10px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-radius",
+        "value": "var(--pui-radius-pill)",
+        "description": "Rail and fill corner radius. Follows `data-pui-radius`, so a `none` preset squares the bar off — unlike a circle's roundness, a bar's is taste rather than meaning.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between the label/value row and the rail.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-track-bg",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Rail fill — the part that has not happened yet. Stays neutral in every tone.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-indicator-bg",
+        "value": "var(--pui-color-primary)",
+        "description": "The fill itself. Swapped per `tone`. Consumed through the `background` shorthand rather than `background-color`, so a gradient is a legal value here as well as a colour — at the cost of the colour transition, which a gradient cannot have.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-label-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Colour of the label.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-value-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Colour of the readout.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-label-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size of the label and the readout together. Retuned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long the fill takes to travel to a new value. Shortens under reduced motion rather than disappearing — a fill that teleports is harder to read, not easier.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-loop-duration",
+        "value": "var(--pui-duration-loop-sweep)",
+        "description": "One full pass of the indeterminate segment. Never collapsed, in any motion state; see the note at the top of this file.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-shuttle",
+        "value": "0.35",
+        "description": "How much of the rail the indeterminate segment covers, as a fraction. It is a plain number rather than a length because the sweep divides by it to work out how far to travel.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-shuttle-size",
+        "value": "calc( ( var(--pui-progress-shuttle) + (1 - var(--pui-progress-shuttle)) * var(--pui-motion-off) ) * 100% )",
+        "description": "The segment's resolved width: `--pui-progress-shuttle` of the rail normally, the whole rail under reduced motion.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "ProgressCircle": {
+    "name": "ProgressCircle",
+    "tokens": [
+      {
+        "name": "--pui-progress-circle-size",
+        "value": "3.5rem",
+        "description": "Outer diameter of the ring. `size` retunes it: `2.5rem` for `sm`, `5rem` for `lg`. Everything inside is a fraction of the viewBox and follows on its own.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "2.5rem"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "3.5rem"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "5rem"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-circle-thickness",
+        "value": "8px",
+        "description": "Stroke width, in viewBox units — 8 of the 100 the ring is across, not 8 device pixels. That is what makes it scale with the diameter. `size` retunes it: `10px` for `sm`, `7px` for `lg`, so a small ring stays legible without a large one looking heavy.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "10px"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "8px"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "7px"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-circle-cap",
+        "value": "round",
+        "description": "Cap on both ends of the arc. `butt` squares them off.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between the ring and a label underneath it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-rail",
+        "value": "var(--pui-color-border-muted)",
+        "description": "The rail behind the arc — the part that has not happened yet. Stays neutral in every tone.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-color",
+        "value": "var(--pui-color-primary)",
+        "description": "The arc itself. Swapped per `tone`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-circle-value-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Colour of the centred readout.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-value-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size of the readout. Retuned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-circle-label-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Colour of the label under the ring.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-label-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size of that label. Retuned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-progress-circle-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long the arc takes to travel to a new value. Shortens under reduced motion rather than disappearing.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-loop-duration",
+        "value": "var(--pui-duration-loop-spin)",
+        "description": "One full rotation of the indeterminate arc. Never collapsed, in any motion state — a loop driven to 1ms is a WCAG 2.3.1 flashing hazard.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-progress-circle-arc",
+        "value": "25",
+        "description": "Length of the indeterminate arc, out of the 100 units `pathLength` normalises the circumference to.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Radio": {
     "name": "Radio",
     "tokens": [
