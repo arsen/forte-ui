@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/build-registry.mjs && next dev -p 3000",
-    "build": "node scripts/build-registry.mjs && next build",
+    "dev": "node scripts/build-registry.mjs && node scripts/build-toc.mjs && next dev -p 3000",
+    "build": "node scripts/build-registry.mjs && node scripts/build-toc.mjs && next build",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
-    "registry": "node scripts/build-registry.mjs"
+    "registry": "node scripts/build-registry.mjs",
+    "toc": "node scripts/build-toc.mjs"
   },
   "dependencies": {
     "@dofortech/pretty-ui": "workspace:*",
@@ -29,6 +30,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@mdx-js/mdx": "3.1.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/mdx": "^2.0.14",
     "@types/node": "^26.1.1",
