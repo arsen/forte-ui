@@ -2,13 +2,13 @@
 
 import { Checkbox, CheckboxGroup, Field } from "@dofortech/pretty-ui";
 
-const days = [
+const DAYS = [
   { value: "mon", label: "Monday" },
   { value: "wed", label: "Wednesday" },
   { value: "fri", label: "Friday" },
 ];
 
-export default function CheckboxGroupDemo() {
+export default function CheckboxGroupBasic() {
   return (
     // The outer Field names the group — nativeLabel={false} because the label
     // belongs to the group, not to any one checkbox in it, so it must not
@@ -17,7 +17,7 @@ export default function CheckboxGroupDemo() {
     <Field.Root name="digest-day">
       <Field.Label nativeLabel={false}>Send the weekly digest on</Field.Label>
       <CheckboxGroup defaultValue={["mon", "fri"]}>
-        {days.map((day) => (
+        {DAYS.map((day) => (
           <Field.Item key={day.value}>
             <Field.Label>
               <Checkbox value={day.value} />

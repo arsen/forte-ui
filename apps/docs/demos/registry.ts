@@ -35,12 +35,28 @@ import d_checkbox_basic from "./checkbox/basic";
 import d_checkbox_basic_src from "./checkbox/basic?raw";
 import d_checkbox_disabled from "./checkbox/disabled";
 import d_checkbox_disabled_src from "./checkbox/disabled?raw";
-import d_checkbox_group from "./checkbox/group";
-import d_checkbox_group_src from "./checkbox/group?raw";
 import d_checkbox_indeterminate from "./checkbox/indeterminate";
 import d_checkbox_indeterminate_src from "./checkbox/indeterminate?raw";
 import d_checkbox_sizes from "./checkbox/sizes";
 import d_checkbox_sizes_src from "./checkbox/sizes?raw";
+import d_checkbox_group_basic from "./checkbox-group/basic";
+import d_checkbox_group_basic_src from "./checkbox-group/basic?raw";
+import d_checkbox_group_controlled from "./checkbox-group/controlled";
+import d_checkbox_group_controlled_src from "./checkbox-group/controlled?raw";
+import d_checkbox_group_disabled from "./checkbox-group/disabled";
+import d_checkbox_group_disabled_src from "./checkbox-group/disabled?raw";
+import d_checkbox_group_form from "./checkbox-group/form";
+import d_checkbox_group_form_src from "./checkbox-group/form?raw";
+import d_checkbox_group_labelling from "./checkbox-group/labelling";
+import d_checkbox_group_labelling_src from "./checkbox-group/labelling?raw";
+import d_checkbox_group_native_button from "./checkbox-group/native-button";
+import d_checkbox_group_native_button_src from "./checkbox-group/native-button?raw";
+import d_checkbox_group_nested from "./checkbox-group/nested";
+import d_checkbox_group_nested_src from "./checkbox-group/nested?raw";
+import d_checkbox_group_orientation from "./checkbox-group/orientation";
+import d_checkbox_group_orientation_src from "./checkbox-group/orientation?raw";
+import d_checkbox_group_parent from "./checkbox-group/parent";
+import d_checkbox_group_parent_src from "./checkbox-group/parent?raw";
 import d_collapsible_basic from "./collapsible/basic";
 import d_collapsible_basic_src from "./collapsible/basic?raw";
 import d_collapsible_contained from "./collapsible/contained";
@@ -268,9 +284,17 @@ export type DemoId =
   | "button/variants"
   | "checkbox/basic"
   | "checkbox/disabled"
-  | "checkbox/group"
   | "checkbox/indeterminate"
   | "checkbox/sizes"
+  | "checkbox-group/basic"
+  | "checkbox-group/controlled"
+  | "checkbox-group/disabled"
+  | "checkbox-group/form"
+  | "checkbox-group/labelling"
+  | "checkbox-group/native-button"
+  | "checkbox-group/nested"
+  | "checkbox-group/orientation"
+  | "checkbox-group/parent"
   | "collapsible/basic"
   | "collapsible/contained"
   | "collapsible/controlled"
@@ -394,9 +418,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "button/variants": { Component: d_button_variants, source: d_button_variants_src, file: "button/variants.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },
   "checkbox/disabled": { Component: d_checkbox_disabled, source: d_checkbox_disabled_src, file: "checkbox/disabled.tsx" },
-  "checkbox/group": { Component: d_checkbox_group, source: d_checkbox_group_src, file: "checkbox/group.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },
   "checkbox/sizes": { Component: d_checkbox_sizes, source: d_checkbox_sizes_src, file: "checkbox/sizes.tsx" },
+  "checkbox-group/basic": { Component: d_checkbox_group_basic, source: d_checkbox_group_basic_src, file: "checkbox-group/basic.tsx" },
+  "checkbox-group/controlled": { Component: d_checkbox_group_controlled, source: d_checkbox_group_controlled_src, file: "checkbox-group/controlled.tsx" },
+  "checkbox-group/disabled": { Component: d_checkbox_group_disabled, source: d_checkbox_group_disabled_src, file: "checkbox-group/disabled.tsx" },
+  "checkbox-group/form": { Component: d_checkbox_group_form, source: d_checkbox_group_form_src, file: "checkbox-group/form.tsx" },
+  "checkbox-group/labelling": { Component: d_checkbox_group_labelling, source: d_checkbox_group_labelling_src, file: "checkbox-group/labelling.tsx" },
+  "checkbox-group/native-button": { Component: d_checkbox_group_native_button, source: d_checkbox_group_native_button_src, file: "checkbox-group/native-button.tsx" },
+  "checkbox-group/nested": { Component: d_checkbox_group_nested, source: d_checkbox_group_nested_src, file: "checkbox-group/nested.tsx" },
+  "checkbox-group/orientation": { Component: d_checkbox_group_orientation, source: d_checkbox_group_orientation_src, file: "checkbox-group/orientation.tsx" },
+  "checkbox-group/parent": { Component: d_checkbox_group_parent, source: d_checkbox_group_parent_src, file: "checkbox-group/parent.tsx" },
   "collapsible/basic": { Component: d_collapsible_basic, source: d_collapsible_basic_src, file: "collapsible/basic.tsx" },
   "collapsible/contained": { Component: d_collapsible_contained, source: d_collapsible_contained_src, file: "collapsible/contained.tsx" },
   "collapsible/controlled": { Component: d_collapsible_controlled, source: d_collapsible_controlled_src, file: "collapsible/controlled.tsx" },
