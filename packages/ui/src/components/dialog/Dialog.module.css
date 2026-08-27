@@ -306,33 +306,6 @@
       scale var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease);
   }
 
-  /* Trigger origin ---------------------------------------------------------
-   * When a trigger opened the dialog, the popup scales from THAT point rather
-   * than from its own centre, so it reads as growing out of the button that
-   * opened it and collapsing back into it. `Dialog.Popup` measures the trigger
-   * and writes the two offsets in px, relative to the popup's top-left corner;
-   * JS does nothing but measure, and every duration, curve and scale stays
-   * here where it can still be overridden.
-   *
-   * The travel drops to 0 and the scales go deeper than the centred ones. With
-   * the origin off-centre the scale IS the movement — every point slides
-   * toward the origin as the popup shrinks, and the further away the origin,
-   * the more of that scale is expressed as translation — so a separate
-   * translate would only fight it. Both scales stay gated on --pui-motion-ok,
-   * so reduced motion still lands on a plain fade.
-   * ---------------------------------------------------------------------- */
-  .popup[data-origin] {
-    --pui-dialog-enter-travel: 0px;
-    --pui-dialog-enter-scale: calc(1 - 0.15 * var(--pui-motion-ok));
-    --pui-dialog-exit-travel: 0px;
-    --pui-dialog-exit-scale: calc(1 - 0.1 * var(--pui-motion-ok));
-
-    /* The fallback keeps the centred gesture if the attribute is ever present
-     * without the offsets — a consumer copying the selector, say. */
-    transform-origin: var(--pui-dialog-origin-x, 50%)
-      var(--pui-dialog-origin-y, 50%);
-  }
-
   /* Nested dialogs ---------------------------------------------------------
    * Base UI does not render a child dialog's Backdrop unless `forceRender`
    * is set, so the parent dims itself instead. The overlay is always present
