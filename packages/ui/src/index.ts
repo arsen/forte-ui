@@ -144,6 +144,16 @@ export type {
   PopoverViewportProps,
 } from "./components/popover";
 
+export { PreviewCard } from "./components/preview-card";
+export type {
+  PreviewCardSize,
+  PreviewCardRootProps,
+  PreviewCardTriggerProps,
+  PreviewCardPopupProps,
+  PreviewCardArrowProps,
+  PreviewCardViewportProps,
+} from "./components/preview-card";
+
 export { Progress, ProgressCircle } from "./components/progress";
 export type {
   ProgressSize,

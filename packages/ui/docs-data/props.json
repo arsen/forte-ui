@@ -2044,6 +2044,302 @@
       }
     ]
   },
+  "PreviewCardRoot": {
+    "name": "PreviewCardRoot",
+    "description": "Groups one preview card's trigger and popup, and owns its open state.\nRenders no DOM element, so it takes no `className`, `style` or `ref`.",
+    "props": [
+      {
+        "name": "actionsRef",
+        "type": "RefObject<PreviewCardRootActions | null>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Imperative escape hatch. `close()` closes the card; `unmount()` forces the\npopup out of the DOM, for when an exit animation is driven externally."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | PayloadChildRenderFunction<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "The trigger and popup for this card. May also be a render function\nreceiving `{ payload }` from the trigger that opened it."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the card is open when it first mounts. For a controlled card use\n`open` instead."
+      },
+      {
+        "name": "defaultTriggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The initially attached trigger id. Pairs with `defaultOpen` the way\n`triggerId` pairs with `open`."
+      },
+      {
+        "name": "handle",
+        "type": "PreviewCardHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates this card with detached triggers created through\n`PreviewCard.createHandle()`, so one popup can serve triggers that live\nelsewhere in the tree."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean, eventDetails: PreviewCardRootChangeEventDetails) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the card wants to open or close. The second argument carries\nthe reason (`'trigger-hover'`, `'trigger-focus'`, `'trigger-press'`,\n`'outside-press'`, `'escape-key'`, `'imperative-action'`, `'none'`), the\ntrigger involved, and can `cancel()` the change."
+      },
+      {
+        "name": "onOpenChangeComplete",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called after the open or close transition has finished. Use this rather\nthan a timer when work has to wait for the card to actually leave."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the card is currently open. Pass this together with\n`onOpenChange` to control the card."
+      },
+      {
+        "name": "triggerId",
+        "type": "string | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which trigger the card is currently attached to, for controlled\nmulti-trigger setups. There is no separate `onTriggerIdChange` — read the\nnew id off `eventDetails.trigger` inside `onOpenChange`."
+      }
+    ]
+  },
+  "PreviewCardTrigger": {
+    "name": "PreviewCardTrigger",
+    "description": "The link the card previews. Renders an `<a>`.\n\nIt carries no `aria-haspopup`, `aria-controls` or `aria-describedby`, and\nthat is deliberate on Base UI's part: the card is supplementary, so the link\nis announced as an ordinary link and the card never interrupts. What follows\nfrom that is the one rule for the content — see `PreviewCard.Popup`.\n\nA link that wraps across lines anchors the card to the line the pointer is\nactually on, rather than to the union rectangle of all its lines. That\nhappens without configuration.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "300",
+        "description": "How long the card lingers after the pointer leaves, in milliseconds. The\npointer only has to reach the popup within this window along a direct\npath — Base UI grants the diagonal — so this is the tolerance for\novershooting, not the whole journey."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "600",
+        "description": "How long the pointer must rest on the link before the card opens, in\nmilliseconds. Also the wait before a focused link opens it."
+      },
+      {
+        "name": "handle",
+        "type": "PreviewCardHandle<Payload>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates a detached trigger with the `PreviewCard.Root` carrying the\nsame handle, created once outside render with\n`PreviewCard.createHandle()`."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the link goes. Not optional in practice: the card is an enrichment\nof a link, and an `<a>` without `href` is neither focusable nor\nannounced as a link — so leaving it off strands every keyboard user,\nwho is also the one person for whom the card is not the point."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Identifies the trigger. Also how `PreviewCard.Root`'s `triggerId` names\nthe active trigger in controlled multi-trigger mode."
+      },
+      {
+        "name": "payload",
+        "type": "Payload",
+        "required": false,
+        "defaultValue": null,
+        "description": "Data handed to the card when this trigger opens it, so one popup can\nrender a different profile per link. Read it from the render-function\nform of `PreviewCard.Root`'s children."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, PreviewCardTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/u/ada\" />}` for a router link is the common case.\nThe trigger's own link styling steps aside when this is present, so the\ntwo never fight over the cascade."
+      }
+    ]
+  },
+  "PreviewCardPopup": {
+    "name": "PreviewCardPopup",
+    "description": "The card surface, together with the wrappers it always needs:\n`Portal` → `Positioner` → `Popup`. Collapsing them into one component keeps\nthe common case to a single element while leaving every Base UI `Popup` prop\n(`render`, `keepMounted`, …) available.\n\nThe card stays open while the pointer is inside it, so links in it are\nclickable. Keyboard focus is a different story: the popup is portalled to\nthe end of `<body>` and nothing moves focus into it, so Tab from the link\ncontinues into the page. Treat everything in here as **supplementary** — a\nsummary of where the link goes — and make sure anything actionable exists on\nthe destination too.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "center",
+        "description": "How the card lines up with the link along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Shifts the card along the alignment axis, in pixels, or a function\nreturning one."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The element the card positions against, when it should not be the link.\nAccepts an element, a ref, a getter, or a virtual element."
+      },
+      {
+        "name": "arrowPadding",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Minimum distance, in pixels, the arrow keeps from the card's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "How the card reacts when it would overflow the boundary — whether it\nflips, shifts, or stays put."
+      },
+      {
+        "name": "collisionBoundary",
+        "type": "Boundary",
+        "required": false,
+        "defaultValue": "\"clipping-ancestors\"",
+        "description": "The boundary the card tries to stay inside of."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space, in pixels, kept between the card and the collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the portal renders. Defaults to `document.body`; point it at a\ncontainer when the card has to live inside a specific stacking or shadow\nroot."
+      },
+      {
+        "name": "disableAnchorTracking",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the card re-measuring the anchor on scroll and resize. Cheaper, but\nthe card drifts if the anchor moves."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the portal — and therefore the card — in the DOM while it is closed.\nNeeded when something inside must stay mounted (an iframe, a media\nelement)."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single card through\n`--pui-preview-card-z-index`."
+      },
+      {
+        "name": "positionMethod",
+        "type": "\"absolute\" | \"fixed\"",
+        "required": false,
+        "defaultValue": "\"absolute\"",
+        "description": "Whether the card is positioned with `position: absolute` or\n`position: fixed`."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "bottom",
+        "description": "Which side of the link to place the card on. Flips automatically to avoid\ncollisions. `\"inline-start\"` / `\"inline-end\"` follow writing direction."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap between link and card, in pixels, or a function returning one. When an\n`Arrow` is rendered this must exceed the arrow's height or the arrow\noverlaps the link; the default leaves room for the default arrow.\n\nIt is also the gap the pointer crosses on its way in. Base UI covers the\ntrip with a safe polygon, so a wider offset is safe — but it is the one\nnumber that makes the card feel out of reach if it grows much past the\ntext it belongs to."
+      },
+      {
+        "name": "size",
+        "type": "PreviewCardSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Width cap for the card. The card shrinks to fit its content and only grows\nto this width when the content asks for it, so this is a ceiling rather\nthan a fixed measure. Further clamped to the space the positioner reports\nas available."
+      },
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the card glued to the link while it scrolls out of view instead of\nletting it detach."
+      }
+    ]
+  },
+  "PreviewCardArrow": {
+    "name": "PreviewCardArrow",
+    "description": "The wedge pointing back at the link. Render it as a child of\n`PreviewCard.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the built-in wedge. The default SVG inherits the card's colours\nthrough `--pui-preview-card-bg`, so a custom skin usually needs nothing\nhere."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PreviewCardViewport": {
+    "name": "PreviewCardViewport",
+    "description": "Animates the swap when one popup serves several links and its content\nchanges between them.\n\nWrap the changing content in it, inside `PreviewCard.Popup`. Base UI keeps a\nclone of the outgoing content mounted for the length of the transition; the\nstylesheet slides the two past each other in the direction the new link\nlies, and resizes the card to follow. Without it the content simply replaces\nitself, which is fine — this part is only needed when the swap should be\nanimated.\n\nLeave the `Arrow` outside it, as a direct child of the popup: the viewport\nclips, and the arrow lives beyond the card's edge.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The content that changes from link to link."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "ProgressRoot": {
     "name": "ProgressRoot",
     "description": "Groups every part of the bar and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a two-column grid: `Label` and\n`Value` share the first row, and `Track` spans both underneath.\n\n`value` is required and `null` is a meaningful setting — it is how you say\n\"this is running and I cannot say how far along it is\", which switches every\npart below into the indeterminate animation.\n\n```tsx\n<Progress.Root value={62}>\n  <Progress.Label>Uploading</Progress.Label>\n  <Progress.Value />\n  <Progress.Track>\n    <Progress.Indicator />\n  </Progress.Track>\n</Progress.Root>\n```",
