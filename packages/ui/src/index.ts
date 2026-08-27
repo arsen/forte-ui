@@ -129,6 +129,16 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { OTPField } from "./components/otp-field";
+export type {
+  OTPFieldSize,
+  OTPFieldVariant,
+  OTPFieldValidationType,
+  OTPFieldRootProps,
+  OTPFieldInputProps,
+  OTPFieldSeparatorProps,
+} from "./components/otp-field";
+
 export { Popover } from "./components/popover";
 export type {
   PopoverSize,

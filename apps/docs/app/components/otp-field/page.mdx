@@ -1,0 +1,244 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "OTP Field",
+  description:
+    "A row of single-character slots that together hold one verification code — one value, one tab stop, and paste that lands where you expect.",
+};
+
+# OTP Field
+
+The field someone types a six-digit code into after asking to sign in. It looks
+like several inputs and behaves like one: a single value, a single tab stop, and
+a single accessible name. Typing advances, Backspace retreats, and a pasted
+`482913` fills every slot at once instead of dropping five characters.
+
+<DemoBlock id="otp-field/basic" />
+
+`length` is required and is the only thing the field needs — leave the children
+out and the root renders that many slots for you. Pass children when the row is
+not uniform, which in practice means one thing: a separator between groups.
+
+## Import
+
+```tsx
+import { OTPField } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sizes
+
+`size` sets the slots' square side and the character's font size together, and
+the side comes from the same `--pui-control-*` tokens `Input` and
+`Select.Trigger` read — so a code field and the rest of a form stay on one
+scale at every `data-pui-density` setting.
+
+<DemoBlock id="otp-field/sizes" />
+
+### Variants
+
+`outline` reads as a form control, `soft` as a filled field, `underline` as a
+row of rules.
+
+<DemoBlock id="otp-field/variants" />
+
+<Callout kind="note">
+  There is no `ghost` here, unlike [`Input`](/components/input). A slot with no
+  boundary leaves nothing to count, and how many characters the code has is the
+  one thing the field has to communicate before anything is typed. `underline`
+  is the quiet end of the scale instead.
+</Callout>
+
+### Grouped
+
+`OTPField.Separator` is the dash in `482 – 913`. It renders the library's
+[`Separator`](/components/separator) with `decorative` on by default, because
+the slots either side of it are one value and one control — announcing a
+boundary in the middle of a six-digit code describes the layout, not the field.
+
+`length` counts inputs, not children, so a separator can go anywhere between
+them without changing it.
+
+<DemoBlock id="otp-field/grouped" />
+
+### Masking and character set
+
+`validationType` decides which characters survive being typed or pasted:
+`numeric` (the default), `alpha`, `alphanumeric`, or `none`. Anything it drops
+is reported through `onValueInvalid` rather than silently ignored, which is
+what lets a code copied as `482-913` still land correctly.
+
+It also picks the virtual keyboard — `numeric` asks for the digit pad, which is
+most of why a phone is bearable to type a code on. Override `inputMode` if you
+need a different one.
+
+<DemoBlock id="otp-field/masked" />
+
+<Callout kind="note">
+  `mask` is for a secret that gets reused — a PIN, a recovery code. Leave it off
+  for a code from an SMS: it has nothing left to protect that the notification
+  did not already show, and hiding it takes away the user's only way to check
+  what they typed.
+</Callout>
+
+### States
+
+Disabled goes on the `Field.Root` rather than on the field, so the label and the
+description dim with the slots instead of sitting at full contrast beside a
+greyed-out row. Read-only keeps full contrast, a panel-coloured background and
+the text cursor.
+
+`invalid` is the interesting one: a rejected code is complete **and** wrong, so
+the danger boundary has to beat the completion boundary. That is document order
+in the stylesheet, not specificity — the two rules tie.
+
+<DemoBlock id="otp-field/states" />
+
+### Auto-submit
+
+`autoSubmit` submits the owning form the moment the last slot fills. It suits
+this control specifically: the code is the whole form, so a Verify button is a
+step whose only content is "yes, the six digits I just typed".
+`onValueComplete` runs immediately before the submit, so there is still a place
+to stop it.
+
+<DemoBlock id="otp-field/auto-submit" />
+
+<Callout kind="a11y">
+  Keep a submit button even with `autoSubmit`. Someone who corrects a digit
+  after the field is already full has nothing left to trigger, and a form whose
+  only route to submission is "type the last character" is unreachable by
+  anyone whose input method fills the field some other way.
+</Callout>
+
+### Controlled
+
+The value is one string, not one per slot: `value`, `defaultValue`,
+`onValueChange`, `onValueComplete` and `onValueInvalid` all speak in `"482913"`.
+
+`onValueComplete` is not `onValueChange` with a length check — it also fires
+when a complete value is pasted over an identical one, where the value never
+changed and `onValueChange` stays quiet.
+
+<DemoBlock id="otp-field/controlled" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description:
+        "Moves into the field, and out of it. The whole field is one tab stop: exactly one slot is in the tab order at a time, and it is the one the user left off at.",
+    },
+    {
+      keys: ["←", "→"],
+      description: "Move between slots. Direction follows the writing direction.",
+    },
+    {
+      keys: ["Backspace"],
+      description:
+        "Clears the current slot, or moves back and clears the previous one when the current slot is already empty.",
+    },
+    {
+      keys: ["Delete"],
+      description: "Clears the current slot without moving.",
+    },
+    {
+      keys: ["Home", "End"],
+      description: "Jump to the first or last slot.",
+    },
+    {
+      keys: ["Ctrl", "V"],
+      description:
+        "Pastes from the slot the caret is in, filling forwards. Characters the validation type rejects are dropped rather than blocking the paste.",
+    },
+  ]}
+/>
+
+The root renders `role="group"` and takes its name from the `Field.Label` above
+it. The slots themselves are not named individually, and `aria-label` on the
+first one is ignored on purpose — Base UI warns about it — because the name
+belongs to the group, not to a character of it. Where there is no visible label,
+put `aria-label` on `OTPField.Root`.
+
+Beside the group sits a visually hidden `<input>` carrying the whole code. That
+is what makes `name`, `required`, `form` and constraint validation behave the
+way they would on any other control, and what a password manager or an SMS
+autofill writes into.
+
+<Callout kind="a11y">
+  `autoComplete` defaults to `"one-time-code"`, which is what lets iOS and
+  Android offer the code straight from the message that just arrived. Do not
+  override it without a reason — it is the difference between one tap and
+  copying six digits between two apps.
+</Callout>
+
+Focusing a slot selects the character in it, so the next keypress replaces it
+rather than being rejected by a full slot. That is also why the selection colour
+is a documented knob: it is visible on every single focus, not only when someone
+drags across text.
+
+Under forced colours every variant paints a full 1px `FieldText` box, including
+`soft` (whose border is `transparent`, a value forced-colors replaces with a
+system colour of its own choosing) and `underline` (which has no border on three
+sides at all). Keeping the slots countable is the whole job there — a user who
+cannot see how many characters the code has cannot tell whether they have
+finished typing it.
+
+**Motion.** There is none, and that is a decision rather than an omission. The
+only thing that changes as the user types is which slot holds a character, and a
+slot that grew or flashed on fill would do it six times in two seconds, right
+next to the caret they are watching. What does transition is colour: the
+boundary on hover, on completion, and on failure.
+
+## Theming
+
+Every `--pui-otp-field-*` property is declared on the field's root and reaches
+the slots by inheritance — a slot is not something you address one at a time.
+Set them on the root, through `className` (an unlayered rule beats
+`@layer pretty-ui.components` whatever its specificity) or an inline `style`.
+
+The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*` — are the exception: this component only reads those, so
+re-pointing them from `:root` or a theme scope moves every field at once.
+
+<ThemingTable component="OTPField" />
+
+`--pui-otp-field-gap` is deliberately not `--pui-control-gap`. That token drops
+to 4px under `data-pui-density="compact"`, and 4px is less than a focus ring
+needs to clear its slot (2px offset plus 2px width), so a focused slot's ring
+would sit on top of its neighbour's border.
+
+## API reference
+
+### OTPField.Root
+
+<PropTable component="OTPFieldRoot" />
+
+Everything else Base UI's `OTPField.Root` accepts passes through — `value`,
+`defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `name`,
+`form`, `required`, `disabled`, `readOnly`, `id`, `autoComplete`, `inputMode`,
+`normalizeValue` and `render`.
+
+### OTPField.Input
+
+<PropTable component="OTPFieldInput" />
+
+Slots take their index from the order they are rendered in, so there is no
+`index` prop to keep in step — but the number of them has to equal the root's
+`length`, and Base UI warns in development when it does not. Native `<input>`
+props and Base UI's `render` pass through.
+
+### OTPField.Separator
+
+<PropTable component="OTPFieldSeparator" />
+
+It renders the library's [`Separator`](/components/separator) and takes all of
+its props, so it carries `data-pui="separator"` rather than a marker of its own —
+scope to it with `[data-pui="otp-field"] [data-pui="separator"]`.

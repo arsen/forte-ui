@@ -1647,6 +1647,115 @@
       }
     ]
   },
+  "OTPFieldRoot": {
+    "name": "OTPFieldRoot",
+    "description": "Groups every slot of a one-time-code field and owns the value. Renders a\n`<div role=\"group\">` laid out as a wrapping flex row, plus a visually hidden\n`<input>` beside it that carries the whole code into form submission and\nconstraint validation.\n\n```tsx\n<Field.Root name=\"code\">\n  <Field.Label>Verification code</Field.Label>\n  <OTPField.Root length={6} />\n</Field.Root>\n```\n\nThe value is one string, not one per slot: `value`, `defaultValue`,\n`onValueChange` and `onValueComplete` all speak in `\"123456\"`. Typing\nadvances, Backspace retreats, and a paste fills from the slot it lands on —\nBase UI owns all of that, including clamping to `length` and filtering by\n`validationType`.\n\n`autoComplete` defaults to `\"one-time-code\"`, which is what lets iOS and\nAndroid offer a code straight from the SMS that just arrived. Do not\noverride it without a reason.\n\nState is exposed on `data-*` (`data-complete`, `data-filled`,\n`data-disabled`, `data-readonly`, plus `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched` and `data-focused` inside a `Field.Root`) and\nevery visual decision is a `--pui-otp-field-*` custom property, so it can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[complete]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "length",
+        "type": "number",
+        "required": true,
+        "defaultValue": null,
+        "description": "How many characters the code has, and therefore how many slots the field\nrenders. Required: the root clamps the value, decides when it is complete\nand writes the hidden input's `pattern` from it, all of which have to be\nright on the server render, before a single slot has mounted.\n\nWhen you pass your own children, the number of `<OTPField.Input>`s has to\nmatch — Base UI warns in development when it does not."
+      },
+      {
+        "name": "autoSubmit",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Submit the owning form as soon as the last slot is filled.\n\nThe reason to want it is that the code is the whole form — there is\nnothing left to review, and a Verify button is a step whose only content\nis \"yes, I meant the six digits I just typed\". `onValueComplete` runs\nimmediately before the submit, so you can still stop it."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The slots, and anything between them. Leave it out and the root renders\n`length` plain `<OTPField.Input>`s for you — the common case, and the one\nwhere Base UI otherwise warns at runtime if the count and `length`\ndisagree.\n\nPass children when the row is not uniform: groups split by an\n`<OTPField.Separator />`, or a slot with its own `aria-label`. The count\nstill has to equal `length`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "mask",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Replace each character with a dot, the way a password field does.\n\nOff by default, and worth leaving off. A code that is read off a phone and\ntyped once has nothing to shoulder-surf that the SMS did not already\nexpose, and hiding it takes away the user's only way to check what they\ntyped."
+      },
+      {
+        "name": "size",
+        "type": "OTPFieldSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the slots. Sets their square side and the character's font size\ntogether, and the side comes from the same `--pui-control-*` tokens\n`Input` and `Select.Trigger` read — so a code field lines up with the rest\nof a form at every `data-pui-density` setting."
+      },
+      {
+        "name": "validationType",
+        "type": "OTPFieldValidationType",
+        "required": false,
+        "defaultValue": "\"numeric\"",
+        "description": "Which characters the field accepts. Anything else is dropped as it is\ntyped or pasted and reported through `onValueInvalid`, so a code copied\nwith a stray space or a dash still lands correctly.\n\nIt also picks the virtual keyboard: `numeric` asks for the digit pad,\nwhich is most of why a phone is bearable to type a code on. Override\n`inputMode` if you need a different one."
+      },
+      {
+        "name": "variant",
+        "type": "OTPFieldVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight each slot carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `underline` as a row of rules.\n\nThere is no `ghost`, unlike `Input`: a slot with no boundary leaves\nnothing to count, and how many characters the code has is the one thing\nthe field has to say before anything is typed."
+      }
+    ]
+  },
+  "OTPFieldInput": {
+    "name": "OTPFieldInput",
+    "description": "One character of the code. Renders an `<input>`.\n\nSlots take their index from the order they are rendered in, so there is no\n`index` prop to keep in step — but the number of them must equal the root's\n`length`, and Base UI warns in development when it does not. Render them\nyourself only when the row needs something a bare list cannot express;\notherwise let `OTPField.Root` produce them.\n\nExactly one slot is in the tab order at a time, which is what makes the\nwhole field a single tab stop rather than six. Focusing one selects its\ncharacter, so the next keypress replaces it instead of being rejected by a\nfull slot.\n\n`aria-label` on the FIRST slot is ignored — Base UI warns about it — because\nthe name belongs to the group, not to a character of it. Name the field with\na `<Field.Label>` or a `<label>` instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "OTPFieldSeparator": {
+    "name": "OTPFieldSeparator",
+    "description": "The dash between two groups of slots — the `123 – 456` shape a six-digit\ncode is usually printed in. Renders the library's `Separator`, so it carries\n`data-pui=\"separator\"` rather than a marker of its own; scope to it with\n`[data-pui=\"otp-field\"] [data-pui=\"separator\"]`.\n\nIt is a **horizontal** rule sized to `--pui-otp-field-separator-length`,\nnot a vertical bar, and it counts against nothing: `length` is the number of\n`Input`s, so a separator can go anywhere between them.\n\n```tsx\n<OTPField.Root length={6}>\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Separator />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n</OTPField.Root>\n```",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "decorative",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Drops `role=\"separator\"`, leaving the dash visible but absent from the\naccessibility tree.\n\nDefaults to `true` here, which is the opposite of a standalone\n`Separator`: the slots either side of it are one value and one control,\nso the grouping is a reading aid for the eye only. Announcing a boundary\nin the middle of a six-digit code describes the layout, not the field."
+      },
+      {
+        "name": "orientation",
+        "type": "SeparatorOrientation",
+        "required": false,
+        "defaultValue": "\"horizontal\"",
+        "description": "Which way the rule runs — and therefore which axis it separates. A\n`horizontal` rule is a line across the inline axis dividing stacked\ncontent; a `vertical` one is a line down the block axis dividing content\nin a row.\n\nIt is also what Base UI reports as `aria-orientation`, so it is a\nsemantic choice, not only a visual one."
+      },
+      {
+        "name": "variant",
+        "type": "SeparatorVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "The line style. A rule has exactly one visual dimension, so this is the\nwhole of it: `solid` for structural divisions, `dashed` or `dotted` for\nsofter, more provisional ones (a drop zone's edge, an optional section)."
+      }
+    ]
+  },
   "PopoverRoot": {
     "name": "PopoverRoot",
     "description": "Groups one popover's trigger and popup, and owns its open state. Renders no\nDOM element, so it takes no `className`, `style` or `ref`.",

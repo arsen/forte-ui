@@ -173,6 +173,22 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_otp_field_auto_submit from "./otp-field/auto-submit";
+import d_otp_field_auto_submit_src from "./otp-field/auto-submit?raw";
+import d_otp_field_basic from "./otp-field/basic";
+import d_otp_field_basic_src from "./otp-field/basic?raw";
+import d_otp_field_controlled from "./otp-field/controlled";
+import d_otp_field_controlled_src from "./otp-field/controlled?raw";
+import d_otp_field_grouped from "./otp-field/grouped";
+import d_otp_field_grouped_src from "./otp-field/grouped?raw";
+import d_otp_field_masked from "./otp-field/masked";
+import d_otp_field_masked_src from "./otp-field/masked?raw";
+import d_otp_field_sizes from "./otp-field/sizes";
+import d_otp_field_sizes_src from "./otp-field/sizes?raw";
+import d_otp_field_states from "./otp-field/states";
+import d_otp_field_states_src from "./otp-field/states?raw";
+import d_otp_field_variants from "./otp-field/variants";
+import d_otp_field_variants_src from "./otp-field/variants?raw";
 import d_popover_basic from "./popover/basic";
 import d_popover_basic_src from "./popover/basic?raw";
 import d_popover_controlled from "./popover/controlled";
@@ -455,6 +471,14 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "otp-field/auto-submit"
+  | "otp-field/basic"
+  | "otp-field/controlled"
+  | "otp-field/grouped"
+  | "otp-field/masked"
+  | "otp-field/sizes"
+  | "otp-field/states"
+  | "otp-field/variants"
   | "popover/basic"
   | "popover/controlled"
   | "popover/detached-trigger"
@@ -640,6 +664,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "otp-field/auto-submit": { Component: d_otp_field_auto_submit, source: d_otp_field_auto_submit_src, file: "otp-field/auto-submit.tsx" },
+  "otp-field/basic": { Component: d_otp_field_basic, source: d_otp_field_basic_src, file: "otp-field/basic.tsx" },
+  "otp-field/controlled": { Component: d_otp_field_controlled, source: d_otp_field_controlled_src, file: "otp-field/controlled.tsx" },
+  "otp-field/grouped": { Component: d_otp_field_grouped, source: d_otp_field_grouped_src, file: "otp-field/grouped.tsx" },
+  "otp-field/masked": { Component: d_otp_field_masked, source: d_otp_field_masked_src, file: "otp-field/masked.tsx" },
+  "otp-field/sizes": { Component: d_otp_field_sizes, source: d_otp_field_sizes_src, file: "otp-field/sizes.tsx" },
+  "otp-field/states": { Component: d_otp_field_states, source: d_otp_field_states_src, file: "otp-field/states.tsx" },
+  "otp-field/variants": { Component: d_otp_field_variants, source: d_otp_field_variants_src, file: "otp-field/variants.tsx" },
   "popover/basic": { Component: d_popover_basic, source: d_popover_basic_src, file: "popover/basic.tsx" },
   "popover/controlled": { Component: d_popover_controlled, source: d_popover_controlled_src, file: "popover/controlled.tsx" },
   "popover/detached-trigger": { Component: d_popover_detached_trigger, source: d_popover_detached_trigger_src, file: "popover/detached-trigger.tsx" },
