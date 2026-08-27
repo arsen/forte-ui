@@ -187,23 +187,46 @@ replaced most of it. Unrecognised classes are not merged — both survive and
 the cascade decides — and, worse, the stock colour scale matches *any* name,
 so `text-2` (a font size here) parses as a text colour and
 `twMerge("text-2", "text-foreground-muted")` silently drops one. The package
-ships the matching config:
+ships a `cn` already configured for the bridge:
 
 ```ts
+import { cn } from "@dofortech/pretty-ui/cn";
+
+cn("p-4", condition && "p-6"); // -> "p-6" when condition holds
+```
+
+`tailwind-merge` is an *optional* peer dependency — install it alongside the
+package to use this subpath; apps that never import it pay nothing.
+
+If your app adds its own `@theme` keys, the shipped `cn` cannot know them, so
+build your own from the underlying config (a plain data object, exported
+separately precisely for this):
+
+```ts
+import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 import { tailwindMergeConfig } from "@dofortech/pretty-ui/tailwind-merge";
 
-export const twMerge = extendTailwindMerge(tailwindMergeConfig);
+const { theme, classGroups } = tailwindMergeConfig.extend;
+
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      ...theme,
+      // extend, don't replace, or `p-surface` stops merging
+      spacing: [...theme.spacing, "header"],
+    },
+    classGroups,
+  },
+});
+
+export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 ```
 
-It is a plain data object — the package has no dependency on `tailwind-merge`
-itself, so it works with whatever version your app already uses. Colours need
-no entry — the colour scale already matches any name — and neither do
-`font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names are
-Tailwind's own. If you add keys of your own in `@theme`, spread the config's
-inner arrays into your `extend` block and add them there (`spacing` in
-particular must be extended, not replaced, or `p-surface` stops merging); a
-missed name does not error, it just stops overriding its own family.
+Colours need no entry — the colour scale already matches any name — and
+neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
+are Tailwind's own. A missed name does not error, it just stops overriding
+its own family.
 
 ## Other styling setups
 

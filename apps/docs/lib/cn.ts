@@ -20,6 +20,11 @@ import { tailwindMergeConfig } from "@dofortech/pretty-ui/tailwind-merge";
  * library's bridge gets added to the package config instead — this file
  * should never restate a library scale. Either way a missed name does not
  * error, it just stops overriding its own family.
+ *
+ * The package also ships a ready-made `@dofortech/pretty-ui/cn` — the docs
+ * cannot use it precisely because of the extra keys below, which makes this
+ * file the worked example of the "app with its own theme keys" path from the
+ * README.
  */
 
 const { theme, classGroups } = tailwindMergeConfig.extend;

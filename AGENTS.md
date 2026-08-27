@@ -467,7 +467,12 @@ Like the bridge, the library half of this config ships with the package:
 [`packages/ui/src/tailwind-merge.ts`](packages/ui/src/tailwind-merge.ts)
 exports `tailwindMergeConfig` (plain data — the package does not depend on
 tailwind-merge) covering `spacing: surface`, `text`, `shadow`, `radius`,
-`ease` and the `duration` group. `cn.ts` spreads it and adds only what the
+`ease` and the `duration` group. A ready-made helper built on it ships as
+`@dofortech/pretty-ui/cn` ([`packages/ui/src/cn.ts`](packages/ui/src/cn.ts)),
+which is why tailwind-merge is an *optional* peer dependency, externalised in
+`vite.config.ts` — only that subpath needs it. The docs cannot use the shipped
+`cn` precisely because of their extra keys, which makes `cn.ts` here the
+worked example of the bring-your-own-keys path. `cn.ts` spreads it and adds only what the
 DOCS added to the theme: `spacing: header/anchor`, `animate: reveal`, and the
 `container` measures. **A key added to a scale still gets added in two files —
 they are just paired by owner now**: a library token goes in the bridge and

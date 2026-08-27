@@ -85,7 +85,9 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", /^@base-ui\/react/],
+      // tailwind-merge is an optional peer: bundling it would defeat the point
+      // of letting the app's own copy (and version) win.
+      external: ["react", "react-dom", "react/jsx-runtime", "tailwind-merge", /^@base-ui\/react/],
       input: entries,
       output: {
         assetFileNames: "styles/[name][extname]",
