@@ -166,6 +166,22 @@ export type {
   MenubarOrientation,
 } from "./components/menubar";
 
+export { NavigationMenu } from "./components/navigation-menu";
+export type {
+  NavigationMenuVariant,
+  NavigationMenuColumns,
+  NavigationMenuRootProps,
+  NavigationMenuListProps,
+  NavigationMenuItemProps,
+  NavigationMenuTriggerProps,
+  NavigationMenuIconProps,
+  NavigationMenuContentProps,
+  NavigationMenuLinkProps,
+  NavigationMenuLinkTitleProps,
+  NavigationMenuLinkDescriptionProps,
+  NavigationMenuPopupProps,
+} from "./components/navigation-menu";
+
 export { NumberField } from "./components/number-field";
 export type {
   NumberFieldSize,
