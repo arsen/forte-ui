@@ -1784,6 +1784,229 @@
       }
     ]
   },
+  "ToastProvider": {
+    "name": "ToastProvider",
+    "description": "Owns every toast below it, and renders the stack.\n\nMount it once, near the root of the app:\n\n```tsx\n<Toast.Provider position=\"bottom-end\" timeout={5000}>\n  <App />\n</Toast.Provider>\n```\n\nThe viewport comes with it deliberately. Base UI keeps the two apart, which\nis the right primitive but the wrong default here: a provider without a\nviewport swallows every toast silently — the calls succeed, the store fills\nup, and nothing is ever drawn. Rendering it here means the failure cannot\nhappen, and `viewport={false}` is one prop away when you need to place it\nyourself.\n\nRenders no DOM element of its own; the stack is portalled.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The app."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colours."
+      },
+      {
+        "name": "limit",
+        "type": "number",
+        "required": false,
+        "defaultValue": "3",
+        "description": "How many toasts are visible at once. The rest stay in the store and take\ntheir turn as the front ones are dismissed, so nothing is lost — they are\nmarked `data-limited` and hidden rather than dropped."
+      },
+      {
+        "name": "position",
+        "type": "ToastPosition",
+        "required": false,
+        "defaultValue": "bottom-end",
+        "description": "Which corner or edge the stack sits at. `start` and `end` are the inline\nedges, so `bottom-end` is bottom-right in LTR and bottom-left in RTL."
+      },
+      {
+        "name": "renderToast",
+        "type": "((toast: ToastObject) => ReactNode)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Renders one toast. Return a `Toast.Item` — it is what carries the stacking\ngeometry and the swipe gesture.\n\n```tsx\nrenderToast={(toast) => (\n  <Toast.Item toast={toast}>\n    <Toast.Icon />\n    <Toast.Title />\n    <Toast.Close />\n  </Toast.Item>\n)}\n```\n\nDefaults to `<Toast.Item toast={toast} />`, which supplies the standard\nlayout from the toast's own fields."
+      },
+      {
+        "name": "swipeDirection",
+        "type": "ToastSwipeDirection | ToastSwipeDirection[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way a toast may be flicked away. Defaults to the direction away from\nthe viewport's own edge plus both inline directions; pass `[]` to turn\nswipe-to-dismiss off."
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5000",
+        "description": "How long a toast stays on screen by default, in milliseconds. `0` keeps\nevery toast until it is closed. A toast can override it with its own\n`timeout`."
+      },
+      {
+        "name": "toastManager",
+        "type": "ToastManager<any>",
+        "required": false,
+        "defaultValue": null,
+        "description": "A manager from `Toast.createManager()`, for raising toasts outside React.\nPass the manager's `base`."
+      },
+      {
+        "name": "viewport",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether to render the stack. Turn it off when you are placing\n`Toast.Viewport` yourself."
+      }
+    ]
+  },
+  "ToastViewport": {
+    "name": "ToastViewport",
+    "description": "The stack itself: Base UI's `Portal` → `Viewport`, plus the loop over the\ntoasts. Collapsing the three keeps the common case to one element, the way\n`Dialog.Popup` collapses its four.\n\n`Toast.Provider` renders one of these for you. Render it yourself only when\nit has to go somewhere specific — inside a `container`, or after some other\nportalled chrome — and pass `viewport={false}` to the provider so there is\nnot a second one.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colours."
+      },
+      {
+        "name": "position",
+        "type": "ToastPosition",
+        "required": false,
+        "defaultValue": "bottom-end",
+        "description": "Which corner or edge the stack sits at. `start` and `end` are the inline\nedges, so `bottom-end` is bottom-right in LTR and bottom-left in RTL."
+      },
+      {
+        "name": "renderToast",
+        "type": "((toast: ToastObject) => ReactNode)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Renders one toast. Return a `Toast.Item` — it is what carries the stacking\ngeometry and the swipe gesture.\n\n```tsx\nrenderToast={(toast) => (\n  <Toast.Item toast={toast}>\n    <Toast.Icon />\n    <Toast.Title />\n    <Toast.Close />\n  </Toast.Item>\n)}\n```\n\nDefaults to `<Toast.Item toast={toast} />`, which supplies the standard\nlayout from the toast's own fields."
+      },
+      {
+        "name": "swipeDirection",
+        "type": "ToastSwipeDirection | ToastSwipeDirection[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way a toast may be flicked away. Defaults to the direction away from\nthe viewport's own edge plus both inline directions; pass `[]` to turn\nswipe-to-dismiss off."
+      }
+    ]
+  },
+  "ToastItem": {
+    "name": "ToastItem",
+    "description": "One toast: Base UI's `Root` wrapping its `Content`.\n\n`Root` carries the stacking geometry, the swipe gesture and the focus\nhandling; `Content` is what fades when the toast is behind another one, and\nis why the two are separate elements rather than one.",
+    "props": [
+      {
+        "name": "toast",
+        "type": "ToastObject",
+        "required": true,
+        "defaultValue": null,
+        "description": "The toast to render — the object a `renderToast` callback receives."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The toast's contents. Omit it for the standard layout — icon, title,\ndescription, action, close — assembled from the toast's own fields.\n\nPassing children replaces that layout entirely. Compose it from the parts\n(`Toast.Icon`, `Toast.Title`, `Toast.Description`, `Toast.Action`,\n`Toast.Close`), each of which defaults its content from the toast, so a\ncustom arrangement does not mean restating the text."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "swipeDirection",
+        "type": "ToastSwipeDirection | ToastSwipeDirection[]",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way this toast may be flicked away. Inherited from the viewport;\nset it here to override one toast, or pass `[]` to pin it in place."
+      }
+    ]
+  },
+  "ToastIcon": {
+    "name": "ToastIcon",
+    "description": "The status glyph, coloured by the toast's type.\n\nA `loading` toast gets a `Spinner` instead of a static glyph. The spinner is\na child of the toast root rather than the root itself, which is load-bearing\n— Base UI waits on `root.getAnimations()` before removing a dismissed toast,\nand an infinite animation's promise never settles, so a spinning root would\nstay in the DOM for the lifetime of the page. `getAnimations()` is not\ncalled with `subtree: true`, so a descendant is safe.\n\nRenders nothing when there is no glyph to draw, so the icon column collapses\non a typeless toast rather than leaving a gap where an icon would be.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The glyph to draw. Defaults to `data.icon` if the toast carries one, and\notherwise to the standard glyph for its `type`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastTitle": {
+    "name": "ToastTitle",
+    "description": "The toast's headline, and its accessible name.\n\nRenders an `<h2>` whose text defaults to the toast's `title`. Renders\nnothing at all when there is no title, so a description-only toast does not\ncarry an empty heading.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastDescription": {
+    "name": "ToastDescription",
+    "description": "The second line, and the toast's accessible description.\n\nRenders a `<p>` whose text defaults to the toast's `description`, and\nrenders nothing when there is none.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastAction": {
+    "name": "ToastAction",
+    "description": "The toast's action button.\n\nRenders a `<button>` whose label and `onClick` default to the toast's\n`action`, and renders nothing when the toast has none — so the default\nlayout can include it unconditionally.\n\nClicking it does not close the toast. That is deliberate: an action that\nfails should be able to say so, and closing is one `handle.close()` away\ninside the handler.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ToastClose": {
+    "name": "ToastClose",
+    "description": "The button that dismisses the toast.\n\nRenders a `<button>` with a \"×\" and an `aria-label` of \"Close\", both\noverridable through `children` and `aria-label`. Base UI hides it from\nassistive technology while the stack is collapsed and reveals it once the\nviewport is hovered or focused, so it is announced exactly when it is\nreachable.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "Toggle": {
     "name": "Toggle",
     "description": "A two-state button that is either on or off, built on Base UI's unstyled\n`Toggle` primitive. Renders a `<button>` with `aria-pressed`.\n\nReach for it when the button *is* the state — bold, mute, pin, favourite —\nand the effect is immediate and local. If the state is a setting the user\nconfirms later, use [`Switch`](/components/switch) or\n[`Checkbox`](/components/checkbox), which carry a label and a form value; a\ntoggle button has neither.\n\nState is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)\nand every visual decision is a `--pui-toggle-*` custom property, so it can\nbe re-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[pressed]:...`) without wrapping.",

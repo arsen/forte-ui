@@ -52,8 +52,18 @@ import { EYEBROW, NAV_LINK, NAV_LINK_ACTIVE, STICKY_COLUMN } from "./styles";
  * put a row in the rail that is always "current" the moment you are at the top.
  * h4 exists on a couple of pages and is detail inside a section, not a stop.
  * `build-toc.mjs` filters to the same two depths; if these two ever disagree,
- * the seeded rail is visibly rewritten on mount. */
-const HEADINGS = "h2[id], h3[id]";
+ * the seeded rail is visibly rewritten on mount.
+ *
+ * `:not([data-pui])` excludes headings a COMPONENT rendered. Several library
+ * parts are headings with generated ids — `Dialog.Title` and `Toast.Title` are
+ * both `<h2 id>` — because that id is what wires up `aria-labelledby`. Most of
+ * them are portalled to `<body>` and so are out of `#main` and out of reach
+ * anyway, but not all: a toast viewport given a `container` renders inside the
+ * page, and the first demo on the Toast page put "Profile saved" in this rail
+ * for as long as the toast was on screen. `data-pui` is the marker every part
+ * the library renders carries, and nothing MDX produces has one, so it
+ * separates the two exactly. */
+const HEADINGS = "h2[id]:not([data-pui]), h3[id]:not([data-pui])";
 
 /* A stable identity for "this route has no generated entry", so the effect
  * below is not re-run by a fresh `[]` on every render. */

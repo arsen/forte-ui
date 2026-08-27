@@ -215,6 +215,22 @@ import d_tabs_vertical from "./tabs/vertical";
 import d_tabs_vertical_src from "./tabs/vertical?raw";
 import d_tabs_with_icons from "./tabs/with-icons";
 import d_tabs_with_icons_src from "./tabs/with-icons?raw";
+import d_toast_action from "./toast/action";
+import d_toast_action_src from "./toast/action?raw";
+import d_toast_basic from "./toast/basic";
+import d_toast_basic_src from "./toast/basic?raw";
+import d_toast_custom from "./toast/custom";
+import d_toast_custom_src from "./toast/custom?raw";
+import d_toast_handle from "./toast/handle";
+import d_toast_handle_src from "./toast/handle?raw";
+import d_toast_manager from "./toast/manager";
+import d_toast_manager_src from "./toast/manager?raw";
+import d_toast_positions from "./toast/positions";
+import d_toast_positions_src from "./toast/positions?raw";
+import d_toast_promise from "./toast/promise";
+import d_toast_promise_src from "./toast/promise?raw";
+import d_toast_stacking from "./toast/stacking";
+import d_toast_stacking_src from "./toast/stacking?raw";
 import d_toggle_basic from "./toggle/basic";
 import d_toggle_basic_src from "./toggle/basic?raw";
 import d_toggle_controlled from "./toggle/controlled";
@@ -358,6 +374,14 @@ export type DemoId =
   | "tabs/pill"
   | "tabs/vertical"
   | "tabs/with-icons"
+  | "toast/action"
+  | "toast/basic"
+  | "toast/custom"
+  | "toast/handle"
+  | "toast/manager"
+  | "toast/positions"
+  | "toast/promise"
+  | "toast/stacking"
   | "toggle/basic"
   | "toggle/controlled"
   | "toggle/disabled"
@@ -484,6 +508,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tabs/pill": { Component: d_tabs_pill, source: d_tabs_pill_src, file: "tabs/pill.tsx" },
   "tabs/vertical": { Component: d_tabs_vertical, source: d_tabs_vertical_src, file: "tabs/vertical.tsx" },
   "tabs/with-icons": { Component: d_tabs_with_icons, source: d_tabs_with_icons_src, file: "tabs/with-icons.tsx" },
+  "toast/action": { Component: d_toast_action, source: d_toast_action_src, file: "toast/action.tsx" },
+  "toast/basic": { Component: d_toast_basic, source: d_toast_basic_src, file: "toast/basic.tsx" },
+  "toast/custom": { Component: d_toast_custom, source: d_toast_custom_src, file: "toast/custom.tsx" },
+  "toast/handle": { Component: d_toast_handle, source: d_toast_handle_src, file: "toast/handle.tsx" },
+  "toast/manager": { Component: d_toast_manager, source: d_toast_manager_src, file: "toast/manager.tsx" },
+  "toast/positions": { Component: d_toast_positions, source: d_toast_positions_src, file: "toast/positions.tsx" },
+  "toast/promise": { Component: d_toast_promise, source: d_toast_promise_src, file: "toast/promise.tsx" },
+  "toast/stacking": { Component: d_toast_stacking, source: d_toast_stacking_src, file: "toast/stacking.tsx" },
   "toggle/basic": { Component: d_toggle_basic, source: d_toggle_basic_src, file: "toggle/basic.tsx" },
   "toggle/controlled": { Component: d_toggle_controlled, source: d_toggle_controlled_src, file: "toggle/controlled.tsx" },
   "toggle/disabled": { Component: d_toggle_disabled, source: d_toggle_disabled_src, file: "toggle/disabled.tsx" },
