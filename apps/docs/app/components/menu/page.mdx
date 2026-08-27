@@ -1,0 +1,297 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Menu",
+  description:
+    "A dropdown menu — a button that opens a list of commands, with checkable rows, submenus and keyboard shortcuts.",
+};
+
+# Menu
+
+A dropdown menu: a button that opens a list of *commands*. Reach for it when
+each row **does** something — duplicate, export, sign out — and the list is
+short enough to read at a glance. It is the component people usually mean by
+"dropdown", but it is not a form control: nothing here writes a value into a
+field. For picking a value out of a fixed set, use [Select](/components/select).
+
+<DemoBlock id="menu/basic" />
+
+## Import
+
+```tsx
+import { Menu } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Triggers
+
+`<Menu.Trigger>` renders a modest neutral button so an unstyled menu is not UA
+chrome. Pass `render` to hand the element to something else — the library's own
+`<Button>` is the usual case — and the trigger's styling steps aside, so the two
+never fight over the cascade.
+
+<DemoBlock id="menu/trigger" />
+
+### Icons and shortcuts
+
+`<Menu.Shortcut>` prints the keys at the end of a row. A direct `<svg>` child of
+a row is sized to `--pui-menu-item-icon-size` and never squeezed by a long
+label, so an icon set's own default (lucide draws at 24px) does not decide the
+row's height.
+
+<DemoBlock id="menu/shortcuts" />
+
+<Callout kind="a11y">
+  `<Menu.Shortcut>` is `aria-hidden` on purpose: read aloud, `⌘C` becomes
+  "place of interest sign C" and `⇧⌘P` becomes "up arrowhead command P" — worse
+  than silence. Put the shortcut on the item as
+  `aria-keyshortcuts="Meta+C"`, which is where assistive technology looks for it
+  and where it is spelled in words.
+</Callout>
+
+### Checkable rows
+
+`<Menu.CheckboxItem>` toggles a setting; `<Menu.RadioItem>` inside a
+`<Menu.RadioGroup>` picks one of a set. Both default to `closeOnClick={false}`,
+which is what lets a run of toggles be set in one visit — the opposite of
+`<Menu.Item>`, which closes on click because a command is done once it has run.
+
+<DemoBlock id="menu/checkbox-items" />
+
+The marker is a tick for a checkbox row and a dot for a radio row, the same
+distinction the platform menus draw — and once both kinds share a popup, the
+only thing separating "any of these" from "one of these".
+
+<DemoBlock id="menu/radio-items" />
+
+Rendering one checkable row anywhere in a popup indents **every** row in that
+popup to match, so labels stay in one column instead of stepping in and out
+around the tick marks. A menu of plain commands keeps its tight left edge and
+spends no space on a gutter nothing will fill. It is decided per popup, so a
+submenu full of checkboxes does not put a gutter in the menu that opened it.
+
+### Groups
+
+`<Menu.Group>` renders `role="group"` and takes its accessible name from the
+`<Menu.GroupLabel>` inside it, so screen readers announce the heading along with
+its members. `<Menu.Separator>` is the visual counterpart — use both when the
+grouping has a name, the separator alone when it does not.
+
+<DemoBlock id="menu/groups" />
+
+### Submenus
+
+`<Menu.SubmenuRoot>` goes inside the parent popup, where `<Menu.SubmenuTrigger>`
+takes the place of a row. The submenu's own `<Menu.Popup>` needs no positioning
+props: it reads the nesting from the `SubmenuRoot` above it and switches to
+`side="inline-end"`, `align="start"` and two negative offsets that tuck it
+against the parent so the first row lines up with the trigger. Pass any of
+`side`, `align`, `sideOffset` or `alignOffset` explicitly to override that.
+
+<DemoBlock id="menu/submenu" />
+
+A submenu opens on hover as well as on press, and Base UI's safe triangle keeps
+it up while the pointer travels diagonally toward it — so crossing a neighbouring
+row on the way does not close the thing you were reaching for. The parent row
+stays filled for as long as its submenu is up, which is the trail back.
+
+### Links
+
+`<Menu.LinkItem>` renders an `<a>` with `role="menuitem"`: it keeps the menu's
+arrow-key navigation and typeahead while still being a real link, so
+middle-click, ⌘-click and "copy link address" all work. None of those work on an
+item whose `onClick` calls `router.push`. Pass `render={<Link href="…" />}` to
+route it through a framework's own link component.
+
+<DemoBlock id="menu/links" />
+
+### Placement
+
+`side` and `align` place the popup against the trigger; both are hints, and the
+popup flips to the opposite side or shifts along the alignment axis rather than
+overflow the viewport. Every combination Base UI accepts is below.
+
+All three alignments work — the only thing this library changes is which one you
+get for free: `align` defaults to `"start"` rather than Base UI's `"center"`,
+because a centred menu drifts left of a wide trigger and right of a narrow one,
+and the reading edge is what a list of commands should line up on. Pass
+`align="center"` back when the trigger is the visual anchor, as an icon-only
+button in a toolbar usually is.
+
+<DemoBlock id="menu/placement" />
+
+<Callout kind="warn">
+  `inline-start` and `inline-end` are the logical sides, and they mirror under
+  RTL only if the app mounts Base UI's
+  [`DirectionProvider`](https://base-ui.com/react/utils/direction-provider).
+  Base UI resolves them from that React context, which defaults to `"ltr"` — it
+  does **not** read the `dir` attribute — so in an app that only sets `dir`, the
+  two land exactly where `left` and `right` do. The demo above shows this: these
+  docs mount no provider, so its `inline-*` rows do not move when you flip the
+  frame's direction toggle, while everything the library's own CSS drives —
+  text, padding, the submenu chevron — does. Mount the provider *and* set `dir`
+  and the two agree.
+</Callout>
+
+### Disabled
+
+<DemoBlock id="menu/disabled" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    { keys: ["Enter", "Space"], description: "With the trigger focused, opens the menu and highlights the first row. With the menu open, activates the highlighted row." },
+    { keys: ["Arrow Down"], description: "Opens the menu from the trigger and highlights the first row; moves the highlight down one row once open." },
+    { keys: ["Arrow Up"], description: "Opens the menu from the trigger and highlights the last row; moves the highlight up one row once open." },
+    { keys: ["Arrow Right"], description: "On a submenu trigger, opens the submenu and highlights its first row. Mirrored under RTL." },
+    { keys: ["Arrow Left"], description: "Inside a submenu, closes it and returns the highlight to the row that opened it. Mirrored under RTL." },
+    { keys: ["Home"], description: "Highlights the first row." },
+    { keys: ["End"], description: "Highlights the last row." },
+    { keys: ["A–Z"], description: "Typeahead: highlights the first row whose text matches what you type. The buffer resets shortly after the last keystroke." },
+    { keys: ["Esc"], description: "Closes the menu and returns focus to the trigger. Inside a submenu it closes only that submenu, unless closeParentOnEsc is set." },
+  ]}
+/>
+
+The highlight wraps by default: Arrow Down on the last row returns to the first.
+Set `loopFocus={false}` on `<Menu.Root>` if it should stop at the ends instead.
+
+`data-highlighted` is the focus analogue for rows. Base UI moves real DOM focus
+between them with a roving tabindex, so the highlighted row is the focused
+element, and pointer hover sets the same attribute (`highlightItemOnHover` on
+`<Menu.Root>`, on by default — set it to `false` if you need CSS `:hover` to be
+distinguishable from the focused state). Style rows off `[data-highlighted]`
+rather than `:hover`, or keyboard users get no highlight at all.
+
+Because the popup scrolls once it runs out of room, and a scroll container
+clips, every row applies its focus ring inset via `data-focus-inset` — the ring
+lands inside the row's own box, where `overflow` cannot shave it off.
+
+<Callout kind="a11y">
+  A disabled row stays in the list, stays announced, and is still reached by the
+  arrow keys and by typeahead — so the command remains discoverable; it just
+  cannot be run. That is deliberate on Base UI's part, and it is why the row has
+  to say in its own text *why* it is unavailable ("Deploy to production (needs
+  review)"). Greying alone tells the user nothing, and greying is invisible in
+  forced-colors mode until `GrayText` is applied — which the library does for
+  you, because `opacity` is one of the few properties forced colors leaves
+  alone.
+</Callout>
+
+<Callout kind="note">
+  `<Menu.Root>` is modal by default: while the menu is open, page scroll is
+  locked and pointer interaction with the rest of the document is disabled. That
+  is what a native menu does. Pass `modal={false}` when the menu sits inside
+  something the user should still be able to scroll — a long settings panel, a
+  data grid. Menus opened by hover, and every submenu, ignore the prop.
+</Callout>
+
+## Theming
+
+Every `--pui-menu-*` property below is declared on the surface that owns it, and
+an element's own declaration beats an inherited value — so setting one on
+`:root`, on a theme scope or on any ancestor has no effect. The popup is
+portalled to `<body>` as well, so an ancestor of the *trigger* is not even in
+its tree. Set each property on the part that declares it, through that part's
+`className` (an unlayered rule beats the library's `@layer pretty-ui.components`,
+whatever its specificity) or an inline `style`:
+
+- `Menu.Popup` declares the surface properties — `bg`, `fg`, `radius`, `shadow`,
+  the two `border-*`, `padding-y`, `min-width`, `max-width` — plus
+  `--pui-menu-item-px`, `--pui-menu-item-gap`,
+  `--pui-menu-item-indicator-size` and `--pui-menu-item-icon-size`. Those four
+  are the layout knobs the rows, the group labels and the separators read but
+  never redeclare, so the popup is the right place to set them.
+- `Menu.Popup` also declares the motion knobs: `travel`, `enter-scale`, and the
+  `enter-`/`exit-` duration and easing pairs.
+- `Menu.Item` and the other row parts declare `--pui-menu-item-fg`,
+  `--pui-menu-item-bg-highlighted`, `--pui-menu-item-fg-highlighted` and
+  `--pui-menu-item-font-size`. `tone="danger"` is those first three re-pointed
+  at the danger set.
+- `positionerClassName` reaches `--pui-menu-z-index`, and nothing else: it is
+  the only property declared on the positioner.
+- `--pui-menu-backdrop-z-index` is declared on the backdrop, an element
+  `Menu.Popup` renders internally and exposes no class name for, so it cannot be
+  retargeted from outside.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*`, `--pui-space-*` — are the exception: the component only reads
+those and never redeclares them, so re-pointing them on `:root` or on a theme
+scope does re-skin every menu.
+
+<DemoBlock id="menu/theming" />
+
+<ThemingTable component="Menu" />
+
+## API reference
+
+### Menu.Root
+
+Groups every part and owns the open state. It renders no DOM element, so it
+takes neither `className` nor `ref`, and it forwards Base UI's own `Menu.Root`
+props unchanged — including `open`, `defaultOpen`, `onOpenChange`, `modal`,
+`orientation`, `loopFocus`, `highlightItemOnHover`, `disabled`, and the
+`handle` / `triggerId` pair that lets a detached trigger drive it.
+
+### Menu.Trigger
+
+<PropTable component="MenuTrigger" />
+
+### Menu.Popup
+
+Renders the whole floating half of the anatomy — portal, optional backdrop,
+positioner and popup — as one part.
+
+<PropTable component="MenuPopup" />
+
+### Menu.Item
+
+<PropTable component="MenuItem" />
+
+### Menu.LinkItem
+
+<PropTable component="MenuLinkItem" />
+
+### Menu.CheckboxItem
+
+<PropTable component="MenuCheckboxItem" />
+
+### Menu.RadioGroup
+
+<PropTable component="MenuRadioGroup" />
+
+### Menu.RadioItem
+
+<PropTable component="MenuRadioItem" />
+
+### Menu.Group
+
+<PropTable component="MenuGroup" />
+
+### Menu.GroupLabel
+
+<PropTable component="MenuGroupLabel" />
+
+### Menu.Separator
+
+<PropTable component="MenuSeparator" />
+
+### Menu.SubmenuRoot
+
+Groups a submenu's trigger and popup, and renders no DOM element of its own. It
+forwards Base UI's `Menu.SubmenuRoot` props — `open`, `defaultOpen`,
+`onOpenChange`, `disabled`, `loopFocus`, `closeParentOnEsc` — and is what
+`<Menu.Popup>` reads to switch to sideways placement.
+
+### Menu.SubmenuTrigger
+
+<PropTable component="MenuSubmenuTrigger" />
+
+### Menu.Shortcut
+
+<PropTable component="MenuShortcut" />

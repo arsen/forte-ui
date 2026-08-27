@@ -1,0 +1,668 @@
+/*
+ * Menu
+ *
+ * Two surfaces: the Trigger, and the floating Popup with its rows. They are
+ * separate "roots" for the purposes of the token convention, because the popup
+ * is portalled to <body> and inherits nothing declared on the trigger. Knobs
+ * are declared at the top of the rule that owns the surface.
+ *
+ * Structure (Base UI anatomy, unchanged):
+ *   Root  →  Trigger
+ *         →  Portal  →  Backdrop
+ *                    →  Positioner  →  Popup  →  Item / LinkItem
+ *                                                / CheckboxItem / RadioItem
+ *                                                / Group / GroupLabel
+ *                                                / Separator / SubmenuTrigger
+ *
+ * `Root` renders no DOM element, so there is no `.root` rule; the popup is the
+ * styling anchor for everything inside it.
+ *
+ * Four things here are load-bearing and easy to undo by accident:
+ *
+ *   1. The label column is decided by the POPUP, not by the row — see the
+ *      `:has()` rule under `.popup`. A menu with no checkable rows has no
+ *      gutter; one checkbox item anywhere in it gives every row the same
+ *      gutter, so labels stay in one column instead of stepping in and out
+ *      around the tick marks.
+ *
+ *   2. Enter/exit is transitions on [data-starting-style]/[data-ending-style],
+ *      never keyframes. A transition can be cancelled mid-flight, so a menu
+ *      dismissed while it is still opening reverses instead of snapping. There
+ *      is also no `infinite` animation on the Popup or Positioner: Base UI
+ *      awaits `Promise.all(el.getAnimations().map(a => a.finished))` before it
+ *      unmounts the popup, and an infinite animation's promise never settles.
+ *
+ *   3. No `prefers-reduced-motion` block. `--pui-travel-sm` collapses to 0px
+ *      and `--pui-scale-enter` to exactly 1, so the gesture degrades to a
+ *      plain opacity fade without this file knowing reduced motion exists.
+ *
+ *   4. The popup scrolls, and a scroll container clips. Every row therefore
+ *      carries `data-focus-inset`, which moves the focus ring inside the row's
+ *      own box so `overflow` cannot shave it off.
+ */
+
+@layer pretty-ui.components {
+  /* ------------------------------------------------------------------------
+   * Trigger
+   *
+   * A modest neutral button, so an unstyled `<Menu.Trigger>Actions</...>` does
+   * not fall back to the UA's grey chrome. Dropped entirely when the consumer
+   * passes `render` (typically our own `<Button>`), because two full button
+   * styles on one element resolve by source order inside the same cascade
+   * layer — which is not something a consumer can predict or fix.
+   * --------------------------------------------------------------------- */
+  .trigger {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-control-gap);
+    height: var(--pui-control-h-md);
+    padding-inline: var(--pui-control-px-md);
+    margin: 0;
+    border: 1px solid var(--pui-color-border);
+    border-radius: var(--pui-radius-control);
+
+    background-color: var(--pui-color-panel);
+    color: var(--pui-color-foreground);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-2);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+    }
+  }
+
+  .trigger:active:not([data-disabled]) {
+    background-color: var(--pui-color-panel-active);
+  }
+
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* The open trigger stays visibly pressed for as long as its menu is up. A
+   * menu can be tall enough to cover its own trigger's neighbours, so this is
+   * often the only thing left on screen saying which control produced it. */
+  .trigger[data-popup-open] {
+    background-color: var(--pui-color-panel-active);
+    border-color: var(--pui-color-border-strong);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Backdrop
+   *
+   * Off by default and opt-in through `backdrop` on `Menu.Popup`. A menu is a
+   * short-lived list, and dimming the page for it reads as a far bigger
+   * interruption than it is. It earns its keep on a phone, where the popup
+   * covers most of the viewport anyway.
+   *
+   * `.pui-scrim` supplies position/inset, the colour, the optional blur, the
+   * fade and the forced-colors treatment. Only stacking is component-local.
+   * --------------------------------------------------------------------- */
+  .backdrop {
+    /* One below the positioner, and declared here because the backdrop is the
+     * positioner's SIBLING inside the portal — nothing on the positioner can
+     * reach it, and `Menu.Popup` exposes no class name for it. */
+    /** Stacking order of the backdrop */
+    --pui-menu-backdrop-z-index: 49;
+
+    /* Restated from `.pui-scrim` so the @supports override below has an
+     * explicit default to flip. */
+    position: fixed;
+    z-index: var(--pui-menu-backdrop-z-index);
+  }
+
+  /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
+   * element keeps painting against the *large* viewport, leaving an
+   * unscrimmed strip along one edge. Absolute positioning tracks the visible
+   * viewport instead. The @supports test is the standard iOS/WebKit sniff. */
+  @supports (-webkit-touch-callout: none) {
+    .backdrop {
+      position: absolute;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * Positioner
+   *
+   * Base UI writes position/top/left as inline styles; the only thing left to
+   * decide here is stacking. There is no z-index token in the inventory, so
+   * the literal lives behind a component knob and can be re-pointed at an
+   * app's own scale without forking. 50 is the same band Popover, Tooltip and
+   * Select sit in — anchored popups all belong above a Dialog's 40, so a menu
+   * opened from inside a dialog is not swallowed by it.
+   * --------------------------------------------------------------------- */
+  .positioner {
+    /** Stacking order of the positioner */
+    --pui-menu-z-index: 50;
+
+    z-index: var(--pui-menu-z-index);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Popup
+   * --------------------------------------------------------------------- */
+  .popup {
+    /* Component tokens. Declared HERE, on the popup, so an ancestor's value is
+     * only inherited and loses to these — and the popup is portalled to
+     * <body> anyway, so an ancestor of the trigger is not even in its tree.
+     * Consumers set them on the popup itself (`className` on `Menu.Popup`,
+     * whose rule is unlayered and so beats this layer) or re-point the global
+     * tokens below, which this file only ever reads. */
+    /** Popup surface colour */
+    --pui-menu-bg: var(--pui-color-overlay);
+    /** Popup text colour */
+    --pui-menu-fg: var(--pui-color-foreground);
+    /** Corner radius */
+    --pui-menu-radius: var(--pui-radius-surface);
+    /** Popup shadow (stripped by the browser in forced-colors mode, which is
+     * why the element also carries `.pui-hc-surface`) */
+    --pui-menu-shadow: var(--pui-shadow-4);
+    /* A hairline, and not the redundancy it looks like next to the shadow. A
+     * menu floats over undimmed content, and at overlay-on-background the two
+     * surfaces are within a step of each other on the grey ramp — in dark mode
+     * the shadow is nearly the only thing separating them, and it is the first
+     * casualty of a bright page behind it. `.pui-hc-surface` already reserves a
+     * 1px transparent border on this element, so painting it costs no layout. */
+    /** Width of the hairline that separates the popup from the page */
+    --pui-menu-border-width: 1px;
+    /** Colour of that hairline */
+    --pui-menu-border-color: var(--pui-color-border);
+    /** Block padding above the first row and below the last */
+    --pui-menu-padding-y: var(--pui-space-1);
+    /* No width token exists in the inventory — widths are layout, not theme.
+     * The floor stops a two-word menu from rendering as a sliver under a wide
+     * trigger; the cap is a ceiling the popup only reaches when a label asks
+     * for it, and is clamped again by the space the positioner reports. */
+    /** Smallest width the popup will take */
+    --pui-menu-min-width: 12rem;
+    /** Width cap, further clamped to the space the positioner reports as
+     * available */
+    --pui-menu-max-width: 20rem;
+
+    /* Layout knobs shared by the rows, the group labels and the separators.
+     * They live on the popup rather than on `.item` because the group label
+     * and the separator are not item descendants and still have to line up
+     * with them — one declaration, one place to retune. */
+    /** Inline padding shared by rows, group labels and separators */
+    --pui-menu-item-px: var(--pui-space-3);
+    /** Gap between a row's indicator, its label and its shortcut */
+    --pui-menu-item-gap: var(--pui-control-gap);
+    /** Width of the tick / dot column on checkable rows */
+    --pui-menu-item-indicator-size: var(--pui-space-4);
+    /** Size a leading icon dropped into a row is drawn at */
+    --pui-menu-item-icon-size: var(--pui-space-4);
+
+    /* Motion knobs, broken out so an app can retune the feel — or flatten it
+     * entirely — without restating the transition. */
+    /** How far the popup slides in from, per side */
+    --pui-menu-travel: var(--pui-travel-sm);
+    /** Scale the popup grows from and shrinks back to */
+    --pui-menu-enter-scale: var(--pui-scale-enter);
+    /* `normal` paired with the snappy spring, which is the pairing Popover,
+     * Select and the Tabs indicator already use. Pairing a spring with its own
+     * settle time is about not CROPPING the curve; running the whole curve
+     * compressed still plays every stop, overshoot included, just faster. */
+    /** Length of the opening gesture */
+    --pui-menu-enter-duration: var(--pui-duration-normal);
+    /** Curve of the opening gesture */
+    --pui-menu-enter-ease: var(--pui-ease-spring-snappy);
+    /* Shorter than the entrance, and no spring: an arrival has to read as a
+     * surface settling into place, while a dismissal is something the user has
+     * already decided on and only needs confirming. */
+    /** Length of the closing gesture */
+    --pui-menu-exit-duration: var(--pui-duration-fast);
+    /** Curve of the closing gesture */
+    --pui-menu-exit-ease: var(--pui-ease-exit);
+
+    /* Where the label column starts. Internal on purpose — a plain comment, so
+     * theming-docgen does not publish it: it is an intermediate, and the knobs
+     * to turn are the three `item-*` properties above.
+     *
+     * Both branches are declared on THIS element, which is what makes them
+     * work: a `var()` inside an unregistered custom property is substituted
+     * where the property is DECLARED, so the three properties it reads have to
+     * be in scope here — they are, three declarations up — and the rows below
+     * only ever read the resolved length. */
+    --pui-menu-item-indent: var(--pui-menu-item-px);
+
+    /* Enter/exit displacement, resolved per side just below. Defaults to the
+     * `side="bottom"` case, which is a top-level menu's default side. */
+    --pui-menu-enter-x: 0px;
+    --pui-menu-enter-y: calc(-1 * var(--pui-menu-travel));
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* Shrink-to-fit between the floor and the cap, rather than filling: a menu
+     * of one-word commands should not be as wide as one with a paragraph in
+     * it. `--available-width` is published by the Positioner and inherited
+     * here; it is absent for the first frame, hence the fallback — a bare
+     * `min()` with an unset var is invalid at computed-value time and would
+     * drop the cap entirely. */
+    inline-size: max-content;
+    min-inline-size: var(--pui-menu-min-width);
+    max-inline-size: min(
+      var(--pui-menu-max-width),
+      var(--available-width, 100vw)
+    );
+    /* Required: the popup may never grow past the space Base UI measured
+     * between the anchor and the viewport edge. Beyond that it scrolls, and
+     * `overscroll-behavior` keeps a flick at the end of the list from
+     * scrolling the page behind it. */
+    max-block-size: var(--available-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Keeps a keyboard-focused row from coming to rest flush against the
+     * popup's own padding edge, where its inset ring would be half-hidden by
+     * the rounded corner (SC 2.4.11). */
+    scroll-padding-block: var(--pui-space-4);
+    padding-block: var(--pui-menu-padding-y);
+    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+     * alone — patterns is ordered before components. Forced colors then wins
+     * it back from the a11y layer, which is ordered after both. */
+    border: var(--pui-menu-border-width) solid var(--pui-menu-border-color);
+    border-radius: var(--pui-menu-radius);
+
+    background-color: var(--pui-menu-bg);
+    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+     * stops the background bleeding out under it. */
+    background-clip: padding-box;
+    color: var(--pui-menu-fg);
+    box-shadow: var(--pui-menu-shadow);
+
+    font-family: var(--pui-font-sans);
+    line-height: var(--pui-line-height-normal);
+    letter-spacing: var(--pui-letter-spacing-normal);
+    text-align: start;
+
+    /* Grow out of the trigger rather than out of the popup's own centre.
+     * `--transform-origin` is published by the Positioner and points back at
+     * the anchor. */
+    transform-origin: var(--transform-origin);
+    /* Opacity is deliberately shorter than the transform: the list is legible
+     * early and the spring finishes settling behind readable rows, instead of
+     * the menu spending the whole entrance half-transparent. */
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-menu-enter-duration) var(--pui-menu-enter-ease);
+  }
+
+  /* The label column, decided by the popup and read by every row.
+   *
+   * A tick or a dot needs a column of its own, and a column that appears only
+   * on the checkable rows leaves the labels around it stepping in and out. So
+   * the presence of ONE checkable row anywhere in this popup indents all of
+   * them — and a menu of plain commands, which is most menus, keeps its tight
+   * left edge and spends no space on a gutter nothing will ever fill.
+   *
+   * Scoped per popup, which is what makes it correct for submenus: each one is
+   * its own portalled Popup element, so a submenu full of checkboxes does not
+   * put a gutter in the parent menu that opened it. */
+  .popup:has(.checkboxItem, .radioItem) {
+    --pui-menu-item-indent: calc(
+      var(--pui-menu-item-px) + var(--pui-menu-item-indicator-size) +
+        var(--pui-menu-item-gap)
+    );
+  }
+
+  /* Directional rise: the popup starts a few pixels nearer the trigger and
+   * settles outward. `inline-start`/`inline-end` are legal `data-side` values
+   * as well as the physical ones — and are what a submenu resolves to — so
+   * both spellings are mapped. `:dir()` lives inside `:is()`, whose argument
+   * list is forgiving: an engine without `:dir()` support drops only that
+   * branch and the physical sides keep working. */
+  .popup[data-side="top"] {
+    --pui-menu-enter-x: 0px;
+    --pui-menu-enter-y: var(--pui-menu-travel);
+  }
+
+  .popup[data-side="bottom"] {
+    --pui-menu-enter-x: 0px;
+    --pui-menu-enter-y: calc(-1 * var(--pui-menu-travel));
+  }
+
+  .popup:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    --pui-menu-enter-x: var(--pui-menu-travel);
+    --pui-menu-enter-y: 0px;
+  }
+
+  .popup:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    --pui-menu-enter-x: calc(-1 * var(--pui-menu-travel));
+    --pui-menu-enter-y: 0px;
+  }
+
+  /* Closing retraces the entrance rather than puffing outward, so the two
+   * directions read as one reversible gesture and an open interrupted halfway
+   * simply continues back along the path it came up. */
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: translate(var(--pui-menu-enter-x), var(--pui-menu-enter-y))
+      scale(var(--pui-menu-enter-scale));
+  }
+
+  .popup[data-ending-style] {
+    transition-duration: var(--pui-menu-exit-duration);
+    transition-timing-function: var(--pui-menu-exit-ease);
+  }
+
+  /* Base UI sets `data-instant` when the change was NOT a considered
+   * open/close — a dismissal, one trigger handing the popup to another, a
+   * sibling menu in a menubar taking over. Animating those reads as a glitch,
+   * so the transition is dropped for exactly those cases. */
+  .popup[data-instant] {
+    transition: none;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Rows
+   *
+   * One rule for all five kinds — Item, LinkItem, CheckboxItem, RadioItem and
+   * SubmenuTrigger — because they differ in role and in what they carry, not
+   * in how they sit in the list. Each of the four specialisations below adds
+   * only its own difference.
+   *
+   * `data-highlighted` is the focus analogue: Base UI moves real DOM focus
+   * between rows with a roving tabindex, so a row is both `:focus-visible`
+   * (ring) and `[data-highlighted]` (fill) at once. Pointer hover sets the
+   * same attribute, which is why there is no separate `:hover` rule — style
+   * `[data-highlighted]`, or keyboard users get no highlight at all.
+   * --------------------------------------------------------------------- */
+  .item {
+    /** Row text colour */
+    --pui-menu-item-fg: var(--pui-color-foreground);
+    /** Background of the highlighted row */
+    --pui-menu-item-bg-highlighted: var(--pui-color-primary-soft);
+    /** Text colour of the highlighted row */
+    --pui-menu-item-fg-highlighted: var(--pui-color-primary-text);
+    /** Row font size */
+    --pui-menu-item-font-size: var(--pui-font-size-2);
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--pui-menu-item-gap);
+    /* SC 2.5.8. `--pui-list-item-py` follows `data-pui-density`, so a compact
+     * menu tightens its rows without ever dropping under the floor. */
+    min-block-size: var(--pui-target-min);
+    padding-block: var(--pui-list-item-py);
+    padding-inline-start: var(--pui-menu-item-indent);
+    padding-inline-end: var(--pui-menu-item-px);
+
+    color: var(--pui-menu-item-fg);
+    font-size: var(--pui-menu-item-font-size);
+    line-height: var(--pui-line-height-normal);
+    text-align: start;
+    /* A menu row is a single command; wrapping one makes the list read as
+     * paragraphs. Long labels are truncated rather than folded. */
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    /* Every row performs an action — the house rule, and the reason it has to
+     * be stated: Base UI builds these out of <div>, which gets `auto`. */
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* An icon a consumer drops into a row. Sized here rather than left to the
+   * caller because an icon set's own default is whatever that set picked —
+   * lucide draws at 24px — and a row is not the place to discover that. Only
+   * a DIRECT child is caught, so the tick inside an indicator and the chevron
+   * inside a submenu row keep their own sizes.
+   *
+   * `flex: none` stops a long label squeezing it, and `pointer-events: none`
+   * keeps the row's own cursor showing through instead of the SVG's. */
+  .item > svg {
+    flex: none;
+    inline-size: var(--pui-menu-item-icon-size);
+    block-size: var(--pui-menu-item-icon-size);
+    pointer-events: none;
+  }
+
+  .item[data-highlighted] {
+    background-color: var(--pui-menu-item-bg-highlighted);
+    color: var(--pui-menu-item-fg-highlighted);
+  }
+
+  /* Destructive commands. The resting state is text-only — a red row sitting
+   * quietly in the list is alarming out of proportion to a command the user
+   * has not chosen yet — and the full soft-danger fill arrives on the
+   * highlight, at the moment it is about to matter. */
+  .item[data-tone="danger"] {
+    --pui-menu-item-fg: var(--pui-color-danger-text);
+    --pui-menu-item-bg-highlighted: var(--pui-color-danger-soft);
+    --pui-menu-item-fg-highlighted: var(--pui-color-danger-text);
+  }
+
+  /* Ordered after the highlight rule on purpose: Base UI still highlights a
+   * disabled row when the arrow keys land on it (it stays focusable so it
+   * stays announced), and the fill would otherwise say it is actionable. */
+  .item[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+
+  /* LinkItem ---------------------------------------------------------------
+   * A real <a>, so the UA gives it a colour and an underline that have
+   * nothing to do with the row it is sitting in. */
+  .linkItem {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Checkable rows ---------------------------------------------------------
+   * The indicator supplies the gutter these two need, so their own start
+   * padding goes back to the plain inline padding — the label still lands on
+   * the shared column because indicator + gap add up to the same indent. */
+  .checkboxItem,
+  .radioItem {
+    padding-inline-start: var(--pui-menu-item-px);
+  }
+
+  .itemIndicator {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--pui-menu-item-indicator-size);
+    /* The tick is the one moment of feedback the user gets for the choice they
+     * just made, so it springs rather than fades. */
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  /* Kept mounted (see `Menu.tsx`) so the column never collapses, which means
+   * the unchecked state has to be hidden here rather than by unmounting.
+   * `opacity`, not `visibility` or `display`: the mark has to be able to
+   * animate back in, and the element is `aria-hidden` chrome either way — the
+   * state itself reaches assistive technology through `aria-checked` on the
+   * row. */
+  .itemIndicator[data-unchecked] {
+    opacity: 0;
+    scale: var(--pui-scale-enter);
+  }
+
+  /* Submenu trigger --------------------------------------------------------
+   * The chevron sits at the end of the row and is pushed there by the label's
+   * own growth, so a long label and a short one both put it flush against the
+   * end padding. */
+  .submenuIcon {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    margin-inline-start: auto;
+    /* The label and the chevron would otherwise sit one `item-gap` apart even
+     * in a wide popup; this keeps a minimum breathing space when the row is at
+     * its natural width. */
+    padding-inline-start: var(--pui-space-3);
+    color: var(--pui-color-foreground-muted);
+    /* `translate`/`scale` are physical properties, and this glyph points along
+     * the inline axis — at the side the submenu opens on. `--pui-direction` is
+     * 1 in LTR and -1 in RTL, so this mirrors the chevron rather than rotating
+     * it, and the arrowhead keeps its shape. */
+    scale: var(--pui-direction) 1;
+  }
+
+  /* Inside a highlighted row the chevron has to leave the muted grey behind,
+   * or it stays a low-contrast smudge on the soft primary fill. */
+  .item[data-highlighted] .submenuIcon,
+  .item[data-popup-open] .submenuIcon {
+    color: inherit;
+  }
+
+  /* An open submenu keeps its parent row filled for as long as it is up: the
+   * highlight moves into the submenu, and without this the row that produced
+   * it goes flat and the trail back is lost. */
+  .item[data-popup-open]:not([data-disabled]) {
+    background-color: var(--pui-menu-item-bg-highlighted);
+    color: var(--pui-menu-item-fg-highlighted);
+  }
+
+  /* Shortcut ---------------------------------------------------------------
+   * Pushed to the end of the row the same way the chevron is, and never the
+   * thing that gets truncated: it is short, fixed, and the label is what a
+   * reader is scanning. */
+  .shortcut {
+    flex: none;
+    margin-inline-start: auto;
+    padding-inline-start: var(--pui-space-5);
+    /* -muted, not -subtle: this is permanently visible text, so SC 1.4.3
+     * applies and -subtle is 3.73:1. */
+    color: var(--pui-color-foreground-muted);
+    font-size: var(--pui-font-size-1);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--pui-letter-spacing-normal);
+  }
+
+  .item[data-highlighted] .shortcut {
+    color: inherit;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Group / GroupLabel / Separator
+   * --------------------------------------------------------------------- */
+  .group {
+    display: block;
+  }
+
+  /* Indented to the label column, not to the popup's edge, so the heading sits
+   * over the words it names rather than over the tick marks beside them. */
+  .groupLabel {
+    box-sizing: border-box;
+    padding-block: var(--pui-list-item-py);
+    padding-inline-start: var(--pui-menu-item-indent);
+    padding-inline-end: var(--pui-menu-item-px);
+    /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
+     * non-text only. The semibold weight and font-size-1 already carry the
+     * hierarchy, so nothing is lost by meeting contrast here. */
+    color: var(--pui-color-foreground-muted);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+
+  /* The line is a BORDER, not a `background-color`. Under forced-colors a
+   * background is replaced with a system colour — for a plain box that is
+   * `Canvas`, the page's own backdrop — so a hairline drawn that way vanishes
+   * for exactly the users who most need the grouping cue. Border colours are
+   * forced to `CanvasText` instead, so the rule survives on its own and needs
+   * no entry in the forced-colors block at the bottom of this file.
+   *
+   * `block-size: 0` with `border-box` reads as "do not stretch", not "be zero
+   * tall": a block-size below the border width is floored at the border, so
+   * the rule still paints at its full 1px. Same shape as
+   * `separator/Separator.module.css`, which carries the longer version of this
+   * reasoning. */
+  .separator {
+    box-sizing: border-box;
+    margin-block: var(--pui-space-1);
+    margin-inline: var(--pui-menu-item-px);
+    block-size: 0;
+    border-block-start: 1px solid var(--pui-color-border-muted);
+  }
+
+  .separator[data-orientation="vertical"] {
+    margin-block: var(--pui-space-1);
+    margin-inline: var(--pui-space-1);
+    block-size: auto;
+    inline-size: 0;
+    align-self: stretch;
+    /* Load-bearing: the base rule above paints the block-start edge, and
+     * nothing else here overrides it. Without this reset a vertical separator
+     * carries BOTH borders and renders a stray 1px tick across its top. */
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--pui-color-border-muted);
+  }
+}
+
+/*
+ * Forced colors (Windows High Contrast) — see layers.css for why these must
+ * not live in the components layer. Layer order outranks specificity
+ * completely, so a rule placed earlier could never win.
+ *
+ * Almost everything is already handled globally by patterns.css: the generic
+ * `[data-highlighted]` rule there paints the Highlight/HighlightText pair plus
+ * svg fill/stroke, and the generic `[data-disabled]` rule restores
+ * `opacity: 1` and paints GrayText. Do not restate either.
+ *
+ * What is left is menu-specific: a DESCENDANT that declares its own author
+ * colour does not inherit its row's forced colour — its own declaration wins
+ * and is then forced to CanvasText, i.e. full contrast. The shortcut and the
+ * submenu chevron are exactly that case, in both directions.
+ */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .item[data-highlighted] .shortcut,
+    .item[data-highlighted] .submenuIcon,
+    .item[data-popup-open] .submenuIcon {
+      color: HighlightText;
+    }
+
+    .item[data-disabled] .shortcut,
+    .item[data-disabled] .submenuIcon {
+      color: GrayText;
+    }
+
+    /* An open submenu's parent row is filled above with an author colour that
+     * forced-colors would flatten to Canvas, losing the trail back. The same
+     * system pair the generic `[data-highlighted]` rule uses puts it back. */
+    .item[data-popup-open]:not([data-disabled]) {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+  }
+}

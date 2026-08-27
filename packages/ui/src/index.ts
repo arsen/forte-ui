@@ -129,6 +129,25 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { Menu } from "./components/menu";
+export type {
+  MenuItemTone,
+  MenuRootProps,
+  MenuTriggerProps,
+  MenuPopupProps,
+  MenuItemProps,
+  MenuLinkItemProps,
+  MenuCheckboxItemProps,
+  MenuRadioGroupProps,
+  MenuRadioItemProps,
+  MenuGroupProps,
+  MenuGroupLabelProps,
+  MenuSeparatorProps,
+  MenuSubmenuRootProps,
+  MenuSubmenuTriggerProps,
+  MenuShortcutProps,
+} from "./components/menu";
+
 export { NumberField } from "./components/number-field";
 export type {
   NumberFieldSize,
