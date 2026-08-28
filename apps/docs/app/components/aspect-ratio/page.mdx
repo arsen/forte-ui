@@ -1,0 +1,225 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Aspect Ratio",
+  description:
+    "A box that holds its shape from the first paint, so the image arriving later drops into space that was already reserved.",
+};
+
+# Aspect Ratio
+
+A box that keeps its shape, whatever goes in it. The reason to reach for one is
+layout shift: the frame occupies its final size before the media has downloaded
+a byte, so a picture that arrives half a second later lands in space that was
+already there instead of shoving the rest of the page down.
+
+<DemoBlock id="aspect-ratio/basic" />
+
+## Import
+
+```tsx
+import { AspectRatio } from "@dofortech/pretty-ui";
+```
+
+## Built on the property, not the trick
+
+Radix — and therefore shadcn — draws an aspect box with the padding hack: a
+wrapper with `padding-bottom: 56.25%` and a single child pinned to
+`position: absolute; inset: 0`. That predates the `aspect-ratio` property, and
+it costs three things:
+
+- **The child has to leave flow.** A second one — a caption, a play button, a
+  gradient — needs its own absolute positioning and its own stacking order.
+- **A percentage padding always resolves against the container's *inline*
+  size.** So the box can only ever turn a width into a height; a
+  height-constrained parent is not expressible at all.
+- **The ratio arrives as a pre-computed percentage.** Restating it at another
+  breakpoint means working out `9 / 16 * 100` by hand.
+
+This component uses the property. Three of its features fall straight out of
+that: children stack without leaving flow, `basis="block"` measures on the
+other axis, and the ratio stays a CSS value a media query can restate.
+
+## Examples
+
+### Named ratios
+
+`ratio` takes a number (`16 / 9`), a CSS ratio string (`"16 / 9"`), the spoken
+form (`"16:9"`), or one of seven names. Prefer a name where one fits: `"story"`
+says what the box is for, where `0.5625` says only what it measures.
+
+<DemoBlock id="aspect-ratio/presets" />
+
+### Fitting the media
+
+An `<img>` at its intrinsic size inside a fixed-shape box is either letterboxed
+or overflowing, so `AspectRatio` sizes direct media children to the frame and
+applies `object-fit` for you. Without that, every caller writes the same
+`width: 100%; height: 100%; object-fit: cover` on the child, forever.
+
+`cover` is the default and what a media slot almost always wants. `contain` is
+right when the subject must not be cut — a logo, a diagram, a product shot on
+white.
+
+<DemoBlock id="aspect-ratio/fit" />
+
+<Callout kind="note">
+  The sizing reaches **direct** media children only — `img`, `video`, `canvas`,
+  `iframe`, `embed`, `object`, and the `img` inside a `picture`. A descendant
+  selector would also catch the icon inside an overlay button and stretch it to
+  fill the frame. Media nested inside a wrapper of your own is yours to size.
+</Callout>
+
+### Choosing what survives the crop
+
+`cover` has to throw something away. `--pui-aspect-position` is how you say
+which something — it is an `object-position` value, and its `50% 50%` default
+is the one choice guaranteed to behead a portrait.
+
+<DemoBlock id="aspect-ratio/focal" />
+
+### Stacking, without `position: absolute`
+
+The box is a one-cell grid and every direct child is placed in that cell, in
+source order. So a caption over a photo is two elements and an alignment —
+nothing leaves flow, nothing needs a `z-index`, and each layer still positions
+itself with `place-self`.
+
+<DemoBlock id="aspect-ratio/overlay" />
+
+### Variants
+
+`variant` is how much chrome the box carries. `plain` is pure layout. `outlined`
+adds a hairline frame, which gives light-on-light media an edge. `filled` adds a
+recessed panel — and because that panel is visible while the box is still empty,
+it is also the loading placeholder.
+
+<DemoBlock id="aspect-ratio/variants" />
+
+That last one is the anti-layout-shift story finished rather than started: the
+space is reserved *and* it looks reserved.
+
+<DemoBlock id="aspect-ratio/placeholder" />
+
+### Measuring on the block axis
+
+`basis="block"` takes a definite height and derives the width, which is the case
+a percentage padding cannot express. A fixed-height row of thumbnails is the
+usual reason to want it.
+
+<DemoBlock id="aspect-ratio/basis" />
+
+<Callout kind="note">
+  `basis="block"` needs the parent to actually supply a height — a grid row, a
+  stretched flex cross size, an explicit `height`. Given an indefinite one,
+  `100%` has nothing to resolve against and the box falls back to sizing from
+  its content.
+</Callout>
+
+### A ratio that changes with the layout
+
+`ratio` does not set `--pui-aspect-ratio`. It seeds it: the prop writes
+`--pui-aspect-ratio-seed` as an inline style, and the stylesheet reads that into
+the knob from inside `@layer pretty-ui.components`.
+
+The indirection exists because a ratio cannot be enumerated the way `fit` or
+`variant` can — there is no `[data-ratio="…"]` rule to write — so the value has
+to arrive inline, and an inline declaration outranks every author rule short of
+`!important`. `ratio` would then be the one prop in this library that plain CSS
+could not override. Seeding instead keeps the knob in a layer, where an ordinary
+class beats it:
+
+```css
+.hero {
+  --pui-aspect-ratio: 3 / 4;
+}
+
+@media (width >= 48rem) {
+  .hero {
+    --pui-aspect-ratio: 16 / 9;
+  }
+}
+```
+
+Which is a container query away from being the right thing in a component
+library:
+
+<DemoBlock id="aspect-ratio/responsive" />
+
+### Letting something break the frame
+
+`clip` is on by default — media overflowing its own frame is a bug, not a
+feature. Turn it off for the decoration that is *meant* to escape: a badge on a
+corner, a focus ring on a child, a tooltip anchored inside.
+
+<DemoBlock id="aspect-ratio/unclipped" />
+
+<Callout kind="note">
+  The clipping is `overflow: clip`, not `overflow: hidden`. `hidden` makes the
+  box a scroll container — programmatically scrollable, a focus-scroll target,
+  and a wall that `position: sticky` cannot escape. `clip` paints the same and
+  does none of that.
+</Callout>
+
+### Changing the element
+
+`render` swaps the `<div>` for whatever the box actually is — a `<figure>`
+around a caption, or the `<a>` that wraps a whole thumbnail.
+
+<DemoBlock id="aspect-ratio/link" />
+
+A focusable box rings: `AspectRatio` carries `.pui-focus-ring`, which costs a
+plain `<div>` nothing — the class only paints on `:focus-visible`, which a
+non-focusable element never matches. And the component declares no `cursor` at
+all, precisely so that a linked frame keeps the pointer the anchor already
+earns. Both are cases of doing less rather than more.
+
+The UA's own defaults are left alone for the same reason: `<figure>` keeps its
+margin and `<a>` its colour, because a box that quietly stripped the element it
+was handed would be the harder thing to work around. Set them where you use
+them.
+
+## Accessibility
+
+The box is layout. It renders no role, takes no focus, and adds nothing to the
+accessibility tree — which is correct, and means the accessibility of what you
+put in it is unchanged by putting it there.
+
+Two things are still yours:
+
+- **`alt` on the image.** An empty `alt=""` where the caption beside the frame
+  already says it; real text where the picture carries information nothing else
+  does. A decorative frame does not make its contents decorative.
+- **Contrast for anything laid over media.** Text on a photograph has no
+  guaranteed background, so SC 1.4.3 cannot be met by the text colour alone.
+  Put it on a band or a scrim, as the overlay example does, rather than trusting
+  the image to stay dark where the words are.
+
+<Callout kind="a11y">
+  Under forced colours, `filled`'s background is replaced by a system colour and
+  flattens into the page — so the one variant whose whole job is to be visible
+  while empty would disappear. It grows a `CanvasText` border there instead.
+  `outlined` needs nothing: border colours survive forced colours, which is why
+  the frame is a border and not a `box-shadow`.
+</Callout>
+
+## Theming
+
+Every visual decision is a `--pui-aspect-*` custom property.
+
+<ThemingTable component="AspectRatio" />
+
+Nothing in the file transitions. The box has no states — no hover, no focus, no
+open or closed — so there is nothing to animate, and a colour transition on the
+placeholder would only make it lag the rest of the page on a theme switch.
+
+State is on `data-variant`, `data-fit`, `data-basis` and `data-clip`, so a
+consumer can reach all four from plain CSS or a Tailwind arbitrary variant
+(`data-[variant=filled]:...`) without wrapping the component.
+
+## API reference
+
+<PropTable component="AspectRatio" />

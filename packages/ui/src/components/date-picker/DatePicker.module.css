@@ -1,0 +1,221 @@
+/*
+ * DatePicker
+ *
+ * A field that opens a calendar. The field is this component's own chrome and
+ * follows the same two axes every other control in the library uses:
+ *
+ *   data-variant="outline|soft|ghost"   how loud the field is
+ *   data-size="sm|md|lg"                its height, padding and text size
+ *
+ * The surface the calendar sits on is NOT restyled here. It is a
+ * `Popover.Popup`, keeps that component's marker and its `--pui-popover-*`
+ * knobs, and the only thing this file does to it is give back the surface
+ * padding — a calendar arrives with its own measures, and the popover's
+ * default `--pui-surface-p` around them reads as a frame rather than a
+ * margin. The `.panel` inside is the part that belongs to this component.
+ *
+ * No prefers-reduced-motion block, here or in any component file: the only
+ * motion is a colour crossfade, and its duration token shortens itself.
+ */
+@layer pretty-ui.components {
+  /* Trigger ---------------------------------------------------------------- */
+  .trigger {
+    /* Component tokens. Declared HERE, on the trigger, so an ancestor's value
+     * is only inherited and loses to these. Consumers set them on the trigger
+     * itself (`className` on `DatePicker.Trigger`, whose rule is unlayered
+     * and so beats this layer) or re-point the global tokens below, which
+     * this file only ever reads. */
+    /** Field height (reset per `size`) */
+    --pui-date-picker-trigger-height: var(--pui-control-h-md);
+    /** Field inline padding (reset per `size`) */
+    --pui-date-picker-trigger-padding-x: var(--pui-control-px-md);
+    /** Field font size (reset per `size`) */
+    --pui-date-picker-trigger-font-size: var(--pui-font-size-2);
+    /** Gap between the value and the glyph */
+    --pui-date-picker-trigger-gap: var(--pui-control-gap);
+    /** Field corner radius */
+    --pui-date-picker-trigger-radius: var(--pui-radius-control);
+    /** Field border width */
+    --pui-date-picker-trigger-border-width: 1px;
+
+    /* Colour slots, filled in per variant below. */
+    /** Field background (reset per `variant`) */
+    --pui-date-picker-trigger-bg: var(--pui-color-background);
+    /** Field background on hover */
+    --pui-date-picker-trigger-bg-hover: var(--pui-color-panel-hover);
+    /** Field background while pressed or open */
+    --pui-date-picker-trigger-bg-active: var(--pui-color-panel-active);
+    /** Field text colour */
+    --pui-date-picker-trigger-fg: var(--pui-color-foreground);
+    /** Field border colour (reset per `variant`) */
+    --pui-date-picker-trigger-border-color: var(--pui-color-border);
+    /** Colour of the calendar glyph */
+    --pui-date-picker-icon-color: var(--pui-color-foreground-subtle);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--pui-date-picker-trigger-gap);
+    height: var(--pui-date-picker-trigger-height);
+    padding-inline: var(--pui-date-picker-trigger-padding-x);
+    margin: 0;
+    border: var(--pui-date-picker-trigger-border-width) solid
+      var(--pui-date-picker-trigger-border-color);
+    border-radius: var(--pui-date-picker-trigger-radius);
+
+    background-color: var(--pui-date-picker-trigger-bg);
+    color: var(--pui-date-picker-trigger-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-date-picker-trigger-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    line-height: var(--pui-line-height-tight);
+    text-align: start;
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    /* Pointer, deliberately unlike a native date input. Every control in this
+     * library that performs an action shows a pointer. */
+    cursor: pointer;
+    /* No press squash, for the same reason as Select's trigger: `:active`
+     * begins on pointer-DOWN, the same event that opens the popup, so a
+     * squash there fires while the calendar is already unfolding. */
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled]) {
+      background-color: var(--pui-date-picker-trigger-bg-hover);
+    }
+  }
+
+  .trigger[data-pressed]:not([data-disabled]),
+  .trigger[data-popup-open] {
+    background-color: var(--pui-date-picker-trigger-bg-active);
+    transition-duration: var(--pui-duration-instant);
+  }
+
+  /* `opacity` is the non-forced-colors treatment only — the generic
+   * `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y, ordered
+   * after this one) restores `opacity: 1` and paints GrayText. */
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Only the boundary changes. Recolouring the value as well would make the
+   * user's own answer look like the error message. */
+  .trigger[data-invalid] {
+    --pui-date-picker-trigger-border-color: var(--pui-color-danger-border);
+  }
+
+  .trigger[data-full-width] {
+    display: flex;
+    width: 100%;
+  }
+
+  /* Sizes */
+  .trigger[data-size="sm"] {
+    --pui-date-picker-trigger-height: var(--pui-control-h-sm);
+    --pui-date-picker-trigger-padding-x: var(--pui-control-px-sm);
+    --pui-date-picker-trigger-font-size: var(--pui-font-size-1);
+  }
+
+  .trigger[data-size="md"] {
+    --pui-date-picker-trigger-height: var(--pui-control-h-md);
+    --pui-date-picker-trigger-padding-x: var(--pui-control-px-md);
+    --pui-date-picker-trigger-font-size: var(--pui-font-size-2);
+  }
+
+  .trigger[data-size="lg"] {
+    --pui-date-picker-trigger-height: var(--pui-control-h-lg);
+    --pui-date-picker-trigger-padding-x: var(--pui-control-px-lg);
+    --pui-date-picker-trigger-font-size: var(--pui-font-size-3);
+  }
+
+  /* Variants */
+  .trigger[data-variant="outline"] {
+    --pui-date-picker-trigger-bg: var(--pui-color-background);
+    --pui-date-picker-trigger-border-color: var(--pui-color-border);
+  }
+
+  .trigger[data-variant="soft"] {
+    --pui-date-picker-trigger-bg: var(--pui-color-panel);
+    --pui-date-picker-trigger-border-color: transparent;
+  }
+
+  .trigger[data-variant="ghost"] {
+    --pui-date-picker-trigger-bg: transparent;
+    --pui-date-picker-trigger-border-color: transparent;
+  }
+
+  /* Value ------------------------------------------------------------------
+   * Owns the flexible column, so a long range truncates rather than pushing
+   * the glyph out of the field. */
+  .value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3
+   * applies with no exemption, and it is often the only thing naming the
+   * control. So `-muted` (5.82:1), not `-subtle` (3.73:1, non-text only). It
+   * still reads lighter than a chosen date, which uses `--pui-color-
+   * foreground`. */
+  .value[data-placeholder] {
+    color: var(--pui-color-foreground-muted);
+  }
+
+  /* Icon -------------------------------------------------------------------- */
+  .icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-date-picker-icon-color);
+    /* Decorative and inside an interactive part: the field's own cursor has
+     * to show through it. */
+    pointer-events: none;
+  }
+
+  .icon > svg {
+    display: block;
+  }
+
+  /* Popup ------------------------------------------------------------------
+   * The calendar arrives with its own measures, so the popover's surface
+   * padding is stepped down to a frame rather than a margin. Set on the popup
+   * element itself, where Popover declares the knob — an inherited value
+   * would never win against its own declaration. */
+  .popup {
+    --pui-popover-padding: var(--pui-space-3);
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-space-2);
+  }
+
+  /* Footer ------------------------------------------------------------------
+   * Full-bleed rule across the panel: the divider reads as the boundary
+   * between the grid and its actions, and a rule that stops short of the
+   * popup's padding reads as a stray underline instead. */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--pui-space-2);
+    margin-inline: calc(-1 * var(--pui-popover-padding));
+    padding: var(--pui-space-2) var(--pui-popover-padding) 0;
+    border-block-start: 1px solid var(--pui-color-border-muted);
+  }
+}

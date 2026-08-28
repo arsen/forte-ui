@@ -92,8 +92,36 @@
    * Excluding only descendants of a ringing wrapper, rather than every
    * `[data-pui]` element, keeps this rule as the backstop it is meant to be for
    * anything the library leaves unringed. `:where()` keeps the specificity at
-   * (0,1,0). */
-  :focus-visible:not(:where(.pui-focus-ring-within *)) {
+   * (0,1,0).
+   *
+   * `[data-focus-inset]` is the second, and it is the general form of the
+   * third. That attribute is the library's statement that the part sits in a
+   * clipping context and therefore rings INWARD — `patterns.css` flips the
+   * offset negative and moves the outer tone to an `inset` box-shadow. An
+   * outset ring on one of those has nowhere to go: `Sidebar` is
+   * `overflow-y: auto` with the NavList rows flush to its inline edges, so the
+   * ring drew outside the column and was clipped down to two vertical stubs.
+   * Every list row, tab and menu item in the library carries the attribute, so
+   * excluding it here fixes the whole class rather than the one that was
+   * noticed.
+   *
+   * `combobox-input` is the third exclusion, and it is the same kind of
+   * mistake seen from the other end: a part whose component decided AGAINST a
+   * ring. Inside `Combobox.Popup` that input holds focus for the popup's whole
+   * lifetime, and the popup is `overflow: clip` with the row flush to its
+   * edges — so this rule's outset ring survives only along the hairline, as a
+   * bright bar that reads as a rendering fault. The library's own rule says
+   * `outline: none`; this layer is declared after every `pretty-ui` layer, so
+   * without the exclusion it wins and reintroduces the bar. It is listed by
+   * `data-pui` because that marker is public API and the CSS Modules class
+   * beside it is not. */
+  :focus-visible:not(
+      :where(
+        .pui-focus-ring-within *,
+        [data-focus-inset],
+        [data-pui="combobox-input"]
+      )
+    ) {
     outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
     outline-offset: var(--pui-focus-ring-offset);
     box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);

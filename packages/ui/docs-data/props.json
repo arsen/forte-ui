@@ -226,6 +226,61 @@
       }
     ]
   },
+  "AspectRatio": {
+    "name": "AspectRatio",
+    "description": "A box that holds its shape, whatever goes in it.\n\n```tsx\n<AspectRatio ratio=\"video\">\n  <img src=\"/cover.jpg\" alt=\"\" />\n</AspectRatio>\n```\n\nThe reason to reach for it is layout shift: the box occupies its final size\nfrom the first paint, so an image that arrives half a second later drops\ninto space that was already reserved instead of shoving the page down.\n\nBase UI has no aspect-ratio primitive — there is no interaction to model —\nso this is built on the CSS property directly rather than on the\n`padding-bottom: 56.25%` trick the property replaced. Two things follow from\nthat, and both are the point:\n\n- **Children stack.** The box is a one-cell grid and every direct child is\n  placed in that cell, in source order, without leaving flow. A caption over\n  a photo is two elements and no `position: absolute`:\n\n  ```tsx\n  <AspectRatio ratio=\"photo\" variant=\"filled\">\n    <img src=\"/cover.jpg\" alt=\"\" />\n    <figcaption style={{ placeSelf: \"end start\" }}>Lisbon, 2019</figcaption>\n  </AspectRatio>\n  ```\n\n- **Either axis can be the measured one.** `basis=\"block\"` takes a definite\n  height and derives the width, which a percentage padding cannot do at all.\n\nMedia children are sized and `object-fit` for you — see `fit`. Everything\nvisual is a `--pui-aspect-*` custom property, and the state is on\n`data-variant`, `data-fit` and `data-basis`, so a box can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=filled]:...`) without wrapping it.",
+    "props": [
+      {
+        "name": "basis",
+        "type": "AspectRatioBasis",
+        "required": false,
+        "defaultValue": "inline",
+        "description": "Which axis the box measures itself on. `inline` takes the container's\nwidth and derives the height — the usual case, and the only one the\npadding-bottom technique can express. `block` does the reverse: it takes a\ndefinite height and derives the width, which is what a media tile in a\nfixed-height row or a full-bleed hero needs.\n\n`block` requires the parent to actually supply a height — a grid row, a\nstretched flex cross size, an explicit `height`. Given an indefinite one,\n`100%` has nothing to resolve against and the box falls back to sizing\nfrom its content."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "clip",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Clips content to the box, and to its corner radius.\n\nOn by default, because media that overflows its own frame is a bug rather\nthan a feature. Turn it off for the overlay that is *meant* to break out —\na badge hanging off a corner, a focus ring on a child, a tooltip anchored\ninside."
+      },
+      {
+        "name": "fit",
+        "type": "AspectRatioFit",
+        "required": false,
+        "defaultValue": "cover",
+        "description": "How direct media children — `img`, `video`, `canvas`, `iframe`, `embed`,\n`object`, and the `img` inside a `picture` — fill the box. It is an\n`object-fit` value, applied for you: media is stretched to the frame on\nboth axes first, so without it an image is either letterboxed or\noverflowing, and every caller ends up writing the same three declarations\non the child by hand.\n\n`cover` crops to fill and is what a media slot almost always wants;\n`contain` fits the whole image inside and leaves bars, which is right when\nthe subject must not be cut — a logo, a diagram, a product shot on white.\n\nTo keep an image from being cropped in the wrong place, set\n`--pui-aspect-position`."
+      },
+      {
+        "name": "ratio",
+        "type": "AspectRatioValue",
+        "required": false,
+        "defaultValue": "1",
+        "description": "The shape to hold. Takes a number (`16 / 9`), a CSS ratio string\n(`\"16 / 9\"`), the spoken form (`\"16:9\"`), or one of seven names:\n`square`, `video` (16:9), `wide` (21:9), `photo` (4:3), `portrait` (3:4),\n`story` (9:16), `golden` (1.618:1).\n\nPrefer the name where one fits — it says what the box is for, where\n`0.5625` says only what it measures."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component. This is\nhow the box becomes a `<figure>` around a caption, or the `<a>` that wraps\na whole thumbnail."
+      },
+      {
+        "name": "variant",
+        "type": "AspectRatioVariant",
+        "required": false,
+        "defaultValue": "plain",
+        "description": "How much chrome the box carries. `plain` is a pure layout box: no\nbackground, no border, no radius. `outlined` adds a hairline frame and a\nsurface radius, which gives light-on-light media an edge. `filled` adds a\nrecessed panel instead — and because that panel is visible while the box\nis still empty, it doubles as the loading placeholder for the image that\nis about to arrive."
+      }
+    ]
+  },
   "AvatarRoot": {
     "name": "AvatarRoot",
     "description": "The avatar box. Holds an `Avatar.Image`, an `Avatar.Fallback`, or both —\nBase UI mounts whichever the image's loading status calls for.\n\nIt is a one-cell grid, and both parts are placed in that cell. Stacking them\nin flow would put the outgoing image *beside* the fallback for the frames it\nspends fading out, doubling the avatar's width and snapping it back.",
@@ -427,6 +482,194 @@
         "required": false,
         "defaultValue": "solid",
         "description": "How much visual weight the button carries."
+      }
+    ]
+  },
+  "Calendar": {
+    "name": "Calendar",
+    "description": "A month grid for picking one day, several days, or a range.\n\n```tsx\nconst [date, setDate] = React.useState<Date>();\n\n<Calendar mode=\"single\" selected={date} onSelect={setDate} />\n```\n\nIt owns no date library. Month arithmetic goes through the `Date`\nconstructor (DST-safe by construction) and every name on screen comes from\n`Intl.DateTimeFormat`, so the whole component adds nothing to a consumer's\nbundle beyond itself.\n\nThe grid is a real `<table role=\"grid\">` with a roving tabindex: one Tab\nstop for the whole calendar, arrows to move a day, <kbd>Page Up</kbd> /\n<kbd>Page Down</kbd> to move a month, and <kbd>Shift</kbd> with either to\nmove a year. Days that cannot be picked are `aria-disabled` rather than\n`disabled`, so navigation can cross them.",
+    "props": [
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Focus the calendar's active day on mount. Use it when the calendar opens\nin a popover, not on a calendar sitting in the page."
+      },
+      {
+        "name": "captionLayout",
+        "type": "CalendarCaptionLayout",
+        "required": false,
+        "defaultValue": "\"label\"",
+        "description": "What sits between the arrows: a static month and year, or dropdowns for\none or both. Dropdowns turn a birthday twenty years back into two clicks\ninstead of two hundred and forty."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultMonth",
+        "type": "Date",
+        "required": false,
+        "defaultValue": "the month of the selection, or the current month",
+        "description": "The month an uncontrolled calendar opens on."
+      },
+      {
+        "name": "defaultSelected",
+        "type": "Date | CalendarRange | Date[] | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The selection an uncontrolled calendar starts with."
+      },
+      {
+        "name": "disabled",
+        "type": "CalendarMatcher",
+        "required": false,
+        "defaultValue": null,
+        "description": "Days that cannot be picked, as a date, a range, `{ before }` / `{ after }`,\n`{ dayOfWeek }`, a predicate, or an array of any of those. Disabled days\nstay focusable so keyboard navigation can cross them."
+      },
+      {
+        "name": "fixedWeeks",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Always render six rows, so the calendar keeps one height all year and a\npopover containing it never resizes as you page through it."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Rendered under the grid inside a `role=\"status\"` region, so a summary\nlike \"3 nights selected\" is announced as it changes."
+      },
+      {
+        "name": "labels",
+        "type": "CalendarLabels",
+        "required": false,
+        "defaultValue": null,
+        "description": "Chrome strings — arrow and dropdown labels. Merged over the English defaults."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "defaultValue": "\"en-US\"",
+        "description": "BCP 47 tag used for every month, weekday and day name.\n\nPinned rather than left to the runtime on purpose: `undefined` resolves\nto the server's locale during SSR and the browser's on the client, and\n\"August\" hydrating over \"août\" is a mismatch React can only fix by\nthrowing the markup away."
+      },
+      {
+        "name": "maxDate",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "Latest selectable day. The upper half of `minDate`."
+      },
+      {
+        "name": "minDate",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "Earliest selectable day. Also stops navigation and trims the year\ndropdown, so one prop bounds the calendar in every direction at once."
+      },
+      {
+        "name": "mode",
+        "type": "CalendarMode",
+        "required": false,
+        "defaultValue": "\"single\"",
+        "description": "How many days can be picked at once. `\"single\"` selects one `Date`,\n`\"multiple\"` a `Date[]`, `\"range\"` a `{ from, to }` object."
+      },
+      {
+        "name": "month",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "The month on display, as any date within it. Pass it with `onMonthChange`\nto drive navigation yourself."
+      },
+      {
+        "name": "navVariant",
+        "type": "ButtonVariant",
+        "required": false,
+        "defaultValue": "\"ghost\"",
+        "description": "Visual weight of the two navigation arrows — any `Button` variant."
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "number",
+        "required": false,
+        "defaultValue": "1",
+        "description": "How many months to show side by side."
+      },
+      {
+        "name": "onMonthChange",
+        "type": "((month: Date) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the first day of the new leading month whenever navigation moves."
+      },
+      {
+        "name": "onSelect",
+        "type": "((selection: CalendarSelection<M> | null, day: Date) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the next selection and the day that was clicked. The\nselection is `null` once the last pick is cleared, so a controlled\n`useState<Date>()` takes it directly."
+      },
+      {
+        "name": "pagedNavigation",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Move a whole page at a time — with `numberOfMonths={2}`, the arrows jump\ntwo months instead of one."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep at least one day selected: clicking the current selection no longer\nclears it."
+      },
+      {
+        "name": "selected",
+        "type": "Date | CalendarRange | Date[] | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The current selection. Pass it with `onSelect` to control the calendar;\nleave it off entirely to let the calendar own its state."
+      },
+      {
+        "name": "showOutsideDays",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Fill the first and last rows with the neighbouring months' days instead\nof leaving them blank."
+      },
+      {
+        "name": "showWeekNumbers",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Add a leading column of ISO 8601 week numbers."
+      },
+      {
+        "name": "size",
+        "type": "CalendarSize",
+        "required": false,
+        "defaultValue": "\"md\"",
+        "description": "Cell size and text size. Follows the ambient `data-pui-density` too."
+      },
+      {
+        "name": "today",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "Today's date. Override it to pin the \"today\" marker in tests or stories."
+      },
+      {
+        "name": "weekStartsOn",
+        "type": "0 | 1 | 2 | 3 | 4 | 5 | 6",
+        "required": false,
+        "defaultValue": "0",
+        "description": "First column of the week — 0 is Sunday, 1 Monday, 6 Saturday. Not derived\nfrom `locale`: `Intl` cannot be asked for it in every browser, and a\nsilent fallback would move the columns under some of your users and not\nothers."
       }
     ]
   },
@@ -1443,8 +1686,8 @@
         "name": "sideOffset",
         "type": "number | OffsetFunction",
         "required": false,
-        "defaultValue": "4",
-        "description": "Gap in pixels between the anchor and the popup."
+        "defaultValue": "8",
+        "description": "Gap in pixels between the anchor and the popup. The default clears the\nfocus ring rather than sitting flush against it: unlike `Select`, focus\nstays on the field while the popup is open, so the group's two-tone ring\n(`--pui-focus-ring-offset` + `--pui-focus-ring-width`, 4px together) is\npainted in exactly the gap this measures."
       }
     ]
   },
@@ -1550,7 +1793,7 @@
   },
   "ComboboxGroupLabel": {
     "name": "ComboboxGroupLabel",
-    "description": "The heading for a `<Combobox.Group>`. Renders a `<div>`, indented past the\nindicator column so its text lines up with the item text rather than with\nthe check marks.",
+    "description": "The heading for a `<Combobox.Group>`. Renders a `<div>`, set at the list's\nown text edge — outdented from the items it heads, and uppercased and\ntracked — so it reads a level up from them rather than as one more row.",
     "props": [
       {
         "name": "className",
@@ -2081,6 +2324,593 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DatePickerRoot": {
+    "name": "DatePickerRoot",
+    "description": "Groups every part of the picker and owns both its selection and its open\nstate. Renders no DOM of its own.\n\n```tsx\n<DatePicker.Root mode=\"single\" selected={date} onSelect={setDate}>\n  <DatePicker.Trigger aria-label=\"Due date\">\n    <DatePicker.Value placeholder=\"Pick a date\" />\n    <DatePicker.Icon />\n  </DatePicker.Trigger>\n  <DatePicker.Popup>\n    <DatePicker.Calendar />\n  </DatePicker.Popup>\n</DatePicker.Root>\n```\n\nThe selection lives here rather than on the calendar because the trigger\nand the calendar sit on opposite sides of a portal, and because closing on\na pick is a decision the calendar cannot make — it does not know it is in a\npopover.",
+    "props": [
+      {
+        "name": "closeOnSelect",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Close the popup when a day is picked. Left unset it follows the mode:\n`single` closes on a pick, `range` closes once both ends are in, and\n`multiple` stays open because picking a second day would otherwise cost\nanother two clicks."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the popup is open when the picker first mounts."
+      },
+      {
+        "name": "defaultSelected",
+        "type": "Date | CalendarRange | Date[] | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The selection an uncontrolled picker starts with."
+      },
+      {
+        "name": "formatValue",
+        "type": "((selection: CalendarSelection<M> | null, locale: string) => string | null)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the trigger's text entirely. Receives the current selection and\nthe locale, and returns `null` to fall back to the placeholder."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "defaultValue": "\"en-US\"",
+        "description": "BCP 47 tag for the calendar and for the trigger's own text. Pinned rather\nthan left to the runtime for the same reason as on `Calendar`: an\nunpinned locale differs between the server render and the browser."
+      },
+      {
+        "name": "modal",
+        "type": "boolean | \"trap-focus\"",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the popup takes the page over while it is open. Forwarded to\n`Popover.Root`."
+      },
+      {
+        "name": "mode",
+        "type": "CalendarMode",
+        "required": false,
+        "defaultValue": "\"single\"",
+        "description": "How many days can be picked. Decides what `selected` holds and, unless\n`closeOnSelect` says otherwise, when the popup closes."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the popup wants to open or close."
+      },
+      {
+        "name": "onSelect",
+        "type": "((selection: CalendarSelection<M> | null, day: Date) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the next selection and the day that was clicked."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the popup is open. Pass it with `onOpenChange` to control it."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep at least one day selected: clicking the current selection no longer\nclears it, and `DatePicker.Clear` is disabled."
+      },
+      {
+        "name": "selected",
+        "type": "Date | CalendarRange | Date[] | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The current selection. Pass it with `onSelect` to control the picker;\nleave it off entirely to let the picker own its state."
+      }
+    ]
+  },
+  "DatePickerTrigger": {
+    "name": "DatePickerTrigger",
+    "description": "The field that opens the picker. Renders a native `<button>`.\n\nGive it a `<DatePicker.Value>` and a `<DatePicker.Icon>` as children. It\nmust have an accessible name: a `<Field.Label nativeLabel={false}>` in the\nsame `<Field.Root>` — which it picks up through Base UI's field context —\nor an `aria-label` here. In development the trigger warns once if it ends\nup with neither.\n\nThe picker holds no form value of its own. Submit the date from your own\nstate, or render a hidden input beside the trigger.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "closeDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How long the popover lingers after the pointer leaves, in milliseconds.\nRequires `openOnHover`."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "300",
+        "description": "How long the pointer must rest on the trigger before the popover opens,\nin milliseconds. Requires `openOnHover`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the field to fill the width of its container."
+      },
+      {
+        "name": "handle",
+        "type": "PopoverHandle<unknown>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Associates a detached trigger with the `Popover.Root` carrying the same\nhandle, created once outside render with `Popover.createHandle()`."
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Identifies the trigger. Also how `Popover.Root`'s `triggerId` names the\nactive trigger in controlled multi-trigger mode."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behaviour the element\ndoes not have natively."
+      },
+      {
+        "name": "openOnHover",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Also open the popover when the trigger is hovered. This is the setting\nthat turns an \"i\" info icon into the accessible alternative to a tooltip:\nhover reveals it for pointer users while press still reveals it for\neveryone else."
+      },
+      {
+        "name": "payload",
+        "type": "unknown",
+        "required": false,
+        "defaultValue": null,
+        "description": "Data handed to the popover when this trigger opens it, so one popup can\nrender different content per trigger. Read it from the render-function\nform of `Popover.Root`'s children."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, PopoverTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component —\n`render={<Button variant=\"outline\" />}` is the common case. The trigger's\nown neutral styling steps aside when this is present, so the two never\nfight over the cascade."
+      },
+      {
+        "name": "size",
+        "type": "DatePickerSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the field. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+      },
+      {
+        "name": "variant",
+        "type": "DatePickerVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the field carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance."
+      }
+    ]
+  },
+  "DatePickerValue": {
+    "name": "DatePickerValue",
+    "description": "The trigger's text: the formatted selection, or the placeholder while there\nis none. Carries `data-placeholder` in the second case so the two states\ncan be styled apart.\n\nFormatting comes from `DatePicker.Root` — its `locale`, or its\n`formatValue` when you need something other than a medium date.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Shown while nothing is selected."
+      }
+    ]
+  },
+  "DatePickerIcon": {
+    "name": "DatePickerIcon",
+    "description": "The calendar glyph at the end of the field. Decorative — the trigger's\naccessible name and its value carry the meaning, so the glyph is hidden\nfrom assistive technology and does not take pointer events of its own.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "Clear",
+        "description": "Contents of the slot. Defaults to a calendar glyph."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DatePickerPopup": {
+    "name": "DatePickerPopup",
+    "description": "The floating surface, and the column inside it that stacks the calendar\nover an optional `DatePicker.Footer`.\n\nThe surface itself is a `Popover.Popup` and keeps that component's own\nmarker and `--pui-popover-*` knobs — it is a popover surface, and there is\nnothing date-shaped about it. The panel it wraps is this component's part,\nwhich is what a consumer targets to reach the picker's own popup and not\nevery popover on the page.\n\nEvery `Popover.Popup` prop except `size` is forwarded, so `side`, `align`\nand `sideOffset` work as usual. `size` is not: a calendar has an intrinsic\nwidth and a width cap would only ever fight it.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "\"center\"",
+        "description": "How the popup lines up with the trigger along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Shifts the popup along the alignment axis, in pixels, or a function\nreturning one."
+      },
+      {
+        "name": "anchor",
+        "type": "Element | VirtualElement | RefObject<Element | null> | (() => Element | VirtualElement | null) | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "The element the popup positions against, when it should not be the\ntrigger. Accepts an element, a ref, a getter, or a virtual element — a\ntext selection or a right-click point."
+      },
+      {
+        "name": "arrowPadding",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a scrim behind the popup. Off by default — a popover normally\nleaves the page visible and usable. Turn it on with `modal` on\n`Popover.Root`, where the page is already inert and the scrim is what\nsays so."
+      },
+      {
+        "name": "backdropClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--pui-popover-backdrop-z-index` goes."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the panel inside the popup. Applied after\nthe internal styles so consumer utilities (e.g. Tailwind) win without\nneeding `!important`."
+      },
+      {
+        "name": "collisionAvoidance",
+        "type": "CollisionAvoidance",
+        "required": false,
+        "defaultValue": null,
+        "description": "How the popup reacts when it would overflow the boundary — whether it\nflips, shifts, or stays put."
+      },
+      {
+        "name": "collisionBoundary",
+        "type": "Boundary",
+        "required": false,
+        "defaultValue": "\"clipping-ancestors\"",
+        "description": "The boundary the popup tries to stay inside of."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space, in pixels, kept between the popup and the collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the portal renders. Defaults to `document.body`; point it at a\ncontainer when the popup has to live inside a specific stacking or shadow\nroot."
+      },
+      {
+        "name": "disableAnchorTracking",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops the popup re-measuring the anchor on scroll and resize. Cheaper,\nbut the popup drifts if the anchor moves."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the portal — and therefore the popup — in the DOM while the popover\nis closed. Needed when something inside must stay mounted (an iframe, a\nmedia element, uncommitted form state)."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--pui-popover-z-index`."
+      },
+      {
+        "name": "positionMethod",
+        "type": "\"absolute\" | \"fixed\"",
+        "required": false,
+        "defaultValue": "\"absolute\"",
+        "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "\"bottom\"",
+        "description": "Which side of the trigger to place the popup on. Flips automatically to\navoid collisions. `\"inline-start\"` / `\"inline-end\"` follow writing\ndirection."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "8",
+        "description": "Gap between trigger and popup, in pixels, or a function returning one.\nWhen an `Arrow` is rendered this must exceed the arrow's height or the\narrow overlaps the trigger; the default leaves room for the default\narrow."
+      },
+      {
+        "name": "sticky",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keeps the popup glued to the trigger while it scrolls out of view instead\nof letting it detach."
+      }
+    ]
+  },
+  "DatePickerCalendar": {
+    "name": "DatePickerCalendar",
+    "description": "The calendar inside the popup, wired to the root's selection and locale.\nEvery other `Calendar` prop is forwarded — `numberOfMonths`,\n`captionLayout`, `minDate`, `disabled` and the rest.\n\n`autoFocus` defaults to **on** here, the opposite of `Calendar`'s own\ndefault. The calendar is behind a press that the user just made, so the\nfirst arrow key should move a day rather than do nothing; a calendar\nsitting in the page has no such press behind it, which is why the base\ncomponent leaves focus alone.",
+    "props": [
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Focus the calendar's active day on mount. Use it when the calendar opens\nin a popover, not on a calendar sitting in the page."
+      },
+      {
+        "name": "captionLayout",
+        "type": "CalendarCaptionLayout",
+        "required": false,
+        "defaultValue": "\"label\"",
+        "description": "What sits between the arrows: a static month and year, or dropdowns for\none or both. Dropdowns turn a birthday twenty years back into two clicks\ninstead of two hundred and forty."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultMonth",
+        "type": "Date",
+        "required": false,
+        "defaultValue": "the month of the selection, or the current month",
+        "description": "The month an uncontrolled calendar opens on."
+      },
+      {
+        "name": "disabled",
+        "type": "CalendarMatcher",
+        "required": false,
+        "defaultValue": null,
+        "description": "Days that cannot be picked, as a date, a range, `{ before }` / `{ after }`,\n`{ dayOfWeek }`, a predicate, or an array of any of those. Disabled days\nstay focusable so keyboard navigation can cross them."
+      },
+      {
+        "name": "fixedWeeks",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Always render six rows, so the calendar keeps one height all year and a\npopover containing it never resizes as you page through it."
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Rendered under the grid inside a `role=\"status\"` region, so a summary\nlike \"3 nights selected\" is announced as it changes."
+      },
+      {
+        "name": "labels",
+        "type": "CalendarLabels",
+        "required": false,
+        "defaultValue": null,
+        "description": "Chrome strings — arrow and dropdown labels. Merged over the English defaults."
+      },
+      {
+        "name": "maxDate",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "Latest selectable day. The upper half of `minDate`."
+      },
+      {
+        "name": "minDate",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "Earliest selectable day. Also stops navigation and trims the year\ndropdown, so one prop bounds the calendar in every direction at once."
+      },
+      {
+        "name": "month",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "The month on display, as any date within it. Pass it with `onMonthChange`\nto drive navigation yourself."
+      },
+      {
+        "name": "navVariant",
+        "type": "ButtonVariant",
+        "required": false,
+        "defaultValue": "\"ghost\"",
+        "description": "Visual weight of the two navigation arrows — any `Button` variant."
+      },
+      {
+        "name": "numberOfMonths",
+        "type": "number",
+        "required": false,
+        "defaultValue": "1",
+        "description": "How many months to show side by side."
+      },
+      {
+        "name": "onMonthChange",
+        "type": "((month: Date) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the first day of the new leading month whenever navigation moves."
+      },
+      {
+        "name": "pagedNavigation",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Move a whole page at a time — with `numberOfMonths={2}`, the arrows jump\ntwo months instead of one."
+      },
+      {
+        "name": "showOutsideDays",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Fill the first and last rows with the neighbouring months' days instead\nof leaving them blank."
+      },
+      {
+        "name": "showWeekNumbers",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Add a leading column of ISO 8601 week numbers."
+      },
+      {
+        "name": "size",
+        "type": "CalendarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Cell size and text size. Follows the ambient `data-pui-density` too."
+      },
+      {
+        "name": "today",
+        "type": "Date",
+        "required": false,
+        "defaultValue": null,
+        "description": "Today's date. Override it to pin the \"today\" marker in tests or stories."
+      },
+      {
+        "name": "weekStartsOn",
+        "type": "0 | 1 | 2 | 3 | 4 | 5 | 6",
+        "required": false,
+        "defaultValue": "0",
+        "description": "First column of the week — 0 is Sunday, 1 Monday, 6 Saturday. Not derived\nfrom `locale`: `Intl` cannot be asked for it in every browser, and a\nsilent fallback would move the columns under some of your users and not\nothers."
+      }
+    ]
+  },
+  "DatePickerFooter": {
+    "name": "DatePickerFooter",
+    "description": "An actions row under the calendar, inside the popup — where \"Clear\" and\n\"Today\" belong. It is a row of real buttons, so it is reached by\n<kbd>Tab</kbd> from the grid, which is one Tab stop.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DatePickerClear": {
+    "name": "DatePickerClear",
+    "description": "Empties the selection. A `Button`, so it answers to `variant`, `tone` and\n`size` — and tags itself `data-pui=\"button\"` rather than being handed a\nmarker, the way every composed component in the library does.\n\nIt disables itself when there is nothing to clear, and when the root is\n`required`. Disabled rather than hidden: a control that disappears as you\nreach for it is worse than one that is visibly unavailable, and the popup\nwould reflow under the pointer.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "Clear",
+        "description": "Contents of the button."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "focusableWhenDisabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true while `loading`, otherwise false",
+        "description": "Keep the button focusable while it is disabled. A native `disabled`\nbutton is blurred by the browser, which drops focus to `<body>` and loses\nthe user's place in the tab order — and takes `aria-busy` and\n`loadingLabel` out of earshot with it. Left unset, this turns itself on\nfor the duration of `loading` so the busy state is actually announced;\npass it explicitly to override."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the button to fill the width of its container."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon. Enforces the 24px\nminimum hit target from WCAG SC 2.5.8. Always pair with `aria-label`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show a busy indicator and block interaction. The label keeps its space so\nthe button cannot resize mid-interaction."
+      },
+      {
+        "name": "loadingLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "\"Loading\"",
+        "description": "Announced to assistive technology while `loading` is true. Without it, a\nscreen reader user gets no signal that anything is happening."
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+      },
+      {
+        "name": "tone",
+        "type": "ButtonTone",
+        "required": false,
+        "defaultValue": "\"primary\"",
+        "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the button carries."
       }
     ]
   },

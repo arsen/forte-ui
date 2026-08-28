@@ -1,0 +1,458 @@
+/*
+ * Calendar
+ *
+ * One month grid, or several side by side. Two axes on the root, read by
+ * everything below through inherited custom properties:
+ *
+ *   data-size="sm|md|lg"            cell size and text size
+ *   data-mode="single|multiple|range"   available to consumers; the range band
+ *                                       itself is driven by the cells' own
+ *                                       data attributes, not by the mode
+ *
+ * The layout has one structural trick worth knowing before editing it. The
+ * arrows are NOT a row of their own: `.nav` and `.months` are stacked in the
+ * same grid cell, so a two-month view gets one pair of arrows on its outer
+ * edges instead of a strip of chrome above each column. `.nav` is therefore
+ * pointer-transparent — only the buttons inside take events — or it would sit
+ * over the caption row and swallow clicks meant for the month and year
+ * dropdowns beneath it.
+ *
+ * The second is that the table collapses its borders and the cells carry no
+ * gap. That is what lets a selected range paint as one continuous band across
+ * a week: the fill lives on the `<td>` and runs edge to edge, while the day
+ * button inside keeps its own radius for the two ends.
+ *
+ * No prefers-reduced-motion block, here or in any component file: the only
+ * motion is a colour transition, and its duration token shortens itself.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on Calendar's own root, so an
+     * ancestor's value is only ever inherited and never wins — and so the
+     * size presets below can re-point a handful of them instead of restating
+     * rules. */
+
+    /* Geometry. One square drives the whole grid: the cell, the day button,
+     * the arrows and the caption row all measure from it, so a consumer
+     * resizing a calendar sets one value rather than six. It is a control
+     * height rather than a space token so the grid follows
+     * `data-pui-density` the way every other control in the library does. */
+    /** Size of one day cell, and the measure everything else derives from */
+    --pui-calendar-cell-size: var(--pui-control-h-md);
+    /** Size of the two navigation arrows */
+    --pui-calendar-nav-size: var(--pui-calendar-cell-size);
+    /** Space between months shown side by side */
+    --pui-calendar-gap: var(--pui-space-5);
+    /** Space between the weekday header and the first week */
+    --pui-calendar-head-gap: var(--pui-space-1);
+    /* Applied as padding INSIDE each cell, so two adjacent days end up two
+     * gaps apart on both axes. Without it, days that touch fuse into one
+     * shape: two selected days side by side read as a range, and the same
+     * weekday selected on consecutive weeks reads as a vertical bar. */
+    /** Space around a day inside its cell. `0px` fuses the grid into one block */
+    --pui-calendar-day-gap: 2px;
+
+    /* Caption. */
+    /** Month and year text size */
+    --pui-calendar-caption-font-size: var(--pui-font-size-2);
+    /** Month and year text weight */
+    --pui-calendar-caption-font-weight: var(--pui-font-weight-semibold);
+    /** Month and year colour */
+    --pui-calendar-caption-color: var(--pui-color-foreground);
+
+    /* Column headers and the week-number gutter. `-subtle` is below the text
+     * contrast floor for body copy but these are labels for a column whose
+     * content says the same thing, and neither is ever the only cue. */
+    /** Weekday initials text size */
+    --pui-calendar-weekday-font-size: var(--pui-font-size-1);
+    /** Weekday initials colour */
+    --pui-calendar-weekday-color: var(--pui-color-foreground-subtle);
+    /** ISO week-number colour */
+    --pui-calendar-week-number-color: var(--pui-color-foreground-subtle);
+
+    /* Days. */
+    /** Day number text size */
+    --pui-calendar-day-font-size: var(--pui-font-size-2);
+    /** Corner radius of a day */
+    --pui-calendar-day-radius: var(--pui-radius-2);
+    /** Day number colour */
+    --pui-calendar-day-color: var(--pui-color-foreground);
+    /** Colour of days belonging to the neighbouring month */
+    --pui-calendar-day-color-outside: var(--pui-color-foreground-subtle);
+    /** Day fill on hover */
+    --pui-calendar-day-bg-hover: var(--pui-color-panel-hover);
+    /** Fill of a selected day, and of the two ends of a range */
+    --pui-calendar-day-selected-bg: var(--pui-color-primary);
+    /** Fill of a selected day on hover */
+    --pui-calendar-day-selected-bg-hover: var(--pui-color-primary-hover);
+    /** Text colour on a selected day */
+    --pui-calendar-day-selected-color: var(--pui-color-on-primary);
+
+    /* Range. The band sits on the cell, the ends on the button. */
+    /** Fill of the days between the two ends of a range */
+    --pui-calendar-range-bg: var(--pui-color-primary-soft);
+    /** Fill of the band a half-picked range shows under the pointer */
+    --pui-calendar-preview-bg: var(--pui-color-panel-hover);
+
+    /* Today. The dot is a second, non-colour cue: `aria-current="date"` says
+     * it to a screen reader, the dot says it to everyone else, and neither
+     * depends on telling the accent hue from the foreground. */
+    /** Colour of today's number */
+    --pui-calendar-today-color: var(--pui-color-primary-text);
+    /** Diameter of the dot under today's number. `0px` removes it */
+    --pui-calendar-today-dot-size: 3px;
+
+    /* Colour only ever crossfades — see the note about hover geometry in the
+     * motion principles: a day that lifts under the pointer moves its own hit
+     * box, and in a grid this dense that oscillates. */
+    /** Length of a day's hover and selection crossfade */
+    --pui-calendar-duration: var(--pui-duration-fast);
+    /** Curve of a day's hover and selection crossfade */
+    --pui-calendar-ease: var(--pui-ease-standard);
+
+    /* Not a knob — the column width the header cells and the day cells have
+     * to agree on. Naming it once is what stops the two drifting apart when
+     * either input changes. */
+    --pui-calendar-track: calc(
+      var(--pui-calendar-cell-size) + var(--pui-calendar-day-gap) * 2
+    );
+
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--pui-space-2);
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  /* Size presets re-point the knobs and nothing else. No `md` block: the
+   * defaults above ARE `md`. */
+  .root[data-size="sm"] {
+    --pui-calendar-cell-size: var(--pui-control-h-sm);
+    --pui-calendar-caption-font-size: var(--pui-font-size-1);
+    --pui-calendar-day-font-size: var(--pui-font-size-1);
+    --pui-calendar-gap: var(--pui-space-4);
+  }
+
+  .root[data-size="lg"] {
+    --pui-calendar-cell-size: var(--pui-control-h-lg);
+    --pui-calendar-caption-font-size: var(--pui-font-size-3);
+    --pui-calendar-day-font-size: var(--pui-font-size-3);
+    --pui-calendar-weekday-font-size: var(--pui-font-size-2);
+  }
+
+  /* Layout ------------------------------------------------------------------
+   * One grid cell holding two children, so the arrows overlay the caption row
+   * instead of occupying a row of their own. */
+  .body {
+    display: grid;
+  }
+
+  .months,
+  .nav {
+    grid-area: 1 / 1;
+  }
+
+  .months {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--pui-calendar-gap);
+  }
+
+  .month {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* `align-items: start` keeps the arrows on the caption row rather than
+   * stretching them down the whole grid. Pointer-transparent, with the
+   * buttons opting back in — see the file header. */
+  .nav {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+
+  /* The height knob is NOT set here. It has to be an inline style on the
+   * button (see Calendar.tsx): Button's own `[data-size="sm"]` rule declares
+   * `--pui-button-height` on the very same element at (0,2,0), so a class
+   * selector here ties on nothing and loses — the arrows came out 28px inside
+   * a 36px caption row, a misalignment visible only with the dropdowns. */
+  .navButton {
+    pointer-events: auto;
+  }
+
+  /* One glyph, drawn pointing forward, mirrored for the back arrow. The
+   * inline axis is physical, so `--pui-direction` turns both around in RTL —
+   * a chevron that keeps pointing right in an RTL calendar points at the
+   * month you just came from. */
+  .navIcon {
+    display: block;
+  }
+
+  .navIcon[data-nav-icon="next"] {
+    scale: var(--pui-direction) 1;
+  }
+
+  .navIcon[data-nav-icon="previous"] {
+    scale: calc(-1 * var(--pui-direction)) 1;
+  }
+
+  /* Caption ---------------------------------------------------------------- */
+
+  .caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--pui-space-1);
+    /* Matches the arrows, so the caption row is exactly as tall as the strip
+     * overlaying it however the caption is laid out. */
+    min-block-size: var(--pui-calendar-nav-size);
+    /* Keeps a long month name — or a pair of dropdowns — clear of the arrows
+     * sitting over the ends of this row. */
+    padding-inline: var(--pui-calendar-nav-size);
+  }
+
+  .captionLabel {
+    color: var(--pui-calendar-caption-color);
+    font-size: var(--pui-calendar-caption-font-size);
+    font-weight: var(--pui-calendar-caption-font-weight);
+    line-height: var(--pui-line-height-normal);
+    white-space: nowrap;
+    /* Chrome, not a control: an idle click should not start a text selection
+     * that then looks like a failed interaction. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Grid --------------------------------------------------------------------
+   * The cells stay flush and carry the gap as their own padding. That split
+   * is what lets the days be separated on both axes while a range band still
+   * runs unbroken across a week: the band is a pseudo-element that bleeds
+   * over the inline padding and stops short of the block padding.
+   *
+   * `table-layout: fixed` stops a column widening for a two-digit date and
+   * shifting the whole grid on the 10th. */
+  .grid {
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .weekday {
+    inline-size: var(--pui-calendar-track);
+    padding: 0 0 var(--pui-calendar-head-gap);
+    color: var(--pui-calendar-weekday-color);
+    font-size: var(--pui-calendar-weekday-font-size);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-normal);
+    text-align: center;
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .weekNumber {
+    padding: 0 var(--pui-space-2) 0 0;
+    color: var(--pui-calendar-week-number-color);
+    font-size: var(--pui-calendar-weekday-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    text-align: end;
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Cells -------------------------------------------------------------------
+   * The cell owns the gap and the range band; the button inside is the day
+   * itself. Splitting them this way is what lets the days sit apart while the
+   * band stays continuous, and it is why the band is a pseudo-element rather
+   * than a background on the cell — a background would paint the padding too,
+   * putting the gap back inside the band. */
+  .cell {
+    box-sizing: border-box;
+    position: relative;
+    inline-size: var(--pui-calendar-track);
+    block-size: var(--pui-calendar-track);
+    padding: var(--pui-calendar-day-gap);
+  }
+
+  /* Inset on the block axis, so week rows stay visibly separate; full bleed
+   * on the inline axis, so consecutive days in one week join into a single
+   * band with no seams at the cell boundaries. */
+  .cell[data-in-range]::before {
+    content: "";
+    position: absolute;
+    inset-block: var(--pui-calendar-day-gap);
+    inset-inline: 0;
+    background-color: var(--pui-calendar-range-bg);
+  }
+
+  /* The tentative half of a half-picked range: quieter than the committed
+   * band, because it disappears again the moment the pointer moves on. Same
+   * specificity as the rule above, so order is what decides. */
+  .cell[data-preview]::before {
+    background-color: var(--pui-calendar-preview-bg);
+  }
+
+  /* Logical corners, so the band opens at the range's start and closes at its
+   * end in both writing directions without a second rule. */
+  .cell[data-range-start]::before {
+    border-start-start-radius: var(--pui-calendar-day-radius);
+    border-end-start-radius: var(--pui-calendar-day-radius);
+  }
+
+  .cell[data-range-end]::before {
+    border-start-end-radius: var(--pui-calendar-day-radius);
+    border-end-end-radius: var(--pui-calendar-day-radius);
+  }
+
+  /* Days -------------------------------------------------------------------- */
+
+  /* `position: relative` is doing two jobs: it anchors the today dot, and it
+   * lifts the button above the cell's band pseudo-element — both are
+   * positioned with `z-index: auto`, so DOM order decides and the ::before
+   * comes first. */
+  .day {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 100%;
+    /* SC 2.5.8. Bites at data-size="sm" under a compact density, where the
+     * control height drops below 24px. */
+    min-inline-size: var(--pui-target-min);
+    min-block-size: var(--pui-target-min);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--pui-calendar-day-radius);
+    background-color: transparent;
+    color: var(--pui-calendar-day-color);
+    font-family: inherit;
+    font-size: var(--pui-calendar-day-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    /* Figures of one width, or the columns twitch as the month walks from
+     * single to double digits. */
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-calendar-duration) var(--pui-calendar-ease),
+      color var(--pui-calendar-duration) var(--pui-calendar-ease);
+  }
+
+  .day[data-outside] {
+    color: var(--pui-calendar-day-color-outside);
+  }
+
+  /* Hover excludes a selected day, which has its own stronger pair below —
+   * swapping its fill for the hover grey would read as the day DESELECTING
+   * under the pointer. */
+  @media (hover: hover) {
+    .day:hover:not([data-selected], [aria-disabled="true"]) {
+      background-color: var(--pui-calendar-day-bg-hover);
+      color: var(--pui-color-foreground);
+    }
+
+    .day[data-selected]:hover {
+      background-color: var(--pui-calendar-day-selected-bg-hover);
+    }
+  }
+
+  .day[data-selected] {
+    background-color: var(--pui-calendar-day-selected-bg);
+    color: var(--pui-calendar-day-selected-color);
+    font-weight: var(--pui-font-weight-medium);
+  }
+
+  /* `opacity` is the non-forced-colors treatment only — the generic
+   * `[aria-disabled="true"]` rule in patterns.css (layer pretty-ui.a11y,
+   * ordered after this one) restores `opacity: 1` and paints GrayText, so the
+   * fade cannot survive into HCM and read as enabled. */
+  .day[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .day[data-today] {
+    color: var(--pui-calendar-today-color);
+    font-weight: var(--pui-font-weight-semibold);
+  }
+
+  /* Centred with `inset-inline: 0` and an auto margin rather than a
+   * percentage translate: `translate` is physical, so the usual
+   * `inset-inline-start: 50%; translate: -50%` centres in LTR and lands half
+   * a dot to the outside in RTL. */
+  .day[data-today]::after {
+    content: "";
+    position: absolute;
+    inset-block-end: calc(var(--pui-calendar-today-dot-size) + 1px);
+    inset-inline: 0;
+    inline-size: var(--pui-calendar-today-dot-size);
+    block-size: var(--pui-calendar-today-dot-size);
+    margin-inline: auto;
+    border-radius: var(--pui-radius-full);
+    /* Rides the number's colour through selection, hover and every tone a
+     * consumer re-points, so it never needs a palette of its own. */
+    background-color: currentColor;
+  }
+
+  /* Footer ------------------------------------------------------------------ */
+
+  .footer {
+    color: var(--pui-color-foreground-muted);
+    font-size: var(--pui-font-size-1);
+    line-height: var(--pui-line-height-normal);
+    text-align: center;
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * layer alone.
+ *
+ * patterns.css already covers most of this: `[data-selected]` and
+ * `[aria-selected="true"]` take the Highlight pair, `[aria-disabled="true"]`
+ * takes GrayText at full opacity, and the focus ring survives on its own.
+ * Range middles come along for free because the cell says `aria-selected`.
+ * What is Calendar-specific:
+ *
+ *   - Author backgrounds are stripped, and `currentColor` on the today dot
+ *     resolves against a forced text colour that may now equal the cell's —
+ *     so the dot is repainted from the system keywords, in both the ordinary
+ *     and the selected case.
+ *   - Outside days lose their muted colour and become indistinguishable from
+ *     the month's own. GrayText is the only "this is secondary" the mode has.
+ *
+ * The hover preview band is deliberately left unstyled here. It is a pointer
+ * affordance that vanishes on the next move, and the only fill available
+ * would be Highlight — the same one a committed range uses, which would make
+ * a guess look like a decision.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .day[data-today]::after {
+      background-color: CanvasText;
+    }
+
+    .day[data-selected][data-today]::after {
+      background-color: HighlightText;
+    }
+
+    .day[data-outside]:not([data-selected]) {
+      color: GrayText;
+    }
+
+    /* The cell already says `aria-selected`, which patterns.css repaints with
+     * the Highlight pair — and that lands on the cell itself, gap included.
+     * The band pseudo-element would sit on top of it with a forced background
+     * of its own, punching a hole through the middle of the range. */
+    .cell[data-in-range]::before {
+      display: none;
+    }
+  }
+}

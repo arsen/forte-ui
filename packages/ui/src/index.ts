@@ -28,6 +28,16 @@ export type {
   AlertCloseProps,
 } from "./components/alert";
 
+export { AspectRatio } from "./components/aspect-ratio";
+export type {
+  AspectRatioProps,
+  AspectRatioPreset,
+  AspectRatioValue,
+  AspectRatioFit,
+  AspectRatioVariant,
+  AspectRatioBasis,
+} from "./components/aspect-ratio";
+
 export { Avatar } from "./components/avatar";
 export type {
   AvatarSize,
@@ -45,6 +55,18 @@ export type {
 
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
+
+export { Calendar } from "./components/calendar";
+export type {
+  CalendarMode,
+  CalendarSize,
+  CalendarCaptionLayout,
+  CalendarRange,
+  CalendarSelection,
+  CalendarMatcher,
+  CalendarLabels,
+  CalendarProps,
+} from "./components/calendar";
 
 export { Checkbox, CheckboxGroup } from "./components/checkbox";
 export type {
@@ -136,6 +158,30 @@ export type {
   ContextMenuSubmenuTriggerProps,
   ContextMenuShortcutProps,
 } from "./components/context-menu";
+
+export {
+  DatePicker,
+  DatePickerRoot,
+  DatePickerTrigger,
+  DatePickerValue,
+  DatePickerIcon,
+  DatePickerPopup,
+  DatePickerCalendar,
+  DatePickerFooter,
+  DatePickerClear,
+} from "./components/date-picker";
+export type {
+  DatePickerSize,
+  DatePickerVariant,
+  DatePickerRootProps,
+  DatePickerTriggerProps,
+  DatePickerValueProps,
+  DatePickerIconProps,
+  DatePickerPopupProps,
+  DatePickerCalendarProps,
+  DatePickerFooterProps,
+  DatePickerClearProps,
+} from "./components/date-picker";
 
 export { Dialog, AlertDialog, useDialog } from "./components/dialog";
 export type {

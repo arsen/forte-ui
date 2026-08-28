@@ -113,6 +113,12 @@ function VirtualizedItems({
             key={virtualItem.key}
             index={virtualItem.index}
             ref={virtualizer.measureElement}
+            // `measureElement` reads the row's index back off the DOM node it
+            // is handed, from `data-index` — it warns and measures nothing
+            // without it. Two attributes for one number is not duplication:
+            // `index` is what Base UI navigates and announces by, this is what
+            // the virtualizer sizes by.
+            data-index={virtualItem.index}
             value={item}
             aria-setsize={filteredItems.length}
             aria-posinset={virtualItem.index + 1}

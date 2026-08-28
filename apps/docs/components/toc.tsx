@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { NavList } from "@dofortech/pretty-ui";
 import { cn } from "@/lib/cn";
 import { TOC, type TocHeading } from "./toc-registry";
-import { EYEBROW, NAV_LINK, NAV_LINK_ACTIVE, STICKY_COLUMN } from "./styles";
+import { EYEBROW, STICKY_COLUMN } from "./styles";
 
 /**
  * The "On this page" rail — the right-hand column of the shell, and the same
@@ -377,6 +378,57 @@ export function useActiveHeading(headings: TocHeading[], enabled = true) {
   return active;
 }
 
+/* The registry hands the headings over flat, in document order, because that
+ * is what a querySelectorAll IS. NavList expresses depth by nesting alone —
+ * there is no `level` prop — so the flat run is folded here: an h3 belongs to
+ * the h2 above it. An h3 with no h2 before it (no page has one today) stays a
+ * top-level row rather than inventing a parent to indent under. */
+type TocNode = TocHeading & { children: TocHeading[] };
+
+function toTree(headings: TocHeading[]): TocNode[] {
+  const roots: TocNode[] = [];
+  for (const heading of headings) {
+    const parent = roots[roots.length - 1];
+    if (heading.depth === 3 && parent) parent.children.push(heading);
+    else roots.push({ ...heading, children: [] });
+  }
+  return roots;
+}
+
+function HeadingLink({
+  heading,
+  active,
+  onSelect,
+}: {
+  heading: TocHeading;
+  active: string | null;
+  onSelect: (target: HTMLElement) => void;
+}) {
+  return (
+    <NavList.Link
+      href={`#${heading.id}`}
+      active={heading.id === active}
+      /* `"location"` rather than the `"page"` the `active` prop derives: the
+       * sidebar already owns which PAGE you are on, and two elements claiming
+       * `page` in one document is a contradiction a screen reader reads out.
+       * An explicit `aria-current` wins over the derived one — NavList
+       * documents this exact override for same-page targets. */
+      aria-current={heading.id === active ? "location" : undefined}
+      onClick={(event) => {
+        /* Leave the browser the clicks it does better: a new tab, a
+         * new window, a saved link. */
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const target = document.getElementById(heading.id);
+        if (!target) return;
+        event.preventDefault();
+        onSelect(target);
+      }}
+    >
+      {heading.text}
+    </NavList.Link>
+  );
+}
+
 /**
  * The list of heading links, shared by the column and the drawer.
  *
@@ -394,40 +446,28 @@ export function TocList({
   onSelect?: (target: HTMLElement) => void;
 }) {
   return (
-    /* No Preflight on this site, so the UA marker and padding are still there
-     * and have to be removed by hand. */
-    <ul className="m-0 list-none p-0">
-      {headings.map((heading) => (
-        <li key={heading.id}>
-          <a
-            className={cn(
-              NAV_LINK,
-              /* Indented and a step down, so the shape of the page is
-               * legible without reading a single word of it. */
-              heading.depth === 3 && "ps-5 text-1",
-              heading.id === active && cn(NAV_LINK_ACTIVE, "font-medium"),
+    /* `render={<div />}`: both callers already own the landmark — the column
+     * wraps this in a labelled <nav>, and the drawer is a dialog with its own
+     * title — so the default <nav> here would put a second, unnamed one in
+     * the tree. */
+    <NavList.Root render={<div />}>
+      <NavList.List>
+        {toTree(headings).map((heading) => (
+          <NavList.Item key={heading.id}>
+            <HeadingLink heading={heading} active={active} onSelect={onSelect} />
+            {heading.children.length > 0 && (
+              <NavList.List>
+                {heading.children.map((child) => (
+                  <NavList.Item key={child.id}>
+                    <HeadingLink heading={child} active={active} onSelect={onSelect} />
+                  </NavList.Item>
+                ))}
+              </NavList.List>
             )}
-            /* `aria-current="location"` rather than `"page"`: the sidebar
-             * already owns which PAGE you are on, and two elements claiming
-             * `page` in one document is a contradiction a screen reader
-             * reads out. */
-            aria-current={heading.id === active ? "location" : undefined}
-            href={`#${heading.id}`}
-            onClick={(event) => {
-              /* Leave the browser the clicks it does better: a new tab, a
-               * new window, a saved link. */
-              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-              const target = document.getElementById(heading.id);
-              if (!target) return;
-              event.preventDefault();
-              onSelect(target);
-            }}
-          >
-            {heading.text}
-          </a>
-        </li>
-      ))}
-    </ul>
+          </NavList.Item>
+        ))}
+      </NavList.List>
+    </NavList.Root>
   );
 }
 
