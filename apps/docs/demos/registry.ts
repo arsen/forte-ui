@@ -47,6 +47,22 @@ import d_button_tones from "./button/tones";
 import d_button_tones_src from "./button/tones?raw";
 import d_button_variants from "./button/variants";
 import d_button_variants_src from "./button/variants?raw";
+import d_calendar_basic from "./calendar/basic";
+import d_calendar_basic_src from "./calendar/basic?raw";
+import d_calendar_disabled_dates from "./calendar/disabled-dates";
+import d_calendar_disabled_dates_src from "./calendar/disabled-dates?raw";
+import d_calendar_dropdown from "./calendar/dropdown";
+import d_calendar_dropdown_src from "./calendar/dropdown?raw";
+import d_calendar_locale from "./calendar/locale";
+import d_calendar_locale_src from "./calendar/locale?raw";
+import d_calendar_multiple from "./calendar/multiple";
+import d_calendar_multiple_src from "./calendar/multiple?raw";
+import d_calendar_range from "./calendar/range";
+import d_calendar_range_src from "./calendar/range?raw";
+import d_calendar_sizes from "./calendar/sizes";
+import d_calendar_sizes_src from "./calendar/sizes?raw";
+import d_calendar_week_numbers from "./calendar/week-numbers";
+import d_calendar_week_numbers_src from "./calendar/week-numbers?raw";
 import d_checkbox_basic from "./checkbox/basic";
 import d_checkbox_basic_src from "./checkbox/basic?raw";
 import d_checkbox_disabled from "./checkbox/disabled";
@@ -139,6 +155,18 @@ import d_context_menu_theming from "./context-menu/theming";
 import d_context_menu_theming_src from "./context-menu/theming?raw";
 import d_context_menu_with_menu from "./context-menu/with-menu";
 import d_context_menu_with_menu_src from "./context-menu/with-menu?raw";
+import d_date_picker_basic from "./date-picker/basic";
+import d_date_picker_basic_src from "./date-picker/basic?raw";
+import d_date_picker_constrained from "./date-picker/constrained";
+import d_date_picker_constrained_src from "./date-picker/constrained?raw";
+import d_date_picker_footer from "./date-picker/footer";
+import d_date_picker_footer_src from "./date-picker/footer?raw";
+import d_date_picker_range from "./date-picker/range";
+import d_date_picker_range_src from "./date-picker/range?raw";
+import d_date_picker_sizes from "./date-picker/sizes";
+import d_date_picker_sizes_src from "./date-picker/sizes?raw";
+import d_date_picker_with_field from "./date-picker/with-field";
+import d_date_picker_with_field_src from "./date-picker/with-field?raw";
 import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
@@ -602,6 +630,14 @@ export type DemoId =
   | "button/sizes"
   | "button/tones"
   | "button/variants"
+  | "calendar/basic"
+  | "calendar/disabled-dates"
+  | "calendar/dropdown"
+  | "calendar/locale"
+  | "calendar/multiple"
+  | "calendar/range"
+  | "calendar/sizes"
+  | "calendar/week-numbers"
   | "checkbox/basic"
   | "checkbox/disabled"
   | "checkbox/indeterminate"
@@ -648,6 +684,12 @@ export type DemoId =
   | "context-menu/submenu"
   | "context-menu/theming"
   | "context-menu/with-menu"
+  | "date-picker/basic"
+  | "date-picker/constrained"
+  | "date-picker/footer"
+  | "date-picker/range"
+  | "date-picker/sizes"
+  | "date-picker/with-field"
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/controlled"
@@ -892,6 +934,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "button/sizes": { Component: d_button_sizes, source: d_button_sizes_src, file: "button/sizes.tsx" },
   "button/tones": { Component: d_button_tones, source: d_button_tones_src, file: "button/tones.tsx" },
   "button/variants": { Component: d_button_variants, source: d_button_variants_src, file: "button/variants.tsx" },
+  "calendar/basic": { Component: d_calendar_basic, source: d_calendar_basic_src, file: "calendar/basic.tsx" },
+  "calendar/disabled-dates": { Component: d_calendar_disabled_dates, source: d_calendar_disabled_dates_src, file: "calendar/disabled-dates.tsx" },
+  "calendar/dropdown": { Component: d_calendar_dropdown, source: d_calendar_dropdown_src, file: "calendar/dropdown.tsx" },
+  "calendar/locale": { Component: d_calendar_locale, source: d_calendar_locale_src, file: "calendar/locale.tsx" },
+  "calendar/multiple": { Component: d_calendar_multiple, source: d_calendar_multiple_src, file: "calendar/multiple.tsx" },
+  "calendar/range": { Component: d_calendar_range, source: d_calendar_range_src, file: "calendar/range.tsx" },
+  "calendar/sizes": { Component: d_calendar_sizes, source: d_calendar_sizes_src, file: "calendar/sizes.tsx" },
+  "calendar/week-numbers": { Component: d_calendar_week_numbers, source: d_calendar_week_numbers_src, file: "calendar/week-numbers.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },
   "checkbox/disabled": { Component: d_checkbox_disabled, source: d_checkbox_disabled_src, file: "checkbox/disabled.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },
@@ -938,6 +988,12 @@ const REGISTRY: Record<DemoId, Demo> = {
   "context-menu/submenu": { Component: d_context_menu_submenu, source: d_context_menu_submenu_src, file: "context-menu/submenu.tsx" },
   "context-menu/theming": { Component: d_context_menu_theming, source: d_context_menu_theming_src, file: "context-menu/theming.tsx" },
   "context-menu/with-menu": { Component: d_context_menu_with_menu, source: d_context_menu_with_menu_src, file: "context-menu/with-menu.tsx" },
+  "date-picker/basic": { Component: d_date_picker_basic, source: d_date_picker_basic_src, file: "date-picker/basic.tsx" },
+  "date-picker/constrained": { Component: d_date_picker_constrained, source: d_date_picker_constrained_src, file: "date-picker/constrained.tsx" },
+  "date-picker/footer": { Component: d_date_picker_footer, source: d_date_picker_footer_src, file: "date-picker/footer.tsx" },
+  "date-picker/range": { Component: d_date_picker_range, source: d_date_picker_range_src, file: "date-picker/range.tsx" },
+  "date-picker/sizes": { Component: d_date_picker_sizes, source: d_date_picker_sizes_src, file: "date-picker/sizes.tsx" },
+  "date-picker/with-field": { Component: d_date_picker_with_field, source: d_date_picker_with_field_src, file: "date-picker/with-field.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },
