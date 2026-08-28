@@ -1786,6 +1786,13 @@
         "overrides": []
       },
       {
+        "name": "--pui-combobox-button-radius",
+        "value": "max( 0px, calc(var(--pui-combobox-field-radius) - var(--pui-space-1)) )",
+        "description": "Corner radius of the icon buttons (Trigger, Clear) inside the field",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
         "name": "--pui-combobox-chip-inset",
         "value": "var(--pui-space-2)",
         "description": "Inline space a chip holds before its own label. Set it HERE, on the group — a chip's own copy cannot reach the padding that pairs with it",

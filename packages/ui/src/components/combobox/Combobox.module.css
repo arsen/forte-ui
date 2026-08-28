@@ -123,6 +123,27 @@
         var(--pui-combobox-field-border-width) * 2
     );
 
+    /* The nesting rule — an inner radius is its outer one less the gap
+     * between them — rather than a fixed `--pui-radius-1`. A square corner is
+     * only invisible while the field's own corner is square-ish: under
+     * `data-pui-radius="pill"` the field's cap curves away from the button
+     * while the button stays rectangular, and its corners cross the border
+     * and hang outside the field (3px at `lg`). Because the button is square
+     * and fills the field's inner height, subtracting the end padding lands
+     * it exactly concentric with the cap under `pill` — the huge radius
+     * clamps to a circle of half the button, 4px inside the curve the whole
+     * way round. `max()` guards `data-pui-radius="none"`, where the field
+     * radius is 0 and the subtraction would go negative — an invalid radius
+     * takes the whole declaration down with it, silently. NumberField's
+     * steppers carry the same expression for the same reason; the only
+     * difference is what they subtract, since they sit flush to the group's
+     * border and these sit a padding in from it. */
+    /** Corner radius of the icon buttons (Trigger, Clear) inside the field */
+    --pui-combobox-button-radius: max(
+      0px,
+      calc(var(--pui-combobox-field-radius) - var(--pui-space-1))
+    );
+
     /* Declared on the GROUP rather than on `.chip`, which is the part that
      * paints it, because the group has to subtract it from its own start
      * padding (see the `:has(.chip)` rule below) and an ancestor cannot read a
@@ -511,7 +532,7 @@
     padding: 0;
     margin: 0;
     border: none;
-    border-radius: var(--pui-radius-1);
+    border-radius: var(--pui-combobox-button-radius, var(--pui-radius-1));
     background: none;
     color: var(--pui-color-foreground-subtle);
     cursor: pointer;
@@ -551,7 +572,7 @@
     block-size: var(--pui-combobox-button-size);
     padding: 0;
     border: none;
-    border-radius: var(--pui-radius-1);
+    border-radius: var(--pui-combobox-button-radius);
     background: none;
     color: var(--pui-color-foreground-subtle);
     cursor: pointer;
