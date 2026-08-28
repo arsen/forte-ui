@@ -98,6 +98,21 @@
     /** Arrow height, and the distance it is pushed out from the popup */
     --pui-tooltip-arrow-height: 0.5em;
 
+    /* Shortcut knobs. Declared here rather than on .shortcut for the same
+     * reason the arrow's are: one place to retune the surface and everything
+     * printed on it. .shortcut reads them with the same values as fallbacks,
+     * so it still stands alone if it is ever lifted out of this popup. */
+    /** Gap between the label and the key cap */
+    --pui-tooltip-shortcut-gap: var(--pui-space-3);
+    /** Key cap fill */
+    --pui-tooltip-shortcut-bg: color-mix(in oklab, currentColor 16%, transparent);
+    /** Key cap outline */
+    --pui-tooltip-shortcut-border-color: color-mix(in oklab, currentColor 28%, transparent);
+    /** Key cap corner radius */
+    --pui-tooltip-shortcut-radius: var(--pui-radius-1);
+    /** Key cap left and right padding */
+    --pui-tooltip-shortcut-padding-inline: var(--pui-space-1);
+
     /* Enter/exit displacement, resolved per side just below. Defaults to the
      * `side="top"` case because that is Base UI's default side. */
     --pui-tooltip-enter-x: 0px;
@@ -191,6 +206,69 @@
   .popup[data-instant],
   .arrow[data-instant] {
     transition: none;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Shortcut
+   *
+   * The popup stacks its children, which is right for a label that wraps and
+   * wrong for a label followed by its keys. One Shortcut anywhere inside turns
+   * the popup into a row for exactly that case, so a consumer writes the label
+   * and the cap as siblings and lays out nothing — the same `:has()` trick
+   * Menu uses to decide its label column.
+   *
+   * `baseline`, not `center`: the cap is taller than the text it sits beside,
+   * and centring it against a label that has wrapped to two lines floats it
+   * halfway down the popup instead of beside the first line.
+   *
+   * The Arrow is not a flex item and is unaffected — Base UI positions it with
+   * an inline `position: absolute`, so it is out of flow either way.
+   *
+   * In forced-colors mode the cap's fill is replaced with Canvas, the same
+   * colour .pui-hc-surface gives the popup, so the fill stops being the thing
+   * that separates the keys from the label. The border is what survives: it is
+   * forced to CanvasText, which is why the cap carries one at all rather than
+   * relying on the fill alone.
+   * --------------------------------------------------------------------- */
+  .popup:has(.shortcut) {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--pui-tooltip-shortcut-gap, var(--pui-space-3));
+  }
+
+  /* Full-contrast text on a translucent cap, rather than the dimmed text Menu
+   * prints. The ramp's measured pairs are gray-11/gray-12 against gray-1; this
+   * surface is the inverse of that — gray-1 ON gray-12 — and no mid-gray on it
+   * is covered by the contrast harness, so dimming here would be a guess at
+   * SC 1.4.3. Deriving the cap from `currentColor` instead keeps the glyphs at
+   * the popup's own contrast and works unchanged in a re-skinned popup. */
+  .shortcut {
+    flex: none;
+    padding-inline: var(--pui-tooltip-shortcut-padding-inline, var(--pui-space-1));
+    border: 1px solid
+      var(
+        --pui-tooltip-shortcut-border-color,
+        color-mix(in oklab, currentColor 28%, transparent)
+      );
+    border-radius: var(--pui-tooltip-shortcut-radius, var(--pui-radius-1));
+    background-color: var(
+      --pui-tooltip-shortcut-bg,
+      color-mix(in oklab, currentColor 16%, transparent)
+    );
+    /* Keys are read as a group of glyphs, not as prose: tabular figures stop
+     * a row of tooltips jittering, and normal tracking undoes any tightening
+     * a re-skinned popup applied to its label. */
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--pui-letter-spacing-normal);
+    /* A chord is one token. Wrapping it puts ⌘ on one line and ⇧P on the
+     * next, inside a cap that then has to be drawn around both. */
+    white-space: nowrap;
+    /* Chord notation stays LTR whatever the UI's direction. ⌘, ⇧ and ⌫ are
+     * bidi-neutral, so in an RTL popup `⌘B` reorders to `B⌘` and the modifier
+     * ends up after the key it modifies. `isolate` scopes that to the cap, so
+     * forcing it does not drag the label's own bidi resolution with it. */
+    direction: ltr;
+    unicode-bidi: isolate;
   }
 
   /* ------------------------------------------------------------------------

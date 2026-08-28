@@ -7540,6 +7540,41 @@
         "description": "Arrow height, and the distance it is pushed out from the popup",
         "part": "popup",
         "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Gap between the label and the key cap",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-bg",
+        "value": "color-mix(in oklab, currentColor 16%, transparent)",
+        "description": "Key cap fill",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-border-color",
+        "value": "color-mix(in oklab, currentColor 28%, transparent)",
+        "description": "Key cap outline",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-radius",
+        "value": "var(--pui-radius-1)",
+        "description": "Key cap corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-padding-inline",
+        "value": "var(--pui-space-1)",
+        "description": "Key cap left and right padding",
+        "part": "popup",
+        "overrides": []
       }
     ]
   }

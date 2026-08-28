@@ -5,4 +5,5 @@ export type {
   TooltipTriggerProps,
   TooltipPopupProps,
   TooltipArrowProps,
+  TooltipShortcutProps,
 } from "./Tooltip";

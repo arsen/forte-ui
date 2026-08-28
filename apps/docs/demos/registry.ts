@@ -579,6 +579,8 @@ import d_tooltip_delay from "./tooltip/delay";
 import d_tooltip_delay_src from "./tooltip/delay?raw";
 import d_tooltip_placement from "./tooltip/placement";
 import d_tooltip_placement_src from "./tooltip/placement?raw";
+import d_tooltip_shortcut from "./tooltip/shortcut";
+import d_tooltip_shortcut_src from "./tooltip/shortcut?raw";
 import d_tooltip_with_provider from "./tooltip/with-provider";
 import d_tooltip_with_provider_src from "./tooltip/with-provider?raw";
 
@@ -868,6 +870,7 @@ export type DemoId =
   | "tooltip/basic"
   | "tooltip/delay"
   | "tooltip/placement"
+  | "tooltip/shortcut"
   | "tooltip/with-provider";
 
 export type Demo = { Component: ComponentType; source: string; file: string };
@@ -1158,6 +1161,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tooltip/basic": { Component: d_tooltip_basic, source: d_tooltip_basic_src, file: "tooltip/basic.tsx" },
   "tooltip/delay": { Component: d_tooltip_delay, source: d_tooltip_delay_src, file: "tooltip/delay.tsx" },
   "tooltip/placement": { Component: d_tooltip_placement, source: d_tooltip_placement_src, file: "tooltip/placement.tsx" },
+  "tooltip/shortcut": { Component: d_tooltip_shortcut, source: d_tooltip_shortcut_src, file: "tooltip/shortcut.tsx" },
   "tooltip/with-provider": { Component: d_tooltip_with_provider, source: d_tooltip_with_provider_src, file: "tooltip/with-provider.tsx" },
 };
 

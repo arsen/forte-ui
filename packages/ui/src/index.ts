@@ -455,4 +455,5 @@ export type {
   TooltipTriggerProps,
   TooltipPopupProps,
   TooltipArrowProps,
+  TooltipShortcutProps,
 } from "./components/tooltip";
