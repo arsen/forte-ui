@@ -123,6 +123,10 @@ const CHECKS = [
   { id: "gray-11 vs gray-1", min: 4.5, pair: (r, g) => CR(g[11], g[1]) },
   { id: "gray-12 vs gray-1", min: 7.0, pair: (r, g) => CR(g[12], g[1]) },
   { id: "gray-7 vs gray-1",  min: 1.4, pair: (r, g) => CR(g[7], g[1]) },
+  /* The neutral tone of any soft surface — Alert's `soft`/`neutral` card is
+   * gray-3 with muted body copy on it, and gray-3 is a whole step darker than
+   * the gray-1 the pair above measures against. */
+  { id: "gray-11 vs gray-3", min: 4.5, pair: (r, g) => CR(g[11], g[3]) },
 ];
 
 /* --------------------------------------------------------------------------
@@ -143,6 +147,19 @@ const FIXED = [
   { id: "on-danger vs danger-9",   min: 4.5, fg: NEAR_WHITE, bg: [0.552, 0.211, 24] },
   { id: "on-success vs success-9", min: 4.5, fg: NEAR_WHITE, bg: [0.545, 0.148, 152] },
   { id: "on-warning vs warning-9", min: 4.5, fg: NEAR_BLACK, bg: [0.812, 0.163, 82] },
+  /* Step 11 on step 3 — the pair every tinted status surface is built from,
+   * and the one an Alert with `variant="soft"` paints its whole message in.
+   * `light-dark()` makes each of these two colours, so each is two checks;
+   * writing them out is the same duplication the block header admits to, for
+   * the same reason — this file re-implements what the CSS declares. */
+  { id: "danger-11 on -3 light",  min: 4.5, fg: [0.485, 0.196, 24],  bg: [0.944, 0.033, 17] },
+  { id: "danger-11 on -3 dark",   min: 4.5, fg: [0.760, 0.140, 20],  bg: [0.272, 0.061, 17] },
+  { id: "success-11 on -3 light", min: 4.5, fg: [0.475, 0.128, 152], bg: [0.946, 0.042, 155] },
+  { id: "success-11 on -3 dark",  min: 4.5, fg: [0.792, 0.135, 152], bg: [0.268, 0.054, 155] },
+  { id: "warning-11 on -3 light", min: 4.5, fg: [0.520, 0.118, 60],  bg: [0.955, 0.058, 85] },
+  { id: "warning-11 on -3 dark",  min: 4.5, fg: [0.840, 0.140, 85],  bg: [0.276, 0.056, 85] },
+  { id: "info-11 on -3 light",    min: 4.5, fg: [0.500, 0.140, 250], bg: [0.945, 0.026, 250] },
+  { id: "info-11 on -3 dark",     min: 4.5, fg: [0.790, 0.110, 250], bg: [0.272, 0.065, 250] },
 ];
 
 const FINE = process.argv.includes("--fine");

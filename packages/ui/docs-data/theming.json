@@ -197,6 +197,355 @@
       }
     ]
   },
+  "Alert": {
+    "name": "Alert",
+    "tokens": [
+      {
+        "name": "--pui-alert-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Space between the icon, the message and the trailing controls. A margin on each part rather than a `column-gap` — see the header.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-row-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the title and the description.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-padding",
+        "value": "var(--pui-surface-p)",
+        "description": "Padding inside the card. Follows `data-pui-density`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius. Follows `data-pui-radius`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-border-width",
+        "value": "1px",
+        "description": "Width of the card's edge.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-icon-size",
+        "value": "var(--pui-space-4)",
+        "description": "Size of the glyph in `Alert.Icon`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-title-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Size of the title.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-title-font-weight",
+        "value": "var(--pui-font-weight-semibold)",
+        "description": "Weight of the title. It is what separates the title from the description on a `soft` card, where both are the same colour.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Size of the description.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the leaving gesture. Never reaches `0s`: at exactly zero no transition object is created, `finished` never resolves, and the card that is waiting on it stays in the DOM for good.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the leaving gesture.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-exit-travel",
+        "value": "var(--pui-travel-md)",
+        "description": "How far the card slides along the inline axis as it goes. `md`, the same distance `Dialog` leaves on — an alert is a surface, not a list row. A travel token, so it collapses to `0px` under reduced motion on its own and the fade is left to carry the dismissal.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-tone-soft",
+        "value": "var(--pui-gray-3)",
+        "description": "Tone's tinted surface",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-3)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-border",
+        "value": "var(--pui-color-border)",
+        "description": "Tone's edge",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-title",
+        "value": "var(--pui-color-foreground)",
+        "description": "Tone's title colour on that surface",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-body",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Tone's body colour on that surface. Separate from the title's because `neutral` wants a muted grey here and the coloured tones want their own step 11 — the pair the harness guarantees.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-accent",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Tone's glyph colour, which is the only tone signal `outline` keeps",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-bg",
+        "value": "var(--pui-alert-tone-soft)",
+        "description": "Fill behind the card. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-border-color",
+        "value": "var(--pui-alert-tone-border)",
+        "description": "Edge colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-title-color",
+        "value": "var(--pui-alert-tone-title)",
+        "description": "Title colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-title)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-body-color",
+        "value": "var(--pui-alert-tone-body)",
+        "description": "Description colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-body)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-icon-color",
+        "value": "var(--pui-alert-tone-accent)",
+        "description": "Glyph colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-accent)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-alert-tone-accent)"
+          }
+        ]
+      }
+    ]
+  },
   "AspectRatio": {
     "name": "AspectRatio",
     "tokens": [

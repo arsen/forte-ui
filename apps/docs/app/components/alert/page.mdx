@@ -1,0 +1,180 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Alert",
+  description:
+    "A message about the state of the page, sitting in the page rather than over it — the persistent counterpart to Toast.",
+};
+
+# Alert
+
+An alert is the message you cannot afford to have scroll past. It sits in the flow of the page rather than over it, which is what separates it from a `Toast`: a toast is an interruption that expires, an alert is a fact about the current screen that stays true until something changes it. A failed payment, a form with three bad fields, a trial with three days left.
+
+<DemoBlock id="alert/basic" />
+
+There is no Base UI primitive underneath, because there is almost no state to model — no focus to manage, nothing to position. What it does have is a layout that has to survive any subset of its six parts, two colour axes, one accessibility decision that is easy to get wrong in both directions, and exactly one bit of state: whether it is still in the page. It owns that last one only because React unmounts an element the frame it stops being rendered, so an alert dismissed by a plain conditional could never animate out.
+
+## Import
+
+```tsx
+import { Alert } from "@dofortech/pretty-ui";
+```
+
+`Alert` is a namespace of six parts, and every one of them is optional.
+
+```tsx
+<Alert.Root tone="danger">
+  <Alert.Icon />
+  <Alert.Title>Payment failed</Alert.Title>
+  <Alert.Description>Your card was declined.</Alert.Description>
+  <Alert.Action>
+    <Button size="sm" variant="outline" tone="danger">Retry</Button>
+  </Alert.Action>
+  <Alert.Close />
+</Alert.Root>
+```
+
+The parts are flat siblings rather than nested in a text wrapper, because the root is a grid and each part places itself in it. That is what lets an icon-less alert start its text at the padding edge instead of against an empty column.
+
+## Examples
+
+### Tones
+
+Seven, and they split into two groups. `success`, `warning`, `danger` and `info` are **status** — they say what kind of thing happened, and each has a glyph of its own. `neutral`, `primary` and `secondary` are **emphasis** — a louder paragraph, with no glyph, because there is no shape that means "mildly important".
+
+<DemoBlock id="alert/tones" />
+
+`<Alert.Icon />` reads the tone off the root and draws the matching glyph, so the same JSX serves all seven: on a tone with no glyph it renders nothing at all and the icon column collapses. That matters when the tone is a prop rather than a literal — the alternative is every caller writing a conditional around the icon.
+
+### Variants
+
+`variant` is how loud the card is; `tone` is which colour set it draws from. Two variants rather than the usual three: there is no `solid`, because a solid fill puts body copy on a saturated field, and the paragraph — not the label — is the part an alert exists to have read.
+
+<DemoBlock id="alert/variants" />
+
+`soft` tints the whole surface, its edge and its type in the tone. `outline` is a neutral panel with a hairline, where the tone survives only in the glyph — the arrangement `Toast` uses, and for the same reason: several alerts on one screen have to stay distinguishable from each other, and a page of tinted cards has nothing left to emphasise with. Reach for `outline` when the alert sits inside a form beside other bordered controls.
+
+<Callout kind="note">
+  The default is `soft`, which is the opposite way round from most of the library. It is deliberate: someone writing `<Alert.Root tone="danger">` and nothing else is asking for something that looks dangerous, and a quiet neutral card with a small red tick is not that.
+</Callout>
+
+### Any subset of the parts
+
+<DemoBlock id="alert/parts" />
+
+A title on its own is one line tall — the icon is centred on the title's line box, not on the card, so it lines up with the first line whether the description runs to one line or five. A description on its own lands on the first row rather than leaving an empty one above it. And an alert with no icon has no icon *column*: the track is `auto`, so with nothing in it the track is zero wide.
+
+That last one is why the horizontal gaps are margins on the parts rather than a `column-gap` on the grid. A grid keeps its gaps whether or not the tracks have anything in them, so an alert with no icon and no action would carry two gaps' worth of dead space hard against its own padding. A margin only exists when its element does.
+
+`Alert.Description` is a `<div>`, not a `<p>`, so a list or a second paragraph can go inside it without producing invalid markup. Its first and last children lose their outer margins, so the card closes evenly either way.
+
+### An action
+
+<DemoBlock id="alert/action" />
+
+`Alert.Action` is a slot and not a button. An alert's action is a real control with its own variant, tone, size, loading state and `href`; wrapping `Button` would mean re-exposing all of it and then falling behind. Compose instead.
+
+It sits against the inline-end edge, centred on the whole message rather than on the title, so a three-line description does not leave the button floating at the top. Two controls fit as well — they share a flex row, so the pair reads as one decision.
+
+### Dismissing
+
+<DemoBlock id="alert/dismissible" />
+
+`Alert.Close` dismisses the card on its own, so the common case needs no state and no handler at all. The card does not disappear on the click — it collapses out of the flow over `--pui-alert-exit-duration`, and the content below rises into the space rather than jumping up once the element is gone.
+
+Pass `open` and `onOpenChange` to take that over. The important half is that setting `open` to `false` **starts** the exit rather than ending it: the card is still on screen for the length of the transition and removes itself when it finishes. If the alert lives in a list, splice it out in `onExitComplete`, which fires at the other end.
+
+<Callout kind="note">
+  `{open && <Alert.Root>}` has no exit at all. React takes the element out of the DOM the frame it stops being rendered, so there is nothing left to animate — which is the whole reason `Alert.Root` accepts `open` instead of leaving presence to a conditional. It is also the one bit of state the component owns, and it owns it only because nothing else can.
+</Callout>
+
+`Alert.Close` is absolutely positioned rather than given a column of its own, and that is a layout fix rather than an aesthetic one. Its 24×24 minimum target is taller than the title's line box, so a close button *in* the grid would make the first row 24px tall and push the description down by seven pixels on exactly the alerts that have one — leaving the gap between title and description different from one alert to the next. Out of flow it costs nothing, and the root grows its trailing padding through `:has(> .close)` so a long title cannot run underneath.
+
+### A custom glyph
+
+<DemoBlock id="alert/custom-icon" />
+
+Children of `Alert.Icon` replace the tone's standard glyph rather than sitting beside it, and an `svg` is sized to `--pui-alert-icon-size` without a width of its own. Keep it `aria-hidden` — the alert's text already says what happened.
+
+## Accessibility
+
+The interesting decision here is not the colour. It is whether the alert should announce itself, and the answer is usually **no**.
+
+<DemoBlock id="alert/live" />
+
+`live` defaults to `off`, and that is not a conservative default — it is the correct one for most alerts. A live region only announces a **change**, so an alert that was in the server-rendered HTML has nothing to announce no matter what role it carries; all `role="alert"` adds there is another entry in the roles list a screen-reader user pages through. Set `live` when the alert is *inserted* in response to something.
+
+<Callout kind="a11y">
+  `polite` renders `role="status"` and waits for a pause in whatever is being read. It is right for almost everything — a saved confirmation, a background job finishing. `assertive` renders `role="alert"` and interrupts mid-sentence, so keep it for failures the user has to act on: a payment that did not go through, work that is about to be lost. An interruption that turns out to be a "changes saved" is how people learn to ignore them.
+</Callout>
+
+Colour is never the only cue. The four status glyphs are four different **shapes** — a tick, a cross, a triangle, an "i" — rather than one shape in four colours, which is what keeps the kind of message readable to a colour-blind reader and under forced colours, where every glyph repaints in a single system colour (SC 1.4.1). The title says it in words as well.
+
+Every text pair the component can produce clears AA, and the harness now asserts it. `soft` paints its message in the tone's step 11 on the tone's step 3 — `danger-11 on -3`, `success-11 on -3`, `warning-11 on -3`, `info-11 on -3` in both light and dark, plus `gray-11 on gray-3` for `neutral`, which is swept across the same ~119k seeds as the rest of the ramp. That is why the title and the description are the *same colour* on a coloured tone, with weight doing the separating: a second, lighter tint of the same hue is not a colour the ramp promises anything about.
+
+`Alert.Title` renders a `<div>`, not a heading. An alert is a message about the state of the page rather than a section of it, and an `<h3>` here lands in the document outline between two real sections — which is what someone navigating by heading has to wade through. If the alert genuinely opens a region, name the region instead.
+
+`Alert.Close` is a 24×24 button (SC 2.5.8) with an `aria-label` of "Dismiss", a `.pui-focus-ring`, and `type="button"` — the last because the HTML default is `submit`, and an alert inside a form is exactly where that bites.
+
+Dismissing it does leave focus on `<body>`, because the element holding focus is the one that goes away. The exit transition delays that by 160ms rather than fixing it, and the component does not guess where focus should land — only the page knows whether the right answer is the control that raised the alert, the next alert in a stack, or the heading above it. If the alert was reached by keyboard, move focus somewhere deliberate in `onExitComplete`.
+
+Under forced colours the card keeps its border and loses its tint: backgrounds are replaced with system colours, so `soft` and `outline` become the same card and the tone stops being visible at all. The glyph shapes carry it from there.
+
+### Motion
+
+There is an exit and deliberately no enter, and the asymmetry is the point. An alert that was in the server-rendered HTML has nothing to animate *from*, and giving it a starting style would ship the page with the message invisible until hydration — so arriving is left to the app, which is the only party that knows whether the alert is appearing into a list that is already reflowing. Leaving is the opposite case: React removes an element the frame it stops being rendered, so the card cannot animate out without the component holding it in the DOM for the length of one transition.
+
+The exit collapses rather than only fading. `block-size`, `padding-block` and `border-block-width` all go to zero alongside the opacity and a short slide toward the inline-end, so the content below rises into the gap over the same 160ms. A dismissal that only faded would end with everything under the card jumping up its full height, which reads as a second, unexplained event.
+
+`block-size: auto` is not interpolable, so the collapse needs a from-value: the component measures the card at the moment it is asked to leave and hands the number over as `--pui-alert-exit-from`, then forces one style recalculation before applying `[data-ending-style]`. Without that recalculation React's next render folds into the same one, the browser only ever sees `auto → 0`, and the card blinks out instead of closing. The measured height is the only value in the stylesheet that is not a token, because it is not a design decision.
+
+It is a transition rather than a keyframe animation, for the reason the rest of the library gives: an alert reopened while it is still leaving reverses from wherever it got to instead of snapping back and restarting. The unmount waits on `Promise.all(root.getAnimations().map(a => a.finished))` — the same wait Base UI does before removing a popup, with the same trap attached, so never put an `infinite` animation on `Alert.Root` itself. `getAnimations()` is not called with `subtree: true`, so a spinner on a child is safe.
+
+Nothing here needs a `prefers-reduced-motion` block, and there is none. `--pui-alert-exit-travel` is a `--pui-travel-*` token, so the slide collapses to `0px` on its own and the fade is left to carry the dismissal; the duration shortens itself and never reaches `0s`, which matters more than usual here — at exactly zero no transition object is created, `finished` never resolves, and the card waiting on it would stay in the DOM for good.
+
+The one other transition in the file is the close button's hover, on colour alone.
+
+## Theming
+
+Everything below is declared on `Alert.Root` itself, which is also why an ancestor is the wrong place to set one — the element's own declaration beats an inherited value. Override them on `Alert.Root` through its `className` or a `style` object, or re-point the global tokens in the Default column to move every alert at once.
+
+<ThemingTable component="Alert" part="root" />
+
+The five `--pui-alert-tone-*` slots are the whole colour system: `tone` fills them in, and `variant` decides which of them reach the surface. A one-off tone is those five properties on one element, with no new variant and no wrapper.
+
+State is on `data-variant` and `data-tone`, both reachable from plain CSS or a Tailwind arbitrary variant — `data-[tone=danger]:...` — without a wrapper element.
+
+<Callout>
+  The status families gained `--pui-color-success-soft`, `--pui-color-success-border` and their `warning` and `info` counterparts for this component, so all four status tones now offer the same set `danger` always did. They are ordinary tokens: anything can use them.
+</Callout>
+
+## API reference
+
+Every part is a plain element and takes that element's whole prop surface, `ref` included. There is no `render` prop, because there is no Base UI primitive to swap the element on.
+
+### Alert.Root
+
+<PropTable component="AlertRoot" />
+
+### Alert.Icon
+
+<PropTable component="AlertIcon" />
+
+### Alert.Title
+
+<PropTable component="AlertTitle" />
+
+### Alert.Description
+
+<PropTable component="AlertDescription" />
+
+### Alert.Action
+
+<PropTable component="AlertAction" />
+
+### Alert.Close
+
+<PropTable component="AlertClose" />
