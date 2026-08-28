@@ -1,0 +1,162 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Calendar",
+  description:
+    "A month grid for picking one day, several days, or a range — no date library, no locale data, nothing added to your bundle but the component.",
+};
+
+# Calendar
+
+A month grid. It picks one day, a handful of days, or a range across as many months as you show at once, and it is the thing a date picker is built out of — [the popover example](#a-date-picker) is nine lines.
+
+<DemoBlock id="calendar/basic" />
+
+## Import
+
+```tsx
+import { Calendar } from "@dofortech/pretty-ui";
+```
+
+One component, not a namespace of parts. A calendar's anatomy is generated from a date rather than composed by hand, so there is nothing useful to hand you the pieces of — what varies is which days are pickable and how they are labelled, and those are props.
+
+It carries no date library and no locale tables. Month arithmetic goes through the `Date` constructor and every name on screen — months, weekdays, day numbers — comes from `Intl.DateTimeFormat`, which the browser already has. The whole component adds nothing to your bundle beyond itself.
+
+<Callout kind="note">
+  `locale` defaults to `"en-US"` rather than to the runtime's own locale, and that is deliberate. Left unset, `Intl` resolves to the server's locale while rendering and the browser's while hydrating — "August" arriving over "août" is a mismatch React can only fix by throwing the server's markup away. Pass your app's locale explicitly and both halves agree.
+</Callout>
+
+## Selection
+
+`mode` decides what `selected` holds, and the component is generic over it, so the callback is typed to match — `onSelect={setDate}` against a plain `useState<Date>()` typechecks without a cast.
+
+| `mode` | `selected` | Clicking the current selection |
+| :-- | :-- | :-- |
+| `"single"` (default) | `Date` | clears it, unless `required` |
+| `"multiple"` | `Date[]` | removes that day |
+| `"range"` | `{ from, to }` | starts a new range |
+
+Pass `selected` to control the calendar and leave it off to let the calendar own its state. Which of the two you get is decided from whether the prop was **passed**, not from whether it is currently defined — `useState<Date>()` starts at `undefined`, and a component that read that as "uncontrolled" would silently switch modes on the first click.
+
+`onSelect` receives `null` once the last day is cleared, so a controlled `Date | null` state takes it directly.
+
+### A range
+
+<DemoBlock id="calendar/range" />
+
+Ranges are picked in two clicks, and the half-picked state is visible: with one end committed, the day under the pointer — or under keyboard focus — stands in for the other, so the span you are about to commit is drawn before you commit it. Clicking behind the first end swaps the two rather than throwing the pick away.
+
+`numberOfMonths` shows several months side by side. The arrows still move one month at a time, which is what you want when comparing the end of one month with the start of the next; `pagedNavigation` makes them jump a whole page instead.
+
+### Several days
+
+<DemoBlock id="calendar/multiple" />
+
+## Navigating
+
+### Month and year dropdowns
+
+<DemoBlock id="calendar/dropdown" />
+
+`captionLayout="dropdown"` swaps the month and year label for two selects — or use `"dropdown-months"` / `"dropdown-years"` for one of the two. It is the difference between two clicks and two hundred and forty when the target is a date of birth.
+
+`minDate` and `maxDate` do three jobs from one prop each: they stop the arrows at the ends, they trim the year dropdown to exactly that span, and they disable every day outside it.
+
+### Days that cannot be picked
+
+<DemoBlock id="calendar/disabled-dates" />
+
+`disabled` takes a matcher — a `Date`, a `{ from, to }` range, `{ before }` or `{ after }`, `{ dayOfWeek }`, a predicate, or an array of any of those, in which case a day is blocked if any one of them claims it.
+
+Disabled days are marked with `aria-disabled` rather than the `disabled` attribute, and stay focusable. A disabled button cannot take focus, so a blocked-out week would trap arrow-key navigation on the day before it — the reader would press <kbd>→</kbd> five times and go nowhere with no way to know why.
+
+### Week numbers, and a height that does not move
+
+<DemoBlock id="calendar/week-numbers" />
+
+`showWeekNumbers` adds a leading column of ISO 8601 week numbers. Those weeks run Monday to Sunday by definition, so pair it with `weekStartsOn={1}` or the numbers in the gutter will not describe the rows beside them.
+
+`fixedWeeks` always renders six rows. A month needs four, five or six depending on where it starts, so without it a calendar in a popover changes height as you page through the year — and a popup that resizes under the pointer moves its own buttons out from under the cursor.
+
+## Localisation
+
+<DemoBlock id="calendar/locale" />
+
+`locale` is a BCP 47 tag and drives every string the grid renders, day numbers included — `ar-EG` above prints Arabic-Indic digits without the component knowing what a digit is.
+
+`weekStartsOn` is a separate prop rather than a lookup from the locale, because it cannot be read from `Intl` in every browser. A silent fallback would move the columns for some of your users and not others, which is worse than one explicit number.
+
+The chrome's own strings — the two arrow labels, the dropdown labels, the week-number column header — come from `labels`, which is merged over the English defaults, so you can override one without restating the rest.
+
+## Sizes
+
+<DemoBlock id="calendar/sizes" />
+
+Three sizes, set once on the root. Cell size follows `data-pui-density` too, so a compact app gets a compact `md` for free.
+
+## A date picker
+
+A calendar behind a field is [**DatePicker**](/components/date-picker) — a `Popover` around this component, plus the two things that composition always needs anyway: one place that owns the selection, since the field's text and the grid sit on opposite sides of a portal, and a rule for when picking a day closes the popup.
+
+```tsx
+<DatePicker.Root selected={date} onSelect={setDate}>
+  <DatePicker.Trigger aria-label="Due date">
+    <DatePicker.Value placeholder="Pick a date" />
+    <DatePicker.Icon />
+  </DatePicker.Trigger>
+  <DatePicker.Popup>
+    <DatePicker.Calendar />
+  </DatePicker.Popup>
+</DatePicker.Root>
+```
+
+Use `Calendar` directly when it lives in the page — a booking grid, a dashboard, a settings panel. Reach for `DatePicker` when it lives behind a field.
+
+One prop differs between the two: `autoFocus`. It is **off** on `Calendar`, because moving focus on mount drops a screen reader user out of whatever they were reading, and **on** inside `DatePicker`, where a press just opened the popup and the first arrow key should move a day rather than do nothing.
+
+## Accessibility
+
+The grid is a real `<table role="grid">`, named by its month caption, with a **roving tabindex**: the whole calendar is one <kbd>Tab</kbd> stop and the arrows move within it. Tabbing through a month otherwise costs between twenty-eight and forty-two presses to get past.
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], description: "Enters the grid at the selected day, or today, or the first of the month — the first of those that is on screen. Leaves the grid entirely on the next press." },
+  { keys: ["← / →"], description: "Moves one day. Follows the writing direction: in RTL the left arrow moves forward, because that is the direction the columns run." },
+  { keys: ["↑ / ↓"], description: "Moves one week." },
+  { keys: ["Home / End"], description: "First and last day of the focused week." },
+  { keys: ["Page Up / Page Down"], description: "Moves one month, keeping the day of the month — clamped to the target month's length, so the 31st lands on the 28th of February rather than skipping it." },
+  { keys: ["Shift + Page Up / Page Down"], description: "Moves one year." },
+  { keys: ["Enter", "Space"], description: "Picks the focused day." },
+]} />
+
+Moving past the edge of the displayed months pages the calendar and keeps focus on the day you asked for, so a run of <kbd>→</kbd> walks straight from one month into the next.
+
+What the grid says about itself:
+
+- Each day is named in full — "Thursday, August 27, 2026" — rather than being read as a bare number that means nothing out of its column.
+- Today carries `aria-current="date"`, and a dot under the number. The dot is there so "today" is not a hue you have to be able to tell from the foreground.
+- Selected days, and every day between the two ends of a range, sit in cells marked `aria-selected`. A hover preview does not claim to be one: it is a guess, not a decision.
+- The month caption is a live region, so paging with the arrows — which changes nothing else a screen reader can see — is announced.
+- The weekday headers show two letters and announce the whole name. "Mo" is read as a word.
+- Under forced colors the selection repaints from the system `Highlight` pair, and outside days fall back to `GrayText` — they lose their muted colour otherwise and become indistinguishable from the month's own days.
+
+`footer` renders inside a `role="status"` region, which is where a summary like "3 nights selected" belongs: it is a consequence of the selection, and it should be announced when it changes without moving focus.
+
+## Theming
+
+Every property below is declared on the calendar's own root, so override them there — through `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value.
+
+One knob is worth knowing before the rest: `--pui-calendar-cell-size` is the measure everything else derives from. The arrows, the caption row's height and the column widths all read it, so resizing a calendar past the three `size` presets is one value, not six.
+
+<ThemingTable component="Calendar" />
+
+The parts expose their state as data attributes — `data-size` and `data-mode` on the root; `data-selected`, `data-today`, `data-outside`, `data-in-range` on days; `data-range-start`, `data-range-end`, `data-preview` on their cells — so a Tailwind arbitrary variant such as `data-[today]:...` can target them without a wrapper.
+
+Both navigation arrows are `Button`s, so they answer to `navVariant` and to every `--pui-button-*` knob set on the calendar. They are told apart by `data-nav="previous"` / `data-nav="next"`.
+
+## API reference
+
+<PropTable component="Calendar" />

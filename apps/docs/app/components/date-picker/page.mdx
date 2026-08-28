@@ -1,0 +1,180 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Date Picker",
+  description:
+    "A field that opens a calendar — Popover around Calendar, with one owner for the selection and a rule for when picking a day closes the popup.",
+};
+
+# Date Picker
+
+A field that opens a [Calendar](/components/calendar). It is that composition and two things the composition always needs anyway: **one place that owns the selection**, because the field's text and the grid sit on opposite sides of a portal, and **a rule for when picking a day closes the popup**, which the calendar cannot decide because it does not know it is in one.
+
+<DemoBlock id="date-picker/basic" />
+
+## Import
+
+```tsx
+import { DatePicker } from "@dofortech/pretty-ui";
+```
+
+Eight parts. The full anatomy, with every optional layer present:
+
+```tsx
+<DatePicker.Root mode="single" selected={date} onSelect={setDate}>
+  <DatePicker.Trigger aria-label="Due date">
+    <DatePicker.Value placeholder="Pick a date" />
+    <DatePicker.Icon />
+  </DatePicker.Trigger>
+  <DatePicker.Popup>
+    <DatePicker.Calendar />
+    <DatePicker.Footer>
+      <DatePicker.Clear />
+    </DatePicker.Footer>
+  </DatePicker.Popup>
+</DatePicker.Root>
+```
+
+Most pickers need less: the demo above is `Root → Trigger → Popup` and nothing else.
+
+<Callout kind="note">
+  Use [`Calendar`](/components/calendar) directly when the grid lives in the page — a booking view, a dashboard, a settings panel. Reach for `DatePicker` when it lives behind a field. Every `Calendar` prop is forwarded through `DatePicker.Calendar`, so nothing is given up by going through the wrapper.
+</Callout>
+
+## Selection
+
+`Root` owns it, and takes the same three modes `Calendar` does — `single`, `multiple`, `range` — with `selected` typed to match. Pass `selected` with `onSelect` to control it; leave it off and the picker keeps its own state.
+
+Controlled-ness is decided from whether `selected` was **passed**, not from whether it is currently defined, so the idiomatic `useState<Date>()` starting at `undefined` does not silently begin life uncontrolled.
+
+### When the popup closes
+
+`closeOnSelect` follows the mode unless you say otherwise:
+
+| `mode` | Closes when |
+| :-- | :-- |
+| `single` | a day is picked — but not when one is cleared, where a vanishing popup leaves you unsure it took |
+| `range` | both ends are in, the only moment the answer is complete |
+| `multiple` | never — you are still choosing, and closing after the first day would cost two clicks for the second |
+
+<DemoBlock id="date-picker/range" />
+
+### Picking several days
+
+<DemoBlock id="date-picker/footer" />
+
+A `multiple` picker never closes on its own, so it needs a way out that is not the Escape key. `DatePicker.Footer` is the actions row for that, and because the surface really is a popover, a plain `Popover.Close` works inside it.
+
+`DatePicker.Clear` empties the selection. It disables itself when there is nothing to clear and when `Root` is `required` — disabled rather than hidden, because a control that disappears as you reach for it is worse than one that is visibly unavailable, and the popup would reflow under the pointer.
+
+## Bounds and disabled days
+
+<DemoBlock id="date-picker/constrained" />
+
+`DatePicker.Calendar` forwards every `Calendar` prop it does not own itself, so `minDate`, `maxDate`, `disabled`, `numberOfMonths`, `captionLayout`, `showWeekNumbers` and the rest behave exactly as they do on a bare calendar. What it does own — and therefore does not forward — is `mode`, `selected`, `onSelect`, `required` and `locale`, all of which come from `Root` so the field and the grid cannot disagree.
+
+## In a form
+
+<DemoBlock id="date-picker/with-field" />
+
+The trigger is a `<button>`, so pair it with `<Field.Label nativeLabel={false}>`. A native `<label>` would hand the trigger its `:hover` state and open the calendar on every label click; with it off the two are wired together with `aria-labelledby` instead — which is also what gives the trigger its accessible name, so no `aria-label` is needed here.
+
+That wiring is not automatic for a popover trigger the way it is for an `Input` or a `Select.Trigger`, which read the field context themselves. `DatePicker.Trigger` renders through Base UI's `Field.Control` to get it — so the label and the `Field.Description` both reach the button, and outside a `Field.Root` nothing changes.
+
+The picker holds **no form value of its own**. Submit the date from your own state, or render a hidden input beside the trigger:
+
+```tsx
+<input type="hidden" name="starts" value={date ? date.toISOString().slice(0, 10) : ""} />
+```
+
+## Sizes and variants
+
+<DemoBlock id="date-picker/sizes" />
+
+Same two axes as every other control in the library: `size` for the field's height, padding and text; `variant` for how loud it is. `outline` reads as a form control, `soft` as a filled field, `ghost` as an inline affordance.
+
+## Formatting the field
+
+The trigger shows a medium date in `Root`'s `locale`. `range` renders as `from – to` with an en dash, and `multiple` collapses past two days into `Aug 27, 2026 +3` — a field that grows as you pick would reflow the form around it, and the full list is in the popup either way.
+
+`formatValue` replaces all of that:
+
+```tsx
+<DatePicker.Root
+  selected={date}
+  onSelect={setDate}
+  formatValue={(value) =>
+    value ? new Intl.DateTimeFormat("en-GB", { dateStyle: "full" }).format(value) : null
+  }
+>
+```
+
+Return `null` to fall back to `DatePicker.Value`'s placeholder.
+
+<Callout kind="note">
+  `locale` defaults to `"en-US"` rather than to the runtime's, for the same reason it does on `Calendar`: unset, `Intl` resolves to the server's locale while rendering and the browser's while hydrating, and the mismatch costs the whole server render.
+</Callout>
+
+## Accessibility
+
+The trigger must have an accessible name — a `<Field.Label nativeLabel={false}>` in the same `<Field.Root>`, or an `aria-label`. In development it warns once if it ends up with neither.
+
+<KeyboardTable rows={[
+  { keys: ["Enter", "Space"], description: "Opens the calendar from the field." },
+  { keys: ["Escape"], description: "Closes the calendar and returns focus to the field." },
+  { keys: ["Tab"], description: "Inside the popup, moves between the grid and the footer's buttons. The grid itself is one stop — the arrows move within it." },
+]} />
+
+Everything else is the calendar's, which is documented [on its own page](/components/calendar#accessibility): a real `<table role="grid">`, a roving tabindex, and days that are `aria-disabled` rather than `disabled` so navigation can cross them.
+
+`DatePicker.Calendar` turns `autoFocus` **on** by default, the opposite of `Calendar`'s own default. There is a press behind this calendar, so the first arrow key should move a day rather than do nothing; a calendar sitting in the page has no such press, which is why the base component leaves focus where it was.
+
+The glyph is `aria-hidden` and takes no pointer events, so the field's own cursor shows through it. The value is the trigger's text, which means a screen reader announces the label and the chosen date together, with no extra wiring.
+
+## Theming
+
+Every property below is declared on `DatePicker.Trigger`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the part's own declaration would beat the inherited value.
+
+<ThemingTable component="DatePicker" />
+
+The popup's surface is **not** restyled by this component. It is a `Popover.Popup`, keeps `data-pui="popover-popup"` and every `--pui-popover-*` knob, and the only thing the picker does to it is step the surface padding down — a calendar arrives with its own measures, and a full `--pui-surface-p` around them reads as a frame rather than a margin. The column inside it is this component's own part, `data-pui="date-picker-panel"`, which is what you target to reach *this* popup rather than every popover on the page.
+
+`DatePicker.Clear` is a `Button` and tags itself `data-pui="button"`, the way every composed component in the library does — scope it as `[data-pui="date-picker-footer"] [data-pui="button"]`.
+
+## API reference
+
+### DatePicker.Root
+
+<PropTable component="DatePickerRoot" />
+
+### DatePicker.Trigger
+
+<PropTable component="DatePickerTrigger" />
+
+### DatePicker.Value
+
+<PropTable component="DatePickerValue" />
+
+### DatePicker.Icon
+
+<PropTable component="DatePickerIcon" />
+
+### DatePicker.Popup
+
+<PropTable component="DatePickerPopup" />
+
+### DatePicker.Calendar
+
+<PropTable component="DatePickerCalendar" />
+
+### DatePicker.Footer
+
+<PropTable component="DatePickerFooter" />
+
+### DatePicker.Clear
+
+<PropTable component="DatePickerClear" />

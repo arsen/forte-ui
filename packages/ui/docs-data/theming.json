@@ -197,6 +197,453 @@
       }
     ]
   },
+  "Alert": {
+    "name": "Alert",
+    "tokens": [
+      {
+        "name": "--pui-alert-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Space between the icon, the message and the trailing controls. A margin on each part rather than a `column-gap` — see the header.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-row-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the title and the description.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-padding",
+        "value": "var(--pui-surface-p)",
+        "description": "Padding inside the card. Follows `data-pui-density`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Corner radius. Follows `data-pui-radius`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-border-width",
+        "value": "1px",
+        "description": "Width of the card's edge.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-icon-size",
+        "value": "var(--pui-space-4)",
+        "description": "Size of the glyph in `Alert.Icon`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-title-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Size of the title.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-title-font-weight",
+        "value": "var(--pui-font-weight-semibold)",
+        "description": "Weight of the title. It is what separates the title from the description on a `soft` card, where both are the same colour.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Size of the description.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the leaving gesture. Never reaches `0s`: at exactly zero no transition object is created, `finished` never resolves, and the card that is waiting on it stays in the DOM for good.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the leaving gesture.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-exit-travel",
+        "value": "var(--pui-travel-md)",
+        "description": "How far the card slides along the inline axis as it goes. `md`, the same distance `Dialog` leaves on — an alert is a surface, not a list row. A travel token, so it collapses to `0px` under reduced motion on its own and the fade is left to carry the dismissal.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-alert-tone-soft",
+        "value": "var(--pui-gray-3)",
+        "description": "Tone's tinted surface",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-3)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-border",
+        "value": "var(--pui-color-border)",
+        "description": "Tone's edge",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-title",
+        "value": "var(--pui-color-foreground)",
+        "description": "Tone's title colour on that surface",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-body",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Tone's body colour on that surface. Separate from the title's because `neutral` wants a muted grey here and the coloured tones want their own step 11 — the pair the harness guarantees.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-tone-accent",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Tone's glyph colour, which is the only tone signal `outline` keeps",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          },
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--pui-color-primary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-bg",
+        "value": "var(--pui-alert-tone-soft)",
+        "description": "Fill behind the card. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-border-color",
+        "value": "var(--pui-alert-tone-border)",
+        "description": "Edge colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-title-color",
+        "value": "var(--pui-alert-tone-title)",
+        "description": "Title colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-title)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-body-color",
+        "value": "var(--pui-alert-tone-body)",
+        "description": "Description colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-body)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-foreground-muted)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-alert-icon-color",
+        "value": "var(--pui-alert-tone-accent)",
+        "description": "Glyph colour. Set by `variant` from the tone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-alert-tone-accent)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-alert-tone-accent)"
+          }
+        ]
+      }
+    ]
+  },
+  "AspectRatio": {
+    "name": "AspectRatio",
+    "tokens": [
+      {
+        "name": "--pui-aspect-ratio",
+        "value": "var(--pui-aspect-ratio-seed, 1)",
+        "description": "The shape the box holds, as a CSS `aspect-ratio` value. The `ratio` prop seeds it; declare it yourself — in a media or container query — for a shape that changes with the layout, and your declaration wins.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-aspect-fit",
+        "value": "cover",
+        "description": "How direct media children fill the box. `fit` sets this.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-fit=\"cover\"]",
+            "value": "cover"
+          },
+          {
+            "selector": ".root[data-fit=\"contain\"]",
+            "value": "contain"
+          },
+          {
+            "selector": ".root[data-fit=\"fill\"]",
+            "value": "fill"
+          },
+          {
+            "selector": ".root[data-fit=\"scale-down\"]",
+            "value": "scale-down"
+          },
+          {
+            "selector": ".root[data-fit=\"none\"]",
+            "value": "none"
+          }
+        ]
+      },
+      {
+        "name": "--pui-aspect-position",
+        "value": "50% 50%",
+        "description": "Which part of a cropped image survives the crop — an `object-position` value.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-aspect-radius",
+        "value": "0px",
+        "description": "Corner radius. `0px` for `plain`; both other variants raise it to `--pui-radius-surface`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outlined\"]",
+            "value": "var(--pui-radius-surface)"
+          },
+          {
+            "selector": ".root[data-variant=\"filled\"]",
+            "value": "var(--pui-radius-surface)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-aspect-background",
+        "value": "transparent",
+        "description": "What sits behind the content. `variant=\"filled\"` sets it — which is what makes the box its own placeholder while an image loads.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"filled\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-aspect-border-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Frame colour. Only painted when the width below is non-zero.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-aspect-border-width",
+        "value": "0px",
+        "description": "Frame width. `0px` unless `variant=\"outlined\"` — or forced colours are active, where `filled` takes one too so its placeholder does not vanish into the page.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outlined\"]",
+            "value": "1px"
+          },
+          {
+            "selector": ".root[data-variant=\"filled\"]",
+            "value": "1px"
+          }
+        ]
+      }
+    ]
+  },
   "Avatar": {
     "name": "Avatar",
     "tokens": [
@@ -1054,6 +1501,167 @@
       }
     ]
   },
+  "Breadcrumb": {
+    "name": "Breadcrumb",
+    "tokens": [
+      {
+        "name": "--pui-breadcrumb-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Space between a crumb and its separator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-breadcrumb-row-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between rows of a wrapped trail",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-item-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Space between an icon and its label inside one crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Text size of the whole trail",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-breadcrumb-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Colour of an ancestor crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-color-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Colour of an ancestor crumb under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-color-current",
+        "value": "var(--pui-color-foreground)",
+        "description": "Colour of the current page's crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-font-weight-current",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Weight of the current page's crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-underline-offset",
+        "value": "0.2em",
+        "description": "How far a hover underline sits below the text",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-separator-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of the separator",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-separator-size",
+        "value": "1em",
+        "description": "Size of the default chevron, relative to the trail's text",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-ellipsis-px",
+        "value": "var(--pui-breadcrumb-chip-px)",
+        "description": "Inline padding of the ellipsis button",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-ellipsis-py",
+        "value": "var(--pui-breadcrumb-chip-py)",
+        "description": "Block padding of the ellipsis button",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-ellipsis-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of the ellipsis button",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-px",
+        "value": "var(--pui-space-2)",
+        "description": "Inline padding of a chip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-breadcrumb-chip-py",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding of a chip. Follows `data-pui-density`",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a chip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Chip fill of an ancestor crumb under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-bg-current",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Chip fill of the current page's crumb",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "tokens": [
@@ -1472,6 +2080,223 @@
             "value": "var(--pui-color-border)"
           }
         ]
+      }
+    ]
+  },
+  "Calendar": {
+    "name": "Calendar",
+    "tokens": [
+      {
+        "name": "--pui-calendar-cell-size",
+        "value": "var(--pui-control-h-md)",
+        "description": "Size of one day cell, and the measure everything else derives from",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-nav-size",
+        "value": "var(--pui-calendar-cell-size)",
+        "description": "Size of the two navigation arrows",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-gap",
+        "value": "var(--pui-space-5)",
+        "description": "Space between months shown side by side",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-head-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the weekday header and the first week",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-gap",
+        "value": "2px",
+        "description": "Space around a day inside its cell. `0px` fuses the grid into one block",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-caption-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Month and year text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-caption-font-weight",
+        "value": "var(--pui-font-weight-semibold)",
+        "description": "Month and year text weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-caption-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Month and year colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-weekday-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Weekday initials text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-weekday-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Weekday initials colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-week-number-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "ISO week-number colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Day number text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-day-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of a day",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Day number colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-color-outside",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of days belonging to the neighbouring month",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Day fill on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-selected-bg",
+        "value": "var(--pui-color-primary)",
+        "description": "Fill of a selected day, and of the two ends of a range",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-selected-bg-hover",
+        "value": "var(--pui-color-primary-hover)",
+        "description": "Fill of a selected day on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-selected-color",
+        "value": "var(--pui-color-on-primary)",
+        "description": "Text colour on a selected day",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-range-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Fill of the days between the two ends of a range",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-preview-bg",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill of the band a half-picked range shows under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-today-color",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Colour of today's number",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-today-dot-size",
+        "value": "3px",
+        "description": "Diameter of the dot under today's number. `0px` removes it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of a day's hover and selection crossfade",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve of a day's hover and selection crossfade",
+        "part": "root",
+        "overrides": []
       }
     ]
   },
@@ -2214,8 +3039,22 @@
       },
       {
         "name": "--pui-combobox-button-size",
-        "value": "max( var(--pui-target-min), calc(var(--pui-combobox-field-height) - var(--pui-space-1) * 2) )",
+        "value": "calc( var(--pui-combobox-field-height) - var(--pui-space-1) * 2 - var(--pui-combobox-field-border-width) * 2 )",
         "description": "Size of the icon buttons (Trigger, Clear) inside the field",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-button-radius",
+        "value": "max( 0px, calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1)) )",
+        "description": "Corner radius of the icon buttons (Trigger, Clear) inside the field",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-inset",
+        "value": "var(--pui-space-2)",
+        "description": "Inline space a chip holds before its own label. Set it HERE, on the group — a chip's own copy cannot reach the padding that pairs with it",
         "part": "inputGroup",
         "overrides": []
       },
@@ -2473,7 +3312,7 @@
       },
       {
         "name": "--pui-combobox-chip-radius",
-        "value": "var(--pui-radius-1)",
+        "value": "max( 0px, calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1)) )",
         "description": "Chip corner radius",
         "part": "chip",
         "overrides": []
@@ -2645,6 +3484,34 @@
         "description": "Item font size",
         "part": "item",
         "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Group label text colour",
+        "part": "groupLabel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Group label text size",
+        "part": "groupLabel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-tracking",
+        "value": "0.06em",
+        "description": "Group label letter-spacing",
+        "part": "groupLabel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-mt",
+        "value": "var(--pui-space-2)",
+        "description": "Space above a group label, dropped on the first group in the list",
+        "part": "groupLabel",
+        "overrides": []
       }
     ]
   },
@@ -2669,6 +3536,164 @@
         "name": "--pui-context-menu-trigger-ring-offset",
         "value": "calc( -1 * var(--pui-context-menu-trigger-ring-width) )",
         "description": "How far the ring sits outside the region's box; negative draws it inside",
+        "part": "trigger",
+        "overrides": []
+      }
+    ]
+  },
+  "DatePicker": {
+    "name": "DatePicker",
+    "tokens": [
+      {
+        "name": "--pui-date-picker-trigger-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Field height (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Field inline padding (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Field font size (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between the value and the glyph",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Field corner radius",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-border-width",
+        "value": "1px",
+        "description": "Field border width",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Field background (reset per `variant`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Field background on hover",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-bg-active",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Field background while pressed or open",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Field text colour",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Field border colour (reset per `variant`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-icon-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of the calendar glyph",
         "part": "trigger",
         "overrides": []
       }
@@ -3817,8 +4842,15 @@
       },
       {
         "name": "--pui-nav-list-item-radius",
-        "value": "var(--pui-radius-2)",
+        "value": "var(--pui-radius-control)",
         "description": "Corner radius of a row's fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-row-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between rows",
         "part": "root",
         "overrides": []
       },
@@ -6256,6 +7288,118 @@
       }
     ]
   },
+  "Skeleton": {
+    "name": "Skeleton",
+    "tokens": [
+      {
+        "name": "--pui-skeleton-color",
+        "value": "var(--pui-color-panel-active)",
+        "description": "The placeholder fill.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-highlight",
+        "value": "light-dark(var(--pui-gray-1), var(--pui-gray-7))",
+        "description": "Colour of the band that travels across `animation=\"shimmer\"`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius. `variant=\"text\"` drops to `--pui-radius-2`, `circle` is a literal circle and ignores this.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"text\"]",
+            "value": "var(--pui-radius-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-line-height",
+        "value": "var(--pui-line-height-normal)",
+        "description": "Line box the placeholder is measured against. Everything below is a multiple of it and of the inherited `font-size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".text",
+            "value": "var(--pui-line-height-normal)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-ink",
+        "value": "0.72em",
+        "description": "Height of the painted band for `variant=\"text\"` — how much ink a line of real text puts down, as a fraction of the line box.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".text",
+            "value": "0.72em"
+          },
+          {
+            "selector": ".text > .root",
+            "value": "inherit"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-width",
+        "value": "100%",
+        "description": "Width. Overridden by the `width` prop, and by any consumer utility — `className=\"w-24\"` wins on layer order alone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"circle\"]",
+            "value": "var(--pui-skeleton-height)"
+          },
+          {
+            "selector": ".root:has(> .content)",
+            "value": "fit-content"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-height",
+        "value": "calc(1em * var(--pui-skeleton-line-height))",
+        "description": "Height. Defaults to one line box, so a bare `<Skeleton.Root />` is exactly as tall as the line of text it replaces.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"text\"]",
+            "value": "var(--pui-skeleton-ink)"
+          },
+          {
+            "selector": ".root:not([data-variant=\"text\"]):has(> .content)",
+            "value": "auto"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-duration",
+        "value": "var(--pui-duration-loop-sweep)",
+        "description": "One full animation cycle, for both `pulse` and `shimmer`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-dim",
+        "value": "calc(0.55 + 0.25 * var(--pui-motion-off))",
+        "description": "How far `animation=\"pulse\"` fades at the bottom of its cycle — and the depth `shimmer`'s fallback pulse reaches under reduced motion, so the two animations stay one knob. Rises to `0.8` under reduced motion, so the pulse gets shallower rather than disappearing.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-group-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Space between stacked rows of a `Skeleton.Group`.",
+        "part": "group",
+        "overrides": []
+      }
+    ]
+  },
   "Slider": {
     "name": "Slider",
     "tokens": [
@@ -7972,6 +9116,41 @@
         "name": "--pui-tooltip-arrow-height",
         "value": "0.5em",
         "description": "Arrow height, and the distance it is pushed out from the popup",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Gap between the label and the key cap",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-bg",
+        "value": "color-mix(in oklab, currentColor 16%, transparent)",
+        "description": "Key cap fill",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-border-color",
+        "value": "color-mix(in oklab, currentColor 28%, transparent)",
+        "description": "Key cap outline",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-radius",
+        "value": "var(--pui-radius-1)",
+        "description": "Key cap corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-tooltip-shortcut-padding-inline",
+        "value": "var(--pui-space-1)",
+        "description": "Key cap left and right padding",
         "part": "popup",
         "overrides": []
       }

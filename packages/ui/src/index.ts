@@ -15,6 +15,29 @@ export type {
   AccordionPanelProps,
 } from "./components/accordion";
 
+export { Alert } from "./components/alert";
+export type {
+  AlertVariant,
+  AlertTone,
+  AlertLive,
+  AlertRootProps,
+  AlertIconProps,
+  AlertTitleProps,
+  AlertDescriptionProps,
+  AlertActionProps,
+  AlertCloseProps,
+} from "./components/alert";
+
+export { AspectRatio } from "./components/aspect-ratio";
+export type {
+  AspectRatioProps,
+  AspectRatioPreset,
+  AspectRatioValue,
+  AspectRatioFit,
+  AspectRatioVariant,
+  AspectRatioBasis,
+} from "./components/aspect-ratio";
+
 export { Avatar } from "./components/avatar";
 export type {
   AvatarSize,
@@ -39,8 +62,34 @@ export type {
   BadgeShape,
 } from "./components/badge";
 
+export { Breadcrumb } from "./components/breadcrumb";
+export type {
+  BreadcrumbSize,
+  BreadcrumbVariant,
+  BreadcrumbOverflow,
+  BreadcrumbRootProps,
+  BreadcrumbListProps,
+  BreadcrumbItemProps,
+  BreadcrumbLinkProps,
+  BreadcrumbPageProps,
+  BreadcrumbSeparatorProps,
+  BreadcrumbEllipsisProps,
+} from "./components/breadcrumb";
+
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
+
+export { Calendar } from "./components/calendar";
+export type {
+  CalendarMode,
+  CalendarSize,
+  CalendarCaptionLayout,
+  CalendarRange,
+  CalendarSelection,
+  CalendarMatcher,
+  CalendarLabels,
+  CalendarProps,
+} from "./components/calendar";
 
 export { Checkbox, CheckboxGroup } from "./components/checkbox";
 export type {
@@ -132,6 +181,30 @@ export type {
   ContextMenuSubmenuTriggerProps,
   ContextMenuShortcutProps,
 } from "./components/context-menu";
+
+export {
+  DatePicker,
+  DatePickerRoot,
+  DatePickerTrigger,
+  DatePickerValue,
+  DatePickerIcon,
+  DatePickerPopup,
+  DatePickerCalendar,
+  DatePickerFooter,
+  DatePickerClear,
+} from "./components/date-picker";
+export type {
+  DatePickerSize,
+  DatePickerVariant,
+  DatePickerRootProps,
+  DatePickerTriggerProps,
+  DatePickerValueProps,
+  DatePickerIconProps,
+  DatePickerPopupProps,
+  DatePickerCalendarProps,
+  DatePickerFooterProps,
+  DatePickerClearProps,
+} from "./components/date-picker";
 
 export { Dialog, AlertDialog, useDialog } from "./components/dialog";
 export type {
@@ -366,6 +439,15 @@ export type {
   SeparatorVariant,
 } from "./components/separator";
 
+export { Skeleton } from "./components/skeleton";
+export type {
+  SkeletonVariant,
+  SkeletonAnimation,
+  SkeletonRootProps,
+  SkeletonTextProps,
+  SkeletonGroupProps,
+} from "./components/skeleton";
+
 export { Slider } from "./components/slider";
 export type {
   SliderSize,
@@ -464,4 +546,5 @@ export type {
   TooltipTriggerProps,
   TooltipPopupProps,
   TooltipArrowProps,
+  TooltipShortcutProps,
 } from "./components/tooltip";

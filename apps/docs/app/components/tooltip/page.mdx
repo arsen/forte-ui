@@ -93,6 +93,36 @@ opens on contact.
 Note that neither delay applies to the keyboard: focusing a trigger opens its
 tooltip immediately.
 
+### Keyboard shortcuts
+
+`<Tooltip.Shortcut>` prints the keys as a cap beside the label — the same
+convenience `<Menu.Shortcut>` is on the [menu](/components/menu) side, for the
+toolbar button that runs the same command. Write the keys the way they are
+printed (`⌘B`, `Ctrl+B`, `⇧⌘P`); nothing here maps them per platform. One
+shortcut anywhere in the popup turns it into a row, so the label and the cap
+share a line without laying anything out.
+
+<DemoBlock id="tooltip/shortcut" />
+
+<Callout kind="a11y">
+
+**Put the shortcut on the trigger as `aria-keyshortcuts` as well.** Unlike
+`Menu.Shortcut`, this part is not `aria-hidden` — there is nothing to hide it
+from, since no part of a tooltip is announced. Which is the problem:
+`aria-keyshortcuts="Meta+B"` on the trigger is the only route the keys have to
+a screen reader user, and it wants them spelled in words. Read aloud, `⌘B`
+becomes "place of interest sign B".
+
+</Callout>
+
+The cap keeps the popup's own text colour and carries a translucent fill drawn
+from it, rather than dimming the way a menu's shortcut does. A tooltip's
+surface is the inverse of the page — near-white on near-black — and no mid-grey
+on it is one of the pairs the contrast harness measures, so a dimmed shortcut
+would be a guess at SC 1.4.3 on permanently visible text. Retune it with
+`--pui-tooltip-shortcut-bg` and the three knobs beside it, which is also how a
+re-skinned popup keeps its cap legible.
+
 ## Accessibility
 
 <KeyboardTable
@@ -190,9 +220,11 @@ To re-skin every tooltip at once, re-point the global tokens the defaults
 resolve to — `--pui-gray-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-font-*`,
 `--pui-shadow-*`, `--pui-travel-sm`. The popup only reads those and never
 re-declares them, so a value set on `:root` or a theme scope does reach it. The
-three knobs with literal defaults — `--pui-tooltip-max-width`,
-`--pui-tooltip-arrow-width` and `--pui-tooltip-arrow-height` — have no global
-token behind them, so those can only be changed on the popup itself.
+knobs with literal defaults — `--pui-tooltip-max-width`,
+`--pui-tooltip-arrow-width`, `--pui-tooltip-arrow-height`, and the shortcut
+cap's `--pui-tooltip-shortcut-bg` and `--pui-tooltip-shortcut-border-color`,
+mixed from the popup's own `currentColor` — have no global token behind them,
+so those can only be changed on the popup itself.
 
 `--pui-tooltip-z-index` is declared on the positioner, not the popup, so
 restacking a single tooltip goes through `positionerClassName` rather than
@@ -222,3 +254,7 @@ drawn from all three.
 ### Tooltip.Arrow
 
 <PropTable component="TooltipArrow" />
+
+### Tooltip.Shortcut
+
+<PropTable component="TooltipShortcut" />

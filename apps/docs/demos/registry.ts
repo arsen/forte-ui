@@ -19,6 +19,44 @@ import d_accordion_disabled_item from "./accordion/disabled-item";
 import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
 import d_accordion_multiple from "./accordion/multiple";
 import d_accordion_multiple_src from "./accordion/multiple?raw";
+import d_alert_action from "./alert/action";
+import d_alert_action_src from "./alert/action?raw";
+import d_alert_basic from "./alert/basic";
+import d_alert_basic_src from "./alert/basic?raw";
+import d_alert_custom_icon from "./alert/custom-icon";
+import d_alert_custom_icon_src from "./alert/custom-icon?raw";
+import d_alert_dismissible from "./alert/dismissible";
+import d_alert_dismissible_src from "./alert/dismissible?raw";
+import d_alert_live from "./alert/live";
+import d_alert_live_src from "./alert/live?raw";
+import d_alert_parts from "./alert/parts";
+import d_alert_parts_src from "./alert/parts?raw";
+import d_alert_tones from "./alert/tones";
+import d_alert_tones_src from "./alert/tones?raw";
+import d_alert_variants from "./alert/variants";
+import d_alert_variants_src from "./alert/variants?raw";
+import d_aspect_ratio_basic from "./aspect-ratio/basic";
+import d_aspect_ratio_basic_src from "./aspect-ratio/basic?raw";
+import d_aspect_ratio_basis from "./aspect-ratio/basis";
+import d_aspect_ratio_basis_src from "./aspect-ratio/basis?raw";
+import d_aspect_ratio_fit from "./aspect-ratio/fit";
+import d_aspect_ratio_fit_src from "./aspect-ratio/fit?raw";
+import d_aspect_ratio_focal from "./aspect-ratio/focal";
+import d_aspect_ratio_focal_src from "./aspect-ratio/focal?raw";
+import d_aspect_ratio_link from "./aspect-ratio/link";
+import d_aspect_ratio_link_src from "./aspect-ratio/link?raw";
+import d_aspect_ratio_overlay from "./aspect-ratio/overlay";
+import d_aspect_ratio_overlay_src from "./aspect-ratio/overlay?raw";
+import d_aspect_ratio_placeholder from "./aspect-ratio/placeholder";
+import d_aspect_ratio_placeholder_src from "./aspect-ratio/placeholder?raw";
+import d_aspect_ratio_presets from "./aspect-ratio/presets";
+import d_aspect_ratio_presets_src from "./aspect-ratio/presets?raw";
+import d_aspect_ratio_responsive from "./aspect-ratio/responsive";
+import d_aspect_ratio_responsive_src from "./aspect-ratio/responsive?raw";
+import d_aspect_ratio_unclipped from "./aspect-ratio/unclipped";
+import d_aspect_ratio_unclipped_src from "./aspect-ratio/unclipped?raw";
+import d_aspect_ratio_variants from "./aspect-ratio/variants";
+import d_aspect_ratio_variants_src from "./aspect-ratio/variants?raw";
 import d_avatar_badge from "./avatar/badge";
 import d_avatar_badge_src from "./avatar/badge?raw";
 import d_avatar_basic from "./avatar/basic";
@@ -55,6 +93,22 @@ import d_badge_table from "./badge/table";
 import d_badge_table_src from "./badge/table?raw";
 import d_badge_variants from "./badge/variants";
 import d_badge_variants_src from "./badge/variants?raw";
+import d_breadcrumb_basic from "./breadcrumb/basic";
+import d_breadcrumb_basic_src from "./breadcrumb/basic?raw";
+import d_breadcrumb_collapsed from "./breadcrumb/collapsed";
+import d_breadcrumb_collapsed_src from "./breadcrumb/collapsed?raw";
+import d_breadcrumb_generated from "./breadcrumb/generated";
+import d_breadcrumb_generated_src from "./breadcrumb/generated?raw";
+import d_breadcrumb_icons from "./breadcrumb/icons";
+import d_breadcrumb_icons_src from "./breadcrumb/icons?raw";
+import d_breadcrumb_overflow from "./breadcrumb/overflow";
+import d_breadcrumb_overflow_src from "./breadcrumb/overflow?raw";
+import d_breadcrumb_separators from "./breadcrumb/separators";
+import d_breadcrumb_separators_src from "./breadcrumb/separators?raw";
+import d_breadcrumb_sizes from "./breadcrumb/sizes";
+import d_breadcrumb_sizes_src from "./breadcrumb/sizes?raw";
+import d_breadcrumb_variants from "./breadcrumb/variants";
+import d_breadcrumb_variants_src from "./breadcrumb/variants?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
 import d_button_icon_only from "./button/icon-only";
@@ -67,6 +121,22 @@ import d_button_tones from "./button/tones";
 import d_button_tones_src from "./button/tones?raw";
 import d_button_variants from "./button/variants";
 import d_button_variants_src from "./button/variants?raw";
+import d_calendar_basic from "./calendar/basic";
+import d_calendar_basic_src from "./calendar/basic?raw";
+import d_calendar_disabled_dates from "./calendar/disabled-dates";
+import d_calendar_disabled_dates_src from "./calendar/disabled-dates?raw";
+import d_calendar_dropdown from "./calendar/dropdown";
+import d_calendar_dropdown_src from "./calendar/dropdown?raw";
+import d_calendar_locale from "./calendar/locale";
+import d_calendar_locale_src from "./calendar/locale?raw";
+import d_calendar_multiple from "./calendar/multiple";
+import d_calendar_multiple_src from "./calendar/multiple?raw";
+import d_calendar_range from "./calendar/range";
+import d_calendar_range_src from "./calendar/range?raw";
+import d_calendar_sizes from "./calendar/sizes";
+import d_calendar_sizes_src from "./calendar/sizes?raw";
+import d_calendar_week_numbers from "./calendar/week-numbers";
+import d_calendar_week_numbers_src from "./calendar/week-numbers?raw";
 import d_checkbox_basic from "./checkbox/basic";
 import d_checkbox_basic_src from "./checkbox/basic?raw";
 import d_checkbox_disabled from "./checkbox/disabled";
@@ -159,6 +229,18 @@ import d_context_menu_theming from "./context-menu/theming";
 import d_context_menu_theming_src from "./context-menu/theming?raw";
 import d_context_menu_with_menu from "./context-menu/with-menu";
 import d_context_menu_with_menu_src from "./context-menu/with-menu?raw";
+import d_date_picker_basic from "./date-picker/basic";
+import d_date_picker_basic_src from "./date-picker/basic?raw";
+import d_date_picker_constrained from "./date-picker/constrained";
+import d_date_picker_constrained_src from "./date-picker/constrained?raw";
+import d_date_picker_footer from "./date-picker/footer";
+import d_date_picker_footer_src from "./date-picker/footer?raw";
+import d_date_picker_range from "./date-picker/range";
+import d_date_picker_range_src from "./date-picker/range?raw";
+import d_date_picker_sizes from "./date-picker/sizes";
+import d_date_picker_sizes_src from "./date-picker/sizes?raw";
+import d_date_picker_with_field from "./date-picker/with-field";
+import d_date_picker_with_field_src from "./date-picker/with-field?raw";
 import d_dialog_alert from "./dialog/alert";
 import d_dialog_alert_src from "./dialog/alert?raw";
 import d_dialog_basic from "./dialog/basic";
@@ -451,6 +533,20 @@ import d_separator_variants from "./separator/variants";
 import d_separator_variants_src from "./separator/variants?raw";
 import d_separator_vertical from "./separator/vertical";
 import d_separator_vertical_src from "./separator/vertical?raw";
+import d_skeleton_animations from "./skeleton/animations";
+import d_skeleton_animations_src from "./skeleton/animations?raw";
+import d_skeleton_card from "./skeleton/card";
+import d_skeleton_card_src from "./skeleton/card?raw";
+import d_skeleton_reduced_motion from "./skeleton/reduced-motion";
+import d_skeleton_reduced_motion_src from "./skeleton/reduced-motion?raw";
+import d_skeleton_sizing from "./skeleton/sizing";
+import d_skeleton_sizing_src from "./skeleton/sizing?raw";
+import d_skeleton_text from "./skeleton/text";
+import d_skeleton_text_src from "./skeleton/text?raw";
+import d_skeleton_theming from "./skeleton/theming";
+import d_skeleton_theming_src from "./skeleton/theming?raw";
+import d_skeleton_variants from "./skeleton/variants";
+import d_skeleton_variants_src from "./skeleton/variants?raw";
 import d_slider_basic from "./slider/basic";
 import d_slider_basic_src from "./slider/basic?raw";
 import d_slider_collision from "./slider/collision";
@@ -599,6 +695,8 @@ import d_tooltip_delay from "./tooltip/delay";
 import d_tooltip_delay_src from "./tooltip/delay?raw";
 import d_tooltip_placement from "./tooltip/placement";
 import d_tooltip_placement_src from "./tooltip/placement?raw";
+import d_tooltip_shortcut from "./tooltip/shortcut";
+import d_tooltip_shortcut_src from "./tooltip/shortcut?raw";
 import d_tooltip_with_provider from "./tooltip/with-provider";
 import d_tooltip_with_provider_src from "./tooltip/with-provider?raw";
 
@@ -608,6 +706,25 @@ export type DemoId =
   | "accordion/controlled"
   | "accordion/disabled-item"
   | "accordion/multiple"
+  | "alert/action"
+  | "alert/basic"
+  | "alert/custom-icon"
+  | "alert/dismissible"
+  | "alert/live"
+  | "alert/parts"
+  | "alert/tones"
+  | "alert/variants"
+  | "aspect-ratio/basic"
+  | "aspect-ratio/basis"
+  | "aspect-ratio/fit"
+  | "aspect-ratio/focal"
+  | "aspect-ratio/link"
+  | "aspect-ratio/overlay"
+  | "aspect-ratio/placeholder"
+  | "aspect-ratio/presets"
+  | "aspect-ratio/responsive"
+  | "aspect-ratio/unclipped"
+  | "aspect-ratio/variants"
   | "avatar/badge"
   | "avatar/basic"
   | "avatar/fallback"
@@ -626,12 +743,28 @@ export type DemoId =
   | "badge/status"
   | "badge/table"
   | "badge/variants"
+  | "breadcrumb/basic"
+  | "breadcrumb/collapsed"
+  | "breadcrumb/generated"
+  | "breadcrumb/icons"
+  | "breadcrumb/overflow"
+  | "breadcrumb/separators"
+  | "breadcrumb/sizes"
+  | "breadcrumb/variants"
   | "button/as-link"
   | "button/icon-only"
   | "button/loading"
   | "button/sizes"
   | "button/tones"
   | "button/variants"
+  | "calendar/basic"
+  | "calendar/disabled-dates"
+  | "calendar/dropdown"
+  | "calendar/locale"
+  | "calendar/multiple"
+  | "calendar/range"
+  | "calendar/sizes"
+  | "calendar/week-numbers"
   | "checkbox/basic"
   | "checkbox/disabled"
   | "checkbox/indeterminate"
@@ -678,6 +811,12 @@ export type DemoId =
   | "context-menu/submenu"
   | "context-menu/theming"
   | "context-menu/with-menu"
+  | "date-picker/basic"
+  | "date-picker/constrained"
+  | "date-picker/footer"
+  | "date-picker/range"
+  | "date-picker/sizes"
+  | "date-picker/with-field"
   | "dialog/alert"
   | "dialog/basic"
   | "dialog/controlled"
@@ -824,6 +963,13 @@ export type DemoId =
   | "separator/toolbar"
   | "separator/variants"
   | "separator/vertical"
+  | "skeleton/animations"
+  | "skeleton/card"
+  | "skeleton/reduced-motion"
+  | "skeleton/sizing"
+  | "skeleton/text"
+  | "skeleton/theming"
+  | "skeleton/variants"
   | "slider/basic"
   | "slider/collision"
   | "slider/disabled"
@@ -898,6 +1044,7 @@ export type DemoId =
   | "tooltip/basic"
   | "tooltip/delay"
   | "tooltip/placement"
+  | "tooltip/shortcut"
   | "tooltip/with-provider";
 
 export type Demo = { Component: ComponentType; source: string; file: string };
@@ -908,6 +1055,25 @@ const REGISTRY: Record<DemoId, Demo> = {
   "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
   "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
   "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
+  "alert/action": { Component: d_alert_action, source: d_alert_action_src, file: "alert/action.tsx" },
+  "alert/basic": { Component: d_alert_basic, source: d_alert_basic_src, file: "alert/basic.tsx" },
+  "alert/custom-icon": { Component: d_alert_custom_icon, source: d_alert_custom_icon_src, file: "alert/custom-icon.tsx" },
+  "alert/dismissible": { Component: d_alert_dismissible, source: d_alert_dismissible_src, file: "alert/dismissible.tsx" },
+  "alert/live": { Component: d_alert_live, source: d_alert_live_src, file: "alert/live.tsx" },
+  "alert/parts": { Component: d_alert_parts, source: d_alert_parts_src, file: "alert/parts.tsx" },
+  "alert/tones": { Component: d_alert_tones, source: d_alert_tones_src, file: "alert/tones.tsx" },
+  "alert/variants": { Component: d_alert_variants, source: d_alert_variants_src, file: "alert/variants.tsx" },
+  "aspect-ratio/basic": { Component: d_aspect_ratio_basic, source: d_aspect_ratio_basic_src, file: "aspect-ratio/basic.tsx" },
+  "aspect-ratio/basis": { Component: d_aspect_ratio_basis, source: d_aspect_ratio_basis_src, file: "aspect-ratio/basis.tsx" },
+  "aspect-ratio/fit": { Component: d_aspect_ratio_fit, source: d_aspect_ratio_fit_src, file: "aspect-ratio/fit.tsx" },
+  "aspect-ratio/focal": { Component: d_aspect_ratio_focal, source: d_aspect_ratio_focal_src, file: "aspect-ratio/focal.tsx" },
+  "aspect-ratio/link": { Component: d_aspect_ratio_link, source: d_aspect_ratio_link_src, file: "aspect-ratio/link.tsx" },
+  "aspect-ratio/overlay": { Component: d_aspect_ratio_overlay, source: d_aspect_ratio_overlay_src, file: "aspect-ratio/overlay.tsx" },
+  "aspect-ratio/placeholder": { Component: d_aspect_ratio_placeholder, source: d_aspect_ratio_placeholder_src, file: "aspect-ratio/placeholder.tsx" },
+  "aspect-ratio/presets": { Component: d_aspect_ratio_presets, source: d_aspect_ratio_presets_src, file: "aspect-ratio/presets.tsx" },
+  "aspect-ratio/responsive": { Component: d_aspect_ratio_responsive, source: d_aspect_ratio_responsive_src, file: "aspect-ratio/responsive.tsx" },
+  "aspect-ratio/unclipped": { Component: d_aspect_ratio_unclipped, source: d_aspect_ratio_unclipped_src, file: "aspect-ratio/unclipped.tsx" },
+  "aspect-ratio/variants": { Component: d_aspect_ratio_variants, source: d_aspect_ratio_variants_src, file: "aspect-ratio/variants.tsx" },
   "avatar/badge": { Component: d_avatar_badge, source: d_avatar_badge_src, file: "avatar/badge.tsx" },
   "avatar/basic": { Component: d_avatar_basic, source: d_avatar_basic_src, file: "avatar/basic.tsx" },
   "avatar/fallback": { Component: d_avatar_fallback, source: d_avatar_fallback_src, file: "avatar/fallback.tsx" },
@@ -926,12 +1092,28 @@ const REGISTRY: Record<DemoId, Demo> = {
   "badge/status": { Component: d_badge_status, source: d_badge_status_src, file: "badge/status.tsx" },
   "badge/table": { Component: d_badge_table, source: d_badge_table_src, file: "badge/table.tsx" },
   "badge/variants": { Component: d_badge_variants, source: d_badge_variants_src, file: "badge/variants.tsx" },
+  "breadcrumb/basic": { Component: d_breadcrumb_basic, source: d_breadcrumb_basic_src, file: "breadcrumb/basic.tsx" },
+  "breadcrumb/collapsed": { Component: d_breadcrumb_collapsed, source: d_breadcrumb_collapsed_src, file: "breadcrumb/collapsed.tsx" },
+  "breadcrumb/generated": { Component: d_breadcrumb_generated, source: d_breadcrumb_generated_src, file: "breadcrumb/generated.tsx" },
+  "breadcrumb/icons": { Component: d_breadcrumb_icons, source: d_breadcrumb_icons_src, file: "breadcrumb/icons.tsx" },
+  "breadcrumb/overflow": { Component: d_breadcrumb_overflow, source: d_breadcrumb_overflow_src, file: "breadcrumb/overflow.tsx" },
+  "breadcrumb/separators": { Component: d_breadcrumb_separators, source: d_breadcrumb_separators_src, file: "breadcrumb/separators.tsx" },
+  "breadcrumb/sizes": { Component: d_breadcrumb_sizes, source: d_breadcrumb_sizes_src, file: "breadcrumb/sizes.tsx" },
+  "breadcrumb/variants": { Component: d_breadcrumb_variants, source: d_breadcrumb_variants_src, file: "breadcrumb/variants.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },
   "button/sizes": { Component: d_button_sizes, source: d_button_sizes_src, file: "button/sizes.tsx" },
   "button/tones": { Component: d_button_tones, source: d_button_tones_src, file: "button/tones.tsx" },
   "button/variants": { Component: d_button_variants, source: d_button_variants_src, file: "button/variants.tsx" },
+  "calendar/basic": { Component: d_calendar_basic, source: d_calendar_basic_src, file: "calendar/basic.tsx" },
+  "calendar/disabled-dates": { Component: d_calendar_disabled_dates, source: d_calendar_disabled_dates_src, file: "calendar/disabled-dates.tsx" },
+  "calendar/dropdown": { Component: d_calendar_dropdown, source: d_calendar_dropdown_src, file: "calendar/dropdown.tsx" },
+  "calendar/locale": { Component: d_calendar_locale, source: d_calendar_locale_src, file: "calendar/locale.tsx" },
+  "calendar/multiple": { Component: d_calendar_multiple, source: d_calendar_multiple_src, file: "calendar/multiple.tsx" },
+  "calendar/range": { Component: d_calendar_range, source: d_calendar_range_src, file: "calendar/range.tsx" },
+  "calendar/sizes": { Component: d_calendar_sizes, source: d_calendar_sizes_src, file: "calendar/sizes.tsx" },
+  "calendar/week-numbers": { Component: d_calendar_week_numbers, source: d_calendar_week_numbers_src, file: "calendar/week-numbers.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },
   "checkbox/disabled": { Component: d_checkbox_disabled, source: d_checkbox_disabled_src, file: "checkbox/disabled.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },
@@ -978,6 +1160,12 @@ const REGISTRY: Record<DemoId, Demo> = {
   "context-menu/submenu": { Component: d_context_menu_submenu, source: d_context_menu_submenu_src, file: "context-menu/submenu.tsx" },
   "context-menu/theming": { Component: d_context_menu_theming, source: d_context_menu_theming_src, file: "context-menu/theming.tsx" },
   "context-menu/with-menu": { Component: d_context_menu_with_menu, source: d_context_menu_with_menu_src, file: "context-menu/with-menu.tsx" },
+  "date-picker/basic": { Component: d_date_picker_basic, source: d_date_picker_basic_src, file: "date-picker/basic.tsx" },
+  "date-picker/constrained": { Component: d_date_picker_constrained, source: d_date_picker_constrained_src, file: "date-picker/constrained.tsx" },
+  "date-picker/footer": { Component: d_date_picker_footer, source: d_date_picker_footer_src, file: "date-picker/footer.tsx" },
+  "date-picker/range": { Component: d_date_picker_range, source: d_date_picker_range_src, file: "date-picker/range.tsx" },
+  "date-picker/sizes": { Component: d_date_picker_sizes, source: d_date_picker_sizes_src, file: "date-picker/sizes.tsx" },
+  "date-picker/with-field": { Component: d_date_picker_with_field, source: d_date_picker_with_field_src, file: "date-picker/with-field.tsx" },
   "dialog/alert": { Component: d_dialog_alert, source: d_dialog_alert_src, file: "dialog/alert.tsx" },
   "dialog/basic": { Component: d_dialog_basic, source: d_dialog_basic_src, file: "dialog/basic.tsx" },
   "dialog/controlled": { Component: d_dialog_controlled, source: d_dialog_controlled_src, file: "dialog/controlled.tsx" },
@@ -1124,6 +1312,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
   "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
   "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },
+  "skeleton/animations": { Component: d_skeleton_animations, source: d_skeleton_animations_src, file: "skeleton/animations.tsx" },
+  "skeleton/card": { Component: d_skeleton_card, source: d_skeleton_card_src, file: "skeleton/card.tsx" },
+  "skeleton/reduced-motion": { Component: d_skeleton_reduced_motion, source: d_skeleton_reduced_motion_src, file: "skeleton/reduced-motion.tsx" },
+  "skeleton/sizing": { Component: d_skeleton_sizing, source: d_skeleton_sizing_src, file: "skeleton/sizing.tsx" },
+  "skeleton/text": { Component: d_skeleton_text, source: d_skeleton_text_src, file: "skeleton/text.tsx" },
+  "skeleton/theming": { Component: d_skeleton_theming, source: d_skeleton_theming_src, file: "skeleton/theming.tsx" },
+  "skeleton/variants": { Component: d_skeleton_variants, source: d_skeleton_variants_src, file: "skeleton/variants.tsx" },
   "slider/basic": { Component: d_slider_basic, source: d_slider_basic_src, file: "slider/basic.tsx" },
   "slider/collision": { Component: d_slider_collision, source: d_slider_collision_src, file: "slider/collision.tsx" },
   "slider/disabled": { Component: d_slider_disabled, source: d_slider_disabled_src, file: "slider/disabled.tsx" },
@@ -1198,6 +1393,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "tooltip/basic": { Component: d_tooltip_basic, source: d_tooltip_basic_src, file: "tooltip/basic.tsx" },
   "tooltip/delay": { Component: d_tooltip_delay, source: d_tooltip_delay_src, file: "tooltip/delay.tsx" },
   "tooltip/placement": { Component: d_tooltip_placement, source: d_tooltip_placement_src, file: "tooltip/placement.tsx" },
+  "tooltip/shortcut": { Component: d_tooltip_shortcut, source: d_tooltip_shortcut_src, file: "tooltip/shortcut.tsx" },
   "tooltip/with-provider": { Component: d_tooltip_with_provider, source: d_tooltip_with_provider_src, file: "tooltip/with-provider.tsx" },
 };
 

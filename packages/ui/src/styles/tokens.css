@@ -71,7 +71,7 @@
 
     --pui-success-2: light-dark(oklch(0.976 0.017 155), oklch(0.216 0.032 155));
     --pui-success-3: light-dark(oklch(0.946 0.042 155), oklch(0.268 0.054 155));
-    --pui-success-7: light-dark(oklch(0.812 0.075 155), oklch(0.472 0.095 155));
+    --pui-success-7: light-dark(oklch(0.810 0.100 155), oklch(0.470 0.110 155));
     --pui-success-9: oklch(0.545 0.148 152);
     --pui-success-11: light-dark(oklch(0.475 0.128 152), oklch(0.792 0.135 152));
 
@@ -80,23 +80,30 @@
     /* Lighter than its own `-9`, which reads backwards until you remember
      * that amber's 9 sits at 0.812 — step 7 has to stay above it or the ramp
      * inverts. It is the faintest of the four `-7` edges against white
-     * (1.5:1, where danger manages 1.9) and that is the hue, not a mistake:
+     * (1.6:1, where danger manages 1.9) and that is the hue, not a mistake:
      * a warning chip carries its meaning in the label, never in the border
      * alone. */
-    --pui-warning-7: light-dark(oklch(0.868 0.105 85), oklch(0.520 0.090 85));
+    --pui-warning-7: light-dark(oklch(0.855 0.110 85), oklch(0.500 0.095 85));
     --pui-warning-9: oklch(0.812 0.163 82);
     --pui-warning-11: light-dark(oklch(0.520 0.118 60), oklch(0.840 0.140 85));
 
-    --pui-info-2: light-dark(oklch(0.972 0.016 250), oklch(0.218 0.038 250));
-    --pui-info-3: light-dark(oklch(0.940 0.036 250), oklch(0.270 0.064 250));
-    --pui-info-7: light-dark(oklch(0.800 0.090 250), oklch(0.478 0.125 250));
-    /* Was 0.588 for as long as nothing painted text on it. `Badge` does —
-     * a solid `tone="info"` chip — and white measured 4.09:1 there, an AA
-     * failure. Black clears it (4.77:1), but nobody ships black on azure, so
-     * the fill moved instead: 0.550 puts white at 4.78:1 and lands info
-     * between its own siblings (danger 0.552, success 0.545) rather than as
-     * an outlier above them. check-contrast.mjs asserts the pair, which is
-     * what stops a future nudge from undoing this. */
+    /* Blue runs out of sRGB gamut earlier than the other three hues do, so
+     * steps 2 and 3 carry visibly less chroma than their danger and success
+     * counterparts rather than the same number clipped: the browser clips
+     * naively instead of gamut-mapping, and a clipped near-white shifts
+     * lightness as well as saturation. `--pui-info-11` on `--pui-info-3`
+     * still measures 5.12:1 light / 7.78:1 dark. */
+    --pui-info-2: light-dark(oklch(0.975 0.012 250), oklch(0.218 0.038 250));
+    --pui-info-3: light-dark(oklch(0.945 0.026 250), oklch(0.272 0.065 250));
+    --pui-info-7: light-dark(oklch(0.800 0.090 250), oklch(0.478 0.130 250));
+    /* Step 9 sat at 0.588 for as long as nothing painted text on it. `Badge`
+     * does — a solid `tone="info"` chip — and white measured 4.09:1 there, an
+     * AA failure. Black clears it (4.77:1), but nobody ships black on azure,
+     * so the fill moved instead: 0.550 puts white at 4.78:1 and lands info
+     * between its own siblings (danger 0.552, success 0.545) rather than as an
+     * outlier above them. `Alert` reads only the tints above and is unaffected.
+     * check-contrast.mjs asserts the pair, which is what stops a future nudge
+     * from undoing this. */
     --pui-info-9: oklch(0.550 0.158 250);
     --pui-info-11: light-dark(oklch(0.500 0.140 250), oklch(0.790 0.110 250));
   }
