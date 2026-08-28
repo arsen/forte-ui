@@ -150,8 +150,8 @@ list and that file disagree, the file is right; fix the list.
 **accent** (12)
 `--pui-accent-1` · `--pui-accent-10` · `--pui-accent-11` · `--pui-accent-12` · `--pui-accent-2` · `--pui-accent-3` · `--pui-accent-4` · `--pui-accent-5` · `--pui-accent-6` · `--pui-accent-7` · `--pui-accent-8` · `--pui-accent-9`
 
-**color** (44)
-`--pui-color-background` · `--pui-color-border` · `--pui-color-border-muted` · `--pui-color-border-strong` · `--pui-color-danger` · `--pui-color-danger-border` · `--pui-color-danger-hover` · `--pui-color-danger-soft` · `--pui-color-danger-text` · `--pui-color-focus-ring` · `--pui-color-foreground` · `--pui-color-foreground-muted` · `--pui-color-foreground-subtle` · `--pui-color-info` · `--pui-color-info-text` · `--pui-color-on-danger` · `--pui-color-on-primary` · `--pui-color-on-secondary` · `--pui-color-on-success` · `--pui-color-on-warning` · `--pui-color-overlay` · `--pui-color-panel` · `--pui-color-panel-active` · `--pui-color-panel-hover` · `--pui-color-primary` · `--pui-color-primary-active` · `--pui-color-primary-border` · `--pui-color-primary-hover` · `--pui-color-primary-soft` · `--pui-color-primary-soft-active` · `--pui-color-primary-soft-hover` · `--pui-color-primary-text` · `--pui-color-secondary` · `--pui-color-secondary-active` · `--pui-color-secondary-border` · `--pui-color-secondary-hover` · `--pui-color-secondary-soft` · `--pui-color-secondary-soft-active` · `--pui-color-secondary-soft-hover` · `--pui-color-secondary-text` · `--pui-color-success` · `--pui-color-success-text` · `--pui-color-warning` · `--pui-color-warning-text`
+**color** (51)
+`--pui-color-background` · `--pui-color-border` · `--pui-color-border-muted` · `--pui-color-border-strong` · `--pui-color-danger` · `--pui-color-danger-border` · `--pui-color-danger-hover` · `--pui-color-danger-soft` · `--pui-color-danger-text` · `--pui-color-focus-ring` · `--pui-color-foreground` · `--pui-color-foreground-muted` · `--pui-color-foreground-subtle` · `--pui-color-info` · `--pui-color-info-border` · `--pui-color-info-soft` · `--pui-color-info-text` · `--pui-color-on-danger` · `--pui-color-on-info` · `--pui-color-on-primary` · `--pui-color-on-secondary` · `--pui-color-on-success` · `--pui-color-on-warning` · `--pui-color-overlay` · `--pui-color-panel` · `--pui-color-panel-active` · `--pui-color-panel-hover` · `--pui-color-primary` · `--pui-color-primary-active` · `--pui-color-primary-border` · `--pui-color-primary-hover` · `--pui-color-primary-soft` · `--pui-color-primary-soft-active` · `--pui-color-primary-soft-hover` · `--pui-color-primary-text` · `--pui-color-secondary` · `--pui-color-secondary-active` · `--pui-color-secondary-border` · `--pui-color-secondary-hover` · `--pui-color-secondary-soft` · `--pui-color-secondary-soft-active` · `--pui-color-secondary-soft-hover` · `--pui-color-secondary-text` · `--pui-color-success` · `--pui-color-success-border` · `--pui-color-success-soft` · `--pui-color-success-text` · `--pui-color-warning` · `--pui-color-warning-border` · `--pui-color-warning-soft` · `--pui-color-warning-text`
 
 **control** (7)
 `--pui-control-gap` · `--pui-control-h-lg` · `--pui-control-h-md` · `--pui-control-h-sm` · `--pui-control-px-lg` · `--pui-control-px-md` · `--pui-control-px-sm`
@@ -180,8 +180,8 @@ list and that file disagree, the file is right; fix the list.
 **gray** (12)
 `--pui-gray-1` · `--pui-gray-10` · `--pui-gray-11` · `--pui-gray-12` · `--pui-gray-2` · `--pui-gray-3` · `--pui-gray-4` · `--pui-gray-5` · `--pui-gray-6` · `--pui-gray-7` · `--pui-gray-8` · `--pui-gray-9`
 
-**info** (2)
-`--pui-info-11` · `--pui-info-9`
+**info** (5)
+`--pui-info-11` · `--pui-info-2` · `--pui-info-3` · `--pui-info-7` · `--pui-info-9`
 
 **letter** (2)
 `--pui-letter-spacing-normal` · `--pui-letter-spacing-tight`
@@ -194,6 +194,9 @@ list and that file disagree, the file is right; fix the list.
 
 **motion** (2)
 `--pui-motion-off` · `--pui-motion-ok`
+
+**neutral** (1)
+`--pui-neutral-tint`
 
 **on** (3)
 `--pui-on-hue-cos` · `--pui-on-hue-sin` · `--pui-on-threshold`
@@ -222,8 +225,8 @@ list and that file disagree, the file is right; fix the list.
 **spin** (1)
 `--pui-spin-turn`
 
-**success** (4)
-`--pui-success-11` · `--pui-success-2` · `--pui-success-3` · `--pui-success-9`
+**success** (5)
+`--pui-success-11` · `--pui-success-2` · `--pui-success-3` · `--pui-success-7` · `--pui-success-9`
 
 **surface** (1)
 `--pui-surface-p`
@@ -234,5 +237,5 @@ list and that file disagree, the file is right; fix the list.
 **travel** (5)
 `--pui-travel-lg` · `--pui-travel-md` · `--pui-travel-page` · `--pui-travel-sm` · `--pui-travel-xs`
 
-**warning** (4)
-`--pui-warning-11` · `--pui-warning-2` · `--pui-warning-3` · `--pui-warning-9`
+**warning** (5)
+`--pui-warning-11` · `--pui-warning-2` · `--pui-warning-3` · `--pui-warning-7` · `--pui-warning-9`

@@ -227,6 +227,75 @@
       }
     ]
   },
+  "Badge": {
+    "name": "Badge",
+    "description": "A small label for status, counts and categories.\n\nBase UI has no badge primitive — there is no interaction to model and no\nstate machine to get right — so this is built on `useRender` alone, which is\nwhat gives it the `render` prop the rest of the library has.\n\n```tsx\n<Badge>Beta</Badge>\n<Badge tone=\"success\" dot>Active</Badge>\n<Badge variant=\"solid\" tone=\"danger\" shape=\"pill\" count={12} />\n<Badge variant=\"solid\" tone=\"danger\" shape=\"pill\" count={480} />  // 99+\n<Badge tone=\"neutral\" variant=\"outline\" render={<a href=\"/tags/css\" />}>css</Badge>\n```\n\nStyling is driven by `data-*` attributes and `--pui-badge-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with Tailwind\narbitrary variants (`data-[tone=success]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "required": false,
+        "defaultValue": null,
+        "description": "The number this badge is showing — an unread tally, a pending count.\n\nPassing it does two separate things. It renders the number (capped by\n`max`), and it switches the badge to count geometry: figures stop changing\nwidth as the tally ticks over, the inline padding tightens, and the badge\ntakes a minimum inline size equal to its own height. That last pair is\nwhat makes a single digit a circle rather than a slot — with a word's\npadding, `1` already measures wider than the badge is tall.\n\n`children` still win over the rendered number, and that is the hook for\nanything `max` cannot express: `<Badge count={1240}>1.2k</Badge>` keeps\nyour formatting and the geometry both."
+      },
+      {
+        "name": "dot",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Draw a small filled dot before the label — the status-chip convention.\n\nIt is decorative and `aria-hidden`: the status is in the words. A dot\nthat carried meaning on its own would be colour as the sole cue, which is\nthe failure (SC 1.4.1) this component is otherwise careful to avoid."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "defaultValue": "99",
+        "description": "The largest number `count` will print. Above it the badge shows\n`${max}+` instead, so a tally cannot widen the chip without limit.\n\n99 matches what a notification badge conventionally does. Pass\n`Infinity` to print the number whatever it reaches."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<span>` with another element or component.\n`render={<a href=\"/releases\" />}` or `render={<Link href=\"/inbox\" />}` is\nhow a badge becomes navigable.\n\nThere is no `interactive` prop to go with it: the styles read the element\nitself, so an `<a href>` or a `<button>` picks up the pointer cursor, the\nhover wash and a 24×24 hit target on its own, and a plain `<span>` never\npretends to be clickable."
+      },
+      {
+        "name": "shape",
+        "type": "BadgeShape",
+        "required": false,
+        "defaultValue": "rounded",
+        "description": "Corner treatment. `rounded` follows `--pui-radius-control`, so it moves\nwith a `data-pui-radius` preset like everything else; `pill` is fully\nround, which is the conventional shape for a count."
+      },
+      {
+        "name": "size",
+        "type": "BadgeSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the badge. The three differ mostly in how much air surrounds the\nlabel: the type scale bottoms out at `--pui-font-size-1`, so `sm` and\n`md` share it and `lg` steps up.\n\nUnlike a control, a badge is not resized by `data-pui-density` — its\nheight comes from the text it sits beside, which is the thing it should\ntrack."
+      },
+      {
+        "name": "tone",
+        "type": "BadgeTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour set the badge draws from. Combines freely with\n`variant` — every pairing is a complete colour set, so\n`tone=\"success\" variant=\"outline\"` needs nothing added to work.\n\nThe four status tones are the reason this component has seven rather than\nthe four `Button` has: a badge is where an app says \"Active\", \"Pending\",\n\"Failed\", and an app that has to reach for a hex value to say it has lost\ntheming, dark mode and forced-colors support in one line."
+      },
+      {
+        "name": "variant",
+        "type": "BadgeVariant",
+        "required": false,
+        "defaultValue": "soft",
+        "description": "How much visual weight the badge carries.\n\n`soft` is the default because a badge annotates something else on the\npage and should not outrank it — a row of solid chips down a table column\nreads as the content rather than as labels on it. Reach for `solid` when\nthe badge IS the message, which is usually a count or a single alarm."
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",

@@ -1,0 +1,245 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Badge",
+  description:
+    "A small label for status, counts and categories — two axes, seven tones, and a hit target when it turns out to be a link.",
+};
+
+# Badge
+
+The chip that annotates something else: a status beside a row, a count on a
+tab, a category under a title. Two axes decide how it looks — `variant` for how
+loud it is, `tone` for which semantic colour set it draws from — and every
+pairing of the two is a complete colour set, so there is no combination that
+needs a special case.
+
+<DemoBlock id="badge/basic" />
+
+## Import
+
+```tsx
+import { Badge } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Variants and tones
+
+Four variants and seven tones, and all twenty-eight cells work without anything
+being added per pair. `soft` is the default: a badge annotates the content next
+to it, and a column of solid chips reads as the content rather than as labels
+on it.
+
+<DemoBlock id="badge/variants" />
+
+Three of the tones — `success`, `warning`, `info` — exist for this component
+more than for any other. A badge is where an app says *Active*, *Pending*,
+*Failed*, and an app that has to reach for a hex value to say it loses theming,
+dark mode and forced-colors support in a single line.
+
+### Sizes
+
+The three sizes differ mostly in how much air surrounds the label. The type
+scale bottoms out at `--pui-font-size-1`, so `sm` and `md` share it and `lg`
+steps up; what separates `sm` from `md` is that `sm` drops its block padding
+entirely.
+
+<DemoBlock id="badge/sizes" />
+
+A badge's height comes from its own text — one tight line plus padding — rather
+than from `--pui-control-h-*`. That is what lets it sit inside a sentence
+without stretching the line, and it is also why `data-pui-density` does not
+resize it: density is about how tightly *controls* pack, and a badge is not
+one.
+
+### Status
+
+`dot` puts a small filled dot before the label — the status-chip convention.
+The dot is decorative and `aria-hidden`; the word beside it is what carries the
+status.
+
+<DemoBlock id="badge/status" />
+
+<Callout kind="a11y">
+  Never let the dot be the whole message. A row of chips distinguished only by
+  colour fails SC 1.4.1 for anyone who cannot separate amber from green, and it
+  reaches a screen reader as five identical badges. Keep the word.
+</Callout>
+
+### Counts
+
+Pass `count` and the badge stops behaving like a word.
+
+<DemoBlock id="badge/counts" />
+
+`count` does two things that are easy to mistake for one. It **prints the
+number**, capped by `max` — which defaults to `99`, so `count={480}` reads
+`99+` and a runaway tally cannot stretch the chip across the row. And it
+**switches the badge to count geometry**:
+
+| | `<Badge shape="pill">1</Badge>` | `<Badge shape="pill" count={1} />` |
+| :-- | :-- | :-- |
+| measured | 25.7 × 24.4 — a slightly squashed egg | **24.4 × 24.4 — a circle** |
+| `9` → `10` | the width jumps and the chip twitches | grows once, digits stay aligned |
+
+Three declarations get you there: tabular figures, so every digit is the same
+width; tighter inline padding; and a minimum inline size equal to the badge's
+own height. The last two work together — with a word's padding on both sides a
+single digit already measures wider than the badge is tall, so without the
+tightening the minimum would never bind and the circle would come out an egg.
+
+Two escape hatches, because `max` is a blunt instrument:
+
+- `max={Infinity}` prints the number whatever it reaches.
+- `children` beat the printed number, so `<Badge count={1240}>1.2k</Badge>`
+  keeps your own formatting *and* the geometry. That is where
+  `Intl.NumberFormat` goes — the component deliberately renders with `String`
+  rather than `toLocaleString`, because a locale-formatted number is one of the
+  few values that differs between the server and the browser, and a hydration
+  mismatch over a thousands separator is a page-level error.
+
+### On a button
+
+A count on a button — unread messages, pending invites — comes in two shapes,
+and the accessible one is the one most people skip.
+
+<DemoBlock id="badge/on-a-button" />
+
+**Inline** puts the badge among the button's children, so the count lands in
+the button's own accessible name and is read as part of it. Nothing has to be
+duplicated, nothing goes stale. Prefer it.
+
+**Corner** wraps the button in a `relative inline-flex` span and positions the
+badge over it. It buys a tighter layout and costs three things you have to get
+right:
+
+- The count is no longer in the button's name, so put it there yourself — an
+  `aria-label` of "Notifications, 12 unread" — and mark the badge
+  `aria-hidden`. A visible "12" that reaches a screen reader as a bare number
+  beside an unnamed button is worse than no badge at all.
+- `pointer-events-none` on the badge, or it swallows the click meant for the
+  button under it.
+- `-end-1`, never `-right-1`. The badge has to cross to the other corner in
+  RTL, and the demo frame has a toggle to prove it.
+
+<Callout kind="note">
+  A badge composed into a control does not revert the cursor over its own box —
+  it inherits whatever the control decided, `pointer` or `not-allowed`. That is
+  the one thing you would otherwise have to remember, so the component does it:
+  a dead rectangle in the middle of a button is the kind of bug nobody files
+  and everybody feels.
+</Callout>
+
+### Icons
+
+An `svg` child is sized at `1em`, so it tracks the label through every `size`
+without a class or a prop. Mark it `aria-hidden`: the word beside it already
+says what it means.
+
+<DemoBlock id="badge/icons" />
+
+### Links and buttons
+
+`render` swaps the element, which is how a badge becomes a tag link or a
+filter button.
+
+There is no `interactive` prop to go with it. The styles read the rendered
+element — an `<a href>`, a `<button>`, or anything carrying `role="button"` or
+`role="link"` — and only those get the pointer cursor, the hover wash and a
+24×24 hit target. A prop would be a second source of truth that a consumer
+could forget to set, and forgetting it is exactly the SC 2.5.8 failure the hit
+target exists to prevent.
+
+<DemoBlock id="badge/links" />
+
+<Callout kind="note">
+  The hit target is an invisible pseudo-element centred on the badge, so a
+  `sm` tag link is 24px to the pointer while still being 16px on screen.
+  Leave room for it: two interactive badges closer together than the target
+  overlap, and the top one wins the click.
+</Callout>
+
+### In a table
+
+The shape most badges actually ship in — one column of status, one badge per
+row.
+
+<DemoBlock id="badge/table" />
+
+## Accessibility
+
+A badge is a label, not a control, and it renders a plain `<span>` with no
+role. That is deliberate: the text inside it is already read in document
+order, and a `role="status"` on every chip would turn a table of four invoices
+into four live regions.
+
+Three things are worth doing at the call site:
+
+- **Say it in words.** Colour and a dot are reinforcement. The label is the
+  message — see the callout above.
+- **Give a bare count a name.** `<Badge count={12} />` next to an inbox icon
+  reads as "twelve" and nothing else. Put the noun somewhere: visible text, an
+  `aria-label` on the surrounding button or link, or a `.pui-visually-hidden`
+  span inside the badge.
+- **Announce a count that changes.** A badge that updates while the page is
+  open changes silently; if the change matters, wrap it in your own live
+  region rather than making every badge one.
+
+Under forced colours the four variants converge on a single outlined chip, and
+that is correct rather than a compromise: author backgrounds are replaced by
+system colours, so the fill can no longer carry the difference. Each variant
+reserves its 1px border whether or not it paints one, and `transparent` becomes
+a real system-coloured edge in that mode — the same trick `.pui-hc-surface`
+plays, applied to every variant at once. The dot is repainted as `CanvasText`,
+since a background would otherwise go to `Canvas` and disappear.
+
+<Callout kind="a11y">
+  A badge's label sits on a tinted fill, and the pair is asserted rather than
+  assumed: `check-contrast.mjs` now measures every `-11` on `-3` combination in
+  both light and dark mode, alongside the text on each solid status fill. The
+  worst of the twelve is 4.54:1.
+</Callout>
+
+## Theming
+
+Every visual decision is a `--pui-badge-*` custom property declared on the
+badge's own root, so a re-skin is a `style` object or one CSS rule rather than a
+new variant.
+
+<DemoBlock id="badge/custom" />
+
+Two of the knobs are worth reading twice:
+
+- `--pui-badge-border-width` is reserved by *every* variant, not only
+  `outline`. Changing it moves all four together, which is the point — a
+  variant swap must not resize the badge, and the reserved edge is what keeps
+  the chip visible under forced colours.
+- `--pui-badge-min-inline-size` is what `count` re-points, and its value
+  restates the badge's own height in a `calc()` because CSS has nothing to
+  measure that height with. Override the padding or the line height on a count
+  badge and you own the minimum too, or the circle stops being round.
+
+<ThemingTable component="Badge" />
+
+The two hover fills are the only derived values in the file. The four status
+ramps carry steps 2, 3, 7, 9 and 11 and no step 4 or 10, so there is no
+authored hover shade to name for `success`, `warning` and `info` — those tones
+derive one with `color-mix()` instead: solid mixes 8% toward black, which is
+how the accent ramp defines its own step 10 and the only direction that cannot
+cost the label contrast, and soft mixes 8% toward the tone's own text colour.
+Tones that *do* ship a hover token re-point the slot to it, so nothing is
+approximated where an authored value exists.
+
+State is on `data-variant`, `data-tone`, `data-size`, `data-shape` and
+`data-count` — which carries the number itself, so a rule can key off the
+value it came from — so a consumer can reach any of them from plain CSS or a
+Tailwind arbitrary variant (`data-[tone=success]:...`) without wrapping the
+component.
+
+## API reference
+
+<PropTable component="Badge" />

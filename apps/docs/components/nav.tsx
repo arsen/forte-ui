@@ -47,6 +47,7 @@ const NAV: NavGroup[] = [
     items: [
       { title: "Accordion", href: "/components/accordion" },
       { title: "Avatar", href: "/components/avatar" },
+      { title: "Badge", href: "/components/badge" },
       { title: "Button", href: "/components/button" },
       { title: "Checkbox", href: "/components/checkbox" },
       { title: "Checkbox Group", href: "/components/checkbox-group" },

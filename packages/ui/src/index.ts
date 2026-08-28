@@ -30,6 +30,15 @@ export type {
   AvatarGroupProps,
 } from "./components/avatar";
 
+export { Badge } from "./components/badge";
+export type {
+  BadgeProps,
+  BadgeVariant,
+  BadgeTone,
+  BadgeSize,
+  BadgeShape,
+} from "./components/badge";
+
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
 

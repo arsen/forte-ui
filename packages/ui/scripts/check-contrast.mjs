@@ -131,18 +131,38 @@ const CHECKS = [
  * These hues are pinned in tokens.css and do not move with the seed, so they
  * are checked once rather than swept: there is no grid to sweep. They are here
  * anyway because nothing else would catch them. `--pui-warning-9` is a light
- * amber, so its `on-` token is near-BLACK while the other two are near-white,
+ * amber, so its `on-` token is near-BLACK while the other three are near-white,
  * and a plausible-looking edit that made them uniform would ship a 1.8:1 label
  * with no test to say so.
+ *
+ * Two families of pair:
+ *
+ *   on-X vs X-9    text on a SOLID status fill. What a solid Badge, and any
+ *                  future solid status control, actually paints.
+ *   X-11 on X-3    text on the TINTED fill — the soft Badge, the soft danger
+ *                  Button, and every status chip that follows them. Both
+ *                  modes are separate rows because `light-dark()` picks a
+ *                  different pair of literals in each, and only one of the two
+ *                  is ever on screen to be noticed.
  *
  * Keep the literals in sync with tokens.css; they are duplicated for the same
  * reason the curve is — this file re-implements what the CSS declares.
  * ------------------------------------------------------------------------ */
 const NEAR_WHITE = [0.995, 0, 0], NEAR_BLACK = [0.145, 0, 0];
 const FIXED = [
-  { id: "on-danger vs danger-9",   min: 4.5, fg: NEAR_WHITE, bg: [0.552, 0.211, 24] },
-  { id: "on-success vs success-9", min: 4.5, fg: NEAR_WHITE, bg: [0.545, 0.148, 152] },
-  { id: "on-warning vs warning-9", min: 4.5, fg: NEAR_BLACK, bg: [0.812, 0.163, 82] },
+  { id: "on-danger vs danger-9",     min: 4.5, fg: NEAR_WHITE, bg: [0.552, 0.211, 24] },
+  { id: "on-success vs success-9",   min: 4.5, fg: NEAR_WHITE, bg: [0.545, 0.148, 152] },
+  { id: "on-warning vs warning-9",   min: 4.5, fg: NEAR_BLACK, bg: [0.812, 0.163, 82] },
+  { id: "on-info vs info-9",         min: 4.5, fg: NEAR_WHITE, bg: [0.550, 0.158, 250] },
+
+  { id: "danger-11 on -3, light",    min: 4.5, fg: [0.485, 0.196, 24],  bg: [0.944, 0.033, 17] },
+  { id: "danger-11 on -3, dark",     min: 4.5, fg: [0.760, 0.140, 20],  bg: [0.272, 0.061, 17] },
+  { id: "success-11 on -3, light",   min: 4.5, fg: [0.475, 0.128, 152], bg: [0.946, 0.042, 155] },
+  { id: "success-11 on -3, dark",    min: 4.5, fg: [0.792, 0.135, 152], bg: [0.268, 0.054, 155] },
+  { id: "warning-11 on -3, light",   min: 4.5, fg: [0.520, 0.118, 60],  bg: [0.955, 0.058, 85] },
+  { id: "warning-11 on -3, dark",    min: 4.5, fg: [0.840, 0.140, 85],  bg: [0.276, 0.056, 85] },
+  { id: "info-11 on -3, light",      min: 4.5, fg: [0.500, 0.140, 250], bg: [0.940, 0.036, 250] },
+  { id: "info-11 on -3, dark",       min: 4.5, fg: [0.790, 0.110, 250], bg: [0.270, 0.064, 250] },
 ];
 
 const FINE = process.argv.includes("--fine");
@@ -185,7 +205,7 @@ for (const chk of FIXED) {
   const cr = CR(oklchToLinear(...chk.fg), oklchToLinear(...chk.bg));
   const ok = cr >= chk.min;
   if (!ok) failures++;
-  console.log(`  ${ok ? "PASS" : "FAIL"}  ${chk.id.padEnd(23)} min ${cr.toFixed(2).padStart(6)}  (need ${chk.min})`);
+  console.log(`  ${ok ? "PASS" : "FAIL"}  ${chk.id.padEnd(29)} min ${cr.toFixed(2).padStart(6)}  (need ${chk.min})`);
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : "\nAll contrast checks passed.");
