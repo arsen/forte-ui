@@ -1,0 +1,202 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Breadcrumb",
+  description:
+    "The trail of ancestors above the current page — with the separators inserted for you, a collapsible middle, and a scrolling mode for narrow screens.",
+};
+
+# Breadcrumb
+
+A breadcrumb is the line above a page that says where the page sits: `Home › Settings › Billing`. It is the shortest possible sitemap, drawn from the reader's position outward, and its whole job is to make the level above one click away.
+
+<DemoBlock id="breadcrumb/basic" />
+
+## Import
+
+```tsx
+import { Breadcrumb } from "@dofortech/pretty-ui";
+```
+
+`Breadcrumb` is a namespace of seven parts. The full anatomy, with every optional layer present:
+
+```tsx
+<Breadcrumb.Root>
+  <Breadcrumb.List>
+    <Breadcrumb.Item>
+      <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+    </Breadcrumb.Item>
+    <Breadcrumb.Item>
+      <Breadcrumb.Ellipsis />
+    </Breadcrumb.Item>
+    <Breadcrumb.Item>
+      <Breadcrumb.Page>Billing</Breadcrumb.Page>
+    </Breadcrumb.Item>
+  </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+Most trails need less: `Root → List → Item → Link`, and a `Page` at the end.
+
+<Callout kind="note">
+  **You do not write the separators.** `Breadcrumb.List` puts one between every pair of children, because the count is always "one fewer than the crumbs" and hand-interleaving them is the step everyone forgets. Write a `Breadcrumb.Separator` by hand only to give one gap its own content — doing so switches that list to fully manual, so the two styles never double up.
+</Callout>
+
+## Examples
+
+### From an array
+
+The shape a real app writes. `React.Children.toArray` flattens what a `.map()` returns, so generated crumbs get their separators exactly like hand-written ones — and `null` children are dropped *before* the count is taken, which is what stops a conditionally rendered crumb from leaving a separator pointing at nothing.
+
+<DemoBlock id="breadcrumb/generated" />
+
+### Separators
+
+`separator` on the root takes any node and every gap in the trail uses it.
+
+<DemoBlock id="breadcrumb/separators" />
+
+The default chevron mirrors itself in RTL. A separator you pass does **not** — mirroring a glyph would turn a `/` into a `\`, so only the built-in icon consults `--pui-direction`. Flip the demo to RTL with the frame's direction control to see both halves of that.
+
+### Variants
+
+`plain` is text with a hover underline: the trail above a document, sitting on the same rhythm as the prose. `chip` gives every crumb a rounded fill — a hover tint on the links and a resting one on the current page — which is what holds up when the trail sits on a toolbar rather than on the page background.
+
+<DemoBlock id="breadcrumb/variants" />
+
+### Sizes
+
+<DemoBlock id="breadcrumb/sizes" />
+
+The separator is sized in `em`, so it tracks the text through every preset instead of needing a scale of its own.
+
+### Icons
+
+Crumbs are flex, so an `svg` goes in as a plain child. A direct-child `svg` is sized at `1em` by the stylesheet and rides `currentColor`, so an icon follows the size preset and the hover colour without a class of its own.
+
+<DemoBlock id="breadcrumb/icons" />
+
+An icon-only crumb still needs a name. The visually hidden span is what a screen reader reads; `title` is what a pointer user gets from the browser's own tooltip.
+
+### Collapsing a deep trail
+
+Past four or five levels the trail is longer than the space above the page. Keep the first and last crumbs and fold the middle into a menu — `Breadcrumb.Ellipsis` is built to be that menu's trigger.
+
+<DemoBlock id="breadcrumb/collapsed" />
+
+On its own, `Ellipsis` renders an inert `<span>`; the stylesheet keys its cursor off the element that actually got rendered, so it stays `default` as a span and becomes `pointer` as a button, with no prop to pass. Give it a `label` — three dots have no text of their own, and without one the control is announced as "button" and nothing else.
+
+The inner `render={<button type="button" />}` is not decoration: `Menu.Trigger` styles itself as a button only when it is rendering its own default element, so handing it one keeps its chrome off the ellipsis.
+
+### Narrow screens
+
+<DemoBlock id="breadcrumb/overflow" />
+
+`overflow="wrap"` (the default) lets a long trail run onto a second line. `overflow="scroll"` keeps it on one line and `Breadcrumb.List` wraps itself in a [ScrollArea](/components/scroll-area), for the one thing a bare `overflow-x: auto` cannot do: say that it scrolls. Its edge fade is a **mask** driven off the remaining scroll distance, so it opens as the trail moves under it, closes flush at either end, and is right on any background. `overscroll-behavior: contain` comes with it, so a sideways swipe at the end does not drag the page along, as does a viewport that becomes focusable only while there is something to scroll.
+
+There is **no scrollbar**. A scroll area's scrollbar overlays the content rather than insetting it, so on a one-line trail it is painted across the bottom of the crumbs — and reserving a strip to keep it off them would make every scrollable trail taller than every other one. The fade is the affordance here, and at this size it is the better one: it is there at rest rather than on hover, and it says which *end* still has trail on it.
+
+`Breadcrumb.List` also scrolls it to the **far end** on mount: the end of a trail is the part a reader needs, and it is the part that falls off the edge. That only happens when the list actually overflows, so the `wrap` default never sees it, and it is keyed on the crumb count rather than on every render — a reader who scrolled back to the root crumb should not be yanked forward again by an unrelated re-render.
+
+### Routing
+
+Framework links go in through `render`, which replaces the rendered `<a>` without losing the crumb's styling. With Next.js:
+
+```tsx
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Breadcrumb } from "@dofortech/pretty-ui";
+
+export function Trail() {
+  const segments = usePathname().split("/").filter(Boolean);
+
+  return (
+    <Breadcrumb.Root>
+      <Breadcrumb.List>
+        <Breadcrumb.Item>
+          <Breadcrumb.Link render={<Link href="/" />}>Home</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        {segments.map((segment, index) => {
+          const href = `/${segments.slice(0, index + 1).join("/")}`;
+          const last = index === segments.length - 1;
+          return (
+            <Breadcrumb.Item key={href}>
+              {last ? (
+                <Breadcrumb.Page>{label(segment)}</Breadcrumb.Page>
+              ) : (
+                <Breadcrumb.Link render={<Link href={href} />}>
+                  {label(segment)}
+                </Breadcrumb.Link>
+              )}
+            </Breadcrumb.Item>
+          );
+        })}
+      </Breadcrumb.List>
+    </Breadcrumb.Root>
+  );
+}
+```
+
+Deriving the trail from the URL like this is the cheap version, and it is wrong as often as it is right — a segment is an id or a slug at least as often as it is a title. Where the crumbs have real names, pass them down from the route's own data instead.
+
+If the trail sits inside a `<nav>` you already own, swap the root's element the same way: `render={<div />}` on `Breadcrumb.Root` keeps the page to one landmark.
+
+<Callout kind="note">
+  Search engines read breadcrumbs from [`BreadcrumbList` structured data](https://schema.org/BreadcrumbList), not from your markup. That is a `<script type="application/ld+json">` your route emits next to the trail — the component deliberately does not write one, because the absolute URLs it would need are the app's, not the trail's.
+</Callout>
+
+## Accessibility
+
+The keyboard story is the platform's: the crumbs are real links, so <kbd>Tab</kbd> walks them and <kbd>Enter</kbd> follows one. There is no roving focus to learn.
+
+Everything else the component does by default:
+
+- **`Root` is a named landmark.** It renders `<nav aria-label="Breadcrumb">` without being asked, because a page routinely carries several navigation landmarks and an unnamed one cannot be told from the others in a screen reader's landmark list. Override the label if the page carries two trails.
+- **`List` is an `<ol>`.** The trail's meaning *is* the order, and "list, 4 items" tells a reader how deep they are before they walk it.
+- **Separators are `role="presentation" aria-hidden="true"`.** They are punctuation; a screen reader reading "greater than" between every crumb is noise. The role also keeps them out of the item count, so the number announced is the number of crumbs.
+- **`Page` is a `<span aria-current="page">`, not a link.** A link to the page you are already on is a control that does nothing. The cue is never colour alone: `aria-current` carries it in the accessibility tree, and a weight change carries it on screen.
+- **Crumbs meet the 24×24 target floor** (SC 2.5.8) through `.pui-target`, which grows the hit box without moving anything — so the `plain` variant can keep the zero padding its look depends on.
+- **Under forced colors, every link is underlined.** The only thing separating an ancestor from the current page in the `plain` variant is a colour, and forced colors flattens both to `CanvasText`; the underline restores the distinction in the one channel that mode preserves.
+
+## Theming
+
+Every property below is declared on `Breadcrumb.Root`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The size presets work the same way: `data-size="sm"` and `"lg"` re-point a few of these knobs and nothing else.
+
+<ThemingTable component="Breadcrumb" />
+
+The parts also expose their state as data attributes — `data-size`, `data-variant` and `data-overflow` on the root — so a Tailwind arbitrary variant such as `data-[variant=chip]:...` can target them without a wrapper.
+
+## API reference
+
+### Breadcrumb.Root
+
+<PropTable component="BreadcrumbRoot" />
+
+### Breadcrumb.List
+
+<PropTable component="BreadcrumbList" />
+
+### Breadcrumb.Item
+
+<PropTable component="BreadcrumbItem" />
+
+### Breadcrumb.Link
+
+<PropTable component="BreadcrumbLink" />
+
+### Breadcrumb.Page
+
+<PropTable component="BreadcrumbPage" />
+
+### Breadcrumb.Separator
+
+<PropTable component="BreadcrumbSeparator" />
+
+### Breadcrumb.Ellipsis
+
+<PropTable component="BreadcrumbEllipsis" />

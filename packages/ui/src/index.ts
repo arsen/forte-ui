@@ -30,6 +30,20 @@ export type {
   AvatarGroupProps,
 } from "./components/avatar";
 
+export { Breadcrumb } from "./components/breadcrumb";
+export type {
+  BreadcrumbSize,
+  BreadcrumbVariant,
+  BreadcrumbOverflow,
+  BreadcrumbRootProps,
+  BreadcrumbListProps,
+  BreadcrumbItemProps,
+  BreadcrumbLinkProps,
+  BreadcrumbPageProps,
+  BreadcrumbSeparatorProps,
+  BreadcrumbEllipsisProps,
+} from "./components/breadcrumb";
+
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
 

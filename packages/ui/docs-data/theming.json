@@ -620,6 +620,167 @@
       }
     ]
   },
+  "Breadcrumb": {
+    "name": "Breadcrumb",
+    "tokens": [
+      {
+        "name": "--pui-breadcrumb-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Space between a crumb and its separator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-breadcrumb-row-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between rows of a wrapped trail",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-item-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Space between an icon and its label inside one crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Text size of the whole trail",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-breadcrumb-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Colour of an ancestor crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-color-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Colour of an ancestor crumb under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-color-current",
+        "value": "var(--pui-color-foreground)",
+        "description": "Colour of the current page's crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-font-weight-current",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Weight of the current page's crumb",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-underline-offset",
+        "value": "0.2em",
+        "description": "How far a hover underline sits below the text",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-separator-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of the separator",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-separator-size",
+        "value": "1em",
+        "description": "Size of the default chevron, relative to the trail's text",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-ellipsis-px",
+        "value": "var(--pui-breadcrumb-chip-px)",
+        "description": "Inline padding of the ellipsis button",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-ellipsis-py",
+        "value": "var(--pui-breadcrumb-chip-py)",
+        "description": "Block padding of the ellipsis button",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-ellipsis-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of the ellipsis button",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-px",
+        "value": "var(--pui-space-2)",
+        "description": "Inline padding of a chip",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-breadcrumb-chip-py",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding of a chip. Follows `data-pui-density`",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius of a chip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Chip fill of an ancestor crumb under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-breadcrumb-chip-bg-current",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Chip fill of the current page's crumb",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "tokens": [
