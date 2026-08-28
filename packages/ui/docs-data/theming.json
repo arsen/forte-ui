@@ -197,6 +197,104 @@
       }
     ]
   },
+  "AspectRatio": {
+    "name": "AspectRatio",
+    "tokens": [
+      {
+        "name": "--pui-aspect-ratio",
+        "value": "var(--pui-aspect-ratio-seed, 1)",
+        "description": "The shape the box holds, as a CSS `aspect-ratio` value. The `ratio` prop seeds it; declare it yourself — in a media or container query — for a shape that changes with the layout, and your declaration wins.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-aspect-fit",
+        "value": "cover",
+        "description": "How direct media children fill the box. `fit` sets this.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-fit=\"cover\"]",
+            "value": "cover"
+          },
+          {
+            "selector": ".root[data-fit=\"contain\"]",
+            "value": "contain"
+          },
+          {
+            "selector": ".root[data-fit=\"fill\"]",
+            "value": "fill"
+          },
+          {
+            "selector": ".root[data-fit=\"scale-down\"]",
+            "value": "scale-down"
+          },
+          {
+            "selector": ".root[data-fit=\"none\"]",
+            "value": "none"
+          }
+        ]
+      },
+      {
+        "name": "--pui-aspect-position",
+        "value": "50% 50%",
+        "description": "Which part of a cropped image survives the crop — an `object-position` value.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-aspect-radius",
+        "value": "0px",
+        "description": "Corner radius. `0px` for `plain`; both other variants raise it to `--pui-radius-surface`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outlined\"]",
+            "value": "var(--pui-radius-surface)"
+          },
+          {
+            "selector": ".root[data-variant=\"filled\"]",
+            "value": "var(--pui-radius-surface)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-aspect-background",
+        "value": "transparent",
+        "description": "What sits behind the content. `variant=\"filled\"` sets it — which is what makes the box its own placeholder while an image loads.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"filled\"]",
+            "value": "var(--pui-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-aspect-border-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Frame colour. Only painted when the width below is non-zero.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-aspect-border-width",
+        "value": "0px",
+        "description": "Frame width. `0px` unless `variant=\"outlined\"` — or forced colours are active, where `filled` takes one too so its placeholder does not vanish into the page.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outlined\"]",
+            "value": "1px"
+          },
+          {
+            "selector": ".root[data-variant=\"filled\"]",
+            "value": "1px"
+          }
+        ]
+      }
+    ]
+  },
   "Avatar": {
     "name": "Avatar",
     "tokens": [

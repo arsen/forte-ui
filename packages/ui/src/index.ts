@@ -15,6 +15,16 @@ export type {
   AccordionPanelProps,
 } from "./components/accordion";
 
+export { AspectRatio } from "./components/aspect-ratio";
+export type {
+  AspectRatioProps,
+  AspectRatioPreset,
+  AspectRatioValue,
+  AspectRatioFit,
+  AspectRatioVariant,
+  AspectRatioBasis,
+} from "./components/aspect-ratio";
+
 export { Avatar } from "./components/avatar";
 export type {
   AvatarSize,

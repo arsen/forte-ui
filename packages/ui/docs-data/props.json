@@ -92,6 +92,61 @@
       }
     ]
   },
+  "AspectRatio": {
+    "name": "AspectRatio",
+    "description": "A box that holds its shape, whatever goes in it.\n\n```tsx\n<AspectRatio ratio=\"video\">\n  <img src=\"/cover.jpg\" alt=\"\" />\n</AspectRatio>\n```\n\nThe reason to reach for it is layout shift: the box occupies its final size\nfrom the first paint, so an image that arrives half a second later drops\ninto space that was already reserved instead of shoving the page down.\n\nBase UI has no aspect-ratio primitive — there is no interaction to model —\nso this is built on the CSS property directly rather than on the\n`padding-bottom: 56.25%` trick the property replaced. Two things follow from\nthat, and both are the point:\n\n- **Children stack.** The box is a one-cell grid and every direct child is\n  placed in that cell, in source order, without leaving flow. A caption over\n  a photo is two elements and no `position: absolute`:\n\n  ```tsx\n  <AspectRatio ratio=\"photo\" variant=\"filled\">\n    <img src=\"/cover.jpg\" alt=\"\" />\n    <figcaption style={{ placeSelf: \"end start\" }}>Lisbon, 2019</figcaption>\n  </AspectRatio>\n  ```\n\n- **Either axis can be the measured one.** `basis=\"block\"` takes a definite\n  height and derives the width, which a percentage padding cannot do at all.\n\nMedia children are sized and `object-fit` for you — see `fit`. Everything\nvisual is a `--pui-aspect-*` custom property, and the state is on\n`data-variant`, `data-fit` and `data-basis`, so a box can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=filled]:...`) without wrapping it.",
+    "props": [
+      {
+        "name": "basis",
+        "type": "AspectRatioBasis",
+        "required": false,
+        "defaultValue": "inline",
+        "description": "Which axis the box measures itself on. `inline` takes the container's\nwidth and derives the height — the usual case, and the only one the\npadding-bottom technique can express. `block` does the reverse: it takes a\ndefinite height and derives the width, which is what a media tile in a\nfixed-height row or a full-bleed hero needs.\n\n`block` requires the parent to actually supply a height — a grid row, a\nstretched flex cross size, an explicit `height`. Given an indefinite one,\n`100%` has nothing to resolve against and the box falls back to sizing\nfrom its content."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "clip",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Clips content to the box, and to its corner radius.\n\nOn by default, because media that overflows its own frame is a bug rather\nthan a feature. Turn it off for the overlay that is *meant* to break out —\na badge hanging off a corner, a focus ring on a child, a tooltip anchored\ninside."
+      },
+      {
+        "name": "fit",
+        "type": "AspectRatioFit",
+        "required": false,
+        "defaultValue": "cover",
+        "description": "How direct media children — `img`, `video`, `canvas`, `iframe`, `embed`,\n`object`, and the `img` inside a `picture` — fill the box. It is an\n`object-fit` value, applied for you: media is stretched to the frame on\nboth axes first, so without it an image is either letterboxed or\noverflowing, and every caller ends up writing the same three declarations\non the child by hand.\n\n`cover` crops to fill and is what a media slot almost always wants;\n`contain` fits the whole image inside and leaves bars, which is right when\nthe subject must not be cut — a logo, a diagram, a product shot on white.\n\nTo keep an image from being cropped in the wrong place, set\n`--pui-aspect-position`."
+      },
+      {
+        "name": "ratio",
+        "type": "AspectRatioValue",
+        "required": false,
+        "defaultValue": "1",
+        "description": "The shape to hold. Takes a number (`16 / 9`), a CSS ratio string\n(`\"16 / 9\"`), the spoken form (`\"16:9\"`), or one of seven names:\n`square`, `video` (16:9), `wide` (21:9), `photo` (4:3), `portrait` (3:4),\n`story` (9:16), `golden` (1.618:1).\n\nPrefer the name where one fits — it says what the box is for, where\n`0.5625` says only what it measures."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component. This is\nhow the box becomes a `<figure>` around a caption, or the `<a>` that wraps\na whole thumbnail."
+      },
+      {
+        "name": "variant",
+        "type": "AspectRatioVariant",
+        "required": false,
+        "defaultValue": "plain",
+        "description": "How much chrome the box carries. `plain` is a pure layout box: no\nbackground, no border, no radius. `outlined` adds a hairline frame and a\nsurface radius, which gives light-on-light media an edge. `filled` adds a\nrecessed panel instead — and because that panel is visible while the box\nis still empty, it doubles as the loading placeholder for the image that\nis about to arrive."
+      }
+    ]
+  },
   "AvatarRoot": {
     "name": "AvatarRoot",
     "description": "The avatar box. Holds an `Avatar.Image`, an `Avatar.Fallback`, or both —\nBase UI mounts whichever the image's loading status calls for.\n\nIt is a one-cell grid, and both parts are placed in that cell. Stacking them\nin flow would put the outgoing image *beside* the fallback for the frames it\nspends fading out, doubling the avatar's width and snapping it back.",
