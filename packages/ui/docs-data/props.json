@@ -92,6 +92,140 @@
       }
     ]
   },
+  "AlertRoot": {
+    "name": "AlertRoot",
+    "description": "The card. Holds an `Alert.Icon`, an `Alert.Title`, an `Alert.Description`,\nan `Alert.Action` and an `Alert.Close`, all optional and all siblings.\n\nThe parts are flat rather than nested in a text wrapper because the layout\nis a grid and every part places itself in it. Absent parts cost nothing: the\ngaps are margins on the parts themselves rather than a `column-gap`, so an\nalert with no icon has no icon column to leave empty.\n\nIt owns exactly one bit of state, and only because nothing else can: React\nremoves an element from the DOM the moment it stops being rendered, so an\nalert whose presence is a plain conditional has no way to animate out. The\nroot therefore outlives its own `open={false}` for the length of one\ntransition, then unmounts itself.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the alert starts in the page, when it is uncontrolled."
+      },
+      {
+        "name": "live",
+        "type": "AlertLive",
+        "required": false,
+        "defaultValue": "off",
+        "description": "Whether the alert announces itself when it appears, and how urgently.\n\n`off` is the default because most alerts are in the page from the start,\nand a live region only announces a CHANGE — so a server-rendered\n`role=\"alert\"` announces nothing while still adding a role to every\nscreen-reader element list. Set it when the alert is inserted in response\nto something the user did.\n\n`polite` (`role=\"status\"`) waits for a pause and is right for almost\neverything — a saved confirmation, a background result. `assertive`\n(`role=\"alert\"`) interrupts whatever is being read, so keep it for\nfailures the user has to act on: a payment that did not go through, work\nthat is about to be lost."
+      },
+      {
+        "name": "onExitComplete",
+        "type": "(() => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called once the exit transition has finished and the card has removed\nitself from the DOM.\n\nThis is where an alert that lives in a list gets spliced out of it.\nRemoving it in `onOpenChange` instead unmounts the element mid-transition,\nwhich is the bug the two callbacks exist to keep apart."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "((open: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when `Alert.Close` is pressed, with `false`.\n\nIt fires at the START of the exit, not the end — it is a request, and the\ncard is still on screen when you hear about it. Use `onExitComplete` for\nthe moment it is actually gone."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether the alert is in the page. Pass it to take control of dismissal —\n`Alert.Close` then reports through `onOpenChange` instead of closing the\ncard itself.\n\nSetting it to `false` does not unmount immediately: the card runs its exit\ntransition first and removes itself when that finishes. Rendering the\nalert conditionally — `{open && <Alert.Root>}` — skips the transition\nentirely, because React takes the element out of the DOM before any of it\ncan run. That is the reason this prop exists."
+      },
+      {
+        "name": "tone",
+        "type": "AlertTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the alert draws from, and which glyph\n`Alert.Icon` picks when you do not give it one.\n\nThe four status tones are the ones with a glyph — `success`, `warning`,\n`danger`, `info`. `neutral`, `primary` and `secondary` are emphasis\nrather than status and deliberately have none."
+      },
+      {
+        "name": "variant",
+        "type": "AlertVariant",
+        "required": false,
+        "defaultValue": "soft",
+        "description": "How loud the card is. `soft` tints the whole surface in the tone and\npaints the message in it; `outline` is a neutral panel with a hairline,\nwhere the tone survives only in the glyph.\n\nReach for `outline` when several alerts share a screen, or when the alert\nsits inside a form beside other bordered controls — a page of tinted\nfields has nothing left to emphasise with."
+      }
+    ]
+  },
+  "AlertIcon": {
+    "name": "AlertIcon",
+    "description": "The glyph, coloured by the alert's tone.\n\nRenders nothing when there is nothing to draw — no children and a tone with\nno standard glyph — so `<Alert.Icon />` is safe to leave in a component that\ntakes its tone from a prop. The icon column collapses rather than opening a\ngap where a glyph would be.\n\nIt is centred on the TITLE's line box rather than on the card, so the glyph\nlines up with the first line of text whether the description runs to one\nline or five.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The glyph to draw. Defaults to the standard one for the root's `tone`,\nand any `svg` passed here is sized to `--pui-alert-icon-size` without\nneeding a size prop of its own."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AlertTitle": {
+    "name": "AlertTitle",
+    "description": "The one-line summary, in the tone's own colour on `soft` and in the plain\nforeground on `outline`.\n\nIt renders a `<div>`, not a heading, and that is deliberate: an alert is a\nmessage about the state of the page rather than a section of it, and an\n`<h3>` here lands in the document outline between two real sections — which\nis what a screen-reader user navigating by heading has to wade through. If\nthe alert genuinely opens a region, name the region instead.\n\nA long title wraps. It is not truncated, because the summary is the part a\nreader who skips the description still has to be able to read.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AlertDescription": {
+    "name": "AlertDescription",
+    "description": "The body copy, under the title and in the same column.\n\nA `<div>` rather than a `<p>`, so a list, a code snippet or a second\nparagraph can go inside without producing invalid markup. Paragraphs and\nlists placed in it lose their outer margins, so the card closes evenly\nwhether the description is one sentence or three items.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AlertAction": {
+    "name": "AlertAction",
+    "description": "The trailing slot for whatever the message asks the reader to do — usually\none `Button`, occasionally two.\n\nIt is a slot and not a button: an alert's action is a real control with its\nown variant, tone, loading state and href, and wrapping `Button` would mean\nre-exposing all of it. Compose instead — `<Alert.Action><Button size=\"sm\"\nvariant=\"outline\">Retry</Button></Alert.Action>`.\n\nIt sits against the inline-end edge, centred on the whole message rather\nthan on the title, so a three-line description does not leave the button\nfloating at the top.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AlertClose": {
+    "name": "AlertClose",
+    "description": "The button that dismisses the alert.\n\nOn an uncontrolled alert it closes the card on its own, which is the whole\nof the common case — `<Alert.Root>` with an `<Alert.Close />` in it needs no\nstate and no handler. On a controlled one it reports through the root's\n`onOpenChange` and changes nothing itself.\n\nEither way the card runs its exit transition before it goes. Calling\n`preventDefault()` in your own `onClick` stops the dismissal, which is how a\n\"discard your draft?\" confirmation gets in front of it.\n\nRenders a \"×\" with an `aria-label` of \"Dismiss\", both overridable through\n`children` and `aria-label`. `type=\"button\"` is set because the default is\n`submit`, and an alert inside a form is exactly where that bites.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "AvatarRoot": {
     "name": "AvatarRoot",
     "description": "The avatar box. Holds an `Avatar.Image`, an `Avatar.Fallback`, or both —\nBase UI mounts whichever the image's loading status calls for.\n\nIt is a one-cell grid, and both parts are placed in that cell. Stacking them\nin flow would put the outgoing image *beside* the fallback for the frames it\nspends fading out, doubling the avatar's width and snapping it back.",

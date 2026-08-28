@@ -15,6 +15,19 @@ export type {
   AccordionPanelProps,
 } from "./components/accordion";
 
+export { Alert } from "./components/alert";
+export type {
+  AlertVariant,
+  AlertTone,
+  AlertLive,
+  AlertRootProps,
+  AlertIconProps,
+  AlertTitleProps,
+  AlertDescriptionProps,
+  AlertActionProps,
+  AlertCloseProps,
+} from "./components/alert";
+
 export { Avatar } from "./components/avatar";
 export type {
   AvatarSize,

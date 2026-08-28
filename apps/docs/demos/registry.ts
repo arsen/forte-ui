@@ -19,6 +19,22 @@ import d_accordion_disabled_item from "./accordion/disabled-item";
 import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
 import d_accordion_multiple from "./accordion/multiple";
 import d_accordion_multiple_src from "./accordion/multiple?raw";
+import d_alert_action from "./alert/action";
+import d_alert_action_src from "./alert/action?raw";
+import d_alert_basic from "./alert/basic";
+import d_alert_basic_src from "./alert/basic?raw";
+import d_alert_custom_icon from "./alert/custom-icon";
+import d_alert_custom_icon_src from "./alert/custom-icon?raw";
+import d_alert_dismissible from "./alert/dismissible";
+import d_alert_dismissible_src from "./alert/dismissible?raw";
+import d_alert_live from "./alert/live";
+import d_alert_live_src from "./alert/live?raw";
+import d_alert_parts from "./alert/parts";
+import d_alert_parts_src from "./alert/parts?raw";
+import d_alert_tones from "./alert/tones";
+import d_alert_tones_src from "./alert/tones?raw";
+import d_alert_variants from "./alert/variants";
+import d_alert_variants_src from "./alert/variants?raw";
 import d_avatar_badge from "./avatar/badge";
 import d_avatar_badge_src from "./avatar/badge?raw";
 import d_avatar_basic from "./avatar/basic";
@@ -588,6 +604,14 @@ export type DemoId =
   | "accordion/controlled"
   | "accordion/disabled-item"
   | "accordion/multiple"
+  | "alert/action"
+  | "alert/basic"
+  | "alert/custom-icon"
+  | "alert/dismissible"
+  | "alert/live"
+  | "alert/parts"
+  | "alert/tones"
+  | "alert/variants"
   | "avatar/badge"
   | "avatar/basic"
   | "avatar/fallback"
@@ -878,6 +902,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
   "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
   "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
+  "alert/action": { Component: d_alert_action, source: d_alert_action_src, file: "alert/action.tsx" },
+  "alert/basic": { Component: d_alert_basic, source: d_alert_basic_src, file: "alert/basic.tsx" },
+  "alert/custom-icon": { Component: d_alert_custom_icon, source: d_alert_custom_icon_src, file: "alert/custom-icon.tsx" },
+  "alert/dismissible": { Component: d_alert_dismissible, source: d_alert_dismissible_src, file: "alert/dismissible.tsx" },
+  "alert/live": { Component: d_alert_live, source: d_alert_live_src, file: "alert/live.tsx" },
+  "alert/parts": { Component: d_alert_parts, source: d_alert_parts_src, file: "alert/parts.tsx" },
+  "alert/tones": { Component: d_alert_tones, source: d_alert_tones_src, file: "alert/tones.tsx" },
+  "alert/variants": { Component: d_alert_variants, source: d_alert_variants_src, file: "alert/variants.tsx" },
   "avatar/badge": { Component: d_avatar_badge, source: d_avatar_badge_src, file: "avatar/badge.tsx" },
   "avatar/basic": { Component: d_avatar_basic, source: d_avatar_basic_src, file: "avatar/basic.tsx" },
   "avatar/fallback": { Component: d_avatar_fallback, source: d_avatar_fallback_src, file: "avatar/fallback.tsx" },
