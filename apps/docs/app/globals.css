@@ -92,8 +92,21 @@
    * Excluding only descendants of a ringing wrapper, rather than every
    * `[data-pui]` element, keeps this rule as the backstop it is meant to be for
    * anything the library leaves unringed. `:where()` keeps the specificity at
-   * (0,1,0). */
-  :focus-visible:not(:where(.pui-focus-ring-within *)) {
+   * (0,1,0).
+   *
+   * `combobox-input` is the second exclusion, and it is the same kind of
+   * mistake seen from the other end: a part whose component decided AGAINST a
+   * ring. Inside `Combobox.Popup` that input holds focus for the popup's whole
+   * lifetime, and the popup is `overflow: clip` with the row flush to its
+   * edges — so this rule's outset ring survives only along the hairline, as a
+   * bright bar that reads as a rendering fault. The library's own rule says
+   * `outline: none`; this layer is declared after every `pretty-ui` layer, so
+   * without the exclusion it wins and reintroduces the bar. It is listed by
+   * `data-pui` because that marker is public API and the CSS Modules class
+   * beside it is not. */
+  :focus-visible:not(
+      :where(.pui-focus-ring-within *, [data-pui="combobox-input"])
+    ) {
     outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
     outline-offset: var(--pui-focus-ring-offset);
     box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);

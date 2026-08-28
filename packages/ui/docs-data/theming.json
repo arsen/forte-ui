@@ -2095,8 +2095,22 @@
       },
       {
         "name": "--pui-combobox-button-size",
-        "value": "max( var(--pui-target-min), calc(var(--pui-combobox-field-height) - var(--pui-space-1) * 2) )",
+        "value": "calc( var(--pui-combobox-field-height) - var(--pui-space-1) * 2 - var(--pui-combobox-field-border-width) * 2 )",
         "description": "Size of the icon buttons (Trigger, Clear) inside the field",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-button-radius",
+        "value": "max( 0px, calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1)) )",
+        "description": "Corner radius of the icon buttons (Trigger, Clear) inside the field",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-inset",
+        "value": "var(--pui-space-2)",
+        "description": "Inline space a chip holds before its own label. Set it HERE, on the group — a chip's own copy cannot reach the padding that pairs with it",
         "part": "inputGroup",
         "overrides": []
       },
@@ -2354,7 +2368,7 @@
       },
       {
         "name": "--pui-combobox-chip-radius",
-        "value": "var(--pui-radius-1)",
+        "value": "max( 0px, calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1)) )",
         "description": "Chip corner radius",
         "part": "chip",
         "overrides": []
@@ -2525,6 +2539,34 @@
         "value": "var(--pui-font-size-2)",
         "description": "Item font size",
         "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Group label text colour",
+        "part": "groupLabel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Group label text size",
+        "part": "groupLabel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-tracking",
+        "value": "0.06em",
+        "description": "Group label letter-spacing",
+        "part": "groupLabel",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-group-label-mt",
+        "value": "var(--pui-space-2)",
+        "description": "Space above a group label, dropped on the first group in the list",
+        "part": "groupLabel",
         "overrides": []
       }
     ]

@@ -1552,8 +1552,8 @@
         "name": "sideOffset",
         "type": "number | OffsetFunction",
         "required": false,
-        "defaultValue": "4",
-        "description": "Gap in pixels between the anchor and the popup."
+        "defaultValue": "8",
+        "description": "Gap in pixels between the anchor and the popup. The default clears the\nfocus ring rather than sitting flush against it: unlike `Select`, focus\nstays on the field while the popup is open, so the group's two-tone ring\n(`--pui-focus-ring-offset` + `--pui-focus-ring-width`, 4px together) is\npainted in exactly the gap this measures."
       }
     ]
   },
@@ -1659,7 +1659,7 @@
   },
   "ComboboxGroupLabel": {
     "name": "ComboboxGroupLabel",
-    "description": "The heading for a `<Combobox.Group>`. Renders a `<div>`, indented past the\nindicator column so its text lines up with the item text rather than with\nthe check marks.",
+    "description": "The heading for a `<Combobox.Group>`. Renders a `<div>`, set at the list's\nown text edge — outdented from the items it heads, and uppercased and\ntracked — so it reads a level up from them rather than as one more row.",
     "props": [
       {
         "name": "className",

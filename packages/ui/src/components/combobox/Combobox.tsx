@@ -104,12 +104,40 @@ export type ComboboxRootProps<
  * Both generics are forwarded rather than widened to `any`: `Value` is the
  * type of a single item, and `Multiple` flips the value between `Value` and
  * `Value[]`. Passing `multiple` alone is enough for `Multiple` to infer.
+ *
+ * One behaviour is added on top of the primitive: a `multiple` combobox never
+ * closes because an item was pressed. Base UI closes it only when a filter had
+ * been typed and the input lives outside the popup, which makes picking from a
+ * short list and picking from a searched list two different gestures — and an
+ * async list, where typing is the only way to see anything, closes on every
+ * single pick. Keeping it open also keeps the query, so "search once, tick
+ * three results" works. A consumer who does want a pick to close can drive
+ * `open` themselves and set it from `onValueChange`.
  */
 export function ComboboxRoot<
   Value,
   Multiple extends boolean | undefined = false,
->(props: ComboboxRootProps<Value, Multiple>): React.JSX.Element {
-  return <BaseCombobox.Root {...props} />;
+>({
+  onOpenChange,
+  ...props
+}: ComboboxRootProps<Value, Multiple>): React.JSX.Element {
+  const multiple = props.multiple;
+
+  const handleOpenChange = React.useCallback(
+    (open: boolean, eventDetails: BaseCombobox.Root.ChangeEventDetails) => {
+      // Cancelled BEFORE the consumer's handler runs, not after: the popup
+      // stays open, so there is no open-change to report and calling their
+      // handler would tell them about a close that never happened.
+      if (multiple && !open && eventDetails.reason === "item-press") {
+        eventDetails.cancel();
+        return;
+      }
+      onOpenChange?.(open, eventDetails);
+    },
+    [multiple, onOpenChange],
+  );
+
+  return <BaseCombobox.Root {...props} onOpenChange={handleOpenChange} />;
 }
 
 /* -------------------------------------------------------------------------
@@ -316,7 +344,11 @@ export const ComboboxTrigger = React.forwardRef<
   return (
     <BaseCombobox.Trigger
       ref={ref}
-      className={clsx(styles.trigger, "pui-focus-ring", className)}
+      // `pui-target` floors the HIT area at 24x24 without inflating the
+      // visual box, which inside an `InputGroup` is the field's inner height
+      // and at `sm` is smaller than that. No-op on the standalone shape,
+      // whose box already clears it.
+      className={clsx(styles.trigger, "pui-focus-ring", "pui-target", className)}
       data-pui="combobox-trigger"
       data-variant={variant}
       data-size={size}
@@ -419,7 +451,8 @@ export const ComboboxClear = React.forwardRef<
   return (
     <BaseCombobox.Clear
       ref={ref}
-      className={clsx(styles.clear, "pui-focus-ring", className)}
+      // Same 24x24 floor as the Trigger it sits beside; see there.
+      className={clsx(styles.clear, "pui-focus-ring", "pui-target", className)}
       data-pui="combobox-clear"
       {...props}
     >
@@ -562,8 +595,12 @@ export interface ComboboxPopupProps extends Omit<BasePopupProps, "className"> {
    */
   align?: BasePositionerProps["align"];
   /**
-   * Gap in pixels between the anchor and the popup.
-   * @default 4
+   * Gap in pixels between the anchor and the popup. The default clears the
+   * focus ring rather than sitting flush against it: unlike `Select`, focus
+   * stays on the field while the popup is open, so the group's two-tone ring
+   * (`--pui-focus-ring-offset` + `--pui-focus-ring-width`, 4px together) is
+   * painted in exactly the gap this measures.
+   * @default 8
    */
   sideOffset?: BasePositionerProps["sideOffset"];
   /**
@@ -614,7 +651,7 @@ export const ComboboxPopup = React.forwardRef<HTMLDivElement, ComboboxPopupProps
       children,
       side,
       align = "start",
-      sideOffset = 4,
+      sideOffset = 8,
       alignOffset,
       collisionPadding,
       container,
@@ -880,9 +917,9 @@ export interface ComboboxGroupLabelProps
 }
 
 /**
- * The heading for a `<Combobox.Group>`. Renders a `<div>`, indented past the
- * indicator column so its text lines up with the item text rather than with
- * the check marks.
+ * The heading for a `<Combobox.Group>`. Renders a `<div>`, set at the list's
+ * own text edge — outdented from the items it heads, and uppercased and
+ * tracked — so it reads a level up from them rather than as one more row.
  */
 export const ComboboxGroupLabel = React.forwardRef<
   HTMLDivElement,
