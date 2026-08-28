@@ -2779,6 +2779,253 @@
       }
     ]
   },
+  "NavList": {
+    "name": "NavList",
+    "tokens": [
+      {
+        "name": "--pui-nav-list-gap",
+        "value": "var(--pui-space-5)",
+        "description": "Space between sections",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-px",
+        "value": "var(--pui-space-2)",
+        "description": "Inline padding of a row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-py",
+        "value": "var(--pui-list-item-py)",
+        "description": "Block padding of a row. Follows `data-pui-density`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-nav-list-item-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Space between an icon and the row's text",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of a row's fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Row text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-nav-list-item-font-weight",
+        "value": "var(--pui-font-weight-normal)",
+        "description": "Row text weight at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-font-weight-active",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Row text weight on the active row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Row text colour at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-color-hover",
+        "value": "var(--pui-color-foreground)",
+        "description": "Row text colour on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-color-active",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Row text colour on the active row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-bg",
+        "value": "transparent",
+        "description": "Row fill at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Row fill on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-item-bg-active",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Row fill on the active row",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-label-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Label text size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-label-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Label colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-label-tracking",
+        "value": "0.06em",
+        "description": "Label letter-spacing. Tracking has to come back at this size or a short uppercase phrase closes up and reads as one word",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-label-mb",
+        "value": "var(--pui-space-2)",
+        "description": "Space under the label",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-indent",
+        "value": "var(--pui-space-3)",
+        "description": "How far a nested list steps in before its guide line",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-indent-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Space between the guide line and the nested rows",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-guide-width",
+        "value": "1px",
+        "description": "Width of the guide line along a nested list. `0px` removes it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-guide-color",
+        "value": "var(--pui-color-border-muted)",
+        "description": "Colour of the guide line",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-rail-width",
+        "value": "2px",
+        "description": "Width of the active-row rail",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-rail-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Colour of the active-row rail",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-rail-inset",
+        "value": "18%",
+        "description": "How far the rail stops short of the row's top and bottom edges",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-icon-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Chevron colour while the group is closed",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-icon-color-open",
+        "value": "var(--pui-color-foreground)",
+        "description": "Chevron colour while the group is open",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-icon-rotate",
+        "value": "180deg",
+        "description": "How far the chevron turns as the panel opens",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-badge-bg",
+        "value": "var(--pui-color-secondary-soft)",
+        "description": "Badge fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-badge-color",
+        "value": "var(--pui-color-secondary-text)",
+        "description": "Badge text colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of a group's open/close",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve of a group's open/close",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "NavigationMenu": {
     "name": "NavigationMenu",
     "tokens": [

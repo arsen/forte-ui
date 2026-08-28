@@ -1,0 +1,396 @@
+/*
+ * NavList
+ *
+ * A sidebar's page list: sections with labels, rows, collapsible groups,
+ * nested levels behind a guide line. Two axes are set on the root and read by
+ * everything below through inherited custom properties:
+ *
+ *   data-size="sm|md|lg"       row padding and text size
+ *   data-marker="fill|rail"    how the active row is drawn — `rail` ADDS an
+ *                              accent bar to the fill, it does not replace it
+ *
+ * The collapse animation is Base UI's Collapsible wearing this component's
+ * clothes: the panel transitions `--collapsible-panel-height` on
+ * [data-starting-style]/[data-ending-style], so closing a group mid-open
+ * reverses instead of snapping. Base UI decides transition-vs-keyframe by
+ * reading the panel's COMPUTED transition-duration, and a computed 0s reads
+ * as "no transition" — one more reason the duration tokens floor at 1ms.
+ *
+ * No prefers-reduced-motion block, here or in any component file: the travel
+ * token collapses to 0px and the durations shorten on their own.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on NavList.Root itself, so an
+     * ancestor's value is only ever inherited and never wins. Everything a
+     * row paints resolves from these, which is what lets the size presets
+     * below re-point a handful of them instead of restating rules. */
+
+    /** Space between sections */
+    --pui-nav-list-gap: var(--pui-space-5);
+
+    /* Rows. `--pui-list-item-py` rather than a space token so the rows follow
+     * `data-pui-density` the way every other list in the library does. */
+    /** Inline padding of a row */
+    --pui-nav-list-item-px: var(--pui-space-2);
+    /** Block padding of a row. Follows `data-pui-density` */
+    --pui-nav-list-item-py: var(--pui-list-item-py);
+    /** Space between an icon and the row's text */
+    --pui-nav-list-item-gap: var(--pui-control-gap);
+    /** Corner radius of a row's fill */
+    --pui-nav-list-item-radius: var(--pui-radius-2);
+    /** Row text size */
+    --pui-nav-list-item-font-size: var(--pui-font-size-2);
+    /** Row text weight at rest */
+    --pui-nav-list-item-font-weight: var(--pui-font-weight-normal);
+    /** Row text weight on the active row */
+    --pui-nav-list-item-font-weight-active: var(--pui-font-weight-medium);
+    /** Row text colour at rest */
+    --pui-nav-list-item-color: var(--pui-color-foreground-muted);
+    /** Row text colour on hover */
+    --pui-nav-list-item-color-hover: var(--pui-color-foreground);
+    /** Row text colour on the active row */
+    --pui-nav-list-item-color-active: var(--pui-color-primary-text);
+    /** Row fill at rest */
+    --pui-nav-list-item-bg: transparent;
+    /** Row fill on hover */
+    --pui-nav-list-item-bg-hover: var(--pui-color-panel-hover);
+    /** Row fill on the active row */
+    --pui-nav-list-item-bg-active: var(--pui-color-primary-soft);
+
+    /* Section labels. */
+    /** Label text size */
+    --pui-nav-list-label-font-size: var(--pui-font-size-1);
+    /** Label colour */
+    --pui-nav-list-label-color: var(--pui-color-foreground-subtle);
+    /** Label letter-spacing. Tracking has to come back at this size or a
+     * short uppercase phrase closes up and reads as one word */
+    --pui-nav-list-label-tracking: 0.06em;
+    /** Space under the label */
+    --pui-nav-list-label-mb: var(--pui-space-2);
+
+    /* Nesting. The indent is split in two so the guide line lands between
+     * the levels instead of flush against either one. */
+    /** How far a nested list steps in before its guide line */
+    --pui-nav-list-indent: var(--pui-space-3);
+    /** Space between the guide line and the nested rows */
+    --pui-nav-list-indent-gap: var(--pui-space-2);
+    /** Width of the guide line along a nested list. `0px` removes it */
+    --pui-nav-list-guide-width: 1px;
+    /** Colour of the guide line */
+    --pui-nav-list-guide-color: var(--pui-color-border-muted);
+
+    /* The rail — only painted under data-marker="rail". */
+    /** Width of the active-row rail */
+    --pui-nav-list-rail-width: 2px;
+    /** Colour of the active-row rail */
+    --pui-nav-list-rail-color: var(--pui-color-primary);
+    /** How far the rail stops short of the row's top and bottom edges */
+    --pui-nav-list-rail-inset: 18%;
+
+    /* The group chevron. `-subtle` is below the text floor and fine for a
+     * non-text indicator (SC 1.4.11) — and it is never the only cue:
+     * `aria-expanded` and the panel itself say the same thing. */
+    /** Chevron colour while the group is closed */
+    --pui-nav-list-icon-color: var(--pui-color-foreground-subtle);
+    /** Chevron colour while the group is open */
+    --pui-nav-list-icon-color-open: var(--pui-color-foreground);
+    /** How far the chevron turns as the panel opens */
+    --pui-nav-list-icon-rotate: 180deg;
+
+    /* Badge. Secondary on purpose: the active row's fill is accent-soft, and
+     * a badge drawn from the same ramp would dissolve into it. */
+    /** Badge fill */
+    --pui-nav-list-badge-bg: var(--pui-color-secondary-soft);
+    /** Badge text colour */
+    --pui-nav-list-badge-color: var(--pui-color-secondary-text);
+
+    /* One duration and one curve for the panel's height and its content's
+     * settle, so the two cannot drift apart. Not a spring: overshooting
+     * `height` flashes a band of empty background under the last row. */
+    /** Length of a group's open/close */
+    --pui-nav-list-duration: var(--pui-duration-normal);
+    /** Curve of a group's open/close */
+    --pui-nav-list-ease: var(--pui-ease-standard);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-nav-list-gap);
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  /* Size presets re-point the knobs and nothing else. No `md` block: the
+   * defaults above ARE `md`. */
+  .root[data-size="sm"] {
+    --pui-nav-list-item-py: var(--pui-space-1);
+    --pui-nav-list-item-font-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="lg"] {
+    --pui-nav-list-item-py: var(--pui-space-3);
+    --pui-nav-list-item-font-size: var(--pui-font-size-3);
+  }
+
+  /* Section ---------------------------------------------------------------- */
+
+  .section {
+    display: block;
+  }
+
+  .sectionLabel {
+    /* Aligned with the row TEXT, not the row box: same inline padding. */
+    margin: 0 0 var(--pui-nav-list-label-mb);
+    padding-inline: var(--pui-nav-list-item-px);
+    color: var(--pui-nav-list-label-color);
+    font-size: var(--pui-nav-list-label-font-size);
+    font-weight: var(--pui-font-weight-semibold);
+    letter-spacing: var(--pui-nav-list-label-tracking);
+    line-height: var(--pui-line-height-normal);
+    text-transform: uppercase;
+    /* Chrome, not a control: an idle click should not start a text
+     * selection that then looks like a failed interaction. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* List -------------------------------------------------------------------- */
+
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Any list below the first steps in behind a guide line. One rule covers
+   * both routes there — inside a GroupPanel and directly inside an Item —
+   * because either way the inner <ul> is a descendant of the outer one, and
+   * each additional level matches again, so depth costs nothing to express. */
+  .list .list {
+    margin-inline-start: var(--pui-nav-list-indent);
+    padding-inline-start: var(--pui-nav-list-indent-gap);
+    border-inline-start: var(--pui-nav-list-guide-width) solid
+      var(--pui-nav-list-guide-color);
+  }
+
+  .item {
+    display: block;
+  }
+
+  /* Rows -------------------------------------------------------------------
+   * `.link` (an <a>) and `.groupTrigger` (a <button>) are the same row with
+   * different elements behind it, so the declarations are shared. Keeping
+   * them visually identical is the point: a reader scanning a sidebar should
+   * not be able to tell which rows navigate and which unfold before deciding
+   * to press one. */
+  .link,
+  .groupTrigger {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--pui-nav-list-item-gap);
+    /* SC 2.5.8. The block floor is the one that bites at data-size="sm". */
+    min-height: var(--pui-target-min);
+    padding: var(--pui-nav-list-item-py) var(--pui-nav-list-item-px);
+    border-radius: var(--pui-nav-list-item-radius);
+    background-color: var(--pui-nav-list-item-bg);
+    color: var(--pui-nav-list-item-color);
+    font-family: inherit;
+    font-size: var(--pui-nav-list-item-font-size);
+    font-weight: var(--pui-nav-list-item-font-weight);
+    line-height: var(--pui-line-height-normal);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* An svg placed straight into a row is an icon: it must not squash when
+   * the label wraps, and its colour rides `currentColor` through rest, hover
+   * and active without tokens of its own. Direct child only, so an
+   * illustration inside something the consumer nests deeper is left alone. */
+  .link > svg,
+  .groupLabel > svg {
+    flex: none;
+  }
+
+  /* Hover excludes the active row: it already wears the stronger fill, and
+   * swapping it for the hover grey would read as the row DEACTIVATING under
+   * the pointer. */
+  @media (hover: hover) {
+    .link:hover:not([data-active], [data-disabled]),
+    .groupTrigger:hover:not([data-disabled]) {
+      background-color: var(--pui-nav-list-item-bg-hover);
+      color: var(--pui-nav-list-item-color-hover);
+    }
+  }
+
+  .link[data-active],
+  .groupTrigger[data-active] {
+    background-color: var(--pui-nav-list-item-bg-active);
+    color: var(--pui-nav-list-item-color-active);
+    font-weight: var(--pui-nav-list-item-font-weight-active);
+  }
+
+  /* `opacity` is the non-forced-colors treatment only — the generic
+   * `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y, ordered
+   * after this one) restores `opacity: 1` and paints GrayText, so the 55%
+   * cannot survive into HCM and read as enabled. */
+  .link[data-disabled],
+  .groupTrigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* The rail: painted on top of the fill, not instead of it, so it is an
+   * addition a consumer can theme away by zeroing its width. Vertically
+   * inset rather than full-bleed — a bar spanning edge to edge reads as a
+   * border between rows, not a marker on one. */
+  .root[data-marker="rail"] .link[data-active]::before,
+  .root[data-marker="rail"] .groupTrigger[data-active]::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block: var(--pui-nav-list-rail-inset);
+    width: var(--pui-nav-list-rail-width);
+    border-radius: var(--pui-radius-pill);
+    background-color: var(--pui-nav-list-rail-color);
+  }
+
+  /* Group ------------------------------------------------------------------ */
+
+  .group {
+    display: block;
+  }
+
+  .groupTrigger {
+    width: 100%;
+    justify-content: space-between;
+    margin: 0;
+    border: 0;
+    text-align: start;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Owns the flexible column, so a long label wraps inside the row instead
+   * of pushing the chevron out of it. */
+  .groupLabel {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--pui-nav-list-item-gap);
+    min-width: 0;
+  }
+
+  /* `rotate` as its own property, not through `transform`, so nothing the
+   * consumer puts on this box shares a slot with it. The angle is NOT gated
+   * on --pui-motion-ok: pointing the other way is the state, and only the
+   * trip between the two states is motion — the duration collapses on its
+   * own. Spring easing paired with its own duration token; a shorter one
+   * truncates the curve mid-bounce. */
+  .groupIcon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-nav-list-icon-color);
+    rotate: 0deg;
+    transition:
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      rotate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  .groupTrigger[data-panel-open] .groupIcon {
+    color: var(--pui-nav-list-icon-color-open);
+    rotate: var(--pui-nav-list-icon-rotate);
+  }
+
+  /* Panel ------------------------------------------------------------------
+   * No padding here or on .groupContent: the rows carry their own, so a
+   * mounted, closed panel (`keepMounted` is this component's default)
+   * contributes no phantom band under the trigger. There is deliberately no
+   * `display` declaration either — Base UI hides a kept-mounted panel with
+   * the `hidden` attribute, and an author `display` would beat the UA's
+   * [hidden] rule and hold the panel open. */
+  .groupPanel {
+    box-sizing: border-box;
+    height: var(--collapsible-panel-height);
+    overflow: hidden;
+    transition: height var(--pui-nav-list-duration) var(--pui-nav-list-ease);
+  }
+
+  .groupPanel[data-starting-style],
+  .groupPanel[data-ending-style] {
+    height: 0;
+  }
+
+  /* The rows settle while the panel is still growing. They start slightly
+   * high and drop back: the panel clips from below, so travelling downward
+   * is the direction that reads as being uncovered. --pui-travel-sm is 0px
+   * under reduced motion, leaving the fade — the part that helps there. */
+  .groupContent {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      translate var(--pui-nav-list-duration) var(--pui-nav-list-ease);
+  }
+
+  .groupPanel[data-starting-style] .groupContent,
+  .groupPanel[data-ending-style] .groupContent {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--pui-travel-sm));
+  }
+
+  /* Badge ------------------------------------------------------------------ */
+
+  .badge {
+    /* Walks itself to the row's inline-end edge; text and icon stay a
+     * word-group at the start. */
+    margin-inline-start: auto;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding-inline: var(--pui-space-2);
+    border-radius: var(--pui-radius-pill);
+    background-color: var(--pui-nav-list-badge-bg);
+    color: var(--pui-nav-list-badge-color);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-normal);
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * layer alone.
+ *
+ * patterns.css already handles `[data-disabled]` (opacity restored, GrayText)
+ * and the focus ring. What is NavList-specific:
+ *
+ *   - The active row's cue is a background fill, and forced colors strips
+ *     author backgrounds. `aria-current` is not in patterns.css's selected
+ *     list, so the Highlight pair is restated here for `data-active`. The
+ *     rail needs nothing: redundant with the fill it sits on.
+ *   - The badge's fill goes the same way, leaving its text floating in the
+ *     row; a border keeps it a chip. `transparent` is replaced with a system
+ *     colour in HCM, which is exactly the trick .pui-hc-surface uses.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .link[data-active]:not([data-disabled]),
+    .groupTrigger[data-active]:not([data-disabled]) {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    .badge {
+      border: 1px solid CanvasText;
+    }
+  }
+}

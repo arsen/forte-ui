@@ -185,6 +185,22 @@ export type {
   MenubarOrientation,
 } from "./components/menubar";
 
+export { NavList } from "./components/nav-list";
+export type {
+  NavListSize,
+  NavListMarker,
+  NavListRootProps,
+  NavListSectionProps,
+  NavListSectionLabelProps,
+  NavListListProps,
+  NavListItemProps,
+  NavListLinkProps,
+  NavListGroupProps,
+  NavListGroupTriggerProps,
+  NavListGroupPanelProps,
+  NavListBadgeProps,
+} from "./components/nav-list";
+
 export { NavigationMenu } from "./components/navigation-menu";
 export type {
   NavigationMenuVariant,

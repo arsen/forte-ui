@@ -2281,6 +2281,199 @@
       }
     ]
   },
+  "NavListRoot": {
+    "name": "NavListRoot",
+    "description": "The list container. Renders a `<nav>` landmark.\n\n```tsx\n<NavList.Root aria-label=\"Documentation\">\n  <NavList.Section>\n    <NavList.SectionLabel>Guides</NavList.SectionLabel>\n    <NavList.List>\n      <NavList.Item>\n        <NavList.Link href=\"/intro\" active>Introduction</NavList.Link>\n      </NavList.Item>\n    </NavList.List>\n  </NavList.Section>\n</NavList.Root>\n```\n\nGive it an `aria-label` (or `aria-labelledby`): a page routinely carries\nmore than one navigation landmark — a header, a sidebar, a table of\ncontents — and an unnamed one cannot be told from the others in a screen\nreader's landmark list.\n\nWhich item is current is the consumer's call, made per `Link` through its\n`active` prop. The component deliberately does not read a router: matching\nan href against a location is the app's business, and every framework does\nit differently.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "marker",
+        "type": "NavListMarker",
+        "required": false,
+        "defaultValue": "fill",
+        "description": "How the current item is marked. `\"fill\"` is a tinted row. `\"rail\"` adds a\nshort accent bar along the row's inline-start edge on top of the fill —\nthe classic sidebar treatment, and a second, non-colour-only cue."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<nav>` with another element or component — pass\n`render={<div />}` when the list sits inside a `<nav>` landmark you\nalready own, so the page does not grow a second one."
+      },
+      {
+        "name": "size",
+        "type": "NavListSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Row height and text size for every link and group trigger inside."
+      }
+    ]
+  },
+  "NavListSection": {
+    "name": "NavListSection",
+    "description": "One titled block of the list: a `SectionLabel` and a `List`. Renders a\n`<div role=\"group\">`, named by its label once one is present — which is\nwhat lets a screen reader report \"Components, group\" instead of a run of\nlinks with a stray line of text above them.\n\nPurely structural: sections do not collapse. For a block the reader can\nfold away, use `NavList.Group` inside a `List` instead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavListSectionLabel": {
+    "name": "NavListSectionLabel",
+    "description": "The section's title. Renders a `<div>` — deliberately not a heading:\nsidebars sit beside a document with its own outline, and a run of `<h2>`s\nin the chrome would interleave with the page's real headings in a screen\nreader's outline view. The enclosing `Section` picks the text up as its\naccessible name instead, which conveys the same structure in the right\nchannel.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavListList": {
+    "name": "NavListList",
+    "description": "The `<ul>` holding the rows. A real list on purpose: screen readers\nannounce \"list, N items\", which is the count a reader wants before deciding\nwhether to walk it.\n\nNest one inside a `GroupPanel` — or inside an `Item`, after its `Link` —\nand it indents itself and draws the guide line. Depth is expressed by\nnesting alone; there is no `level` prop to keep in sync with the markup.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavListItem": {
+    "name": "NavListItem",
+    "description": "One row's `<li>`. Structural — the interactive element is the `Link` (or\n`Group`) inside it. It exists as its own part rather than being fused into\n`Link` so a row can hold more than a link: a link plus a nested `List` is\nhow a subtree with a navigable parent is written.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavListLink": {
+    "name": "NavListLink",
+    "description": "The navigable row. Renders an `<a>`.\n\nChildren lay out on a flex row, so an icon in front of the text and a\n`NavList.Badge` after it need no wrapper — the badge floats itself to the\ninline-end edge.",
+    "props": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether this row is where the reader currently is. Publishes\n`data-active` for styling and `aria-current=\"page\"`, so the cue is never\ncolour alone. For a same-page target — a table of contents — pass your\nown `aria-current=\"location\"` alongside it; an explicit value wins over\nthe derived one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disables the row. The default `<a>` drops its `href` (an anchor without\none is unfocusable and inert), `aria-disabled` is set, and clicks are\nswallowed — which is also what covers an element supplied through\n`render`, whose own `href` this component cannot remove."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/pricing\" />}` is how a framework's router link goes\nin without losing the row's styling and states."
+      }
+    ]
+  },
+  "NavListGroup": {
+    "name": "NavListGroup",
+    "description": "A collapsible subtree: a `GroupTrigger` and a `GroupPanel` holding a nested\n`List`. Built on Base UI's `Collapsible`, so it takes the same state props —\n`defaultOpen` uncontrolled, `open` plus `onOpenChange` controlled, and\n`disabled`.\n\nRenders an `<li>` (via `render`, which you can still override), so it sits\nin a `List` as a sibling of ordinary `Item`s.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "NavListGroupTrigger": {
+    "name": "NavListGroupTrigger",
+    "description": "The row that opens and closes its group. Renders a `<button>` styled like a\n`Link`, carrying `aria-expanded` and an `aria-controls` pointing at the\npanel.\n\nKeep the text as the accessible name — `aria-expanded` already announces\nopen and closed, so the label needs no \"show/hide\" of its own.",
+    "props": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the reader is currently somewhere INSIDE this group — the cue\nthat keeps the current location visible while the group is closed over\nit. Styling only (`data-active`): no `aria-current`, because the current\npage is a link, and this is the button that reveals it."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<ChevronDownIcon />",
+        "description": "The marker at the inline-end edge. Defaults to a chevron that rotates as\nthe panel opens. Pass your own node — it goes in the same rotating,\n`aria-hidden` box — or `null` to drop it."
+      }
+    ]
+  },
+  "NavListGroupPanel": {
+    "name": "NavListGroupPanel",
+    "description": "The collapsible region under a `GroupTrigger` — put a `NavList.List` in it.\nBase UI measures it and publishes `--collapsible-panel-height`, which the\nstylesheet transitions.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Keep the panel in the DOM while closed. On by default — the opposite of\nBase UI's — because these are NAVIGATION links: unmounted, they are\ninvisible to crawlers and to find-in-page, and a closed group is exactly\nwhere the page a crawler wants usually is. `hidden` keeps the closed\ncopy out of the accessibility tree and the tab order either way."
+      }
+    ]
+  },
+  "NavListBadge": {
+    "name": "NavListBadge",
+    "description": "A small pill at the row's inline-end edge — \"New\", \"Beta\", a count. Drop it\ninside a `Link` or `GroupTrigger` after the text; `margin-inline-start:\nauto` walks it to the far edge on its own.\n\nIt reads in the row's flow, so a screen reader announces \"Changelog, New\" —\nno extra wiring. Drawn from the secondary ramp rather than the accent, so\nit stays legible sitting on the active row's accent fill.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "NavigationMenuRoot": {
     "name": "NavigationMenuRoot",
     "description": "Groups every part of the navigation menu and owns which panel is open.\nRenders a `<nav>` — or a `<div>` when it is nested inside another menu's\n`Content`, since one `<nav>` inside another announces two navigation\nlandmarks for one region.\n\nGive it an `aria-label` when a page has more than one: \"Main\" and \"Footer\"\nare what a screen-reader user picks between in a landmark list, and two\nunnamed navigations there are indistinguishable.",

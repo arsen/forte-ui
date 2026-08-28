@@ -1,0 +1,184 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Nav List",
+  description:
+    "A sidebar's page list — titled sections, collapsible groups, nested levels, and a controlled notion of where you are.",
+};
+
+# Nav List
+
+A nav list is the vertical list of links a sidebar is made of: sections with small uppercase labels, rows that light up where you are, groups that fold away, and nested levels stepped in behind a guide line. It is the navigation counterpart to [Navigation Menu](/components/navigation-menu) — that one is the horizontal bar with popup panels; this one is the column that stays put.
+
+<DemoBlock id="nav-list/basic" />
+
+## Import
+
+```tsx
+import { NavList } from "@dofortech/pretty-ui";
+```
+
+`NavList` is a namespace of ten parts. The full anatomy, with every optional layer present:
+
+```tsx
+<NavList.Root aria-label="Documentation">
+  <NavList.Section>
+    <NavList.SectionLabel>Components</NavList.SectionLabel>
+    <NavList.List>
+      <NavList.Item>
+        <NavList.Link href="/button" active>Button</NavList.Link>
+      </NavList.Item>
+      <NavList.Group defaultOpen>
+        <NavList.GroupTrigger>Forms</NavList.GroupTrigger>
+        <NavList.GroupPanel>
+          <NavList.List>{/* nested Items */}</NavList.List>
+        </NavList.GroupPanel>
+      </NavList.Group>
+    </NavList.List>
+  </NavList.Section>
+</NavList.Root>
+```
+
+Most lists need less. `Section` and `SectionLabel` exist for a list with titled blocks; a flat list is `Root → List → Item → Link` and nothing else.
+
+Give `Root` an `aria-label`. A page routinely carries several navigation landmarks — the header, the sidebar, a table of contents — and an unnamed one cannot be told from the others in a screen reader's landmark list.
+
+<Callout kind="note">
+  The component does not read your router. Which row is current is a prop — `active` on `NavList.Link` — because matching an href against a location is the app's business, and every framework does it differently. The [routing section](#routing) below shows the three-line version.
+</Callout>
+
+## Examples
+
+### Sections
+
+`Section` wraps a label and a list into one `role="group"`, named by its `SectionLabel` — a screen reader announces "Getting started, group" instead of a run of links with a stray line of text above them. The label is deliberately **not a heading**: a sidebar sits beside a document with its own outline, and a run of `<h2>`s in the chrome would interleave with the page's real ones.
+
+The demo at the top of the page is this shape. Sections do not collapse — they are structure, not state. For a block the reader can fold away, use a group.
+
+### Collapsible groups
+
+`Group` is a collapsible subtree: a `GroupTrigger` styled like a row, and a `GroupPanel` holding a nested `List`. It renders an `<li>`, so it sits in a list as a sibling of ordinary items, and it nests — a group inside a group's panel steps in one more level, each level behind its own guide line.
+
+<DemoBlock id="nav-list/groups" />
+
+State is Base UI's `Collapsible` contract: `defaultOpen` uncontrolled, `open` plus `onOpenChange` controlled. The trigger takes its own `active` prop for the "the current page is in here" cue — styling only, no `aria-current`, because the current page is a link and the trigger is the button that reveals it. The demo lights it only while the group is closed over the active row.
+
+The panel keeps its links in the DOM while closed — `keepMounted` defaults to **on**, the opposite of Base UI's default, because these are navigation links: unmounted, they are invisible to crawlers and to find-in-page. The `hidden` attribute keeps the closed copy out of the accessibility tree and the tab order either way.
+
+### The rail marker
+
+`marker="rail"` on the root adds a short accent bar along the active row's inline-start edge, on top of the fill rather than instead of it — a second cue that is not colour-on-colour, and the classic sidebar treatment.
+
+<DemoBlock id="nav-list/rail" />
+
+### Sizes
+
+Three sizes, set once on the root. Row padding follows `data-pui-density` at `md`, so a compact app gets a compact `md` for free.
+
+<DemoBlock id="nav-list/sizes" />
+
+### Icons, badges, disabled rows
+
+Rows are flex, so an icon goes in as a plain child in front of the text and rides `currentColor` through rest, hover and active. `NavList.Badge` is a small pill that walks itself to the row's far edge with `margin-inline-start: auto` — it reads in the row's flow, so a screen reader announces "Insights, New" with no extra wiring.
+
+<DemoBlock id="nav-list/icons-and-badges" />
+
+A `disabled` link drops its `href` — an anchor without one is unfocusable and inert — sets `aria-disabled`, and swallows clicks.
+
+### Routing
+
+Framework links go in through `render`, which replaces the rendered `<a>` without losing the row's styling and states. With Next.js:
+
+```tsx
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { NavList } from "@dofortech/pretty-ui";
+
+export function DocsNav() {
+  const pathname = usePathname();
+
+  return (
+    <NavList.Root aria-label="Documentation">
+      <NavList.List>
+        {PAGES.map((page) => (
+          <NavList.Item key={page.href}>
+            <NavList.Link
+              active={pathname === page.href}
+              render={<Link href={page.href} />}
+            >
+              {page.title}
+            </NavList.Link>
+          </NavList.Item>
+        ))}
+      </NavList.List>
+    </NavList.Root>
+  );
+}
+```
+
+The same shape works for any router — React Router's `<NavLink>`, TanStack Router's `<Link>` — or for hash links in a hand-rolled table of contents, where you would pass `aria-current="location"` alongside `active` so the sidebar's own `aria-current="page"` keeps its meaning.
+
+If the list sits inside a `<nav>` you already own, swap the root's element the same way: `render={<div />}` on `NavList.Root` keeps the page to one landmark.
+
+## Accessibility
+
+The keyboard story is deliberately the platform's: rows are real links and real buttons, so <kbd>Tab</kbd> walks them in order, <kbd>Enter</kbd> follows a link, and <kbd>Enter</kbd> or <kbd>Space</kbd> toggles a group — there is no roving focus to learn. A `GroupTrigger` carries `aria-expanded` and `aria-controls`; keep its text as the accessible name, since "expanded"/"collapsed" is already announced and needs no "show/hide" wording of its own.
+
+The active row is never colour alone: `active` also sets `aria-current="page"` and a weight change, `marker="rail"` adds geometry, and under forced colors the fill is repainted with the system `Highlight` pair. Focus rings are inset — the list's usual home is a scroll container hard against the viewport edge, where an outward ring would be clipped.
+
+## Theming
+
+Every property below is declared on `NavList.Root`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The size presets work the same way: `data-size="sm"` and `"lg"` re-point a couple of these knobs and nothing else, which is why a knob you set yourself wins over the preset only when set on the root element itself (an unlayered consumer rule beats the library's layer regardless of specificity).
+
+<ThemingTable component="NavList" />
+
+The parts also expose their state as data attributes — `data-size` and `data-marker` on the root; `data-active`, `data-disabled` on rows; Base UI's `data-open`, `data-closed`, `data-panel-open` on the group parts — so a Tailwind arbitrary variant such as `data-[active]:...` can target them without a wrapper.
+
+## API reference
+
+Parts built on Base UI's `Collapsible` forward every prop it takes — `Group` accepts `defaultOpen`, `open`, `onOpenChange` and `disabled`; `GroupPanel` accepts `hiddenUntilFound`. The plain parts forward their element's own props.
+
+### NavList.Root
+
+<PropTable component="NavListRoot" />
+
+### NavList.Section
+
+<PropTable component="NavListSection" />
+
+### NavList.SectionLabel
+
+<PropTable component="NavListSectionLabel" />
+
+### NavList.List
+
+<PropTable component="NavListList" />
+
+### NavList.Item
+
+<PropTable component="NavListItem" />
+
+### NavList.Link
+
+<PropTable component="NavListLink" />
+
+### NavList.Group
+
+<PropTable component="NavListGroup" />
+
+### NavList.GroupTrigger
+
+<PropTable component="NavListGroupTrigger" />
+
+### NavList.GroupPanel
+
+<PropTable component="NavListGroupPanel" />
+
+### NavList.Badge
+
+<PropTable component="NavListBadge" />
