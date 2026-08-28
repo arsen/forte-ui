@@ -1,0 +1,310 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Combobox",
+  description:
+    "A text input combined with a filterable list of predefined options — the Select to reach for once the list is long enough to need typing.",
+};
+
+# Combobox
+
+Reach for Combobox when the value still comes from a fixed set of options but
+the set is long enough that scanning it is work: a country, a teammate, a
+label. It renders a text input that filters a listbox as you type, and it only
+ever produces values from the list — for free-form text with suggestions, that
+is an autocomplete, which this is not. For a short list with no input, use
+Select.
+
+<DemoBlock id="combobox/basic" />
+
+Pass `items` to `<Combobox.Root>` — filtering, the function-child form of
+`<Combobox.List>` and `<Combobox.Empty>` all depend on it. Items can be plain
+strings, or objects: a `{ value, label }` shape displays its `label` in the
+input automatically, any other shape needs `itemToStringLabel`.
+
+## Import
+
+```tsx
+import { Combobox } from "@dofortech/pretty-ui";
+```
+
+## Examples
+
+### Sizes
+
+`size` on `<Combobox.InputGroup>` sets the field's height floor, inline
+padding and font size, on the same `--pui-control-*` scale as `Input` and
+`Select.Trigger` — the three line up on one row. The popup is unaffected.
+
+<DemoBlock id="combobox/sizes" />
+
+### Variants
+
+`variant` changes only how much weight the field carries: `outline` reads as a
+form control, `soft` as a filled field, `ghost` as an inline affordance.
+
+<DemoBlock id="combobox/variants" />
+
+### Multiple selection
+
+`multiple` on `<Combobox.Root>` turns the value into an array and keeps the
+popup open across picks. Render the selection as chips: `<Combobox.Chips>`
+wraps a `<Combobox.Value>` function child that maps the values to
+`<Combobox.Chip>`s, with the input rendered last so it shares a line with the
+final chip. Backspace in the empty input removes the last chip; ArrowLeft
+walks into the chips, where Delete removes the highlighted one.
+
+<DemoBlock id="combobox/multiple" />
+
+### Input inside the popup
+
+Render `<Combobox.Input>` inside `<Combobox.Popup>` and the combobox becomes a
+searchable select: a `<Combobox.Trigger>` holding `<Combobox.Value>` and
+`<Combobox.Icon>` anchors the popup, and the input waits at the top of it. The
+input restyles itself as a search row in this position — same part, no extra
+props. This is the pattern `<Combobox.Label>` exists for: the trigger is the
+form control here, and the label focuses it on click.
+
+<DemoBlock id="combobox/input-in-popup" />
+
+### Grouped options
+
+Pass grouped items (`{ value, items }` objects) to `items` on
+`<Combobox.Root>`, give each `<Combobox.Group>` its `items`, and render them
+through `<Combobox.Collection>` — that is what lets a query narrow each group
+while the headings stay put, and empty groups drop out whole.
+
+<DemoBlock id="combobox/grouped" />
+
+### Async search
+
+When the options live on a server, do the filtering there: pass the results as
+`items`, set `filter={null}` so the combobox does not filter a second time
+client-side, and drive the request from `onInputValueChange`.
+`<Combobox.Status>` is the part that narrates the wait — it is a polite live
+region, so "Searching…", errors and hints reach screen readers as they change.
+`Combobox.useFilter` provides the `Intl.Collator`-backed matcher the fake
+server here uses.
+
+<DemoBlock id="combobox/async-search" />
+
+The same shape works with `multiple` — the selected people ride along in
+`items` so their chips survive searches that no longer return them:
+
+<DemoBlock id="combobox/async-multiple" />
+
+### Creatable
+
+A combobox only produces values from its list, so "create a new one" is a row
+in the list, not free typing: while the query matches nothing exactly, a
+synthetic `Create "…"` item rides along, and choosing it (or pressing Enter
+with nothing highlighted) opens a dialog instead of selecting. The real item
+is added and selected when the dialog's form submits.
+
+<DemoBlock id="combobox/creatable" />
+
+### Virtualized
+
+Past a few thousand items the mount cost of opening dominates, and windowing
+the list is what keeps it fast. Set `virtualized` on `<Combobox.Root>` so
+highlight and ARIA bookkeeping run on indexes rather than rendered elements,
+read the currently filtered items with `Combobox.useFilteredItems`, and hand
+the list element to the virtualizer — the list is already the component's
+scroll container, so no inner scroller is needed. Up to roughly a thousand
+items, wrapping each item in `React.memo` is the simpler fix.
+
+<DemoBlock id="combobox/virtualized" />
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    { keys: ["Arrow Down"], description: "Opens the popup from the input; moves the highlight down one item once open. The input stays focused — the highlight is virtual." },
+    { keys: ["Arrow Up"], description: "Opens the popup from the input; moves the highlight up one item once open." },
+    { keys: ["Enter"], description: "Selects the highlighted item. In a form, a combobox with a closed popup lets Enter submit as usual." },
+    { keys: ["Esc"], description: "Closes the popup without changing the value." },
+    { keys: ["A–Z"], description: "Types in the input and filters the list as you type. There is no typeahead — the input is the typeahead." },
+    { keys: ["Backspace"], description: "Edits the query; in an empty multiple-selection input it removes the last chip." },
+    { keys: ["Arrow Left / Right"], description: "Moves the caret; from the edge of an empty multiple-selection input, moves the highlight into the chips, where Delete removes one." },
+  ]}
+/>
+
+The highlight loops by default: Arrow Down from the last item returns to the
+input, and another Arrow Down starts the list over (`loopFocus` on
+`<Combobox.Root>` turns this off). `data-highlighted` marks the highlighted
+item while real DOM focus stays on the input; pointer hover sets the same
+attribute (`highlightItemOnHover`, on by default), so style rows off
+`[data-highlighted]`, not `:hover`, or keyboard users get no highlight.
+
+<Callout kind="a11y">
+  Every combobox needs an accessible name, and which part to label depends on
+  the pattern. In the field pattern the INPUT is the control: label it with a
+  native `<label htmlFor>`, a `<Field.Label>`, or `aria-label`. In the
+  input-inside-popup pattern the TRIGGER is the control, and
+  `<Combobox.Label>` is the part that labels it. The icon-only trigger and
+  clear buttons always need their own `aria-label`s.
+</Callout>
+
+<Callout kind="a11y">
+  `<Combobox.Empty>` and `<Combobox.Status>` are polite live regions, and live
+  regions only announce reliably while the element stays mounted. Render them
+  unconditionally and swap their children instead — an empty one collapses to
+  nothing on its own. Announcing "no results" this way is what tells a screen
+  reader user their query came up dry.
+</Callout>
+
+## Theming
+
+Every `--pui-combobox-*` property below is declared on the surface that owns
+it, and an element's own declaration beats an inherited value — so setting one
+on `:root`, on a theme scope or on any ancestor has no effect. The popup is
+portalled to `<body>` as well, so an ancestor of the *field* is not even in
+its tree. Set each property on the part that declares it, through that part's
+`className` (an unlayered rule beats the library's `@layer
+pretty-ui.components`, whatever its specificity) or an inline `style`:
+
+- `Combobox.Label` declares the four `label-*` properties.
+- `Combobox.InputGroup` declares every `field-*` property plus
+  `--pui-combobox-input-min-width` and `--pui-combobox-button-size` — the
+  input and the icon buttons read those but never redeclare them, so the
+  group is the place to set them.
+- `Combobox.Trigger` declares the `trigger-*` properties; they style its
+  standalone select-like shape only.
+- `Combobox.Chip` declares the `chip-*` properties.
+- `Combobox.Popup` declares the `popup-*` and motion properties plus
+  `--pui-combobox-item-px`, `--pui-combobox-item-gap` and
+  `--pui-combobox-item-indicator-size` — the layout knobs the list, the
+  items, the group labels and the status rows read but never redeclare.
+- `positionerClassName` reaches `--pui-combobox-z-index`, the only property
+  declared on the positioner.
+- `Combobox.List` declares `--pui-combobox-list-padding-y`; `Combobox.Item`
+  declares the `item-*` colour and font properties.
+
+The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*`, `--pui-space-*` — are the exception: the component only
+reads those and never redeclares them, so re-pointing them on `:root` or on a
+theme scope does re-skin every combobox.
+
+<ThemingTable component="Combobox" />
+
+## API reference
+
+### Combobox.Root
+
+Groups every part and owns the value, the input value and the open state. It
+renders no DOM element, so it takes neither `className` nor `ref`, and it
+forwards Base UI's own `Combobox.Root` props unchanged — including `value`,
+`defaultValue`, `onValueChange`, `inputValue`, `onInputValueChange`, `items`,
+`multiple`, `filter`, `filteredItems`, `itemToStringLabel`,
+`isItemEqualToValue`, `autoHighlight`, `openOnInputClick`, `limit`, `grid`,
+`inline`, `virtualized`, `name`, `disabled`, `readOnly`, `required` and
+`modal`. Both generics are preserved, so `<Combobox.Root<Country>>` types
+`onValueChange`, `items` and `defaultValue` for you.
+
+### Combobox.Label
+
+<PropTable component="ComboboxLabel" />
+
+### Combobox.InputGroup
+
+<PropTable component="ComboboxInputGroup" />
+
+### Combobox.Input
+
+<PropTable component="ComboboxInput" />
+
+### Combobox.Trigger
+
+<PropTable component="ComboboxTrigger" />
+
+### Combobox.Value
+
+Renders no DOM element. Takes `placeholder`, or a function as `children` to
+format the current value — the multiple-selection demos above use exactly
+that to render chips.
+
+### Combobox.Icon
+
+<PropTable component="ComboboxIcon" />
+
+### Combobox.Clear
+
+<PropTable component="ComboboxClear" />
+
+### Combobox.Chips
+
+<PropTable component="ComboboxChips" />
+
+### Combobox.Chip
+
+<PropTable component="ComboboxChip" />
+
+### Combobox.ChipRemove
+
+<PropTable component="ComboboxChipRemove" />
+
+### Combobox.Popup
+
+Renders the floating half of the anatomy — portal, optional backdrop,
+positioner and the popup surface — and hands you the inside: unlike
+`Select.Popup` it does not wrap its children in a list, because what sits
+next to the list is the point of a combobox.
+
+<PropTable component="ComboboxPopup" />
+
+### Combobox.List
+
+<PropTable component="ComboboxList" />
+
+### Combobox.Empty
+
+<PropTable component="ComboboxEmpty" />
+
+### Combobox.Status
+
+<PropTable component="ComboboxStatus" />
+
+### Combobox.Item
+
+<PropTable component="ComboboxItem" />
+
+### Combobox.Group
+
+<PropTable component="ComboboxGroup" />
+
+### Combobox.GroupLabel
+
+<PropTable component="ComboboxGroupLabel" />
+
+### Combobox.Separator
+
+<PropTable component="ComboboxSeparator" />
+
+### Combobox.Row
+
+<PropTable component="ComboboxRow" />
+
+### Combobox.Collection
+
+Renders no DOM element. Takes a function child `(item, index) => ReactNode`
+and renders the filtered items of the nearest `<Combobox.Group>` — a flat
+list passes the function straight to `<Combobox.List>` instead. A direct
+re-export of Base UI's part.
+
+### Combobox.useFilter
+
+Returns `Intl.Collator`-backed matchers — `contains`, `startsWith`,
+`endsWith` — for filtering externally. Pass the result to `filter` on
+`<Combobox.Root>`, or use a matcher inside your own search, as the async
+demos above do. Also exported standalone as `useComboboxFilter`.
+
+### Combobox.useFilteredItems
+
+Returns the items the combobox is currently showing after its internal
+filtering — what a virtualizer should measure. Must be called from a
+component rendered inside `<Combobox.Root>`. Also exported standalone as
+`useComboboxFilteredItems`.

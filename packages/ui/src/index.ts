@@ -75,6 +75,36 @@ export type {
   Rgba,
 } from "./components/color-picker";
 
+export {
+  Combobox,
+  useComboboxFilter,
+  useComboboxFilteredItems,
+} from "./components/combobox";
+export type {
+  ComboboxRootProps,
+  ComboboxLabelProps,
+  ComboboxInputGroupProps,
+  ComboboxInputProps,
+  ComboboxTriggerProps,
+  ComboboxValueProps,
+  ComboboxIconProps,
+  ComboboxClearProps,
+  ComboboxChipsProps,
+  ComboboxChipProps,
+  ComboboxChipRemoveProps,
+  ComboboxPopupProps,
+  ComboboxListProps,
+  ComboboxEmptyProps,
+  ComboboxStatusProps,
+  ComboboxItemProps,
+  ComboboxGroupProps,
+  ComboboxGroupLabelProps,
+  ComboboxSeparatorProps,
+  ComboboxRowProps,
+  ComboboxSize,
+  ComboboxVariant,
+} from "./components/combobox";
+
 export { ContextMenu } from "./components/context-menu";
 export type {
   ContextMenuRootProps,

@@ -1,0 +1,1038 @@
+/*
+ * Combobox
+ *
+ * Six surfaces, one component: Label, the InputGroup field shell (Input +
+ * Trigger + Clear + Chips), a standalone select-like Trigger, the floating
+ * Popup, the scrolling List, and the Items inside it. Each of those is its
+ * own "root" for the purposes of the token convention, because the popup is
+ * portalled to <body> and therefore does NOT inherit anything declared on the
+ * field. Knobs are declared at the top of the rule that owns the surface.
+ *
+ * Four things about this file are load-bearing and easy to undo by accident:
+ *
+ *   1. The chrome lives on the GROUP, not the input. `.input` is deliberately
+ *      bare so the same element can sit inside the field shell, inside the
+ *      popup (the input-inside-popup pattern restyles it as a search row via
+ *      `.popup .input`), or between chips — three placements, one border. A
+ *      border restored on `.input` doubles up in all three.
+ *
+ *   2. `.trigger` has two shapes decided by placement: the base rule is the
+ *      standalone select-like trigger, and `.inputGroup :is(.trigger, .clear)`
+ *      further down rewrites it into the compact icon button. That override
+ *      wins on specificity for the base rule and on DOCUMENT ORDER against
+ *      the (0,2,0) state rules above it — moving it earlier in the file
+ *      re-activates the select-trigger's open/press backgrounds inside the
+ *      field.
+ *
+ *   3. Focus is split the same way. The group carries `.pui-focus-ring-within`
+ *      and rings on behalf of the input (whose UA outline the pattern layer
+ *      suppresses), while the buttons inside it carry `.pui-focus-ring` and
+ *      ring themselves — the same split NumberField uses. The popup-hosted
+ *      input is the one element that has to draw its own ring, inline below,
+ *      because no ringing wrapper exists inside the popup.
+ *
+ *   4. There is deliberately no `prefers-reduced-motion` block. The motion
+ *      tokens collapse their own geometry — `--pui-scale-enter` becomes 1 and
+ *      `--pui-travel-sm` becomes 0px — so consuming them is already correct.
+ *      Enter/exit is transitions on [data-starting-style]/[data-ending-style],
+ *      never keyframes, so reopening mid-close reverses instead of snapping,
+ *      and nothing `infinite` ever lands on the Popup or Positioner.
+ */
+@layer pretty-ui.components {
+  /* Label ------------------------------------------------------------------
+   * Renders a <div>, not a <label>; Base UI wires it to the TRIGGER with
+   * aria-labelledby, so clicking it focuses the trigger without opening.
+   * When the input is the form control, label the input instead — a native
+   * <label htmlFor> or a Field.Label — and skip this part. */
+  .label {
+    /** Label text colour */
+    --pui-combobox-label-fg: var(--pui-color-foreground);
+    /** Label font size */
+    --pui-combobox-label-font-size: var(--pui-font-size-2);
+    /** Label font weight */
+    --pui-combobox-label-font-weight: var(--pui-font-weight-medium);
+    /** Space between label and control */
+    --pui-combobox-label-gap: var(--pui-space-1);
+
+    display: block;
+    margin-block-end: var(--pui-combobox-label-gap);
+    color: var(--pui-combobox-label-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-combobox-label-font-size);
+    font-weight: var(--pui-combobox-label-font-weight);
+    line-height: var(--pui-line-height-tight);
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+  }
+
+  .label[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+  }
+
+  /* InputGroup -------------------------------------------------------------
+   * The field shell. It reads the same `--pui-control-*` scale as Input and
+   * Select.Trigger, so the three sit at one height on a row — which is the
+   * reason not to invent a private scale here. */
+  .inputGroup {
+    /* Component tokens. Declared HERE, on the group, so an ancestor's value
+     * is only inherited and loses to these. Consumers set them on the group
+     * itself (`className` on `Combobox.InputGroup`, whose rule is unlayered
+     * and so beats this layer) or re-point the global tokens below, which
+     * this file only ever reads. */
+    /** Field height floor (reset per `size`); the field GROWS past it when
+     * chips wrap, which is why it is a min height and not a height */
+    --pui-combobox-field-height: var(--pui-control-h-md);
+    /** Field inline padding (reset per `size`) */
+    --pui-combobox-field-px: var(--pui-control-px-md);
+    /** Field font size (reset per `size`) */
+    --pui-combobox-field-font-size: var(--pui-font-size-2);
+    /** Gap between the input, the chips and the buttons */
+    --pui-combobox-field-gap: var(--pui-space-1);
+    /** Field corner radius */
+    --pui-combobox-field-radius: var(--pui-radius-control);
+    /** Field border width */
+    --pui-combobox-field-border-width: 1px;
+    /* No width token exists in the inventory — widths are layout, not theme.
+     * This is only a usable default so a bare combobox is not input-intrinsic
+     * width; `fullWidth` and any consumer class beat it. */
+    /** Default field width */
+    --pui-combobox-field-width: 16rem;
+    /* The floor stops a wrap-heavy chip field from shrinking its input to a
+     * caret-width sliver: the input refuses to go below this, and wraps to
+     * its own line instead. */
+    /** Smallest width the inline input keeps before wrapping under the chips */
+    --pui-combobox-input-min-width: var(--pui-space-8);
+    /* Sized so the icon buttons fill the field's inner height at `md` but
+     * never drop below the SC 2.5.8 pointer-target floor at `sm` or under
+     * `compact` density. */
+    /** Size of the icon buttons (Trigger, Clear) inside the field */
+    --pui-combobox-button-size: max(
+      var(--pui-target-min),
+      calc(var(--pui-combobox-field-height) - var(--pui-space-1) * 2)
+    );
+
+    /* Colour slots, filled in per variant below. */
+    /** Field background (reset per `variant`) */
+    --pui-combobox-field-bg: var(--pui-color-background);
+    /** Field background on hover */
+    --pui-combobox-field-bg-hover: var(--pui-color-panel-hover);
+    /** Field text colour */
+    --pui-combobox-field-fg: var(--pui-color-foreground);
+    /** Field border colour (reset per `variant`, and by `data-invalid`) */
+    --pui-combobox-field-border-color: var(--pui-color-border);
+    /** Field border colour on hover */
+    --pui-combobox-field-border-color-hover: var(--pui-color-border-strong);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--pui-combobox-field-gap);
+    inline-size: var(--pui-combobox-field-width);
+    max-inline-size: 100%;
+    min-block-size: var(--pui-combobox-field-height);
+    padding-block: var(--pui-space-1);
+    padding-inline: var(--pui-combobox-field-px);
+    border: var(--pui-combobox-field-border-width) solid
+      var(--pui-combobox-field-border-color);
+    border-radius: var(--pui-combobox-field-radius);
+
+    background-color: var(--pui-combobox-field-bg);
+    color: var(--pui-combobox-field-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-combobox-field-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    line-height: var(--pui-line-height-tight);
+
+    /* The group is a caret region, not a button: clicking anywhere in it
+     * focuses the input (and opens the popup), which is the text-field
+     * gesture, not the activation one. The buttons inside restore `pointer`
+     * for themselves. */
+    cursor: text;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .inputGroup:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-combobox-field-bg-hover);
+      border-color: var(--pui-combobox-field-border-color-hover);
+    }
+  }
+
+  .inputGroup[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* Read-only still shows the value and its text is still selectable, so it
+   * must not look disabled — only inert. */
+  .inputGroup[data-readonly] {
+    --pui-combobox-field-bg: var(--pui-color-panel);
+    cursor: default;
+  }
+
+  /* Only the boundary changes. Recolouring the value text as well would make
+   * the user's own answer look like the error message. */
+  .inputGroup[data-invalid] {
+    --pui-combobox-field-border-color: var(--pui-color-danger-border);
+    --pui-combobox-field-border-color-hover: var(--pui-color-danger);
+  }
+
+  .inputGroup[data-full-width] {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  /* The icon buttons carry their own padding, so the field's end padding on
+   * top of it would push them visibly deeper than the input's text inset. */
+  .inputGroup:has(.trigger, .clear) {
+    padding-inline-end: var(--pui-space-1);
+  }
+
+  /* Sizes */
+  .inputGroup[data-size="sm"] {
+    --pui-combobox-field-height: var(--pui-control-h-sm);
+    --pui-combobox-field-px: var(--pui-control-px-sm);
+    --pui-combobox-field-font-size: var(--pui-font-size-1);
+  }
+
+  .inputGroup[data-size="md"] {
+    --pui-combobox-field-height: var(--pui-control-h-md);
+    --pui-combobox-field-px: var(--pui-control-px-md);
+    --pui-combobox-field-font-size: var(--pui-font-size-2);
+  }
+
+  .inputGroup[data-size="lg"] {
+    --pui-combobox-field-height: var(--pui-control-h-lg);
+    --pui-combobox-field-px: var(--pui-control-px-lg);
+    --pui-combobox-field-font-size: var(--pui-font-size-3);
+  }
+
+  /* Variants */
+  .inputGroup[data-variant="outline"] {
+    --pui-combobox-field-bg: var(--pui-color-background);
+    --pui-combobox-field-border-color: var(--pui-color-border);
+  }
+
+  .inputGroup[data-variant="soft"] {
+    --pui-combobox-field-bg: var(--pui-color-panel);
+    /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
+     * keeps the field outlined there while staying invisible normally. */
+    --pui-combobox-field-border-color: transparent;
+  }
+
+  .inputGroup[data-variant="ghost"] {
+    --pui-combobox-field-bg: transparent;
+    --pui-combobox-field-border-color: transparent;
+  }
+
+  /* Input ------------------------------------------------------------------
+   * Bare on purpose — see note 1 in the header. Whichever surface hosts it
+   * owns the boundary; this rule only owns the text. */
+  .input {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-inline-size: var(--pui-combobox-input-min-width, 0);
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    color: inherit;
+    caret-color: var(--pui-color-primary);
+
+    /* A UA stylesheet gives form controls their own font, not the host's. */
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-align: start;
+  }
+
+  /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3
+   * applies with no exemption, and it is often the only thing naming the
+   * control. So `-muted` (5.82:1), not `-subtle` (non-text only). */
+  .input::placeholder {
+    color: var(--pui-color-foreground-muted);
+    /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
+     * measured 5.82:1 back under AA. */
+    opacity: 1;
+  }
+
+  .input::selection {
+    background-color: var(--pui-color-primary-soft);
+    color: var(--pui-color-primary-text);
+  }
+
+  .inputGroup[data-disabled] .input {
+    cursor: not-allowed;
+  }
+
+  /* Trigger (standalone) ---------------------------------------------------
+   * The select-like shape, for the input-inside-popup pattern: the trigger
+   * holds Value + Icon and the input waits in the popup. The icon-button
+   * shape it takes INSIDE the field shell is the override further down. */
+  .trigger {
+    /** Trigger height (reset per `size`; standalone shape only) */
+    --pui-combobox-trigger-height: var(--pui-control-h-md);
+    /** Trigger inline padding (reset per `size`; standalone shape only) */
+    --pui-combobox-trigger-padding-x: var(--pui-control-px-md);
+    /** Trigger font size (reset per `size`; standalone shape only) */
+    --pui-combobox-trigger-font-size: var(--pui-font-size-2);
+    /** Gap between value and icon (standalone shape only) */
+    --pui-combobox-trigger-gap: var(--pui-control-gap);
+    /** Trigger corner radius (standalone shape only) */
+    --pui-combobox-trigger-radius: var(--pui-radius-control);
+    /** Trigger border width (standalone shape only) */
+    --pui-combobox-trigger-border-width: 1px;
+
+    /* Colour slots, filled in per variant below. */
+    /** Trigger background (reset per `variant`; standalone shape only) */
+    --pui-combobox-trigger-bg: var(--pui-color-background);
+    /** Trigger background on hover */
+    --pui-combobox-trigger-bg-hover: var(--pui-color-panel-hover);
+    /** Trigger background while pressed or open */
+    --pui-combobox-trigger-bg-active: var(--pui-color-panel-active);
+    /** Trigger text colour */
+    --pui-combobox-trigger-fg: var(--pui-color-foreground);
+    /** Trigger border colour (reset per `variant`; standalone shape only) */
+    --pui-combobox-trigger-border-color: var(--pui-color-border);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--pui-combobox-trigger-gap);
+    height: var(--pui-combobox-trigger-height);
+    padding-inline: var(--pui-combobox-trigger-padding-x);
+    margin: 0;
+    border: var(--pui-combobox-trigger-border-width) solid
+      var(--pui-combobox-trigger-border-color);
+    border-radius: var(--pui-combobox-trigger-radius);
+
+    background-color: var(--pui-combobox-trigger-bg);
+    color: var(--pui-combobox-trigger-fg);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-combobox-trigger-font-size);
+    font-weight: var(--pui-font-weight-normal);
+    line-height: var(--pui-line-height-tight);
+    text-align: start;
+    white-space: nowrap;
+
+    -webkit-user-select: none;
+    user-select: none;
+    /* Pointer, per the affordance rule: every control in this library that
+     * performs an action shows one, native-widget conventions or not. */
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      border-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .trigger:hover:not([data-disabled], [data-readonly]) {
+      background-color: var(--pui-combobox-trigger-bg-hover);
+    }
+  }
+
+  .trigger[data-pressed]:not([data-disabled]),
+  .trigger[data-popup-open] {
+    background-color: var(--pui-combobox-trigger-bg-active);
+    transition-duration: var(--pui-duration-instant);
+  }
+
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .trigger[data-readonly] {
+    --pui-combobox-trigger-bg: var(--pui-color-panel);
+    cursor: default;
+  }
+
+  .trigger[data-invalid] {
+    --pui-combobox-trigger-border-color: var(--pui-color-danger-border);
+  }
+
+  /* Same reasoning as the input's ::placeholder: an enabled control's only
+   * name is often this text, so it stays AA (`-muted`), merely lighter than
+   * a chosen value. */
+  .trigger[data-placeholder] {
+    color: var(--pui-color-foreground-muted);
+  }
+
+  .trigger[data-full-width] {
+    display: flex;
+    width: 100%;
+  }
+
+  /* Sizes (standalone shape only) */
+  .trigger[data-size="sm"] {
+    --pui-combobox-trigger-height: var(--pui-control-h-sm);
+    --pui-combobox-trigger-padding-x: var(--pui-control-px-sm);
+    --pui-combobox-trigger-font-size: var(--pui-font-size-1);
+  }
+
+  .trigger[data-size="md"] {
+    --pui-combobox-trigger-height: var(--pui-control-h-md);
+    --pui-combobox-trigger-padding-x: var(--pui-control-px-md);
+    --pui-combobox-trigger-font-size: var(--pui-font-size-2);
+  }
+
+  .trigger[data-size="lg"] {
+    --pui-combobox-trigger-height: var(--pui-control-h-lg);
+    --pui-combobox-trigger-padding-x: var(--pui-control-px-lg);
+    --pui-combobox-trigger-font-size: var(--pui-font-size-3);
+  }
+
+  /* Variants (standalone shape only) */
+  .trigger[data-variant="outline"] {
+    --pui-combobox-trigger-bg: var(--pui-color-background);
+    --pui-combobox-trigger-border-color: var(--pui-color-border);
+  }
+
+  .trigger[data-variant="soft"] {
+    --pui-combobox-trigger-bg: var(--pui-color-panel);
+    --pui-combobox-trigger-border-color: transparent;
+  }
+
+  .trigger[data-variant="ghost"] {
+    --pui-combobox-trigger-bg: transparent;
+    --pui-combobox-trigger-border-color: transparent;
+  }
+
+  /* Icon -------------------------------------------------------------------
+   * The <span> inside a standalone trigger. */
+  .icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    color: var(--pui-color-foreground-subtle);
+    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .trigger[data-popup-open] .icon {
+    color: var(--pui-color-foreground);
+  }
+
+  /* The two carets of the default icon spread apart while the popup is open —
+   * the one bit of the control that reads as "expanded" from across the page.
+   * Only the built-in icon carries these classes; a caller's own icon is left
+   * alone. `transform` rather than the `translate` property: this is an SVG
+   * child, and the shorthand has the wider baseline there. The distance is
+   * half of `--pui-travel-xs`, so it still collapses to 0 under reduced
+   * motion because the token does. */
+  .caret {
+    transition: transform var(--pui-duration-spring-snappy)
+      var(--pui-ease-spring-snappy);
+  }
+
+  .trigger[data-popup-open] .caret[data-direction="up"] {
+    transform: translateY(calc(-1 * var(--pui-travel-xs) / 2));
+  }
+
+  .trigger[data-popup-open] .caret[data-direction="down"] {
+    transform: translateY(calc(var(--pui-travel-xs) / 2));
+  }
+
+  /* Clear ------------------------------------------------------------------
+   * Base UI only mounts the button while there is a value to clear, with
+   * [data-starting-style]/[data-ending-style] framing the mount — hence the
+   * fade, which keeps the input's text from jumping sideways unannounced. */
+  .clear {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--pui-combobox-button-size, var(--pui-target-min));
+    block-size: var(--pui-combobox-button-size, var(--pui-target-min));
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: var(--pui-radius-1);
+    background: none;
+    color: var(--pui-color-foreground-subtle);
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard),
+      opacity var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .clear[data-starting-style],
+  .clear[data-ending-style] {
+    opacity: 0;
+  }
+
+  .clear[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Trigger and Clear inside the field shell -------------------------------
+   * The icon-button shape. Document order is load-bearing: this sits AFTER
+   * every `.trigger` state rule above, so at the (0,2,0) ties — the open and
+   * pressed backgrounds — the reset here wins. See note 2 in the header. */
+  .inputGroup :is(.trigger, .clear) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    inline-size: var(--pui-combobox-button-size);
+    block-size: var(--pui-combobox-button-size);
+    height: auto;
+    min-block-size: 0;
+    padding: 0;
+    border: none;
+    border-radius: var(--pui-radius-1);
+    background: none;
+    color: var(--pui-color-foreground-subtle);
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .inputGroup :is(.trigger, .clear):hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-hover);
+      color: var(--pui-color-foreground);
+    }
+  }
+
+  .inputGroup .trigger[data-popup-open] {
+    color: var(--pui-color-foreground);
+  }
+
+  .inputGroup :is(.trigger, .clear)[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Chips ------------------------------------------------------------------
+   * The multi-select value, living inline in the field. The container owns
+   * the flexible column so chips and the input share the group's wrap. */
+  .chips {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--pui-combobox-field-gap, var(--pui-space-1));
+    min-inline-size: 0;
+  }
+
+  .chip {
+    /** Chip background */
+    --pui-combobox-chip-bg: var(--pui-color-panel);
+    /** Chip text colour */
+    --pui-combobox-chip-fg: var(--pui-color-foreground);
+    /** Background of the chip keyboard navigation has reached */
+    --pui-combobox-chip-bg-highlighted: var(--pui-color-primary-soft);
+    /** Text colour of that chip */
+    --pui-combobox-chip-fg-highlighted: var(--pui-color-primary-text);
+    /** Chip corner radius */
+    --pui-combobox-chip-radius: var(--pui-radius-1);
+    /** Chip font size */
+    --pui-combobox-chip-font-size: var(--pui-font-size-1);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pui-space-1);
+    max-inline-size: 100%;
+    padding-block: var(--pui-space-1);
+    padding-inline-start: var(--pui-space-2);
+    padding-inline-end: var(--pui-space-1);
+    border-radius: var(--pui-combobox-chip-radius);
+    background-color: var(--pui-combobox-chip-bg);
+    color: var(--pui-combobox-chip-fg);
+    font-size: var(--pui-combobox-chip-font-size);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+    /* The chip itself is a token, not a control — its remove button is the
+     * control. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* `data-highlighted` marks the chip keyboard navigation (ArrowLeft from
+   * the empty input) has reached; `:focus-within` covers its remove button
+   * holding real focus. One look for both, because they are the same state
+   * to the user: "this chip is the one about to be removed". */
+  .chip[data-highlighted],
+  .chip:focus-within {
+    background-color: var(--pui-combobox-chip-bg-highlighted);
+    color: var(--pui-combobox-chip-fg-highlighted);
+  }
+
+  .chip[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+  }
+
+  .chipRemove {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    inline-size: var(--pui-space-4);
+    block-size: var(--pui-space-4);
+    padding: 0;
+    border: none;
+    border-radius: var(--pui-radius-1);
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color var(--pui-duration-fast)
+      var(--pui-ease-standard);
+  }
+
+  @media (hover: hover) {
+    .chipRemove:hover:not([data-disabled]) {
+      background-color: var(--pui-color-panel-active);
+    }
+  }
+
+  .chipRemove[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  /* Backdrop ---------------------------------------------------------------
+   * Opt-in. Geometry and the fade come from `.pui-scrim`; this only owns
+   * stacking, so the two cannot disagree. */
+  .backdrop {
+    /* One below the positioner's 50, and declared locally because the
+     * backdrop is the positioner's SIBLING inside the portal — nothing on
+     * the positioner can reach it. */
+    /** Stacking of the optional `backdrop` layer */
+    --pui-combobox-backdrop-z-index: 49;
+
+    z-index: var(--pui-combobox-backdrop-z-index);
+  }
+
+  /* Positioner ------------------------------------------------------------- */
+  .positioner {
+    /** Stacking of the positioner */
+    --pui-combobox-z-index: 50;
+
+    z-index: var(--pui-combobox-z-index);
+    outline: 0;
+  }
+
+  /* Popup ------------------------------------------------------------------ */
+  .popup {
+    /* Surface knobs. */
+    /** Popup surface colour */
+    --pui-combobox-popup-bg: var(--pui-color-overlay);
+    /** Popup text colour */
+    --pui-combobox-popup-fg: var(--pui-color-foreground);
+    /** Popup corner radius */
+    --pui-combobox-popup-radius: var(--pui-radius-surface);
+    /** Popup shadow */
+    --pui-combobox-popup-shadow: var(--pui-shadow-4);
+    /* A hairline, not redundancy next to the shadow: the popup floats over
+     * undimmed content, and in dark mode the shadow is nearly the only thing
+     * separating overlay from background — the border is what survives a
+     * bright page behind it. `.pui-hc-surface` already reserves the 1px, so
+     * painting it costs no layout. */
+    /** Width of the hairline that separates the popup from the page */
+    --pui-combobox-popup-border-width: 1px;
+    /** Colour of that hairline */
+    --pui-combobox-popup-border-color: var(--pui-color-border);
+
+    /* Motion knobs, broken out so an app can retune the feel — or flatten it
+     * entirely — without restating the transition. Same directional-rise
+     * gesture and the same enter/exit pairing Menu and Popover use. */
+    /** How far the popup slides in from, per side */
+    --pui-combobox-travel: var(--pui-travel-sm);
+    /** Scale the popup grows from and shrinks back to */
+    --pui-combobox-enter-scale: var(--pui-scale-enter);
+    /** Length of the opening gesture */
+    --pui-combobox-enter-duration: var(--pui-duration-normal);
+    /** Curve of the opening gesture */
+    --pui-combobox-enter-ease: var(--pui-ease-spring-snappy);
+    /** Length of the closing gesture */
+    --pui-combobox-exit-duration: var(--pui-duration-fast);
+    /** Curve of the closing gesture */
+    --pui-combobox-exit-ease: var(--pui-ease-exit);
+
+    /* Layout knobs shared by List, Item, GroupLabel, Empty and Status. They
+     * live here because the group label and the status rows have to indent
+     * in step with the items, and none of them is an item descendant. */
+    /** Inline padding shared by items, group labels and status rows */
+    --pui-combobox-item-px: var(--pui-space-3);
+    /** Gap between the indicator column and the item text */
+    --pui-combobox-item-gap: var(--pui-control-gap);
+    /** Width of the check-mark column */
+    --pui-combobox-item-indicator-size: var(--pui-space-4);
+
+    /* Enter/exit displacement, resolved per side below. Defaults to the
+     * `side="bottom"` case, which is this component's default side. */
+    --pui-combobox-enter-x: 0px;
+    --pui-combobox-enter-y: calc(-1 * var(--pui-combobox-travel));
+
+    box-sizing: border-box;
+    /* Column layout is what makes the input-inside-popup pattern work: the
+     * search row and the status rows keep their height, the List takes
+     * `flex: 1` and scrolls under them. */
+    display: flex;
+    flex-direction: column;
+    /* The List clips its own scroll; this crop is for the square corners a
+     * highlighted first row would otherwise poke out of the popup's radius.
+     * `clip`, not `hidden`: `hidden` would make this a second scroll
+     * container, and the browser scrolls every scrollable ancestor when a
+     * highlighted item is scrolled into view — nudging the popup itself out
+     * of place. `clip` crops without ever becoming scrollable. */
+    overflow: clip;
+    min-width: var(--anchor-width);
+    max-width: var(--available-width);
+    /* Required: the popup may never grow past the space Base UI measured
+     * between the anchor and the viewport edge. */
+    max-height: var(--available-height);
+    border: var(--pui-combobox-popup-border-width) solid
+      var(--pui-combobox-popup-border-color);
+    border-radius: var(--pui-combobox-popup-radius);
+    background-color: var(--pui-combobox-popup-bg);
+    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+     * stops the background bleeding under it. */
+    background-clip: padding-box;
+    color: var(--pui-combobox-popup-fg);
+    box-shadow: var(--pui-combobox-popup-shadow);
+
+    font-family: var(--pui-font-sans);
+
+    /* Grow out of the anchor rather than out of the popup's own centre.
+     * `--transform-origin` is published by the Positioner and points back at
+     * the anchor. Opacity is deliberately shorter than the transform: the
+     * list is legible early and the spring settles behind readable rows. */
+    transform-origin: var(--transform-origin);
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      transform var(--pui-combobox-enter-duration)
+        var(--pui-combobox-enter-ease);
+  }
+
+  /* Directional rise: the popup starts a few pixels nearer the anchor and
+   * settles outward. `inline-start`/`inline-end` are legal `data-side` values
+   * alongside the physical ones, so both spellings are mapped. `:dir()` lives
+   * inside `:is()`, whose argument list is forgiving — an engine without
+   * `:dir()` drops only that branch and the physical sides keep working. */
+  .popup[data-side="top"] {
+    --pui-combobox-enter-x: 0px;
+    --pui-combobox-enter-y: var(--pui-combobox-travel);
+  }
+
+  .popup[data-side="bottom"] {
+    --pui-combobox-enter-x: 0px;
+    --pui-combobox-enter-y: calc(-1 * var(--pui-combobox-travel));
+  }
+
+  .popup:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    --pui-combobox-enter-x: var(--pui-combobox-travel);
+    --pui-combobox-enter-y: 0px;
+  }
+
+  .popup:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    --pui-combobox-enter-x: calc(-1 * var(--pui-combobox-travel));
+    --pui-combobox-enter-y: 0px;
+  }
+
+  /* Closing retraces the entrance rather than puffing outward, so the two
+   * directions read as one reversible gesture. */
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    opacity: 0;
+    transform: translate(var(--pui-combobox-enter-x), var(--pui-combobox-enter-y))
+      scale(var(--pui-combobox-enter-scale));
+  }
+
+  .popup[data-ending-style] {
+    transition-duration: var(--pui-combobox-exit-duration);
+    transition-timing-function: var(--pui-combobox-exit-ease);
+  }
+
+  /* Base UI sets `data-instant` when the change was NOT a considered
+   * open/close — a dismissal, or typing that re-opens an already-decided
+   * popup. Animating those reads as a glitch. */
+  .popup[data-instant] {
+    transition: none;
+  }
+
+  /* Input inside the popup -------------------------------------------------
+   * The search-row restyle of `.input` for the input-inside-popup pattern:
+   * fixed height, full width, a hairline under it, and its own inset focus
+   * ring — no ringing wrapper exists in the popup (see note 3 in the
+   * header), and an outset ring would be cropped by the popup's `overflow`. */
+  .popup .input {
+    flex: 0 0 auto;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--pui-control-h-md);
+    padding-inline: var(--pui-combobox-item-px);
+    border-block-end: 1px solid var(--pui-color-border-muted);
+    border-radius: 0;
+    font-size: var(--pui-font-size-2);
+  }
+
+  .popup .input:focus-visible {
+    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
+    outline-offset: calc(-1 * var(--pui-focus-ring-width) - 1px);
+  }
+
+  /* List -------------------------------------------------------------------
+   * The List owns scrolling, not the Popup — which is what lets a search row
+   * or a status row sit above it without scrolling away, and why Items need
+   * `data-focus-inset`: an outward focus ring would be cropped.
+   * `scroll-padding-block` keeps a keyboard-highlighted row from coming to
+   * rest flush against the clipped edges (SC 2.4.11). */
+  .list {
+    /** Block padding inside the scrolling list */
+    --pui-combobox-list-padding-y: var(--pui-space-1);
+
+    box-sizing: border-box;
+    position: relative;
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-block: var(--pui-combobox-list-padding-y);
+    border-radius: inherit;
+    scroll-padding-block: var(--pui-combobox-list-padding-y);
+    outline: 0;
+  }
+
+  /* While the filter matches nothing the list is a zero-height husk and the
+   * Empty row is the content; the padding would render as two blank strips. */
+  .list[data-empty] {
+    padding-block: 0;
+  }
+
+  /* Empty / Status ---------------------------------------------------------
+   * Both must stay MOUNTED to announce reliably (they are polite live
+   * regions), so an idle one collapses via `:empty` rather than being
+   * unmounted or `display: none`d — the element survives, the box goes. */
+  .empty,
+  .status {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: var(--pui-combobox-item-gap);
+    padding-block: var(--pui-list-item-py);
+    padding-inline: var(--pui-combobox-item-px);
+    color: var(--pui-color-foreground-muted);
+    font-size: var(--pui-font-size-2);
+    line-height: var(--pui-line-height-normal);
+  }
+
+  .empty:empty,
+  .status:empty {
+    padding: 0;
+  }
+
+  /* Item -------------------------------------------------------------------
+   * `data-highlighted` is the focus analogue: DOM focus stays on the input
+   * while arrow keys move the highlight, and pointer hover sets the same
+   * attribute — which is why there is no separate `:hover` rule. */
+  .item {
+    /** Item text colour */
+    --pui-combobox-item-fg: var(--pui-color-foreground);
+    /** Background of the highlighted item */
+    --pui-combobox-item-bg-highlighted: var(--pui-color-primary-soft);
+    /** Text colour of the highlighted item */
+    --pui-combobox-item-fg-highlighted: var(--pui-color-primary-text);
+    /** Text colour of the selected item */
+    --pui-combobox-item-fg-selected: var(--pui-color-primary-text);
+    /** Item font size */
+    --pui-combobox-item-font-size: var(--pui-font-size-2);
+
+    box-sizing: border-box;
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--pui-combobox-item-indicator-size) 1fr;
+    align-items: center;
+    gap: var(--pui-combobox-item-gap);
+    min-height: var(--pui-target-min);
+    padding-block: var(--pui-list-item-py);
+    padding-inline: var(--pui-combobox-item-px);
+    color: var(--pui-combobox-item-fg);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-combobox-item-font-size);
+    line-height: var(--pui-line-height-normal);
+    -webkit-user-select: none;
+    user-select: none;
+    /* Choosing an option is an action; see the trigger for why this diverges
+     * from a native listbox. */
+    cursor: pointer;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .item[data-selected] {
+    color: var(--pui-combobox-item-fg-selected);
+    font-weight: var(--pui-font-weight-medium);
+  }
+
+  .item[data-highlighted] {
+    background-color: var(--pui-combobox-item-bg-highlighted);
+    color: var(--pui-combobox-item-fg-highlighted);
+  }
+
+  .item[data-disabled] {
+    color: var(--pui-color-foreground-subtle);
+    background-color: transparent;
+    cursor: not-allowed;
+  }
+
+  /* Item indicator --------------------------------------------------------- */
+  .itemIndicator {
+    grid-column-start: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* The check is the one moment of feedback for the choice just made, so
+     * it springs rather than fades. */
+    transition:
+      opacity var(--pui-duration-fast) var(--pui-ease-standard),
+      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+  }
+
+  .itemIndicator[data-starting-style],
+  .itemIndicator[data-ending-style] {
+    opacity: 0;
+    scale: var(--pui-scale-enter);
+  }
+
+  .itemText {
+    grid-column-start: 2;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Group ------------------------------------------------------------------
+   * The label indents past the indicator column so its text lines up with
+   * the item text rather than the check marks. */
+  .group {
+    display: block;
+  }
+
+  .groupLabel {
+    box-sizing: border-box;
+    padding-block: var(--pui-list-item-py);
+    padding-inline-start: calc(
+      var(--pui-combobox-item-px) + var(--pui-combobox-item-indicator-size) +
+        var(--pui-combobox-item-gap)
+    );
+    padding-inline-end: var(--pui-combobox-item-px);
+    /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
+     * non-text only. */
+    color: var(--pui-color-foreground-muted);
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-font-size-1);
+    font-weight: var(--pui-font-weight-semibold);
+    line-height: var(--pui-line-height-tight);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Separator --------------------------------------------------------------
+   * A BORDER, not a `background-color`: under forced-colors a background is
+   * replaced with `Canvas` and a hairline drawn that way vanishes for
+   * exactly the users who most need the grouping cue, while border colours
+   * are forced to `CanvasText` and survive. `block-size: 0` with
+   * `border-box` is floored at the border width, so the rule still paints
+   * at its full 1px — same shape as `Select.module.css`. */
+  .separator {
+    box-sizing: border-box;
+    margin-block: var(--pui-space-1);
+    margin-inline: var(--pui-combobox-item-px);
+    block-size: 0;
+    border-block-start: 1px solid var(--pui-color-border-muted);
+  }
+
+  .separator[data-orientation="vertical"] {
+    margin-block: var(--pui-space-1);
+    margin-inline: var(--pui-space-1);
+    block-size: auto;
+    inline-size: 0;
+    align-self: stretch;
+    /* Load-bearing: without this reset a vertical separator carries BOTH
+     * borders and renders a stray 1px tick across its top. */
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--pui-color-border-muted);
+  }
+
+  /* Row --------------------------------------------------------------------
+   * One row of a `grid` list; the items inside split the width evenly. */
+  .row {
+    display: flex;
+  }
+
+  .row > .item {
+    flex: 1 1 0;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Forced colors (Windows High Contrast) -------------------------------------
+ * This block is in `pretty-ui.a11y`, ordered after `pretty-ui.components`,
+ * so it beats the rules above by layer alone — no `!important`.
+ *
+ * The generic remedies in patterns.css already cover most of it: the
+ * `[data-disabled]` rule restores `opacity: 1` and paints GrayText, and the
+ * `[data-highlighted]` rule paints the Highlight/HighlightText pair. What is
+ * left is combobox-specific: the group is a <div> wrapping a native <input>,
+ * and forced-colors gives the two DIFFERENT system colours (Canvas vs Field)
+ * unless they are aligned by hand — and a descendant that declares its own
+ * author colour does not inherit the host's GrayText when disabled, so the
+ * placeholder and the icons are restated. */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .inputGroup {
+      background-color: Field;
+      border-color: FieldText;
+    }
+
+    .inputGroup .input {
+      background-color: Field;
+      color: FieldText;
+    }
+
+    .inputGroup[data-disabled] {
+      background-color: Canvas;
+      border-color: GrayText;
+    }
+
+    .inputGroup[data-disabled] .input,
+    .inputGroup[data-disabled] .input::placeholder,
+    .inputGroup[data-disabled] :is(.trigger, .clear) {
+      color: GrayText;
+    }
+
+    .trigger[data-disabled] .icon,
+    .trigger[data-disabled][data-placeholder] {
+      color: GrayText;
+    }
+  }
+}
