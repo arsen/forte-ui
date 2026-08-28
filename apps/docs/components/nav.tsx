@@ -52,6 +52,7 @@ const NAV: NavGroup[] = [
       { title: "Checkbox Group", href: "/components/checkbox-group" },
       { title: "Collapsible", href: "/components/collapsible" },
       { title: "Color Picker", href: "/components/color-picker" },
+      { title: "Combobox", href: "/components/combobox" },
       { title: "Context Menu", href: "/components/context-menu" },
       { title: "Dialog", href: "/components/dialog" },
       { title: "Drawer", href: "/components/drawer" },

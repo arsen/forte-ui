@@ -1652,6 +1652,568 @@
       }
     ]
   },
+  "Combobox": {
+    "name": "Combobox",
+    "tokens": [
+      {
+        "name": "--pui-combobox-label-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label text colour",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-label-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label font size",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-label-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label font weight",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-label-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between label and control",
+        "part": "label",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Field height floor (reset per `size`); the field GROWS past it when chips wrap, which is why it is a min height and not a height",
+        "part": "inputGroup",
+        "overrides": [
+          {
+            "selector": ".inputGroup[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".inputGroup[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".inputGroup[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-field-px",
+        "value": "var(--pui-control-px-md)",
+        "description": "Field inline padding (reset per `size`)",
+        "part": "inputGroup",
+        "overrides": [
+          {
+            "selector": ".inputGroup[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".inputGroup[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".inputGroup[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-field-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Field font size (reset per `size`)",
+        "part": "inputGroup",
+        "overrides": [
+          {
+            "selector": ".inputGroup[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".inputGroup[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".inputGroup[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-field-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Gap between the input, the chips and the buttons",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Field corner radius",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-border-width",
+        "value": "1px",
+        "description": "Field border width",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-width",
+        "value": "16rem",
+        "description": "Default field width",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-input-min-width",
+        "value": "var(--pui-space-8)",
+        "description": "Smallest width the inline input keeps before wrapping under the chips",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-button-size",
+        "value": "max( var(--pui-target-min), calc(var(--pui-combobox-field-height) - var(--pui-space-1) * 2) )",
+        "description": "Size of the icon buttons (Trigger, Clear) inside the field",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Field background (reset per `variant`)",
+        "part": "inputGroup",
+        "overrides": [
+          {
+            "selector": ".inputGroup[data-readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".inputGroup[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".inputGroup[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".inputGroup[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-field-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Field background on hover",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Field text colour",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-field-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Field border colour (reset per `variant`, and by `data-invalid`)",
+        "part": "inputGroup",
+        "overrides": [
+          {
+            "selector": ".inputGroup[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".inputGroup[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".inputGroup[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".inputGroup[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-field-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Field border colour on hover",
+        "part": "inputGroup",
+        "overrides": [
+          {
+            "selector": ".inputGroup[data-invalid]",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-trigger-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Trigger height (reset per `size`; standalone shape only)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-trigger-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Trigger inline padding (reset per `size`; standalone shape only)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Trigger font size (reset per `size`; standalone shape only)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-trigger-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between value and icon (standalone shape only)",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-trigger-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Trigger corner radius (standalone shape only)",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-trigger-border-width",
+        "value": "1px",
+        "description": "Trigger border width (standalone shape only)",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-trigger-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Trigger background (reset per `variant`; standalone shape only)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-readonly]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-trigger-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Trigger background on hover",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-trigger-bg-active",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Trigger background while pressed or open",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-trigger-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Trigger text colour",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-trigger-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Trigger border colour (reset per `variant`; standalone shape only)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-combobox-chip-bg",
+        "value": "var(--pui-color-panel)",
+        "description": "Chip background",
+        "part": "chip",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Chip text colour",
+        "part": "chip",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-bg-highlighted",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the chip keyboard navigation has reached",
+        "part": "chip",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-fg-highlighted",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of that chip",
+        "part": "chip",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-radius",
+        "value": "var(--pui-radius-1)",
+        "description": "Chip corner radius",
+        "part": "chip",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-chip-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Chip font size",
+        "part": "chip",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-backdrop-z-index",
+        "value": "49",
+        "description": "Stacking of the optional `backdrop` layer",
+        "part": "backdrop",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-z-index",
+        "value": "50",
+        "description": "Stacking of the positioner",
+        "part": "positioner",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-popup-bg",
+        "value": "var(--pui-color-overlay)",
+        "description": "Popup surface colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-popup-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Popup text colour",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-popup-radius",
+        "value": "var(--pui-radius-surface)",
+        "description": "Popup corner radius",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-popup-shadow",
+        "value": "var(--pui-shadow-4)",
+        "description": "Popup shadow",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-popup-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the popup from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-popup-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-travel",
+        "value": "var(--pui-travel-sm)",
+        "description": "How far the popup slides in from, per side",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-enter-scale",
+        "value": "var(--pui-scale-enter)",
+        "description": "Scale the popup grows from and shrinks back to",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-enter-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "Length of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-enter-ease",
+        "value": "var(--pui-ease-spring-snappy)",
+        "description": "Curve of the opening gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-exit-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-exit-ease",
+        "value": "var(--pui-ease-exit)",
+        "description": "Curve of the closing gesture",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-px",
+        "value": "var(--pui-space-3)",
+        "description": "Inline padding shared by items, group labels and status rows",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between the indicator column and the item text",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-indicator-size",
+        "value": "var(--pui-space-4)",
+        "description": "Width of the check-mark column",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-list-padding-y",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding inside the scrolling list",
+        "part": "list",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Item text colour",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-bg-highlighted",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Background of the highlighted item",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-fg-highlighted",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the highlighted item",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-fg-selected",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Text colour of the selected item",
+        "part": "item",
+        "overrides": []
+      },
+      {
+        "name": "--pui-combobox-item-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Item font size",
+        "part": "item",
+        "overrides": []
+      }
+    ]
+  },
   "ContextMenu": {
     "name": "ContextMenu",
     "tokens": [

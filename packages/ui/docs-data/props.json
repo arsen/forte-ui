@@ -1051,6 +1051,415 @@
       }
     ]
   },
+  "ComboboxLabel": {
+    "name": "ComboboxLabel",
+    "description": "A visible label wired to the combobox **trigger** — Base UI renders a\n`<div>` and associates it with `aria-labelledby`, so clicking it focuses\nthe trigger without opening the popup. Reach for it in the\ninput-inside-popup pattern, where the trigger is the form control.\n\nWhen `<Combobox.Input>` is the form control (the usual field pattern),\nlabel the input instead: a native `<label htmlFor>`, a `<Field.Label>` in\nthe same `<Field.Root>`, or `aria-label` on the input.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxInputGroup": {
+    "name": "ComboboxInputGroup",
+    "description": "The field shell: a `<div>` that wraps `<Combobox.Input>` and its associated\ncontrols — `<Combobox.Trigger>`, `<Combobox.Clear>`, `<Combobox.Chips>` —\nand carries all of the control chrome (border, background, sizes,\nvariants), so the input inside stays bare and the buttons sit inside the\nboundary. Focus lives on the input; the group rings for it via\n`.pui-focus-ring-within`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the field to fill the width of its container."
+      },
+      {
+        "name": "size",
+        "type": "ComboboxSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the field. Height, inline padding and font size move together,\nand the actual numbers follow the ambient `data-pui-density` setting.\nMatches `Input` and `Select.Trigger`, so the three line up on one row."
+      },
+      {
+        "name": "variant",
+        "type": "ComboboxVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the field carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance."
+      }
+    ]
+  },
+  "ComboboxInput": {
+    "name": "ComboboxInput",
+    "description": "The text input that filters the list. Renders an `<input>`, deliberately\nbare: the chrome belongs to whichever surface hosts it —\n`<Combobox.InputGroup>` draws the field boundary in the anchor pattern, and\n`<Combobox.Popup>` draws it as a search row when the input sits inside the\npopup. An input rendered outside both gets no boundary at all.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxTrigger": {
+    "name": "ComboboxTrigger",
+    "description": "A button that opens the popup. Renders a native `<button>`, in one of two\nshapes decided by where it sits: inside an `<Combobox.InputGroup>` it is a\ncompact icon button at the end of the field; standing alone it is a\nselect-like trigger that holds `<Combobox.Value>` and `<Combobox.Icon>`\nwhile the input waits inside the popup.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Contents of the trigger. Defaults to a caret pair, the right children for\nthe icon-button form inside an `<Combobox.InputGroup>` — an icon-only\ntrigger still needs an `aria-label`. In the input-inside-popup pattern\npass `<Combobox.Value>` and `<Combobox.Icon>` instead, and name the\ncontrol with a `<Combobox.Label>`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the standalone trigger to fill the width of its container."
+      },
+      {
+        "name": "size",
+        "type": "ComboboxSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the standalone trigger. Ignored inside an\n`<Combobox.InputGroup>`, where the group's `size` decides."
+      },
+      {
+        "name": "variant",
+        "type": "ComboboxVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How much visual weight the trigger carries. Only in play when the trigger\nstands alone (the input-inside-popup pattern); inside an\n`<Combobox.InputGroup>` the group owns the chrome and the trigger is a\nplain icon button."
+      }
+    ]
+  },
+  "ComboboxIcon": {
+    "name": "ComboboxIcon",
+    "description": "The affordance that marks a standalone trigger as openable. Renders a\n`<span>`. Purely decorative — the trigger's own role and `aria-expanded`\nare what reach assistive technology.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<CaretUpDownIcon />",
+        "description": "Icon to render. Defaults to a caret pair whose halves spread apart while\nthe popup is open."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxClear": {
+    "name": "ComboboxClear",
+    "description": "A button that clears the value. Renders a native `<button>` that Base UI\nonly mounts while there is something to clear (`keepMounted` opts out), so\nan empty field never shows a dead control.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<XIcon />",
+        "description": "Contents of the button. Defaults to an X glyph; the button is icon-only\neither way, so it still needs an `aria-label`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxChips": {
+    "name": "ComboboxChips",
+    "description": "The container for the selection chips of a `multiple` combobox. Renders a\n`<div>` inside `<Combobox.InputGroup>`; render the chips through\n`<Combobox.Value>`'s function child and finish with `<Combobox.Input>`, so\nthe input wraps onto the same line as the last chip.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxChip": {
+    "name": "ComboboxChip",
+    "description": "One selected value of a `multiple` combobox. Renders a `<div>`; put a\n`<Combobox.ChipRemove>` inside it so the selection can be removed by\npointer as well as by keyboard (Backspace in the empty input already\nremoves the last chip). `data-highlighted` marks the chip keyboard\nnavigation has reached.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxChipRemove": {
+    "name": "ComboboxChipRemove",
+    "description": "A button that removes its chip's value from the selection. Renders a\nnative `<button>`.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<XIcon />",
+        "description": "Contents of the button. Defaults to an X glyph; give the button an\n`aria-label` naming the value it removes."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxPopup": {
+    "name": "ComboboxPopup",
+    "description": "The floating surface holding the list.\n\nThis one part renders the floating half of Base UI's anatomy — `Portal` →\n(`Backdrop`) → `Positioner` → `Popup` — and hands you the inside: unlike\n`Select.Popup` it does NOT wrap its children in a list, because what sits\nnext to the list is the point of a combobox — `<Combobox.Empty>`,\n`<Combobox.Status>`, or the input itself in the input-inside-popup pattern.",
+    "props": [
+      {
+        "name": "align",
+        "type": "Align",
+        "required": false,
+        "defaultValue": "start",
+        "description": "How the popup aligns along the chosen side."
+      },
+      {
+        "name": "alignOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Extra offset in pixels along the alignment axis."
+      },
+      {
+        "name": "backdrop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render a dimming layer behind the popup. Off by default — a combobox\npopup is a listbox, not a dialog."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The popup's contents — typically `<Combobox.Empty>` followed by\n`<Combobox.List>`, plus `<Combobox.Status>` for async lists or an\n`<Combobox.Input>` first for the input-inside-popup pattern."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the popup surface. Applied after the\ninternal styles so consumer utilities win without needing `!important`."
+      },
+      {
+        "name": "collisionPadding",
+        "type": "Padding",
+        "required": false,
+        "defaultValue": "5",
+        "description": "Space to keep between the popup and the edge of its collision boundary."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Render the popup into a different container instead of `<body>`."
+      },
+      {
+        "name": "positionerClassName",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. Use this to reach `--pui-combobox-z-index`, the\nonly knob declared on the positioner."
+      },
+      {
+        "name": "side",
+        "type": "Side",
+        "required": false,
+        "defaultValue": "\"bottom\"",
+        "description": "Which side of the anchor the popup opens on."
+      },
+      {
+        "name": "sideOffset",
+        "type": "number | OffsetFunction",
+        "required": false,
+        "defaultValue": "4",
+        "description": "Gap in pixels between the anchor and the popup."
+      }
+    ]
+  },
+  "ComboboxList": {
+    "name": "ComboboxList",
+    "description": "The scrolling container for the items. Renders a `<div>`; scrolling lives\nhere rather than on the popup so a sibling input or status row stays put\nwhile the items scroll under it.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode | ((item: any, index: number) => ReactNode)",
+        "required": false,
+        "defaultValue": null,
+        "description": "The items, groups and separators — or a function `(item, index) =>\nReactNode` that renders each item Base UI's filtering lets through. The\nfunction form is what keeps the list in sync with the query; it requires\n`items` on `<Combobox.Root>`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxEmpty": {
+    "name": "ComboboxEmpty",
+    "description": "Shows its children only while the filtered list is empty, and announces the\nchange politely to screen readers. Requires `items` on `<Combobox.Root>`.\nThe element itself must stay mounted for the announcement to be reliable —\nBase UI keeps it in the DOM and this component collapses it to nothing\nwhile it has no content, so render it unconditionally.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxStatus": {
+    "name": "ComboboxStatus",
+    "description": "A status row announced politely to screen readers when its content changes\n— \"Searching…\", an error, a hint. Like `<Combobox.Empty>` it must stay\nmounted to announce reliably: swap its children rather than the element,\nand it collapses to nothing while it has none.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxItem": {
+    "name": "ComboboxItem",
+    "description": "One option in the list. Renders a `<div>` with `role=\"option\"`.\n\n`data-highlighted` is the focus analogue: DOM focus stays on the input\nwhile arrow keys and pointer hover move the highlight between items.\nBecause the list is a clipping scroll container, the focus ring is applied\ninset via `data-focus-inset` so `overflow` cannot crop it.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item's label. Rendered next to the indicator column; give the item a\nplain-text `aria-label` if this is not text."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the item ignores user interaction. Disabled items stay in the\nlist and stay announced."
+      },
+      {
+        "name": "indicator",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "<CheckIcon />",
+        "description": "What marks the item as selected. Rendered inside\n`<Combobox.ItemIndicator>`, which only mounts while the item is selected."
+      },
+      {
+        "name": "value",
+        "type": "unknown",
+        "required": false,
+        "defaultValue": "null",
+        "description": "The value this item selects. Objects are matched by `Object.is` unless\n`<Combobox.Root>` is given `isItemEqualToValue`; a `{ value, label }`\nshape displays its `label` in the input automatically."
+      }
+    ]
+  },
+  "ComboboxGroup": {
+    "name": "ComboboxGroup",
+    "description": "Groups related items under a heading. Renders a `<div>` with\n`role=\"group\"`, associated with the `<Combobox.GroupLabel>` inside it. Pass\nthe group's `items` here and render them with `<Combobox.Collection>` so\nfiltering stays aware of the grouping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxGroupLabel": {
+    "name": "ComboboxGroupLabel",
+    "description": "The heading for a `<Combobox.Group>`. Renders a `<div>`, indented past the\nindicator column so its text lines up with the item text rather than with\nthe check marks.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "ComboboxSeparator": {
+    "name": "ComboboxSeparator",
+    "description": "A divider between groups of items. Renders a `<div>` with\n`role=\"separator\"`, so it is exposed to assistive technology rather than\nbeing a purely visual line.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "Orientation",
+        "required": false,
+        "defaultValue": "\"horizontal\"",
+        "description": "Orientation of the rule. A combobox list is vertical, so the separator\nbetween two groups runs horizontally."
+      }
+    ]
+  },
+  "ComboboxRow": {
+    "name": "ComboboxRow",
+    "description": "One row of items when the list is a grid (`grid` on `<Combobox.Root>`),\nwhere arrow keys navigate across rows and columns. Renders a `<div>`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "ContextMenuRoot": {
     "name": "ContextMenuRoot",
     "description": "Groups every part of the context menu and owns its open state. Renders no\nDOM element of its own, so it accepts neither `className` nor `ref`.\n\nForwards Base UI's own root props unchanged — `open`, `defaultOpen`,\n`onOpenChange`, `disabled`, `orientation`, `loopFocus`,\n`highlightItemOnHover`, `closeParentOnEsc` and `actionsRef`. Four of\n`Menu.Root`'s props are deliberately absent, because a context menu has no\ntrigger element to hang them on: `modal` (it is always modal), `openOnHover`\nwith its `delay` / `closeDelay`, and the `handle` / `triggerId` pair.",

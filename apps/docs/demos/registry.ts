@@ -105,6 +105,26 @@ import d_color_picker_theming from "./color-picker/theming";
 import d_color_picker_theming_src from "./color-picker/theming?raw";
 import d_color_picker_trigger from "./color-picker/trigger";
 import d_color_picker_trigger_src from "./color-picker/trigger?raw";
+import d_combobox_async_multiple from "./combobox/async-multiple";
+import d_combobox_async_multiple_src from "./combobox/async-multiple?raw";
+import d_combobox_async_search from "./combobox/async-search";
+import d_combobox_async_search_src from "./combobox/async-search?raw";
+import d_combobox_basic from "./combobox/basic";
+import d_combobox_basic_src from "./combobox/basic?raw";
+import d_combobox_creatable from "./combobox/creatable";
+import d_combobox_creatable_src from "./combobox/creatable?raw";
+import d_combobox_grouped from "./combobox/grouped";
+import d_combobox_grouped_src from "./combobox/grouped?raw";
+import d_combobox_input_in_popup from "./combobox/input-in-popup";
+import d_combobox_input_in_popup_src from "./combobox/input-in-popup?raw";
+import d_combobox_multiple from "./combobox/multiple";
+import d_combobox_multiple_src from "./combobox/multiple?raw";
+import d_combobox_sizes from "./combobox/sizes";
+import d_combobox_sizes_src from "./combobox/sizes?raw";
+import d_combobox_variants from "./combobox/variants";
+import d_combobox_variants_src from "./combobox/variants?raw";
+import d_combobox_virtualized from "./combobox/virtualized";
+import d_combobox_virtualized_src from "./combobox/virtualized?raw";
 import d_context_menu_basic from "./context-menu/basic";
 import d_context_menu_basic_src from "./context-menu/basic?raw";
 import d_context_menu_checkable from "./context-menu/checkable";
@@ -611,6 +631,16 @@ export type DemoId =
   | "color-picker/swatches"
   | "color-picker/theming"
   | "color-picker/trigger"
+  | "combobox/async-multiple"
+  | "combobox/async-search"
+  | "combobox/basic"
+  | "combobox/creatable"
+  | "combobox/grouped"
+  | "combobox/input-in-popup"
+  | "combobox/multiple"
+  | "combobox/sizes"
+  | "combobox/variants"
+  | "combobox/virtualized"
   | "context-menu/basic"
   | "context-menu/checkable"
   | "context-menu/disabled"
@@ -891,6 +921,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "color-picker/swatches": { Component: d_color_picker_swatches, source: d_color_picker_swatches_src, file: "color-picker/swatches.tsx" },
   "color-picker/theming": { Component: d_color_picker_theming, source: d_color_picker_theming_src, file: "color-picker/theming.tsx" },
   "color-picker/trigger": { Component: d_color_picker_trigger, source: d_color_picker_trigger_src, file: "color-picker/trigger.tsx" },
+  "combobox/async-multiple": { Component: d_combobox_async_multiple, source: d_combobox_async_multiple_src, file: "combobox/async-multiple.tsx" },
+  "combobox/async-search": { Component: d_combobox_async_search, source: d_combobox_async_search_src, file: "combobox/async-search.tsx" },
+  "combobox/basic": { Component: d_combobox_basic, source: d_combobox_basic_src, file: "combobox/basic.tsx" },
+  "combobox/creatable": { Component: d_combobox_creatable, source: d_combobox_creatable_src, file: "combobox/creatable.tsx" },
+  "combobox/grouped": { Component: d_combobox_grouped, source: d_combobox_grouped_src, file: "combobox/grouped.tsx" },
+  "combobox/input-in-popup": { Component: d_combobox_input_in_popup, source: d_combobox_input_in_popup_src, file: "combobox/input-in-popup.tsx" },
+  "combobox/multiple": { Component: d_combobox_multiple, source: d_combobox_multiple_src, file: "combobox/multiple.tsx" },
+  "combobox/sizes": { Component: d_combobox_sizes, source: d_combobox_sizes_src, file: "combobox/sizes.tsx" },
+  "combobox/variants": { Component: d_combobox_variants, source: d_combobox_variants_src, file: "combobox/variants.tsx" },
+  "combobox/virtualized": { Component: d_combobox_virtualized, source: d_combobox_virtualized_src, file: "combobox/virtualized.tsx" },
   "context-menu/basic": { Component: d_context_menu_basic, source: d_context_menu_basic_src, file: "context-menu/basic.tsx" },
   "context-menu/checkable": { Component: d_context_menu_checkable, source: d_context_menu_checkable_src, file: "context-menu/checkable.tsx" },
   "context-menu/disabled": { Component: d_context_menu_disabled, source: d_context_menu_disabled_src, file: "context-menu/disabled.tsx" },
