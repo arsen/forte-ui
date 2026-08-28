@@ -497,6 +497,20 @@ import d_separator_variants from "./separator/variants";
 import d_separator_variants_src from "./separator/variants?raw";
 import d_separator_vertical from "./separator/vertical";
 import d_separator_vertical_src from "./separator/vertical?raw";
+import d_skeleton_animations from "./skeleton/animations";
+import d_skeleton_animations_src from "./skeleton/animations?raw";
+import d_skeleton_card from "./skeleton/card";
+import d_skeleton_card_src from "./skeleton/card?raw";
+import d_skeleton_reduced_motion from "./skeleton/reduced-motion";
+import d_skeleton_reduced_motion_src from "./skeleton/reduced-motion?raw";
+import d_skeleton_sizing from "./skeleton/sizing";
+import d_skeleton_sizing_src from "./skeleton/sizing?raw";
+import d_skeleton_text from "./skeleton/text";
+import d_skeleton_text_src from "./skeleton/text?raw";
+import d_skeleton_theming from "./skeleton/theming";
+import d_skeleton_theming_src from "./skeleton/theming?raw";
+import d_skeleton_variants from "./skeleton/variants";
+import d_skeleton_variants_src from "./skeleton/variants?raw";
 import d_slider_basic from "./slider/basic";
 import d_slider_basic_src from "./slider/basic?raw";
 import d_slider_collision from "./slider/collision";
@@ -895,6 +909,13 @@ export type DemoId =
   | "separator/toolbar"
   | "separator/variants"
   | "separator/vertical"
+  | "skeleton/animations"
+  | "skeleton/card"
+  | "skeleton/reduced-motion"
+  | "skeleton/sizing"
+  | "skeleton/text"
+  | "skeleton/theming"
+  | "skeleton/variants"
   | "slider/basic"
   | "slider/collision"
   | "slider/disabled"
@@ -1219,6 +1240,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
   "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
   "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },
+  "skeleton/animations": { Component: d_skeleton_animations, source: d_skeleton_animations_src, file: "skeleton/animations.tsx" },
+  "skeleton/card": { Component: d_skeleton_card, source: d_skeleton_card_src, file: "skeleton/card.tsx" },
+  "skeleton/reduced-motion": { Component: d_skeleton_reduced_motion, source: d_skeleton_reduced_motion_src, file: "skeleton/reduced-motion.tsx" },
+  "skeleton/sizing": { Component: d_skeleton_sizing, source: d_skeleton_sizing_src, file: "skeleton/sizing.tsx" },
+  "skeleton/text": { Component: d_skeleton_text, source: d_skeleton_text_src, file: "skeleton/text.tsx" },
+  "skeleton/theming": { Component: d_skeleton_theming, source: d_skeleton_theming_src, file: "skeleton/theming.tsx" },
+  "skeleton/variants": { Component: d_skeleton_variants, source: d_skeleton_variants_src, file: "skeleton/variants.tsx" },
   "slider/basic": { Component: d_slider_basic, source: d_slider_basic_src, file: "slider/basic.tsx" },
   "slider/collision": { Component: d_slider_collision, source: d_slider_collision_src, file: "slider/collision.tsx" },
   "slider/disabled": { Component: d_slider_disabled, source: d_slider_disabled_src, file: "slider/disabled.tsx" },

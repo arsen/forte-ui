@@ -1,0 +1,314 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Skeleton",
+  description:
+    "A placeholder that occupies exactly the space the real thing will, so the page does not jump when the data lands.",
+};
+
+# Skeleton
+
+Use a skeleton when a wait replaces content the user was already looking at, or
+is about to. It answers a different question from a
+[`Spinner`](/components/spinner): a spinner says *something is happening*, a
+skeleton says *this is what is coming, and here is where it will sit*. If you
+know how far along the work is, show a [`Progress`](/components/progress) bar
+instead — that answers "how much longer", which neither of the other two can.
+
+<DemoBlock id="skeleton/card" />
+
+Base UI has no skeleton primitive, so this is one of the few components in the
+library not built on one — there is no interaction to model and no state
+machine to get right. What is left is the part that is usually got wrong:
+metrics that genuinely match the content, one announcement for one wait, and an
+animation that still says "this is coming" when the user has asked for less
+motion.
+
+## Import
+
+```tsx
+import { Skeleton } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+```tsx
+<Skeleton.Group loading={pending} label="Loading profile">
+  <Skeleton.Root variant="circle" className="size-10" />
+  <Skeleton.Text lines={3} />
+</Skeleton.Group>
+```
+
+`Skeleton.Root` is one placeholder shape. `Skeleton.Text` is a paragraph of
+them, measured like type. `Skeleton.Group` is the region they belong to.
+
+### What the group is for
+
+Every placeholder is `aria-hidden`, and that is not an oversight — a card of
+them announced individually is "blank blank blank", which is worse than
+silence. But it means a screenful of bare skeletons tells a screen reader user
+**nothing at all**. That is the state most skeleton components ship in.
+
+The obvious fix, a `role="status"` on each placeholder, is the mistake the
+[`Spinner`](/components/spinner) page already documents: nine placeholders
+becomes nine live regions politely queueing to say "Loading". So the
+announcement has to live one level up, and something has to own it. That is the
+group's job, and the only one it cannot be talked out of.
+
+It also has to stay mounted across both states, which is the second thing the
+shape enforces — see the note under [Accessibility](#accessibility) for why a
+live region that appears at the same moment as its content is announced
+unreliably. Writing it as a wrapper you keep, with `loading` flipping inside,
+makes the dependable version the one that is easiest to type.
+
+Two conveniences ride along. The group hands down `animation` as a default, so
+`shimmer` is written once per card rather than on all nine placeholders; and it
+is a `display: grid` with a gap, because stacked placeholder rows are the
+common shape. Both are ordinary defaults — a skeleton that sets its own
+`animation` wins, and any `className` beats the layout on layer order.
+
+### Using skeletons without a group
+
+The group is optional and nothing degrades except the announcement. Both parts
+read their context with `??`, so a skeleton outside one falls through to its
+own props and then to the defaults:
+
+```tsx
+<Skeleton.Root className="h-32 w-full" />
+<Skeleton.Text lines={3} />
+```
+
+Reach for a bare skeleton when **something else already owns the
+announcement** — a panel that carries its own `role="status"` and `aria-busy`,
+which is the pattern the Spinner page recommends and which a group inside would
+only duplicate — or for a single placeholder inside a sentence that a live
+region already covers, or for something decorative like the demos further down
+this page, none of which uses a group at all.
+
+Reach for the group when a whole screen is loading and nothing else is
+speaking. And note it is not magic: it is a `<div>` with `aria-busy`, a hidden
+`role="status"` and a context provider. Putting those on your own container
+works exactly as well — you are writing the same thing by hand.
+
+## Examples
+
+### Variants
+
+Three silhouettes, and no more — a skeleton is a shape, not a component
+library. Everything else is a matter of width and height, which `className`
+already does better than a prop could.
+
+<DemoBlock id="skeleton/variants" />
+
+`text` is `inline-block`, so a short one can sit inside a real sentence —
+"posted by ▓▓▓▓ an hour ago" — and share its baseline row. `circle` stays a
+circle under `data-pui-radius="none"`, because round is what that shape *is*
+rather than how it is styled; it is the same test [`Radio`](/components/radio)
+and the [`Spinner`](/components/spinner) ring apply.
+
+<Callout kind="warn">
+  A `text` root paints the **ink** and nothing else, which is right inside a
+  sentence — the surrounding line box already supplies the leading — and wrong
+  standing on its own in a column, where it comes out shorter than the line it
+  replaces and the page shifts anyway. Use `Skeleton.Text` there, `lines={1}`
+  included: reserving the whole line box is the job it exists for.
+</Callout>
+
+### Text, measured like type
+
+This is the part that is usually approximated. Real text does not fill its line
+box — the glyphs occupy roughly the cap height and the rest is leading, split
+half above and half below. A stack of full-line-box bars is therefore both too
+heavy to read as prose and the wrong total height.
+
+So a line paints only `--pui-skeleton-ink`, the leading becomes the flex `gap`,
+and the container carries half a leading on each side. The sum is exact:
+
+```
+n × ink  +  (n − 1) × leading  +  leading  ==  n × (ink + leading)
+                                           ==  n × 1em × line-height
+```
+
+which is the height of the paragraph it replaces, to the pixel. In the demo
+below the bars are drawn *over* the text they stand in for, so you can see the
+alignment rather than take it on trust.
+
+<DemoBlock id="skeleton/text" />
+
+Every measurement is in `em`, relative to the inherited font size. Set
+`className="text-4"` on a `Skeleton.Text` and the whole block rescales —
+heading placeholders need no second prop, and no numbers to keep in sync with
+the stylesheet.
+
+This is why the card at the top of the page uses `Skeleton.Text` for its
+one-line placeholders too. Watch the button above it while the article
+reloads: it does not move, because the two states are the same height to
+within a rounding error.
+
+<Callout kind="note">
+  `lastLineWidth` exists because real paragraphs end mid-line. A block of
+  equal-length bars reads as a table rather than as prose. It is skipped when
+  `lines` is `1` — a single line trimmed to 60% looks like a mistake instead of
+  like the end of a paragraph.
+</Callout>
+
+### Sizing from the content
+
+The other half of "no layout shift". Hand the real content to a skeleton and it
+is laid out and then hidden with `visibility`, so the placeholder is exactly
+the box that content will occupy. No width guessed by eye, and nothing moves
+when the data lands.
+
+<DemoBlock id="skeleton/sizing" />
+
+When `loading` turns false the skeleton renders its children with **no wrapper
+of its own** — nothing of the placeholder is left in the DOM or in the layout.
+That is also the catch: the content is mounted while it is invisible, so pass a
+string or a cheap node, not a subtree you would rather not render twice. For
+anything larger, keep the ordinary `{loading ? <Skeleton … /> : <Content />}`
+swap and let `Skeleton.Group` carry the flag.
+
+### Animations
+
+<DemoBlock id="skeleton/animations" />
+
+`pulse` is the default: a shallow opacity breathe, quiet enough to put fifty of
+on one screen. `shimmer` sends a band of light across the fill — faster-reading,
+and better when a whole page is loading at once. It follows the reading
+direction, multiplying its travel by `--pui-direction`, so it sweeps
+right-to-left in RTL. `none` is a static fill, for a screenshot test or a page
+where something else already owns the movement.
+
+<Callout kind="note">
+  Both loops rest between passes rather than restarting the instant they end.
+  The shimmer band spends the last 40% of its cycle parked off the far edge;
+  without that pause it reads as frantic rather than as patient, which is the
+  opposite of what a placeholder is for.
+</Callout>
+
+### Reduced motion
+
+<DemoBlock id="skeleton/reduced-motion" />
+
+Neither animation switches off, and that is deliberate. A skeleton that stops
+moving entirely reads as content that **failed** — a dead grey box is a worse
+message than the one it replaced. So both reduce instead:
+
+- **`pulse`** gets shallower. The dip is
+  `calc(0.55 + 0.25 * var(--pui-motion-off))`, so a 45% swing becomes a 20%
+  one. There was never any geometry to collapse: it is opacity from end to end.
+- **`shimmer`** degrades into `pulse`. The band's travel is gated on
+  `--pui-motion-ok` and the band itself is faded out by `--pui-motion-off` — a
+  highlight frozen mid-sweep on every placeholder reads as a rendering defect,
+  not as restraint. A second animation on the root, always running and a no-op
+  at full motion, takes over as the visible cue — and it bottoms out at the
+  same `--pui-skeleton-dim` the pulse uses, so the two animations reach one
+  depth under reduced motion instead of shimmer swinging deeper than anything
+  the page shows at full motion.
+
+<Callout kind="a11y">
+  Neither loop duration is ever shortened. `--pui-duration-loop-sweep` is
+  1400ms in every motion state, including `data-pui-motion="off"`. The rest of
+  the system collapses durations toward `1ms`, but a *repeating* animation
+  driven to 1ms flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which
+  is the opposite of an accessibility win.
+</Callout>
+
+### Theming
+
+<DemoBlock id="skeleton/theming" />
+
+## Accessibility
+
+Every placeholder is `aria-hidden`. A skeleton is a picture of absence, and
+there is nothing in it to read — a card of them announced individually is
+"blank blank blank", which is worse than silence.
+
+`Skeleton.Group` is what speaks, once. It sets `aria-busy` on the region and
+renders a visually hidden `role="status"` carrying `label`, plus `doneLabel`
+when the wait ends. Say what is coming: "Loading invoices" tells someone
+whether the wait concerns them; "Loading" makes them guess.
+
+<Callout kind="a11y">
+  Keep the group mounted across **both** states. A live region has to exist
+  *before* its contents change to be announced reliably — a screen reader has to
+  be watching the element when the mutation happens — so a status element that
+  appears at the same moment as the thing it announces is heard inconsistently.
+  Render `Skeleton.Group` either way and let `loading` flip inside it.
+</Callout>
+
+The status role is on a hidden span rather than on the group's wrapper, and
+that is not tidiness. `role="status"` carries an implicit `aria-atomic="true"`,
+so on the wrapper it would make every arriving row re-read the **entire**
+region — a table of forty invoices announced in full the moment it lands.
+Confined to the message, it says one sentence and stops; `aria-busy` on the
+wrapper covers the rest.
+
+Under forced colours a placeholder is painted `Canvas` with a `GrayText`
+outline. Left alone, the fill is remapped to a system colour that is not ours
+to choose — either invisible against the page or a solid black brick — and
+neither is a placeholder. `.pui-hc-decorative` is the wrong tool even though a
+skeleton *is* decorative: it is `display: none`, and a placeholder that stops
+occupying space has abandoned its only job. The shimmer band is dropped there
+too, because forced colours does not remap `background-image` and it would keep
+its own colour against a system-coloured page.
+
+There is nothing to focus and nothing to press, so a skeleton is not in the tab
+order, takes `cursor: default` per the pointer rules, and sets `pointer-events:
+none` — which also stops a link nobody can see from being clickable in sizing
+mode.
+
+## Theming
+
+Everything below is declared on the skeleton root itself, which is also why an
+ancestor is the wrong place to set one — the element's own declaration beats an
+inherited value. Override them through `className` or a `style` object, or
+re-point the global tokens in the Default column to move every skeleton at once.
+
+<ThemingTable component="Skeleton" part="root" />
+
+`Skeleton.Group` has one of its own, on the group element.
+
+<ThemingTable component="Skeleton" part="group" />
+
+`--pui-skeleton-highlight` is the one token here that is not a plain semantic
+reference, and the reason is worth knowing: "brighter" is not a direction on
+this scale. `--pui-gray-4` is a light grey in light mode and a dark one in
+dark, so a single ramp step would shimmer *darker* in one of the two — which
+looks broken rather than subtle. It is a `light-dark()` pair instead, each
+branch a step of lightness away from the fill in its own mode, resolved against
+the `color-scheme` that `tokens.css` sets on `:root` and on every `data-theme`
+scope.
+
+`Skeleton.Text` re-declares `--pui-skeleton-ink` and `--pui-skeleton-line-height`
+on the container, because that is where the gap and the padding are measured
+from, and passes the ink down to its lines with `--pui-skeleton-ink: inherit`.
+Without that the lines would use their own declared default — an element's own
+declaration beats an inherited one — and retuning the ink on a `Skeleton.Text`
+would move the gaps while leaving the bars where they were.
+
+State is on `data-variant` and `data-animation`, plus `data-loading` on the
+group, all reachable from plain CSS or a Tailwind arbitrary variant —
+`data-[variant=circle]:...` — without a wrapper element.
+
+## API reference
+
+None of the three parts has a Base UI counterpart to forward to.
+`Skeleton.Root` and `Skeleton.Text` are `<span>`s, `Skeleton.Group` is a
+`<div>`, and each takes that element's whole surface — `id`, `style`, `data-*`,
+`ref` — but no `render` prop.
+
+### Skeleton.Root
+
+<PropTable component="SkeletonRoot" />
+
+### Skeleton.Text
+
+<PropTable component="SkeletonText" />
+
+### Skeleton.Group
+
+<PropTable component="SkeletonGroup" />

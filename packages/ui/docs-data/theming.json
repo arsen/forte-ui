@@ -6693,6 +6693,118 @@
       }
     ]
   },
+  "Skeleton": {
+    "name": "Skeleton",
+    "tokens": [
+      {
+        "name": "--pui-skeleton-color",
+        "value": "var(--pui-color-panel-active)",
+        "description": "The placeholder fill.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-highlight",
+        "value": "light-dark(var(--pui-gray-1), var(--pui-gray-7))",
+        "description": "Colour of the band that travels across `animation=\"shimmer\"`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius. `variant=\"text\"` drops to `--pui-radius-2`, `circle` is a literal circle and ignores this.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"text\"]",
+            "value": "var(--pui-radius-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-line-height",
+        "value": "var(--pui-line-height-normal)",
+        "description": "Line box the placeholder is measured against. Everything below is a multiple of it and of the inherited `font-size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".text",
+            "value": "var(--pui-line-height-normal)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-ink",
+        "value": "0.72em",
+        "description": "Height of the painted band for `variant=\"text\"` — how much ink a line of real text puts down, as a fraction of the line box.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".text",
+            "value": "0.72em"
+          },
+          {
+            "selector": ".text > .root",
+            "value": "inherit"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-width",
+        "value": "100%",
+        "description": "Width. Overridden by the `width` prop, and by any consumer utility — `className=\"w-24\"` wins on layer order alone.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"circle\"]",
+            "value": "var(--pui-skeleton-height)"
+          },
+          {
+            "selector": ".root:has(> .content)",
+            "value": "fit-content"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-height",
+        "value": "calc(1em * var(--pui-skeleton-line-height))",
+        "description": "Height. Defaults to one line box, so a bare `<Skeleton.Root />` is exactly as tall as the line of text it replaces.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"text\"]",
+            "value": "var(--pui-skeleton-ink)"
+          },
+          {
+            "selector": ".root:not([data-variant=\"text\"]):has(> .content)",
+            "value": "auto"
+          }
+        ]
+      },
+      {
+        "name": "--pui-skeleton-duration",
+        "value": "var(--pui-duration-loop-sweep)",
+        "description": "One full animation cycle, for both `pulse` and `shimmer`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-dim",
+        "value": "calc(0.55 + 0.25 * var(--pui-motion-off))",
+        "description": "How far `animation=\"pulse\"` fades at the bottom of its cycle — and the depth `shimmer`'s fallback pulse reaches under reduced motion, so the two animations stay one knob. Rises to `0.8` under reduced motion, so the pulse gets shallower rather than disappearing.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-skeleton-group-gap",
+        "value": "var(--pui-space-3)",
+        "description": "Space between stacked rows of a `Skeleton.Group`.",
+        "part": "group",
+        "overrides": []
+      }
+    ]
+  },
   "Slider": {
     "name": "Slider",
     "tokens": [
