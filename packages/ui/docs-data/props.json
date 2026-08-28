@@ -4942,6 +4942,143 @@
       }
     ]
   },
+  "SkeletonRoot": {
+    "name": "SkeletonRoot",
+    "description": "One placeholder shape.\n\n```tsx\n<Skeleton.Root className=\"h-32 w-full\" />\n<Skeleton.Root variant=\"circle\" width=\"2.5rem\" />\n<Skeleton.Root loading={pending}>{user.name}</Skeleton.Root>\n```",
+    "props": [
+      {
+        "name": "animation",
+        "type": "SkeletonAnimation",
+        "required": false,
+        "defaultValue": "pulse",
+        "description": "How the placeholder signals that it is a placeholder.\n\n`pulse` is a shallow opacity breathe — quiet, and identical whichever way\nit is laid out. `shimmer` sends a band of light across the fill, which\nreads as faster and suits a screenful of placeholders; it follows the\nreading direction, and degrades into `pulse` under reduced motion.\n`none` is a static fill, for a screenshot test or a page where something\nelse already owns the movement.\n\nFalls back to the enclosing `Skeleton.Group`, then to `pulse`."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The real content, used only to SIZE the placeholder.\n\nWhile loading it is laid out and then hidden with `visibility`, so the\nskeleton is exactly the box the content will occupy and nothing shifts\nwhen it arrives. Note that this renders the content — pass a string or a\ncheap node, not a subtree you would rather not mount twice."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "height",
+        "type": "SkeletonLength",
+        "required": false,
+        "defaultValue": null,
+        "description": "Height of the placeholder. A number is pixels; a string is any CSS length.\n\nThe default is one line box at the inherited font size, so a skeleton\nstanding in for a line of text needs no measurement at all."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the placeholder is showing. When it flips to `false` the skeleton\nrenders `children` — with no wrapper of its own, so nothing of the\nplaceholder is left in the DOM or in the layout.\n\nFalls back to the enclosing `Skeleton.Group`, then to `true`."
+      },
+      {
+        "name": "variant",
+        "type": "SkeletonVariant",
+        "required": false,
+        "defaultValue": "rect",
+        "description": "The silhouette. `rect` is a block — a thumbnail, a card, a button.\n`circle` is an avatar or a status dot, and stays round under\n`data-pui-radius=\"none\"`.\n\n`text` is a thin bar the height of the ink a line of text actually puts\ndown, and it is `inline-block`, so it can sit inside a real sentence —\n\"posted by ▓▓▓▓ an hour ago\". Note that it paints the ink and nothing\nelse: standing on its own in a column it is SHORTER than the line it\nreplaces, because the leading is missing. Reach for `Skeleton.Text` there,\n`lines={1}` included — reserving the whole line box is exactly what it is\nfor."
+      },
+      {
+        "name": "width",
+        "type": "SkeletonLength",
+        "required": false,
+        "defaultValue": null,
+        "description": "Width of the placeholder. A number is pixels; a string is any CSS length,\nincluding a percentage.\n\nOptional in every sense — `className=\"w-24\"` does the same job and wins\nover this, and with `children` present the content decides."
+      }
+    ]
+  },
+  "SkeletonText": {
+    "name": "SkeletonText",
+    "description": "A paragraph's worth of placeholder lines, measured like type.\n\nThis — not `Skeleton.Root variant=\"text\"` — is what to put where real text\nwill go, `lines={1}` included. A bare text root paints only the ink; this\none reserves the whole line box, leading and all, which is what keeps the\npage from moving when the words arrive.\n\nA line paints `--pui-skeleton-ink` rather than its whole line box, the\nleading becomes the gap, and half a leading sits above the first line and\nbelow the last — which is what makes the block exactly `lines × 1em ×\nline-height` tall. Set the font size on this element and the whole thing\nrescales; it is what the metrics are relative to.\n\n```tsx\n<Skeleton.Text lines={4} />\n<Skeleton.Text lines={1} className=\"w-32\" />\n<Skeleton.Text lines={2} className=\"text-5\" />\n```",
+    "props": [
+      {
+        "name": "animation",
+        "type": "SkeletonAnimation",
+        "required": false,
+        "defaultValue": "pulse",
+        "description": "See `Skeleton.Root`. Falls back to the enclosing group, then `pulse`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "lastLineWidth",
+        "type": "SkeletonLength",
+        "required": false,
+        "defaultValue": "60%",
+        "description": "Width of the last line. Real paragraphs end mid-line, and a block of\nequal-length bars reads as a table rather than as prose. Any CSS length; a\nnumber is pixels."
+      },
+      {
+        "name": "lines",
+        "type": "number",
+        "required": false,
+        "defaultValue": "3",
+        "description": "How many lines to draw. The block is exactly as tall as that many lines of\nreal text at the inherited font size, so swapping it for the paragraph\nmoves nothing below it."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "See `Skeleton.Root`. Falls back to the enclosing group, then `true`."
+      }
+    ]
+  },
+  "SkeletonGroup": {
+    "name": "SkeletonGroup",
+    "description": "The region a screenful of placeholders belongs to: one live region, one\nannouncement, one `loading` flag.\n\nKeep it mounted across both states — that is the whole point. A live region\nhas to exist *before* its contents change to be announced reliably, so a\nstatus element that appears at the same moment as the thing it is announcing\nis heard inconsistently. Rendering the group either way, and letting\n`loading` flip inside it, is what makes the announcement dependable.\n\n```tsx\n<Skeleton.Group loading={pending} label=\"Loading invoices\" doneLabel=\"Invoices loaded\">\n  {pending ? <Skeleton.Text lines={3} /> : rows.map(…)}\n</Skeleton.Group>\n```",
+    "props": [
+      {
+        "name": "animation",
+        "type": "SkeletonAnimation",
+        "required": false,
+        "defaultValue": "pulse",
+        "description": "Default animation for every skeleton in the group. A skeleton that sets\nits own still wins."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "doneLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "What to announce once `loading` turns false. Left unset, the region simply\ngoes quiet — which is the right default when the content that arrives is\nitself obvious, and the wrong one when the user is waiting on a background\nrefresh they cannot see."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Loading",
+        "description": "What is being waited for. This is the only thing a screen reader gets —\nthe placeholders themselves are `aria-hidden`, because a picture of\nabsence is not information.\n\nSay what is coming rather than that something is: \"Loading invoices\" tells\nsomeone whether the wait concerns them; \"Loading\" makes them guess."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the region is still loading. Sets `aria-busy`, swaps the announced\nmessage, and becomes the default for every skeleton inside."
+      }
+    ]
+  },
   "SliderRoot": {
     "name": "SliderRoot",
     "description": "Groups every part of the slider and owns its value. Renders a `<div>` laid\nout as a two-column grid: `Label` and `Value` share the first row, and\n`Control` spans both columns underneath.\n\nThe generic is forwarded rather than widened, so a `number` value keeps\n`onValueChange(value: number)` and an array keeps `readonly number[]` — the\ndistinction between a single-thumb and a range slider is carried entirely by\nthe shape of `value` / `defaultValue`.\n\n```tsx\n<Slider.Root defaultValue={40}>\n  <Slider.Label>Volume</Slider.Label>\n  <Slider.Value />\n  <Slider.Control>\n    <Slider.Track>\n      <Slider.Indicator />\n      <Slider.Thumb />\n    </Slider.Track>\n  </Slider.Control>\n</Slider.Root>\n```",

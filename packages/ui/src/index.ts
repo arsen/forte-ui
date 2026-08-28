@@ -357,6 +357,15 @@ export type {
   SeparatorVariant,
 } from "./components/separator";
 
+export { Skeleton } from "./components/skeleton";
+export type {
+  SkeletonVariant,
+  SkeletonAnimation,
+  SkeletonRootProps,
+  SkeletonTextProps,
+  SkeletonGroupProps,
+} from "./components/skeleton";
+
 export { Slider } from "./components/slider";
 export type {
   SliderSize,
