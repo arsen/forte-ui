@@ -92,6 +92,24 @@
     --pui-combobox-field-gap: var(--pui-space-1);
     /** Field corner radius */
     --pui-combobox-field-radius: var(--pui-radius-control);
+    /* The radius as actually PAINTED, capped at what a single row would give.
+     * Private on purpose — a consumer retunes the knob above; this is the
+     * derived value the inner parts have to agree with.
+     *
+     * A pill radius is half the box's height, and this box GROWS: every wrap
+     * of the chips makes the cap bigger, and the content inside it stays a
+     * full-width rectangle, so the corners of that rectangle move outside the
+     * shape. At two rows the cap is 31px and the last chip of the first row
+     * ends up 5.9px beyond the border at `sm`. Freezing the radius at the
+     * one-row height keeps the pill exactly a pill while the field is one row
+     * — `min()` picks the same 18px the browser would have clamped to — and
+     * degrades it to a rounded rectangle of that radius once it is not, which
+     * is the only shape a stadium can honestly become when it stops being as
+     * wide as it is tall. */
+    --pui-combobox-field-radius-painted: min(
+      var(--pui-combobox-field-radius),
+      calc(var(--pui-combobox-field-height) / 2)
+    );
     /** Field border width */
     --pui-combobox-field-border-width: 1px;
     /* No width token exists in the inventory — widths are layout, not theme.
@@ -141,7 +159,7 @@
     /** Corner radius of the icon buttons (Trigger, Clear) inside the field */
     --pui-combobox-button-radius: max(
       0px,
-      calc(var(--pui-combobox-field-radius) - var(--pui-space-1))
+      calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1))
     );
 
     /* Declared on the GROUP rather than on `.chip`, which is the part that
@@ -178,7 +196,7 @@
     padding-inline: var(--pui-combobox-field-px);
     border: var(--pui-combobox-field-border-width) solid
       var(--pui-combobox-field-border-color);
-    border-radius: var(--pui-combobox-field-radius);
+    border-radius: var(--pui-combobox-field-radius-painted);
 
     background-color: var(--pui-combobox-field-bg);
     color: var(--pui-combobox-field-fg);
@@ -614,8 +632,16 @@
     --pui-combobox-chip-bg-highlighted: var(--pui-color-primary-soft);
     /** Text colour of that chip */
     --pui-combobox-chip-fg-highlighted: var(--pui-color-primary-text);
+    /* Nested inside the field the same way the icon buttons are, and for the
+     * same reason: a chip is a filled box parked in the field's corner, so a
+     * square one crosses a curved border. The subtrahend is the chip's
+     * smaller inset — its block padding, not its inline one — because the
+     * corner is where both run out at once. */
     /** Chip corner radius */
-    --pui-combobox-chip-radius: var(--pui-radius-1);
+    --pui-combobox-chip-radius: max(
+      0px,
+      calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1))
+    );
     /** Chip font size */
     --pui-combobox-chip-font-size: var(--pui-font-size-1);
 
