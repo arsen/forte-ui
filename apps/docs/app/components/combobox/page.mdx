@@ -52,7 +52,9 @@ form control, `soft` as a filled field, `ghost` as an inline affordance.
 ### Multiple selection
 
 `multiple` on `<Combobox.Root>` turns the value into an array and keeps the
-popup open across picks. Render the selection as chips: `<Combobox.Chips>`
+popup open across picks — including picks made after typing a filter, so
+"search once, tick three results" works and the query survives to let you.
+Render the selection as chips: `<Combobox.Chips>`
 wraps a `<Combobox.Value>` function child that maps the values to
 `<Combobox.Chip>`s, with the input rendered last so it shares a line with the
 final chip. Backspace in the empty input removes the last chip; ArrowLeft

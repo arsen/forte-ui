@@ -28,8 +28,9 @@
  *      and rings on behalf of the input (whose UA outline the pattern layer
  *      suppresses), while the buttons inside it carry `.pui-focus-ring` and
  *      ring themselves — the same split NumberField uses. The popup-hosted
- *      input is the one element that has to draw its own ring, inline below,
- *      because no ringing wrapper exists inside the popup.
+ *      input is the one element that rings NOTHING, and that is deliberate:
+ *      it holds focus for as long as the popup is open, so the reasoning is
+ *      inline at `.popup .input:focus-visible` below.
  *
  *   4. There is deliberately no `prefers-reduced-motion` block. The motion
  *      tokens collapse their own geometry — `--pui-scale-enter` becomes 1 and
@@ -103,14 +104,34 @@
      * its own line instead. */
     /** Smallest width the inline input keeps before wrapping under the chips */
     --pui-combobox-input-min-width: var(--pui-space-8);
-    /* Sized so the icon buttons fill the field's inner height at `md` but
-     * never drop below the SC 2.5.8 pointer-target floor at `sm` or under
-     * `compact` density. */
+    /* The field's INNER height: its own height less the block padding and the
+     * two borders. Square, so the glyph gets the same air above and below as
+     * it does either side. The borders were the term missing here — without
+     * them the button is 2px taller than the space it sits in, and a `max()`
+     * against `--pui-target-min` on top of that made `sm` overflow by 6px and
+     * grow the field, breaking the one-row promise it shares with `Input` and
+     * `Select.Trigger`. The SC 2.5.8 floor is not this box's job: `.pui-target`
+     * on the buttons grows the HIT area to 24x24 without touching the visual
+     * one, the same split `.chipRemove` uses.
+     *
+     * `--pui-space-1` here is the group's `padding-block` below, restated
+     * because a custom property cannot read a longhand. Change one, change
+     * both. */
     /** Size of the icon buttons (Trigger, Clear) inside the field */
-    --pui-combobox-button-size: max(
-      var(--pui-target-min),
-      calc(var(--pui-combobox-field-height) - var(--pui-space-1) * 2)
+    --pui-combobox-button-size: calc(
+      var(--pui-combobox-field-height) - var(--pui-space-1) * 2 -
+        var(--pui-combobox-field-border-width) * 2
     );
+
+    /* Declared on the GROUP rather than on `.chip`, which is the part that
+     * paints it, because the group has to subtract it from its own start
+     * padding (see the `:has(.chip)` rule below) and an ancestor cannot read a
+     * value declared on a descendant. The chip inherits it. Retune it here and
+     * both sides move together; set it on a chip alone and the alignment the
+     * subtraction buys is what breaks. */
+    /** Inline space a chip holds before its own label. Set it HERE, on the
+     * group — a chip's own copy cannot reach the padding that pairs with it */
+    --pui-combobox-chip-inset: var(--pui-space-2);
 
     /* Colour slots, filled in per variant below. */
     /** Field background (reset per `variant`) */
@@ -194,6 +215,29 @@
     padding-inline-end: var(--pui-space-1);
   }
 
+  /* Same double-count at the start edge, and worse, because a chip is a filled
+   * box rather than a bare glyph: the field's padding indents the chip's
+   * BACKGROUND to where an input's text would start, and the chip's own inset
+   * then pushes its label further in again, so a chip field reads as floating
+   * away from its own border. Subtracting the chip's inset back out lines the
+   * chip's label up with the text edge every other control in the family uses
+   * — which is the whole point, since the two swap places as chips come and
+   * go. `max()` because at the smallest size under `compact` density the two
+   * are equal, and a chip flush against the border reads as a clipping bug.
+   *
+   * Not the flat `--pui-space-1` the end edge uses, and the difference is not
+   * an oversight: an icon button is transparent until hover, so its padding
+   * costs nothing visually, while a chip's edge is drawn and needs the
+   * clearance. Gated on `.chip`, not `.chips`, so an empty multiple field
+   * keeps the full padding and its placeholder sits exactly where a
+   * single-select one's does. */
+  .inputGroup:has(.chip) {
+    padding-inline-start: max(
+      var(--pui-space-1),
+      calc(var(--pui-combobox-field-px) - var(--pui-combobox-chip-inset))
+    );
+  }
+
   /* Sizes */
   .inputGroup[data-size="sm"] {
     --pui-combobox-field-height: var(--pui-control-h-sm);
@@ -236,7 +280,14 @@
    * owns the boundary; this rule only owns the text. */
   .input {
     box-sizing: border-box;
-    flex: 1 1 auto;
+    /* The basis is the FLOOR, not `auto`. A flex item wraps on its
+     * hypothetical main size — flex-basis clamped, before any shrinking — so
+     * with `auto` an <input> contributes its ~156px intrinsic `size=20` width
+     * and jumps to its own line the moment the last chip leaves less than
+     * that, however far it could have shrunk. Basing it on the same floor the
+     * min stops it at makes wrapping mean what it looks like it means: the
+     * caret drops only when the smallest usable input no longer fits. */
+    flex: 1 1 var(--pui-combobox-input-min-width, 0);
     min-inline-size: var(--pui-combobox-input-min-width, 0);
     padding: 0;
     margin: 0;
@@ -489,9 +540,15 @@
     justify-content: center;
     flex: 0 0 auto;
     inline-size: var(--pui-combobox-button-size);
+    /* `block-size` is the LAST word on the height here, and it has to be.
+     * `block-size` and `height` are one property, so the `height: auto` that
+     * used to follow this line — put there to cancel the standalone trigger's
+     * `height` above — cancelled THIS declaration instead: the button
+     * collapsed onto its 16px glyph, giving a 28x16 box with no air above or
+     * below the caret and a hit target under the 24x24 floor. Cancelling the
+     * base rule needs no extra declaration, because this one already is that
+     * property, at higher specificity. */
     block-size: var(--pui-combobox-button-size);
-    height: auto;
-    min-block-size: 0;
     padding: 0;
     border: none;
     border-radius: var(--pui-radius-1);
@@ -547,7 +604,7 @@
     gap: var(--pui-space-1);
     max-inline-size: 100%;
     padding-block: var(--pui-space-1);
-    padding-inline-start: var(--pui-space-2);
+    padding-inline-start: var(--pui-combobox-chip-inset, var(--pui-space-2));
     padding-inline-end: var(--pui-space-1);
     border-radius: var(--pui-combobox-chip-radius);
     background-color: var(--pui-combobox-chip-bg);
@@ -778,9 +835,7 @@
 
   /* Input inside the popup -------------------------------------------------
    * The search-row restyle of `.input` for the input-inside-popup pattern:
-   * fixed height, full width, a hairline under it, and its own inset focus
-   * ring — no ringing wrapper exists in the popup (see note 3 in the
-   * header), and an outset ring would be cropped by the popup's `overflow`. */
+   * fixed height, full width, and a hairline separating it from the list. */
   .popup .input {
     flex: 0 0 auto;
     inline-size: 100%;
@@ -792,9 +847,39 @@
     font-size: var(--pui-font-size-2);
   }
 
+  /* The search row is the ONE focusable thing in the popup, and Base UI moves
+   * focus into it on open and never lets it leave — arrow keys move a
+   * `data-highlighted` marker between items while DOM focus stays here. A ring
+   * would therefore be painted for the popup's entire lifetime, which makes it
+   * chrome rather than a state: it says nothing a reader can act on, and it is
+   * what reads as a stray bright border around the search field. The caret
+   * (`caret-color: var(--pui-color-primary)` above) is the focus indicator
+   * here, which is the accepted one for a text field under SC 2.4.7.
+   *
+   * There is a second reason this cannot be an ordinary ring. The popup is
+   * `overflow: clip` and the row is flush to its edges, so an OUTSET ring is
+   * cropped down to whichever edge falls inside — a solid bar along the
+   * hairline, which looks like a rendering fault rather than focus. An app
+   * with a blanket `:focus-visible` rule will reintroduce exactly that; the
+   * docs site's own backstop in `globals.css` excludes this part by name for
+   * that reason, and an app that hits it should do the same rather than
+   * reaching for `!important`. */
   .popup .input:focus-visible {
-    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
-    outline-offset: calc(-1 * var(--pui-focus-ring-width) - 1px);
+    outline: none;
+  }
+
+  /* A popup with no room below flips above the anchor, and the search row has
+   * to follow it — the alternative is the field you type into sitting at the
+   * far end of a popup that may be most of the viewport tall
+   * (`max-height: var(--available-height)`), with the trigger it belongs to at
+   * the other. `order` moves the box only: DOM order, focus order and the
+   * accessibility tree are untouched, so the input still precedes the listbox
+   * it owns via `aria-controls`. The hairline swaps sides with it, since its
+   * job is to separate the row from the list and the list is now above. */
+  .popup[data-side="top"] .input {
+    order: 1;
+    border-block-end: none;
+    border-block-start: 1px solid var(--pui-color-border-muted);
   }
 
   /* List -------------------------------------------------------------------
@@ -931,29 +1016,59 @@
   }
 
   /* Group ------------------------------------------------------------------
-   * The label indents past the indicator column so its text lines up with
-   * the item text rather than the check marks. */
+   * The label is deliberately NOT indented to the item text; see the rule. */
   .group {
     display: block;
   }
 
   .groupLabel {
+    /** Group label text colour */
+    --pui-combobox-group-label-fg: var(--pui-color-foreground-muted);
+    /** Group label text size */
+    --pui-combobox-group-label-font-size: var(--pui-font-size-1);
+    /* Tracking has to come back at this size, or a short uppercase word closes
+     * up into a block. Same 0.06em NavList's section labels use — this is the
+     * house heading idiom, not a new one. */
+    /** Group label letter-spacing */
+    --pui-combobox-group-label-tracking: 0.06em;
+    /** Space above a group label, dropped on the first group in the list */
+    --pui-combobox-group-label-mt: var(--pui-space-2);
+
     box-sizing: border-box;
-    padding-block: var(--pui-list-item-py);
-    padding-inline-start: calc(
-      var(--pui-combobox-item-px) + var(--pui-combobox-item-indicator-size) +
-        var(--pui-combobox-item-gap)
-    );
-    padding-inline-end: var(--pui-combobox-item-px);
+    padding-block-start: var(--pui-space-1);
+    padding-block-end: var(--pui-space-1);
+    /* At the LIST's text edge, not the item's. Indenting it past the
+     * indicator column — which this rule used to do, to line its text up with
+     * the item text — is what made it read as one more row: same x, same
+     * rhythm, and only one colour step between them. A heading has to sit a
+     * level UP from the rows it heads, and outdenting is the cue that costs
+     * nothing to scan. */
+    padding-inline: var(--pui-combobox-item-px);
+    /* Whitespace belongs above a heading, with the group it introduces, not
+     * below it with the group that ended. Dropped on the first label, where
+     * there is no boundary to mark and the list's own padding already sits
+     * above. */
+    margin-block-start: var(--pui-combobox-group-label-mt);
     /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
-     * non-text only. */
-    color: var(--pui-color-foreground-muted);
+     * non-text only. The case, tracking and weight are what carry the
+     * hierarchy, so nothing is lost by meeting contrast here. */
+    color: var(--pui-combobox-group-label-fg);
     font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-1);
+    font-size: var(--pui-combobox-group-label-font-size);
     font-weight: var(--pui-font-weight-semibold);
+    letter-spacing: var(--pui-combobox-group-label-tracking);
     line-height: var(--pui-line-height-tight);
+    /* Presentational only — `text-transform` leaves the DOM text alone, so
+     * assistive technology still announces the author's own casing. */
+    text-transform: uppercase;
+    /* Chrome, not a control, per the pointer table. */
+    cursor: default;
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  .list > .group:first-child > .groupLabel {
+    margin-block-start: 0;
   }
 
   /* Separator --------------------------------------------------------------
