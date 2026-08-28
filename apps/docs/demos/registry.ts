@@ -229,6 +229,16 @@ import d_menubar_triggers from "./menubar/triggers";
 import d_menubar_triggers_src from "./menubar/triggers?raw";
 import d_menubar_variants from "./menubar/variants";
 import d_menubar_variants_src from "./menubar/variants?raw";
+import d_nav_list_basic from "./nav-list/basic";
+import d_nav_list_basic_src from "./nav-list/basic?raw";
+import d_nav_list_groups from "./nav-list/groups";
+import d_nav_list_groups_src from "./nav-list/groups?raw";
+import d_nav_list_icons_and_badges from "./nav-list/icons-and-badges";
+import d_nav_list_icons_and_badges_src from "./nav-list/icons-and-badges?raw";
+import d_nav_list_rail from "./nav-list/rail";
+import d_nav_list_rail_src from "./nav-list/rail?raw";
+import d_nav_list_sizes from "./nav-list/sizes";
+import d_nav_list_sizes_src from "./nav-list/sizes?raw";
 import d_navigation_menu_active from "./navigation-menu/active";
 import d_navigation_menu_active_src from "./navigation-menu/active?raw";
 import d_navigation_menu_arrow from "./navigation-menu/arrow";
@@ -663,6 +673,11 @@ export type DemoId =
   | "menubar/theming"
   | "menubar/triggers"
   | "menubar/variants"
+  | "nav-list/basic"
+  | "nav-list/groups"
+  | "nav-list/icons-and-badges"
+  | "nav-list/rail"
+  | "nav-list/sizes"
   | "navigation-menu/active"
   | "navigation-menu/arrow"
   | "navigation-menu/basic"
@@ -938,6 +953,11 @@ const REGISTRY: Record<DemoId, Demo> = {
   "menubar/theming": { Component: d_menubar_theming, source: d_menubar_theming_src, file: "menubar/theming.tsx" },
   "menubar/triggers": { Component: d_menubar_triggers, source: d_menubar_triggers_src, file: "menubar/triggers.tsx" },
   "menubar/variants": { Component: d_menubar_variants, source: d_menubar_variants_src, file: "menubar/variants.tsx" },
+  "nav-list/basic": { Component: d_nav_list_basic, source: d_nav_list_basic_src, file: "nav-list/basic.tsx" },
+  "nav-list/groups": { Component: d_nav_list_groups, source: d_nav_list_groups_src, file: "nav-list/groups.tsx" },
+  "nav-list/icons-and-badges": { Component: d_nav_list_icons_and_badges, source: d_nav_list_icons_and_badges_src, file: "nav-list/icons-and-badges.tsx" },
+  "nav-list/rail": { Component: d_nav_list_rail, source: d_nav_list_rail_src, file: "nav-list/rail.tsx" },
+  "nav-list/sizes": { Component: d_nav_list_sizes, source: d_nav_list_sizes_src, file: "nav-list/sizes.tsx" },
   "navigation-menu/active": { Component: d_navigation_menu_active, source: d_navigation_menu_active_src, file: "navigation-menu/active.tsx" },
   "navigation-menu/arrow": { Component: d_navigation_menu_arrow, source: d_navigation_menu_arrow_src, file: "navigation-menu/arrow.tsx" },
   "navigation-menu/basic": { Component: d_navigation_menu_basic, source: d_navigation_menu_basic_src, file: "navigation-menu/basic.tsx" },
