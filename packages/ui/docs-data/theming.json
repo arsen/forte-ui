@@ -1139,6 +1139,223 @@
       }
     ]
   },
+  "Calendar": {
+    "name": "Calendar",
+    "tokens": [
+      {
+        "name": "--pui-calendar-cell-size",
+        "value": "var(--pui-control-h-md)",
+        "description": "Size of one day cell, and the measure everything else derives from",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-nav-size",
+        "value": "var(--pui-calendar-cell-size)",
+        "description": "Size of the two navigation arrows",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-gap",
+        "value": "var(--pui-space-5)",
+        "description": "Space between months shown side by side",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-head-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the weekday header and the first week",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-gap",
+        "value": "2px",
+        "description": "Space around a day inside its cell. `0px` fuses the grid into one block",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-caption-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Month and year text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-caption-font-weight",
+        "value": "var(--pui-font-weight-semibold)",
+        "description": "Month and year text weight",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-caption-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Month and year colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-weekday-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Weekday initials text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-weekday-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Weekday initials colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-week-number-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "ISO week-number colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Day number text size",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-calendar-day-radius",
+        "value": "var(--pui-radius-2)",
+        "description": "Corner radius of a day",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-color",
+        "value": "var(--pui-color-foreground)",
+        "description": "Day number colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-color-outside",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of days belonging to the neighbouring month",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Day fill on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-selected-bg",
+        "value": "var(--pui-color-primary)",
+        "description": "Fill of a selected day, and of the two ends of a range",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-selected-bg-hover",
+        "value": "var(--pui-color-primary-hover)",
+        "description": "Fill of a selected day on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-day-selected-color",
+        "value": "var(--pui-color-on-primary)",
+        "description": "Text colour on a selected day",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-range-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Fill of the days between the two ends of a range",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-preview-bg",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Fill of the band a half-picked range shows under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-today-color",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Colour of today's number",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-today-dot-size",
+        "value": "3px",
+        "description": "Diameter of the dot under today's number. `0px` removes it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "Length of a day's hover and selection crossfade",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-calendar-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve of a day's hover and selection crossfade",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Checkbox": {
     "name": "Checkbox",
     "tokens": [
@@ -2333,6 +2550,164 @@
         "name": "--pui-context-menu-trigger-ring-offset",
         "value": "calc( -1 * var(--pui-context-menu-trigger-ring-width) )",
         "description": "How far the ring sits outside the region's box; negative draws it inside",
+        "part": "trigger",
+        "overrides": []
+      }
+    ]
+  },
+  "DatePicker": {
+    "name": "DatePicker",
+    "tokens": [
+      {
+        "name": "--pui-date-picker-trigger-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Field height (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Field inline padding (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Field font size (reset per `size`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".trigger[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".trigger[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between the value and the glyph",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Field corner radius",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-border-width",
+        "value": "1px",
+        "description": "Field border width",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Field background (reset per `variant`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-trigger-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Field background on hover",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-bg-active",
+        "value": "var(--pui-color-panel-active)",
+        "description": "Field background while pressed or open",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Field text colour",
+        "part": "trigger",
+        "overrides": []
+      },
+      {
+        "name": "--pui-date-picker-trigger-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Field border colour (reset per `variant`)",
+        "part": "trigger",
+        "overrides": [
+          {
+            "selector": ".trigger[data-invalid]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".trigger[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".trigger[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-date-picker-icon-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of the calendar glyph",
         "part": "trigger",
         "overrides": []
       }
