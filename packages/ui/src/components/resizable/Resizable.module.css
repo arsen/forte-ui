@@ -1,0 +1,410 @@
+/*
+ * Resizable
+ *
+ * A splitter. The group is a flex container, each panel is `flex: <n> 1 0`,
+ * and the whole component's job is to keep those grow factors summing to 100
+ * so they read as percentages. Nothing here is measured in pixels, which is
+ * why a group re-divides itself correctly when the window changes without a
+ * single line of JavaScript running.
+ *
+ * Four decisions carry the file.
+ *
+ * 1 — The divider's LAYOUT thickness and its VISIBLE thickness are different
+ *     properties. The handle occupies `--pui-resizable-handle-size` (a
+ *     hairline) in flow, and paints its line as an absolutely positioned
+ *     ::before that is free to grow on hover without moving a single pixel of
+ *     content. A line that thickened in flow would reflow both panels every
+ *     time the pointer crossed it — and, worse, shift the very edge the
+ *     pointer is aiming at out from under it.
+ *
+ * 2 — The hit area comes from `.pui-target`, not from the handle's own box. A
+ *     1px-wide control fails SC 2.5.8 by a factor of 24, and widening the box
+ *     to fix that would put a visible gutter between every pair of panels. The
+ *     pattern's ::after expands the target to 24px around the hairline and
+ *     paints nothing.
+ *
+ * 3 — Panel size transitions in exactly two situations, and the selector says
+ *     which: the group has SETTLED (`data-ready`) and is not being DRAGGED.
+ *     Both exclusions are load-bearing.
+ *
+ *     Before `data-ready`, the sizes on screen are the pre-hydration fallback
+ *     and the next thing to happen is the real layout arriving. Transitioning
+ *     that is a slide from a split nobody asked for, on every page load.
+ *
+ *     During a drag, easing `flex-grow` makes the panel edge lag the pointer —
+ *     the one thing a splitter must never do. Shortening the duration is not
+ *     enough: a transition is CREATED on every style change, and a group of
+ *     panels each starting a fresh interpolation sixty times a second is most
+ *     of the frame budget for an effect nobody can see. Declaring it only
+ *     where it is wanted costs nothing, and leaves no `transition: none` for
+ *     the reduced-motion rules to trip over.
+ *
+ * 4 — There is no `prefers-reduced-motion` block. The duration tokens shorten
+ *     themselves and nothing here moves through space on a travel token, so
+ *     the component is already correct under it.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on the group, so an ancestor's value is
+     * only ever inherited and never wins — and so a consumer re-skinning ONE
+     * handle can set the same property on that handle, where its own
+     * declaration beats this inherited one. */
+
+    /* The divider. `handle-size` is what the layout gives up to it;
+     * `line-size` is what you see. Keeping the first at a hairline is what
+     * makes panels look adjacent rather than separated by a gutter. */
+    /** Thickness the divider occupies in the layout */
+    --pui-resizable-handle-size: 1px;
+    /** Thickness of the painted divider line at rest */
+    --pui-resizable-line-size: 1px;
+    /** Thickness of the painted divider line while hovered, focused or dragged */
+    --pui-resizable-line-size-active: 3px;
+    /** Colour of the divider line at rest */
+    --pui-resizable-line-color: var(--pui-color-border);
+    /** Colour of the divider line while hovered, focused or dragged */
+    --pui-resizable-line-color-active: var(--pui-color-primary);
+
+    /* The grip, drawn only when `grip` is set. A chip rather than a bare bar
+     * because it has to stay legible sitting on either panel's background. */
+    /** Thickness of the grip chip, across the divider */
+    --pui-resizable-grip-thickness: 6px;
+    /** Length of the grip chip, along the divider */
+    --pui-resizable-grip-length: 22px;
+    /** Corner radius of the grip chip */
+    --pui-resizable-grip-radius: var(--pui-radius-1);
+    /** Fill of the grip chip */
+    --pui-resizable-grip-bg: var(--pui-color-panel);
+    /** Border colour of the grip chip */
+    --pui-resizable-grip-border: var(--pui-color-border);
+    /** Colour of the three dots inside the grip */
+    --pui-resizable-grip-dot-color: var(--pui-color-foreground-subtle);
+    /** Size of one grip dot */
+    --pui-resizable-grip-dot-size: 2px;
+    /** Space between grip dots */
+    --pui-resizable-grip-dot-gap: 2px;
+
+    /* Panel size changes. Long enough to read as a movement when a panel
+     * collapses — and applied only when the group is settled and not being
+     * dragged, so this never describes a panel following a pointer. */
+    /** How long a panel takes to reach a new size. Applies to a collapse or an
+     * expand, never to a drag */
+    --pui-resizable-duration: var(--pui-duration-normal);
+    /** Curve a panel follows to a new size. Not a spring: overshooting a
+     * panel's size flashes a band of the panel behind it */
+    --pui-resizable-ease: var(--pui-ease-standard);
+
+    /** Stacking level of the sheet mounted over the page during a drag. Above
+     * the library's own overlays (Drawer sits at 40) so a splitter inside one
+     * still drags */
+    --pui-resizable-overlay-z-index: 50;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    /* The handle carries a `z-index` so it out-paints the panel that follows
+     * it (see the handle rule). `isolation` keeps that from being measured
+     * against whatever the page has going on outside the group — a `z-index`
+     * escaping into the root stacking context is how a panel ends up over a
+     * portalled dialog — and it opens the context without the side effect a
+     * `z-index` here would have on the group's own position in the page. */
+    isolation: isolate;
+    /* The panels do the clipping. The group deliberately does not, so a
+     * handle's focus ring is not cropped at the group's own edge. */
+    overflow: visible;
+    font-family: var(--pui-font-sans);
+    color: var(--pui-color-foreground);
+  }
+
+  .root[data-orientation="vertical"] {
+    flex-direction: column;
+  }
+
+  /* Panel ------------------------------------------------------------------ */
+
+  .panel {
+    box-sizing: border-box;
+    /* `flex-basis: 0` is what turns the grow factor into a percentage: with a
+     * basis of `auto` the factor would only divide the space LEFT OVER after
+     * content, so two panels holding different amounts of text would start at
+     * different sizes despite identical `defaultSize`s. */
+    flex-basis: 0;
+    flex-shrink: 1;
+    /* `flex-grow` is written by the component. */
+
+    /* A flex item's automatic minimum size is its content, so one long
+     * unbreakable string — a URL, a code line, a wide table — would prop the
+     * panel open past the size the group asked for and quietly break every
+     * other panel's proportion. Both axes, because a group can be vertical. */
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* The direct-child combinator is not tidiness: a nested group's panels are
+   * descendants of the outer group too, and without it an outer drag would
+   * freeze the inner group's collapse animation. It is also exactly the
+   * relationship the layout requires — a panel is a flex item of its group,
+   * so anything that is not a direct child was already broken. */
+  .root[data-ready]:not([data-resizing]) > .panel {
+    transition: flex-grow var(--pui-resizable-duration) var(--pui-resizable-ease);
+  }
+
+  /* Handle ----------------------------------------------------------------- */
+
+  .handle {
+    box-sizing: border-box;
+    flex: 0 0 var(--pui-resizable-handle-size);
+    /* A flex item's automatic minimum size is its CONTENT, so the grip — six
+     * pixels wide against a one-pixel divider — would silently widen the
+     * handle into a visible gutter and push both panels apart. The basis is
+     * the whole story here; the grip is meant to overhang it. */
+    min-inline-size: 0;
+    min-block-size: 0;
+    align-self: stretch;
+    /* `.pui-target` already sets this; restated because the ::before below
+     * depends on it and a pattern class is not a contract this file owns. */
+    position: relative;
+    /* Panels are positioned too, so document order alone would let the panel
+     * AFTER the handle paint over it — and hit-testing follows paint order,
+     * which silently cost the divider the outer half of its 24px target while
+     * leaving the inner half working. Asymmetric, and invisible in a
+     * screenshot. One level is enough; the group isolates it. */
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* A control that does something looks like it does something — and here
+     * the cursor is also the only thing telling the reader which way it
+     * moves. */
+    cursor: col-resize;
+    /* Without this the browser claims the gesture for scrolling on the first
+     * touch-move and the handle never sees a second event. */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .handle[data-orientation="vertical"] {
+    cursor: row-resize;
+    touch-action: none;
+  }
+
+  .handle[data-disabled] {
+    cursor: default;
+  }
+
+  /* Focus that came from a pointer, which is not focus anyone wants drawn.
+   *
+   * `:focus-visible` would normally decide this, and here it decides wrong:
+   * the pointerdown is `preventDefault`ed (or the drag becomes a text
+   * selection), which hides the pointer modality from the browser, and the
+   * programmatic `focus()` that follows is then treated as provenance-unknown
+   * — which on a page's first interaction resolves in favour of showing the
+   * ring. The result is a ring that appears on the first drag of a fresh page
+   * and never again. The component tracks the modality itself instead, and
+   * this rule is the half of `:focus-visible` it has to reimplement.
+   *
+   * Suppression only, never for keyboard focus: the attribute is dropped on
+   * the first keypress and on blur, so Tab always rings. */
+  .handle[data-pointer-focus]:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* The rule above only silences the ring written in pretty-ui's own layers.
+   * A consumer's global focus backstop — the docs site ships one — is
+   * unlayered, and unlayered author CSS beats every pretty-ui layer no matter
+   * what selector is used here. Those rules rebuild the ring from the focus
+   * tokens, so the tokens are the one channel that reaches them: zeroed on
+   * the handle's own declaration, which outranks the inherited values
+   * wherever the consuming rule sits in the cascade. Scoped to the modality
+   * attribute, so keyboard focus keeps the full-width ring. */
+  .handle[data-pointer-focus] {
+    --pui-focus-ring-width: 0px;
+    --pui-focus-ring-offset: 0px;
+  }
+
+  /* The line. Absolutely positioned so it can thicken on hover without
+   * reflowing the panels either side of it, and centred on the hairline the
+   * layout actually reserved so the growth is symmetric. */
+  .handle::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 50%;
+    /* `translate` is physical while `inset-inline-start` is logical: in RTL
+     * the 50% start point measures from the right, so the recentring shift
+     * has to flip with the direction or the thickened line sits its own
+     * width off the divider. */
+    translate: calc(-50% * var(--pui-direction, 1)) 0;
+    inline-size: var(--pui-resizable-line-size);
+    background-color: var(--pui-resizable-line-color);
+    transition:
+      inline-size var(--pui-duration-fast) var(--pui-ease-standard),
+      block-size var(--pui-duration-fast) var(--pui-ease-standard),
+      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .handle[data-orientation="vertical"]::before {
+    inset-block: auto;
+    inset-inline: 0;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+    inline-size: auto;
+    block-size: var(--pui-resizable-line-size);
+  }
+
+  .handle:hover::before,
+  .handle:focus-visible::before,
+  .handle[data-dragging]::before {
+    inline-size: var(--pui-resizable-line-size-active);
+    background-color: var(--pui-resizable-line-color-active);
+  }
+
+  .handle[data-orientation="vertical"]:hover::before,
+  .handle[data-orientation="vertical"]:focus-visible::before,
+  .handle[data-orientation="vertical"][data-dragging]::before {
+    inline-size: auto;
+    block-size: var(--pui-resizable-line-size-active);
+  }
+
+  /* A disabled divider is a line, not a control: no hover cue, and the
+   * `[data-disabled]` selector has to come after the hover rules to win the
+   * tie on specificity. */
+  .handle[data-disabled]:hover::before {
+    inline-size: var(--pui-resizable-line-size);
+    background-color: var(--pui-resizable-line-color);
+  }
+
+  .handle[data-orientation="vertical"][data-disabled]:hover::before {
+    inline-size: auto;
+    block-size: var(--pui-resizable-line-size);
+  }
+
+  /* Grip ------------------------------------------------------------------- */
+
+  .grip {
+    /* Above the line, and out of the pointer's way — every event has to reach
+     * the handle, which is the element holding the capture. */
+    position: relative;
+    pointer-events: none;
+    /* Deliberately unshrinkable: it is a flex child of a one-pixel box, and
+     * the default `flex-shrink: 1` would squeeze it back down to that pixel. */
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--pui-resizable-grip-thickness);
+    block-size: var(--pui-resizable-grip-length);
+    border: 1px solid var(--pui-resizable-grip-border);
+    border-radius: var(--pui-resizable-grip-radius);
+    background-color: var(--pui-resizable-grip-bg);
+    color: var(--pui-resizable-grip-dot-color);
+    transition: border-color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  .handle[data-orientation="vertical"] .grip {
+    inline-size: var(--pui-resizable-grip-length);
+    block-size: var(--pui-resizable-grip-thickness);
+  }
+
+  .handle:hover .grip,
+  .handle:focus-visible .grip,
+  .handle[data-dragging] .grip {
+    border-color: var(--pui-resizable-line-color-active);
+  }
+
+  .handle[data-disabled]:hover .grip {
+    border-color: var(--pui-resizable-grip-border);
+  }
+
+  /* Three dots, drawn as a repeating gradient rather than an SVG so they
+   * inherit `currentColor` and cost nothing. The length is derived from the
+   * dot and gap so re-pointing either keeps exactly three. */
+  .gripDots {
+    inline-size: var(--pui-resizable-grip-dot-size);
+    block-size: calc(
+      3 * var(--pui-resizable-grip-dot-size) + 2 * var(--pui-resizable-grip-dot-gap)
+    );
+    background-image: repeating-linear-gradient(
+      to bottom,
+      currentColor 0 var(--pui-resizable-grip-dot-size),
+      transparent var(--pui-resizable-grip-dot-size)
+        calc(var(--pui-resizable-grip-dot-size) + var(--pui-resizable-grip-dot-gap))
+    );
+  }
+
+  .handle[data-orientation="vertical"] .gripDots {
+    inline-size: calc(
+      3 * var(--pui-resizable-grip-dot-size) + 2 * var(--pui-resizable-grip-dot-gap)
+    );
+    block-size: var(--pui-resizable-grip-dot-size);
+    background-image: repeating-linear-gradient(
+      to right,
+      currentColor 0 var(--pui-resizable-grip-dot-size),
+      transparent var(--pui-resizable-grip-dot-size)
+        calc(var(--pui-resizable-grip-dot-size) + var(--pui-resizable-grip-dot-gap))
+    );
+  }
+
+  /* Drag overlay ----------------------------------------------------------- */
+
+  /* Mounted only while a handle is being dragged. Two jobs: hold the resize
+   * cursor steady wherever the pointer wanders — the element under the pointer
+   * decides the cursor, and that stops being the handle immediately — and
+   * cover any iframe in the page, which would otherwise capture the pointer
+   * stream mid-drag and leave the handle stuck to the cursor. */
+  .dragOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--pui-resizable-overlay-z-index);
+    cursor: col-resize;
+  }
+
+  .dragOverlay[data-orientation="vertical"] {
+    cursor: row-resize;
+  }
+}
+
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    /* Every fill is repainted by the system, so the line survives only if it
+     * is a system colour. `CanvasText` rather than `ButtonBorder`: this is a
+     * structural divider first and a control second, and it has to read as a
+     * line between two regions even when nothing is focused. */
+    .handle::before {
+      background-color: CanvasText;
+    }
+
+    .handle:hover::before,
+    .handle:focus-visible::before,
+    .handle[data-dragging]::before {
+      background-color: Highlight;
+    }
+
+    .handle[data-disabled]::before,
+    .handle[data-disabled]:hover::before {
+      background-color: GrayText;
+    }
+
+    .grip {
+      border-color: CanvasText;
+      background-color: Canvas;
+      color: CanvasText;
+    }
+
+    .handle[data-disabled]:hover .grip {
+      border-color: GrayText;
+      color: GrayText;
+    }
+
+    /* `transparent` is not preserved under forced colours — it is replaced
+     * with a system colour — so an overlay that is invisible everywhere else
+     * would paint a full-viewport block here for the length of the drag. */
+    .dragOverlay {
+      display: none;
+    }
+  }
+}

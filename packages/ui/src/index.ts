@@ -405,6 +405,16 @@ export type {
   RadioGroupOrientation,
 } from "./components/radio";
 
+export { Resizable } from "./components/resizable";
+export type {
+  ResizableOrientation,
+  ResizableLength,
+  ResizableStorage,
+  ResizableGroupProps,
+  ResizablePanelProps,
+  ResizableHandleProps,
+} from "./components/resizable";
+
 export { ScrollArea } from "./components/scroll-area";
 export type {
   ScrollAreaScrollbarVisibility,

@@ -6848,6 +6848,123 @@
       }
     ]
   },
+  "Resizable": {
+    "name": "Resizable",
+    "tokens": [
+      {
+        "name": "--pui-resizable-handle-size",
+        "value": "1px",
+        "description": "Thickness the divider occupies in the layout",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-line-size",
+        "value": "1px",
+        "description": "Thickness of the painted divider line at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-line-size-active",
+        "value": "3px",
+        "description": "Thickness of the painted divider line while hovered, focused or dragged",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-line-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of the divider line at rest",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-line-color-active",
+        "value": "var(--pui-color-primary)",
+        "description": "Colour of the divider line while hovered, focused or dragged",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-thickness",
+        "value": "6px",
+        "description": "Thickness of the grip chip, across the divider",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-length",
+        "value": "22px",
+        "description": "Length of the grip chip, along the divider",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-radius",
+        "value": "var(--pui-radius-1)",
+        "description": "Corner radius of the grip chip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-bg",
+        "value": "var(--pui-color-panel)",
+        "description": "Fill of the grip chip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-border",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour of the grip chip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-dot-color",
+        "value": "var(--pui-color-foreground-subtle)",
+        "description": "Colour of the three dots inside the grip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-dot-size",
+        "value": "2px",
+        "description": "Size of one grip dot",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-grip-dot-gap",
+        "value": "2px",
+        "description": "Space between grip dots",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-duration",
+        "value": "var(--pui-duration-normal)",
+        "description": "How long a panel takes to reach a new size. Applies to a collapse or an expand, never to a drag",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-ease",
+        "value": "var(--pui-ease-standard)",
+        "description": "Curve a panel follows to a new size. Not a spring: overshooting a panel's size flashes a band of the panel behind it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-resizable-overlay-z-index",
+        "value": "50",
+        "description": "Stacking level of the sheet mounted over the page during a drag. Above the library's own overlays (Drawer sits at 40) so a splitter inside one still drags",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "ScrollArea": {
     "name": "ScrollArea",
     "tokens": [

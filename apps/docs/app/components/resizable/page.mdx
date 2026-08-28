@@ -1,0 +1,137 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Resizable",
+  description:
+    "Panels the reader can re-proportion by dragging the divider between them — with the keyboard, with px constraints, and with a layout that can be remembered.",
+};
+
+# Resizable
+
+A splitter: two or more panels laid out along one axis, with a draggable divider between each pair. It is the shape of every editor, every mail client and every dashboard with a sidebar — and the one component where getting the pointer maths slightly wrong is immediately obvious.
+
+<DemoBlock id="resizable/basic" />
+
+## Import
+
+```tsx
+import { Resizable } from "@dofortech/pretty-ui";
+```
+
+Three parts, and they nest in the order they appear on screen:
+
+```tsx
+<Resizable.Group orientation="horizontal">
+  <Resizable.Panel defaultSize={30}>…</Resizable.Panel>
+  <Resizable.Handle />
+  <Resizable.Panel>…</Resizable.Panel>
+</Resizable.Group>
+```
+
+The group has no size of its own — it fills whatever box it is given, so give it one. A horizontal group with no height collapses to nothing, which looks like the component failing to render.
+
+The layout is resolved on the client, from measurements the server does not have — but the server-rendered split is not a guess. The group reads the `defaultSize`s off its children and gives whatever is left to the panels that declared none, so the HTML arrives at the split the client is about to compute and there is nothing to correct on hydration. That shortcut needs the panels to be plain children of the group; if yours come out of a `map` through a wrapper component, declare a `defaultSize` on each one and the result is the same.
+
+<Callout kind="note">
+  Sizes are percentages of the group, and they always add up to 100. That is what makes the layout survive a window resize with no JavaScript running: each panel is `flex: <size> 1 0`, and the browser re-divides the space itself. Constraints are the exception — `minSize`, `maxSize` and `collapsedSize` also accept a `px` string, resolved against the group's measured size whenever they are read.
+</Callout>
+
+## Examples
+
+### Orientation
+
+`orientation="vertical"` stacks the panels and turns the dividers through ninety degrees, arrow keys included. It is the same component; nothing else changes.
+
+<DemoBlock id="resizable/vertical" />
+
+### Nesting
+
+Groups nest. A vertical group inside a horizontal group's middle panel is the standard three-pane editor, and the two splits know nothing about each other — panels register with their nearest group, so there is no coordination to get wrong.
+
+<DemoBlock id="resizable/nested" />
+
+### Pixel constraints
+
+`minSize="220px"` is the constraint a sidebar actually has. A percentage cannot express it: 20% of an unknown container is not a promise about anything, and the same layout that looks right on a desktop puts the sidebar at 90px on a laptop. Percent and px can be mixed freely in one group, and a px constraint is re-checked whenever the group is resized, so it stays true as the window changes.
+
+<DemoBlock id="resizable/constraints" />
+
+`onLayout` reports every panel's size, in percent and in DOM order, whenever the layout settles — including the first time.
+
+### Collapsing
+
+A `collapsible` panel may be dragged past its minimum, into the gap between `minSize` and `collapsedSize`. It does not rest there: `collapseThreshold` puts a snap point partway across that gap, so releasing nearer the closed end shuts the panel and releasing nearer the open end springs it back to `minSize`.
+
+Collapsed state is a controlled pair — `collapsed` and `onCollapsedChange` — rather than an imperative handle, so the button that toggles a sidebar is an ordinary button holding ordinary state, and the drag, the keyboard and your own UI all write to the same place.
+
+<DemoBlock id="resizable/collapsible" />
+
+A panel collapsed to nothing is given `inert`. `overflow: hidden` hides pixels, not the accessibility tree — without it, <kbd>Tab</kbd> walks into a sidebar that is not on screen, which is the kind of trap that only shows up in an audit.
+
+### Collapsing to a rail
+
+`collapsedSize` does not have to be zero. Leave a `56px` rail behind and the collapsed panel keeps its icons — still visible, still focusable, so it is not made `inert`.
+
+<DemoBlock id="resizable/icon-rail" />
+
+### Remembering the layout
+
+`autoSaveId` writes the layout to `localStorage` and reads it back on the next mount. Sizes are stored positionally, so a saved layout is discarded if the number of panels has changed since it was written.
+
+<DemoBlock id="resizable/persisted" />
+
+Restoration happens after mount, because the server cannot read the store. Give the panels sensible `defaultSize`s as well, or the first paint is the default layout and the saved one arrives a frame later. Pass `storage={sessionStorage}` — or any object with `getItem` and `setItem` — to put it somewhere else.
+
+## Accessibility
+
+Each handle is a real `role="separator"` with the [window splitter](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) keyboard interface, so the layout is reachable without a pointer at all. It reports the size of the panel before it through `aria-valuenow`, points at that panel with `aria-controls`, and carries `aria-orientation` describing the LINE — a divider between side-by-side panels is itself vertical.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Tab"], description: "Moves focus to the next handle." },
+    {
+      keys: ["Arrow keys"],
+      description:
+        "Moves the handle by step (5% by default). Left/Right for a horizontal group, Up/Down for a vertical one, and the handle moves the way the key points in RTL too.",
+    },
+    { keys: ["Page Up", "Page Down"], description: "Moves the handle by largeStep (20% by default)." },
+    { keys: ["Home"], description: "Moves the handle as far toward the start as the constraints allow." },
+    { keys: ["End"], description: "Moves the handle as far toward the end as the constraints allow." },
+    { keys: ["Enter"], description: "Collapses or expands a collapsible neighbour." },
+    { keys: ["Double-click"], description: "Resets the group to its default layout." },
+  ]}
+/>
+
+The divider is a hairline, and a hairline is a 1px target. `.pui-target` widens the hit area to the 24px minimum (SC 2.5.8) without widening the line, so it can be grabbed with a thumb or a shaky hand while still looking like a divider rather than a gutter.
+
+Under forced colors the line is repainted with `CanvasText`, its active state with `Highlight`, and a disabled handle with `GrayText` — the fills that carry those states everywhere else in the library are stripped in that mode, so the divider would otherwise vanish entirely.
+
+## Theming
+
+Every property below is declared on `Resizable.Group`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the group's own declaration would beat the inherited value. To re-skin a single handle, set the same property on that handle: an element's own declaration wins over the one it would otherwise inherit from the group.
+
+<ThemingTable component="Resizable" />
+
+Note the two thicknesses. `--pui-resizable-handle-size` is what the divider costs the LAYOUT; `--pui-resizable-line-size` is what you see. They are separate because a line that thickened on hover in flow would reflow both panels every time the pointer crossed it — and shift the very edge the pointer was aiming at out from under it.
+
+The parts publish their state as data attributes — `data-orientation`, `data-resizing` and `data-ready` on the group, `data-collapsed` on a panel, `data-dragging`, `data-disabled` and `data-collapsed` on a handle — so a Tailwind arbitrary variant such as `data-[dragging]:...` targets them without a wrapper.
+
+`data-ready` appears once the client has resolved the layout, and it is what gates the size transition. Before it, the panels are still at the split the server sent, and easing them to the real one would make every page load begin with a slide. During a drag the transition is off for the same reason in reverse — a panel that eases into place is a panel lagging the pointer.
+
+## API reference
+
+### Resizable.Group
+
+<PropTable component="ResizableGroup" />
+
+### Resizable.Panel
+
+<PropTable component="ResizablePanel" />
+
+### Resizable.Handle
+
+<PropTable component="ResizableHandle" />
