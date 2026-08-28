@@ -399,6 +399,20 @@ import d_radio_orientation from "./radio/orientation";
 import d_radio_orientation_src from "./radio/orientation?raw";
 import d_radio_sizes from "./radio/sizes";
 import d_radio_sizes_src from "./radio/sizes?raw";
+import d_resizable_basic from "./resizable/basic";
+import d_resizable_basic_src from "./resizable/basic?raw";
+import d_resizable_collapsible from "./resizable/collapsible";
+import d_resizable_collapsible_src from "./resizable/collapsible?raw";
+import d_resizable_constraints from "./resizable/constraints";
+import d_resizable_constraints_src from "./resizable/constraints?raw";
+import d_resizable_icon_rail from "./resizable/icon-rail";
+import d_resizable_icon_rail_src from "./resizable/icon-rail?raw";
+import d_resizable_nested from "./resizable/nested";
+import d_resizable_nested_src from "./resizable/nested?raw";
+import d_resizable_persisted from "./resizable/persisted";
+import d_resizable_persisted_src from "./resizable/persisted?raw";
+import d_resizable_vertical from "./resizable/vertical";
+import d_resizable_vertical_src from "./resizable/vertical?raw";
 import d_scroll_area_basic from "./scroll-area/basic";
 import d_scroll_area_basic_src from "./scroll-area/basic?raw";
 import d_scroll_area_both_axes from "./scroll-area/both-axes";
@@ -778,6 +792,13 @@ export type DemoId =
   | "radio/native-button"
   | "radio/orientation"
   | "radio/sizes"
+  | "resizable/basic"
+  | "resizable/collapsible"
+  | "resizable/constraints"
+  | "resizable/icon-rail"
+  | "resizable/nested"
+  | "resizable/persisted"
+  | "resizable/vertical"
   | "scroll-area/basic"
   | "scroll-area/both-axes"
   | "scroll-area/horizontal"
@@ -1068,6 +1089,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "radio/native-button": { Component: d_radio_native_button, source: d_radio_native_button_src, file: "radio/native-button.tsx" },
   "radio/orientation": { Component: d_radio_orientation, source: d_radio_orientation_src, file: "radio/orientation.tsx" },
   "radio/sizes": { Component: d_radio_sizes, source: d_radio_sizes_src, file: "radio/sizes.tsx" },
+  "resizable/basic": { Component: d_resizable_basic, source: d_resizable_basic_src, file: "resizable/basic.tsx" },
+  "resizable/collapsible": { Component: d_resizable_collapsible, source: d_resizable_collapsible_src, file: "resizable/collapsible.tsx" },
+  "resizable/constraints": { Component: d_resizable_constraints, source: d_resizable_constraints_src, file: "resizable/constraints.tsx" },
+  "resizable/icon-rail": { Component: d_resizable_icon_rail, source: d_resizable_icon_rail_src, file: "resizable/icon-rail.tsx" },
+  "resizable/nested": { Component: d_resizable_nested, source: d_resizable_nested_src, file: "resizable/nested.tsx" },
+  "resizable/persisted": { Component: d_resizable_persisted, source: d_resizable_persisted_src, file: "resizable/persisted.tsx" },
+  "resizable/vertical": { Component: d_resizable_vertical, source: d_resizable_vertical_src, file: "resizable/vertical.tsx" },
   "scroll-area/basic": { Component: d_scroll_area_basic, source: d_scroll_area_basic_src, file: "scroll-area/basic.tsx" },
   "scroll-area/both-axes": { Component: d_scroll_area_both_axes, source: d_scroll_area_both_axes_src, file: "scroll-area/both-axes.tsx" },
   "scroll-area/horizontal": { Component: d_scroll_area_horizontal, source: d_scroll_area_horizontal_src, file: "scroll-area/horizontal.tsx" },

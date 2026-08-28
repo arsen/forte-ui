@@ -4538,6 +4538,178 @@
       }
     ]
   },
+  "ResizableGroup": {
+    "name": "ResizableGroup",
+    "description": "The container. Owns the layout: every panel's size lives here, because\nresizing is a transfer between panels and only the group can see both sides.\n\n```tsx\n<Resizable.Group orientation=\"horizontal\">\n  <Resizable.Panel defaultSize={30} minSize=\"200px\">…</Resizable.Panel>\n  <Resizable.Handle />\n  <Resizable.Panel>…</Resizable.Panel>\n</Resizable.Group>\n```\n\nThe group has no intrinsic size — it fills what it is given, so give it one\n(a height for a horizontal group, a height for a vertical one too).",
+    "props": [
+      {
+        "name": "autoSaveId",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, so the saved layout is discarded if the\nnumber of panels has changed since.\n\nRestoration happens after mount — the server has no access to the store —\nso give the panels sensible `defaultSize`s as well, or the first paint is\nthe default layout rather than the saved one."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "largeStep",
+        "type": "number",
+        "required": false,
+        "defaultValue": "20",
+        "description": "How far <kbd>Page Up</kbd> / <kbd>Page Down</kbd> moves a handle, in\npercent of the group."
+      },
+      {
+        "name": "onLayout",
+        "type": "((sizes: number[]) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with every panel's size, in percent and in DOM order, whenever the\nlayout changes — including the first time it settles."
+      },
+      {
+        "name": "orientation",
+        "type": "ResizableOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the panels run. `\"horizontal\"` lays them out side by side with\nvertical handles between them; `\"vertical\"` stacks them."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component."
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "defaultValue": "5",
+        "description": "How far one arrow-key press moves a handle, in percent of the group."
+      },
+      {
+        "name": "storage",
+        "type": "ResizableStorage",
+        "required": false,
+        "defaultValue": "localStorage",
+        "description": "Where `autoSaveId` writes. Defaults to `localStorage`; pass\n`sessionStorage`, or your own two-method object, to change that."
+      }
+    ]
+  },
+  "ResizablePanel": {
+    "name": "ResizablePanel",
+    "description": "One resizable region. Sized by the group, so it takes constraints rather\nthan a size: `defaultSize` is a starting point, `minSize` and `maxSize` are\nthe bounds a drag is clamped to.\n\nIt is `overflow: hidden` and `min-inline-size: 0`, which is what keeps a\nlong, unbreakable child — a code line, a wide table — from propping the\npanel open past the size the group asked for. Put a scroll container inside\nif the content needs to scroll.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "collapsed",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Controls the collapsed state. Pass it with `onCollapsedChange` to drive a\npanel from your own button — a sidebar toggle needs no imperative handle,\njust this pair."
+      },
+      {
+        "name": "collapsedSize",
+        "type": "ResizableLength",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Size when collapsed. `0` hides the panel; a small `px` value leaves an\nicon rail behind."
+      },
+      {
+        "name": "collapseThreshold",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0.5",
+        "description": "How far down the gap between `collapsedSize` and `minSize` the snap point\nsits, as a fraction. `0.5` is the midpoint: drag past halfway and the\npanel shuts, let go before it and it springs back to `minSize`."
+      },
+      {
+        "name": "collapsible",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether dragging past `minSize` snaps the panel shut instead of stopping.\nA collapsed panel publishes `data-collapsed`, and the handle beside it\ntoggles it with <kbd>Enter</kbd>."
+      },
+      {
+        "name": "defaultSize",
+        "type": "ResizableLength",
+        "required": false,
+        "defaultValue": null,
+        "description": "Size before anyone drags anything, as a percentage of the group or a\n`px` string. Panels without one split whatever the sized panels leave."
+      },
+      {
+        "name": "maxSize",
+        "type": "ResizableLength",
+        "required": false,
+        "defaultValue": "100",
+        "description": "Largest the panel may be dragged to."
+      },
+      {
+        "name": "minSize",
+        "type": "ResizableLength",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Smallest the panel may be dragged to. A `px` string is honoured at every\ncontainer width — `minSize=\"240px\"` is the constraint a sidebar actually\nhas, and the one a percentage cannot express."
+      },
+      {
+        "name": "onCollapsedChange",
+        "type": "((collapsed: boolean) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the panel collapses or expands, whichever caused it — a drag\npast the snap point, <kbd>Enter</kbd> on the handle, or your own state."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component."
+      }
+    ]
+  },
+  "ResizableHandle": {
+    "name": "ResizableHandle",
+    "description": "The divider between two panels — draggable, focusable, and a real\n`role=\"separator\"` with the window-splitter keyboard interface: arrows to\nmove it, <kbd>Page Up</kbd>/<kbd>Page Down</kbd> for a bigger step,\n<kbd>Home</kbd>/<kbd>End</kbd> for the extremes, and <kbd>Enter</kbd> to\ncollapse or expand a collapsible neighbour.\n\nIts hit area is expanded to the 24px minimum (SC 2.5.8) without changing\nthe hairline it draws, so it can be grabbed by a shaky hand or a thumb\nwithout becoming a visible gutter.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Makes the divider inert: not focusable, not draggable, and drawn without\na hover cue."
+      },
+      {
+        "name": "grip",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Draws a grip in the middle of the divider — the visible affordance for a\ncontrol that is otherwise a hairline."
+      },
+      {
+        "name": "resetOnDoubleClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether a double-click resets the group to its default layout. On by\ndefault: it costs nothing, it is what every splitter does, and it is the\nonly way back from a layout dragged into a corner without a reload."
+      }
+    ]
+  },
   "ScrollAreaRoot": {
     "name": "ScrollAreaRoot",
     "description": "Groups the viewport, the scrollbars and the corner.\n\nGive it the size the scroll area should occupy — a `height`, a `max-height`,\nor a track in whatever layout it sits in. It is a grid with a single\n`minmax(0, 1fr)` cell, so the viewport stays content-sized until the root is\nconstrained and fills it exactly once it is; a scroll area with no height\nanywhere on it simply grows and never scrolls.",

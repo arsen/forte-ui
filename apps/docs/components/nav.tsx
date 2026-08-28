@@ -70,6 +70,7 @@ const NAV: NavGroup[] = [
       { title: "Preview Card", href: "/components/preview-card" },
       { title: "Progress", href: "/components/progress" },
       { title: "Radio", href: "/components/radio" },
+      { title: "Resizable", href: "/components/resizable" },
       { title: "Scroll Area", href: "/components/scroll-area" },
       { title: "Select", href: "/components/select" },
       { title: "Separator", href: "/components/separator" },
