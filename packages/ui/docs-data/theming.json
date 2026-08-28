@@ -3383,8 +3383,15 @@
       },
       {
         "name": "--pui-nav-list-item-radius",
-        "value": "var(--pui-radius-2)",
+        "value": "var(--pui-radius-control)",
         "description": "Corner radius of a row's fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-nav-list-row-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between rows",
         "part": "root",
         "overrides": []
       },

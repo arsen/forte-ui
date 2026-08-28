@@ -2,8 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { cn } from "@/lib/cn";
-import { EYEBROW, NAV_LINK, NAV_LINK_ACTIVE } from "./styles";
+import { NavList } from "@dofortech/pretty-ui";
 
 /**
  * The documentation page list, and the markup for it.
@@ -91,28 +90,29 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    /* The gap replaces the old `.navGroup + .navGroup` margin — same result,
-     * and it survives a group being added or reordered. */
-    <nav aria-label="Documentation" className="flex flex-col gap-5">
+    /* Which row is current is this component's call, not NavList's — the
+     * library deliberately does not read a router. `render` swaps the row's
+     * <a> for the framework Link so client-side navigation is kept. */
+    <NavList.Root aria-label="Documentation">
       {NAV.map((group) => (
-        <div key={group.title}>
-          <p className={cn(EYEBROW, "mt-0 mb-2 px-2")}>{group.title}</p>
-          {group.items.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(NAV_LINK, "font-medium", active && NAV_LINK_ACTIVE)}
-                aria-current={active ? "page" : undefined}
-                onClick={onNavigate}
-              >
-                {item.title}
-              </Link>
-            );
-          })}
-        </div>
+        <NavList.Section key={group.title}>
+          <NavList.SectionLabel>{group.title}</NavList.SectionLabel>
+          <NavList.List>
+            {group.items.map((item) => (
+              <NavList.Item key={item.href}>
+                <NavList.Link
+                  render={<Link href={item.href} />}
+                  active={pathname === item.href}
+                  onClick={onNavigate}
+                >
+                  {item.title}
+                  {item.badge && <NavList.Badge>{item.badge}</NavList.Badge>}
+                </NavList.Link>
+              </NavList.Item>
+            ))}
+          </NavList.List>
+        </NavList.Section>
       ))}
-    </nav>
+    </NavList.Root>
   );
 }

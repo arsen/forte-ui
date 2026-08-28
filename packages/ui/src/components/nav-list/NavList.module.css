@@ -37,8 +37,30 @@
     --pui-nav-list-item-py: var(--pui-list-item-py);
     /** Space between an icon and the row's text */
     --pui-nav-list-item-gap: var(--pui-control-gap);
+    /* `-control`, not a numbered step: the `data-pui-radius` presets rewrite
+     * only the semantic tokens, so a numbered default here would sit out
+     * `pill` and `none` while every other row in the library follows them. */
     /** Corner radius of a row's fill */
-    --pui-nav-list-item-radius: var(--pui-radius-2);
+    --pui-nav-list-item-radius: var(--pui-radius-control);
+    /* Not `--pui-control-gap`: that is the icon-to-text measure inside a
+     * control, 8px at default density — twice what a run of forty sidebar
+     * rows can carry. Density still reaches the rows through their own
+     * block padding. */
+    /** Space between rows */
+    --pui-nav-list-row-gap: var(--pui-space-1);
+
+    /* Derived, not a knob. Text sitting at the knob's 8px hard against a
+     * fully-rounded end reads as clipped by the curve, so the padding a row
+     * actually gets tracks the radius: min() caps the pill preset's 9999px
+     * at space-4, max() keeps the knob the floor everywhere else — so the
+     * default and `none` presets are byte-identical to before, and a
+     * consumer override of `--pui-nav-list-item-px` still works (it IS the
+     * floor). The section label consumes the same value: its alignment
+     * promise is to the row TEXT, not the row box. */
+    --pui-nav-list-item-px-resolved: max(
+      var(--pui-nav-list-item-px),
+      min(var(--pui-nav-list-item-radius), var(--pui-space-4))
+    );
     /** Row text size */
     --pui-nav-list-item-font-size: var(--pui-font-size-2);
     /** Row text weight at rest */
@@ -142,7 +164,7 @@
   .sectionLabel {
     /* Aligned with the row TEXT, not the row box: same inline padding. */
     margin: 0 0 var(--pui-nav-list-label-mb);
-    padding-inline: var(--pui-nav-list-item-px);
+    padding-inline: var(--pui-nav-list-item-px-resolved);
     color: var(--pui-nav-list-label-color);
     font-size: var(--pui-nav-list-label-font-size);
     font-weight: var(--pui-font-weight-semibold);
@@ -159,6 +181,9 @@
   /* List -------------------------------------------------------------------- */
 
   .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pui-nav-list-row-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -167,8 +192,16 @@
   /* Any list below the first steps in behind a guide line. One rule covers
    * both routes there — inside a GroupPanel and directly inside an Item —
    * because either way the inner <ul> is a descendant of the outer one, and
-   * each additional level matches again, so depth costs nothing to express. */
+   * each additional level matches again, so depth costs nothing to express.
+   *
+   * The block margin is the row gap's other half: a nested list sits INSIDE
+   * an <li>, where the outer list's flex gap cannot reach, so without it the
+   * first nested row lands flush against the row above. Inside a GroupPanel
+   * the margin is contained by the panel's BFC (`overflow: hidden`), so Base
+   * UI measures it into `--collapsible-panel-height` and it animates with
+   * the height instead of snapping in at the end. */
   .list .list {
+    margin-block-start: var(--pui-nav-list-row-gap);
     margin-inline-start: var(--pui-nav-list-indent);
     padding-inline-start: var(--pui-nav-list-indent-gap);
     border-inline-start: var(--pui-nav-list-guide-width) solid
@@ -194,7 +227,7 @@
     gap: var(--pui-nav-list-item-gap);
     /* SC 2.5.8. The block floor is the one that bites at data-size="sm". */
     min-height: var(--pui-target-min);
-    padding: var(--pui-nav-list-item-py) var(--pui-nav-list-item-px);
+    padding: var(--pui-nav-list-item-py) var(--pui-nav-list-item-px-resolved);
     border-radius: var(--pui-nav-list-item-radius);
     background-color: var(--pui-nav-list-item-bg);
     color: var(--pui-nav-list-item-color);
