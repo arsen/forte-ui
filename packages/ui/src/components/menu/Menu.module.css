@@ -629,6 +629,36 @@
     font-size: var(--pui-font-size-1);
     font-variant-numeric: tabular-nums;
     letter-spacing: var(--pui-letter-spacing-normal);
+    /* The modifier glyphs — ⌘ ⇧ ⌥ ⌫ — are bidi-NEUTRAL, so in an RTL menu
+     * they take the row's direction and reorder around the key they modify:
+     * `⌘X` renders as `X⌘`, and an all-neutral `⌘⌫` reverses outright. A
+     * shortcut is a literal key sequence, read the same way in every locale,
+     * so it is pinned rather than mirrored. `isolate` is the half that keeps
+     * the pin from leaking: without it the run still resolves against the row
+     * and can carry the label's neutrals across with it. */
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  /* Pinning `direction` also re-resolves this rule's OWN logical properties —
+   * they follow the element's own direction, not the row's — so both have to
+   * be restated. Under the pin `inline-start` is the left edge in BOTH
+   * directions, which in an RTL row drops the auto margin on the wrong side:
+   * the shortcut stops short of the row's trailing edge and its gap opens away
+   * from the label instead of between the two.
+   *
+   * Keyed on the `dir` ATTRIBUTE, and deliberately not on `:dir()`, for the
+   * reason spelled out in `tokens.css`: with this package's CSS targets
+   * `:dir()` is lowered at build time into a list of `:lang()` selectors, so
+   * the rule follows document LANGUAGE and quietly stops matching a bare
+   * `dir="rtl"` in the published stylesheet while still working in source.
+   * Matching an ancestor is enough here because the popup portals to the
+   * document root, so the `dir` it inherits is the app's own. */
+  :global([dir="rtl"]) .shortcut {
+    margin-inline-start: 0;
+    margin-inline-end: auto;
+    padding-inline-start: 0;
+    padding-inline-end: var(--pui-space-5);
   }
 
   .item[data-highlighted] .shortcut {
