@@ -416,6 +416,167 @@
       }
     ]
   },
+  "BreadcrumbRoot": {
+    "name": "BreadcrumbRoot",
+    "description": "The trail container. Renders a `<nav aria-label=\"Breadcrumb\">`.\n\n```tsx\n<Breadcrumb.Root>\n  <Breadcrumb.List>\n    <Breadcrumb.Item>\n      <Breadcrumb.Link href=\"/\">Home</Breadcrumb.Link>\n    </Breadcrumb.Item>\n    <Breadcrumb.Item>\n      <Breadcrumb.Page>Invoices</Breadcrumb.Page>\n    </Breadcrumb.Item>\n  </Breadcrumb.List>\n</Breadcrumb.Root>\n```\n\nThe label is what tells this landmark apart from the page's other\nnavigation landmarks in a screen reader's landmark list, so it is set by\ndefault rather than left to be forgotten. Override it if the page carries\nmore than one trail.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "overflow",
+        "type": "BreadcrumbOverflow",
+        "required": false,
+        "defaultValue": "wrap",
+        "description": "What a trail too long for its container does. `\"wrap\"` lets it run onto a\nsecond line. `\"scroll\"` keeps it on one line in a horizontal scroller\nthat starts scrolled to the current page — the end of the trail is the\npart a reader needs, and it is the part that falls off the edge."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<nav>` with another element or component — pass\n`render={<div />}` when the trail sits inside a `<nav>` landmark you\nalready own, so the page does not grow a second one."
+      },
+      {
+        "name": "separator",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": "a chevron",
+        "description": "What to draw between crumbs. Any node — a `/`, a `·`, an icon. Set once\nhere and every gap in the trail uses it; a `Breadcrumb.Separator` written\nby hand with its own children still wins locally."
+      },
+      {
+        "name": "size",
+        "type": "BreadcrumbSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Text size, crumb padding and separator size for the whole trail."
+      },
+      {
+        "name": "variant",
+        "type": "BreadcrumbVariant",
+        "required": false,
+        "defaultValue": "plain",
+        "description": "How loud the crumbs are. `\"plain\"` is text that underlines on hover.\n`\"chip\"` gives every crumb a rounded fill — a hover tint on the links and\na resting one on the current page, which is what you want when the trail\nsits on a busy toolbar rather than above a document."
+      }
+    ]
+  },
+  "BreadcrumbList": {
+    "name": "BreadcrumbList",
+    "description": "The `<ol>` holding the crumbs. An ordered list on purpose: the trail's\nmeaning *is* the order, and a screen reader announcing \"list, 4 items\" tells\nthe reader how deep they are before they walk it.\n\nIt interleaves the separators itself. `React.Children.toArray` flattens the\narray a `.map()` produces, so a generated trail gets them too — and `null`\nchildren are dropped before the count is taken, which is what keeps a\nconditionally rendered crumb from leaving a separator pointing at nothing.\n\nUnder the root's `overflow=\"scroll\"` it also wraps itself in a\n`ScrollArea` — see the `scroller` note below.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "separators",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Insert a `Breadcrumb.Separator` between every pair of children. On by\ndefault — hand-interleaving separators is the step everyone forgets, and\na trail is the one place where the count is always \"one fewer than the\nitems\". Turning it off leaves the children exactly as written.\n\nWriting even one `Breadcrumb.Separator` by hand also turns it off for\nthat list, so the two styles never double up."
+      }
+    ]
+  },
+  "BreadcrumbItem": {
+    "name": "BreadcrumbItem",
+    "description": "One crumb's `<li>`. Structural — the `Link`, `Page` or `Ellipsis` inside it\nis what the reader sees.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "BreadcrumbLink": {
+    "name": "BreadcrumbLink",
+    "description": "An ancestor crumb — a real `<a>`, so it opens in a new tab, shows its target\nin the status bar and is found by every keyboard the platform ships.\n\nChildren lay out on a flex row, so an icon in front of the label needs no\nwrapper and rides `currentColor` through rest and hover.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/invoices\" />}` is how a framework's router link goes\nin without losing the crumb's styling and states."
+      }
+    ]
+  },
+  "BreadcrumbPage": {
+    "name": "BreadcrumbPage",
+    "description": "The last crumb: where the reader is. Renders a `<span aria-current=\"page\">`.\n\nDeliberately not a link. A link to the page you are already on is a control\nthat does nothing, and the trail's whole job at this position is to say\n\"here\" — `aria-current` says it in the accessibility tree, and the weight\nand colour change say it on screen, so the cue is never colour alone.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<span>` with another element or component."
+      }
+    ]
+  },
+  "BreadcrumbSeparator": {
+    "name": "BreadcrumbSeparator",
+    "description": "The mark between two crumbs. `Breadcrumb.List` inserts these for you — write\none by hand only to give a single gap its own content, which also switches\nthat list to fully manual so the two never double up.\n\nRenders an `<li role=\"presentation\" aria-hidden=\"true\">`: it is punctuation,\nand a screen reader reading \"greater than\" between every crumb is noise. The\n`role` also keeps it out of the list's item count, so \"list, 4 items\" stays\nthe number of crumbs.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "BreadcrumbEllipsis": {
+    "name": "BreadcrumbEllipsis",
+    "description": "Stands in for the crumbs in the middle of a deep trail. Renders a `<span>`,\nwhich is inert — a trail is not the place to hide a page behind something\nunclickable, so reach for this WITH a menu:\n\n```tsx\n<Menu.Root>\n  <Breadcrumb.Ellipsis render={<Menu.Trigger />} label=\"Show 3 more\" />\n  <Menu.Popup>…</Menu.Popup>\n</Menu.Root>\n```\n\nThe stylesheet keys its cursor off the rendered element, so the span stays\n`default` and a `<button>` becomes `pointer` without a prop to pass.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "More",
+        "description": "The accessible name, in a visually hidden span. Three dots have no text of\ntheir own, so without this the control is announced as \"button\" and\nnothing else. Pass `\"\"` in the rare case where `children` is already text\nthat names it, so the name is not said twice."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<span>` with another element or component. Pass\n`render={<Menu.Trigger />}` to make the collapsed crumbs reachable — see\nthe collapsed example in the docs."
+      }
+    ]
+  },
   "Button": {
     "name": "Button",
     "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",

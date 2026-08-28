@@ -73,6 +73,22 @@ import d_avatar_sizes from "./avatar/sizes";
 import d_avatar_sizes_src from "./avatar/sizes?raw";
 import d_avatar_variants from "./avatar/variants";
 import d_avatar_variants_src from "./avatar/variants?raw";
+import d_breadcrumb_basic from "./breadcrumb/basic";
+import d_breadcrumb_basic_src from "./breadcrumb/basic?raw";
+import d_breadcrumb_collapsed from "./breadcrumb/collapsed";
+import d_breadcrumb_collapsed_src from "./breadcrumb/collapsed?raw";
+import d_breadcrumb_generated from "./breadcrumb/generated";
+import d_breadcrumb_generated_src from "./breadcrumb/generated?raw";
+import d_breadcrumb_icons from "./breadcrumb/icons";
+import d_breadcrumb_icons_src from "./breadcrumb/icons?raw";
+import d_breadcrumb_overflow from "./breadcrumb/overflow";
+import d_breadcrumb_overflow_src from "./breadcrumb/overflow?raw";
+import d_breadcrumb_separators from "./breadcrumb/separators";
+import d_breadcrumb_separators_src from "./breadcrumb/separators?raw";
+import d_breadcrumb_sizes from "./breadcrumb/sizes";
+import d_breadcrumb_sizes_src from "./breadcrumb/sizes?raw";
+import d_breadcrumb_variants from "./breadcrumb/variants";
+import d_breadcrumb_variants_src from "./breadcrumb/variants?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
 import d_button_icon_only from "./button/icon-only";
@@ -697,6 +713,14 @@ export type DemoId =
   | "avatar/shapes"
   | "avatar/sizes"
   | "avatar/variants"
+  | "breadcrumb/basic"
+  | "breadcrumb/collapsed"
+  | "breadcrumb/generated"
+  | "breadcrumb/icons"
+  | "breadcrumb/overflow"
+  | "breadcrumb/separators"
+  | "breadcrumb/sizes"
+  | "breadcrumb/variants"
   | "button/as-link"
   | "button/icon-only"
   | "button/loading"
@@ -1028,6 +1052,14 @@ const REGISTRY: Record<DemoId, Demo> = {
   "avatar/shapes": { Component: d_avatar_shapes, source: d_avatar_shapes_src, file: "avatar/shapes.tsx" },
   "avatar/sizes": { Component: d_avatar_sizes, source: d_avatar_sizes_src, file: "avatar/sizes.tsx" },
   "avatar/variants": { Component: d_avatar_variants, source: d_avatar_variants_src, file: "avatar/variants.tsx" },
+  "breadcrumb/basic": { Component: d_breadcrumb_basic, source: d_breadcrumb_basic_src, file: "breadcrumb/basic.tsx" },
+  "breadcrumb/collapsed": { Component: d_breadcrumb_collapsed, source: d_breadcrumb_collapsed_src, file: "breadcrumb/collapsed.tsx" },
+  "breadcrumb/generated": { Component: d_breadcrumb_generated, source: d_breadcrumb_generated_src, file: "breadcrumb/generated.tsx" },
+  "breadcrumb/icons": { Component: d_breadcrumb_icons, source: d_breadcrumb_icons_src, file: "breadcrumb/icons.tsx" },
+  "breadcrumb/overflow": { Component: d_breadcrumb_overflow, source: d_breadcrumb_overflow_src, file: "breadcrumb/overflow.tsx" },
+  "breadcrumb/separators": { Component: d_breadcrumb_separators, source: d_breadcrumb_separators_src, file: "breadcrumb/separators.tsx" },
+  "breadcrumb/sizes": { Component: d_breadcrumb_sizes, source: d_breadcrumb_sizes_src, file: "breadcrumb/sizes.tsx" },
+  "breadcrumb/variants": { Component: d_breadcrumb_variants, source: d_breadcrumb_variants_src, file: "breadcrumb/variants.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },

@@ -1,0 +1,350 @@
+/*
+ * Breadcrumb
+ *
+ * The trail of ancestors above the current page. Two axes are set on the root
+ * and read by everything below through inherited custom properties:
+ *
+ *   data-size="sm|md|lg"        text size, crumb padding, separator size
+ *   data-variant="plain|chip"   text with a hover underline, or a rounded fill
+ *
+ * A third, data-overflow="wrap|scroll", decides only what a trail too long for
+ * its container does — it is not a look, so it re-points no knobs.
+ *
+ * There is very little motion here on purpose: a breadcrumb is read, not
+ * operated, and the only thing that moves is a colour on hover. No
+ * prefers-reduced-motion block, here or in any component file — the duration
+ * tokens shorten themselves.
+ */
+@layer pretty-ui.components {
+  .root {
+    /* Component tokens. Declared here, on Breadcrumb.Root itself, so an
+     * ancestor's value is only ever inherited and never wins — which is what
+     * lets the size presets below re-point a handful of them instead of
+     * restating rules. */
+
+    /* Rhythm. Two gaps, because they answer different questions: the inline
+     * one is the space around a separator, the block one only shows up once
+     * a wrapping trail has a second line, where the inline value would leave
+     * the rows too far apart to read as one trail. */
+    /** Space between a crumb and its separator */
+    --pui-breadcrumb-gap: var(--pui-space-2);
+    /** Space between rows of a wrapped trail */
+    --pui-breadcrumb-row-gap: var(--pui-space-1);
+    /** Space between an icon and its label inside one crumb */
+    --pui-breadcrumb-item-gap: var(--pui-control-gap);
+    /** Text size of the whole trail */
+    --pui-breadcrumb-font-size: var(--pui-font-size-2);
+
+    /* Crumbs. `-muted` on the ancestors and full foreground on the current
+     * page is the contrast that carries "you are here" without relying on
+     * hue — and both clear the 4.5:1 text floor on their own. */
+    /** Colour of an ancestor crumb */
+    --pui-breadcrumb-color: var(--pui-color-foreground-muted);
+    /** Colour of an ancestor crumb under the pointer */
+    --pui-breadcrumb-color-hover: var(--pui-color-foreground);
+    /** Colour of the current page's crumb */
+    --pui-breadcrumb-color-current: var(--pui-color-foreground);
+    /** Weight of the current page's crumb */
+    --pui-breadcrumb-font-weight-current: var(--pui-font-weight-medium);
+    /** How far a hover underline sits below the text */
+    --pui-breadcrumb-underline-offset: 0.2em;
+
+    /* Separator. `-subtle` is below the text floor and fine here: this is a
+     * non-text indicator (SC 1.4.11), and it carries no information the
+     * order of the list does not already carry. Sized in `em` so it tracks
+     * the text through every size preset and any font-size a consumer sets. */
+    /** Colour of the separator */
+    --pui-breadcrumb-separator-color: var(--pui-color-foreground-subtle);
+    /** Size of the default chevron, relative to the trail's text */
+    --pui-breadcrumb-separator-size: 1em;
+
+    /* The ellipsis. It is the one thing in the trail that is a BUTTON rather
+     * than a link, so it is padded like a chip in both variants — a bare icon
+     * with a fill drawn tight around it reads as a rendering artefact, not a
+     * control. Defaulting to the chip knobs is what keeps it in step when
+     * either those or the size preset move. */
+    /** Inline padding of the ellipsis button */
+    --pui-breadcrumb-ellipsis-px: var(--pui-breadcrumb-chip-px);
+    /** Block padding of the ellipsis button */
+    --pui-breadcrumb-ellipsis-py: var(--pui-breadcrumb-chip-py);
+    /* Its own knob rather than the chip's: the ellipsis has a fill in BOTH
+     * variants, so in `plain` — where no chip is ever painted — theming it
+     * through a token named for one would be a lie. */
+    /** Corner radius of the ellipsis button */
+    --pui-breadcrumb-ellipsis-radius: var(--pui-radius-control);
+
+    /* The chip variant's fills. Only painted under data-variant="chip", but
+     * declared unconditionally so a consumer can re-point them from one
+     * place regardless of which variant is in use. */
+    /** Inline padding of a chip */
+    --pui-breadcrumb-chip-px: var(--pui-space-2);
+    /** Block padding of a chip. Follows `data-pui-density` */
+    --pui-breadcrumb-chip-py: var(--pui-space-1);
+    /* `--pui-radius-control`, not a raw step off the scale. The
+     * `data-pui-radius` presets retarget the SEMANTIC tokens — a raw
+     * `--pui-radius-2` responds to `none` (which zeroes the scale itself) and
+     * ignores `soft` and `pill` entirely, so a pill-themed page would round
+     * every button on it and leave these square. */
+    /** Corner radius of a chip */
+    --pui-breadcrumb-chip-radius: var(--pui-radius-control);
+    /** Chip fill of an ancestor crumb under the pointer */
+    --pui-breadcrumb-chip-bg-hover: var(--pui-color-panel-hover);
+    /** Chip fill of the current page's crumb */
+    --pui-breadcrumb-chip-bg-current: var(--pui-color-panel-active);
+
+    box-sizing: border-box;
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-breadcrumb-font-size);
+    line-height: var(--pui-line-height-normal);
+    color: var(--pui-breadcrumb-color);
+  }
+
+  /* Size presets re-point the knobs and nothing else. No `md` block: the
+   * defaults above ARE `md`. */
+  .root[data-size="sm"] {
+    --pui-breadcrumb-gap: var(--pui-space-1);
+    --pui-breadcrumb-font-size: var(--pui-font-size-1);
+  }
+
+  .root[data-size="lg"] {
+    --pui-breadcrumb-gap: var(--pui-space-3);
+    --pui-breadcrumb-font-size: var(--pui-font-size-3);
+    --pui-breadcrumb-chip-px: var(--pui-space-3);
+  }
+
+  /* List -------------------------------------------------------------------- */
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--pui-breadcrumb-row-gap) var(--pui-breadcrumb-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .item {
+    display: inline-flex;
+    align-items: center;
+    /* A flex item refuses to shrink below its content by default, so without
+     * this a long crumb pushes the trail past its container instead of
+     * letting the row wrap. */
+    min-width: 0;
+  }
+
+  /* Crumbs ------------------------------------------------------------------
+   * `.link` (an <a>) and `.page` (a <span>) share their box so the trail
+   * keeps one baseline and one rhythm; only colour, weight and interactivity
+   * separate them. */
+  .link,
+  .page {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pui-breadcrumb-item-gap);
+    min-width: 0;
+    border-radius: var(--pui-breadcrumb-chip-radius);
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  /* An svg placed straight into a crumb is an icon: it must not squash when
+   * the label wraps, it tracks the text through the size presets, and its
+   * colour rides `currentColor` through rest and hover. Direct child only,
+   * so anything a consumer nests deeper is left alone. */
+  .link > svg,
+  .page > svg {
+    flex: none;
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
+  .link {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .link:hover {
+      color: var(--pui-breadcrumb-color-hover);
+      text-decoration: underline;
+      text-underline-offset: var(--pui-breadcrumb-underline-offset);
+    }
+  }
+
+  .page {
+    color: var(--pui-breadcrumb-color-current);
+    font-weight: var(--pui-breadcrumb-font-weight-current);
+    /* Not a control — it is the label for where you already are, and an
+     * `auto` cursor here would be the only thing in the trail suggesting it
+     * might do something. Text stays selectable: it is content. */
+    cursor: default;
+  }
+
+  /* Chip variant ------------------------------------------------------------
+   * Padding only exists here. The `plain` variant deliberately has none, so
+   * the trail sits on the same rhythm as the prose above it — which is also
+   * why the crumbs carry `.pui-target` in the TSX rather than a min-height:
+   * the 24×24 floor (SC 2.5.8) must not push the two variants apart. */
+  .root[data-variant="chip"] .link,
+  .root[data-variant="chip"] .page {
+    padding: var(--pui-breadcrumb-chip-py) var(--pui-breadcrumb-chip-px);
+  }
+
+  /* The fill IS the hover cue here, so the underline comes off: a tinted
+   * chip with an underline in it reads as two states at once. */
+  @media (hover: hover) {
+    .root[data-variant="chip"] .link:hover {
+      background-color: var(--pui-breadcrumb-chip-bg-hover);
+      text-decoration: none;
+    }
+  }
+
+  .root[data-variant="chip"] .page {
+    background-color: var(--pui-breadcrumb-chip-bg-current);
+  }
+
+  /* Separator ---------------------------------------------------------------
+   * Punctuation, not chrome you can grab: `default` cursor and no selection,
+   * so dragging across the trail copies "Home Settings Billing" rather than
+   * a line full of chevrons. */
+  .separator {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--pui-breadcrumb-separator-color);
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* The chevron is drawn pointing right, and `scale` is physical — there is
+   * no logical form of it — so RTL is a sign flip on `--pui-direction`. The
+   * selector is the icon's own class, not `> svg`, so a consumer's `/` or `·`
+   * passed through `separator` is left alone: mirroring a glyph would turn a
+   * slash into a backslash. */
+  .separatorIcon {
+    inline-size: var(--pui-breadcrumb-separator-size);
+    block-size: var(--pui-breadcrumb-separator-size);
+    scale: var(--pui-direction) 1;
+  }
+
+  /* Ellipsis ----------------------------------------------------------------
+   * Inert as a <span> and interactive as a <button> — the cursor is keyed off
+   * the element that was actually rendered, because `render` is what decides
+   * which of the two this is and there is no prop to read. */
+  .ellipsis {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: var(--pui-breadcrumb-ellipsis-py) var(--pui-breadcrumb-ellipsis-px);
+    border: 0;
+    border-radius: var(--pui-breadcrumb-ellipsis-radius);
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: default;
+    transition:
+      background-color var(--pui-duration-fast) var(--pui-ease-standard),
+      color var(--pui-duration-fast) var(--pui-ease-standard);
+  }
+
+  button.ellipsis,
+  a.ellipsis,
+  [role="button"].ellipsis {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    button.ellipsis:hover,
+    a.ellipsis:hover,
+    [role="button"].ellipsis:hover {
+      background-color: var(--pui-breadcrumb-chip-bg-hover);
+      color: var(--pui-breadcrumb-color-hover);
+    }
+  }
+
+  .ellipsisIcon {
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
+  /* Overflow ----------------------------------------------------------------
+   * One line inside a ScrollArea, which `Breadcrumb.List` renders around the
+   * <ol> on this setting and scrolls to the far end on mount — the end of a
+   * trail is the part a reader needs and the part that falls off the edge.
+   *
+   * Nothing here declares `overflow`, and nothing hides a scrollbar: the
+   * ScrollArea's viewport is the box that scrolls, its edge fade and
+   * overscroll containment come with it, and its native scrollbars are
+   * already hidden by Base UI — the trail simply renders no
+   * `ScrollArea.Scrollbar` part. What is left for this file is the shape of
+   * the row inside that viewport. */
+  .scroller {
+    /* The scroll area takes its height from the row inside it — its grid track
+     * is `minmax(0, 1fr)` and nothing here constrains it, which is what we
+     * want for a one-line trail. What it does need is permission to be
+     * NARROWER than that row: a grid or flex item's automatic minimum size is
+     * its content, and a box that is never smaller than its content never
+     * scrolls. */
+    min-width: 0;
+  }
+
+  /* Both halves of "one line" have to be said. `flex-wrap: nowrap` only stops
+   * the ROW breaking; the crumbs are still shrinkable flex items, so without
+   * `flex: none` a trail wider than its container squeezes every crumb until
+   * its own label wraps onto two lines — the same mess, one level down, and
+   * with the scroller now having nothing to scroll.
+   *
+   * The padding is room for a focused crumb's ring, which the viewport would
+   * otherwise clip — a scroll container clips on both axes the moment either
+   * one is set. */
+  .root[data-overflow="scroll"] .list {
+    flex-wrap: nowrap;
+    padding: var(--pui-space-1);
+    /* SC 2.4.11, for the crumb a Tab lands on out of view. */
+    scroll-padding-inline: var(--pui-space-4);
+  }
+
+  .root[data-overflow="scroll"] .item {
+    flex: none;
+  }
+
+  .root[data-overflow="scroll"] .link,
+  .root[data-overflow="scroll"] .page {
+    white-space: nowrap;
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * layer alone. patterns.css already handles the focus ring.
+ *
+ * What is Breadcrumb-specific: every cue that separates the current page from
+ * its ancestors is a COLOUR — muted text against full foreground — and
+ * forced-colors flattens both to `CanvasText`. The weight survives, but a
+ * weight change alone is not a reliable cue at 14px. Underlining the links
+ * restores the distinction in the channel forced-colors preserves, and it is
+ * the convention there anyway: a link that is not underlined is a link that
+ * is not visibly a link once every colour is the same.
+ *
+ * The chip variant's fills go the same way, which is fine — with the links
+ * underlined the trail still reads.
+ * ------------------------------------------------------------------------- */
+@layer pretty-ui.a11y {
+  @media (forced-colors: active) {
+    .link {
+      text-decoration: underline;
+      text-underline-offset: var(--pui-breadcrumb-underline-offset);
+    }
+
+    .link:hover {
+      color: Highlight;
+    }
+  }
+}

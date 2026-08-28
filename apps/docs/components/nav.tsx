@@ -48,6 +48,7 @@ const NAV: NavGroup[] = [
       { title: "Alert", href: "/components/alert" },
       { title: "Aspect Ratio", href: "/components/aspect-ratio" },
       { title: "Avatar", href: "/components/avatar" },
+      { title: "Breadcrumb", href: "/components/breadcrumb" },
       { title: "Button", href: "/components/button" },
       { title: "Calendar", href: "/components/calendar" },
       { title: "Checkbox", href: "/components/checkbox" },
