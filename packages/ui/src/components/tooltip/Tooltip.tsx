@@ -458,6 +458,67 @@ function ArrowSvg() {
 }
 
 /* -------------------------------------------------------------------------
+ * Shortcut
+ * ---------------------------------------------------------------------- */
+
+export interface TooltipShortcutProps
+  extends Omit<React.ComponentPropsWithoutRef<"span">, "className"> {
+  /**
+   * The keys, written the way they are printed — `⌘B`, `Ctrl+B`, `⇧⌘P`.
+   */
+  children?: React.ReactNode;
+  /**
+   * Additional class name(s). Applied after the internal styles so consumer
+   * utilities (e.g. Tailwind) win without needing `!important`.
+   */
+  className?: string;
+}
+
+/**
+ * The keyboard shortcut printed beside the label, as a key cap. Renders a
+ * `<span>`, and is not a Base UI part — it is the same convenience
+ * `Menu.Shortcut` is, for the other half of the pattern: the command that
+ * lives in a menu shows its keys there, and the toolbar button that runs the
+ * same command shows them here.
+ *
+ * Its presence turns the popup into a row, so a label and its keys sit on one
+ * line without the consumer laying anything out.
+ *
+ * Unlike `Menu.Shortcut` this part is **not** `aria-hidden`, because there is
+ * nothing to hide it from: the popup carries no `role="tooltip"` and the
+ * trigger is not wired to it with `aria-describedby`, so no part of a tooltip
+ * is announced. The shortcut still has to reach assistive technology by
+ * another route, and that route is `aria-keyshortcuts` on the control itself —
+ * the same place a menu puts it, spelled in words rather than glyphs:
+ *
+ * ```tsx
+ * <Tooltip.Trigger
+ *   aria-label="Bold"
+ *   aria-keyshortcuts="Meta+B"
+ *   render={<Button iconOnly />}
+ * >
+ *   <BoldIcon aria-hidden="true" />
+ * </Tooltip.Trigger>
+ * <Tooltip.Popup>
+ *   Bold
+ *   <Tooltip.Shortcut>⌘B</Tooltip.Shortcut>
+ * </Tooltip.Popup>
+ * ```
+ */
+const TooltipShortcut = React.forwardRef<HTMLSpanElement, TooltipShortcutProps>(
+  function TooltipShortcut({ className, ...props }, ref) {
+    return (
+      <span
+        ref={ref}
+        className={clsx(styles.shortcut, className)}
+        data-pui="tooltip-shortcut"
+        {...props}
+      />
+    );
+  },
+);
+
+/* -------------------------------------------------------------------------
  * Compound export
  * ---------------------------------------------------------------------- */
 
@@ -512,6 +573,7 @@ export const Tooltip = {
   Trigger: TooltipTrigger,
   Popup: TooltipPopup,
   Arrow: TooltipArrow,
+  Shortcut: TooltipShortcut,
   /** Creates a handle that connects a `Tooltip.Root` to detached triggers. */
   createHandle: BaseTooltip.createHandle,
 };

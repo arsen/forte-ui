@@ -841,6 +841,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "sides", text: "Sides", depth: 3 },
     { id: "shared-delay-across-a-toolbar", text: "Shared delay across a toolbar", depth: 3 },
     { id: "tuning-the-delay", text: "Tuning the delay", depth: 3 },
+    { id: "keyboard-shortcuts", text: "Keyboard shortcuts", depth: 3 },
     { id: "accessibility", text: "Accessibility", depth: 2 },
     { id: "theming", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
@@ -849,6 +850,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "tooltiptrigger", text: "Tooltip.Trigger", depth: 3 },
     { id: "tooltippopup", text: "Tooltip.Popup", depth: 3 },
     { id: "tooltiparrow", text: "Tooltip.Arrow", depth: 3 },
+    { id: "tooltipshortcut", text: "Tooltip.Shortcut", depth: 3 },
   ],
   "/customization/presets": [
     { id: "radius", text: "Radius", depth: 2 },

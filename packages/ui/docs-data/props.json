@@ -7079,5 +7079,25 @@
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
       }
     ]
+  },
+  "TooltipShortcut": {
+    "name": "TooltipShortcut",
+    "description": "The keyboard shortcut printed beside the label, as a key cap. Renders a\n`<span>`, and is not a Base UI part — it is the same convenience\n`Menu.Shortcut` is, for the other half of the pattern: the command that\nlives in a menu shows its keys there, and the toolbar button that runs the\nsame command shows them here.\n\nIts presence turns the popup into a row, so a label and its keys sit on one\nline without the consumer laying anything out.\n\nUnlike `Menu.Shortcut` this part is **not** `aria-hidden`, because there is\nnothing to hide it from: the popup carries no `role=\"tooltip\"` and the\ntrigger is not wired to it with `aria-describedby`, so no part of a tooltip\nis announced. The shortcut still has to reach assistive technology by\nanother route, and that route is `aria-keyshortcuts` on the control itself —\nthe same place a menu puts it, spelled in words rather than glyphs:\n\n```tsx\n<Tooltip.Trigger\n  aria-label=\"Bold\"\n  aria-keyshortcuts=\"Meta+B\"\n  render={<Button iconOnly />}\n>\n  <BoldIcon aria-hidden=\"true\" />\n</Tooltip.Trigger>\n<Tooltip.Popup>\n  Bold\n  <Tooltip.Shortcut>⌘B</Tooltip.Shortcut>\n</Tooltip.Popup>\n```",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The keys, written the way they are printed — `⌘B`, `Ctrl+B`, `⇧⌘P`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
   }
 }
