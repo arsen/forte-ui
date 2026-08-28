@@ -19,6 +19,28 @@ import d_accordion_disabled_item from "./accordion/disabled-item";
 import d_accordion_disabled_item_src from "./accordion/disabled-item?raw";
 import d_accordion_multiple from "./accordion/multiple";
 import d_accordion_multiple_src from "./accordion/multiple?raw";
+import d_aspect_ratio_basic from "./aspect-ratio/basic";
+import d_aspect_ratio_basic_src from "./aspect-ratio/basic?raw";
+import d_aspect_ratio_basis from "./aspect-ratio/basis";
+import d_aspect_ratio_basis_src from "./aspect-ratio/basis?raw";
+import d_aspect_ratio_fit from "./aspect-ratio/fit";
+import d_aspect_ratio_fit_src from "./aspect-ratio/fit?raw";
+import d_aspect_ratio_focal from "./aspect-ratio/focal";
+import d_aspect_ratio_focal_src from "./aspect-ratio/focal?raw";
+import d_aspect_ratio_link from "./aspect-ratio/link";
+import d_aspect_ratio_link_src from "./aspect-ratio/link?raw";
+import d_aspect_ratio_overlay from "./aspect-ratio/overlay";
+import d_aspect_ratio_overlay_src from "./aspect-ratio/overlay?raw";
+import d_aspect_ratio_placeholder from "./aspect-ratio/placeholder";
+import d_aspect_ratio_placeholder_src from "./aspect-ratio/placeholder?raw";
+import d_aspect_ratio_presets from "./aspect-ratio/presets";
+import d_aspect_ratio_presets_src from "./aspect-ratio/presets?raw";
+import d_aspect_ratio_responsive from "./aspect-ratio/responsive";
+import d_aspect_ratio_responsive_src from "./aspect-ratio/responsive?raw";
+import d_aspect_ratio_unclipped from "./aspect-ratio/unclipped";
+import d_aspect_ratio_unclipped_src from "./aspect-ratio/unclipped?raw";
+import d_aspect_ratio_variants from "./aspect-ratio/variants";
+import d_aspect_ratio_variants_src from "./aspect-ratio/variants?raw";
 import d_avatar_badge from "./avatar/badge";
 import d_avatar_badge_src from "./avatar/badge?raw";
 import d_avatar_basic from "./avatar/basic";
@@ -588,6 +610,17 @@ export type DemoId =
   | "accordion/controlled"
   | "accordion/disabled-item"
   | "accordion/multiple"
+  | "aspect-ratio/basic"
+  | "aspect-ratio/basis"
+  | "aspect-ratio/fit"
+  | "aspect-ratio/focal"
+  | "aspect-ratio/link"
+  | "aspect-ratio/overlay"
+  | "aspect-ratio/placeholder"
+  | "aspect-ratio/presets"
+  | "aspect-ratio/responsive"
+  | "aspect-ratio/unclipped"
+  | "aspect-ratio/variants"
   | "avatar/badge"
   | "avatar/basic"
   | "avatar/fallback"
@@ -878,6 +911,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "accordion/controlled": { Component: d_accordion_controlled, source: d_accordion_controlled_src, file: "accordion/controlled.tsx" },
   "accordion/disabled-item": { Component: d_accordion_disabled_item, source: d_accordion_disabled_item_src, file: "accordion/disabled-item.tsx" },
   "accordion/multiple": { Component: d_accordion_multiple, source: d_accordion_multiple_src, file: "accordion/multiple.tsx" },
+  "aspect-ratio/basic": { Component: d_aspect_ratio_basic, source: d_aspect_ratio_basic_src, file: "aspect-ratio/basic.tsx" },
+  "aspect-ratio/basis": { Component: d_aspect_ratio_basis, source: d_aspect_ratio_basis_src, file: "aspect-ratio/basis.tsx" },
+  "aspect-ratio/fit": { Component: d_aspect_ratio_fit, source: d_aspect_ratio_fit_src, file: "aspect-ratio/fit.tsx" },
+  "aspect-ratio/focal": { Component: d_aspect_ratio_focal, source: d_aspect_ratio_focal_src, file: "aspect-ratio/focal.tsx" },
+  "aspect-ratio/link": { Component: d_aspect_ratio_link, source: d_aspect_ratio_link_src, file: "aspect-ratio/link.tsx" },
+  "aspect-ratio/overlay": { Component: d_aspect_ratio_overlay, source: d_aspect_ratio_overlay_src, file: "aspect-ratio/overlay.tsx" },
+  "aspect-ratio/placeholder": { Component: d_aspect_ratio_placeholder, source: d_aspect_ratio_placeholder_src, file: "aspect-ratio/placeholder.tsx" },
+  "aspect-ratio/presets": { Component: d_aspect_ratio_presets, source: d_aspect_ratio_presets_src, file: "aspect-ratio/presets.tsx" },
+  "aspect-ratio/responsive": { Component: d_aspect_ratio_responsive, source: d_aspect_ratio_responsive_src, file: "aspect-ratio/responsive.tsx" },
+  "aspect-ratio/unclipped": { Component: d_aspect_ratio_unclipped, source: d_aspect_ratio_unclipped_src, file: "aspect-ratio/unclipped.tsx" },
+  "aspect-ratio/variants": { Component: d_aspect_ratio_variants, source: d_aspect_ratio_variants_src, file: "aspect-ratio/variants.tsx" },
   "avatar/badge": { Component: d_avatar_badge, source: d_avatar_badge_src, file: "avatar/badge.tsx" },
   "avatar/basic": { Component: d_avatar_basic, source: d_avatar_basic_src, file: "avatar/basic.tsx" },
   "avatar/fallback": { Component: d_avatar_fallback, source: d_avatar_fallback_src, file: "avatar/fallback.tsx" },
