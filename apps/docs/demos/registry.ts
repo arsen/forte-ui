@@ -73,6 +73,26 @@ import d_avatar_sizes from "./avatar/sizes";
 import d_avatar_sizes_src from "./avatar/sizes?raw";
 import d_avatar_variants from "./avatar/variants";
 import d_avatar_variants_src from "./avatar/variants?raw";
+import d_badge_basic from "./badge/basic";
+import d_badge_basic_src from "./badge/basic?raw";
+import d_badge_counts from "./badge/counts";
+import d_badge_counts_src from "./badge/counts?raw";
+import d_badge_custom from "./badge/custom";
+import d_badge_custom_src from "./badge/custom?raw";
+import d_badge_icons from "./badge/icons";
+import d_badge_icons_src from "./badge/icons?raw";
+import d_badge_links from "./badge/links";
+import d_badge_links_src from "./badge/links?raw";
+import d_badge_on_a_button from "./badge/on-a-button";
+import d_badge_on_a_button_src from "./badge/on-a-button?raw";
+import d_badge_sizes from "./badge/sizes";
+import d_badge_sizes_src from "./badge/sizes?raw";
+import d_badge_status from "./badge/status";
+import d_badge_status_src from "./badge/status?raw";
+import d_badge_table from "./badge/table";
+import d_badge_table_src from "./badge/table?raw";
+import d_badge_variants from "./badge/variants";
+import d_badge_variants_src from "./badge/variants?raw";
 import d_breadcrumb_basic from "./breadcrumb/basic";
 import d_breadcrumb_basic_src from "./breadcrumb/basic?raw";
 import d_breadcrumb_collapsed from "./breadcrumb/collapsed";
@@ -713,6 +733,16 @@ export type DemoId =
   | "avatar/shapes"
   | "avatar/sizes"
   | "avatar/variants"
+  | "badge/basic"
+  | "badge/counts"
+  | "badge/custom"
+  | "badge/icons"
+  | "badge/links"
+  | "badge/on-a-button"
+  | "badge/sizes"
+  | "badge/status"
+  | "badge/table"
+  | "badge/variants"
   | "breadcrumb/basic"
   | "breadcrumb/collapsed"
   | "breadcrumb/generated"
@@ -1052,6 +1082,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "avatar/shapes": { Component: d_avatar_shapes, source: d_avatar_shapes_src, file: "avatar/shapes.tsx" },
   "avatar/sizes": { Component: d_avatar_sizes, source: d_avatar_sizes_src, file: "avatar/sizes.tsx" },
   "avatar/variants": { Component: d_avatar_variants, source: d_avatar_variants_src, file: "avatar/variants.tsx" },
+  "badge/basic": { Component: d_badge_basic, source: d_badge_basic_src, file: "badge/basic.tsx" },
+  "badge/counts": { Component: d_badge_counts, source: d_badge_counts_src, file: "badge/counts.tsx" },
+  "badge/custom": { Component: d_badge_custom, source: d_badge_custom_src, file: "badge/custom.tsx" },
+  "badge/icons": { Component: d_badge_icons, source: d_badge_icons_src, file: "badge/icons.tsx" },
+  "badge/links": { Component: d_badge_links, source: d_badge_links_src, file: "badge/links.tsx" },
+  "badge/on-a-button": { Component: d_badge_on_a_button, source: d_badge_on_a_button_src, file: "badge/on-a-button.tsx" },
+  "badge/sizes": { Component: d_badge_sizes, source: d_badge_sizes_src, file: "badge/sizes.tsx" },
+  "badge/status": { Component: d_badge_status, source: d_badge_status_src, file: "badge/status.tsx" },
+  "badge/table": { Component: d_badge_table, source: d_badge_table_src, file: "badge/table.tsx" },
+  "badge/variants": { Component: d_badge_variants, source: d_badge_variants_src, file: "badge/variants.tsx" },
   "breadcrumb/basic": { Component: d_breadcrumb_basic, source: d_breadcrumb_basic_src, file: "breadcrumb/basic.tsx" },
   "breadcrumb/collapsed": { Component: d_breadcrumb_collapsed, source: d_breadcrumb_collapsed_src, file: "breadcrumb/collapsed.tsx" },
   "breadcrumb/generated": { Component: d_breadcrumb_generated, source: d_breadcrumb_generated_src, file: "breadcrumb/generated.tsx" },

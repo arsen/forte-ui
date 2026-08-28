@@ -77,6 +77,12 @@
 
     --pui-warning-2: light-dark(oklch(0.980 0.024 85), oklch(0.222 0.034 85));
     --pui-warning-3: light-dark(oklch(0.955 0.058 85), oklch(0.276 0.056 85));
+    /* Lighter than its own `-9`, which reads backwards until you remember
+     * that amber's 9 sits at 0.812 — step 7 has to stay above it or the ramp
+     * inverts. It is the faintest of the four `-7` edges against white
+     * (1.6:1, where danger manages 1.9) and that is the hue, not a mistake:
+     * a warning chip carries its meaning in the label, never in the border
+     * alone. */
     --pui-warning-7: light-dark(oklch(0.855 0.110 85), oklch(0.500 0.095 85));
     --pui-warning-9: oklch(0.812 0.163 82);
     --pui-warning-11: light-dark(oklch(0.520 0.118 60), oklch(0.840 0.140 85));
@@ -90,7 +96,15 @@
     --pui-info-2: light-dark(oklch(0.975 0.012 250), oklch(0.218 0.038 250));
     --pui-info-3: light-dark(oklch(0.945 0.026 250), oklch(0.272 0.065 250));
     --pui-info-7: light-dark(oklch(0.800 0.090 250), oklch(0.478 0.130 250));
-    --pui-info-9: oklch(0.588 0.158 250);
+    /* Step 9 sat at 0.588 for as long as nothing painted text on it. `Badge`
+     * does — a solid `tone="info"` chip — and white measured 4.09:1 there, an
+     * AA failure. Black clears it (4.77:1), but nobody ships black on azure,
+     * so the fill moved instead: 0.550 puts white at 4.78:1 and lands info
+     * between its own siblings (danger 0.552, success 0.545) rather than as an
+     * outlier above them. `Alert` reads only the tints above and is unaffected.
+     * check-contrast.mjs asserts the pair, which is what stops a future nudge
+     * from undoing this. */
+    --pui-info-9: oklch(0.550 0.158 250);
     --pui-info-11: light-dark(oklch(0.500 0.140 250), oklch(0.790 0.110 250));
   }
 
@@ -234,14 +248,17 @@
      * failure a component guessing "solid fill means white text" would ship
      * silently. `--pui-success-9` sits almost exactly on the white/black
      * crossover: 4.54:1 white against 4.56:1 black, so it clears AA either way
-     * and by very little. check-contrast.mjs asserts all three pairs, which is
+     * and by very little. check-contrast.mjs asserts all four pairs, which is
      * what stops a future nudge to a status hue from quietly breaking one.
      *
-     * There is deliberately no `--pui-color-on-info` yet: nothing paints text
-     * on `--pui-info-9`, and the answer there is NOT white (4.15:1). Add it
-     * with a matching assertion the day something needs it. */
+     * `--pui-color-on-info` is the newest of the four and the note that used
+     * to stand here said to add it "with a matching assertion the day
+     * something needs it". `Badge` needed it. The assertion is in place, and
+     * so is the other half of that day's work: `--pui-info-9` moved down to
+     * 0.550 so the answer could be white — see the note on the ramp above. */
     --pui-color-on-success: oklch(0.995 0 0);
     --pui-color-on-warning: oklch(0.145 0 0);
+    --pui-color-on-info: oklch(0.995 0 0);
   }
 }
 

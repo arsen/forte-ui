@@ -53,6 +53,15 @@ export type {
   AvatarGroupProps,
 } from "./components/avatar";
 
+export { Badge } from "./components/badge";
+export type {
+  BadgeProps,
+  BadgeVariant,
+  BadgeTone,
+  BadgeSize,
+  BadgeShape,
+} from "./components/badge";
+
 export { Breadcrumb } from "./components/breadcrumb";
 export type {
   BreadcrumbSize,

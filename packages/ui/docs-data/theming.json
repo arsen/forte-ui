@@ -1067,6 +1067,440 @@
       }
     ]
   },
+  "Badge": {
+    "name": "Badge",
+    "tokens": [
+      {
+        "name": "--pui-badge-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius. `shape=\"pill\"` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-shape=\"pill\"]",
+            "value": "var(--pui-radius-pill)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-font-size",
+        "value": "var(--pui-font-size-1)",
+        "description": "Label size; reassigned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-2)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-font-weight",
+        "value": "var(--pui-font-weight-medium)",
+        "description": "Label weight. Badges are small; medium is what keeps them legible against body text without shouting.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-gap",
+        "value": "var(--pui-space-1)",
+        "description": "Space between the dot, an icon and the label.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-padding-y",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding; reassigned by `size`. Together with one tight line this is what sets the badge's height.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "0px"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-padding-x",
+        "value": "var(--pui-space-2)",
+        "description": "Inline padding; reassigned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-space-3)"
+          },
+          {
+            "selector": ".root[data-count]",
+            "value": "var(--pui-space-1)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-border-width",
+        "value": "1px",
+        "description": "Border thickness. Reserved by every variant; only `outline` colours it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-icon-size",
+        "value": "1em",
+        "description": "Size of an `svg` child. `1em`, so it tracks `--pui-badge-font-size` and needs no rule per size — and stays in proportion if a consumer re-points the font size.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-dot-size",
+        "value": "0.5em",
+        "description": "Diameter of the leading dot.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-dot-color",
+        "value": "currentColor",
+        "description": "Colour of that dot. `currentColor` by default, so it matches the label through every variant and tone without a slot of its own.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-min-inline-size",
+        "value": "auto",
+        "description": "Smallest inline size. `count` re-points it at the badge's own height, which is what rounds a one-digit tally into a circle.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-count]",
+            "value": "calc( 1em * var(--pui-line-height-tight) + 2 * var(--pui-badge-padding-y) + 2 * var(--pui-badge-border-width) )"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-duration",
+        "value": "var(--pui-duration-fast)",
+        "description": "How long a hover or theme change takes to cross-fade.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-badge-tone-solid",
+        "value": "var(--pui-color-primary)",
+        "description": "Tone's solid fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-12)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-tone-solid-hover",
+        "value": "var(--pui-color-primary-hover)",
+        "description": "Tone's solid fill under the pointer, for a badge that is a link or a button. The three tones with no authored hover step derive one further down.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-11)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-hover)"
+          },
+          {
+            "selector": ".root:not([data-tone=\"primary\"], [data-tone=\"secondary\"], [data-tone=\"neutral\"], [data-tone=\"danger\"])",
+            "value": "color-mix( in oklab, var(--pui-badge-tone-solid) 92%, black )"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-tone-on-solid",
+        "value": "var(--pui-color-on-primary)",
+        "description": "Text colour on the solid fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-1)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-on-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-on-success)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-on-warning)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-on-info)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-tone-soft",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Tone's tinted fill, and the hover wash for `outline` and `ghost`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-3)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-tone-soft-hover",
+        "value": "var(--pui-color-primary-soft-hover)",
+        "description": "Tinted fill under the pointer. The four tones with no authored soft-hover step derive one further down.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-soft-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-gray-4)"
+          },
+          {
+            "selector": ".root:not([data-tone=\"primary\"], [data-tone=\"secondary\"], [data-tone=\"neutral\"])",
+            "value": "color-mix( in oklab, var(--pui-badge-tone-soft) 92%, var(--pui-badge-tone-text) )"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-tone-text",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Label colour for `soft`, `outline` and `ghost`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-foreground)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-tone-border",
+        "value": "var(--pui-color-primary-border)",
+        "description": "Border colour for `outline`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--pui-color-secondary-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--pui-color-success-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"warning\"]",
+            "value": "var(--pui-color-warning-border)"
+          },
+          {
+            "selector": ".root[data-tone=\"info\"]",
+            "value": "var(--pui-color-info-border)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-bg",
+        "value": "transparent",
+        "description": "Resting background; filled in by `variant`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-badge-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-badge-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-bg-hover",
+        "value": "transparent",
+        "description": "Background under the pointer, for an interactive badge only",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-badge-tone-solid-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-badge-tone-soft-hover)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-badge-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "var(--pui-badge-tone-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]:is([data-variant=\"outline\"], [data-variant=\"ghost\"])",
+            "value": "var(--pui-color-panel-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Label and icon colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--pui-badge-tone-on-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-badge-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-badge-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "var(--pui-badge-tone-text)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-badge-border-color",
+        "value": "transparent",
+        "description": "Border colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-badge-tone-border)"
+          }
+        ]
+      }
+    ]
+  },
   "Breadcrumb": {
     "name": "Breadcrumb",
     "tokens": [

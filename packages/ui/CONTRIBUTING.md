@@ -147,11 +147,11 @@ declaration in `src/styles/*.css` with its default, every overriding selector
 one exists. `pnpm --filter @dofortech/pretty-ui docgen` rebuilds it. When this
 list and that file disagree, the file is right; fix the list.
 
-**accent** (12)
-`--pui-accent-1` · `--pui-accent-10` · `--pui-accent-11` · `--pui-accent-12` · `--pui-accent-2` · `--pui-accent-3` · `--pui-accent-4` · `--pui-accent-5` · `--pui-accent-6` · `--pui-accent-7` · `--pui-accent-8` · `--pui-accent-9`
+**accent** (13)
+`--pui-accent-1` · `--pui-accent-10` · `--pui-accent-11` · `--pui-accent-12` · `--pui-accent-2` · `--pui-accent-3` · `--pui-accent-4` · `--pui-accent-5` · `--pui-accent-6` · `--pui-accent-7` · `--pui-accent-8` · `--pui-accent-9` · `--pui-accent-seed`
 
-**color** (50)
-`--pui-color-background` · `--pui-color-border` · `--pui-color-border-muted` · `--pui-color-border-strong` · `--pui-color-danger` · `--pui-color-danger-border` · `--pui-color-danger-hover` · `--pui-color-danger-soft` · `--pui-color-danger-text` · `--pui-color-focus-ring` · `--pui-color-foreground` · `--pui-color-foreground-muted` · `--pui-color-foreground-subtle` · `--pui-color-info` · `--pui-color-info-border` · `--pui-color-info-soft` · `--pui-color-info-text` · `--pui-color-on-danger` · `--pui-color-on-primary` · `--pui-color-on-secondary` · `--pui-color-on-success` · `--pui-color-on-warning` · `--pui-color-overlay` · `--pui-color-panel` · `--pui-color-panel-active` · `--pui-color-panel-hover` · `--pui-color-primary` · `--pui-color-primary-active` · `--pui-color-primary-border` · `--pui-color-primary-hover` · `--pui-color-primary-soft` · `--pui-color-primary-soft-active` · `--pui-color-primary-soft-hover` · `--pui-color-primary-text` · `--pui-color-secondary` · `--pui-color-secondary-active` · `--pui-color-secondary-border` · `--pui-color-secondary-hover` · `--pui-color-secondary-soft` · `--pui-color-secondary-soft-active` · `--pui-color-secondary-soft-hover` · `--pui-color-secondary-text` · `--pui-color-success` · `--pui-color-success-border` · `--pui-color-success-soft` · `--pui-color-success-text` · `--pui-color-warning` · `--pui-color-warning-border` · `--pui-color-warning-soft` · `--pui-color-warning-text`
+**color** (51)
+`--pui-color-background` · `--pui-color-border` · `--pui-color-border-muted` · `--pui-color-border-strong` · `--pui-color-danger` · `--pui-color-danger-border` · `--pui-color-danger-hover` · `--pui-color-danger-soft` · `--pui-color-danger-text` · `--pui-color-focus-ring` · `--pui-color-foreground` · `--pui-color-foreground-muted` · `--pui-color-foreground-subtle` · `--pui-color-info` · `--pui-color-info-border` · `--pui-color-info-soft` · `--pui-color-info-text` · `--pui-color-on-danger` · `--pui-color-on-info` · `--pui-color-on-primary` · `--pui-color-on-secondary` · `--pui-color-on-success` · `--pui-color-on-warning` · `--pui-color-overlay` · `--pui-color-panel` · `--pui-color-panel-active` · `--pui-color-panel-hover` · `--pui-color-primary` · `--pui-color-primary-active` · `--pui-color-primary-border` · `--pui-color-primary-hover` · `--pui-color-primary-soft` · `--pui-color-primary-soft-active` · `--pui-color-primary-soft-hover` · `--pui-color-primary-text` · `--pui-color-secondary` · `--pui-color-secondary-active` · `--pui-color-secondary-border` · `--pui-color-secondary-hover` · `--pui-color-secondary-soft` · `--pui-color-secondary-soft-active` · `--pui-color-secondary-soft-hover` · `--pui-color-secondary-text` · `--pui-color-success` · `--pui-color-success-border` · `--pui-color-success-soft` · `--pui-color-success-text` · `--pui-color-warning` · `--pui-color-warning-border` · `--pui-color-warning-soft` · `--pui-color-warning-text`
 
 **control** (7)
 `--pui-control-gap` · `--pui-control-h-lg` · `--pui-control-h-md` · `--pui-control-h-sm` · `--pui-control-px-lg` · `--pui-control-px-md` · `--pui-control-px-sm`
@@ -195,6 +195,9 @@ list and that file disagree, the file is right; fix the list.
 **motion** (2)
 `--pui-motion-off` · `--pui-motion-ok`
 
+**neutral** (1)
+`--pui-neutral-tint`
+
 **on** (3)
 `--pui-on-hue-cos` · `--pui-on-hue-sin` · `--pui-on-threshold`
 
@@ -210,8 +213,8 @@ list and that file disagree, the file is right; fix the list.
 **scrim** (2)
 `--pui-scrim-blur` · `--pui-scrim-color`
 
-**secondary** (12)
-`--pui-secondary-1` · `--pui-secondary-10` · `--pui-secondary-11` · `--pui-secondary-12` · `--pui-secondary-2` · `--pui-secondary-3` · `--pui-secondary-4` · `--pui-secondary-5` · `--pui-secondary-6` · `--pui-secondary-7` · `--pui-secondary-8` · `--pui-secondary-9`
+**secondary** (13)
+`--pui-secondary-1` · `--pui-secondary-10` · `--pui-secondary-11` · `--pui-secondary-12` · `--pui-secondary-2` · `--pui-secondary-3` · `--pui-secondary-4` · `--pui-secondary-5` · `--pui-secondary-6` · `--pui-secondary-7` · `--pui-secondary-8` · `--pui-secondary-9` · `--pui-secondary-seed`
 
 **shadow** (4)
 `--pui-shadow-1` · `--pui-shadow-2` · `--pui-shadow-3` · `--pui-shadow-4`
