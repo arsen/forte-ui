@@ -4,7 +4,7 @@ import { Tabs } from "@dofortech/pretty-ui";
 
 export default function TabsVertical() {
   return (
-    <Tabs.Root defaultValue="profile" orientation="vertical">
+    <Tabs.Root defaultValue="profile" orientation="vertical" className="w-120">
       <Tabs.List aria-label="Account settings">
         <Tabs.Tab value="profile">Profile</Tabs.Tab>
         <Tabs.Tab value="notifications">Notifications</Tabs.Tab>
