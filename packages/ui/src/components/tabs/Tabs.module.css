@@ -230,6 +230,32 @@
     max-block-size: 100%;
   }
 
+  /* The strip still has to FILL the viewport when it fits in it, and that does
+   * not come for free. `ScrollArea.Content` is a `display: table` box — the one
+   * box that is sized to `max(min-content, min(max-content, available))`, which
+   * is what lets a nowrap row overflow while wrapping content still wraps — and
+   * a table shrink-wraps its content whenever that content is narrower than the
+   * space available. ScrollArea's own `min-width: 100%` is meant to be the
+   * other half of that, but Base UI sets `min-width: fit-content` on the
+   * element as an INLINE style, and no layered rule beats an inline one.
+   *
+   * So the strip was shrink-wrapping to the width of its labels. A strip of
+   * `flex: 0 0 auto` tabs looks identical either way — its width IS the sum of
+   * its tabs — which is why this survived the first round of testing. A strip
+   * whose tabs are meant to share the row does not: `<Tabs.List className="w-
+   * full">` with `flex-1` tabs resolved its 100% against the shrink-wrapped
+   * table, so a four-way segmented control collapsed to the width of four
+   * words, and under the `pill` radius preset each tab came out a circle.
+   *
+   * `width`, not `min-width`, because `width` is the property Base UI has not
+   * already claimed inline. A table's used width is `max(specified, min-
+   * content)`, so this is strictly the stronger form of what ScrollArea was
+   * asking for: it stretches a strip that fits, and a strip that does not fit
+   * still grows past it to its min-content and scrolls. */
+  .content {
+    width: 100%;
+  }
+
   /* Strip ------------------------------------------------------------------
    * position: relative is load-bearing, not cosmetic: it makes the List the
    * containing block the Indicator is measured against. Without it the

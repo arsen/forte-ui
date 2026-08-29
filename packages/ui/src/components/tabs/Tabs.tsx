@@ -320,8 +320,10 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
       <ScrollArea.Viewport ref={viewportRef}>
         {/* Content is sized to its content rather than stretched to the
           * viewport, which is what lets the nowrap row of `flex: 0 0 auto` tabs
-          * overflow and scroll instead of being clipped. */}
-        <ScrollArea.Content>{list}</ScrollArea.Content>
+          * overflow and scroll instead of being clipped — and `styles.content`
+          * puts back the half of that a table box loses, so a strip that FITS
+          * still fills the viewport. See the note on `.content`. */}
+        <ScrollArea.Content className={styles.content}>{list}</ScrollArea.Content>
       </ScrollArea.Viewport>
     </ScrollArea.Root>
   );
