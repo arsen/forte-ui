@@ -22,7 +22,7 @@ Tabs put several views of the same subject in one place and show one at a time. 
 import { Tabs } from "@dofortech/pretty-ui";
 ```
 
-`Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list.
+`Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list. `Tabs.List` renders a [`ScrollArea`](/components/scroll-area) around itself unless `overflow="visible"` is set on the root — its own `className`, `ref` and props still land on the `tablist` element, but it is no longer the outermost box of the strip.
 
 Each `Tabs.Tab` is paired with the `Tabs.Panel` that carries the same `value`. That pairing is not cosmetic — it is what generates the `aria-controls` and `aria-labelledby` attributes linking the two, so every tab needs a panel with a matching value and every panel needs a tab. `value` can be any string or number; `Tabs.Root` takes `defaultValue` (uncontrolled) or `value` plus `onValueChange` (controlled).
 
@@ -50,6 +50,24 @@ The variant is set once on `Tabs.Root` and reaches the list, tabs and indicator 
 
 <DemoBlock id="tabs/vertical" />
 
+### Overflow
+
+A strip with more tabs than room scrolls rather than spilling out of its container. `Tabs.List` wraps itself in a [`ScrollArea`](/components/scroll-area), so the overflowing end fades out under a mask that opens and closes with the scroll position, a swipe or a drag brings it back, and `overscroll-behavior: contain` stops that swipe dragging the page sideways once the strip hits its end. It costs nothing while the tabs fit: a `ScrollArea` with no overflow shows no fade and takes no tab stop.
+
+<DemoBlock id="tabs/overflow" />
+
+Activating a tab that is off the edge scrolls it into view, whether it was reached with the pointer or with the arrow keys and Enter — and the strip arrives already scrolled to the active tab, with no animation on that first frame. It deliberately overshoots: `--pui-tabs-scroll-peek` parks the tab 3rem in from the edge rather than flush against it, which leaves the neighbouring tab half painted and half fading out under the mask. Land the tab on the fade's inner edge instead and the gap beyond it is empty — the strip reads as having ended there, which is the one thing a scrolling strip must not do.
+
+That clearance is the tab's own `scroll-margin`, overriding the flat 1.5rem patterns.css puts on every focusable part for [SC 2.4.11](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html). Carrying it as a real CSS property rather than a number in the script is what makes the browser's own focus scrolling agree with ours, so arrow-keying along the strip leaves the same peek as clicking does.
+
+Set `overflow="visible"` on `Tabs.Root` to opt out and get the plain flex row back — take it when the strip sits in a layout that already handles the overflow.
+
+A vertical strip needs a height to scroll against. The scroller is capped at the height of `Tabs.Root`, so give the root a `height` or a `max-height` and a long strip scrolls beside a panel that does not; leave the root unconstrained and it grows to fit its tabs exactly as before.
+
+<Callout kind="a11y">
+  The fade is the only overflow cue here — there is deliberately no scrollbar, which would be painted across the bottom of a one-line strip and over the rail in the `line` variant. Under `forced-colors`, `prefers-contrast: more` and `prefers-reduced-transparency` the fade is dropped, since all three ask for the opposite of translucent text. Nothing is unreachable in those modes — the arrow keys walk the whole strip and scroll it as they go — but if the strip is the primary navigation of a page, consider keeping the tab count low enough to fit.
+</Callout>
+
 ### With icons
 
 A tab lays out its children in a row with `--pui-control-gap` between them, so an icon needs no wrapper or extra class.
@@ -69,7 +87,7 @@ A tab lays out its children in a row with `--pui-control-gap` between them, so a
 ## Accessibility
 
 <KeyboardTable rows={[
-  { keys: ["Tab"], description: "Moves focus into the strip, landing on the active tab, and then out of the strip to the active panel. The strip is a single tab stop — the other tabs are reached with the arrow keys." },
+  { keys: ["Tab"], description: "Moves focus into the strip, landing on the active tab, and then out of the strip to the active panel. The strip is a single tab stop — the other tabs are reached with the arrow keys. A strip that is currently overflowing adds one stop before it, on the scroll container itself, so a keyboard user can page along it without activating anything." },
   { keys: ["ArrowRight"], description: "Horizontal orientation: moves focus to the next tab, wrapping to the first at the end." },
   { keys: ["ArrowLeft"], description: "Horizontal orientation: moves focus to the previous tab, wrapping to the last at the start." },
   { keys: ["ArrowDown"], description: "Vertical orientation: moves focus to the next tab, wrapping to the first at the end." },
@@ -110,6 +128,8 @@ The measurement runs once per change (and on resize, via a `ResizeObserver`); th
 
 It is a `transition` rather than a keyframe animation on purpose. A transition can be interrupted: clicking a third tab while the indicator is still travelling to the second retargets smoothly from wherever it is, instead of snapping back and restarting.
 
+Scrolling the active tab into view is the one movement that is not a CSS transition — a scroll position cannot be one. It runs on the browser's own `scrollBy({ behavior: "smooth" })`, and is switched to an instant jump by reading `--pui-motion-ok` off the viewport rather than by asking `matchMedia`, so the in-page reduced-motion toggle and a subtree `data-pui-motion="reduce"` turn it off along with everything else. Alignment forced by a container resize is always instant: it fires on every frame of a drag, and animating each one would leave the strip chasing the pointer.
+
 Panels move too. `Tabs.Root` publishes `data-activation-direction` naming where the new tab sits relative to the old one, and the incoming panel starts offset by `--pui-travel-md` on that side and slides back to rest as it fades in.
 
 Only ever one panel is readable. `Tabs.Root` is a grid and every `Tabs.Panel` is placed in the same cell, so the outgoing panel — which Base UI keeps mounted until its exit transition ends — overlaps the incoming one instead of being laid out beneath it, and the component never grows to fit both and snaps back. The outgoing panel is also taken out of flow for those frames, so the cell is sized by the incoming panel alone. Its exit is a cut rather than a fade: a panel has no background of its own, so two panels fading past each other would leave both sets of text legible at once.
@@ -124,7 +144,7 @@ Every property below is declared on `Tabs.Root`, which is also why an ancestor i
 
 `variant="pill"` is itself implemented by overriding five of these on the root — `--pui-tabs-list-bg`, `--pui-tabs-list-padding`, `--pui-tabs-list-radius`, `--pui-tabs-indicator-color` and `--pui-tabs-indicator-radius`. Setting them yourself on a pill tab set still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 
-The parts also expose their state as data attributes — `data-variant`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction` — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
+The parts also expose their state as data attributes — `data-variant`, `data-overflow`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction` — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
 
 ## API reference
 

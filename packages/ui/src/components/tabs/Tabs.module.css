@@ -62,6 +62,25 @@
     --pui-tabs-font-size: var(--pui-font-size-2);
     /** Tab label weight */
     --pui-tabs-font-weight: var(--pui-font-weight-medium);
+    /* How far past the viewport edge a tab is parked when the strip scrolls to
+     * it — carried as the tab's own `scroll-margin` below, so it applies to the
+     * browser's focus scrolling as much as to ours.
+     *
+     * It has to be LARGER than the ScrollArea's fade, or the tab lands flush
+     * against the fade's inner edge with nothing beyond it: the gap is empty,
+     * the next tab is entirely outside the viewport, and the strip reads as
+     * having ended there. At 3rem against a 1.5rem fade the neighbour keeps
+     * 1.5rem fully painted plus 1.5rem fading out under the mask, which is
+     * unambiguously "more tabs".
+     *
+     * Not clamped against the viewport: a tab wider than the viewport less this
+     * is aligned to its start and clipped at its end, which is what a tab wider
+     * than the viewport already did — this only moves the threshold. */
+    /** How much of the neighbouring tab stays in view when the strip scrolls to
+     * a tab off the edge. At or below the ScrollArea's fade size the tab lands
+     * flush against the fade with nothing past it, which reads as the end of
+     * the strip rather than as more tabs */
+    --pui-tabs-scroll-peek: var(--pui-space-8);
 
     /* Strip */
     /** Background of the strip */
@@ -148,8 +167,14 @@
   /* Placement is scoped to direct children on purpose: a consumer who wraps
    * the panels in their own element gets their wrapper auto-placed and the
    * panels laid out inside it, rather than these rules reaching in and
-   * positioning elements against a grid they are not part of. */
-  .root > .list {
+   * positioning elements against a grid they are not part of.
+   *
+   * `.scroller` is listed alongside `.list` because under the root's
+   * `overflow="scroll"` default it is the strip's outermost box — the List
+   * wraps itself in a ScrollArea and the list itself is no longer a child of
+   * this grid at all. Both are named so the two branches place identically. */
+  .root > .list,
+  .root > .scroller {
     grid-area: 1 / 1;
   }
 
@@ -157,7 +182,8 @@
     grid-area: 2 / 1;
   }
 
-  .root[data-orientation="vertical"] > .list {
+  .root[data-orientation="vertical"] > .list,
+  .root[data-orientation="vertical"] > .scroller {
     grid-area: 1 / 1;
   }
 
@@ -174,6 +200,34 @@
     --pui-tabs-list-radius: var(--pui-radius-4);
     --pui-tabs-indicator-color: var(--pui-color-primary-soft);
     --pui-tabs-indicator-radius: var(--pui-radius-control);
+  }
+
+  /* Scroller ----------------------------------------------------------------
+   * Only present under the root's `overflow="scroll"` default, where it is the
+   * ScrollArea wrapped around the strip. Everything that makes it a scroll
+   * container lives in ScrollArea's own stylesheet; what is left is the two
+   * measures that depend on being a child of THIS grid.
+   *
+   * A grid item's automatic minimum size is its content, and a box that is
+   * never smaller than its content never scrolls — so the horizontal case is
+   * one declaration, and it is the one everybody forgets. */
+  .scroller {
+    min-width: 0;
+  }
+
+  /* The block axis needs the mirror of it, and cannot get it the same way: the
+   * vertical root sets `align-items: start` so the strip does not stretch to
+   * the panel's height (which would run the rail past the last tab), and a
+   * start-aligned item is sized by its content. Capping it at the grid area
+   * gives the strip a definite height to scroll against WHENEVER the root has
+   * one — from `height`, from `max-height`, or from whatever layout it sits in
+   * — and leaves an unconstrained root growing to fit its tabs exactly as
+   * before, since a percentage max against an indefinite track resolves to
+   * none. `min-block-size: 0` is the same automatic-minimum fix as above, on
+   * the axis that now scrolls. */
+  .root[data-orientation="vertical"] > .scroller {
+    min-block-size: 0;
+    max-block-size: 100%;
   }
 
   /* Strip ------------------------------------------------------------------
@@ -241,14 +295,26 @@
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
+    /* On the inline axis, which is the one a horizontal strip scrolls on. This
+     * overrides the flat 1.5rem patterns.css puts on every `.pui-focus-ring`
+     * for SC 2.4.11 — by layer, not specificity, since `pretty-ui.patterns` is
+     * ordered before `pretty-ui.components`. Both the JS that scrolls an
+     * activated tab into view and the browser scrolling a focused one read this
+     * same property, so arrow-keying along the strip leaves the same peek. */
+    scroll-margin-inline: var(--pui-tabs-scroll-peek);
     transition:
       color var(--pui-duration-fast) var(--pui-ease-standard),
       background-color var(--pui-duration-fast) var(--pui-ease-standard);
   }
 
+  /* Vertical scrolls on the block axis instead, so the peek moves with it. The
+   * inline value above is left alone rather than reverted: a vertical strip is
+   * as wide as its widest tab and never scrolls inline, so all it reaches is
+   * the page's own scrolling, where more clearance is never the wrong answer. */
   .tab[data-orientation="vertical"] {
     justify-content: flex-start;
     width: 100%;
+    scroll-margin-block: var(--pui-tabs-scroll-peek);
   }
 
   /* A line tab sits flush on the rail, so its rail-side corners are square:

@@ -6672,6 +6672,13 @@
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
       },
       {
+        "name": "overflow",
+        "type": "TabsOverflow",
+        "required": false,
+        "defaultValue": "scroll",
+        "description": "What a strip with more tabs than room does. `\"scroll\"` puts the tabs in a\n`ScrollArea` that only engages once they stop fitting — the overflowing\nend fades out, a swipe or a drag brings it back, and activating a tab\nscrolls it into view. `\"visible\"` restores the plain flex row, which\nspills out of its container instead; take it when the strip sits in a\nlayout that already handles the overflow.\n\nA vertical strip needs a height to scroll against: the scroller is capped\nat the height of `Tabs.Root`, so give the root one (or a `max-height`) and\nthe strip scrolls beside a panel that does not."
+      },
+      {
         "name": "variant",
         "type": "TabsVariant",
         "required": false,
@@ -6682,7 +6689,7 @@
   },
   "TabsList": {
     "name": "TabsList",
-    "description": "The tab strip. Must contain the `Indicator`, which is positioned against\nthis element — the stylesheet gives it `position: relative` for exactly that\nreason.",
+    "description": "The tab strip. Must contain the `Indicator`, which is positioned against\nthis element — the stylesheet gives it `position: relative` for exactly that\nreason.\n\nUnder the root's `overflow=\"scroll\"` default it also wraps itself in a\n`ScrollArea` and keeps the active tab inside it — see the two notes below.",
     "props": [
       {
         "name": "activateOnFocus",

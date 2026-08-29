@@ -8121,6 +8121,13 @@
         "overrides": []
       },
       {
+        "name": "--pui-tabs-scroll-peek",
+        "value": "var(--pui-space-8)",
+        "description": "How much of the neighbouring tab stays in view when the strip scrolls to a tab off the edge. At or below the ScrollArea's fade size the tab lands flush against the fade with nothing past it, which reads as the end of the strip rather than as more tabs",
+        "part": "root",
+        "overrides": []
+      },
+      {
         "name": "--pui-tabs-list-bg",
         "value": "transparent",
         "description": "Background of the strip",

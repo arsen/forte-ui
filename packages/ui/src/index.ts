@@ -486,6 +486,7 @@ export type { SwitchProps, SwitchSize } from "./components/switch";
 export { Tabs } from "./components/tabs";
 export type {
   TabsVariant,
+  TabsOverflow,
   TabsRootProps,
   TabsListProps,
   TabsTabProps,

@@ -611,6 +611,8 @@ import d_tabs_disabled_tab from "./tabs/disabled-tab";
 import d_tabs_disabled_tab_src from "./tabs/disabled-tab?raw";
 import d_tabs_line from "./tabs/line";
 import d_tabs_line_src from "./tabs/line?raw";
+import d_tabs_overflow from "./tabs/overflow";
+import d_tabs_overflow_src from "./tabs/overflow?raw";
 import d_tabs_pill from "./tabs/pill";
 import d_tabs_pill_src from "./tabs/pill?raw";
 import d_tabs_vertical from "./tabs/vertical";
@@ -1016,6 +1018,7 @@ export type DemoId =
   | "switch/sizes"
   | "tabs/disabled-tab"
   | "tabs/line"
+  | "tabs/overflow"
   | "tabs/pill"
   | "tabs/vertical"
   | "tabs/with-icons"
@@ -1372,6 +1375,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "switch/sizes": { Component: d_switch_sizes, source: d_switch_sizes_src, file: "switch/sizes.tsx" },
   "tabs/disabled-tab": { Component: d_tabs_disabled_tab, source: d_tabs_disabled_tab_src, file: "tabs/disabled-tab.tsx" },
   "tabs/line": { Component: d_tabs_line, source: d_tabs_line_src, file: "tabs/line.tsx" },
+  "tabs/overflow": { Component: d_tabs_overflow, source: d_tabs_overflow_src, file: "tabs/overflow.tsx" },
   "tabs/pill": { Component: d_tabs_pill, source: d_tabs_pill_src, file: "tabs/pill.tsx" },
   "tabs/vertical": { Component: d_tabs_vertical, source: d_tabs_vertical_src, file: "tabs/vertical.tsx" },
   "tabs/with-icons": { Component: d_tabs_with_icons, source: d_tabs_with_icons_src, file: "tabs/with-icons.tsx" },
