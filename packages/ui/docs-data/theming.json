@@ -1716,7 +1716,7 @@
       {
         "name": "--pui-button-padding-x",
         "value": "var(--pui-control-px-md)",
-        "description": "Horizontal padding; reassigned by `size`, and `0` when `iconOnly`",
+        "description": "Horizontal padding; reassigned by `size`. `iconOnly` replaces it with `--pui-button-icon-padding` on all four sides.",
         "part": "root",
         "overrides": [
           {
@@ -1733,7 +1733,7 @@
           },
           {
             "selector": ".root[data-icon-only]",
-            "value": "0"
+            "value": "var(--pui-button-icon-padding)"
           }
         ]
       },
@@ -2080,6 +2080,13 @@
             "value": "var(--pui-color-border)"
           }
         ]
+      },
+      {
+        "name": "--pui-button-icon-padding",
+        "value": "var(--pui-space-2)",
+        "description": "Minimum space between the icon and the button's edge (`iconOnly` only)",
+        "part": "root",
+        "overrides": []
       }
     ]
   },
@@ -8641,7 +8648,7 @@
       {
         "name": "--pui-toggle-padding-x",
         "value": "var(--pui-control-px-md)",
-        "description": "Inline padding. `iconOnly` sets it to `0`.",
+        "description": "Inline padding. `iconOnly` replaces it with `--pui-toggle-icon-padding` on all four sides.",
         "part": "root",
         "overrides": [
           {
@@ -8658,7 +8665,7 @@
           },
           {
             "selector": ".root[data-icon-only]",
-            "value": "0"
+            "value": "var(--pui-toggle-icon-padding)"
           }
         ]
       },
@@ -8836,6 +8843,13 @@
             "value": "var(--pui-toggle-tone-border)"
           }
         ]
+      },
+      {
+        "name": "--pui-toggle-icon-padding",
+        "value": "var(--pui-space-2)",
+        "description": "Minimum space between the icon and the toggle's edge (`iconOnly` only)",
+        "part": "root",
+        "overrides": []
       },
       {
         "name": "--pui-toggle-group-gap",

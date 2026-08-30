@@ -66,9 +66,10 @@ three follow the ambient `data-pui-density` setting.
 
 ### Icon only
 
-`iconOnly` squares the button and pins its width to at least 24px, so the hit
-target still clears WCAG SC 2.5.8 at `size="sm"`, where the button is 28px tall
-but would otherwise be only as wide as its padding.
+`iconOnly` squares the button, gives the icon `--pui-toggle-icon-padding` of
+space on every side, and pins the square to at least the control height and
+24px, so the hit target still clears WCAG SC 2.5.8 at `size="sm"`. An icon too
+big for that floor grows the button instead of crowding the corners.
 
 <DemoBlock id="toggle/icon-only" />
 

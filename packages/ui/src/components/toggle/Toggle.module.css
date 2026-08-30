@@ -33,7 +33,8 @@
     --pui-toggle-radius: var(--pui-radius-control);
     /** Height. `size` re-points it. */
     --pui-toggle-height: var(--pui-control-h-md);
-    /** Inline padding. `iconOnly` sets it to `0`. */
+    /** Inline padding. `iconOnly` replaces it with
+     * `--pui-toggle-icon-padding` on all four sides. */
     --pui-toggle-padding-x: var(--pui-control-px-md);
     /** Label size. */
     --pui-toggle-font-size: var(--pui-font-size-2);
@@ -189,10 +190,22 @@
   /* Every size clears the 24px SC 2.5.8 floor on height (`sm` is 28px), but an
    * icon-only toggle has no label to hold its width open, so the width has to
    * be pinned here. `max()` rather than a flat 24px so `md` and `lg` stay
-   * square instead of being squashed to the minimum. */
+   * square instead of being squashed to the minimum.
+   *
+   * Same shape as Button's icon-only rule, deliberately: Toolbar renders the
+   * two side by side, so if one grew for a large icon and the other clipped
+   * it, a mixed toolbar row would come out ragged. The control height is a
+   * floor — the guaranteed icon padding lets the toggle grow past it, kept
+   * square by the four-sided padding and `aspect-ratio`, whenever the icon
+   * needs the room. */
   .root[data-icon-only] {
-    --pui-toggle-padding-x: 0;
+    /** Minimum space between the icon and the toggle's edge (`iconOnly` only) */
+    --pui-toggle-icon-padding: var(--pui-space-2);
+    --pui-toggle-padding-x: var(--pui-toggle-icon-padding);
+    padding-block: var(--pui-toggle-icon-padding);
+    block-size: auto;
     aspect-ratio: 1;
+    min-block-size: max(var(--pui-toggle-height), var(--pui-target-min));
     min-inline-size: max(var(--pui-toggle-height), var(--pui-target-min));
   }
 

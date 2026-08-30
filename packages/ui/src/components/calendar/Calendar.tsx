@@ -344,9 +344,15 @@ function ChevronIcon(props: React.ComponentProps<"svg">) {
 
 /* Squares the arrows at the calendar's own measure. Hoisted to module scope
  * so it is one frozen object rather than a new one per render, which would
- * make both buttons re-render on every keystroke. */
+ * make both buttons re-render on every keystroke. The icon padding is zeroed
+ * because Button's icon-only sizing treats its height as a floor and grows
+ * for `icon + padding` — with the default padding the 16px chevron would
+ * outgrow a `sm` calendar's 28px nav square and knock the arrows out of the
+ * caption row they overlay. The calendar's geometry is `--pui-calendar-*`'s
+ * to decide, not the button's. */
 const NAV_BUTTON_STYLE = {
   "--pui-button-height": "var(--pui-calendar-nav-size)",
+  "--pui-button-icon-padding": "0px",
 } as React.CSSProperties;
 
 /* -------------------------------------------------------------------------
