@@ -18,7 +18,7 @@ const DATA = theming as ThemingData;
 /**
  * Renders a component's theming-token table straight from its stylesheet.
  *
- * Nothing here is hand-maintained: `packages/ui/scripts/theming-docgen.mjs`
+ * Nothing here is hand-maintained: `packages/react/scripts/theming-docgen.mjs`
  * reads the real `.module.css` at build time — a `/**` doc comment above a
  * custom-property declaration publishes it — so a renamed knob or a
  * changed default updates the docs automatically instead of silently going

@@ -28,7 +28,7 @@ const DATA = tokens as Record<string, Token>;
  * manifest — the styles-directory sibling of `ThemingTable`, which does the
  * same for per-component knobs.
  *
- * Nothing here is hand-maintained: `packages/ui/scripts/tokens-docgen.mjs`
+ * Nothing here is hand-maintained: `packages/react/scripts/tokens-docgen.mjs`
  * reads every declaration in `src/styles/*.css` at build time, so a token
  * added, renamed or re-valued updates these tables automatically instead of
  * silently going stale — the failure mode that already cost the hand-written

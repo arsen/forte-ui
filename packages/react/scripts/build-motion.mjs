@@ -45,7 +45,7 @@ function stateBlock(selectors, { durationKey, geometryKey, motionOk, comment }) 
 
 const css = `/**
  * GENERATED FILE — do not edit by hand.
- * Source of truth: packages/ui/scripts/motion.mjs
+ * Source of truth: packages/react/scripts/motion.mjs
  * Regenerate with:  pnpm --filter @forte-ui/react tokens
  *
  * This is the ONLY prefers-reduced-motion block in the library. Component
