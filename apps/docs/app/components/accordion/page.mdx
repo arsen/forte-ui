@@ -19,7 +19,7 @@ An accordion hides a list of sections behind their own headings and reveals one 
 ## Import
 
 ```tsx
-import { Accordion } from "@dofortech/pretty-ui";
+import { Accordion } from "@dofortech/forte-ui";
 ```
 
 `Accordion` is a namespace of five parts: `Accordion.Root`, `Accordion.Item`, `Accordion.Header`, `Accordion.Trigger` and `Accordion.Panel`. The nesting is fixed — an `Item` holds a `Header` and a `Panel`, and the `Trigger` goes inside the `Header`:
@@ -38,7 +38,7 @@ import { Accordion } from "@dofortech/pretty-ui";
 The `Header` looks like a wrapper worth skipping, and it is not: it is the `<h3>` that puts the section into the page's heading outline, which is how a screen-reader user jumps between sections without tabbing through every trigger. The `Trigger` inside it is the button.
 
 <Callout kind="note">
-  Because it is a real heading, a global `h1–h6` rule in your app applies to it. pretty-ui zeroes the margin, but that declaration lives in `@layer pretty-ui.components` and yields to your unlayered CSS by design — so a typographic reset with `h3 { margin-block: 2rem }` opens a gap above every row. Exclude the accordion from that rule, or set `margin: 0` back on `Accordion.Header`.
+  Because it is a real heading, a global `h1–h6` rule in your app applies to it. forte-ui zeroes the margin, but that declaration lives in `@layer forte.components` and yields to your unlayered CSS by design — so a typographic reset with `h3 { margin-block: 2rem }` opens a gap above every row. Exclude the accordion from that rule, or set `margin: 0` back on `Accordion.Header`.
 </Callout>
 
 Which panels are open is a **list**, on `Accordion.Root`, even when only one may be open at a time: `defaultValue={["shipping"]}` uncontrolled, or `value` plus `onValueChange` controlled. `[]` means everything is closed.
@@ -121,7 +121,7 @@ The height animation runs without a frame of JavaScript. Base UI measures the pa
 .panel {
   height: var(--accordion-panel-height);
   overflow: hidden;
-  transition: height var(--pui-accordion-duration) var(--pui-accordion-ease);
+  transition: height var(--forte-accordion-duration) var(--forte-accordion-ease);
 }
 
 .panel[data-starting-style],
@@ -134,23 +134,23 @@ It is a transition rather than a keyframe animation on purpose: closing a panel 
 
 The panel's padding is not on the panel. A padding box survives a zero content box, so padding on the collapsing element would leave a band of empty space under every closed row; it lives on an inner element instead, which is also what gives the content something of its own to move on. It starts a little high and at zero opacity and settles as the panel grows — travelling *downward*, because the panel clips from below and that is the direction that reads as being uncovered.
 
-The chevron flips on a spring (`--pui-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--pui-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
+The chevron flips on a spring (`--forte-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--forte-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
 
-There is no `prefers-reduced-motion` block in the accordion stylesheet, and none anywhere else in a component file. The tokens do it: `--pui-duration-normal` collapses from 240ms to 120ms and `--pui-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
+There is no `prefers-reduced-motion` block in the accordion stylesheet, and none anywhere else in a component file. The tokens do it: `--forte-duration-normal` collapses from 240ms to 120ms and `--forte-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
 
 ## Theming
 
-Every property below is declared on `Accordion.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Accordion.Root` itself, through its `className` or an inline `style`. To move every accordion at once, re-point the global tokens in the Default column instead: `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
+Every property below is declared on `Accordion.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Accordion.Root` itself, through its `className` or an inline `style`. To move every accordion at once, re-point the global tokens in the Default column instead: `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-control-*` and `--forte-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
 
 <ThemingTable component="Accordion" />
 
-`variant="contained"` is itself implemented by overriding five of these on the root — `--pui-accordion-gap`, `--pui-accordion-item-radius`, `--pui-accordion-item-bg`, `--pui-accordion-item-border-width` and `--pui-accordion-trigger-bg-hover`. Setting them yourself on a contained accordion still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+`variant="contained"` is itself implemented by overriding five of these on the root — `--forte-accordion-gap`, `--forte-accordion-item-radius`, `--forte-accordion-item-bg`, `--forte-accordion-item-border-width` and `--forte-accordion-trigger-bg-hover`. Setting them yourself on a contained accordion still works: the library's rules live in the `forte.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 
 The parts also expose their state as data attributes — `data-variant`, `data-open`, `data-panel-open`, `data-disabled`, `data-index` — so a Tailwind arbitrary variant such as `data-[panel-open]:...` can target them without a wrapper element.
 
 ## API reference
 
-Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `Accordion.Root` also takes `value`, `defaultValue`, `onValueChange`, `multiple`, `disabled`, `keepMounted` and `hiddenUntilFound`; `Accordion.Item` takes `value`, `disabled` and `onOpenChange`; `Accordion.Panel` takes `keepMounted` and `hiddenUntilFound`. All five parts take `render` for changing the underlying element.
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what forte-ui adds or changes the default of. `Accordion.Root` also takes `value`, `defaultValue`, `onValueChange`, `multiple`, `disabled`, `keepMounted` and `hiddenUntilFound`; `Accordion.Item` takes `value`, `disabled` and `onOpenChange`; `Accordion.Panel` takes `keepMounted` and `hiddenUntilFound`. All five parts take `render` for changing the underlying element.
 
 ### Accordion.Root
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Field, Switch } from "@dofortech/pretty-ui";
+import { Checkbox, Field, Switch } from "@dofortech/forte-ui";
 
 export default function FieldCheckboxAndSwitch() {
   return (

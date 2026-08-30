@@ -1,13 +1,13 @@
 # AGENTS.md
 
-Working notes for coding agents on **pretty-ui**. Read this before touching any
+Working notes for coding agents on **forte-ui**. Read this before touching any
 file. `CLAUDE.md` is a symlink to this file — one document, two names.
 
 ---
 
 ## What this project is
 
-`@dofortech/pretty-ui` is an accessible React component library built on
+`@dofortech/forte-ui` is an accessible React component library built on
 [Base UI](https://base-ui.com) primitives, styled with CSS Modules and a design
 system that rebuilds its entire palette from **one colour variable** using CSS
 relative colour syntax — no JavaScript, no build step, no runtime theming layer.
@@ -21,7 +21,7 @@ decision in the repo follows from them:
 2. **Accessibility is measured, not asserted.** The contrast harness sweeps
    ~119k in-gamut seeds and fails the build if any pair the ramp promises drops
    below its WCAG floor.
-3. **The consumer always wins.** Everything ships inside `@layer pretty-ui.*`,
+3. **The consumer always wins.** Everything ships inside `@layer forte.*`,
    which loses to unlayered author CSS. No `!important` anywhere.
 
 ### Layout
@@ -34,7 +34,7 @@ packages/ui             the library
 apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/components/<name>/page.mdx   the written page
   app/globals.css                  the CSS that could not be a utility — read it
-  app/tailwind.css                 the pretty-ui token bridge — read before styling anything
+  app/tailwind.css                 the forte-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
   components/nav.tsx               the page list itself — rail and drawer share it
   components/sidebar.tsx           the page list — the shell's left column
@@ -68,11 +68,11 @@ drift the command exists to repair.
 Each generator still has its own script when you want just one:
 
 ```bash
-pnpm --filter @dofortech/pretty-ui tokens         # the generated CSS
-pnpm --filter @dofortech/pretty-ui docgen         # props.json + theming.json
-pnpm --filter @dofortech/pretty-ui check:contrast # the ramp gate
-pnpm --filter @dofortech/pretty-ui-docs registry  # the demo registry
-pnpm --filter @dofortech/pretty-ui-docs toc       # the "On this page" seed
+pnpm --filter @dofortech/forte-ui tokens         # the generated CSS
+pnpm --filter @dofortech/forte-ui docgen         # props.json + theming.json
+pnpm --filter @dofortech/forte-ui check:contrast # the ramp gate
+pnpm --filter @dofortech/forte-ui-docs registry  # the demo registry
+pnpm --filter @dofortech/forte-ui-docs toc       # the "On this page" seed
 ```
 
 `check:contrast` is deliberately outside `generate` — it is a gate, not a
@@ -95,7 +95,7 @@ task name to collide does not repeat this.
 | `packages/ui/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
 | `packages/ui/docs-data/props.json` | component TSX doc comments | `docgen` |
 | `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
-| `packages/ui/docs-data/tokens.json` | every `--pui-*` declaration in `src/styles/*.css` | `docgen` |
+| `packages/ui/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
 | `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `toc` |
 
@@ -108,8 +108,8 @@ The two CSS generators are not there to save typing — they exist because those
 blocks carry **equalities that must hold and that CSS cannot express**:
 
 ```
-:root                  ≡ [data-pui-motion="full"]      (23 declarations)
-@media prefers-reduced ≡ [data-pui-motion="reduce"]    (23 declarations)
+:root                  ≡ [data-forte-motion="full"]      (23 declarations)
+@media prefers-reduced ≡ [data-forte-motion="reduce"]    (23 declarations)
 accent ramp            ≡ secondary ramp                (one shared curve)
 ```
 
@@ -117,7 +117,7 @@ accent ramp            ≡ secondary ramp                (one shared curve)
 in-page reduce control must match the OS preference exactly, or the motion
 toggle and the user's system setting silently disagree. Hand-editing one side
 and missing the other produces a bug visible only under a subtree
-`data-pui-motion` — which is the one configuration nobody tests. Generating all
+`data-forte-motion` — which is the one configuration nobody tests. Generating all
 the blocks from one table makes that class of mistake impossible. Do not
 "simplify" by inlining the output and deleting the scripts.
 
@@ -140,7 +140,7 @@ which does not re-run `tokens` or `docgen`.
 | a value in `scripts/motion.mjs` | `tokens` |
 | a prop — added, renamed, removed, retyped, or its JSDoc | `docgen` |
 | a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
-| any `--pui-*` declaration in `src/styles/*.css` — added, renamed, removed, its value or selector | `docgen` (rebuilds `tokens.json`; after a `ramp.mjs` / `motion.mjs` change run `tokens` first) |
+| any `--forte-*` declaration in `src/styles/*.css` — added, renamed, removed, its value or selector | `docgen` (rebuilds `tokens.json`; after a `ramp.mjs` / `motion.mjs` change run `tokens` first) |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
 | an `##` / `###` heading in a `page.mdx` — added, renamed, reordered, removed | `toc` |
 
@@ -169,21 +169,21 @@ Most new tokens are **not** generated. Find the family first:
 
 | Token | Lives in | How to add one |
 | :-- | :-- | :-- |
-| `--pui-accent-*` `--pui-secondary-*` `--pui-gray-*` | generated `tokens.color.css` | add to the curve table in `ramp.mjs`, run `tokens`, then `check:contrast` |
-| `--pui-duration-*` `--pui-ease-*` `--pui-travel-*` `--pui-scale-*` `--pui-spin-*` `--pui-pulse-*` `--pui-motion-*` | generated `motion.css` | add to the table in `motion.mjs`, run `tokens` |
-| `--pui-color-*` `--pui-space-*` `--pui-radius-*` `--pui-control-*` `--pui-font-*` `--pui-shadow-*` `--pui-target-*` and the rest | hand-written `tokens.css` | edit the CSS; no generator involved |
-| `--pui-focus-ring-*` | hand-written `a11y.css` | edit the CSS |
-| `--pui-<component>-*` | the component's own root rule | not a global token — declare it at the top of `.root` |
+| `--forte-accent-*` `--forte-secondary-*` `--forte-gray-*` | generated `tokens.color.css` | add to the curve table in `ramp.mjs`, run `tokens`, then `check:contrast` |
+| `--forte-duration-*` `--forte-ease-*` `--forte-travel-*` `--forte-scale-*` `--forte-spin-*` `--forte-pulse-*` `--forte-motion-*` | generated `motion.css` | add to the table in `motion.mjs`, run `tokens` |
+| `--forte-color-*` `--forte-space-*` `--forte-radius-*` `--forte-control-*` `--forte-font-*` `--forte-shadow-*` `--forte-target-*` and the rest | hand-written `tokens.css` | edit the CSS; no generator involved |
+| `--forte-focus-ring-*` | hand-written `a11y.css` | edit the CSS |
+| `--forte-<component>-*` | the component's own root rule | not a global token — declare it at the top of `.root` |
 
 For a hand-written token, the selector it goes on is load-bearing:
 
-- **`:root, .pui-theme, [data-pui-theme]`** — if it derives from a seed a scope
+- **`:root, .forte-theme, [data-forte-theme]`** — if it derives from a seed a scope
   can override. It has to be restated on all three, because a `var()` inside an
   unregistered property resolves where it is *declared*, so a scope that
   overrides only the seed will not recompute it.
-- **`:root` alone** — if a `data-pui-radius` / `data-pui-density` preset
-  rewrites it (`--pui-radius-*`, `--pui-control-*`, `--pui-surface-p`,
-  `--pui-list-item-py`). Restating these on the scope selectors ties at (0,1,0),
+- **`:root` alone** — if a `data-forte-radius` / `data-forte-density` preset
+  rewrites it (`--forte-radius-*`, `--forte-control-*`, `--forte-surface-p`,
+  `--forte-list-item-py`). Restating these on the scope selectors ties at (0,1,0),
   the nearer element wins, and a demo frame inside a `pill`-themed page snaps
   back to the default radius.
 
@@ -194,12 +194,12 @@ No → all three selectors.
 Register it in `properties.css` when it is an input consumed inside `calc()` or a
 colour function — where one malformed value would poison everything derived from
 it — or when it must animate, or needs a guaranteed fallback if no rule matched
-(that is `--pui-direction`).
+(that is `--forte-direction`).
 
 Then run `docgen` — `tokens-docgen.mjs` rebuilds
 `packages/ui/docs-data/tokens.json`, the generated inventory of every global
 token — and add the name to the readable list in `CONTRIBUTING.md` by hand.
-Nothing regenerates that prose list, which is exactly how `--pui-direction`
+Nothing regenerates that prose list, which is exactly how `--forte-direction`
 went missing from it; when the two disagree, `tokens.json` is the one that is
 right.
 
@@ -211,7 +211,7 @@ disagree, the generated file is right and the doc is stale. Fix the doc; never
 the authority of a written inventory, check it against the source:
 
 ```bash
-grep -ho -- '--pui-[a-z0-9-]*\s*:' packages/ui/src/styles/*.css | sed 's/[[:space:]]*:$//' | sort -u
+grep -ho -- '--forte-[a-z0-9-]*\s*:' packages/ui/src/styles/*.css | sed 's/[[:space:]]*:$//' | sort -u
 ```
 
 If you do find drift, update the prose in the same change — a stale list that
@@ -228,7 +228,7 @@ the element inherits instead — so check the name against
 [`packages/ui/CONTRIBUTING.md`](packages/ui/CONTRIBUTING.md) is a readable
 index of the same names, but it is hand-maintained and nothing regenerates it —
 read it for orientation, not as proof a token does or does not exist. It is
-currently missing `--pui-direction`, which `Switch` relies on for RTL.
+currently missing `--forte-direction`, which `Switch` relies on for RTL.
 
 **Two independent axes, not an exploding variant list.** `variant` is how loud
 a component is; `tone` is which semantic colour set it draws from. Each tone
@@ -241,34 +241,34 @@ adding a third axis or a bespoke one-off variant.
 target states from plain CSS or Tailwind arbitrary variants
 (`data-[variant=solid]:...`) without wrapping the component.
 
-**Parts live on `data-pui`.** Every element a component renders carries
-`data-pui="<component>"` (the `styles.root` element) or
-`data-pui="<component>-<part>"` (the kebab-cased style key). The hashed CSS
+**Parts live on `data-forte`.** Every element a component renders carries
+`data-forte="<component>"` (the `styles.root` element) or
+`data-forte="<component>-<part>"` (the kebab-cased style key). The hashed CSS
 Modules class names change between releases, so this marker is the only
 selector a consumer can write against a part and keep — it is public API, and
 renaming one is a breaking change. Full placement rules and the two exceptions
-(SVG descendants, composed pretty-ui components) are rule 9 in
+(SVG descendants, composed forte-ui components) are rule 9 in
 `CONTRIBUTING.md`.
 
 **Component knobs are declared on the component's own root element.** A knob
-like `--pui-button-radius` is declared at the top of `.root`, defaulting to a
+like `--forte-button-radius` is declared at the top of `.root`, defaulting to a
 semantic token. That placement is load-bearing: an element's own declaration
 beats an inherited value, so knobs must be set *on that element*, while the
 global tokens they resolve to can be re-pointed from `:root` or a theme scope.
 
-**`className` goes last.** `clsx(styles.root, "pui-focus-ring", className)`.
+**`className` goes last.** `clsx(styles.root, "forte-focus-ring", className)`.
 
 **Layer discipline.** `reset → tokens → patterns → components → a11y →
 overrides`. `a11y` sits after `components` on purpose: layer order outranks
 specificity completely, so an accessibility override placed earlier can never
-win. Forced-colors rules go in a separate `@layer pretty-ui.a11y` block at the
+win. Forced-colors rules go in a separate `@layer forte.a11y` block at the
 bottom of the file, not nested inside the components block.
 
 **Accessibility beyond what Base UI gives you.** Two-tone focus rings carried by
-`outline`; `.pui-focus-ring` on every focusable part, plus `data-focus-inset`
-inside clipping containers; `.pui-hc-surface` on every floating surface; 24×24
+`outline`; `.forte-focus-ring` on every focusable part, plus `data-focus-inset`
+inside clipping containers; `.forte-hc-surface` on every floating surface; 24×24
 minimum targets (SC 2.5.8); decorative SVG gets `aria-hidden`, and state that
-matters goes in a `.pui-visually-hidden` span.
+matters goes in a `.forte-visually-hidden` span.
 
 **Comments explain why, and what breaks otherwise.** This is the house style and
 it is unusually strict here — read any existing `.module.css` header. A comment
@@ -356,7 +356,7 @@ instead of snapping. Keyframes cannot do this.
 
 **2 — Never write `@media (prefers-reduced-motion)` in a component file.**
 `motion.css` is the only place it exists. The tokens collapse their own
-geometry: `--pui-travel-md` becomes `0px`, `--pui-scale-enter` becomes `1`. A
+geometry: `--forte-travel-md` becomes `0px`, `--forte-scale-enter` becomes `1`. A
 component that consumes tokens gets correct behaviour without knowing reduced
 motion exists. Writing the query locally also tends to produce a hard
 `transition: none`, which removes the opacity fade reduced-motion users
@@ -381,15 +381,15 @@ position and the Checkbox tick are the only signal separating on from off for
 someone who cannot rely on fill colour, so they animate on a *duration* (the
 tick draws via `stroke-dashoffset` over `pathLength="1"`), not on a travel or
 scale token that would collapse. Where motion *is* suppressed, a non-positional
-cue fades in — that is what `--pui-motion-off` and `--pui-pulse-dip` are for.
+cue fades in — that is what `--forte-motion-off` and `--forte-pulse-dip` are for.
 
 **7 — Hover is a colour cue by default; geometry is opt-in.** A hover lift moves
 the hit box: with the pointer resting on the button's edge, the lift can hover
 the element out from under the cursor and oscillate. Hence
-`--pui-button-hover-lift` defaults to `0px`, with `--pui-control-hover-lift` /
-`--pui-control-hover-scale` left undefined as the app-level escape hatch.
+`--forte-button-hover-lift` defaults to `0px`, with `--forte-control-hover-lift` /
+`--forte-control-hover-scale` left undefined as the app-level escape hatch.
 
-**8 — Snap in, spring out.** Press uses `--pui-duration-instant` so activation
+**8 — Snap in, spring out.** Press uses `--forte-duration-instant` so activation
 feels immediate; release runs on the spring.
 
 **9 — Animate `translate` and `scale` as independent properties,** not through
@@ -399,28 +399,28 @@ compose *on top* of them (see the nested-dialog stacking in `Dialog`).
 
 **10 — Pair a spring easing with its matching duration token.** A shorter
 duration truncates the spring mid-bounce and looks broken:
-`--pui-ease-spring-snappy` goes with `--pui-duration-spring-snappy`.
+`--forte-ease-spring-snappy` goes with `--forte-duration-spring-snappy`.
 
-**11 — Gate any literal geometry on `--pui-motion-ok`.** It is `1` normally and
-`0` under reduced motion, so `calc(-1 * var(--x) * var(--pui-motion-ok))`
+**11 — Gate any literal geometry on `--forte-motion-ok`.** It is `1` normally and
+`0` under reduced motion, so `calc(-1 * var(--x) * var(--forte-motion-ok))`
 collapses to identity without a media query.
 
 **12 — The inline axis has no logical form.** `translate` and `transform` are
 physical, so anything moving along the inline axis multiplies its (always
-positive) distance by `--pui-direction`, which is `1` in LTR and `-1` in RTL.
+positive) distance by `--forte-direction`, which is `1` in LTR and `-1` in RTL.
 Test RTL — the demo frame has a toggle for it.
 
 ### Which duration to reach for
 
 | Token | Use it for |
 | :-- | :-- |
-| `--pui-duration-instant` (1ms) | press feedback, anything that must feel immediate |
-| `--pui-duration-fast` (160ms) | hover, colour changes, small fades, popup enter/exit |
-| `--pui-duration-normal` (240ms) | dialog enter, larger surfaces |
-| `--pui-duration-slow` (400ms) | rare; page-level transitions |
-| `--pui-duration-move` (220ms) | positional moves measured at runtime (the Tabs indicator) |
-| `--pui-duration-spring-*` | paired with the matching `--pui-ease-spring-*` |
-| `--pui-duration-loop-*` | spinners and pulses; **never** collapsed, a 1ms loop is a WCAG 2.3.1 flashing hazard |
+| `--forte-duration-instant` (1ms) | press feedback, anything that must feel immediate |
+| `--forte-duration-fast` (160ms) | hover, colour changes, small fades, popup enter/exit |
+| `--forte-duration-normal` (240ms) | dialog enter, larger surfaces |
+| `--forte-duration-slow` (400ms) | rare; page-level transitions |
+| `--forte-duration-move` (220ms) | positional moves measured at runtime (the Tabs indicator) |
+| `--forte-duration-spring-*` | paired with the matching `--forte-ease-spring-*` |
+| `--forte-duration-loop-*` | spinners and pulses; **never** collapsed, a 1ms loop is a WCAG 2.3.1 flashing hazard |
 
 ---
 
@@ -437,11 +437,11 @@ Reach for utilities instead of a `style={{ ... }}` object for anything that is
 layout or typography.
 
 The token mapping itself is no longer a docs file: it ships from the library
-as the **`@dofortech/pretty-ui/tailwind.css` bridge** (source:
+as the **`@dofortech/forte-ui/tailwind.css` bridge** (source:
 [`packages/ui/src/styles/tailwind.css`](packages/ui/src/styles/tailwind.css)),
 which is the same file a consumer imports. It re-points Tailwind's theme at
-the pretty-ui tokens, deletes the stock scales, and pins the cascade-layer
-order `theme, base, pretty-ui, components, utilities` — for a consumer that
+the forte-ui tokens, deletes the stock scales, and pins the cascade-layer
+order `theme, base, forte, components, utilities` — for a consumer that
 statement is what stops Preflight (in `base`) from blanking the components
 and keeps `utilities` able to beat them, which is why the bridge must be
 imported *before* `tailwindcss`. Add a token family to the bridge and it
@@ -455,18 +455,18 @@ keeps only what the DOCS own: the `@source` list, three named variants, and
 the site's chrome measures. Three things about the setup are load-bearing:
 
 **The theme is `@theme inline`, and must stay that way.** Plain `@theme` emits
-`--color-panel: var(--pui-color-panel)` on `:root` and points utilities at
+`--color-panel: var(--forte-color-panel)` on `:root` and points utilities at
 *that* — which freezes the value at `:root`, because a `var()` inside an
 unregistered custom property is substituted where it is declared. Every demo
-renders inside `DemoFrame`, a `.pui-theme` scope carrying `data-theme` and
-`data-pui-motion`, so `bg-panel` would keep the page's colour when the frame's
+renders inside `DemoFrame`, a `.forte-theme` scope carrying `data-theme` and
+`data-forte-motion`, so `bg-panel` would keep the page's colour when the frame's
 light/dark toggle is flipped. `inline` substitutes the token into the utility
-itself (`background-color: var(--pui-color-panel)`), which resolves at the
-element and makes scopes, `data-pui-density` and `data-pui-radius` all work.
+itself (`background-color: var(--forte-color-panel)`), which resolves at the
+element and makes scopes, `data-forte-density` and `data-forte-radius` all work.
 
 **Tailwind's own scales are deleted, not extended.** `--color-*`, `--spacing-*`,
 `--text-*`, `--radius-*`, `--shadow-*`, `--ease-*` and friends are reset to
-`initial` and rebuilt from the pretty-ui tokens, so `bg-red-500`, `p-13` and
+`initial` and rebuilt from the forte-ui tokens, so `bg-red-500`, `p-13` and
 `text-white` simply do not compile. That is the "nothing is hardcoded" rule
 with teeth — those classes would survive review and then fail to respond to a
 seed change.
@@ -480,16 +480,16 @@ off rather than obviously broken. Add the path when you add the file.
 
 | Want | Write |
 | :-- | :-- |
-| `gap: var(--pui-space-5)` | `gap-5` — the eight steps map 1:1, so `gap-6` is 2rem, not Tailwind's stock 1.5rem |
-| `padding: var(--pui-surface-p)` | `p-surface` |
-| `font-size: var(--pui-font-size-2)` | `text-2` |
-| `border-radius: var(--pui-radius-control)` | `rounded-control` (also `-surface`, `-pill`, and `rounded-1`…`6`) |
-| `color: var(--pui-color-foreground-muted)` | `text-foreground-muted` |
-| `transition-duration: var(--pui-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
+| `gap: var(--forte-space-5)` | `gap-5` — the eight steps map 1:1, so `gap-6` is 2rem, not Tailwind's stock 1.5rem |
+| `padding: var(--forte-surface-p)` | `p-surface` |
+| `font-size: var(--forte-font-size-2)` | `text-2` |
+| `border-radius: var(--forte-radius-control)` | `rounded-control` (also `-surface`, `-pill`, and `rounded-1`…`6`) |
+| `color: var(--forte-color-foreground-muted)` | `text-foreground-muted` |
+| `transition-duration: var(--forte-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
 | `inline-size: min(32rem, 100%)` | `w-full max-w-lg` — the `--container-*` scale is untouched |
 | the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-hero` |
 | a layout breakpoint | `max-toc:`, `max-two-col:`, `max-split:`, `max-nav:` — named for the column that stops fitting |
-| any other token | `h-(--pui-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
+| any other token | `h-(--forte-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
 
 Four named `@custom-variant`s exist because their guard is an `@supports`
 nested in a `@media`, which the bracket syntax can express only as a class name
@@ -500,11 +500,11 @@ transparency), `scroll-driven:` (a view timeline exists), `gradient-text:`
 
 Three things stay in a `style` object, and are not oversights:
 
-- **Component knobs** — `--pui-spinner-thickness`, `--pui-button-radius`. They
+- **Component knobs** — `--forte-spinner-thickness`, `--forte-button-radius`. They
   are declared on the component's own root for a reason (see *Design
   principles*), and a utility class cannot set an arbitrary custom property.
-- **Anything gated on `--pui-motion-ok`.** A `translate-y-*` utility cannot
-  carry the `calc(... * var(--pui-motion-ok))` that collapses it under reduced
+- **Anything gated on `--forte-motion-ok`.** A `translate-y-*` utility cannot
+  carry the `calc(... * var(--forte-motion-ok))` that collapses it under reduced
   motion, so a demo that moves something writes CSS, the way a component does.
 - **Values computed at runtime.**
 
@@ -518,7 +518,7 @@ what changes.
 
 Size them with the `ICON` string from `components/styles.ts`
 (`size-4 shrink-0`), never the libraries' own `size` prop — `size-4` is
-`--pui-space-4` and a number is a number. Do **not** add `.pui-icon`: it sets
+`--forte-space-4` and a number is a number. Do **not** add `.forte-icon`: it sets
 `fill: currentColor`, which is right for the solid glyphs the library's
 components draw and turns a stroked outline into a solid blob.
 
@@ -590,7 +590,7 @@ on a component page is the page COLUMN's own cap in `app/layout.tsx`. Do not
 reintroduce a per-element one; `--container-measure` is gone from the theme
 along with it.
 
-Layer order still matters: `pretty-ui.* → docs → theme, base, components,
+Layer order still matters: `forte.* → docs → theme, base, components,
 utilities`, declared at the top of
 [`apps/docs/app/globals.css`](apps/docs/app/globals.css) and fixed by the
 import order in `layout.tsx`. It is what lets a utility beat the site's own
@@ -604,19 +604,19 @@ base rules without a single `!important`.
    holds the full rule list and the token inventory. Every rule there exists
    because breaking it causes a specific, usually silent, bug.
 2. Files: `<Name>.tsx` (`"use client"`), `<Name>.module.css` (inside
-   `@layer pretty-ui.components`), `index.ts`. Register in `src/index.ts`.
+   `@layer forte.components`), `index.ts`. Register in `src/index.ts`.
 3. Keep Base UI's anatomy. Do not invent parts the primitive does not have.
 4. Declare knobs at the top of the root rule; consume tokens below.
-5. Interactive parts: `.pui-focus-ring` (+ `data-focus-inset` inside a clipping
+5. Interactive parts: `.forte-focus-ring` (+ `data-focus-inset` inside a clipping
    container), a `cursor` per the table above, and a 24×24 minimum target.
-6. Floating surfaces: `.pui-hc-surface`, and forced-colors rules in a separate
-   `@layer pretty-ui.a11y` block.
-7. Inside a `.module.css`, `.pui-*` selectors are **local** — CSS Modules hashes
-   them and they match nothing. Wrap as `:global(.pui-icon)`, or better, target
+6. Floating surfaces: `.forte-hc-surface`, and forced-colors rules in a separate
+   `@layer forte.a11y` block.
+7. Inside a `.module.css`, `.forte-*` selectors are **local** — CSS Modules hashes
+   them and they match nothing. Wrap as `:global(.forte-icon)`, or better, target
    the element (`svg`) or rely on `currentColor`.
 8. Write the doc comments on the props — `docgen` turns them into the prop
    table. Same for the knobs: a `/** … */` doc comment directly above a
-   `--pui-<component>-*` declaration publishes it (name, declared default,
+   `--forte-<component>-*` declaration publishes it (name, declared default,
    part, and every reassigning selector) to `theming.json`, which is where the
    docs' `<ThemingTable />` reads from. A knob without one does not appear.
    Plain `/* … */` comments stay private — the why/what split is deliberate.
@@ -637,8 +637,8 @@ base rules without a single `!important`.
 ### Before you call it done
 
 ```bash
-pnpm --filter @dofortech/pretty-ui typecheck
-pnpm --filter @dofortech/pretty-ui test     # only if you touched ramp.mjs
+pnpm --filter @dofortech/forte-ui typecheck
+pnpm --filter @dofortech/forte-ui test     # only if you touched ramp.mjs
 pnpm dev                                    # then look at it
 ```
 
@@ -656,10 +656,10 @@ in #8.
 
 - A `var()` inside an unregistered custom property is substituted **where the
   property is declared**, not where it is used. This is why theme scopes have to
-  re-declare the whole ramp, and why setting `--pui-accent-seed` on an arbitrary
+  re-declare the whole ramp, and why setting `--forte-accent-seed` on an arbitrary
   element does nothing.
 - `transparent` is **not** preserved under forced-colors — it is replaced with a
-  system colour. That is a feature (`.pui-hc-surface` relies on it) and a trap
+  system colour. That is a feature (`.forte-hc-surface` relies on it) and a trap
   (the gap in `Spinner`'s ring would fill in).
 - `opacity` is one of the few properties forced-colors does **not** override, so
   a `0.55` disabled control keeps full contrast and reads as enabled. `GrayText`

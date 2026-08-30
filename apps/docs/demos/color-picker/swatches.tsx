@@ -1,6 +1,6 @@
 "use client";
 
-import { ColorPicker } from "@dofortech/pretty-ui";
+import { ColorPicker } from "@dofortech/forte-ui";
 
 /* A brand palette, in the order it is documented rather than by hue — the
  * swatch grid keeps the order it is given, which is what makes it a palette

@@ -3,7 +3,7 @@
 import * as React from "react";
 import {
   Button, Checkbox, Dialog, Select, Switch, Tabs, Tooltip,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 
 const TIMEZONES = [
   { value: "utc", label: "UTC" },

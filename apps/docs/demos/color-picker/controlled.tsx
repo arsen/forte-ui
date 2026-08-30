@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, ColorPicker } from "@dofortech/pretty-ui";
+import { Button, ColorPicker } from "@dofortech/forte-ui";
 
 const PRESET = "#0ea5e9";
 

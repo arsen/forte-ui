@@ -1,6 +1,6 @@
 "use client";
 
-import { Toggle } from "@dofortech/pretty-ui";
+import { Toggle } from "@dofortech/forte-ui";
 
 export default function ToggleBasic() {
   // A lone toggle owns its own state: `defaultPressed` for uncontrolled,

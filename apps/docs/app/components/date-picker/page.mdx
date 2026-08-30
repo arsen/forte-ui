@@ -19,7 +19,7 @@ A field that opens a [Calendar](/components/calendar). It is that composition an
 ## Import
 
 ```tsx
-import { DatePicker } from "@dofortech/pretty-ui";
+import { DatePicker } from "@dofortech/forte-ui";
 ```
 
 Eight parts. The full anatomy, with every optional layer present:
@@ -141,9 +141,9 @@ Every property below is declared on `DatePicker.Trigger`, so override them there
 
 <ThemingTable component="DatePicker" />
 
-The popup's surface is **not** restyled by this component. It is a `Popover.Popup`, keeps `data-pui="popover-popup"` and every `--pui-popover-*` knob, and the only thing the picker does to it is step the surface padding down — a calendar arrives with its own measures, and a full `--pui-surface-p` around them reads as a frame rather than a margin. The column inside it is this component's own part, `data-pui="date-picker-panel"`, which is what you target to reach *this* popup rather than every popover on the page.
+The popup's surface is **not** restyled by this component. It is a `Popover.Popup`, keeps `data-forte="popover-popup"` and every `--forte-popover-*` knob, and the only thing the picker does to it is step the surface padding down — a calendar arrives with its own measures, and a full `--forte-surface-p` around them reads as a frame rather than a margin. The column inside it is this component's own part, `data-forte="date-picker-panel"`, which is what you target to reach *this* popup rather than every popover on the page.
 
-`DatePicker.Clear` is a `Button` and tags itself `data-pui="button"`, the way every composed component in the library does — scope it as `[data-pui="date-picker-footer"] [data-pui="button"]`.
+`DatePicker.Clear` is a `Button` and tags itself `data-forte="button"`, the way every composed component in the library does — scope it as `[data-forte="date-picker-footer"] [data-forte="button"]`.
 
 ## API reference
 

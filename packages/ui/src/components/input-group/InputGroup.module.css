@@ -28,9 +28,9 @@
  *      disagree. Consumers target the states the same way the shell does
  *      (Tailwind: `has-[[data-disabled]]:opacity-50`).
  *
- *   3. Focus is drawn once, by the root, via `.pui-focus-ring-within` — which
+ *   3. Focus is drawn once, by the root, via `.forte-focus-ring-within` — which
  *      also silences the UA ring on the bare control. Buttons inside addons
- *      carry `.pui-focus-ring` and ring themselves, so the root's ring is
+ *      carry `.forte-focus-ring` and ring themselves, so the root's ring is
  *      cancelled while one of them holds focus: `:has(:focus-visible)` is
  *      true for a focused addon button too, and without the cancellation the
  *      field wears two rings. Restated in the a11y layer, where the
@@ -38,36 +38,36 @@
  *
  *   4. The radius is painted through a one-row cap, the same derivation as
  *      Combobox's field: this box GROWS (a textarea, a block addon), and
- *      under `data-pui-radius="pill"` an uncapped radius would curve the
+ *      under `data-forte-radius="pill"` an uncapped radius would curve the
  *      corners of a two-row group right through its own content.
  *
  *   5. There is deliberately no `prefers-reduced-motion` block. Only colours
  *      transition here, which reduced motion keeps.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the group, so a value set on an
      * ancestor is only INHERITED and loses to these. Re-skin one group via
      * `className` (an unlayered consumer rule beats `@layer
-     * pretty-ui.components` at any specificity) or an inline `style`; move
+     * forte.components` at any specificity) or an inline `style`; move
      * every group at once by re-pointing the global tokens on the right-hand
      * side, which this file only reads. */
     /** Minimum height of the group (reset per `size`) */
-    --pui-input-group-height: var(--pui-control-h-md);
+    --forte-input-group-height: var(--forte-control-h-md);
     /** Inline padding between the border and the content (reset per `size`) */
-    --pui-input-group-px: var(--pui-control-px-md);
+    --forte-input-group-px: var(--forte-control-px-md);
     /** Block padding; also the inset buttons keep from the border */
-    --pui-input-group-py: var(--pui-space-1);
+    --forte-input-group-py: var(--forte-space-1);
     /** Font size of the control and the addons (reset per `size`) */
-    --pui-input-group-font-size: var(--pui-font-size-2);
+    --forte-input-group-font-size: var(--forte-font-size-2);
     /** Gap between the control and each addon, and between an addon's items */
-    --pui-input-group-gap: var(--pui-control-gap);
+    --forte-input-group-gap: var(--forte-control-gap);
     /** Corner radius */
-    --pui-input-group-radius: var(--pui-radius-control);
+    --forte-input-group-radius: var(--forte-radius-control);
     /** Border width */
-    --pui-input-group-border-width: 1px;
+    --forte-input-group-border-width: 1px;
     /** Icon size inside addons */
-    --pui-input-group-icon-size: var(--pui-font-size-3);
+    --forte-input-group-icon-size: var(--forte-font-size-3);
 
     /* The radius as actually PAINTED, capped at what one row would give.
      * Private on purpose — a consumer retunes the knob above; this is the
@@ -76,51 +76,51 @@
      * addon would push the cap past the content's corners, so the pill is
      * frozen at the one-row height and honestly degrades to a rounded
      * rectangle once the group is taller than a row. */
-    --pui-input-group-radius-painted: min(
-      var(--pui-input-group-radius),
-      calc(var(--pui-input-group-height) / 2)
+    --forte-input-group-radius-painted: min(
+      var(--forte-input-group-radius),
+      calc(var(--forte-input-group-height) / 2)
     );
 
     /* The group's INNER height: the knob height less block padding and both
-     * borders. `--pui-input-group-py` is restated by name inside the calc
+     * borders. `--forte-input-group-py` is restated by name inside the calc
      * because a custom property cannot read a longhand — change one, change
      * both. It is what a one-row group actually offers its content, so the
      * button size and the textarea's first-line alignment both derive from
      * it. */
-    --pui-input-group-inner-h: calc(
-      var(--pui-input-group-height) - 2 * var(--pui-input-group-py) - 2 *
-        var(--pui-input-group-border-width)
+    --forte-input-group-inner-h: calc(
+      var(--forte-input-group-height) - 2 * var(--forte-input-group-py) - 2 *
+        var(--forte-input-group-border-width)
     );
 
     /** Size of buttons inside addons: block size always, inline size too when
      * `iconOnly`. Fills the field's inner height, so at `sm` it dips below
      * the 24px SC 2.5.8 floor — which is why `InputGroup.Button` carries
-     * `.pui-target`: the HIT area stays 24x24 while the visual box tracks
+     * `.forte-target`: the HIT area stays 24x24 while the visual box tracks
      * the field */
-    --pui-input-group-button-size: var(--pui-input-group-inner-h);
+    --forte-input-group-button-size: var(--forte-input-group-inner-h);
 
     /* Colour slots, filled in per variant below — the same set Input has,
      * because the group is the same control wearing more parts. */
     /** Background (reset per `variant`) */
-    --pui-input-group-bg: var(--pui-color-background);
+    --forte-input-group-bg: var(--forte-color-background);
     /** Background on hover */
-    --pui-input-group-bg-hover: var(--pui-color-panel-hover);
+    --forte-input-group-bg-hover: var(--forte-color-panel-hover);
     /** Text colour of the control */
-    --pui-input-group-fg: var(--pui-color-foreground);
+    --forte-input-group-fg: var(--forte-color-foreground);
     /** Addon text and icon colour */
-    --pui-input-group-addon-fg: var(--pui-color-foreground-muted);
+    --forte-input-group-addon-fg: var(--forte-color-foreground-muted);
     /** Placeholder colour */
-    --pui-input-group-placeholder-fg: var(--pui-color-foreground-muted);
+    --forte-input-group-placeholder-fg: var(--forte-color-foreground-muted);
     /** Border colour (reset per `variant`, and by the control's `data-invalid`) */
-    --pui-input-group-border-color: var(--pui-color-border);
+    --forte-input-group-border-color: var(--forte-color-border);
     /** Border colour on hover */
-    --pui-input-group-border-color-hover: var(--pui-color-border-strong);
+    --forte-input-group-border-color-hover: var(--forte-color-border-strong);
     /** Caret colour */
-    --pui-input-group-caret-color: var(--pui-color-primary);
+    --forte-input-group-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --pui-input-group-selection-bg: var(--pui-color-primary-soft);
+    --forte-input-group-selection-bg: var(--forte-color-primary-soft);
     /** Selection text colour */
-    --pui-input-group-selection-fg: var(--pui-color-primary-text);
+    --forte-input-group-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
     display: inline-flex;
@@ -129,16 +129,16 @@
     /* Column gap only. Block rows meet the control row with no gap because
      * each block addon carries its own `padding-block` — a row gap on top of
      * that would double the space and could not be tuned away per addon. */
-    gap: 0 var(--pui-input-group-gap);
-    min-block-size: var(--pui-input-group-height);
-    padding-block: var(--pui-input-group-py);
-    padding-inline: var(--pui-input-group-px);
+    gap: 0 var(--forte-input-group-gap);
+    min-block-size: var(--forte-input-group-height);
+    padding-block: var(--forte-input-group-py);
+    padding-inline: var(--forte-input-group-px);
     margin: 0;
-    border: var(--pui-input-group-border-width) solid
-      var(--pui-input-group-border-color);
-    border-radius: var(--pui-input-group-radius-painted);
-    background-color: var(--pui-input-group-bg);
-    color: var(--pui-input-group-fg);
+    border: var(--forte-input-group-border-width) solid
+      var(--forte-input-group-border-color);
+    border-radius: var(--forte-input-group-radius-painted);
+    background-color: var(--forte-input-group-bg);
+    color: var(--forte-input-group-fg);
     /* Addon buttons paint their hover wash right up to the border; without a
      * stacking context of its own the root's rounded corners can be painted
      * over. `isolation` opens one without a z-index side effect. */
@@ -151,8 +151,8 @@
     cursor: text;
 
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .root[data-full-width] {
@@ -169,8 +169,8 @@
         :has(:is(.input, .textarea)[data-disabled]),
         :has(:is(.input, .textarea)[readonly])
       ) {
-      background-color: var(--pui-input-group-bg-hover);
-      border-color: var(--pui-input-group-border-color-hover);
+      background-color: var(--forte-input-group-bg-hover);
+      border-color: var(--forte-input-group-border-color-hover);
     }
   }
 
@@ -183,19 +183,19 @@
    * must not look disabled — only inert. The text cursor stays: selecting and
    * copying the value is the point of the state. */
   .root:has(:is(.input, .textarea)[readonly]) {
-    --pui-input-group-bg: var(--pui-color-panel);
+    --forte-input-group-bg: var(--forte-color-panel);
   }
 
   /* Only the boundary and the caret change. Recolouring the value or the
    * addons as well would make the user's own answer look like the error
    * message. */
   .root:has(:is(.input, .textarea)[data-invalid]) {
-    --pui-input-group-border-color: var(--pui-color-danger-border);
-    --pui-input-group-border-color-hover: var(--pui-color-danger);
-    --pui-input-group-caret-color: var(--pui-color-danger);
+    --forte-input-group-border-color: var(--forte-color-danger-border);
+    --forte-input-group-border-color-hover: var(--forte-color-danger);
+    --forte-input-group-caret-color: var(--forte-color-danger);
   }
 
-  /* A focused addon button draws its own ring. `.pui-focus-ring-within` on
+  /* A focused addon button draws its own ring. `.forte-focus-ring-within` on
    * the root matches `:has(:focus-visible)`, which is true for that button
    * too, so without this the field wears two rings at once. Restated in the
    * a11y layer below, where the forced-colors ring lives. */
@@ -206,39 +206,39 @@
 
   /* Sizes ------------------------------------------------------------------ */
   .root[data-size="sm"] {
-    --pui-input-group-height: var(--pui-control-h-sm);
-    --pui-input-group-px: var(--pui-control-px-sm);
-    --pui-input-group-font-size: var(--pui-font-size-1);
+    --forte-input-group-height: var(--forte-control-h-sm);
+    --forte-input-group-px: var(--forte-control-px-sm);
+    --forte-input-group-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-input-group-height: var(--pui-control-h-md);
-    --pui-input-group-px: var(--pui-control-px-md);
-    --pui-input-group-font-size: var(--pui-font-size-2);
+    --forte-input-group-height: var(--forte-control-h-md);
+    --forte-input-group-px: var(--forte-control-px-md);
+    --forte-input-group-font-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-input-group-height: var(--pui-control-h-lg);
-    --pui-input-group-px: var(--pui-control-px-lg);
-    --pui-input-group-font-size: var(--pui-font-size-3);
+    --forte-input-group-height: var(--forte-control-h-lg);
+    --forte-input-group-px: var(--forte-control-px-lg);
+    --forte-input-group-font-size: var(--forte-font-size-3);
   }
 
   /* Variants --------------------------------------------------------------- */
   .root[data-variant="outline"] {
-    --pui-input-group-bg: var(--pui-color-background);
-    --pui-input-group-border-color: var(--pui-color-border);
+    --forte-input-group-bg: var(--forte-color-background);
+    --forte-input-group-border-color: var(--forte-color-border);
   }
 
   .root[data-variant="soft"] {
-    --pui-input-group-bg: var(--pui-color-panel);
+    --forte-input-group-bg: var(--forte-color-panel);
     /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
      * keeps the field outlined there while staying invisible normally. */
-    --pui-input-group-border-color: transparent;
+    --forte-input-group-border-color: transparent;
   }
 
   .root[data-variant="ghost"] {
-    --pui-input-group-bg: transparent;
-    --pui-input-group-border-color: transparent;
+    --forte-input-group-bg: transparent;
+    --forte-input-group-border-color: transparent;
   }
 
   /* Control — shared ------------------------------------------------------- */
@@ -257,22 +257,22 @@
     /* The root paints the box. An opaque background here would show as a
      * rectangle over it under a `soft` variant or the read-only tint. */
     background-color: transparent;
-    color: var(--pui-input-group-fg);
-    caret-color: var(--pui-input-group-caret-color);
+    color: var(--forte-input-group-fg);
+    caret-color: var(--forte-input-group-caret-color);
 
     /* A UA stylesheet gives form controls their own font, not the page's. */
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-input-group-font-size);
-    font-weight: var(--pui-font-weight-normal);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-input-group-font-size);
+    font-weight: var(--forte-font-weight-normal);
     text-align: start;
 
     /* The UA `text` cursor is correct and left alone — a text field is a
      * region you place a caret in, not an element that acts on click. */
-    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* There is deliberately no `:focus-visible { outline: none }` here: the
-   * root's `.pui-focus-ring-within` already suppresses the UA ring for every
+   * root's `.forte-focus-ring-within` already suppresses the UA ring for every
    * element it rings on behalf of — see patterns.css — and restating it per
    * component is how the two drift. */
 
@@ -280,7 +280,7 @@
    * applies with no exemption — so `-muted` (5.82:1), not `-subtle`. */
   .input::placeholder,
   .textarea::placeholder {
-    color: var(--pui-input-group-placeholder-fg);
+    color: var(--forte-input-group-placeholder-fg);
     /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
      * measured 5.82:1 back under AA. */
     opacity: 1;
@@ -288,8 +288,8 @@
 
   .input::selection,
   .textarea::selection {
-    background-color: var(--pui-input-group-selection-bg);
-    color: var(--pui-input-group-selection-fg);
+    background-color: var(--forte-input-group-selection-bg);
+    color: var(--forte-input-group-selection-fg);
   }
 
   .input[data-disabled],
@@ -299,7 +299,7 @@
 
   /* Input ------------------------------------------------------------------ */
   .input {
-    line-height: var(--pui-line-height-tight);
+    line-height: var(--forte-line-height-tight);
     /* No block-size: the root's `min-block-size` and `align-items: center`
      * seat the text, so the control keeps its natural height and the row
      * maths stay honest when a block addon shares the box. */
@@ -315,22 +315,22 @@
    * a negative result to 0 (compact density can make one row taller than the
    * inner height), so this never turns into an invalid padding. */
   .textarea {
-    --pui-input-group-rows: 3;
-    --pui-input-group-max-rows: infinity;
-    --pui-input-group-textarea-py: calc(
-      (var(--pui-input-group-inner-h) - 1lh) / 2
+    --forte-input-group-rows: 3;
+    --forte-input-group-max-rows: infinity;
+    --forte-input-group-textarea-py: calc(
+      (var(--forte-input-group-inner-h) - 1lh) / 2
     );
 
-    padding-block: var(--pui-input-group-textarea-py);
+    padding-block: var(--forte-input-group-textarea-py);
     min-block-size: calc(
-      var(--pui-input-group-rows) * 1lh + 2 *
-        var(--pui-input-group-textarea-py)
+      var(--forte-input-group-rows) * 1lh + 2 *
+        var(--forte-input-group-textarea-py)
     );
     max-block-size: calc(
-      var(--pui-input-group-max-rows) * 1lh + 2 *
-        var(--pui-input-group-textarea-py)
+      var(--forte-input-group-max-rows) * 1lh + 2 *
+        var(--forte-input-group-textarea-py)
     );
-    line-height: var(--pui-line-height-normal);
+    line-height: var(--forte-line-height-normal);
     /* No native handle: the group's boundary is not this element's, so the
      * grippy corner would sit visibly inside the field dragging a corner that
      * is not the corner of anything. `autoResize` is how a composer grows. */
@@ -351,11 +351,11 @@
     /* Full row height, so the caret-region gesture has no dead band between
      * an icon and the border above it. */
     align-self: stretch;
-    gap: var(--pui-input-group-gap);
-    color: var(--pui-input-group-addon-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-input-group-font-size);
-    line-height: var(--pui-line-height-tight);
+    gap: var(--forte-input-group-gap);
+    color: var(--forte-input-group-addon-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-input-group-font-size);
+    line-height: var(--forte-line-height-tight);
     /* Chrome, not content: a drag that starts on a prefix should not start
      * selecting the prefix. */
     -webkit-user-select: none;
@@ -378,7 +378,7 @@
      * control cannot share a line with it. */
     inline-size: 100%;
     align-self: auto;
-    padding-block: var(--pui-input-group-py);
+    padding-block: var(--forte-input-group-py);
   }
 
   .addon[data-align="block-start"] {
@@ -397,15 +397,15 @@
   .root:has(.textarea) .addon[data-align="inline-start"],
   .root:has(.textarea) .addon[data-align="inline-end"] {
     align-self: flex-start;
-    block-size: var(--pui-input-group-inner-h);
+    block-size: var(--forte-input-group-inner-h);
   }
 
   /* Direct SVG children only: a Spinner or a Button inside the addon sizes
    * its own glyph, and reaching into them would fight that. */
   .addon > svg {
     flex: none;
-    inline-size: var(--pui-input-group-icon-size);
-    block-size: var(--pui-input-group-icon-size);
+    inline-size: var(--forte-input-group-icon-size);
+    block-size: var(--forte-input-group-icon-size);
   }
 
   /* Text ------------------------------------------------------------------- */
@@ -418,27 +418,27 @@
   }
 
   /* Buttons in addons ------------------------------------------------------
-   * A composed pretty-ui Button — it tags its own root, so the attribute
+   * A composed forte-ui Button — it tags its own root, so the attribute
    * selector is the stable handle, and attribute selectors are the one kind
    * CSS Modules does not hash. Everything here retunes Button's own knobs on
    * the element itself at (0,3,0), which beats the (0,2,0) size rules in
    * Button.module.css on specificity — bundle order between the two files
    * never gets a vote. */
-  .root .addon [data-pui="button"] {
+  .root .addon [data-forte="button"] {
     flex: none;
     /* Fills the field's inner height; the hit target stays floored at 24px
-     * by the `.pui-target` that `InputGroup.Button` adds. */
-    --pui-button-height: var(--pui-input-group-button-size);
+     * by the `.forte-target` that `InputGroup.Button` adds. */
+    --forte-button-height: var(--forte-input-group-button-size);
     /* A field-height button holding a word needs less air than a standalone
      * one, or "Search" alone eats a third of the group. */
-    --pui-button-padding-x: var(--pui-space-2);
+    --forte-button-padding-x: var(--forte-space-2);
     /* The nesting rule — an inner radius is its outer one less the gap
-     * between them — with `--pui-radius-1` as the floor so
-     * `data-pui-radius="none"` (painted radius 0, subtraction negative)
+     * between them — with `--forte-radius-1` as the floor so
+     * `data-forte-radius="none"` (painted radius 0, subtraction negative)
      * cannot produce an invalid radius. */
-    --pui-button-radius: max(
-      var(--pui-radius-1),
-      calc(var(--pui-input-group-radius-painted) - var(--pui-input-group-py))
+    --forte-button-radius: max(
+      var(--forte-radius-1),
+      calc(var(--forte-input-group-radius-painted) - var(--forte-input-group-py))
     );
   }
 
@@ -446,45 +446,45 @@
    * the library has no icon catalogue, so callers size their own glyphs —
    * but a bare lucide icon is 24px, only 2px shy of the button it sits in
    * here, so the group closes the gap the same way it does for its own
-   * direct icons. Scoped through the content span (a public `data-pui`
+   * direct icons. Scoped through the content span (a public `data-forte`
    * part), which is what keeps a composed Spinner — whose svg lives under
    * its own root, sized by it — out of reach. */
-  .root .addon [data-pui="button"] [data-pui="button-content"] > svg {
+  .root .addon [data-forte="button"] [data-forte="button-content"] > svg {
     flex: none;
-    inline-size: var(--pui-input-group-icon-size);
-    block-size: var(--pui-input-group-icon-size);
+    inline-size: var(--forte-input-group-icon-size);
+    block-size: var(--forte-input-group-icon-size);
   }
 
   /* Button's own `iconOnly` floors `min-inline-size` at the 24px target,
    * which inside an `sm` field would make the button wider than it is tall.
-   * The visual box tracks the field; `.pui-target` keeps the hit area legal. */
-  .root .addon [data-pui="button"][data-icon-only] {
-    inline-size: var(--pui-input-group-button-size);
-    min-inline-size: var(--pui-input-group-button-size);
+   * The visual box tracks the field; `.forte-target` keeps the hit area legal. */
+  .root .addon [data-forte="button"][data-icon-only] {
+    inline-size: var(--forte-input-group-button-size);
+    min-inline-size: var(--forte-input-group-button-size);
   }
 
   /* The icon buttons carry their own padding, so the field's end padding on
    * top of it would push them visibly deeper than the control's text inset —
    * the same correction Combobox makes for its trigger. Only the edge the
    * button actually sits against is pulled in. */
-  .root:has(.addon[data-align="inline-start"] [data-pui="button"]) {
-    padding-inline-start: var(--pui-input-group-py);
+  .root:has(.addon[data-align="inline-start"] [data-forte="button"]) {
+    padding-inline-start: var(--forte-input-group-py);
   }
 
-  .root:has(.addon[data-align="inline-end"] [data-pui="button"]) {
-    padding-inline-end: var(--pui-input-group-py);
+  .root:has(.addon[data-align="inline-end"] [data-forte="button"]) {
+    padding-inline-end: var(--forte-input-group-py);
   }
 }
 
 /* Forced colours -----------------------------------------------------------
- * Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+ * Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * The root is a <div>, not a field, so the UA assigns it nothing; and the
  * `soft`/`ghost` variants' `transparent` border is replaced with a system
  * colour of the engine's choosing rather than left invisible. Both are why
  * the box is restated. */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .root {
       background-color: Field;

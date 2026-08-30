@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { InputGroup } from "@dofortech/pretty-ui";
+import { InputGroup } from "@dofortech/forte-ui";
 
 export default function InputGroupBasic() {
   return (

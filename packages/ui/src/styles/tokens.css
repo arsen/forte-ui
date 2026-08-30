@@ -1,20 +1,20 @@
 /**
- * pretty-ui semantic tokens, geometry, and motion.
+ * forte-ui semantic tokens, geometry, and motion.
  * The colour *ramps* are generated — see tokens.color.css / scripts/ramp.mjs.
  *
- * Most blocks here are declared on `:root, .pui-theme, [data-pui-theme]`, not
+ * Most blocks here are declared on `:root, .forte-theme, [data-forte-theme]`, not
  * on `:root` alone. That repetition is load-bearing: a `var()` inside an
  * unregistered custom property is substituted at the element where the
- * property is DECLARED, so a subtree that only overrides `--pui-accent-seed`
+ * property is DECLARED, so a subtree that only overrides `--forte-accent-seed`
  * would keep the root's already-resolved values. Restating the derivations on
  * the scope selectors is what makes per-subtree theming work at all.
  *
  * The exception is the radius and density defaults, which sit on `:root`
- * alone — they are what the `data-pui-*` presets rewrite, so restating them on
+ * alone — they are what the `data-forte-*` presets rewrite, so restating them on
  * every scope would have each scope shadow a preset inherited from an
  * ancestor. See the comment above that block; motion.css does the same.
  */
-@layer pretty-ui.tokens {
+@layer forte.tokens {
   :root {
     color-scheme: light dark;
   }
@@ -22,7 +22,7 @@
   /* ------------------------------------------------------------------------
    * Direction
    *
-   * `--pui-direction` is the sign of the inline axis, for the handful of
+   * `--forte-direction` is the sign of the inline axis, for the handful of
    * places that must move something with `translate`/`transform`, which have
    * no logical form and always run along the physical x axis. A component
    * multiplies its own positive travel by it; nothing else here needs to know
@@ -39,11 +39,11 @@
    * island inside an RTL page gets 1 back, at any nesting depth.
    * --------------------------------------------------------------------- */
   [dir="ltr"] {
-    --pui-direction: 1;
+    --forte-direction: 1;
   }
 
   [dir="rtl"] {
-    --pui-direction: -1;
+    --forte-direction: -1;
   }
 
   /* Forcing a mode opts out of the OS preference. */
@@ -60,42 +60,42 @@
    * error message look reassuring.
    * --------------------------------------------------------------------- */
   :root,
-  .pui-theme,
-  [data-pui-theme] {
-    --pui-danger-2: light-dark(oklch(0.974 0.014 17), oklch(0.220 0.035 17));
-    --pui-danger-3: light-dark(oklch(0.944 0.033 17), oklch(0.272 0.061 17));
-    --pui-danger-7: light-dark(oklch(0.808 0.098 17), oklch(0.480 0.128 17));
-    --pui-danger-9: oklch(0.552 0.211 24);
-    --pui-danger-10: light-dark(oklch(0.512 0.208 24), oklch(0.606 0.204 24));
-    --pui-danger-11: light-dark(oklch(0.485 0.196 24), oklch(0.760 0.140 20));
+  .forte-theme,
+  [data-forte-theme] {
+    --forte-danger-2: light-dark(oklch(0.974 0.014 17), oklch(0.220 0.035 17));
+    --forte-danger-3: light-dark(oklch(0.944 0.033 17), oklch(0.272 0.061 17));
+    --forte-danger-7: light-dark(oklch(0.808 0.098 17), oklch(0.480 0.128 17));
+    --forte-danger-9: oklch(0.552 0.211 24);
+    --forte-danger-10: light-dark(oklch(0.512 0.208 24), oklch(0.606 0.204 24));
+    --forte-danger-11: light-dark(oklch(0.485 0.196 24), oklch(0.760 0.140 20));
 
-    --pui-success-2: light-dark(oklch(0.976 0.017 155), oklch(0.216 0.032 155));
-    --pui-success-3: light-dark(oklch(0.946 0.042 155), oklch(0.268 0.054 155));
-    --pui-success-7: light-dark(oklch(0.810 0.100 155), oklch(0.470 0.110 155));
-    --pui-success-9: oklch(0.545 0.148 152);
-    --pui-success-11: light-dark(oklch(0.475 0.128 152), oklch(0.792 0.135 152));
+    --forte-success-2: light-dark(oklch(0.976 0.017 155), oklch(0.216 0.032 155));
+    --forte-success-3: light-dark(oklch(0.946 0.042 155), oklch(0.268 0.054 155));
+    --forte-success-7: light-dark(oklch(0.810 0.100 155), oklch(0.470 0.110 155));
+    --forte-success-9: oklch(0.545 0.148 152);
+    --forte-success-11: light-dark(oklch(0.475 0.128 152), oklch(0.792 0.135 152));
 
-    --pui-warning-2: light-dark(oklch(0.980 0.024 85), oklch(0.222 0.034 85));
-    --pui-warning-3: light-dark(oklch(0.955 0.058 85), oklch(0.276 0.056 85));
+    --forte-warning-2: light-dark(oklch(0.980 0.024 85), oklch(0.222 0.034 85));
+    --forte-warning-3: light-dark(oklch(0.955 0.058 85), oklch(0.276 0.056 85));
     /* Lighter than its own `-9`, which reads backwards until you remember
      * that amber's 9 sits at 0.812 — step 7 has to stay above it or the ramp
      * inverts. It is the faintest of the four `-7` edges against white
      * (1.6:1, where danger manages 1.9) and that is the hue, not a mistake:
      * a warning chip carries its meaning in the label, never in the border
      * alone. */
-    --pui-warning-7: light-dark(oklch(0.855 0.110 85), oklch(0.500 0.095 85));
-    --pui-warning-9: oklch(0.812 0.163 82);
-    --pui-warning-11: light-dark(oklch(0.520 0.118 60), oklch(0.840 0.140 85));
+    --forte-warning-7: light-dark(oklch(0.855 0.110 85), oklch(0.500 0.095 85));
+    --forte-warning-9: oklch(0.812 0.163 82);
+    --forte-warning-11: light-dark(oklch(0.520 0.118 60), oklch(0.840 0.140 85));
 
     /* Blue runs out of sRGB gamut earlier than the other three hues do, so
      * steps 2 and 3 carry visibly less chroma than their danger and success
      * counterparts rather than the same number clipped: the browser clips
      * naively instead of gamut-mapping, and a clipped near-white shifts
-     * lightness as well as saturation. `--pui-info-11` on `--pui-info-3`
+     * lightness as well as saturation. `--forte-info-11` on `--forte-info-3`
      * still measures 5.12:1 light / 7.78:1 dark. */
-    --pui-info-2: light-dark(oklch(0.975 0.012 250), oklch(0.218 0.038 250));
-    --pui-info-3: light-dark(oklch(0.945 0.026 250), oklch(0.272 0.065 250));
-    --pui-info-7: light-dark(oklch(0.800 0.090 250), oklch(0.478 0.130 250));
+    --forte-info-2: light-dark(oklch(0.975 0.012 250), oklch(0.218 0.038 250));
+    --forte-info-3: light-dark(oklch(0.945 0.026 250), oklch(0.272 0.065 250));
+    --forte-info-7: light-dark(oklch(0.800 0.090 250), oklch(0.478 0.130 250));
     /* Step 9 sat at 0.588 for as long as nothing painted text on it. `Badge`
      * does — a solid `tone="info"` chip — and white measured 4.09:1 there, an
      * AA failure. Black clears it (4.77:1), but nobody ships black on azure,
@@ -104,8 +104,8 @@
      * outlier above them. `Alert` reads only the tints above and is unaffected.
      * check-contrast.mjs asserts the pair, which is what stops a future nudge
      * from undoing this. */
-    --pui-info-9: oklch(0.550 0.158 250);
-    --pui-info-11: light-dark(oklch(0.500 0.140 250), oklch(0.790 0.110 250));
+    --forte-info-9: oklch(0.550 0.158 250);
+    --forte-info-11: light-dark(oklch(0.500 0.140 250), oklch(0.790 0.110 250));
   }
 
   /* Baseline for engines that reach neither @supports block below. Declared
@@ -113,10 +113,10 @@
    * so a fallback placed after the @supports blocks would silently defeat
    * them. Order is the mechanism here. */
   :root,
-  .pui-theme,
-  [data-pui-theme] {
-    --pui-color-on-primary: oklch(0.995 0 0);
-    --pui-color-on-secondary: oklch(0.995 0 0);
+  .forte-theme,
+  [data-forte-theme] {
+    --forte-color-on-primary: oklch(0.995 0 0);
+    --forte-color-on-secondary: oklch(0.995 0 0);
   }
 
   /* ------------------------------------------------------------------------
@@ -136,25 +136,25 @@
    * --------------------------------------------------------------------- */
   @supports (color: oklch(from red l c h)) {
     :root,
-    .pui-theme,
-    [data-pui-theme] {
-      --pui-on-threshold: 0.5675;
-      --pui-on-hue-cos: 0.13;
-      --pui-on-hue-sin: -0.03;
+    .forte-theme,
+    [data-forte-theme] {
+      --forte-on-threshold: 0.5675;
+      --forte-on-hue-cos: 0.13;
+      --forte-on-hue-sin: -0.03;
 
-      --pui-color-on-primary: oklch(
-        from var(--pui-accent-9)
-        clamp(0, calc((var(--pui-on-threshold)
-          + c * (var(--pui-on-hue-cos) * cos(h * 1deg)
-               + var(--pui-on-hue-sin) * sin(h * 1deg))
+      --forte-color-on-primary: oklch(
+        from var(--forte-accent-9)
+        clamp(0, calc((var(--forte-on-threshold)
+          + c * (var(--forte-on-hue-cos) * cos(h * 1deg)
+               + var(--forte-on-hue-sin) * sin(h * 1deg))
           - l) * 1000), 1)
         0 h
       );
-      --pui-color-on-secondary: oklch(
-        from var(--pui-secondary-9)
-        clamp(0, calc((var(--pui-on-threshold)
-          + c * (var(--pui-on-hue-cos) * cos(h * 1deg)
-               + var(--pui-on-hue-sin) * sin(h * 1deg))
+      --forte-color-on-secondary: oklch(
+        from var(--forte-secondary-9)
+        clamp(0, calc((var(--forte-on-threshold)
+          + c * (var(--forte-on-hue-cos) * cos(h * 1deg)
+               + var(--forte-on-hue-sin) * sin(h * 1deg))
           - l) * 1000), 1)
         0 h
       );
@@ -167,10 +167,10 @@
    * supported. */
   @supports (color: contrast-color(red)) {
     :root,
-    .pui-theme,
-    [data-pui-theme] {
-      --pui-color-on-primary: contrast-color(var(--pui-accent-9));
-      --pui-color-on-secondary: contrast-color(var(--pui-secondary-9));
+    .forte-theme,
+    [data-forte-theme] {
+      --forte-color-on-primary: contrast-color(var(--forte-accent-9));
+      --forte-color-on-secondary: contrast-color(var(--forte-secondary-9));
     }
   }
 
@@ -178,283 +178,283 @@
    * Semantic aliases — what components actually consume.
    * --------------------------------------------------------------------- */
   :root,
-  .pui-theme,
-  [data-pui-theme] {
+  .forte-theme,
+  [data-forte-theme] {
     /* Surfaces */
-    --pui-color-background: var(--pui-gray-1);
-    --pui-color-panel: var(--pui-gray-2);
-    --pui-color-panel-hover: var(--pui-gray-3);
-    --pui-color-panel-active: var(--pui-gray-4);
-    --pui-color-overlay: var(--pui-gray-1);
+    --forte-color-background: var(--forte-gray-1);
+    --forte-color-panel: var(--forte-gray-2);
+    --forte-color-panel-hover: var(--forte-gray-3);
+    --forte-color-panel-active: var(--forte-gray-4);
+    --forte-color-overlay: var(--forte-gray-1);
 
     /* Text */
-    --pui-color-foreground: var(--pui-gray-12);
-    --pui-color-foreground-muted: var(--pui-gray-11);
+    --forte-color-foreground: var(--forte-gray-12);
+    --forte-color-foreground-muted: var(--forte-gray-11);
     /* 3.73:1 — passes SC 1.4.11 for non-text, FAILS 1.4.3 for body copy.
      * Icons and decoration only. `prefers-contrast: more` promotes it. */
-    --pui-color-foreground-subtle: var(--pui-gray-10);
+    --forte-color-foreground-subtle: var(--forte-gray-10);
 
     /* Borders */
-    --pui-color-border: var(--pui-gray-7);
-    --pui-color-border-muted: var(--pui-gray-6);
-    --pui-color-border-strong: var(--pui-gray-8);
+    --forte-color-border: var(--forte-gray-7);
+    --forte-color-border-muted: var(--forte-gray-6);
+    --forte-color-border-strong: var(--forte-gray-8);
 
     /* Primary */
-    --pui-color-primary: var(--pui-accent-9);
-    --pui-color-primary-hover: var(--pui-accent-10);
-    --pui-color-primary-active: var(--pui-accent-11);
-    --pui-color-primary-soft: var(--pui-accent-3);
-    --pui-color-primary-soft-hover: var(--pui-accent-4);
-    --pui-color-primary-soft-active: var(--pui-accent-5);
-    --pui-color-primary-text: var(--pui-accent-11);
-    --pui-color-primary-border: var(--pui-accent-7);
+    --forte-color-primary: var(--forte-accent-9);
+    --forte-color-primary-hover: var(--forte-accent-10);
+    --forte-color-primary-active: var(--forte-accent-11);
+    --forte-color-primary-soft: var(--forte-accent-3);
+    --forte-color-primary-soft-hover: var(--forte-accent-4);
+    --forte-color-primary-soft-active: var(--forte-accent-5);
+    --forte-color-primary-text: var(--forte-accent-11);
+    --forte-color-primary-border: var(--forte-accent-7);
 
     /* Secondary */
-    --pui-color-secondary: var(--pui-secondary-9);
-    --pui-color-secondary-hover: var(--pui-secondary-10);
-    --pui-color-secondary-active: var(--pui-secondary-11);
-    --pui-color-secondary-soft: var(--pui-secondary-3);
-    --pui-color-secondary-soft-hover: var(--pui-secondary-4);
-    --pui-color-secondary-soft-active: var(--pui-secondary-5);
-    --pui-color-secondary-text: var(--pui-secondary-11);
-    --pui-color-secondary-border: var(--pui-secondary-7);
+    --forte-color-secondary: var(--forte-secondary-9);
+    --forte-color-secondary-hover: var(--forte-secondary-10);
+    --forte-color-secondary-active: var(--forte-secondary-11);
+    --forte-color-secondary-soft: var(--forte-secondary-3);
+    --forte-color-secondary-soft-hover: var(--forte-secondary-4);
+    --forte-color-secondary-soft-active: var(--forte-secondary-5);
+    --forte-color-secondary-text: var(--forte-secondary-11);
+    --forte-color-secondary-border: var(--forte-secondary-7);
 
     /* Status */
-    --pui-color-danger: var(--pui-danger-9);
-    --pui-color-danger-hover: var(--pui-danger-10);
-    --pui-color-danger-text: var(--pui-danger-11);
-    --pui-color-danger-soft: var(--pui-danger-3);
-    --pui-color-danger-border: var(--pui-danger-7);
-    --pui-color-on-danger: oklch(0.995 0 0);
-    --pui-color-success: var(--pui-success-9);
-    --pui-color-success-text: var(--pui-success-11);
-    --pui-color-success-soft: var(--pui-success-3);
-    --pui-color-success-border: var(--pui-success-7);
-    --pui-color-warning: var(--pui-warning-9);
-    --pui-color-warning-text: var(--pui-warning-11);
-    --pui-color-warning-soft: var(--pui-warning-3);
-    --pui-color-warning-border: var(--pui-warning-7);
-    --pui-color-info: var(--pui-info-9);
-    --pui-color-info-text: var(--pui-info-11);
-    --pui-color-info-soft: var(--pui-info-3);
-    --pui-color-info-border: var(--pui-info-7);
+    --forte-color-danger: var(--forte-danger-9);
+    --forte-color-danger-hover: var(--forte-danger-10);
+    --forte-color-danger-text: var(--forte-danger-11);
+    --forte-color-danger-soft: var(--forte-danger-3);
+    --forte-color-danger-border: var(--forte-danger-7);
+    --forte-color-on-danger: oklch(0.995 0 0);
+    --forte-color-success: var(--forte-success-9);
+    --forte-color-success-text: var(--forte-success-11);
+    --forte-color-success-soft: var(--forte-success-3);
+    --forte-color-success-border: var(--forte-success-7);
+    --forte-color-warning: var(--forte-warning-9);
+    --forte-color-warning-text: var(--forte-warning-11);
+    --forte-color-warning-soft: var(--forte-warning-3);
+    --forte-color-warning-border: var(--forte-warning-7);
+    --forte-color-info: var(--forte-info-9);
+    --forte-color-info-text: var(--forte-info-11);
+    --forte-color-info-soft: var(--forte-info-3);
+    --forte-color-info-border: var(--forte-info-7);
 
     /* Text on a solid status fill. Literals, not the auto-contrast expression
      * the brand tones use: those hues are fixed above, so the answer is known
      * at author time and there is nothing for `contrast-color()` to decide.
      *
      * The two are not the same colour, and that is the point of having them.
-     * `--pui-warning-9` is a light amber — white on it measures 1.82:1, a
+     * `--forte-warning-9` is a light amber — white on it measures 1.82:1, a
      * failure a component guessing "solid fill means white text" would ship
-     * silently. `--pui-success-9` sits almost exactly on the white/black
+     * silently. `--forte-success-9` sits almost exactly on the white/black
      * crossover: 4.54:1 white against 4.56:1 black, so it clears AA either way
      * and by very little. check-contrast.mjs asserts all four pairs, which is
      * what stops a future nudge to a status hue from quietly breaking one.
      *
-     * `--pui-color-on-info` is the newest of the four and the note that used
+     * `--forte-color-on-info` is the newest of the four and the note that used
      * to stand here said to add it "with a matching assertion the day
      * something needs it". `Badge` needed it. The assertion is in place, and
-     * so is the other half of that day's work: `--pui-info-9` moved down to
+     * so is the other half of that day's work: `--forte-info-9` moved down to
      * 0.550 so the answer could be white — see the note on the ramp above. */
-    --pui-color-on-success: oklch(0.995 0 0);
-    --pui-color-on-warning: oklch(0.145 0 0);
-    --pui-color-on-info: oklch(0.995 0 0);
+    --forte-color-on-success: oklch(0.995 0 0);
+    --forte-color-on-warning: oklch(0.145 0 0);
+    --forte-color-on-info: oklch(0.995 0 0);
   }
 }
 
 /**
  * Geometry: spacing, radius, density, typography, elevation.
  */
-@layer pretty-ui.tokens {
+@layer forte.tokens {
   :root,
-  .pui-theme,
-  [data-pui-theme] {
+  .forte-theme,
+  [data-forte-theme] {
     /* Spacing (4px base) */
-    --pui-space-1: 0.25rem;
-    --pui-space-2: 0.5rem;
-    --pui-space-3: 0.75rem;
-    --pui-space-4: 1rem;
-    --pui-space-5: 1.5rem;
-    --pui-space-6: 2rem;
-    --pui-space-7: 2.5rem;
-    --pui-space-8: 3rem;
+    --forte-space-1: 0.25rem;
+    --forte-space-2: 0.5rem;
+    --forte-space-3: 0.75rem;
+    --forte-space-4: 1rem;
+    --forte-space-5: 1.5rem;
+    --forte-space-6: 2rem;
+    --forte-space-7: 2.5rem;
+    --forte-space-8: 3rem;
 
     /* Typography */
-    --pui-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    --forte-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
       "Helvetica Neue", Arial, sans-serif;
-    --pui-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    --forte-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
       "Liberation Mono", monospace;
 
-    --pui-font-size-1: 0.75rem;
-    --pui-font-size-2: 0.875rem;
-    --pui-font-size-3: 1rem;
-    --pui-font-size-4: 1.125rem;
-    --pui-font-size-5: 1.25rem;
-    --pui-font-size-6: 1.5rem;
+    --forte-font-size-1: 0.75rem;
+    --forte-font-size-2: 0.875rem;
+    --forte-font-size-3: 1rem;
+    --forte-font-size-4: 1.125rem;
+    --forte-font-size-5: 1.25rem;
+    --forte-font-size-6: 1.5rem;
 
-    --pui-font-weight-normal: 400;
-    --pui-font-weight-medium: 500;
-    --pui-font-weight-semibold: 600;
-    --pui-font-weight-bold: 700;
+    --forte-font-weight-normal: 400;
+    --forte-font-weight-medium: 500;
+    --forte-font-weight-semibold: 600;
+    --forte-font-weight-bold: 700;
 
-    --pui-line-height-tight: 1.2;
-    --pui-line-height-normal: 1.5;
+    --forte-line-height-tight: 1.2;
+    --forte-line-height-normal: 1.5;
 
-    --pui-letter-spacing-tight: -0.01em;
-    --pui-letter-spacing-normal: 0em;
+    --forte-letter-spacing-tight: -0.01em;
+    --forte-letter-spacing-normal: 0em;
 
     /* Elevation. Every shadow is forced to `none` under forced-colors, so a
      * shadow may never be the only thing separating a surface from the page —
-     * floating surfaces also carry `.pui-hc-surface`. */
-    --pui-shadow-1: 0 1px 2px 0 light-dark(oklch(0 0 0 / 0.05), oklch(0 0 0 / 0.4));
-    --pui-shadow-2:
+     * floating surfaces also carry `.forte-hc-surface`. */
+    --forte-shadow-1: 0 1px 2px 0 light-dark(oklch(0 0 0 / 0.05), oklch(0 0 0 / 0.4));
+    --forte-shadow-2:
       0 1px 3px 0 light-dark(oklch(0 0 0 / 0.1), oklch(0 0 0 / 0.5)),
       0 1px 2px -1px light-dark(oklch(0 0 0 / 0.1), oklch(0 0 0 / 0.5));
-    --pui-shadow-3:
+    --forte-shadow-3:
       0 4px 6px -1px light-dark(oklch(0 0 0 / 0.1), oklch(0 0 0 / 0.5)),
       0 2px 4px -2px light-dark(oklch(0 0 0 / 0.1), oklch(0 0 0 / 0.5));
-    --pui-shadow-4:
+    --forte-shadow-4:
       0 12px 24px -6px light-dark(oklch(0 0 0 / 0.12), oklch(0 0 0 / 0.6)),
       0 4px 8px -4px light-dark(oklch(0 0 0 / 0.1), oklch(0 0 0 / 0.5));
 
     /* Scrims and glass */
-    --pui-scrim-color: light-dark(oklch(0 0 0 / 0.45), oklch(0 0 0 / 0.65));
-    --pui-scrim-blur: 4px;
-    --pui-glass-alpha: 0.72;
+    --forte-scrim-color: light-dark(oklch(0 0 0 / 0.45), oklch(0 0 0 / 0.65));
+    --forte-scrim-blur: 4px;
+    --forte-glass-alpha: 0.72;
 
     /* Hit targets — SC 2.5.8 (AA) and 2.5.5 (AAA) */
-    --pui-target-min: 24px;
-    --pui-target-comfortable: 44px;
+    --forte-target-min: 24px;
+    --forte-target-comfortable: 44px;
   }
 
   /* ------------------------------------------------------------------------
    * Radius and density defaults, on `:root` ALONE.
    *
-   * Everything above is restated on `.pui-theme` / `[data-pui-theme]` because
+   * Everything above is restated on `.forte-theme` / `[data-forte-theme]` because
    * it is DERIVED from a seed a scope can override, and a `var()` inside an
    * unregistered custom property is substituted where it is declared. These
-   * two groups are different: they are the values the `data-pui-radius` and
-   * `data-pui-density` presets below rewrite. Restating them on the scope
+   * two groups are different: they are the values the `data-forte-radius` and
+   * `data-forte-density` presets below rewrite. Restating them on the scope
    * selectors would mean every theme scope re-declares the DEFAULTS on top of
-   * a preset inherited from an ancestor — `.pui-theme` (0,1,0) and
-   * `[data-pui-radius="pill"]` (0,1,0) tie on specificity, and the scope wins
+   * a preset inherited from an ancestor — `.forte-theme` (0,1,0) and
+   * `[data-forte-radius="pill"]` (0,1,0) tie on specificity, and the scope wins
    * because it matches the nearer element. A docs demo frame inside a page
    * themed to `pill` would silently snap back to the default radius.
    *
    * So: inheritance carries a preset into a scope, and a scope that wants its
-   * own geometry says so with its own `data-pui-radius` / `data-pui-density`,
+   * own geometry says so with its own `data-forte-radius` / `data-forte-density`,
    * which then wins on the blocks below. The cost is that overriding a raw
-   * `--pui-space-*` or `--pui-radius-*` on a subtree no longer re-derives the
+   * `--forte-space-*` or `--forte-radius-*` on a subtree no longer re-derives the
    * semantic values — that is what the presets are for.
    * --------------------------------------------------------------------- */
   :root {
     /* Radius scale */
-    --pui-radius-1: 0.125rem;
-    --pui-radius-2: 0.25rem;
-    --pui-radius-3: 0.375rem;
-    --pui-radius-4: 0.5rem;
-    --pui-radius-5: 0.75rem;
-    --pui-radius-6: 1rem;
-    --pui-radius-full: 9999px;
+    --forte-radius-1: 0.125rem;
+    --forte-radius-2: 0.25rem;
+    --forte-radius-3: 0.375rem;
+    --forte-radius-4: 0.5rem;
+    --forte-radius-5: 0.75rem;
+    --forte-radius-6: 1rem;
+    --forte-radius-full: 9999px;
 
     /* Semantic radius — what components consume, so a preset can retarget
      * the whole library by rewriting three values instead of seven. */
-    --pui-radius-control: var(--pui-radius-4);
-    --pui-radius-surface: var(--pui-radius-5);
-    --pui-radius-pill: var(--pui-radius-full);
+    --forte-radius-control: var(--forte-radius-4);
+    --forte-radius-surface: var(--forte-radius-5);
+    --forte-radius-pill: var(--forte-radius-full);
 
     /* Density: control metrics. Comfortable is the default. */
-    --pui-control-h-sm: 1.75rem;
-    --pui-control-h-md: 2.25rem;
-    --pui-control-h-lg: 2.75rem;
-    --pui-control-px-sm: var(--pui-space-3);
-    --pui-control-px-md: var(--pui-space-4);
-    --pui-control-px-lg: var(--pui-space-5);
-    --pui-control-gap: var(--pui-space-2);
-    --pui-surface-p: var(--pui-space-5);
-    --pui-list-item-py: var(--pui-space-2);
+    --forte-control-h-sm: 1.75rem;
+    --forte-control-h-md: 2.25rem;
+    --forte-control-h-lg: 2.75rem;
+    --forte-control-px-sm: var(--forte-space-3);
+    --forte-control-px-md: var(--forte-space-4);
+    --forte-control-px-lg: var(--forte-space-5);
+    --forte-control-gap: var(--forte-space-2);
+    --forte-surface-p: var(--forte-space-5);
+    --forte-list-item-py: var(--forte-space-2);
   }
 
   /* Radius presets. Discrete literals rather than a calc() multiplier: an
    * unregistered property containing var() freezes at its declaring element,
-   * so `calc(8px * var(--pui-radius-factor))` on :root would never re-derive
+   * so `calc(8px * var(--forte-radius-factor))` on :root would never re-derive
    * inside a scoped subtree. There are only three presets — literals are both
    * simpler and correct.
    *
    * Each preset restates the WHOLE scale, the way every state block in
    * motion.css does, so a preset is a complete statement rather than a patch
    * on whatever it inherited. `none` zeroes the scale itself, so a nested
-   * `soft` that only re-pointed `--pui-radius-control` at `--pui-radius-5`
+   * `soft` that only re-pointed `--forte-radius-control` at `--forte-radius-5`
    * would resolve it against its ancestor's zero and stay square. */
   /* `0px` and not `0`, and the unit is load-bearing. A bare `0` in a custom
    * property is a <number>, and a math function may not mix a number with a
-   * length: `min(var(--pui-radius-surface), 12px)` becomes invalid at
+   * length: `min(var(--forte-radius-surface), 12px)` becomes invalid at
    * computed-value time under this preset, taking every value derived from it
    * down with it. On `border-radius` itself the two are identical, so the
    * breakage only ever showed up one derivation later — which is exactly the
    * kind of silent var() failure that is hard to find. */
-  [data-pui-radius="none"] {
-    --pui-radius-1: 0px;
-    --pui-radius-2: 0px;
-    --pui-radius-3: 0px;
-    --pui-radius-4: 0px;
-    --pui-radius-5: 0px;
-    --pui-radius-6: 0px;
-    --pui-radius-full: 0px;
-    --pui-radius-control: 0px;
-    --pui-radius-surface: 0px;
-    --pui-radius-pill: 0px;
+  [data-forte-radius="none"] {
+    --forte-radius-1: 0px;
+    --forte-radius-2: 0px;
+    --forte-radius-3: 0px;
+    --forte-radius-4: 0px;
+    --forte-radius-5: 0px;
+    --forte-radius-6: 0px;
+    --forte-radius-full: 0px;
+    --forte-radius-control: 0px;
+    --forte-radius-surface: 0px;
+    --forte-radius-pill: 0px;
   }
 
-  [data-pui-radius="soft"] {
-    --pui-radius-1: 0.125rem;
-    --pui-radius-2: 0.25rem;
-    --pui-radius-3: 0.375rem;
-    --pui-radius-4: 0.5rem;
-    --pui-radius-5: 0.75rem;
-    --pui-radius-6: 1rem;
-    --pui-radius-full: 9999px;
-    --pui-radius-control: var(--pui-radius-5);
-    --pui-radius-surface: var(--pui-radius-6);
-    --pui-radius-pill: var(--pui-radius-full);
+  [data-forte-radius="soft"] {
+    --forte-radius-1: 0.125rem;
+    --forte-radius-2: 0.25rem;
+    --forte-radius-3: 0.375rem;
+    --forte-radius-4: 0.5rem;
+    --forte-radius-5: 0.75rem;
+    --forte-radius-6: 1rem;
+    --forte-radius-full: 9999px;
+    --forte-radius-control: var(--forte-radius-5);
+    --forte-radius-surface: var(--forte-radius-6);
+    --forte-radius-pill: var(--forte-radius-full);
   }
 
-  [data-pui-radius="pill"] {
-    --pui-radius-1: 0.125rem;
-    --pui-radius-2: 0.25rem;
-    --pui-radius-3: 0.375rem;
-    --pui-radius-4: 0.5rem;
-    --pui-radius-5: 0.75rem;
-    --pui-radius-6: 1rem;
-    --pui-radius-full: 9999px;
-    --pui-radius-control: var(--pui-radius-full);
-    --pui-radius-surface: var(--pui-radius-6);
-    --pui-radius-pill: var(--pui-radius-full);
+  [data-forte-radius="pill"] {
+    --forte-radius-1: 0.125rem;
+    --forte-radius-2: 0.25rem;
+    --forte-radius-3: 0.375rem;
+    --forte-radius-4: 0.5rem;
+    --forte-radius-5: 0.75rem;
+    --forte-radius-6: 1rem;
+    --forte-radius-full: 9999px;
+    --forte-radius-control: var(--forte-radius-full);
+    --forte-radius-surface: var(--forte-radius-6);
+    --forte-radius-pill: var(--forte-radius-full);
   }
 
   /* Density presets. `compact` `sm` lands at exactly 24px — the SC 2.5.8
    * floor. Do not add a denser preset. */
-  [data-pui-density="compact"] {
-    --pui-control-h-sm: 1.5rem;
-    --pui-control-h-md: 1.875rem;
-    --pui-control-h-lg: 2.25rem;
-    --pui-control-px-sm: var(--pui-space-2);
-    --pui-control-px-md: var(--pui-space-3);
-    --pui-control-px-lg: var(--pui-space-4);
-    --pui-control-gap: var(--pui-space-1);
-    --pui-surface-p: var(--pui-space-4);
-    --pui-list-item-py: var(--pui-space-1);
+  [data-forte-density="compact"] {
+    --forte-control-h-sm: 1.5rem;
+    --forte-control-h-md: 1.875rem;
+    --forte-control-h-lg: 2.25rem;
+    --forte-control-px-sm: var(--forte-space-2);
+    --forte-control-px-md: var(--forte-space-3);
+    --forte-control-px-lg: var(--forte-space-4);
+    --forte-control-gap: var(--forte-space-1);
+    --forte-surface-p: var(--forte-space-4);
+    --forte-list-item-py: var(--forte-space-1);
   }
 
-  [data-pui-density="spacious"] {
-    --pui-control-h-sm: 2.25rem;
-    --pui-control-h-md: 2.75rem;
-    --pui-control-h-lg: 3.25rem;
-    --pui-control-px-sm: var(--pui-space-4);
-    --pui-control-px-md: var(--pui-space-5);
-    --pui-control-px-lg: var(--pui-space-6);
-    --pui-control-gap: var(--pui-space-3);
-    --pui-surface-p: var(--pui-space-6);
-    --pui-list-item-py: var(--pui-space-3);
+  [data-forte-density="spacious"] {
+    --forte-control-h-sm: 2.25rem;
+    --forte-control-h-md: 2.75rem;
+    --forte-control-h-lg: 3.25rem;
+    --forte-control-px-sm: var(--forte-space-4);
+    --forte-control-px-md: var(--forte-space-5);
+    --forte-control-px-lg: var(--forte-space-6);
+    --forte-control-gap: var(--forte-space-3);
+    --forte-surface-p: var(--forte-space-6);
+    --forte-list-item-py: var(--forte-space-3);
   }
 }

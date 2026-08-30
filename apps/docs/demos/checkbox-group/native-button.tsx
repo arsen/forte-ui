@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox, CheckboxGroup } from "@dofortech/pretty-ui";
+import { Checkbox, CheckboxGroup } from "@dofortech/forte-ui";
 
-const row = "flex cursor-pointer items-center gap-(--pui-control-gap)";
+const row = "flex cursor-pointer items-center gap-(--forte-control-gap)";
 
 export default function CheckboxGroupNativeButton() {
   const groupLabelId = React.useId();

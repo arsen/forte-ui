@@ -1,17 +1,17 @@
 /**
- * pretty-ui × Tailwind v4 — the token bridge.
+ * forte-ui × Tailwind v4 — the token bridge.
  * ---------------------------------------------------------------------------
  * Import it in the stylesheet that imports Tailwind, BEFORE Tailwind itself:
  *
- *   @import "@dofortech/pretty-ui/tailwind.css";
+ *   @import "@dofortech/forte-ui/tailwind.css";
  *   @import "tailwindcss";
  *
  * (`theme.css` is still required, once, anywhere in the app — this file only
  * teaches Tailwind the token names; it does not define the tokens.)
  *
- * It re-points Tailwind's theme at the pretty-ui tokens, so utilities and
- * components stay one system: `bg-primary` is `--pui-color-primary`, `gap-5`
- * is `--pui-space-5`, `rounded-control` follows the `data-pui-radius` preset,
+ * It re-points Tailwind's theme at the forte-ui tokens, so utilities and
+ * components stay one system: `bg-primary` is `--forte-color-primary`, `gap-5`
+ * is `--forte-space-5`, `rounded-control` follows the `data-forte-radius` preset,
  * and everything responds to a seed change, dark mode, and theme scopes.
  *
  * ---------------------------------------------------------------------------
@@ -20,15 +20,15 @@
  * The `@layer` statement below fixes the cascade-layer order at its first
  * appearance, and both halves of it matter:
  *
- *   - `pretty-ui` sits AFTER `base`, or Tailwind's Preflight — which lives in
+ *   - `forte-ui` sits AFTER `base`, or Tailwind's Preflight — which lives in
  *     `base` and sets `button { background: transparent }` and friends — would
  *     beat every component's own styles by layer order alone.
- *   - `pretty-ui` sits BEFORE `utilities`, or `p-4` on a Button would lose to
+ *   - `forte-ui` sits BEFORE `utilities`, or `p-4` on a Button would lose to
  *     the button's own padding, and the library's "your CSS always wins"
  *     contract would silently break for utility classes specifically.
  *
  * Import Tailwind first and its own `theme, base, components, utilities`
- * statement wins the race instead — `pretty-ui` then lands after `utilities`,
+ * statement wins the race instead — `forte-ui` then lands after `utilities`,
  * which is the second failure above. Keeping this import first costs nothing
  * and settles the order for every stylesheet loaded later, including the
  * per-component CSS the library's JS injects.
@@ -36,13 +36,13 @@
  * ---------------------------------------------------------------------------
  * Why `@theme inline` and not plain `@theme`
  * ---------------------------------------------------------------------------
- * A plain `@theme` emits `--color-primary: var(--pui-color-primary)` on
+ * A plain `@theme` emits `--color-primary: var(--forte-color-primary)` on
  * `:root` and points utilities at *that*. But a `var()` inside an unregistered
  * custom property is substituted where the property is DECLARED, so the value
- * would freeze to whatever `:root` resolved — and every `.pui-theme` scope,
- * `data-theme` island and `data-pui-density` / `data-pui-radius` preset would
+ * would freeze to whatever `:root` resolved — and every `.forte-theme` scope,
+ * `data-theme` island and `data-forte-density` / `data-forte-radius` preset would
  * stop reaching the utility. `inline` substitutes the token reference into
- * the utility itself (`background-color: var(--pui-color-panel)`), which
+ * the utility itself (`background-color: var(--forte-color-panel)`), which
  * resolves at the element. Do not drop the keyword.
  *
  * ---------------------------------------------------------------------------
@@ -55,7 +55,7 @@
  *     every theme scope. Deleting the namespace turns that into a build-time
  *     "unknown utility" instead of a shipped bug.
  *   - Arithmetic: Tailwind's spacing is a multiplier (`p-13` is as valid as
- *     `p-4`), while pretty-ui's scale is eight designed steps that go
+ *     `p-4`), while forte-ui's scale is eight designed steps that go
  *     non-linear past 4 (5 = 1.5rem … 8 = 3rem). Mapping the eight steps while
  *     keeping the multiplier would leave `p-8` (3rem) LARGER than `p-9`
  *     (2.25rem) — replacing the scale wholesale is what keeps it monotonic.
@@ -65,7 +65,7 @@
  * untouched on purpose — `max-w-lg` is how you say `min(32rem, 100%)`.
  */
 
-@layer theme, base, pretty-ui, components, utilities;
+@layer theme, base, forte, components, utilities;
 
 @theme {
   --color-*: initial;
@@ -87,98 +87,98 @@
    * themselves consume, so anything built out of them re-themes with the
    * library rather than beside it.
    * --------------------------------------------------------------------- */
-  --color-background: var(--pui-color-background);
-  --color-foreground: var(--pui-color-foreground);
-  --color-foreground-muted: var(--pui-color-foreground-muted);
-  --color-foreground-subtle: var(--pui-color-foreground-subtle);
+  --color-background: var(--forte-color-background);
+  --color-foreground: var(--forte-color-foreground);
+  --color-foreground-muted: var(--forte-color-foreground-muted);
+  --color-foreground-subtle: var(--forte-color-foreground-subtle);
 
-  --color-panel: var(--pui-color-panel);
-  --color-panel-hover: var(--pui-color-panel-hover);
-  --color-panel-active: var(--pui-color-panel-active);
-  --color-overlay: var(--pui-color-overlay);
+  --color-panel: var(--forte-color-panel);
+  --color-panel-hover: var(--forte-color-panel-hover);
+  --color-panel-active: var(--forte-color-panel-active);
+  --color-overlay: var(--forte-color-overlay);
 
-  --color-border: var(--pui-color-border);
-  --color-border-muted: var(--pui-color-border-muted);
-  --color-border-strong: var(--pui-color-border-strong);
+  --color-border: var(--forte-color-border);
+  --color-border-muted: var(--forte-color-border-muted);
+  --color-border-strong: var(--forte-color-border-strong);
 
-  --color-primary: var(--pui-color-primary);
-  --color-primary-hover: var(--pui-color-primary-hover);
-  --color-primary-active: var(--pui-color-primary-active);
-  --color-primary-soft: var(--pui-color-primary-soft);
-  --color-primary-soft-hover: var(--pui-color-primary-soft-hover);
-  --color-primary-soft-active: var(--pui-color-primary-soft-active);
-  --color-primary-border: var(--pui-color-primary-border);
-  --color-primary-text: var(--pui-color-primary-text);
+  --color-primary: var(--forte-color-primary);
+  --color-primary-hover: var(--forte-color-primary-hover);
+  --color-primary-active: var(--forte-color-primary-active);
+  --color-primary-soft: var(--forte-color-primary-soft);
+  --color-primary-soft-hover: var(--forte-color-primary-soft-hover);
+  --color-primary-soft-active: var(--forte-color-primary-soft-active);
+  --color-primary-border: var(--forte-color-primary-border);
+  --color-primary-text: var(--forte-color-primary-text);
 
-  --color-secondary: var(--pui-color-secondary);
-  --color-secondary-hover: var(--pui-color-secondary-hover);
-  --color-secondary-active: var(--pui-color-secondary-active);
-  --color-secondary-soft: var(--pui-color-secondary-soft);
-  --color-secondary-soft-hover: var(--pui-color-secondary-soft-hover);
-  --color-secondary-soft-active: var(--pui-color-secondary-soft-active);
-  --color-secondary-border: var(--pui-color-secondary-border);
-  --color-secondary-text: var(--pui-color-secondary-text);
+  --color-secondary: var(--forte-color-secondary);
+  --color-secondary-hover: var(--forte-color-secondary-hover);
+  --color-secondary-active: var(--forte-color-secondary-active);
+  --color-secondary-soft: var(--forte-color-secondary-soft);
+  --color-secondary-soft-hover: var(--forte-color-secondary-soft-hover);
+  --color-secondary-soft-active: var(--forte-color-secondary-soft-active);
+  --color-secondary-border: var(--forte-color-secondary-border);
+  --color-secondary-text: var(--forte-color-secondary-text);
 
-  --color-danger: var(--pui-color-danger);
-  --color-danger-hover: var(--pui-color-danger-hover);
-  --color-danger-soft: var(--pui-color-danger-soft);
-  --color-danger-border: var(--pui-color-danger-border);
-  --color-danger-text: var(--pui-color-danger-text);
+  --color-danger: var(--forte-color-danger);
+  --color-danger-hover: var(--forte-color-danger-hover);
+  --color-danger-soft: var(--forte-color-danger-soft);
+  --color-danger-border: var(--forte-color-danger-border);
+  --color-danger-text: var(--forte-color-danger-text);
 
-  --color-success: var(--pui-color-success);
-  --color-success-text: var(--pui-color-success-text);
-  --color-warning: var(--pui-color-warning);
-  --color-warning-text: var(--pui-color-warning-text);
+  --color-success: var(--forte-color-success);
+  --color-success-text: var(--forte-color-success-text);
+  --color-warning: var(--forte-color-warning);
+  --color-warning-text: var(--forte-color-warning-text);
 
   /* Auto-contrast text for a solid fill. `text-white` is deliberately gone;
    * this is the token that stays readable when the seed moves. */
-  --color-on-primary: var(--pui-color-on-primary);
-  --color-on-secondary: var(--pui-color-on-secondary);
-  --color-on-danger: var(--pui-color-on-danger);
+  --color-on-primary: var(--forte-color-on-primary);
+  --color-on-secondary: var(--forte-color-on-secondary);
+  --color-on-danger: var(--forte-color-on-danger);
 
   /* The raw ramps. Prefer a semantic slot above unless the step number IS the
    * subject — a palette display, a bespoke chart scale. */
-  --color-accent-1: var(--pui-accent-1);
-  --color-accent-2: var(--pui-accent-2);
-  --color-accent-3: var(--pui-accent-3);
-  --color-accent-4: var(--pui-accent-4);
-  --color-accent-5: var(--pui-accent-5);
-  --color-accent-6: var(--pui-accent-6);
-  --color-accent-7: var(--pui-accent-7);
-  --color-accent-8: var(--pui-accent-8);
-  --color-accent-9: var(--pui-accent-9);
-  --color-accent-10: var(--pui-accent-10);
-  --color-accent-11: var(--pui-accent-11);
-  --color-accent-12: var(--pui-accent-12);
+  --color-accent-1: var(--forte-accent-1);
+  --color-accent-2: var(--forte-accent-2);
+  --color-accent-3: var(--forte-accent-3);
+  --color-accent-4: var(--forte-accent-4);
+  --color-accent-5: var(--forte-accent-5);
+  --color-accent-6: var(--forte-accent-6);
+  --color-accent-7: var(--forte-accent-7);
+  --color-accent-8: var(--forte-accent-8);
+  --color-accent-9: var(--forte-accent-9);
+  --color-accent-10: var(--forte-accent-10);
+  --color-accent-11: var(--forte-accent-11);
+  --color-accent-12: var(--forte-accent-12);
 
-  --color-secondary-1: var(--pui-secondary-1);
-  --color-secondary-2: var(--pui-secondary-2);
-  --color-secondary-3: var(--pui-secondary-3);
-  --color-secondary-4: var(--pui-secondary-4);
-  --color-secondary-5: var(--pui-secondary-5);
-  --color-secondary-6: var(--pui-secondary-6);
-  --color-secondary-7: var(--pui-secondary-7);
-  --color-secondary-8: var(--pui-secondary-8);
-  --color-secondary-9: var(--pui-secondary-9);
-  --color-secondary-10: var(--pui-secondary-10);
-  --color-secondary-11: var(--pui-secondary-11);
-  --color-secondary-12: var(--pui-secondary-12);
+  --color-secondary-1: var(--forte-secondary-1);
+  --color-secondary-2: var(--forte-secondary-2);
+  --color-secondary-3: var(--forte-secondary-3);
+  --color-secondary-4: var(--forte-secondary-4);
+  --color-secondary-5: var(--forte-secondary-5);
+  --color-secondary-6: var(--forte-secondary-6);
+  --color-secondary-7: var(--forte-secondary-7);
+  --color-secondary-8: var(--forte-secondary-8);
+  --color-secondary-9: var(--forte-secondary-9);
+  --color-secondary-10: var(--forte-secondary-10);
+  --color-secondary-11: var(--forte-secondary-11);
+  --color-secondary-12: var(--forte-secondary-12);
 
-  --color-gray-1: var(--pui-gray-1);
-  --color-gray-2: var(--pui-gray-2);
-  --color-gray-3: var(--pui-gray-3);
-  --color-gray-4: var(--pui-gray-4);
-  --color-gray-5: var(--pui-gray-5);
-  --color-gray-6: var(--pui-gray-6);
-  --color-gray-7: var(--pui-gray-7);
-  --color-gray-8: var(--pui-gray-8);
-  --color-gray-9: var(--pui-gray-9);
-  --color-gray-10: var(--pui-gray-10);
-  --color-gray-11: var(--pui-gray-11);
-  --color-gray-12: var(--pui-gray-12);
+  --color-gray-1: var(--forte-gray-1);
+  --color-gray-2: var(--forte-gray-2);
+  --color-gray-3: var(--forte-gray-3);
+  --color-gray-4: var(--forte-gray-4);
+  --color-gray-5: var(--forte-gray-5);
+  --color-gray-6: var(--forte-gray-6);
+  --color-gray-7: var(--forte-gray-7);
+  --color-gray-8: var(--forte-gray-8);
+  --color-gray-9: var(--forte-gray-9);
+  --color-gray-10: var(--forte-gray-10);
+  --color-gray-11: var(--forte-gray-11);
+  --color-gray-12: var(--forte-gray-12);
 
   /* ------------------------------------------------------------------------
-   * Spacing — the eight steps, 1:1. `gap-5` IS `--pui-space-5` (1.5rem, not
+   * Spacing — the eight steps, 1:1. `gap-5` IS `--forte-space-5` (1.5rem, not
    * Tailwind's stock 1.25rem). Sizing beyond 3rem is what the untouched
    * `--container-*` scale is for: `w-full max-w-lg`.
    * --------------------------------------------------------------------- */
@@ -189,71 +189,71 @@
    * worst way for it to fail. */
   --spacing-0: 0;
 
-  --spacing-1: var(--pui-space-1);
-  --spacing-2: var(--pui-space-2);
-  --spacing-3: var(--pui-space-3);
-  --spacing-4: var(--pui-space-4);
-  --spacing-5: var(--pui-space-5);
-  --spacing-6: var(--pui-space-6);
-  --spacing-7: var(--pui-space-7);
-  --spacing-8: var(--pui-space-8);
+  --spacing-1: var(--forte-space-1);
+  --spacing-2: var(--forte-space-2);
+  --spacing-3: var(--forte-space-3);
+  --spacing-4: var(--forte-space-4);
+  --spacing-5: var(--forte-space-5);
+  --spacing-6: var(--forte-space-6);
+  --spacing-7: var(--forte-space-7);
+  --spacing-8: var(--forte-space-8);
 
-  /* Surface padding is density-aware — a `data-pui-density` preset rewrites
+  /* Surface padding is density-aware — a `data-forte-density` preset rewrites
    * it — which is exactly the case `inline` exists for. The rest of the
-   * density family (`--pui-control-h-*`, `--pui-target-*`) has no natural
-   * utility name; reach for it as `h-(--pui-control-h-md)`, which resolves at
+   * density family (`--forte-control-h-*`, `--forte-target-*`) has no natural
+   * utility name; reach for it as `h-(--forte-control-h-md)`, which resolves at
    * the element for the same reason. */
-  --spacing-surface: var(--pui-surface-p);
+  --spacing-surface: var(--forte-surface-p);
 
   /* ------------------------------------------------------------------------
    * Typography.
    * --------------------------------------------------------------------- */
-  --font-sans: var(--pui-font-sans);
-  --font-mono: var(--pui-font-mono);
+  --font-sans: var(--forte-font-sans);
+  --font-mono: var(--forte-font-mono);
 
-  --text-1: var(--pui-font-size-1);
-  --text-2: var(--pui-font-size-2);
-  --text-3: var(--pui-font-size-3);
-  --text-4: var(--pui-font-size-4);
-  --text-5: var(--pui-font-size-5);
-  --text-6: var(--pui-font-size-6);
+  --text-1: var(--forte-font-size-1);
+  --text-2: var(--forte-font-size-2);
+  --text-3: var(--forte-font-size-3);
+  --text-4: var(--forte-font-size-4);
+  --text-5: var(--forte-font-size-5);
+  --text-6: var(--forte-font-size-6);
 
-  --font-weight-normal: var(--pui-font-weight-normal);
-  --font-weight-medium: var(--pui-font-weight-medium);
-  --font-weight-semibold: var(--pui-font-weight-semibold);
-  --font-weight-bold: var(--pui-font-weight-bold);
+  --font-weight-normal: var(--forte-font-weight-normal);
+  --font-weight-medium: var(--forte-font-weight-medium);
+  --font-weight-semibold: var(--forte-font-weight-semibold);
+  --font-weight-bold: var(--forte-font-weight-bold);
 
-  --leading-tight: var(--pui-line-height-tight);
-  --leading-normal: var(--pui-line-height-normal);
+  --leading-tight: var(--forte-line-height-tight);
+  --leading-normal: var(--forte-line-height-normal);
 
-  --tracking-tight: var(--pui-letter-spacing-tight);
-  --tracking-normal: var(--pui-letter-spacing-normal);
+  --tracking-tight: var(--forte-letter-spacing-tight);
+  --tracking-normal: var(--forte-letter-spacing-normal);
 
   /* ------------------------------------------------------------------------
    * Geometry and elevation. `rounded-control` / `rounded-surface` are the
-   * semantic pair the `data-pui-radius` presets retarget; the numbered steps
+   * semantic pair the `data-forte-radius` presets retarget; the numbered steps
    * are the raw scale behind them.
    * --------------------------------------------------------------------- */
-  --radius-1: var(--pui-radius-1);
-  --radius-2: var(--pui-radius-2);
-  --radius-3: var(--pui-radius-3);
-  --radius-4: var(--pui-radius-4);
-  --radius-5: var(--pui-radius-5);
-  --radius-6: var(--pui-radius-6);
-  --radius-control: var(--pui-radius-control);
-  --radius-surface: var(--pui-radius-surface);
-  --radius-pill: var(--pui-radius-pill);
+  --radius-1: var(--forte-radius-1);
+  --radius-2: var(--forte-radius-2);
+  --radius-3: var(--forte-radius-3);
+  --radius-4: var(--forte-radius-4);
+  --radius-5: var(--forte-radius-5);
+  --radius-6: var(--forte-radius-6);
+  --radius-control: var(--forte-radius-control);
+  --radius-surface: var(--forte-radius-surface);
+  --radius-pill: var(--forte-radius-pill);
 
-  --shadow-1: var(--pui-shadow-1);
-  --shadow-2: var(--pui-shadow-2);
-  --shadow-3: var(--pui-shadow-3);
-  --shadow-4: var(--pui-shadow-4);
+  --shadow-1: var(--forte-shadow-1);
+  --shadow-2: var(--forte-shadow-2);
+  --shadow-3: var(--forte-shadow-3);
+  --shadow-4: var(--forte-shadow-4);
 
   /* ------------------------------------------------------------------------
-   * Motion. Durations and easings only — travel, scale and `--pui-motion-ok`
+   * Motion. Durations and easings only — travel, scale and `--forte-motion-ok`
    * stay out on purpose. Those are the tokens that collapse under reduced
    * motion, and a `translate-y-*` utility built from one would need the
-   * `calc(... * var(--pui-motion-ok))` gate that a utility cannot carry.
+   * `calc(... * var(--forte-motion-ok))` gate that a utility cannot carry.
    * Anything that has to move writes CSS, the way a component does.
    *
    * Pair a spring easing with its matching duration — a shorter duration
@@ -261,21 +261,21 @@
    * --------------------------------------------------------------------- */
   /* The namespace behind `duration-*` is `--transition-duration-*`, not
    * `--duration-*` — a name that silently generates no utility at all. */
-  --transition-duration-instant: var(--pui-duration-instant);
-  --transition-duration-fast: var(--pui-duration-fast);
-  --transition-duration-normal: var(--pui-duration-normal);
-  --transition-duration-slow: var(--pui-duration-slow);
-  --transition-duration-move: var(--pui-duration-move);
-  --transition-duration-spring-gentle: var(--pui-duration-spring-gentle);
-  --transition-duration-spring-snappy: var(--pui-duration-spring-snappy);
-  --transition-duration-spring-precise: var(--pui-duration-spring-precise);
-  --transition-duration-spring-bouncy: var(--pui-duration-spring-bouncy);
+  --transition-duration-instant: var(--forte-duration-instant);
+  --transition-duration-fast: var(--forte-duration-fast);
+  --transition-duration-normal: var(--forte-duration-normal);
+  --transition-duration-slow: var(--forte-duration-slow);
+  --transition-duration-move: var(--forte-duration-move);
+  --transition-duration-spring-gentle: var(--forte-duration-spring-gentle);
+  --transition-duration-spring-snappy: var(--forte-duration-spring-snappy);
+  --transition-duration-spring-precise: var(--forte-duration-spring-precise);
+  --transition-duration-spring-bouncy: var(--forte-duration-spring-bouncy);
 
-  --ease-standard: var(--pui-ease-standard);
-  --ease-emphasized: var(--pui-ease-emphasized);
-  --ease-exit: var(--pui-ease-exit);
-  --ease-spring-gentle: var(--pui-ease-spring-gentle);
-  --ease-spring-snappy: var(--pui-ease-spring-snappy);
-  --ease-spring-precise: var(--pui-ease-spring-precise);
-  --ease-spring-bouncy: var(--pui-ease-spring-bouncy);
+  --ease-standard: var(--forte-ease-standard);
+  --ease-emphasized: var(--forte-ease-emphasized);
+  --ease-exit: var(--forte-ease-exit);
+  --ease-spring-gentle: var(--forte-ease-spring-gentle);
+  --ease-spring-snappy: var(--forte-ease-spring-snappy);
+  --ease-spring-precise: var(--forte-ease-spring-precise);
+  --ease-spring-bouncy: var(--forte-ease-spring-bouncy);
 }

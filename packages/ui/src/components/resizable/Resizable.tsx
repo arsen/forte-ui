@@ -402,7 +402,7 @@ const ResizableContext = React.createContext<ResizableContextValue | null>(null)
 function useResizableContext(part: string): ResizableContextValue {
   const context = React.useContext(ResizableContext);
   if (!context) {
-    throw new Error(`pretty-ui: <Resizable.${part}> must be rendered inside <Resizable.Group>.`);
+    throw new Error(`forte-ui: <Resizable.${part}> must be rendered inside <Resizable.Group>.`);
   }
   return context;
 }
@@ -677,7 +677,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       if (!autoSaveId || !store || restoredRef.current || panelIds.length === 0) return;
       restoredRef.current = true;
       try {
-        const raw = store.getItem(`pui-resizable:${autoSaveId}`);
+        const raw = store.getItem(`forte-resizable:${autoSaveId}`);
         if (!raw) return;
         const saved: unknown = JSON.parse(raw);
         if (!Array.isArray(saved) || saved.length !== panelIds.length) return;
@@ -697,7 +697,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       if (panelIds.some((id) => !Number.isFinite(sizes[id]))) return;
       try {
         store.setItem(
-          `pui-resizable:${autoSaveId}`,
+          `forte-resizable:${autoSaveId}`,
           JSON.stringify(panelIds.map((id) => Number((sizes[id] ?? 0).toFixed(4)))),
         );
       } catch {
@@ -1085,7 +1085,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
           defaultTagName: "div",
           props: {
             className: clsx(styles.root, className),
-            "data-pui": "resizable",
+            "data-forte": "resizable",
             "data-orientation": orientation,
             "data-resizing": draggingId ? "" : undefined,
             "data-ready": ready && settled ? "" : undefined,
@@ -1103,7 +1103,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
                 {draggingId ? (
                   <div
                     className={styles.dragOverlay}
-                    data-pui="resizable-drag-overlay"
+                    data-forte="resizable-drag-overlay"
                     data-orientation={orientation}
                     aria-hidden="true"
                   />
@@ -1327,7 +1327,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
         // (spread below) wins, at the cost of that linkage.
         id,
         className: clsx(styles.panel, className),
-        "data-pui": "resizable-panel",
+        "data-forte": "resizable-panel",
         "data-orientation": context.orientation,
         "data-collapsed": isCollapsed ? "" : undefined,
         style: {
@@ -1528,7 +1528,7 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
       // and stops the browser deciding this was the start of a native drag.
       event.preventDefault();
       setPointerFocus(true);
-      // `preventScroll`: `.pui-focus-ring` carries a `scroll-margin`, and a
+      // `preventScroll`: `.forte-focus-ring` carries a `scroll-margin`, and a
       // handle near the viewport edge is inside it — the default scroll-into
       // -view would yank the page sideways at the start of the drag.
       element.focus({ preventScroll: true });
@@ -1680,9 +1680,9 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
         aria-disabled={disabled || undefined}
         aria-label="Resize panels"
         tabIndex={disabled ? undefined : 0}
-        className={clsx(styles.handle, "pui-focus-ring", "pui-target", className)}
+        className={clsx(styles.handle, "forte-focus-ring", "forte-target", className)}
         data-pointer-focus={pointerFocus ? "" : undefined}
-        data-pui="resizable-handle"
+        data-forte="resizable-handle"
         data-orientation={orientation}
         data-dragging={isDragging ? "" : undefined}
         data-disabled={disabled ? "" : undefined}
@@ -1703,7 +1703,7 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
         onDoubleClick={handleDoubleClick}
       >
         {grip ? (
-          <span className={styles.grip} data-pui="resizable-grip" aria-hidden="true">
+          <span className={styles.grip} data-forte="resizable-grip" aria-hidden="true">
             <span className={styles.gripDots} />
           </span>
         ) : null}

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ContextMenu } from "@dofortech/pretty-ui";
+import { ContextMenu } from "@dofortech/forte-ui";
 
 export default function ContextMenuCheckable() {
   const [grid, setGrid] = React.useState(true);
@@ -14,7 +14,7 @@ export default function ContextMenuCheckable() {
         className="grid aspect-5/3 w-full max-w-2xs place-items-center rounded-surface border border-border bg-panel text-2 text-foreground-muted select-none"
         style={{
           backgroundImage: grid
-            ? "repeating-linear-gradient(0deg, var(--pui-color-border-muted) 0 1px, transparent 1px 24px), repeating-linear-gradient(90deg, var(--pui-color-border-muted) 0 1px, transparent 1px 24px)"
+            ? "repeating-linear-gradient(0deg, var(--forte-color-border-muted) 0 1px, transparent 1px 24px), repeating-linear-gradient(90deg, var(--forte-color-border-muted) 0 1px, transparent 1px 24px)"
             : undefined,
         }}
       >

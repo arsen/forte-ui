@@ -1,4 +1,4 @@
-import tokens from "@dofortech/pretty-ui/docs-data/tokens.json";
+import tokens from "@dofortech/forte-ui/docs-data/tokens.json";
 import { cn } from "@/lib/cn";
 import { inline } from "./theming-table";
 import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";
@@ -32,10 +32,10 @@ const DATA = tokens as Record<string, Token>;
  * reads every declaration in `src/styles/*.css` at build time, so a token
  * added, renamed or re-valued updates these tables automatically instead of
  * silently going stale — the failure mode that already cost the hand-written
- * inventory `--pui-direction`.
+ * inventory `--forte-direction`.
  *
  * The Notes column is derived, not written: the manifest records every
- * selector that redeclares a token, so "rewritten by the `data-pui-radius`
+ * selector that redeclares a token, so "rewritten by the `data-forte-radius`
  * presets" or "retuned under `prefers-contrast: more`" comes from the CSS
  * itself. A `/** … *\/` doc comment above a declaration adds prose the same
  * way it does for component knobs.
@@ -47,7 +47,7 @@ export function TokenTable({
   exclude = [],
   label,
 }: {
-  /** Include every token in these families (the segment after `--pui-`). */
+  /** Include every token in these families (the segment after `--forte-`). */
   families?: string[];
   /** Include every token whose name starts with any of these. */
   prefixes?: string[];
@@ -87,7 +87,7 @@ export function TokenTable({
   return (
     <div className={TABLE_WRAP}>
       <table className={TABLE}>
-        <caption className="pui-visually-hidden">{label}</caption>
+        <caption className="forte-visually-hidden">{label}</caption>
         <thead>
           <tr>
             <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Token</th>
@@ -124,10 +124,10 @@ function notesFor(t: Token): string[] {
   const notes: string[] = t.description ? [t.description] : [];
   const some = (pred: (d: Declaration) => boolean | undefined) => t.declarations.some(pred);
 
-  if (some((d) => d.selector.includes("[data-pui-radius")))
-    notes.push("rewritten by the `data-pui-radius` presets");
-  if (some((d) => d.selector.includes("[data-pui-density")))
-    notes.push("rewritten by the `data-pui-density` presets");
+  if (some((d) => d.selector.includes("[data-forte-radius")))
+    notes.push("rewritten by the `data-forte-radius` presets");
+  if (some((d) => d.selector.includes("[data-forte-density")))
+    notes.push("rewritten by the `data-forte-density` presets");
   if (some((d) => d.media?.includes("prefers-contrast")))
     notes.push("retuned under `prefers-contrast: more`");
   if (some((d) => d.media?.includes("forced-colors")))

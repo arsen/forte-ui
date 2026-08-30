@@ -28,7 +28,7 @@ inside it, instead of one dropdown closing while its neighbour opens.
 ## Import
 
 ```tsx
-import { NavigationMenu } from "@dofortech/pretty-ui";
+import { NavigationMenu } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -85,7 +85,7 @@ styling the two parts separately is a bar where they differ by a pixel.
 ### Columns
 
 `columns` on `Content` lays the panel out in one, two or three columns of
-`--pui-navigation-menu-column-width`.
+`--forte-navigation-menu-column-width`.
 
 <DemoBlock id="navigation-menu/columns" />
 
@@ -93,7 +93,7 @@ The grid drops to fewer columns on its own when the panel is narrower than one
 column, so a three-column panel becomes a single column on a phone without a
 media query. The panel's width is an absolute measure rather than a percentage
 because the popup around it is sized *from* it — a percentage would be circular
-— and it is capped again by `--pui-navigation-menu-content-inset` from the
+— and it is capped again by `--forte-navigation-menu-content-inset` from the
 window edge, which is a hard bound that holds on the very first frame, before
 the positioner has published `--available-width`.
 
@@ -139,7 +139,7 @@ inside another would announce two navigation landmarks for one region.
 `variant="card"` on the nested trigger is what makes it sit level with the links
 around it, and it takes an inline-axis chevron rather than the downward one,
 because that is the direction its panel actually arrives from. The chevron
-mirrors under RTL through `--pui-direction`.
+mirrors under RTL through `--forte-direction`.
 
 ### Controlled
 
@@ -204,7 +204,7 @@ others follow the pointer along the row. Only the first open waits for `delay`.
 
 That gap between the bar and the panel is real space, and a pointer crossing it
 is over neither. The positioner draws an invisible bridge across it —
-`--pui-navigation-menu-bridge`, paired with the popup's `sideOffset` — so
+`--forte-navigation-menu-bridge`, paired with the popup's `sideOffset` — so
 reaching for a link does not close the panel on the way. Change one and change
 the other.
 
@@ -218,13 +218,13 @@ the other.
 The popup's viewport clips — that is what makes a swap read as one panel
 replacing another rather than two crossing in the open — so every link carries
 `data-focus-inset` and draws its focus ring inside its own box, where `overflow`
-cannot shave it off (SC 2.4.11). Rows are floored at `--pui-target-min` so a
+cannot shave it off (SC 2.4.11). Rows are floored at `--forte-target-min` so a
 dense preset cannot take them under 24×24 (SC 2.5.8).
 
 Under forced colors the open trigger and the current page's link paint
 `Highlight` / `HighlightText` explicitly rather than letting their background be
 replaced with `Canvas`, which would leave both states indistinguishable from
-every other row. The popup carries `.pui-hc-surface`, whose transparent border
+every other row. The popup carries `.forte-hc-surface`, whose transparent border
 becomes a system-coloured boundary once the shadow is stripped, and the arrow is
 two flat SVG paths rather than the traditional CSS-border triangle — a border
 triangle degrades into a filled rectangle when every border colour is forced to
@@ -237,7 +237,7 @@ Three movements, all pure CSS, none of them running JavaScript per frame.
 **The panel travels.** Base UI writes the positioner's `top` / `left` / `right`
 / `bottom` as inline styles and rewrites them whenever another trigger takes the
 popup over; the stylesheet transitions those four properties on
-`--pui-duration-move`. `[data-instant]` drops the transition for the changes
+`--forte-duration-move`. `[data-instant]` drops the transition for the changes
 that are not a considered move — a dismissal, or a first open with no previous
 position to travel from.
 
@@ -257,7 +257,7 @@ an inline `position: absolute`, and the viewport is its containing block — so
 the popup is never as tall as both at once.
 
 That direction is one of only two places in the library where an inline-axis
-distance is **not** multiplied by `--pui-direction`. The usual rule assumes the
+distance is **not** multiplied by `--forte-direction`. The usual rule assumes the
 intent is logical ("enter from the start edge"); this one is already physical,
 because Base UI derives the word from `getBoundingClientRect()`. Flipping it
 under RTL would throw the panel away from the trigger the user just reached for.
@@ -267,8 +267,8 @@ Enter and exit are transitions on `[data-starting-style]` /
 opening reverses instead of snapping.
 
 There is no `prefers-reduced-motion` block in the stylesheet at all. The tokens
-collapse their own geometry: `--pui-travel-sm` and `--pui-travel-lg` become
-`0px`, `--pui-scale-enter` becomes exactly `1`, and `--pui-duration-move`
+collapse their own geometry: `--forte-travel-sm` and `--forte-travel-lg` become
+`0px`, `--forte-scale-enter` becomes exactly `1`, and `--forte-duration-move`
 becomes `1ms` — so the panel appears in place, swaps without sliding, and jumps
 between triggers, with the opacity fade that reduced-motion users actually
 benefit from still intact.
@@ -290,8 +290,8 @@ a whole panel, cards included.
 <ThemingTable component="NavigationMenu" />
 
 To move every navigation menu at once, re-point the global tokens in the Default
-column instead — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`,
-`--pui-control-*`, `--pui-font-*` and the motion tokens are only read here,
+column instead — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`,
+`--forte-control-*`, `--forte-font-*` and the motion tokens are only read here,
 never re-declared, so those do inherit from `:root` or a theme scope.
 
 The parts also expose their state as data attributes — `data-variant`,
@@ -302,7 +302,7 @@ variant such as `data-[popup-open]:...` can target them without a wrapper.
 ## API reference
 
 Each part forwards every prop it does not consume to its Base UI counterpart, so
-the tables below list what pretty-ui adds or changes the default of. Every part
+the tables below list what forte-ui adds or changes the default of. Every part
 takes `render` for changing the underlying element.
 
 ### NavigationMenu.Root

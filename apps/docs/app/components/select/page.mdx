@@ -30,7 +30,7 @@ or when the viewport is too tight.
 ## Import
 
 ```tsx
-import { Select } from "@dofortech/pretty-ui";
+import { Select } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -56,7 +56,7 @@ text lines up with the item text.
 
 `size` sets the trigger's height, inline padding and font size — nothing else.
 The popup is unaffected: items keep their own type scale and their
-`--pui-target-min` (24px) minimum row height whatever size the trigger is.
+`--forte-target-min` (24px) minimum row height whatever size the trigger is.
 
 <DemoBlock id="select/sizes" />
 
@@ -126,33 +126,33 @@ removes nothing but the affordance.
 
 ## Theming
 
-Every `--pui-select-*` property below is declared on the surface that owns it,
+Every `--forte-select-*` property below is declared on the surface that owns it,
 and an element's own declaration beats an inherited value — so setting one on
 `:root`, on a theme scope or on any ancestor has no effect. The popup is
 portalled to `<body>` as well, so an ancestor of the *trigger* is not even in
 its tree. Set each property on the part that declares it, through that part's
-`className` (an unlayered rule beats the library's `@layer pretty-ui.components`,
+`className` (an unlayered rule beats the library's `@layer forte.components`,
 whatever its specificity) or an inline `style`:
 
 - `Select.Label` declares the four `label-*` properties.
 - `Select.Trigger` declares every `trigger-*` property.
-- `Select.Popup` declares the `popup-*` properties plus `--pui-select-item-px`,
-  `--pui-select-item-gap` and `--pui-select-item-indicator-size` — the layout
+- `Select.Popup` declares the `popup-*` properties plus `--forte-select-item-px`,
+  `--forte-select-item-gap` and `--forte-select-item-indicator-size` — the layout
   knobs the list, the items and the group labels read but never redeclare, so
   the popup is the right place to set them.
-- `positionerClassName` reaches `--pui-select-z-index` and
-  `--pui-select-positioner-min-height`, and nothing else: those two are the only
+- `positionerClassName` reaches `--forte-select-z-index` and
+  `--forte-select-positioner-min-height`, and nothing else: those two are the only
   properties declared on the positioner.
-- `Select.Item` declares `--pui-select-item-fg`,
-  `--pui-select-item-bg-highlighted`, `--pui-select-item-fg-highlighted`,
-  `--pui-select-item-fg-selected` and `--pui-select-item-font-size`.
-- `--pui-select-backdrop-z-index`, `--pui-select-list-padding-y` and
-  `--pui-select-scroll-arrow-size` are declared on the backdrop, the list and
+- `Select.Item` declares `--forte-select-item-fg`,
+  `--forte-select-item-bg-highlighted`, `--forte-select-item-fg-highlighted`,
+  `--forte-select-item-fg-selected` and `--forte-select-item-font-size`.
+- `--forte-select-backdrop-z-index`, `--forte-select-list-padding-y` and
+  `--forte-select-scroll-arrow-size` are declared on the backdrop, the list and
   the scroll arrows — elements `Select.Popup` renders internally and exposes no
   class name for, so they cannot be retargeted from outside.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*`, `--pui-space-*` — are the exception: the component only reads
+The global tokens these resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*`, `--forte-space-*` — are the exception: the component only reads
 those and never redeclares them, so re-pointing them on `:root` or on a theme
 scope does re-skin every select.
 

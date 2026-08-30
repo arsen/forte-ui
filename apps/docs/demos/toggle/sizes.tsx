@@ -1,6 +1,6 @@
 "use client";
 
-import { Toggle } from "@dofortech/pretty-ui";
+import { Toggle } from "@dofortech/forte-ui";
 
 const SIZES = ["sm", "md", "lg"] as const;
 

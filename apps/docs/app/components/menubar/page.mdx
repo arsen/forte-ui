@@ -28,7 +28,7 @@ what the keyboard does.
 ## Import
 
 ```tsx
-import { Menu, Menubar } from "@dofortech/pretty-ui";
+import { Menu, Menubar } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -75,7 +75,7 @@ restricts the popup.
   For a rule between runs of menus, use the standalone
   [`Separator`](/components/separator) rather than `Menu.Separator`.
   `Menu.Separator` is a part of the *popup*: it takes its inline margin from
-  `--pui-menu-item-px`, a token only `Menu.Popup` declares, so outside one that
+  `--forte-menu-item-px`, a token only `Menu.Popup` declares, so outside one that
   margin silently resolves to zero. `role="separator"` is valid inside a
   `role="menubar"` either way, and the arrow keys skip it because it is not
   focusable.
@@ -163,10 +163,10 @@ default; pass `loopFocus={false}` if the arrows should stop at the ends.
 
 ## Theming
 
-Every `--pui-menubar-*` property is declared on the bar's own element, and an
+Every `--forte-menubar-*` property is declared on the bar's own element, and an
 element's own declaration beats an inherited value — so setting one on `:root`
 or on a theme scope has no effect. Set them on the `<Menubar>` itself, through
-`className` (an unlayered rule beats the library's `@layer pretty-ui.components`,
+`className` (an unlayered rule beats the library's `@layer forte.components`,
 whatever its specificity) or an inline `style`.
 
 The `trigger-` half is the exception that proves the rule, and it is deliberate:
@@ -178,7 +178,7 @@ beats the one it would inherit.
 <DemoBlock id="menubar/theming" />
 
 The popups are not themed from here. They are portalled to `<body>`, so nothing
-declared on the bar is even in their tree — set `--pui-menu-*` on each
+declared on the bar is even in their tree — set `--forte-menu-*` on each
 `<Menu.Popup>`, as the [Menu theming](/components/menu#theming) section
 describes.
 

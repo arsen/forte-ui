@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb } from "@dofortech/pretty-ui";
+import { Breadcrumb } from "@dofortech/forte-ui";
 
 /* No <Breadcrumb.Separator> anywhere: the list puts one between every pair of
  * children itself. The last crumb is a Page, not a Link — a link to the page

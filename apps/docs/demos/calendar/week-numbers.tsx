@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "@dofortech/pretty-ui";
+import { Calendar } from "@dofortech/forte-ui";
 
 export default function CalendarWeekNumbers() {
   return (

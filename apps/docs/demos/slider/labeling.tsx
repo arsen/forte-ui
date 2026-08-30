@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@dofortech/pretty-ui";
+import { Slider } from "@dofortech/forte-ui";
 
 const column = "grid gap-5";
 

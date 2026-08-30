@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer } from "@dofortech/pretty-ui";
+import { Button, Drawer } from "@dofortech/forte-ui";
 
 // Long enough to overflow a 4K display, so the scroll — and the swipe that
 // only takes over once the scroll has bottomed out — is actually reachable.

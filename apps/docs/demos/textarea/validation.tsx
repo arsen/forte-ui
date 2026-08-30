@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Field, Form, Textarea } from "@dofortech/pretty-ui";
+import { Button, Field, Form, Textarea } from "@dofortech/forte-ui";
 
 export default function TextareaValidation() {
   const [sent, setSent] = React.useState<string | null>(null);

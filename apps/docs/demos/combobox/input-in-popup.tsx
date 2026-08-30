@@ -1,6 +1,6 @@
 "use client";
 
-import { Combobox } from "@dofortech/pretty-ui";
+import { Combobox } from "@dofortech/forte-ui";
 
 interface Country {
   value: string;

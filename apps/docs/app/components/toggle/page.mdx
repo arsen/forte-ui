@@ -27,7 +27,7 @@ the buttons are alternatives rather than independent states, reach for
 ## Import
 
 ```tsx
-import { Toggle } from "@dofortech/pretty-ui";
+import { Toggle } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -60,13 +60,13 @@ looks the same in all four tones.
 
 The same three steps as `Button` — `1.75rem`, `2.25rem`, `2.75rem` — so a toggle
 dropped into a row of buttons lines up rather than sitting a pixel proud. All
-three follow the ambient `data-pui-density` setting.
+three follow the ambient `data-forte-density` setting.
 
 <DemoBlock id="toggle/sizes" />
 
 ### Icon only
 
-`iconOnly` squares the button, gives the icon `--pui-toggle-icon-padding` of
+`iconOnly` squares the button, gives the icon `--forte-toggle-icon-padding` of
 space on every side, and pins the square to at least the control height and
 24px, so the hit target still clears WCAG SC 2.5.8 at `size="sm"`. An icon too
 big for that floor grows the button instead of crowding the corners.
@@ -150,10 +150,10 @@ rather than the library-wide one in `patterns.css`: that rule covers
 of those — it is `aria-pressed`. Without it, on and off would look identical in
 high contrast.
 
-**Motion.** The only geometry is the press squash, `--pui-scale-press`, which
+**Motion.** The only geometry is the press squash, `--forte-scale-press`, which
 collapses to exactly `1` under `prefers-reduced-motion: reduce` on its own — so
 there is no media query in the component. Press runs on
-`--pui-duration-instant` and the release on `--pui-ease-spring-snappy`: snap in,
+`--forte-duration-instant` and the release on `--forte-ease-spring-snappy`: snap in,
 spring out. There is deliberately no hover lift or hover scale slot, unlike
 `Button`. A toggle is usually one of several in a strip, and a single item
 growing under the pointer breaks the shared edge that makes the strip read as
@@ -168,7 +168,7 @@ element's own declaration beats an inherited value.
 
 <ThemingTable component="Toggle" part="root" />
 
-`tone` reassigns the seven `--pui-toggle-tone-*` properties the variants read
+`tone` reassigns the seven `--forte-toggle-tone-*` properties the variants read
 from, so overriding one of those re-skins every variant at once, while
 overriding a `-pressed` slot changes only the variant in play.
 
@@ -178,8 +178,8 @@ so a touch device never sticks in a hover colour after a tap.
 <Callout kind="note">
   `tone="danger"` is the one tone whose pressed fill does not brighten on hover.
   The danger ramp in `tokens.css` is a sparse hand-written set with no step
-  between `--pui-danger-3` and `--pui-danger-7`, and `7` is far too saturated to
-  carry `--pui-color-danger-text` at AA. `Button` makes the same trade for the
+  between `--forte-danger-3` and `--forte-danger-7`, and `7` is far too saturated to
+  carry `--forte-color-danger-text` at AA. `Button` makes the same trade for the
   same reason. The cursor, the focus ring and the press scale all still respond.
 </Callout>
 

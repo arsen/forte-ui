@@ -1,6 +1,6 @@
 "use client";
 
-import { Toolbar } from "@dofortech/pretty-ui";
+import { Toolbar } from "@dofortech/forte-ui";
 
 export default function ToolbarSizes() {
   return (

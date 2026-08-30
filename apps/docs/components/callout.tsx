@@ -49,7 +49,7 @@ export function Callout({ kind = "note", children }: { kind?: Kind; children: Re
     >
       <span
         className={cn(
-          "grid size-5 place-items-center rounded-(--pui-radius-full) font-mono text-1 font-bold",
+          "grid size-5 place-items-center rounded-(--forte-radius-full) font-mono text-1 font-bold",
           tone.badge,
         )}
         aria-hidden="true"

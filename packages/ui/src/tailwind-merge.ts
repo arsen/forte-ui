@@ -1,8 +1,8 @@
 /**
- * pretty-ui × tailwind-merge — the config the Tailwind bridge makes necessary.
+ * forte-ui × tailwind-merge — the config the Tailwind bridge makes necessary.
  * ---------------------------------------------------------------------------
  * tailwind-merge ships knowing Tailwind's DEFAULT theme, and
- * `@dofortech/pretty-ui/tailwind.css` replaced most of it. A class it does not
+ * `@dofortech/forte-ui/tailwind.css` replaced most of it. A class it does not
  * recognise is not an error — it is simply never merged, so two competing
  * values both survive and the cascade decides. Its stock validators expect
  * t-shirt sizes (`rounded-md`) or bare numbers (`p-4`), and the bridge says
@@ -21,7 +21,7 @@
  * Usage:
  *
  *   import { extendTailwindMerge } from "tailwind-merge";
- *   import { tailwindMergeConfig } from "@dofortech/pretty-ui/tailwind-merge";
+ *   import { tailwindMergeConfig } from "@dofortech/forte-ui/tailwind-merge";
  *
  *   export const twMerge = extendTailwindMerge(tailwindMergeConfig);
  *
@@ -35,7 +35,7 @@
  * here does not error — it just stops overriding its own family.
  */
 
-/** `--pui-duration-*`, which is also the `--transition-duration-*` scale. */
+/** `--forte-duration-*`, which is also the `--transition-duration-*` scale. */
 const DURATIONS = [
   "instant",
   "fast",

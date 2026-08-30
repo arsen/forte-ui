@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { Avatar } from "@dofortech/pretty-ui";
+import { Avatar } from "@dofortech/forte-ui";
 
 const SIZES = ["sm", "md", "lg", "xl"] as const;
 const SHAPES = ["circle", "rounded", "square"] as const;
@@ -9,8 +9,8 @@ const SHAPES = ["circle", "rounded", "square"] as const;
 export default function AvatarBadge() {
   return (
     <div className="grid gap-6">
-      {/* The badge is a fraction of --pui-avatar-size and its offset is a
-        * fraction of --pui-avatar-radius, so one dot definition sits correctly
+      {/* The badge is a fraction of --forte-avatar-size and its offset is a
+        * fraction of --forte-avatar-radius, so one dot definition sits correctly
         * on every size — which is the part a fixed-size <span> gets wrong. */}
       <div className="flex flex-wrap items-end gap-4">
         {SIZES.map((size) => (

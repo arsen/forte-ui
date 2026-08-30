@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/pretty-ui";
+import { Resizable } from "@dofortech/forte-ui";
 
 /* A pane's content is its own business: the panel clips and the group never
  * measures it, so anything can go in. These two are plain boxes so the demo is

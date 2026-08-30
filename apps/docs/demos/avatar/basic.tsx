@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/pretty-ui";
+import { Avatar } from "@dofortech/forte-ui";
 
 export default function AvatarBasic() {
   return (
@@ -29,7 +29,7 @@ export default function AvatarBasic() {
 
       {/* An icon fallback stands for "somebody", not for anybody in
         * particular, so it stays decorative: no label, and the svg is hidden.
-        * It is sized by --pui-avatar-icon-size without a width of its own. */}
+        * It is sized by --forte-avatar-icon-size without a width of its own. */}
       <Avatar.Root variant="outline">
         <Avatar.Fallback>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">

@@ -172,7 +172,7 @@ export const ComboboxLabel = React.forwardRef<
     <BaseCombobox.Label
       ref={ref}
       className={clsx(styles.label, className)}
-      data-pui="combobox-label"
+      data-forte="combobox-label"
       {...props}
     />
   );
@@ -196,7 +196,7 @@ export interface ComboboxInputGroupProps
   variant?: ComboboxVariant;
   /**
    * Size of the field. Height, inline padding and font size move together,
-   * and the actual numbers follow the ambient `data-pui-density` setting.
+   * and the actual numbers follow the ambient `data-forte-density` setting.
    * Matches `Input` and `Select.Trigger`, so the three line up on one row.
    * @default "md"
    */
@@ -219,7 +219,7 @@ export interface ComboboxInputGroupProps
  * and carries all of the control chrome (border, background, sizes,
  * variants), so the input inside stays bare and the buttons sit inside the
  * boundary. Focus lives on the input; the group rings for it via
- * `.pui-focus-ring-within`.
+ * `.forte-focus-ring-within`.
  */
 export const ComboboxInputGroup = React.forwardRef<
   HTMLDivElement,
@@ -231,8 +231,8 @@ export const ComboboxInputGroup = React.forwardRef<
   return (
     <BaseCombobox.InputGroup
       ref={ref}
-      className={clsx(styles.inputGroup, "pui-focus-ring-within", className)}
-      data-pui="combobox-input-group"
+      className={clsx(styles.inputGroup, "forte-focus-ring-within", className)}
+      data-forte="combobox-input-group"
       data-variant={variant}
       data-size={size}
       data-full-width={fullWidth || undefined}
@@ -270,7 +270,7 @@ export const ComboboxInput = React.forwardRef<
     <BaseCombobox.Input
       ref={ref}
       className={clsx(styles.input, className)}
-      data-pui="combobox-input"
+      data-forte="combobox-input"
       {...props}
     />
   );
@@ -344,12 +344,12 @@ export const ComboboxTrigger = React.forwardRef<
   return (
     <BaseCombobox.Trigger
       ref={ref}
-      // `pui-target` floors the HIT area at 24x24 without inflating the
+      // `forte-target` floors the HIT area at 24x24 without inflating the
       // visual box, which inside an `InputGroup` is the field's inner height
       // and at `sm` is smaller than that. No-op on the standalone shape,
       // whose box already clears it.
-      className={clsx(styles.trigger, "pui-focus-ring", "pui-target", className)}
-      data-pui="combobox-trigger"
+      className={clsx(styles.trigger, "forte-focus-ring", "forte-target", className)}
+      data-forte="combobox-trigger"
       data-variant={variant}
       data-size={size}
       data-full-width={fullWidth || undefined}
@@ -410,7 +410,7 @@ export const ComboboxIcon = React.forwardRef<HTMLSpanElement, ComboboxIconProps>
       <BaseCombobox.Icon
         ref={ref}
         className={clsx(styles.icon, className)}
-        data-pui="combobox-icon"
+        data-forte="combobox-icon"
         {...props}
       >
         {children ?? <CaretUpDownIcon />}
@@ -452,8 +452,8 @@ export const ComboboxClear = React.forwardRef<
     <BaseCombobox.Clear
       ref={ref}
       // Same 24x24 floor as the Trigger it sits beside; see there.
-      className={clsx(styles.clear, "pui-focus-ring", "pui-target", className)}
-      data-pui="combobox-clear"
+      className={clsx(styles.clear, "forte-focus-ring", "forte-target", className)}
+      data-forte="combobox-clear"
       {...props}
     >
       {children ?? <XIcon />}
@@ -487,7 +487,7 @@ export const ComboboxChips = React.forwardRef<HTMLDivElement, ComboboxChipsProps
       <BaseCombobox.Chips
         ref={ref}
         className={clsx(styles.chips, className)}
-        data-pui="combobox-chips"
+        data-forte="combobox-chips"
         {...props}
       />
     );
@@ -517,7 +517,7 @@ export const ComboboxChip = React.forwardRef<HTMLDivElement, ComboboxChipProps>(
       <BaseCombobox.Chip
         ref={ref}
         className={clsx(styles.chip, className)}
-        data-pui="combobox-chip"
+        data-forte="combobox-chip"
         {...props}
       />
     );
@@ -554,10 +554,10 @@ export const ComboboxChipRemove = React.forwardRef<
   return (
     <BaseCombobox.ChipRemove
       ref={ref}
-      // `pui-target` grows the hit area to the SC 2.5.8 floor without
+      // `forte-target` grows the hit area to the SC 2.5.8 floor without
       // inflating the 1rem visual box, which has to fit inside a chip.
-      className={clsx(styles.chipRemove, "pui-focus-ring", "pui-target", className)}
-      data-pui="combobox-chip-remove"
+      className={clsx(styles.chipRemove, "forte-focus-ring", "forte-target", className)}
+      data-forte="combobox-chip-remove"
       {...props}
     >
       {children ?? <XIcon />}
@@ -598,7 +598,7 @@ export interface ComboboxPopupProps extends Omit<BasePopupProps, "className"> {
    * Gap in pixels between the anchor and the popup. The default clears the
    * focus ring rather than sitting flush against it: unlike `Select`, focus
    * stays on the field while the popup is open, so the group's two-tone ring
-   * (`--pui-focus-ring-offset` + `--pui-focus-ring-width`, 4px together) is
+   * (`--forte-focus-ring-offset` + `--forte-focus-ring-width`, 4px together) is
    * painted in exactly the gap this measures.
    * @default 8
    */
@@ -630,7 +630,7 @@ export interface ComboboxPopupProps extends Omit<BasePopupProps, "className"> {
   className?: string;
   /**
    * Additional class name(s) for the positioner — the absolutely positioned
-   * wrapper around the popup. Use this to reach `--pui-combobox-z-index`, the
+   * wrapper around the popup. Use this to reach `--forte-combobox-z-index`, the
    * only knob declared on the positioner.
    */
   positionerClassName?: string;
@@ -666,27 +666,27 @@ export const ComboboxPopup = React.forwardRef<HTMLDivElement, ComboboxPopupProps
       <BaseCombobox.Portal container={container}>
         {backdrop ? (
           <BaseCombobox.Backdrop
-            className={clsx(styles.backdrop, "pui-scrim")}
-            data-pui="combobox-backdrop"
+            className={clsx(styles.backdrop, "forte-scrim")}
+            data-forte="combobox-backdrop"
           />
         ) : null}
         <BaseCombobox.Positioner
           className={clsx(styles.positioner, positionerClassName)}
-          data-pui="combobox-positioner"
+          data-forte="combobox-positioner"
           side={side}
           align={align}
           sideOffset={sideOffset}
           alignOffset={alignOffset}
           collisionPadding={collisionPadding}
         >
-          {/* `pui-hc-surface` carries a transparent border that becomes a
+          {/* `forte-hc-surface` carries a transparent border that becomes a
             * system-coloured boundary in forced-colors mode, where the
             * box-shadow below is stripped and the popup would otherwise
             * dissolve into the page. */}
           <BaseCombobox.Popup
             ref={ref}
-            className={clsx(styles.popup, "pui-hc-surface", className)}
-            data-pui="combobox-popup"
+            className={clsx(styles.popup, "forte-hc-surface", className)}
+            data-forte="combobox-popup"
             {...props}
           >
             {children}
@@ -729,7 +729,7 @@ export const ComboboxList = React.forwardRef<HTMLDivElement, ComboboxListProps>(
       <BaseCombobox.List
         ref={ref}
         className={clsx(styles.list, className)}
-        data-pui="combobox-list"
+        data-forte="combobox-list"
         {...props}
       />
     );
@@ -763,7 +763,7 @@ export const ComboboxEmpty = React.forwardRef<HTMLDivElement, ComboboxEmptyProps
       <BaseCombobox.Empty
         ref={ref}
         className={clsx(styles.empty, className)}
-        data-pui="combobox-empty"
+        data-forte="combobox-empty"
         {...props}
       />
     );
@@ -794,7 +794,7 @@ export const ComboboxStatus = React.forwardRef<
     <BaseCombobox.Status
       ref={ref}
       className={clsx(styles.status, className)}
-      data-pui="combobox-status"
+      data-forte="combobox-status"
       {...props}
     />
   );
@@ -851,18 +851,18 @@ export const ComboboxItem = React.forwardRef<HTMLDivElement, ComboboxItemProps>(
     return (
       <BaseCombobox.Item
         ref={ref}
-        className={clsx(styles.item, "pui-focus-ring", className)}
-        data-pui="combobox-item"
+        className={clsx(styles.item, "forte-focus-ring", className)}
+        data-forte="combobox-item"
         data-focus-inset=""
         {...props}
       >
         <BaseCombobox.ItemIndicator
           className={styles.itemIndicator}
-          data-pui="combobox-item-indicator"
+          data-forte="combobox-item-indicator"
         >
           {indicator ?? <CheckIcon />}
         </BaseCombobox.ItemIndicator>
-        <span className={styles.itemText} data-pui="combobox-item-text">
+        <span className={styles.itemText} data-forte="combobox-item-text">
           {children}
         </span>
       </BaseCombobox.Item>
@@ -896,7 +896,7 @@ export const ComboboxGroup = React.forwardRef<HTMLDivElement, ComboboxGroupProps
       <BaseCombobox.Group
         ref={ref}
         className={clsx(styles.group, className)}
-        data-pui="combobox-group"
+        data-forte="combobox-group"
         {...props}
       />
     );
@@ -929,7 +929,7 @@ export const ComboboxGroupLabel = React.forwardRef<
     <BaseCombobox.GroupLabel
       ref={ref}
       className={clsx(styles.groupLabel, className)}
-      data-pui="combobox-group-label"
+      data-forte="combobox-group-label"
       {...props}
     />
   );
@@ -967,7 +967,7 @@ export const ComboboxSeparator = React.forwardRef<
     <BaseCombobox.Separator
       ref={ref}
       className={clsx(styles.separator, className)}
-      data-pui="combobox-separator"
+      data-forte="combobox-separator"
       {...props}
     />
   );
@@ -993,7 +993,7 @@ export const ComboboxRow = React.forwardRef<HTMLDivElement, ComboboxRowProps>(
       <BaseCombobox.Row
         ref={ref}
         className={clsx(styles.row, className)}
-        data-pui="combobox-row"
+        data-forte="combobox-row"
         {...props}
       />
     );
@@ -1058,15 +1058,15 @@ export const useComboboxFilteredItems = BaseCombobox.useFilteredItems;
  * </Combobox.Root>
  * ```
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-combobox-*`
+ * Styling is driven entirely by `data-*` attributes and `--forte-combobox-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[highlighted]:...`) without wrapping.
  * Each part declares its own knobs, so an ancestor's value is only inherited
  * and loses — set them on the part itself via `className`. The popup is also
  * portalled to `<body>`, so an ancestor of the input could not reach it in
- * any case; `positionerClassName` reaches `--pui-combobox-z-index`. The
- * global `--pui-color-*` / `--pui-control-*` / `--pui-radius-*` /
- * `--pui-space-*` tokens these resolve to ARE inherited, so re-pointing those
+ * any case; `positionerClassName` reaches `--forte-combobox-z-index`. The
+ * global `--forte-color-*` / `--forte-control-*` / `--forte-radius-*` /
+ * `--forte-space-*` tokens these resolve to ARE inherited, so re-pointing those
  * from `:root` or a theme scope moves every combobox at once.
  */
 export const Combobox = {

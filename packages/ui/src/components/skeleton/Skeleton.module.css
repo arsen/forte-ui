@@ -11,7 +11,7 @@
  * line box — glyphs occupy roughly the cap height and the rest is leading,
  * split half above and half below. A stack of full-line-box bars is therefore
  * both too heavy and the wrong total height. So a text line paints only
- * `--pui-skeleton-ink`, the leading becomes the flex `gap`, and the container
+ * `--forte-skeleton-ink`, the leading becomes the flex `gap`, and the container
  * carries half a leading of padding on each side. The sum is exact:
  *
  *   n * ink + (n - 1) * leading + leading  ==  n * (ink + leading)
@@ -26,29 +26,29 @@
  * animating entirely reads as content that FAILED, which is a worse message
  * than the one it replaced:
  *
- *   pulse    the dip is `calc(0.55 + 0.25 * --pui-motion-off)`, so it goes
+ *   pulse    the dip is `calc(0.55 + 0.25 * --forte-motion-off)`, so it goes
  *            from a 45% swing to a 20% one. Shallower, never absent. There is
  *            nothing moving to collapse — it is opacity from end to end.
- *   shimmer  the travelling band's distance is gated on `--pui-motion-ok` and
- *            the band itself is faded out by `--pui-motion-off`; a highlight
+ *   shimmer  the travelling band's distance is gated on `--forte-motion-ok` and
+ *            the band itself is faded out by `--forte-motion-off`; a highlight
  *            frozen mid-sweep reads as a rendering defect, not as restraint.
  *            A second animation on the root — a no-op at full motion, and
- *            exactly `--pui-skeleton-dim` under reduced motion — takes over
+ *            exactly `--forte-skeleton-dim` under reduced motion — takes over
  *            as the visible cue, so `shimmer` degrades into the SAME shallow
  *            pulse the `pulse` variant runs there, rather than into nothing.
- *            Deliberately not the system `--pui-pulse-dip` that Spinner's
+ *            Deliberately not the system `--forte-pulse-dip` that Spinner's
  *            ring falls back on: that dip is 0.45, deeper than anything a
  *            skeleton shows at full motion, and a page of large surfaces
  *            swinging 55% is the opposite of "reduced" — it would also sit
  *            beside `pulse` placeholders breathing at 0.8, two depths for
  *            one meaning.
  *
- * Neither loop duration is ever shortened: `--pui-duration-loop-sweep` is
+ * Neither loop duration is ever shortened: `--forte-duration-loop-sweep` is
  * 1400ms in every motion state. A repeating animation driven toward 1ms would
  * flash at around 1000Hz, a WCAG 2.3.1 seizure hazard rather than an
  * accessibility win.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the skeleton itself, so a value set
      * on an ancestor is only INHERITED and loses to these. Re-skin one
@@ -57,9 +57,9 @@
      * skeleton by re-pointing the global tokens on the right-hand side. */
 
     /** The placeholder fill. */
-    --pui-skeleton-color: var(--pui-color-panel-active);
+    --forte-skeleton-color: var(--forte-color-panel-active);
     /* `light-dark()` rather than one ramp step, because "brighter" is not a
-     * direction on this scale: `--pui-gray-4` is a light grey in light mode
+     * direction on this scale: `--forte-gray-4` is a light grey in light mode
      * and a dark one in dark mode, and a shimmer that darkens is a shimmer
      * that looks broken. The two branches are each a step of lightness AWAY
      * from the fill in their own mode. It resolves against the inherited
@@ -67,37 +67,37 @@
      * `data-theme` scope — so a demo frame flipped to dark gets the dark
      * branch even on a light page. */
     /** Colour of the band that travels across `animation="shimmer"`. */
-    --pui-skeleton-highlight: light-dark(var(--pui-gray-1), var(--pui-gray-7));
-    /** Corner radius. `variant="text"` drops to `--pui-radius-2`, `circle` is
+    --forte-skeleton-highlight: light-dark(var(--forte-gray-1), var(--forte-gray-7));
+    /** Corner radius. `variant="text"` drops to `--forte-radius-2`, `circle` is
      * a literal circle and ignores this. */
-    --pui-skeleton-radius: var(--pui-radius-control);
+    --forte-skeleton-radius: var(--forte-radius-control);
 
     /** Line box the placeholder is measured against. Everything below is a
      * multiple of it and of the inherited `font-size`. */
-    --pui-skeleton-line-height: var(--pui-line-height-normal);
+    --forte-skeleton-line-height: var(--forte-line-height-normal);
     /* Roughly a cap height plus descender at the sizes this library ships.
      * It is deliberately not `1em`: text does not fill its line box, and a
      * bar that does reads as a filled input rather than as missing words. */
     /** Height of the painted band for `variant="text"` — how much ink a line
      * of real text puts down, as a fraction of the line box. */
-    --pui-skeleton-ink: 0.72em;
+    --forte-skeleton-ink: 0.72em;
 
     /** Width. Overridden by the `width` prop, and by any consumer utility —
      * `className="w-24"` wins on layer order alone. */
-    --pui-skeleton-width: 100%;
+    --forte-skeleton-width: 100%;
     /** Height. Defaults to one line box, so a bare `<Skeleton.Root />` is
      * exactly as tall as the line of text it replaces. */
-    --pui-skeleton-height: calc(1em * var(--pui-skeleton-line-height));
+    --forte-skeleton-height: calc(1em * var(--forte-skeleton-line-height));
 
     /** One full animation cycle, for both `pulse` and `shimmer`. */
-    --pui-skeleton-duration: var(--pui-duration-loop-sweep);
+    --forte-skeleton-duration: var(--forte-duration-loop-sweep);
     /* Interpolates toward 1 under reduced motion instead of switching off, per
      * motion rule 5 — see the header for why "off" is the wrong answer here. */
     /** How far `animation="pulse"` fades at the bottom of its cycle — and the
      * depth `shimmer`'s fallback pulse reaches under reduced motion, so the
      * two animations stay one knob. Rises to `0.8` under reduced motion, so
      * the pulse gets shallower rather than disappearing. */
-    --pui-skeleton-dim: calc(0.55 + 0.25 * var(--pui-motion-off));
+    --forte-skeleton-dim: calc(0.55 + 0.25 * var(--forte-motion-off));
 
     box-sizing: border-box;
     display: block;
@@ -108,10 +108,10 @@
     overflow: hidden;
     isolation: isolate;
 
-    inline-size: var(--pui-skeleton-width);
-    block-size: var(--pui-skeleton-height);
-    border-radius: var(--pui-skeleton-radius);
-    background-color: var(--pui-skeleton-color);
+    inline-size: var(--forte-skeleton-width);
+    block-size: var(--forte-skeleton-height);
+    border-radius: var(--forte-skeleton-radius);
+    background-color: var(--forte-skeleton-color);
 
     /* Chrome, not a control: nothing here performs an action on click, so it
      * takes `default` per the cursor table in AGENTS.md. In sizing mode it
@@ -134,11 +134,11 @@
     vertical-align: middle;
     /* Assigned through the knob rather than to `block-size` directly, so the
      * sizing-mode rule below can still hand the box back to its children. */
-    --pui-skeleton-height: var(--pui-skeleton-ink);
+    --forte-skeleton-height: var(--forte-skeleton-ink);
     /* A tighter radius than a control: a line of text is a thin bar, and
-     * `--pui-radius-control` on something 0.72em tall rounds it into a pill
+     * `--forte-radius-control` on something 0.72em tall rounds it into a pill
      * that no longer reads as a line. */
-    --pui-skeleton-radius: var(--pui-radius-2);
+    --forte-skeleton-radius: var(--forte-radius-2);
   }
 
   .root[data-variant="circle"] {
@@ -151,10 +151,10 @@
      * axes are definite — `width="2.5rem"` was a 2.5rem × one-line-box
      * ELLIPSE before it. A consumer utility (`size-10`) sets both axes
      * directly and wins on layer order, which is still a square. */
-    --pui-skeleton-width: var(--pui-skeleton-height);
+    --forte-skeleton-width: var(--forte-skeleton-height);
     block-size: auto;
     aspect-ratio: 1;
-    /* A literal `50%`, not `--pui-radius-full`: under `data-pui-radius="none"`
+    /* A literal `50%`, not `--forte-radius-full`: under `data-forte-radius="none"`
      * that token is 0 and this shape would stop being the thing it is named
      * after. Round here is meaning, not styling — the same test `Radio` and
      * the `Spinner` ring apply. */
@@ -171,7 +171,7 @@
     /* `fit-content`, not `max-content`: in a narrow column a long string
      * should wrap the way it will once it is visible, rather than shoot out
      * of the container and take the placeholder with it. */
-    --pui-skeleton-width: fit-content;
+    --forte-skeleton-width: fit-content;
   }
 
   /* Height follows the content for a block, but a TEXT placeholder keeps its
@@ -179,7 +179,7 @@
    * full line box beside real text reads as a filled input rather than as
    * words that have not arrived. Only the width is being borrowed there. */
   .root:not([data-variant="text"]):has(> .content) {
-    --pui-skeleton-height: auto;
+    --forte-skeleton-height: auto;
   }
 
   .content {
@@ -188,7 +188,7 @@
 
   /* Pulse ------------------------------------------------------------------ */
   .root[data-animation="pulse"] {
-    animation: pui-skeleton-pulse var(--pui-skeleton-duration) var(--pui-ease-in-out) infinite;
+    animation: forte-skeleton-pulse var(--forte-skeleton-duration) var(--forte-ease-in-out) infinite;
   }
 
   /* Shimmer ----------------------------------------------------------------
@@ -199,9 +199,9 @@
     /* Always running, and a no-op at full motion — the breathe keyframe
      * bottoms out at 1 there. Under reduced motion it becomes the entire cue,
      * which is what makes `shimmer` degrade into `pulse` rather than into a
-     * static box. See the header for why it matches `--pui-skeleton-dim`
-     * instead of the system `--pui-pulse-dip`. */
-    animation: pui-skeleton-breathe var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
+     * static box. See the header for why it matches `--forte-skeleton-dim`
+     * instead of the system `--forte-pulse-dip`. */
+    animation: forte-skeleton-breathe var(--forte-duration-loop-pulse) var(--forte-ease-standard) infinite;
   }
 
   .root[data-animation="shimmer"]::after {
@@ -211,16 +211,16 @@
     /* 0 under reduced motion. The band cannot travel there, and a highlight
      * parked in the middle of every placeholder on the page reads as a
      * rendering defect rather than as a deliberate calm. */
-    opacity: calc(1 - var(--pui-motion-off));
+    opacity: calc(1 - var(--forte-motion-off));
     /* Physical `to right` is fine: the gradient is symmetric, so only the
      * TRAVEL below has a handedness to get wrong. */
     background-image: linear-gradient(
       to right,
       transparent,
-      var(--pui-skeleton-highlight),
+      var(--forte-skeleton-highlight),
       transparent
     );
-    animation: pui-skeleton-sweep var(--pui-skeleton-duration) var(--pui-ease-in-out) infinite;
+    animation: forte-skeleton-sweep var(--forte-skeleton-duration) var(--forte-ease-in-out) infinite;
   }
 
   /* Text -------------------------------------------------------------------
@@ -228,69 +228,69 @@
    * padding is the half-leading that sits above the first line and below the
    * last one in a real paragraph. */
   .text {
-    --pui-skeleton-line-height: var(--pui-line-height-normal);
-    --pui-skeleton-ink: 0.72em;
-    --pui-skeleton-leading: calc(
-      1em * var(--pui-skeleton-line-height) - var(--pui-skeleton-ink)
+    --forte-skeleton-line-height: var(--forte-line-height-normal);
+    --forte-skeleton-ink: 0.72em;
+    --forte-skeleton-leading: calc(
+      1em * var(--forte-skeleton-line-height) - var(--forte-skeleton-ink)
     );
 
     display: flex;
     flex-direction: column;
-    gap: var(--pui-skeleton-leading);
-    padding-block: calc(var(--pui-skeleton-leading) / 2);
+    gap: var(--forte-skeleton-leading);
+    padding-block: calc(var(--forte-skeleton-leading) / 2);
   }
 
-  /* The lines are `Skeleton.Root`s, which declare `--pui-skeleton-ink`
+  /* The lines are `Skeleton.Root`s, which declare `--forte-skeleton-ink`
    * themselves — and an element's own declaration beats an inherited one, so
    * without this rule a consumer retuning the ink on `Skeleton.Text` would
    * move the gaps and leave the bars behind. `inherit` on a custom property
    * takes the parent's computed value, which is the one the gap was measured
    * from, so the two can never disagree. */
   .text > .root {
-    --pui-skeleton-ink: inherit;
+    --forte-skeleton-ink: inherit;
   }
 
   /* Group ------------------------------------------------------------------ */
   .group {
     /** Space between stacked rows of a `Skeleton.Group`. */
-    --pui-skeleton-group-gap: var(--pui-space-3);
+    --forte-skeleton-group-gap: var(--forte-space-3);
 
     display: grid;
-    gap: var(--pui-skeleton-group-gap);
+    gap: var(--forte-skeleton-group-gap);
   }
 
   /* Keyframes -------------------------------------------------------------- */
-  @keyframes pui-skeleton-pulse {
+  @keyframes forte-skeleton-pulse {
     50% {
-      opacity: var(--pui-skeleton-dim);
+      opacity: var(--forte-skeleton-dim);
     }
   }
 
   /* Shimmer's reduced-motion fallback. `1 - (1 - dim) * off` is 1 at full
-   * motion (off = 0) and exactly `--pui-skeleton-dim` under reduced motion
+   * motion (off = 0) and exactly `--forte-skeleton-dim` under reduced motion
    * (off = 1) — including a consumer's retuned dim, so "how deep does this
    * skeleton pulse" stays one answer across both animations. */
-  @keyframes pui-skeleton-breathe {
+  @keyframes forte-skeleton-breathe {
     50% {
-      opacity: calc(1 - (1 - var(--pui-skeleton-dim)) * var(--pui-motion-off));
+      opacity: calc(1 - (1 - var(--forte-skeleton-dim)) * var(--forte-motion-off));
     }
   }
 
-  @keyframes pui-skeleton-sweep {
-    /* `--pui-direction` is 1 in LTR and -1 in RTL: `translate` is physical, so
+  @keyframes forte-skeleton-sweep {
+    /* `--forte-direction` is 1 in LTR and -1 in RTL: `translate` is physical, so
      * the sweep would otherwise run against the reading direction. The
-     * `--pui-motion-ok` factor collapses the whole travel to 0 under reduced
+     * `--forte-motion-ok` factor collapses the whole travel to 0 under reduced
      * motion, per motion rule 11.
      *
      * The band rests off the far edge from 60% to 100% of the cycle rather
      * than restarting immediately. */
     0% {
-      translate: calc(-100% * var(--pui-direction) * var(--pui-motion-ok)) 0;
+      translate: calc(-100% * var(--forte-direction) * var(--forte-motion-ok)) 0;
     }
 
     60%,
     100% {
-      translate: calc(100% * var(--pui-direction) * var(--pui-motion-ok)) 0;
+      translate: calc(100% * var(--forte-direction) * var(--forte-motion-ok)) 0;
     }
   }
 }
@@ -299,7 +299,7 @@
  * Accessibility overrides — see layers.css for why these cannot live in the
  * components layer.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Forced colours remaps `background-color` to a system colour, and which
      * one it picks is not ours to choose: the fill lands on either `Canvas`
@@ -308,7 +308,7 @@
      * draw the outline instead, which is how an empty box is spelled in a
      * high-contrast theme.
      *
-     * `.pui-hc-decorative` is the wrong tool here even though a skeleton IS
+     * `.forte-hc-decorative` is the wrong tool here even though a skeleton IS
      * decorative: it is `display: none`, and a placeholder that stops
      * occupying space has abandoned its only job. */
     .root {

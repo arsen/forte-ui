@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, type DialogFooterAlign } from "@dofortech/pretty-ui";
+import { Button, Dialog, type DialogFooterAlign } from "@dofortech/forte-ui";
 
 const ALIGNS: { align: DialogFooterAlign; blurb: string }[] = [
   {

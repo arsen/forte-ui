@@ -1,7 +1,7 @@
 "use client";
 
 import NextLink from "next/link";
-import { NavigationMenu } from "@dofortech/pretty-ui";
+import { NavigationMenu } from "@dofortech/forte-ui";
 
 const pages = [
   { href: "/components/menu", title: "Menu", description: "Commands, not destinations." },

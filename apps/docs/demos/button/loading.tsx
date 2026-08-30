@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 
 export default function ButtonLoading() {
   const [saving, setSaving] = React.useState(false);

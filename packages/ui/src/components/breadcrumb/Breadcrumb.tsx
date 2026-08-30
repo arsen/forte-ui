@@ -32,7 +32,7 @@ const BreadcrumbContext = React.createContext<{
  * font-size a consumer sets) without a second scale to keep in step. The
  * chevron is drawn pointing RIGHT and mirrored in RTL from the stylesheet —
  * `scale` is physical and has no logical form, so the flip has to consult
- * `--pui-direction`.
+ * `--forte-direction`.
  * ---------------------------------------------------------------------- */
 
 function ChevronIcon(props: React.ComponentProps<"svg">) {
@@ -163,7 +163,7 @@ export const BreadcrumbRoot = React.forwardRef<HTMLElement, BreadcrumbRootProps>
       defaultTagName: "nav",
       props: {
         className: clsx(styles.root, className),
-        "data-pui": "breadcrumb",
+        "data-forte": "breadcrumb",
         "data-size": size,
         "data-variant": variant,
         "data-overflow": overflow,
@@ -234,7 +234,7 @@ export const BreadcrumbList = React.forwardRef<HTMLOListElement, BreadcrumbListP
         ? items.flatMap((child, index) =>
             index === 0
               ? [child]
-              : [<BreadcrumbSeparator key={`pui-separator-${index}`} />, child],
+              : [<BreadcrumbSeparator key={`forte-separator-${index}`} />, child],
           )
         : items;
 
@@ -258,7 +258,7 @@ export const BreadcrumbList = React.forwardRef<HTMLOListElement, BreadcrumbListP
       <ol
         ref={ref}
         className={clsx(styles.list, className)}
-        data-pui="breadcrumb-list"
+        data-forte="breadcrumb-list"
         {...props}
       >
         {content}
@@ -286,7 +286,7 @@ export const BreadcrumbList = React.forwardRef<HTMLOListElement, BreadcrumbListP
      * Base UI hides the native scrollbars on the viewport itself, so leaving
      * the part out is all it takes.
      *
-     * No `data-pui` on these parts either: rule 9 — a composed pretty-ui
+     * No `data-forte` on these parts either: rule 9 — a composed forte-ui
      * component tags its own root, and consumers scope with a descendant
      * selector. */
     return (
@@ -325,7 +325,7 @@ export const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProp
       <li
         ref={ref}
         className={clsx(styles.item, className)}
-        data-pui="breadcrumb-item"
+        data-forte="breadcrumb-item"
         {...props}
       />
     );
@@ -365,12 +365,12 @@ export const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLink
       ref,
       defaultTagName: "a",
       props: {
-        // `.pui-target` grows the hit box to 24×24 (SC 2.5.8) without moving
+        // `.forte-target` grows the hit box to 24×24 (SC 2.5.8) without moving
         // anything: crumb text is a couple of pixels short of the floor, and
         // padding it out would space the trail apart in the `plain` variant,
         // which has none by design.
-        className: clsx(styles.link, "pui-focus-ring", "pui-target", className),
-        "data-pui": "breadcrumb-link",
+        className: clsx(styles.link, "forte-focus-ring", "forte-target", className),
+        "data-forte": "breadcrumb-link",
         ...props,
       },
     });
@@ -410,7 +410,7 @@ export const BreadcrumbPage = React.forwardRef<HTMLSpanElement, BreadcrumbPagePr
       defaultTagName: "span",
       props: {
         className: clsx(styles.page, className),
-        "data-pui": "breadcrumb-page",
+        "data-forte": "breadcrumb-page",
         "aria-current": "page" as const,
         ...props,
       },
@@ -453,7 +453,7 @@ export const BreadcrumbSeparator = React.forwardRef<
       role="presentation"
       aria-hidden="true"
       className={clsx(styles.separator, className)}
-      data-pui="breadcrumb-separator"
+      data-forte="breadcrumb-separator"
       {...props}
     >
       {children ?? separator ?? <ChevronIcon className={styles.separatorIcon} />}
@@ -512,13 +512,13 @@ export const BreadcrumbEllipsis = React.forwardRef<
     ref,
     defaultTagName: "span",
     props: {
-      className: clsx(styles.ellipsis, "pui-focus-ring", "pui-target", className),
-      "data-pui": "breadcrumb-ellipsis",
+      className: clsx(styles.ellipsis, "forte-focus-ring", "forte-target", className),
+      "data-forte": "breadcrumb-ellipsis",
       ...props,
       children: (
         <>
           {children ?? <EllipsisIcon className={styles.ellipsisIcon} />}
-          <span className="pui-visually-hidden">{label}</span>
+          <span className="forte-visually-hidden">{label}</span>
         </>
       ),
     },
@@ -548,7 +548,7 @@ export const BreadcrumbEllipsis = React.forwardRef<
  * `Page`, not a `Link` — a link to where you already are is a control that
  * does nothing.
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-breadcrumb-*`
+ * Styling is driven entirely by `data-*` attributes and `--forte-breadcrumb-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=chip]:...`) without wrapping.
  */

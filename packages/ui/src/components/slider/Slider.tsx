@@ -10,7 +10,7 @@ export type SliderTone = "primary" | "secondary" | "danger" | "neutral";
 
 /**
  * `size` and `tone` are chosen on `Slider.Root`, and the parts below paint
- * themselves from `--pui-slider-*` properties that the root declares — so
+ * themselves from `--forte-slider-*` properties that the root declares — so
  * inheritance alone is enough to make them *look* right, and this context
  * exists for the other half of the contract: every part republishes them as
  * `data-size` / `data-tone` so a consumer can write `data-[size=lg]:…` on the
@@ -87,7 +87,7 @@ export function SliderRoot<
     <SliderContext.Provider value={context}>
       <BaseSlider.Root
         className={clsx(styles.root, className)}
-        data-pui="slider"
+        data-forte="slider"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -128,7 +128,7 @@ export const SliderLabel = React.forwardRef<HTMLDivElement, SliderLabelProps>(
       <BaseSlider.Label
         ref={ref}
         className={clsx(styles.label, className)}
-        data-pui="slider-label"
+        data-forte="slider-label"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -175,7 +175,7 @@ export const SliderValue = React.forwardRef<HTMLOutputElement, SliderValueProps>
       <BaseSlider.Value
         ref={ref}
         className={clsx(styles.value, className)}
-        data-pui="slider-value"
+        data-forte="slider-value"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -216,7 +216,7 @@ export const SliderControl = React.forwardRef<HTMLDivElement, SliderControlProps
       <BaseSlider.Control
         ref={ref}
         className={clsx(styles.control, className)}
-        data-pui="slider-control"
+        data-forte="slider-control"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -257,7 +257,7 @@ export const SliderTrack = React.forwardRef<HTMLDivElement, SliderTrackProps>(
       <BaseSlider.Track
         ref={ref}
         className={clsx(styles.track, className)}
-        data-pui="slider-track"
+        data-forte="slider-track"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -296,7 +296,7 @@ export const SliderIndicator = React.forwardRef<HTMLDivElement, SliderIndicatorP
       <BaseSlider.Indicator
         ref={ref}
         className={clsx(styles.indicator, className)}
-        data-pui="slider-indicator"
+        data-forte="slider-indicator"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -324,8 +324,8 @@ export interface SliderThumbProps extends Omit<BaseThumbProps, "className"> {
  * `<input type="range">` — the input is the real control, so it is what takes
  * focus and what a screen reader reads.
  *
- * That split is why the focus ring is `.pui-focus-ring-within` rather than
- * `.pui-focus-ring`: the thumb `<div>` never matches `:focus-visible` itself.
+ * That split is why the focus ring is `.forte-focus-ring-within` rather than
+ * `.forte-focus-ring`: the thumb `<div>` never matches `:focus-visible` itself.
  *
  * A range slider needs one `Thumb` per value, each with an `index` — without
  * it the thumbs only find their order once the composite list has registered
@@ -340,12 +340,12 @@ export const SliderThumb = React.forwardRef<HTMLDivElement, SliderThumbProps>(
     return (
       <BaseSlider.Thumb
         ref={ref}
-        // `pui-target` grows the hit area to the SC 2.5.8 minimum without
+        // `forte-target` grows the hit area to the SC 2.5.8 minimum without
         // repainting the handle, which is only 14px across at `sm`. It sets
         // `position: relative`, which Base UI's inline `position: absolute`
         // overrides — harmlessly, since absolute is a containing block too.
-        className={clsx(styles.thumb, "pui-focus-ring-within", "pui-target", className)}
-        data-pui="slider-thumb"
+        className={clsx(styles.thumb, "forte-focus-ring-within", "forte-target", className)}
+        data-forte="slider-thumb"
         data-size={size}
         data-tone={tone}
         {...props}

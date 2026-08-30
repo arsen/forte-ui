@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Calendar } from "@dofortech/pretty-ui";
+import { Calendar } from "@dofortech/forte-ui";
 
 /* The bounds do three jobs at once: they stop the arrows at the ends, they
  * trim the year dropdown to exactly this span, and they disable every day

@@ -187,10 +187,10 @@ const PopoverTrigger = React.forwardRef(function PopoverTrigger<Payload>(
       render={render}
       className={clsx(
         render === undefined && styles.trigger,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="popover-trigger"
+      data-forte="popover-trigger"
       {...props}
     />
   );
@@ -307,13 +307,13 @@ export interface PopoverPopupProps
   /**
    * Additional class name(s) for the backdrop element. The popup's own
    * `className` cannot reach it, since the backdrop is a sibling rendered
-   * inside this component. Also where `--pui-popover-backdrop-z-index` goes.
+   * inside this component. Also where `--forte-popover-backdrop-z-index` goes.
    */
   backdropClassName?: string;
   /**
    * Additional class name(s) for the positioner element, which owns placement
    * and `z-index`. Use it to re-stack a single popover through
-   * `--pui-popover-z-index`.
+   * `--forte-popover-z-index`.
    */
   positionerClassName?: string;
   /**
@@ -368,13 +368,13 @@ const PopoverPopup = React.forwardRef<HTMLDivElement, PopoverPopupProps>(
       <BasePopover.Portal keepMounted={keepMounted} container={container}>
         {backdrop ? (
           <BasePopover.Backdrop
-            className={clsx(styles.backdrop, "pui-scrim", backdropClassName)}
-            data-pui="popover-backdrop"
+            className={clsx(styles.backdrop, "forte-scrim", backdropClassName)}
+            data-forte="popover-backdrop"
           />
         ) : null}
         <BasePopover.Positioner
           className={clsx(styles.positioner, positionerClassName)}
-          data-pui="popover-positioner"
+          data-forte="popover-positioner"
           side={side}
           align={align}
           sideOffset={sideOffset}
@@ -391,7 +391,7 @@ const PopoverPopup = React.forwardRef<HTMLDivElement, PopoverPopupProps>(
           {/* The popup is programmatically focused when the popover opens by
             * touch, and that focus is keyboard-visible when it opens by
             * keyboard — so it needs a real ring, not the UA default.
-            * `.pui-hc-surface` carries a transparent border, and `transparent`
+            * `.forte-hc-surface` carries a transparent border, and `transparent`
             * is not preserved in forced-colors mode, so it becomes the
             * visible system-coloured boundary that replaces the stripped
             * shadow. */}
@@ -399,11 +399,11 @@ const PopoverPopup = React.forwardRef<HTMLDivElement, PopoverPopupProps>(
             ref={ref}
             className={clsx(
               styles.popup,
-              "pui-focus-ring",
-              "pui-hc-surface",
+              "forte-focus-ring",
+              "forte-hc-surface",
               className,
             )}
-            data-pui="popover-popup"
+            data-forte="popover-popup"
             data-size={size}
             {...props}
           >
@@ -423,7 +423,7 @@ export interface PopoverArrowProps
   extends Omit<BasePopover.Arrow.Props, "className"> {
   /**
    * Replaces the built-in wedge. The default SVG inherits the popup's colours
-   * through `--pui-popover-bg`, so a custom skin usually needs nothing here.
+   * through `--forte-popover-bg`, so a custom skin usually needs nothing here.
    */
   children?: React.ReactNode;
   /**
@@ -452,7 +452,7 @@ const PopoverArrow = React.forwardRef<HTMLDivElement, PopoverArrowProps>(
       <BasePopover.Arrow
         ref={ref}
         className={clsx(styles.arrow, className)}
-        data-pui="popover-arrow"
+        data-forte="popover-arrow"
         {...props}
       >
         {children ?? <ArrowSvg />}
@@ -508,7 +508,7 @@ const PopoverTitle = React.forwardRef<HTMLHeadingElement, PopoverTitleProps>(
       <BasePopover.Title
         ref={ref}
         className={clsx(styles.title, className)}
-        data-pui="popover-title"
+        data-forte="popover-title"
         {...props}
       />
     );
@@ -538,7 +538,7 @@ const PopoverDescription = React.forwardRef<
     <BasePopover.Description
       ref={ref}
       className={clsx(styles.description, className)}
-      data-pui="popover-description"
+      data-forte="popover-description"
       {...props}
     />
   );
@@ -588,10 +588,10 @@ const PopoverClose = React.forwardRef<HTMLButtonElement, PopoverCloseProps>(
         render={render}
         className={clsx(
           render === undefined && styles.close,
-          "pui-focus-ring",
+          "forte-focus-ring",
           className,
         )}
-        data-pui="popover-close"
+        data-forte="popover-close"
         data-icon-only={iconOnly || undefined}
         {...props}
       />
@@ -633,7 +633,7 @@ const PopoverFooter = React.forwardRef<HTMLDivElement, PopoverFooterProps>(
       <div
         ref={ref}
         className={clsx(styles.footer, className)}
-        data-pui="popover-footer"
+        data-forte="popover-footer"
         data-align={align}
         {...props}
       />
@@ -682,7 +682,7 @@ const PopoverViewport = React.forwardRef<HTMLDivElement, PopoverViewportProps>(
       <BasePopover.Viewport
         ref={ref}
         className={clsx(styles.viewport, className)}
-        data-pui="popover-viewport"
+        data-forte="popover-viewport"
         {...props}
       />
     );
@@ -723,7 +723,7 @@ const PopoverViewport = React.forwardRef<HTMLDivElement, PopoverViewportProps>(
  * `Popover.Trigger` and it behaves like a tooltip for pointer users while
  * staying reachable for everyone else.
  *
- * Styling is driven by `data-*` attributes and `--pui-popover-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-popover-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[side=top]:...`) without wrapping.
  */

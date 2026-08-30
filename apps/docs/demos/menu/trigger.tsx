@@ -1,7 +1,7 @@
 "use client";
 
 import { EllipsisVertical } from "lucide-react";
-import { Button, Menu } from "@dofortech/pretty-ui";
+import { Button, Menu } from "@dofortech/forte-ui";
 
 function Items() {
   return (

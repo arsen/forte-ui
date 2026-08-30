@@ -1,13 +1,13 @@
 "use client";
 
-import { InputGroup, Spinner } from "@dofortech/pretty-ui";
+import { InputGroup, Spinner } from "@dofortech/forte-ui";
 
 export default function InputGroupLoading() {
   return (
     <div className="w-full max-w-[22rem]">
       <InputGroup.Root fullWidth>
         <InputGroup.Input
-          defaultValue="pretty-ui"
+          defaultValue="forte-ui"
           aria-label="Package name"
           aria-describedby="name-check"
         />

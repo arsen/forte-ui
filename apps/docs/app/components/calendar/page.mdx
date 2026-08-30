@@ -19,7 +19,7 @@ A month grid. It picks one day, a handful of days, or a range across as many mon
 ## Import
 
 ```tsx
-import { Calendar } from "@dofortech/pretty-ui";
+import { Calendar } from "@dofortech/forte-ui";
 ```
 
 One component, not a namespace of parts. A calendar's anatomy is generated from a date rather than composed by hand, so there is nothing useful to hand you the pieces of — what varies is which days are pickable and how they are labelled, and those are props.
@@ -96,7 +96,7 @@ The chrome's own strings — the two arrow labels, the dropdown labels, the week
 
 <DemoBlock id="calendar/sizes" />
 
-Three sizes, set once on the root. Cell size follows `data-pui-density` too, so a compact app gets a compact `md` for free.
+Three sizes, set once on the root. Cell size follows `data-forte-density` too, so a compact app gets a compact `md` for free.
 
 ## A date picker
 
@@ -149,13 +149,13 @@ What the grid says about itself:
 
 Every property below is declared on the calendar's own root, so override them there — through `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value.
 
-One knob is worth knowing before the rest: `--pui-calendar-cell-size` is the measure everything else derives from. The arrows, the caption row's height and the column widths all read it, so resizing a calendar past the three `size` presets is one value, not six.
+One knob is worth knowing before the rest: `--forte-calendar-cell-size` is the measure everything else derives from. The arrows, the caption row's height and the column widths all read it, so resizing a calendar past the three `size` presets is one value, not six.
 
 <ThemingTable component="Calendar" />
 
 The parts expose their state as data attributes — `data-size` and `data-mode` on the root; `data-selected`, `data-today`, `data-outside`, `data-in-range` on days; `data-range-start`, `data-range-end`, `data-preview` on their cells — so a Tailwind arbitrary variant such as `data-[today]:...` can target them without a wrapper.
 
-Both navigation arrows are `Button`s, so they answer to `navVariant` and to every `--pui-button-*` knob set on the calendar. They are told apart by `data-nav="previous"` / `data-nav="next"`.
+Both navigation arrows are `Button`s, so they answer to `navVariant` and to every `--forte-button-*` knob set on the calendar. They are told apart by `data-nav="previous"` / `data-nav="next"`.
 
 ## API reference
 

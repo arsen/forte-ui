@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Popover } from "@dofortech/pretty-ui";
+import { Button, Popover } from "@dofortech/forte-ui";
 
 type View = { id: string; name: string; note: string };
 

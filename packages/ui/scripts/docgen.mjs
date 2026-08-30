@@ -5,7 +5,7 @@
  * build never pays the cost of constructing a TypeScript program, and so turbo
  * can cache the result.
  *
- *   pnpm --filter @dofortech/pretty-ui docgen
+ *   pnpm --filter @dofortech/forte-ui docgen
  */
 import { mkdirSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Field } from "@dofortech/pretty-ui";
+import { Checkbox, Field } from "@dofortech/forte-ui";
 
 const sizes = [
   { size: "sm", label: "Small" },

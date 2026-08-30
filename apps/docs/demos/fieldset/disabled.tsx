@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Field, Fieldset, Input, Switch } from "@dofortech/pretty-ui";
+import { Checkbox, Field, Fieldset, Input, Switch } from "@dofortech/forte-ui";
 
 export default function FieldsetDisabled() {
   return (

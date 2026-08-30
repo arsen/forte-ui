@@ -81,11 +81,11 @@ export interface SeparatorProps extends Omit<BaseSeparatorProps, "className"> {
  *
  * A vertical separator has no length of its own — it is an empty box. Inside a
  * flex row it stretches to the tallest sibling; anywhere else it falls back to
- * one line's height, which `--pui-separator-min-length` controls. That is the
+ * one line's height, which `--forte-separator-min-length` controls. That is the
  * one thing worth knowing before reaching for it:
  *
  * ```tsx
- * <div style={{ display: "flex", alignItems: "center", gap: "var(--pui-space-3)" }}>
+ * <div style={{ display: "flex", alignItems: "center", gap: "var(--forte-space-3)" }}>
  *   <span>Draft</span>
  *   <Separator orientation="vertical" />
  *   <span>Edited 3m ago</span>
@@ -98,7 +98,7 @@ export interface SeparatorProps extends Omit<BaseSeparatorProps, "className"> {
  * <Separator render={<hr />} />
  * ```
  *
- * Every visual decision is a `--pui-separator-*` custom property, and the
+ * Every visual decision is a `--forte-separator-*` custom property, and the
  * orientation is on `data-orientation`, so it can be re-skinned from plain CSS
  * or targeted with Tailwind arbitrary variants
  * (`data-[orientation=vertical]:...`) without wrapping.
@@ -119,7 +119,7 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
         ref={ref}
         orientation={orientation}
         className={clsx(styles.root, className)}
-        data-pui="separator"
+        data-forte="separator"
         data-variant={variant}
         {...(decorative ? DECORATIVE_PROPS : null)}
         {...props}

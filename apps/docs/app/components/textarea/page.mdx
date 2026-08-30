@@ -29,7 +29,7 @@ message, the `name` used on submit, and the validity attributes.
 ## Import
 
 ```tsx
-import { Textarea } from "@dofortech/pretty-ui";
+import { Textarea } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -37,9 +37,9 @@ import { Textarea } from "@dofortech/pretty-ui";
 ### Sizes
 
 `size` moves inline padding, block padding and font size together, and the
-numbers come from the same `--pui-control-*` tokens `Input` and
+numbers come from the same `--forte-control-*` tokens `Input` and
 `Select.Trigger` read — so a textarea stacked under an input in a form shares
-its optical inset at every `data-pui-density` setting.
+its optical inset at every `data-forte-density` setting.
 
 <DemoBlock id="textarea/sizes" />
 
@@ -154,12 +154,12 @@ usual case — `aria-label` on the textarea is the fallback.
   is not reliably announced.
 </Callout>
 
-Placeholder text is coloured `--pui-color-foreground-muted` (5.82:1) rather
-than `--pui-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
+Placeholder text is coloured `--forte-color-foreground-muted` (5.82:1) rather
+than `--forte-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
 placeholders in an enabled control, and Firefox's own 0.54 `::placeholder`
 opacity is reset for the same reason.
 
-There is no `pui-target` here: the SC 2.5.8 floor is about pointer targets
+There is no `forte-target` here: the SC 2.5.8 floor is about pointer targets
 under 24px, and the shortest box this component can produce — `size="sm"`,
 `rows={1}`, `compact` density — is taller than that on its own.
 
@@ -171,34 +171,34 @@ three variants would stop looking like the same control.
 
 ## Theming
 
-Every `--pui-textarea-*` property is declared on the textarea element itself,
+Every `--forte-textarea-*` property is declared on the textarea element itself,
 and an element's own declaration beats an inherited one — so setting these on
 `:root`, on a theme scope or on any ancestor does nothing. Set them on the
 textarea, through `className` (an unlayered rule beats
-`@layer pretty-ui.components` whatever its specificity) or an inline `style`.
+`@layer forte.components` whatever its specificity) or an inline `style`.
 
 The two row counts are knobs like any other, which is what lets a consumer set
 a house-wide minimum height from a stylesheet without touching JSX:
 
 ```css
-[data-pui="textarea"] {
-  --pui-textarea-rows: 5;
-  --pui-textarea-max-rows: 12;
+[data-forte="textarea"] {
+  --forte-textarea-rows: 5;
+  --forte-textarea-max-rows: 12;
 }
 ```
 
-`--pui-textarea-max-rows` defaults to `infinity` rather than to a large number,
+`--forte-textarea-max-rows` defaults to `infinity` rather than to a large number,
 so `max-block-size` resolves to the largest length the engine supports and the
 knob is a complete statement on its own — no ceiling until you name one.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*` — are the exception: this component only reads those, so
+The global tokens these resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*` — are the exception: this component only reads those, so
 re-pointing them from `:root` or a theme scope moves every textarea at once.
 
-`--pui-textarea-radius` is the one that does not read its token straight: it is
-`min(var(--pui-radius-control), <half a row>)`. A control radius is drawn for a
+`--forte-textarea-radius` is the one that does not read its token straight: it is
+`min(var(--forte-radius-control), <half a row>)`. A control radius is drawn for a
 box whose text sits on one line, in the middle, where the corner is at its
-widest — so `data-pui-radius="pill"` asks for a capsule and an input is fine.
+widest — so `data-forte-radius="pill"` asks for a capsule and an input is fine.
 A textarea's first and last lines sit *at* the corners, and a capsule arc
 slices them. The cap is the roundest corner that still leaves every row
 readable; `soft` and the default are below it and pass through untouched.

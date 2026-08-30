@@ -9,7 +9,7 @@
  *    nobody has to compute 2πr — including when the thickness below changes
  *    the radius out from under it.
  * 2. Everything is measured in viewBox units, so the stroke scales with the
- *    ring. `--pui-progress-circle-thickness: 8px` is 8 units of 100, which is
+ *    ring. `--forte-progress-circle-thickness: 8px` is 8 units of 100, which is
  *    4.5 real pixels at `md` and 6.4 at `lg`. A `sm` ring is a smaller ring,
  *    not a thinner one.
  * 3. `r` is restated in CSS from that thickness so a thicker stroke stays
@@ -21,25 +21,25 @@
  * the indicator while the ring is determinate. None of the three applies to a
  * `<circle>` in CSS, so all three are inert and there is nothing here that has
  * to fight them — the value arrives instead as
- * `--pui-progress-circle-percent`, published on the root by ProgressCircle.tsx.
+ * `--forte-progress-circle-percent`, published on the root by ProgressCircle.tsx.
  *
  * Motion. `stroke-dashoffset` is an animatable property and the arc's length
  * is the whole of what changes, so a plain transition on it is enough: no
  * layout, no paint outside the ring, and it interpolates correctly even though
  * the value reaches it through a custom property. The indeterminate arc uses
- * `--pui-spin-turn` plus an always-running opacity breathe, exactly as
+ * `--forte-spin-turn` plus an always-running opacity breathe, exactly as
  * Spinner's ring does, so reduced motion stops the rotation and the breathe
  * carries the "still working" cue. The arc also grows to a FULL ring there,
  * because a 25% arc frozen at twelve o'clock is pixel-for-pixel a determinate
  * 25% — the one thing an indeterminate indicator must never look like.
  *
  * Direction. This is the one component in the library that moves along a
- * curve and deliberately does NOT consult `--pui-direction`. A bar's fill
+ * curve and deliberately does NOT consult `--forte-direction`. A bar's fill
  * follows the reading direction because it is a line of the same kind as a
  * line of text; a ring is a clock face, and clocks run clockwise in every
  * locale. Mirroring it in RTL would be a novelty, not a translation.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on ProgressCircle.Root, so an
      * ancestor's value is only INHERITED and never wins over this
@@ -47,53 +47,53 @@
     /** Outer diameter of the ring. `size` retunes it: `2.5rem` for `sm`,
      * `5rem` for `lg`. Everything inside is a fraction of the viewBox and
      * follows on its own. */
-    --pui-progress-circle-size: 3.5rem;
+    --forte-progress-circle-size: 3.5rem;
     /** Stroke width, in viewBox units — 8 of the 100 the ring is across, not 8
      * device pixels. That is what makes it scale with the diameter. `size`
      * retunes it: `10px` for `sm`, `7px` for `lg`, so a small ring stays
      * legible without a large one looking heavy. */
-    --pui-progress-circle-thickness: 8px;
+    --forte-progress-circle-thickness: 8px;
     /** Cap on both ends of the arc. `butt` squares them off. */
-    --pui-progress-circle-cap: round;
+    --forte-progress-circle-cap: round;
     /** Gap between the ring and a label underneath it. */
-    --pui-progress-circle-gap: var(--pui-space-2);
+    --forte-progress-circle-gap: var(--forte-space-2);
 
     /** The rail behind the arc — the part that has not happened yet. Stays
      * neutral in every tone. */
-    --pui-progress-circle-rail: var(--pui-color-border-muted);
+    --forte-progress-circle-rail: var(--forte-color-border-muted);
     /** The arc itself. Swapped per `tone`. */
-    --pui-progress-circle-color: var(--pui-color-primary);
+    --forte-progress-circle-color: var(--forte-color-primary);
     /** Colour of the centred readout. */
-    --pui-progress-circle-value-color: var(--pui-color-foreground);
+    --forte-progress-circle-value-color: var(--forte-color-foreground);
     /** Font size of the readout. Retuned by `size`. */
-    --pui-progress-circle-value-size: var(--pui-font-size-2);
+    --forte-progress-circle-value-size: var(--forte-font-size-2);
     /** Colour of the label under the ring. */
-    --pui-progress-circle-label-color: var(--pui-color-foreground-muted);
+    --forte-progress-circle-label-color: var(--forte-color-foreground-muted);
     /** Font size of that label. Retuned by `size`. */
-    --pui-progress-circle-label-size: var(--pui-font-size-2);
+    --forte-progress-circle-label-size: var(--forte-font-size-2);
 
     /** How long the arc takes to travel to a new value. Shortens under reduced
      * motion rather than disappearing. */
-    --pui-progress-circle-duration: var(--pui-duration-normal);
+    --forte-progress-circle-duration: var(--forte-duration-normal);
     /** One full rotation of the indeterminate arc. Never collapsed, in any
      * motion state — a loop driven to 1ms is a WCAG 2.3.1 flashing hazard. */
-    --pui-progress-circle-loop-duration: var(--pui-duration-loop-spin);
+    --forte-progress-circle-loop-duration: var(--forte-duration-loop-spin);
     /** Length of the indeterminate arc, out of the 100 units
      * `pathLength` normalises the circumference to. */
-    --pui-progress-circle-arc: 25;
+    --forte-progress-circle-arc: 25;
 
     /* The percentage, written on this element as an inline style by
      * ProgressCircle.Root, and declared here so the arc still draws (empty) if
      * the component is ever rendered without it. Not a theming knob: setting
      * it by hand is overwritten on the next render. */
-    --pui-progress-circle-percent: 0;
+    --forte-progress-circle-percent: 0;
     /* Derived on the same element as the input it reads, because a var()
      * inside an unregistered custom property is substituted where it is
      * DECLARED — on an ancestor this would freeze at the ancestor's motion
      * state. */
-    --pui-progress-circle-arc-resolved: calc(
-      var(--pui-progress-circle-arc) +
-        (100 - var(--pui-progress-circle-arc)) * var(--pui-motion-off)
+    --forte-progress-circle-arc-resolved: calc(
+      var(--forte-progress-circle-arc) +
+        (100 - var(--forte-progress-circle-arc)) * var(--forte-motion-off)
     );
 
     box-sizing: border-box;
@@ -105,9 +105,9 @@
     display: inline-grid;
     justify-items: center;
     align-items: center;
-    gap: var(--pui-progress-circle-gap);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    gap: var(--forte-progress-circle-gap);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
 
     /* Chrome, not a control: nothing here performs an action on click. */
     cursor: default;
@@ -117,49 +117,49 @@
 
   /* Sizes ------------------------------------------------------------------ */
   .root[data-size="sm"] {
-    --pui-progress-circle-size: 2.5rem;
-    --pui-progress-circle-thickness: 10px;
-    --pui-progress-circle-value-size: var(--pui-font-size-1);
-    --pui-progress-circle-label-size: var(--pui-font-size-1);
+    --forte-progress-circle-size: 2.5rem;
+    --forte-progress-circle-thickness: 10px;
+    --forte-progress-circle-value-size: var(--forte-font-size-1);
+    --forte-progress-circle-label-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-progress-circle-size: 3.5rem;
-    --pui-progress-circle-thickness: 8px;
-    --pui-progress-circle-value-size: var(--pui-font-size-2);
-    --pui-progress-circle-label-size: var(--pui-font-size-2);
+    --forte-progress-circle-size: 3.5rem;
+    --forte-progress-circle-thickness: 8px;
+    --forte-progress-circle-value-size: var(--forte-font-size-2);
+    --forte-progress-circle-label-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-progress-circle-size: 5rem;
-    --pui-progress-circle-thickness: 7px;
-    --pui-progress-circle-value-size: var(--pui-font-size-3);
-    --pui-progress-circle-label-size: var(--pui-font-size-2);
+    --forte-progress-circle-size: 5rem;
+    --forte-progress-circle-thickness: 7px;
+    --forte-progress-circle-value-size: var(--forte-font-size-3);
+    --forte-progress-circle-label-size: var(--forte-font-size-2);
   }
 
   /* Tones ------------------------------------------------------------------ */
   .root[data-tone="primary"] {
-    --pui-progress-circle-color: var(--pui-color-primary);
+    --forte-progress-circle-color: var(--forte-color-primary);
   }
 
   .root[data-tone="secondary"] {
-    --pui-progress-circle-color: var(--pui-color-secondary);
+    --forte-progress-circle-color: var(--forte-color-secondary);
   }
 
   .root[data-tone="success"] {
-    --pui-progress-circle-color: var(--pui-color-success);
+    --forte-progress-circle-color: var(--forte-color-success);
   }
 
   .root[data-tone="warning"] {
-    --pui-progress-circle-color: var(--pui-color-warning);
+    --forte-progress-circle-color: var(--forte-color-warning);
   }
 
   .root[data-tone="danger"] {
-    --pui-progress-circle-color: var(--pui-color-danger);
+    --forte-progress-circle-color: var(--forte-color-danger);
   }
 
   .root[data-tone="neutral"] {
-    --pui-progress-circle-color: var(--pui-color-foreground);
+    --forte-progress-circle-color: var(--forte-color-foreground);
   }
 
   /* Track ------------------------------------------------------------------
@@ -171,8 +171,8 @@
   .track {
     grid-area: 1 / 1;
     display: block;
-    inline-size: var(--pui-progress-circle-size);
-    block-size: var(--pui-progress-circle-size);
+    inline-size: var(--forte-progress-circle-size);
+    block-size: var(--forte-progress-circle-size);
     rotate: -90deg;
     /* The stroke is centred on `r`, so half of it always sits outside the
      * radius. `r` is derived below to keep that half inside the viewBox, and
@@ -193,14 +193,14 @@
    * hue against a system-coloured page. */
   .rail,
   .indicator {
-    r: calc(50px - var(--pui-progress-circle-thickness) / 2);
+    r: calc(50px - var(--forte-progress-circle-thickness) / 2);
     fill: none;
     stroke: currentColor;
-    stroke-width: var(--pui-progress-circle-thickness);
+    stroke-width: var(--forte-progress-circle-thickness);
   }
 
   .rail {
-    color: var(--pui-progress-circle-rail);
+    color: var(--forte-progress-circle-rail);
   }
 
   /* Indicator ---------------------------------------------------------------
@@ -211,13 +211,13 @@
    * feeding a calc() still produces a computed value on both sides, so the
    * transition has something to interpolate between. */
   .indicator {
-    color: var(--pui-progress-circle-color);
-    stroke-linecap: var(--pui-progress-circle-cap);
+    color: var(--forte-progress-circle-color);
+    stroke-linecap: var(--forte-progress-circle-cap);
     stroke-dasharray: 100;
-    stroke-dashoffset: calc(100 - var(--pui-progress-circle-percent));
+    stroke-dashoffset: calc(100 - var(--forte-progress-circle-percent));
     transition:
-      stroke-dashoffset var(--pui-progress-circle-duration) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      stroke-dashoffset var(--forte-progress-circle-duration) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Indeterminate ----------------------------------------------------------
@@ -226,21 +226,21 @@
    * ring's centre and not something that shifts as the dash pattern changes.
    *
    * Both animations always run; the tokens decide which one is VISIBLE.
-   * Normally `--pui-spin-turn` is 1turn and `--pui-pulse-dip` is 1, so it
+   * Normally `--forte-spin-turn` is 1turn and `--forte-pulse-dip` is 1, so it
    * rotates and the breathe is a no-op. Under reduced motion they invert —
    * 0turn and 0.45 — the arc grows to a full ring, and the breathe becomes the
    * entire busy cue. */
   .indicator[data-indeterminate] {
-    stroke-dasharray: var(--pui-progress-circle-arc-resolved) 100;
+    stroke-dasharray: var(--forte-progress-circle-arc-resolved) 100;
     stroke-dashoffset: 0;
     transform-box: view-box;
     transform-origin: 50% 50%;
     animation:
-      pui-progress-circle-spin var(--pui-progress-circle-loop-duration) linear infinite,
-      pui-progress-circle-breathe var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
+      forte-progress-circle-spin var(--forte-progress-circle-loop-duration) linear infinite,
+      forte-progress-circle-breathe var(--forte-duration-loop-pulse) var(--forte-ease-standard) infinite;
     /* The dash pattern is the animation's, not a value — transitioning it
      * would fight the keyframes on every switch into this state. */
-    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Value and label --------------------------------------------------------- */
@@ -248,10 +248,10 @@
     /* Same cell as the ring, centred in it. */
     grid-area: 1 / 1;
     place-self: center;
-    font-size: var(--pui-progress-circle-value-size);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
-    color: var(--pui-progress-circle-value-color);
+    font-size: var(--forte-progress-circle-value-size);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
+    color: var(--forte-progress-circle-value-color);
     /* Without tabular figures the readout changes width as the digits change,
      * which makes a centred number twitch left and right as it counts up. */
     font-variant-numeric: tabular-nums;
@@ -260,22 +260,22 @@
   .label {
     grid-row: 2;
     grid-column: 1;
-    font-size: var(--pui-progress-circle-label-size);
-    line-height: var(--pui-line-height-normal);
-    color: var(--pui-progress-circle-label-color);
+    font-size: var(--forte-progress-circle-label-size);
+    line-height: var(--forte-line-height-normal);
+    color: var(--forte-progress-circle-label-color);
     text-align: center;
   }
 
   /* Keyframes --------------------------------------------------------------- */
-  @keyframes pui-progress-circle-spin {
+  @keyframes forte-progress-circle-spin {
     to {
-      rotate: var(--pui-spin-turn);
+      rotate: var(--forte-spin-turn);
     }
   }
 
-  @keyframes pui-progress-circle-breathe {
+  @keyframes forte-progress-circle-breathe {
     50% {
-      opacity: var(--pui-pulse-dip);
+      opacity: var(--forte-pulse-dip);
     }
   }
 }
@@ -284,7 +284,7 @@
  * Accessibility overrides — see layers.css for why these cannot live in the
  * components layer.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* `color` is remapped for us, so the arc and the rail would both arrive as
      * CanvasText and the ring would read as a plain circle at every value.

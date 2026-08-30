@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@dofortech/pretty-ui";
+import { ScrollArea } from "@dofortech/forte-ui";
 
 const RELEASES = [
   ["4.2.0", "Scroll areas gained a gradient edge fade."],

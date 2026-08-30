@@ -11,15 +11,15 @@
  * inline size — and every line below that looks like boilerplate is removing
  * one of those.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /** Space between the legend and each field */
-    --pui-fieldset-gap: var(--pui-space-4);
+    --forte-fieldset-gap: var(--forte-space-4);
 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-fieldset-gap);
+    gap: var(--forte-fieldset-gap);
 
     /* The UA gives <fieldset> `min-inline-size: min-content`, and it is NOT
      * overridden by `width`/`inline-size` the way it is on other elements. A
@@ -43,20 +43,20 @@
    * reset of its own and lays out as an ordinary block. */
   .legend {
     /** Legend colour */
-    --pui-fieldset-legend-fg: var(--pui-color-foreground);
+    --forte-fieldset-legend-fg: var(--forte-color-foreground);
     /** Legend font size */
-    --pui-fieldset-legend-font-size: var(--pui-font-size-3);
+    --forte-fieldset-legend-font-size: var(--forte-font-size-3);
     /** Legend font weight */
-    --pui-fieldset-legend-font-weight: var(--pui-font-weight-semibold);
+    --forte-fieldset-legend-font-weight: var(--forte-font-weight-semibold);
 
     margin: 0;
     padding: 0;
-    color: var(--pui-fieldset-legend-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-fieldset-legend-font-size);
-    font-weight: var(--pui-fieldset-legend-font-weight);
-    line-height: var(--pui-line-height-tight);
-    letter-spacing: var(--pui-letter-spacing-tight);
+    color: var(--forte-fieldset-legend-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-fieldset-legend-font-size);
+    font-weight: var(--forte-fieldset-legend-font-weight);
+    line-height: var(--forte-line-height-tight);
+    letter-spacing: var(--forte-letter-spacing-tight);
 
     -webkit-user-select: none;
     user-select: none;
@@ -65,12 +65,12 @@
   }
 
   .legend[data-disabled] {
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
   }
 }
 
 /* Forced colours ---------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* The generic `[data-disabled]` remedy in patterns.css applies through
      * `:where()`, at zero specificity, so the (0,2,0) colour above would

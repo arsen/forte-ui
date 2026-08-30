@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@dofortech/pretty-ui";
+import { Slider } from "@dofortech/forte-ui";
 
 export default function SliderBasic() {
   return (

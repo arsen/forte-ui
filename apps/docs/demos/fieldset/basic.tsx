@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Fieldset, Input } from "@dofortech/pretty-ui";
+import { Field, Fieldset, Input } from "@dofortech/forte-ui";
 
 export default function FieldsetBasic() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@dofortech/pretty-ui";
+import { Badge } from "@dofortech/forte-ui";
 
 const ROWS = [
   { id: "INV-2041", plan: "Scale", tone: "success", label: "Paid" },

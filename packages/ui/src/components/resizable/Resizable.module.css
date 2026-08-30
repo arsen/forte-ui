@@ -10,14 +10,14 @@
  * Four decisions carry the file.
  *
  * 1 — The divider's LAYOUT thickness and its VISIBLE thickness are different
- *     properties. The handle occupies `--pui-resizable-handle-size` (a
+ *     properties. The handle occupies `--forte-resizable-handle-size` (a
  *     hairline) in flow, and paints its line as an absolutely positioned
  *     ::before that is free to grow on hover without moving a single pixel of
  *     content. A line that thickened in flow would reflow both panels every
  *     time the pointer crossed it — and, worse, shift the very edge the
  *     pointer is aiming at out from under it.
  *
- * 2 — The hit area comes from `.pui-target`, not from the handle's own box. A
+ * 2 — The hit area comes from `.forte-target`, not from the handle's own box. A
  *     1px-wide control fails SC 2.5.8 by a factor of 24, and widening the box
  *     to fix that would put a visible gutter between every pair of panels. The
  *     pattern's ::after expands the target to 24px around the hairline and
@@ -43,7 +43,7 @@
  *     themselves and nothing here moves through space on a travel token, so
  *     the component is already correct under it.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on the group, so an ancestor's value is
      * only ever inherited and never wins — and so a consumer re-skinning ONE
@@ -54,49 +54,49 @@
      * `line-size` is what you see. Keeping the first at a hairline is what
      * makes panels look adjacent rather than separated by a gutter. */
     /** Thickness the divider occupies in the layout */
-    --pui-resizable-handle-size: 1px;
+    --forte-resizable-handle-size: 1px;
     /** Thickness of the painted divider line at rest */
-    --pui-resizable-line-size: 1px;
+    --forte-resizable-line-size: 1px;
     /** Thickness of the painted divider line while hovered, focused or dragged */
-    --pui-resizable-line-size-active: 3px;
+    --forte-resizable-line-size-active: 3px;
     /** Colour of the divider line at rest */
-    --pui-resizable-line-color: var(--pui-color-border);
+    --forte-resizable-line-color: var(--forte-color-border);
     /** Colour of the divider line while hovered, focused or dragged */
-    --pui-resizable-line-color-active: var(--pui-color-primary);
+    --forte-resizable-line-color-active: var(--forte-color-primary);
 
     /* The grip, drawn only when `grip` is set. A chip rather than a bare bar
      * because it has to stay legible sitting on either panel's background. */
     /** Thickness of the grip chip, across the divider */
-    --pui-resizable-grip-thickness: 6px;
+    --forte-resizable-grip-thickness: 6px;
     /** Length of the grip chip, along the divider */
-    --pui-resizable-grip-length: 22px;
+    --forte-resizable-grip-length: 22px;
     /** Corner radius of the grip chip */
-    --pui-resizable-grip-radius: var(--pui-radius-1);
+    --forte-resizable-grip-radius: var(--forte-radius-1);
     /** Fill of the grip chip */
-    --pui-resizable-grip-bg: var(--pui-color-panel);
+    --forte-resizable-grip-bg: var(--forte-color-panel);
     /** Border colour of the grip chip */
-    --pui-resizable-grip-border: var(--pui-color-border);
+    --forte-resizable-grip-border: var(--forte-color-border);
     /** Colour of the three dots inside the grip */
-    --pui-resizable-grip-dot-color: var(--pui-color-foreground-subtle);
+    --forte-resizable-grip-dot-color: var(--forte-color-foreground-subtle);
     /** Size of one grip dot */
-    --pui-resizable-grip-dot-size: 2px;
+    --forte-resizable-grip-dot-size: 2px;
     /** Space between grip dots */
-    --pui-resizable-grip-dot-gap: 2px;
+    --forte-resizable-grip-dot-gap: 2px;
 
     /* Panel size changes. Long enough to read as a movement when a panel
      * collapses — and applied only when the group is settled and not being
      * dragged, so this never describes a panel following a pointer. */
     /** How long a panel takes to reach a new size. Applies to a collapse or an
      * expand, never to a drag */
-    --pui-resizable-duration: var(--pui-duration-normal);
+    --forte-resizable-duration: var(--forte-duration-normal);
     /** Curve a panel follows to a new size. Not a spring: overshooting a
      * panel's size flashes a band of the panel behind it */
-    --pui-resizable-ease: var(--pui-ease-standard);
+    --forte-resizable-ease: var(--forte-ease-standard);
 
     /** Stacking level of the sheet mounted over the page during a drag. Above
      * the library's own overlays (Drawer sits at 40) so a splitter inside one
      * still drags */
-    --pui-resizable-overlay-z-index: 50;
+    --forte-resizable-overlay-z-index: 50;
 
     box-sizing: border-box;
     display: flex;
@@ -111,8 +111,8 @@
     /* The panels do the clipping. The group deliberately does not, so a
      * handle's focus ring is not cropped at the group's own edge. */
     overflow: visible;
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   .root[data-orientation="vertical"] {
@@ -147,14 +147,14 @@
    * relationship the layout requires — a panel is a flex item of its group,
    * so anything that is not a direct child was already broken. */
   .root[data-ready]:not([data-resizing]) > .panel {
-    transition: flex-grow var(--pui-resizable-duration) var(--pui-resizable-ease);
+    transition: flex-grow var(--forte-resizable-duration) var(--forte-resizable-ease);
   }
 
   /* Handle ----------------------------------------------------------------- */
 
   .handle {
     box-sizing: border-box;
-    flex: 0 0 var(--pui-resizable-handle-size);
+    flex: 0 0 var(--forte-resizable-handle-size);
     /* A flex item's automatic minimum size is its CONTENT, so the grip — six
      * pixels wide against a one-pixel divider — would silently widen the
      * handle into a visible gutter and push both panels apart. The basis is
@@ -162,7 +162,7 @@
     min-inline-size: 0;
     min-block-size: 0;
     align-self: stretch;
-    /* `.pui-target` already sets this; restated because the ::before below
+    /* `.forte-target` already sets this; restated because the ::before below
      * depends on it and a pattern class is not a contract this file owns. */
     position: relative;
     /* Panels are positioned too, so document order alone would let the panel
@@ -213,17 +213,17 @@
     box-shadow: none;
   }
 
-  /* The rule above only silences the ring written in pretty-ui's own layers.
+  /* The rule above only silences the ring written in forte-ui's own layers.
    * A consumer's global focus backstop — the docs site ships one — is
-   * unlayered, and unlayered author CSS beats every pretty-ui layer no matter
+   * unlayered, and unlayered author CSS beats every forte-ui layer no matter
    * what selector is used here. Those rules rebuild the ring from the focus
    * tokens, so the tokens are the one channel that reaches them: zeroed on
    * the handle's own declaration, which outranks the inherited values
    * wherever the consuming rule sits in the cascade. Scoped to the modality
    * attribute, so keyboard focus keeps the full-width ring. */
   .handle[data-pointer-focus] {
-    --pui-focus-ring-width: 0px;
-    --pui-focus-ring-offset: 0px;
+    --forte-focus-ring-width: 0px;
+    --forte-focus-ring-offset: 0px;
   }
 
   /* The line. Absolutely positioned so it can thicken on hover without
@@ -238,13 +238,13 @@
      * the 50% start point measures from the right, so the recentring shift
      * has to flip with the direction or the thickened line sits its own
      * width off the divider. */
-    translate: calc(-50% * var(--pui-direction, 1)) 0;
-    inline-size: var(--pui-resizable-line-size);
-    background-color: var(--pui-resizable-line-color);
+    translate: calc(-50% * var(--forte-direction, 1)) 0;
+    inline-size: var(--forte-resizable-line-size);
+    background-color: var(--forte-resizable-line-color);
     transition:
-      inline-size var(--pui-duration-fast) var(--pui-ease-standard),
-      block-size var(--pui-duration-fast) var(--pui-ease-standard),
-      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+      inline-size var(--forte-duration-fast) var(--forte-ease-standard),
+      block-size var(--forte-duration-fast) var(--forte-ease-standard),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .handle[data-orientation="vertical"]::before {
@@ -253,34 +253,34 @@
     inset-block-start: 50%;
     translate: 0 -50%;
     inline-size: auto;
-    block-size: var(--pui-resizable-line-size);
+    block-size: var(--forte-resizable-line-size);
   }
 
   .handle:hover::before,
   .handle:focus-visible::before,
   .handle[data-dragging]::before {
-    inline-size: var(--pui-resizable-line-size-active);
-    background-color: var(--pui-resizable-line-color-active);
+    inline-size: var(--forte-resizable-line-size-active);
+    background-color: var(--forte-resizable-line-color-active);
   }
 
   .handle[data-orientation="vertical"]:hover::before,
   .handle[data-orientation="vertical"]:focus-visible::before,
   .handle[data-orientation="vertical"][data-dragging]::before {
     inline-size: auto;
-    block-size: var(--pui-resizable-line-size-active);
+    block-size: var(--forte-resizable-line-size-active);
   }
 
   /* A disabled divider is a line, not a control: no hover cue, and the
    * `[data-disabled]` selector has to come after the hover rules to win the
    * tie on specificity. */
   .handle[data-disabled]:hover::before {
-    inline-size: var(--pui-resizable-line-size);
-    background-color: var(--pui-resizable-line-color);
+    inline-size: var(--forte-resizable-line-size);
+    background-color: var(--forte-resizable-line-color);
   }
 
   .handle[data-orientation="vertical"][data-disabled]:hover::before {
     inline-size: auto;
-    block-size: var(--pui-resizable-line-size);
+    block-size: var(--forte-resizable-line-size);
   }
 
   /* Grip ------------------------------------------------------------------- */
@@ -296,56 +296,56 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    inline-size: var(--pui-resizable-grip-thickness);
-    block-size: var(--pui-resizable-grip-length);
-    border: 1px solid var(--pui-resizable-grip-border);
-    border-radius: var(--pui-resizable-grip-radius);
-    background-color: var(--pui-resizable-grip-bg);
-    color: var(--pui-resizable-grip-dot-color);
-    transition: border-color var(--pui-duration-fast) var(--pui-ease-standard);
+    inline-size: var(--forte-resizable-grip-thickness);
+    block-size: var(--forte-resizable-grip-length);
+    border: 1px solid var(--forte-resizable-grip-border);
+    border-radius: var(--forte-resizable-grip-radius);
+    background-color: var(--forte-resizable-grip-bg);
+    color: var(--forte-resizable-grip-dot-color);
+    transition: border-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .handle[data-orientation="vertical"] .grip {
-    inline-size: var(--pui-resizable-grip-length);
-    block-size: var(--pui-resizable-grip-thickness);
+    inline-size: var(--forte-resizable-grip-length);
+    block-size: var(--forte-resizable-grip-thickness);
   }
 
   .handle:hover .grip,
   .handle:focus-visible .grip,
   .handle[data-dragging] .grip {
-    border-color: var(--pui-resizable-line-color-active);
+    border-color: var(--forte-resizable-line-color-active);
   }
 
   .handle[data-disabled]:hover .grip {
-    border-color: var(--pui-resizable-grip-border);
+    border-color: var(--forte-resizable-grip-border);
   }
 
   /* Three dots, drawn as a repeating gradient rather than an SVG so they
    * inherit `currentColor` and cost nothing. The length is derived from the
    * dot and gap so re-pointing either keeps exactly three. */
   .gripDots {
-    inline-size: var(--pui-resizable-grip-dot-size);
+    inline-size: var(--forte-resizable-grip-dot-size);
     block-size: calc(
-      3 * var(--pui-resizable-grip-dot-size) + 2 * var(--pui-resizable-grip-dot-gap)
+      3 * var(--forte-resizable-grip-dot-size) + 2 * var(--forte-resizable-grip-dot-gap)
     );
     background-image: repeating-linear-gradient(
       to bottom,
-      currentColor 0 var(--pui-resizable-grip-dot-size),
-      transparent var(--pui-resizable-grip-dot-size)
-        calc(var(--pui-resizable-grip-dot-size) + var(--pui-resizable-grip-dot-gap))
+      currentColor 0 var(--forte-resizable-grip-dot-size),
+      transparent var(--forte-resizable-grip-dot-size)
+        calc(var(--forte-resizable-grip-dot-size) + var(--forte-resizable-grip-dot-gap))
     );
   }
 
   .handle[data-orientation="vertical"] .gripDots {
     inline-size: calc(
-      3 * var(--pui-resizable-grip-dot-size) + 2 * var(--pui-resizable-grip-dot-gap)
+      3 * var(--forte-resizable-grip-dot-size) + 2 * var(--forte-resizable-grip-dot-gap)
     );
-    block-size: var(--pui-resizable-grip-dot-size);
+    block-size: var(--forte-resizable-grip-dot-size);
     background-image: repeating-linear-gradient(
       to right,
-      currentColor 0 var(--pui-resizable-grip-dot-size),
-      transparent var(--pui-resizable-grip-dot-size)
-        calc(var(--pui-resizable-grip-dot-size) + var(--pui-resizable-grip-dot-gap))
+      currentColor 0 var(--forte-resizable-grip-dot-size),
+      transparent var(--forte-resizable-grip-dot-size)
+        calc(var(--forte-resizable-grip-dot-size) + var(--forte-resizable-grip-dot-gap))
     );
   }
 
@@ -359,7 +359,7 @@
   .dragOverlay {
     position: fixed;
     inset: 0;
-    z-index: var(--pui-resizable-overlay-z-index);
+    z-index: var(--forte-resizable-overlay-z-index);
     cursor: col-resize;
   }
 
@@ -368,7 +368,7 @@
   }
 }
 
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Every fill is repainted by the system, so the line survives only if it
      * is a system colour. `CanvasText` rather than `ButtonBorder`: this is a

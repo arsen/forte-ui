@@ -19,7 +19,7 @@ Use a slider when the user is choosing a value on a continuum and the *approxima
 ## Import
 
 ```tsx
-import { Slider } from "@dofortech/pretty-ui";
+import { Slider } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -56,7 +56,7 @@ An array value is what makes a slider a range — there is no `range` prop. Plac
 At `min` and `max` the thumb is wider than the rail, so something has to give. `thumbAlignment` decides what:
 
 - `center` (the default) puts the thumb's centre on the control's edge, so half of it hangs outside.
-- `edge` insets the thumb so its outer edge lands on the control's edge instead. Base UI measures the control's border and padding to work this out, which means it re-measures if you change `--pui-slider-control-padding`.
+- `edge` insets the thumb so its outer edge lands on the control's edge instead. Base UI measures the control's border and padding to work this out, which means it re-measures if you change `--forte-slider-control-padding`.
 - `edge-client-only` behaves like `edge` but drops the pre-hydration script, trading a first paint with no thumb for a smaller bundle.
 
 The red guides in the demo mark the control's edges.
@@ -83,7 +83,7 @@ On a range slider, `thumbCollisionBehavior` decides what happens when a dragged 
 
 ### Vertical
 
-`orientation="vertical"` turns the same parts 90°. The root becomes a single centred column and `--pui-slider-length` now describes the block axis, defaulting to `10rem`.
+`orientation="vertical"` turns the same parts 90°. The root becomes a single centred column and `--forte-slider-length` now describes the block axis, defaulting to `10rem`.
 
 <Callout kind="note">
 
@@ -166,9 +166,9 @@ would leave the second thumb of a range slider unnamed.
 
 Render a `Slider.Value` wherever there is room for it. It is a visible duplicate of what `aria-valuetext` already announces, so nothing depends on it — but it is what makes the control usable for anyone who cannot judge a thumb's position by eye.
 
-The thumb's focus ring is `.pui-focus-ring-within`, not `.pui-focus-ring`: focus lands on the hidden `<input>`, so the thumb `<div>` never matches `:focus-visible` itself.
+The thumb's focus ring is `.forte-focus-ring-within`, not `.forte-focus-ring`: focus lands on the hidden `<input>`, so the thumb `<div>` never matches `:focus-visible` itself.
 
-The thumb's elevation and halo are painted by a `::before` rather than by the thumb's own `box-shadow`, and that is not a stylistic choice. The focus ring's second tone *is* a `box-shadow`, declared in `@layer pretty-ui.patterns` — which is ordered before `pretty-ui.components`, and layer order outranks specificity completely. A `box-shadow` on the thumb would therefore win unconditionally and delete half of a ring whose entire promise is that its two tones contrast with each other rather than with the page. If you restyle the thumb, put shadows on the pseudo-element, not on the thumb.
+The thumb's elevation and halo are painted by a `::before` rather than by the thumb's own `box-shadow`, and that is not a stylistic choice. The focus ring's second tone *is* a `box-shadow`, declared in `@layer forte.patterns` — which is ordered before `forte.components`, and layer order outranks specificity completely. A `box-shadow` on the thumb would therefore win unconditionally and delete half of a ring whose entire promise is that its two tones contrast with each other rather than with the page. If you restyle the thumb, put shadows on the pseudo-element, not on the thumb.
 
 The control is padded well past the painted rail, and that padding is what carries the 24×24 minimum target of SC 2.5.8 — a press anywhere inside the strip moves the nearest thumb, so the target is the whole strip rather than the handle. The padding is derived from the rail thickness and the thumb size, so it cannot fall below the minimum when either is retuned.
 
@@ -176,15 +176,15 @@ In forced-colours mode the rail, the fill and the handle are separated with syst
 
 ### Contrast
 
-The thumb's ring is `--pui-color-primary` and the rail is `--pui-color-border-muted`. The value is legible from three independent places — the indicator's length against the rail, the thumb's position, and the `Slider.Value` text — so no single pair is load-bearing on its own. If your accent seed lands pale against your page, re-point `--pui-slider-thumb-border` at `--pui-color-foreground-subtle`, which is measured at 3.73:1.
+The thumb's ring is `--forte-color-primary` and the rail is `--forte-color-border-muted`. The value is legible from three independent places — the indicator's length against the rail, the thumb's position, and the `Slider.Value` text — so no single pair is load-bearing on its own. If your accent seed lands pale against your page, re-point `--forte-slider-thumb-border` at `--forte-color-foreground-subtle`, which is measured at 3.73:1.
 
-The hover halo is a **translucent** mix of the tone's colour rather than its `-soft` step, and that matters. `--pui-color-primary-soft` is accent-3, which is built to sit *on* the page — 12% of the seed mixed into white in light mode, 22% into near-black in dark — so against the page it is very nearly the page itself, and the halo was effectively invisible in both modes (measured 1.12:1 in light, 1.25:1 in dark). Mixing toward `transparent` composites the accent over whatever is actually behind the control, which brings every tone to between 1.6:1 and 2.5:1 against the page in both modes and keeps it working over a panel or a card as well.
+The hover halo is a **translucent** mix of the tone's colour rather than its `-soft` step, and that matters. `--forte-color-primary-soft` is accent-3, which is built to sit *on* the page — 12% of the seed mixed into white in light mode, 22% into near-black in dark — so against the page it is very nearly the page itself, and the halo was effectively invisible in both modes (measured 1.12:1 in light, 1.25:1 in dark). Mixing toward `transparent` composites the accent over whatever is actually behind the control, which brings every tone to between 1.6:1 and 2.5:1 against the page in both modes and keeps it working over a panel or a card as well.
 
 ### Motion
 
 The handle and the fill are **never animated into position**, and that is deliberate.
 
-Base UI rewrites the indicator's `width` and the thumb's `inset-inline-start` on every value change — which during a drag means every `pointermove`. A positional transition therefore does not run once, it *restarts every frame*, leaving the handle permanently interpolating toward a target that has already moved. It trails the pointer, and it keeps a layout-triggering property under animation for the entire gesture. An earlier version of this component had a `--pui-duration-move` glide with the transition suppressed during a drag; both suppression triggers turned out to be unreliable — `:active` is cleared the moment the pointer leaves the control's box, and `[data-dragging]` is React state that only arrives after Base UI's intentional-drag threshold — so in practice the suppression never fired at all.
+Base UI rewrites the indicator's `width` and the thumb's `inset-inline-start` on every value change — which during a drag means every `pointermove`. A positional transition therefore does not run once, it *restarts every frame*, leaving the handle permanently interpolating toward a target that has already moved. It trails the pointer, and it keeps a layout-triggering property under animation for the entire gesture. An earlier version of this component had a `--forte-duration-move` glide with the transition suppressed during a drag; both suppression triggers turned out to be unreliable — `:active` is cleared the moment the pointer leaves the control's box, and `[data-dragging]` is React state that only arrives after Base UI's intentional-drag threshold — so in practice the suppression never fired at all.
 
 A keyboard-only glide is tempting and also wrong: holding an arrow key repeats at roughly 30/s and restarts the same transition each time, which reproduces the lag on a smaller scale, while a single arrow step moves the handle two or three pixels and has nothing worth animating. Native `input[type="range"]` does not animate either.
 
@@ -192,11 +192,11 @@ What does animate is colour, and the halo around the handle on hover and while d
 
 ## Theming
 
-Every property below is declared on `Slider.Root` and consumed by the parts underneath through inheritance. Setting one on an ancestor of the root has no effect — the root's own declaration wins over an inherited value. Override them on the root itself, through `className` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`.
+Every property below is declared on `Slider.Root` and consumed by the parts underneath through inheritance. Setting one on an ancestor of the root has no effect — the root's own declaration wins over an inherited value. Override them on the root itself, through `className` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`.
 
 <ThemingTable component="Slider" />
 
-`--pui-slider-control-padding` is derived from the rail thickness and the thumb size, so resizing either keeps the pointer target correct — you rarely want to set it by hand. Note that `thumbAlignment="edge"` measures it, so changing it also moves where an edge-aligned thumb rests.
+`--forte-slider-control-padding` is derived from the rail thickness and the thumb size, so resizing either keeps the pointer target correct — you rarely want to set it by hand. Note that `thumbAlignment="edge"` measures it, so changing it also moves where an edge-aligned thumb rests.
 
 ## API reference
 

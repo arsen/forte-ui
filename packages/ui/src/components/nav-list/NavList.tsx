@@ -35,7 +35,7 @@ const SectionLabelContext = React.createContext<
  * Decorative: the open state is already on `aria-expanded`. A chevron
  * pointing DOWN that rotates 180°, not an inline-facing one rotating 90° —
  * rotation is physical and has no logical form, so the symmetric flip is the
- * one gesture that survives RTL without consulting `--pui-direction`.
+ * one gesture that survives RTL without consulting `--forte-direction`.
  * ---------------------------------------------------------------------- */
 
 function ChevronDownIcon(props: React.ComponentProps<"svg">) {
@@ -127,7 +127,7 @@ export const NavListRoot = React.forwardRef<HTMLElement, NavListRootProps>(
       defaultTagName: "nav",
       props: {
         className: clsx(styles.root, className),
-        "data-pui": "nav-list",
+        "data-forte": "nav-list",
         "data-size": size,
         "data-marker": marker,
         ...props,
@@ -169,7 +169,7 @@ export const NavListSection = React.forwardRef<HTMLDivElement, NavListSectionPro
           role="group"
           aria-labelledby={labelId}
           className={clsx(styles.section, className)}
-          data-pui="nav-list-section"
+          data-forte="nav-list-section"
           {...props}
         >
           {children}
@@ -218,7 +218,7 @@ export const NavListSectionLabel = React.forwardRef<
       ref={ref}
       id={id}
       className={clsx(styles.sectionLabel, className)}
-      data-pui="nav-list-section-label"
+      data-forte="nav-list-section-label"
       {...props}
     />
   );
@@ -252,7 +252,7 @@ export const NavListList = React.forwardRef<HTMLUListElement, NavListListProps>(
       <ul
         ref={ref}
         className={clsx(styles.list, className)}
-        data-pui="nav-list-list"
+        data-forte="nav-list-list"
         {...props}
       />
     );
@@ -284,7 +284,7 @@ export const NavListItem = React.forwardRef<HTMLLIElement, NavListItemProps>(
       <li
         ref={ref}
         className={clsx(styles.item, className)}
-        data-pui="nav-list-item"
+        data-forte="nav-list-item"
         {...props}
       />
     );
@@ -344,8 +344,8 @@ export const NavListLink = React.forwardRef<HTMLAnchorElement, NavListLinkProps>
       ref,
       defaultTagName: "a",
       props: {
-        className: clsx(styles.link, "pui-focus-ring", className),
-        "data-pui": "nav-list-link",
+        className: clsx(styles.link, "forte-focus-ring", className),
+        "data-forte": "nav-list-link",
         // Inset, always: the list's usual home is a scroll container hard
         // against the viewport edge, where an outset ring's leading side is
         // clipped off (SC 2.4.11).
@@ -398,7 +398,7 @@ export const NavListGroup = React.forwardRef<HTMLLIElement, NavListGroupProps>(
         // stays honest and the widening happens here.
         ref={ref as React.Ref<HTMLDivElement>}
         className={clsx(styles.group, className)}
-        data-pui="nav-list-group"
+        data-forte="nav-list-group"
         render={render ?? <li />}
         {...props}
       />
@@ -452,8 +452,8 @@ export const NavListGroupTrigger = React.forwardRef<
   return (
     <BaseCollapsible.Trigger
       ref={ref}
-      className={clsx(styles.groupTrigger, "pui-focus-ring", className)}
-      data-pui="nav-list-group-trigger"
+      className={clsx(styles.groupTrigger, "forte-focus-ring", className)}
+      data-forte="nav-list-group-trigger"
       data-focus-inset=""
       data-active={active ? "" : undefined}
       {...props}
@@ -461,13 +461,13 @@ export const NavListGroupTrigger = React.forwardRef<
       {/* The row is `justify-content: space-between`, so two loose children
         * would fly to opposite ends. The label box keeps icon-plus-text
         * reading as one word group, with the chevron alone at the far edge. */}
-      <span className={styles.groupLabel} data-pui="nav-list-group-label">
+      <span className={styles.groupLabel} data-forte="nav-list-group-label">
         {children}
       </span>
       {icon === null ? null : (
         <span
           className={styles.groupIcon}
-          data-pui="nav-list-group-icon"
+          data-forte="nav-list-group-icon"
           aria-hidden="true"
         >
           {icon}
@@ -516,13 +516,13 @@ export const NavListGroupPanel = React.forwardRef<
       ref={ref}
       keepMounted={keepMounted}
       className={clsx(styles.groupPanel, className)}
-      data-pui="nav-list-group-panel"
+      data-forte="nav-list-group-panel"
       {...props}
     >
       {/* The fade-and-settle runs on this box while the outer one is busy
         * animating its height — same split as Collapsible, minus the padding
         * (rows carry their own). */}
-      <div className={styles.groupContent} data-pui="nav-list-group-content">
+      <div className={styles.groupContent} data-forte="nav-list-group-content">
         {children}
       </div>
     </BaseCollapsible.Panel>
@@ -557,7 +557,7 @@ export const NavListBadge = React.forwardRef<HTMLSpanElement, NavListBadgeProps>
       <span
         ref={ref}
         className={clsx(styles.badge, className)}
-        data-pui="nav-list-badge"
+        data-forte="nav-list-badge"
         {...props}
       />
     );
@@ -588,7 +588,7 @@ export const NavListBadge = React.forwardRef<HTMLSpanElement, NavListBadgeProps>
  * </NavList.Root>
  * ```
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-nav-list-*`
+ * Styling is driven entirely by `data-*` attributes and `--forte-nav-list-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[active]:...`) without wrapping.
  */

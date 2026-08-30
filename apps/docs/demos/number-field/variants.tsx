@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, NumberField } from "@dofortech/pretty-ui";
+import { Field, NumberField } from "@dofortech/forte-ui";
 
 const VARIANTS = ["outline", "soft", "ghost"] as const;
 

@@ -1,7 +1,7 @@
 /**
- * pretty-ui — the one stylesheet a consumer needs.
+ * forte-ui — the one stylesheet a consumer needs.
  *
- *   import "@dofortech/pretty-ui/theme.css";
+ *   import "@dofortech/forte-ui/theme.css";
  *
  * Import it ONCE, at the root of your app, before any component. It brings in
  * the cascade-layer declaration, the registered custom properties, the colour
@@ -13,36 +13,36 @@
  * ---------------------------------------------------------------------------
  * One variable re-skins everything:
  *
- *   :root { --pui-accent-seed: #7c3aed; }
+ *   :root { --forte-accent-seed: #7c3aed; }
  *
  * All twelve accent steps, the brand-tinted neutrals, and a readable text
  * colour for solid fills are derived from it, in both light and dark mode,
  * with no JavaScript. Also available:
  *
- *   --pui-secondary-seed   second brand colour, same treatment
- *   --pui-neutral-tint     0 = pure grey ... 1 = brand-tinted greys
- *   data-pui-radius        "none" | "soft" | "pill"
- *   data-pui-density       "compact" | "spacious"
- *   data-pui-motion        "reduce" | "off" | "full"
+ *   --forte-secondary-seed   second brand colour, same treatment
+ *   --forte-neutral-tint     0 = pure grey ... 1 = brand-tinted greys
+ *   data-forte-radius        "none" | "soft" | "pill"
+ *   data-forte-density       "compact" | "spacious"
+ *   data-forte-motion        "reduce" | "off" | "full"
  *   data-theme             "light" | "dark"   (otherwise follows the OS)
  *
  * Supported seed envelope: lightness 0.45-0.90, chroma 0.02-0.30, and inside
  * the sRGB gamut. Outside it the ramp still renders but the derived contrast
  * guarantees no longer hold — scripts/check-contrast.mjs enforces the envelope.
  *
- * Scoping: apply `.pui-theme` or `data-pui-theme` to any element to re-theme
+ * Scoping: apply `.forte-theme` or `data-forte-theme` to any element to re-theme
  * just that subtree. The ramps are re-declared on those selectors precisely so
  * this works; overriding the seed on an arbitrary element does not. The
- * `data-pui-*` switches need no such hook — put one on any element and it
+ * `data-forte-*` switches need no such hook — put one on any element and it
  * applies to that element and everything under it, including nested
- * `.pui-theme` scopes, until a descendant sets its own.
+ * `.forte-theme` scopes, until a descendant sets its own.
  *
  * ---------------------------------------------------------------------------
  * Overriding
  * ---------------------------------------------------------------------------
- * Everything ships inside `@layer pretty-ui.*`, which loses to unlayered CSS.
+ * Everything ships inside `@layer forte.*`, which loses to unlayered CSS.
  * Your own rules and utility classes win without `!important`. The flip side
- * is a documented opt-out: an unlayered `transition` or `--pui-motion-ok: 1`
+ * is a documented opt-out: an unlayered `transition` or `--forte-motion-ok: 1`
  * in your app will also defeat the library's reduced-motion handling.
  */
 

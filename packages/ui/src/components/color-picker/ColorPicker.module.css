@@ -17,7 +17,7 @@
  * The area's two gradients, the hue rail's seven stops and the checkerboard's
  * intent are not design decisions — they are the colour space itself. `white`
  * at the left of the saturation axis is what saturation 0 MEANS; re-pointing
- * it at `--pui-color-panel` would not re-skin the picker, it would make it
+ * it at `--forte-color-panel` would not re-skin the picker, it would make it
  * lie. The same goes for the handles: they sit on colour the user chose, about
  * which nothing is known, so they take a white ring and a dark hairline —
  * the pair that stays visible on all of it — rather than a theme colour that
@@ -29,12 +29,12 @@
  * canvas, so those parts opt out of forced-colors substitution — otherwise the
  * picker becomes four identical system-coloured rectangles — and take a
  * system-coloured hairline as the boundary the substitution would have given
- * them. That is what `.pui-preserve-color` does, and it is deliberately NOT
+ * them. That is what `.forte-preserve-color` does, and it is deliberately NOT
  * used here: its border is unconditional, so a twenty-four swatch grid would
  * carry a pure CanvasText line around every cell in ordinary rendering too,
  * which reads as a hard white lattice in dark mode. The two halves are split
- * instead — a `--pui-color-border` hairline below, the opt-out and the system
- * hairline in the `pretty-ui.a11y` block at the foot of this file.
+ * instead — a `--forte-color-border` hairline below, the opt-out and the system
+ * hairline in the `forte.a11y` block at the foot of this file.
  *
  * Motion is colour and scale only. Neither the area's thumb nor a rail's is
  * ever transitioned on position: Base UI (and this component's own pointer
@@ -42,7 +42,7 @@
  * the handle chase the pointer instead of following it — the same finding
  * written up at the top of Slider.module.css.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* ------------------------------------------------------------------------
    * Popup
    *
@@ -51,7 +51,7 @@
    * second ring of padding around it would push the swatch grid off its own
    * measure.
    *
-   * The doubled class is deliberate. `--pui-popover-padding` is declared by
+   * The doubled class is deliberate. `--forte-popover-padding` is declared by
    * `Popover.module.css`'s own `.popup` rule, at the same specificity and in
    * the same cascade layer, so which one wins would come down to the order
    * the two stylesheets happen to be bundled in — a difference that only
@@ -59,7 +59,7 @@
    * still loses to any unlayered consumer rule.
    * --------------------------------------------------------------------- */
   .popup.popup {
-    --pui-popover-padding: 0px;
+    --forte-popover-padding: 0px;
   }
 
   /* ------------------------------------------------------------------------
@@ -77,69 +77,69 @@
      * anything declared further up the React tree would not reach it. */
     /** Width of the picker. The panel shrinks below it rather than overflowing
      * a narrow container. */
-    --pui-color-picker-width: 17rem;
-    /* Tighter than `--pui-surface-p`, which is the measure for a surface of
+    --forte-color-picker-width: 17rem;
+    /* Tighter than `--forte-surface-p`, which is the measure for a surface of
      * running text. This one is a control panel: at 24px a side the four
      * items in the control row have 48px left between them for the text field,
      * which is not enough to show `#7c3aed`. */
     /** Padding inside the panel */
-    --pui-color-picker-padding: var(--pui-space-3);
+    --forte-color-picker-padding: var(--forte-space-3);
     /** Vertical gap between the panel's parts */
-    --pui-color-picker-gap: var(--pui-space-3);
+    --forte-color-picker-gap: var(--forte-space-3);
     /** Corner radius of the standalone panel; the popover surface keeps
-     * `--pui-popover-radius` */
-    --pui-color-picker-radius: var(--pui-radius-surface);
+     * `--forte-popover-radius` */
+    --forte-color-picker-radius: var(--forte-radius-surface);
     /** Height of the saturation/brightness canvas */
-    --pui-color-picker-area-height: 8.5rem;
+    --forte-color-picker-area-height: 8.5rem;
     /** Corner radius of the canvas and the swatches */
-    --pui-color-picker-area-radius: var(--pui-radius-2);
+    --forte-color-picker-area-radius: var(--forte-radius-2);
     /** Diameter of the canvas handle */
-    --pui-color-picker-thumb-size: 0.875rem;
+    --forte-color-picker-thumb-size: 0.875rem;
     /** Thickness of the ring around both kinds of handle */
-    --pui-color-picker-thumb-ring: 2px;
+    --forte-color-picker-thumb-ring: 2px;
     /* Not a theme colour, and it must not become one: this ring is drawn on
      * whatever colour the user picked, so a token would be free to resolve to
      * that same colour and disappear. The canvas handle takes the computed
-     * black-or-white contrast instead (see `--pui-color-picker-on-color`
+     * black-or-white contrast instead (see `--forte-color-picker-on-color`
      * below); the rail handles cannot, because the colour under them changes
      * along the rail. */
     /** Ring colour of the rail handles */
-    --pui-color-picker-thumb-border: #ffffff;
+    --forte-color-picker-thumb-border: #ffffff;
     /** The hairline outside that ring, which is what keeps a white handle
      * visible on a pale yellow */
-    --pui-color-picker-thumb-outline: rgb(0 0 0 / 0.35);
+    --forte-color-picker-thumb-outline: rgb(0 0 0 / 0.35);
     /** Thickness of the hue and opacity rails */
-    --pui-color-picker-rail-thickness: 0.75rem;
+    --forte-color-picker-rail-thickness: 0.75rem;
     /** Diameter of a rail handle */
-    --pui-color-picker-rail-thumb-size: 1.125rem;
+    --forte-color-picker-rail-thumb-size: 1.125rem;
     /** Corner radius of the rails */
-    --pui-color-picker-rail-radius: var(--pui-radius-pill);
+    --forte-color-picker-rail-radius: var(--forte-radius-pill);
     /** Size of the swatch grid's cells; the grid takes the panel's width and
      * the cells stretch to fill it, so this is a minimum */
-    --pui-color-picker-swatch-size: 1.25rem;
+    --forte-color-picker-swatch-size: 1.25rem;
     /** Gap between swatches */
-    --pui-color-picker-swatch-gap: var(--pui-space-2);
+    --forte-color-picker-swatch-gap: var(--forte-space-2);
     /** Corner radius of one swatch */
-    --pui-color-picker-swatch-radius: var(--pui-radius-1);
+    --forte-color-picker-swatch-radius: var(--forte-radius-1);
     /** Side of one square of the checkerboard drawn behind translucent colour */
-    --pui-color-picker-checker-size: 8px;
+    --forte-color-picker-checker-size: 8px;
     /** The checkerboard's light square */
-    --pui-color-picker-checker-light: var(--pui-color-background);
+    --forte-color-picker-checker-light: var(--forte-color-background);
     /** The checkerboard's dark square */
-    --pui-color-picker-checker-dark: var(--pui-color-border);
+    --forte-color-picker-checker-dark: var(--forte-color-border);
 
     /* Written as inline styles by the component, and listed here so a reader
      * of this file knows where they come from:
-     *   --pui-color-picker-color       the current colour, alpha included
-     *   --pui-color-picker-solid       the same colour at full alpha
-     *   --pui-color-picker-hue         its hue in degrees, unitless
-     *   --pui-color-picker-on-color    `black` or `white`, whichever reads on it
+     *   --forte-color-picker-color       the current colour, alpha included
+     *   --forte-color-picker-solid       the same colour at full alpha
+     *   --forte-color-picker-hue         its hue in degrees, unitless
+     *   --forte-color-picker-on-color    `black` or `white`, whichever reads on it
      * They carry live state, not theme, which is why they are not knobs. */
 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-color-picker-gap);
+    gap: var(--forte-color-picker-gap);
     /* A DEFINITE width, with the cap as a separate declaration — and the pair
      * is load-bearing rather than long-winded. `Popover.Popup` sizes itself
      * with `inline-size: max-content`, and a percentage cannot resolve while
@@ -150,23 +150,23 @@
      * A definite `inline-size` is the max-content contribution, so the popup
      * measures exactly the panel; `max-inline-size` still shrinks both on a
      * screen too narrow for either. */
-    inline-size: var(--pui-color-picker-width);
+    inline-size: var(--forte-color-picker-width);
     max-inline-size: 100%;
-    padding: var(--pui-color-picker-padding);
+    padding: var(--forte-color-picker-padding);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
-    color: var(--pui-color-foreground);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
+    color: var(--forte-color-foreground);
   }
 
   /* In the page rather than in a popover, the panel has to be its own surface —
    * the popup was providing the background, the border and the elevation. */
   .standalonePanel {
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-color-picker-radius);
-    background-color: var(--pui-color-panel);
-    box-shadow: var(--pui-shadow-1);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-color-picker-radius);
+    background-color: var(--forte-color-panel);
+    box-shadow: var(--forte-shadow-1);
   }
 
   .panel[data-disabled] {
@@ -182,7 +182,7 @@
   .row {
     display: flex;
     align-items: center;
-    gap: var(--pui-space-2);
+    gap: var(--forte-space-2);
     /* Nothing in the row may grow past the panel: without this the text field's
      * intrinsic width (an `oklch(…)` string is wide) sets the panel's width and
      * the swatch grid stretches with it. */
@@ -208,19 +208,19 @@
     position: relative;
     box-sizing: border-box;
     inline-size: 100%;
-    block-size: var(--pui-color-picker-area-height);
+    block-size: var(--forte-color-picker-area-height);
     /* Every colour surface here takes the same hairline: white at saturation
      * zero is indistinguishable from the panel behind it, and the boundary is
      * what says where the control ends. */
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-color-picker-area-radius);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-color-picker-area-radius);
 
     background-image:
       linear-gradient(to top, rgb(0 0 0) 0%, rgb(0 0 0 / 0) 100%),
       linear-gradient(
         to right,
         rgb(255 255 255) 0%,
-        hsl(var(--pui-color-picker-hue, 0) 100% 50%) 100%
+        hsl(var(--forte-color-picker-hue, 0) 100% 50%) 100%
       );
 
     /* The house rule in CLAUDE.md: anything that performs an action shows
@@ -249,11 +249,11 @@
      * canvas does not mirror under RTL. See the note on ColorPicker.Area. */
     translate: -50% -50%;
     box-sizing: border-box;
-    inline-size: var(--pui-color-picker-thumb-size);
-    block-size: var(--pui-color-picker-thumb-size);
-    border: var(--pui-color-picker-thumb-ring) solid
-      var(--pui-color-picker-on-color, #ffffff);
-    border-radius: var(--pui-radius-full);
+    inline-size: var(--forte-color-picker-thumb-size);
+    block-size: var(--forte-color-picker-thumb-size);
+    border: var(--forte-color-picker-thumb-ring) solid
+      var(--forte-color-picker-on-color, #ffffff);
+    border-radius: var(--forte-radius-full);
     /* The colour shows THROUGH the handle rather than being painted into it,
      * so the handle never disagrees with the pixel it is sitting on. */
     background-color: transparent;
@@ -262,33 +262,33 @@
      * keyboard-reachable — `pointer-events` says nothing about focus. */
     pointer-events: none;
     transition:
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      scale var(--pui-duration-fast) var(--pui-ease-standard);
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* The hairline that keeps the handle legible where its ring matches what is
    * under it — mid-grey against mid-grey. On ::before rather than the handle
-   * itself, because `.pui-focus-ring-within` paints its outer tone with a
+   * itself, because `.forte-focus-ring-within` paints its outer tone with a
    * box-shadow from an EARLIER layer, and a box-shadow declared here would
    * beat it on layer order and silently delete half the ring. */
   .areaThumb::before {
     content: "";
     position: absolute;
-    inset: calc(-1 * var(--pui-color-picker-thumb-ring));
+    inset: calc(-1 * var(--forte-color-picker-thumb-ring));
     border-radius: inherit;
-    box-shadow: 0 0 0 1px var(--pui-color-picker-thumb-outline);
+    box-shadow: 0 0 0 1px var(--forte-color-picker-thumb-outline);
     pointer-events: none;
   }
 
-  /* Literal geometry, so it is gated: `--pui-motion-ok` is 0 under reduced
+  /* Literal geometry, so it is gated: `--forte-motion-ok` is 0 under reduced
    * motion and the handle simply does not grow. */
   .area[data-dragging] .areaThumb {
-    scale: calc(1 + 0.18 * var(--pui-motion-ok));
+    scale: calc(1 + 0.18 * var(--forte-motion-ok));
   }
 
   /* The two range inputs behind the canvas handle.
    *
-   * NOT `.pui-visually-hidden`: that class un-hides its element on
+   * NOT `.forte-visually-hidden`: that class un-hides its element on
    * `:focus-within`, which is right for a skip link and wrong here — these are
    * focused for the whole of every keyboard interaction, and a raw range
    * control would appear across the canvas the moment the user pressed Tab. */
@@ -326,7 +326,7 @@
      * consumer who thickens the rail past 24px does not get a negative. */
     padding-block: max(
       0px,
-      calc((var(--pui-target-min) - var(--pui-color-picker-rail-thickness)) / 2)
+      calc((var(--forte-target-min) - var(--forte-color-picker-rail-thickness)) / 2)
     );
     cursor: pointer;
     touch-action: none;
@@ -341,9 +341,9 @@
     position: relative;
     box-sizing: border-box;
     inline-size: 100%;
-    block-size: var(--pui-color-picker-rail-thickness);
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-color-picker-rail-radius);
+    block-size: var(--forte-color-picker-rail-thickness);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-color-picker-rail-radius);
   }
 
   /* Seven stops rather than `in hsl longer hue`, which says the same thing in
@@ -353,20 +353,20 @@
    * on, so both rails flip under RTL and the handle keeps standing on the
    * colour it names.
    *
-   * The angle is computed from `--pui-direction` — `90deg` is exactly
+   * The angle is computed from `--forte-direction` — `90deg` is exactly
    * `to right`, and `-90deg` exactly `to left` — rather than written as
    * `:dir(rtl)`. That is not a style preference: with this package's CSS
    * targets `:dir()` is LOWERED AT BUILD TIME into a list of `:lang()`
    * selectors, which follow the document language and not the `dir`
    * attribute, so the rule works in source and silently stops matching in the
    * published stylesheet. `tokens.css` records the same trap next to
-   * `--pui-direction` itself; this is the token existing for exactly this.
+   * `--forte-direction` itself; this is the token existing for exactly this.
    * Inheriting the sign also means an LTR island inside an RTL page gets its
    * rails back, which a `[dir="rtl"] .track` descendant selector would not
    * give. */
   .hueTrack {
     background-image: linear-gradient(
-      calc(90deg * var(--pui-direction)),
+      calc(90deg * var(--forte-direction)),
       hsl(0 100% 50%) 0%,
       hsl(60 100% 50%) 16.666%,
       hsl(120 100% 50%) 33.333%,
@@ -384,31 +384,31 @@
   .alphaTrack {
     background-image:
       linear-gradient(
-        calc(90deg * var(--pui-direction)),
-        rgb(from var(--pui-color-picker-solid, #000000) r g b / 0) 0%,
-        var(--pui-color-picker-solid, #000000) 100%
+        calc(90deg * var(--forte-direction)),
+        rgb(from var(--forte-color-picker-solid, #000000) r g b / 0) 0%,
+        var(--forte-color-picker-solid, #000000) 100%
       ),
       repeating-conic-gradient(
-        var(--pui-color-picker-checker-light) 0% 25%,
-        var(--pui-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light) 0% 25%,
+        var(--forte-color-picker-checker-dark) 0% 50%
       );
     background-size:
       auto,
-      var(--pui-color-picker-checker-size) var(--pui-color-picker-checker-size);
+      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
   }
 
   .railThumb {
     box-sizing: border-box;
-    inline-size: var(--pui-color-picker-rail-thumb-size);
-    block-size: var(--pui-color-picker-rail-thumb-size);
-    border: var(--pui-color-picker-thumb-ring) solid
-      var(--pui-color-picker-thumb-border);
-    border-radius: var(--pui-radius-full);
+    inline-size: var(--forte-color-picker-rail-thumb-size);
+    block-size: var(--forte-color-picker-rail-thumb-size);
+    border: var(--forte-color-picker-thumb-ring) solid
+      var(--forte-color-picker-thumb-border);
+    border-radius: var(--forte-radius-full);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     /* Position is written inline by Base UI on every pointermove and is
      * deliberately absent from this transition — see the file header. */
-    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Same argument as the canvas handle's ::before: the outer hairline cannot
@@ -416,16 +416,16 @@
   .railThumb::before {
     content: "";
     position: absolute;
-    inset: calc(-1 * var(--pui-color-picker-thumb-ring));
+    inset: calc(-1 * var(--forte-color-picker-thumb-ring));
     border-radius: inherit;
-    box-shadow: 0 0 0 1px var(--pui-color-picker-thumb-outline);
+    box-shadow: 0 0 0 1px var(--forte-color-picker-thumb-outline);
     pointer-events: none;
   }
 
   /* Each handle is filled with the value it is standing on, which is what
    * makes a hue rail readable at a glance without a numeric readout. */
   .hueTrack .railThumb {
-    background-color: hsl(var(--pui-color-picker-hue, 0) 100% 50%);
+    background-color: hsl(var(--forte-color-picker-hue, 0) 100% 50%);
   }
 
   /* The colour is a flat GRADIENT rather than a background-color, and that is
@@ -436,16 +436,16 @@
   .alphaTrack .railThumb {
     background-image:
       linear-gradient(
-        var(--pui-color-picker-color, #000000),
-        var(--pui-color-picker-color, #000000)
+        var(--forte-color-picker-color, #000000),
+        var(--forte-color-picker-color, #000000)
       ),
       repeating-conic-gradient(
-        var(--pui-color-picker-checker-light) 0% 25%,
-        var(--pui-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light) 0% 25%,
+        var(--forte-color-picker-checker-dark) 0% 50%
       );
     background-size:
       auto,
-      var(--pui-color-picker-checker-size) var(--pui-color-picker-checker-size);
+      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
   }
 
   .railThumb[data-disabled] {
@@ -458,10 +458,10 @@
   .swatches {
     display: grid;
     grid-template-columns: repeat(
-      var(--pui-color-picker-swatch-columns, 8),
-      minmax(var(--pui-color-picker-swatch-size), 1fr)
+      var(--forte-color-picker-swatch-columns, 8),
+      minmax(var(--forte-color-picker-swatch-size), 1fr)
     );
-    gap: var(--pui-color-picker-swatch-gap);
+    gap: var(--forte-color-picker-swatch-gap);
   }
 
   .swatch {
@@ -474,32 +474,32 @@
      * does. */
     aspect-ratio: 1;
     inline-size: 100%;
-    min-inline-size: var(--pui-color-picker-swatch-size);
+    min-inline-size: var(--forte-color-picker-swatch-size);
     padding: 0;
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-color-picker-swatch-radius);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-color-picker-swatch-radius);
 
     /* Colour above checkerboard, both as image layers — see the alpha handle. */
     background-image:
       linear-gradient(
-        var(--pui-color-picker-swatch, transparent),
-        var(--pui-color-picker-swatch, transparent)
+        var(--forte-color-picker-swatch, transparent),
+        var(--forte-color-picker-swatch, transparent)
       ),
       repeating-conic-gradient(
-        var(--pui-color-picker-checker-light) 0% 25%,
-        var(--pui-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light) 0% 25%,
+        var(--forte-color-picker-checker-dark) 0% 50%
       );
     background-size:
       auto,
-      var(--pui-color-picker-checker-size) var(--pui-color-picker-checker-size);
+      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
 
     /* Whichever of black or white reads on THIS swatch, computed per swatch by
      * the component — a white tick is invisible on the white swatch every
      * palette starts with. */
-    color: var(--pui-color-picker-swatch-on, #ffffff);
+    color: var(--forte-color-picker-swatch-on, #ffffff);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition: box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .swatch:disabled {
@@ -512,7 +512,7 @@
     /* The tick takes `color` from the swatch, which is already the readable
      * one; the shadow is for the narrow band where neither black nor white is
      * comfortable and the stroke needs its own edge. */
-    filter: drop-shadow(0 0 1px var(--pui-color-picker-thumb-outline));
+    filter: drop-shadow(0 0 1px var(--forte-color-picker-thumb-outline));
   }
 
   /* ------------------------------------------------------------------------
@@ -521,34 +521,34 @@
   .preview {
     box-sizing: border-box;
     flex: none;
-    inline-size: var(--pui-control-h-sm);
-    block-size: var(--pui-control-h-sm);
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-2);
+    inline-size: var(--forte-control-h-sm);
+    block-size: var(--forte-control-h-sm);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-2);
     background-image:
       linear-gradient(
-        var(--pui-color-picker-color, transparent),
-        var(--pui-color-picker-color, transparent)
+        var(--forte-color-picker-color, transparent),
+        var(--forte-color-picker-color, transparent)
       ),
       repeating-conic-gradient(
-        var(--pui-color-picker-checker-light) 0% 25%,
-        var(--pui-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light) 0% 25%,
+        var(--forte-color-picker-checker-dark) 0% 50%
       );
     background-size:
       auto,
-      var(--pui-color-picker-checker-size) var(--pui-color-picker-checker-size);
+      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
   }
 
   /* ------------------------------------------------------------------------
    * Value readout
    * --------------------------------------------------------------------- */
   .value {
-    font-family: var(--pui-font-mono);
-    font-size: var(--pui-font-size-1);
+    font-family: var(--forte-font-mono);
+    font-size: var(--forte-font-size-1);
     /* Without tabular figures the readout changes width as the digits change,
      * which makes the whole row jitter during a drag. */
     font-variant-numeric: tabular-nums;
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
     cursor: default;
     -webkit-user-select: all;
     user-select: all;
@@ -562,9 +562,9 @@
    * --------------------------------------------------------------------- */
   .format.format {
     flex: none;
-    gap: var(--pui-space-1);
-    padding-inline: var(--pui-space-2);
-    font-size: var(--pui-font-size-1);
+    gap: var(--forte-space-1);
+    padding-inline: var(--forte-space-2);
+    font-size: var(--forte-font-size-1);
     /* The row is a fixed 232px and the field has to keep enough of it to show
      * an `oklch(…)` string, so the format control is held to its own text. */
     min-inline-size: 0;
@@ -580,27 +580,27 @@
      * 293.01)` is wider than the panel. */
     flex: 1 1 auto;
     min-inline-size: 0;
-    block-size: var(--pui-control-h-sm);
-    padding-inline: var(--pui-space-2);
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-control);
+    block-size: var(--forte-control-h-sm);
+    padding-inline: var(--forte-space-2);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-control);
 
-    background-color: var(--pui-color-background);
-    color: var(--pui-color-foreground);
+    background-color: var(--forte-color-background);
+    color: var(--forte-color-foreground);
 
-    font-family: var(--pui-font-mono);
-    font-size: var(--pui-font-size-1);
+    font-family: var(--forte-font-mono);
+    font-size: var(--forte-font-size-1);
     font-variant-numeric: tabular-nums;
-    line-height: var(--pui-line-height-tight);
+    line-height: var(--forte-line-height-tight);
     /* The UA text cursor is correct here and is left alone, per the cursor
      * table in CLAUDE.md. */
     transition:
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .input[data-invalid] {
-    border-color: var(--pui-color-danger-border);
+    border-color: var(--forte-color-danger-border);
   }
 
   .input:disabled {
@@ -616,24 +616,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    inline-size: var(--pui-control-h-sm);
-    block-size: var(--pui-control-h-sm);
+    inline-size: var(--forte-control-h-sm);
+    block-size: var(--forte-control-h-sm);
     padding: 0;
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-control);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-control);
 
-    background-color: var(--pui-color-panel);
-    color: var(--pui-color-foreground-muted);
+    background-color: var(--forte-color-panel);
+    color: var(--forte-color-foreground-muted);
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .eyeDropper:hover:not(:disabled) {
-      background-color: var(--pui-color-panel-hover);
-      color: var(--pui-color-foreground);
+      background-color: var(--forte-color-panel-hover);
+      color: var(--forte-color-foreground);
     }
   }
 
@@ -642,8 +642,8 @@
   }
 
   .eyeDropperIcon {
-    inline-size: var(--pui-space-4);
-    block-size: var(--pui-space-4);
+    inline-size: var(--forte-space-4);
+    block-size: var(--forte-space-4);
   }
 
   /* ------------------------------------------------------------------------
@@ -665,48 +665,48 @@
      * documented declaration of one name as an error — rightly, since two
      * defaults for one knob is a contradiction — and records a redeclaration
      * as an override of the documented one instead, which is what this is. */
-    --pui-color-picker-checker-size: 6px;
-    --pui-color-picker-checker-light: var(--pui-color-background);
-    --pui-color-picker-checker-dark: var(--pui-color-border);
+    --forte-color-picker-checker-size: 6px;
+    --forte-color-picker-checker-light: var(--forte-color-background);
+    --forte-color-picker-checker-dark: var(--forte-color-border);
     /** Size of the swatch inside the trigger */
-    --pui-color-picker-trigger-swatch-size: 1rem;
+    --forte-color-picker-trigger-swatch-size: 1rem;
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-control-gap);
-    block-size: var(--pui-control-h-md);
-    padding-inline: var(--pui-control-px-md);
+    gap: var(--forte-control-gap);
+    block-size: var(--forte-control-h-md);
+    padding-inline: var(--forte-control-px-md);
     margin: 0;
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-control);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-control);
 
-    background-color: var(--pui-color-panel);
-    color: var(--pui-color-foreground);
+    background-color: var(--forte-color-panel);
+    color: var(--forte-color-foreground);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-2);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-2);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
+      background-color: var(--forte-color-panel-hover);
     }
   }
 
   .trigger:active:not([data-disabled]) {
-    background-color: var(--pui-color-panel-active);
+    background-color: var(--forte-color-panel-active);
   }
 
   .trigger[data-disabled] {
@@ -718,45 +718,45 @@
    * reasoning as `Popover.Trigger`: this popup can be tabbed into and returned
    * from, so it needs to leave a trace of what opened it. */
   .trigger[data-popup-open] {
-    background-color: var(--pui-color-panel-active);
-    border-color: var(--pui-color-border-strong);
+    background-color: var(--forte-color-panel-active);
+    border-color: var(--forte-color-border-strong);
   }
 
   .triggerSwatch {
     box-sizing: border-box;
     flex: none;
-    inline-size: var(--pui-color-picker-trigger-swatch-size);
-    block-size: var(--pui-color-picker-trigger-swatch-size);
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-1);
+    inline-size: var(--forte-color-picker-trigger-swatch-size);
+    block-size: var(--forte-color-picker-trigger-swatch-size);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-1);
     background-image:
       linear-gradient(
-        var(--pui-color-picker-color, transparent),
-        var(--pui-color-picker-color, transparent)
+        var(--forte-color-picker-color, transparent),
+        var(--forte-color-picker-color, transparent)
       ),
       repeating-conic-gradient(
-        var(--pui-color-picker-checker-light) 0% 25%,
-        var(--pui-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light) 0% 25%,
+        var(--forte-color-picker-checker-dark) 0% 50%
       );
     background-size:
       auto,
-      var(--pui-color-picker-checker-size) var(--pui-color-picker-checker-size);
+      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
   }
 }
 
 /*
  * Accessibility overrides.
  *
- * A separate block, and ordered after `pretty-ui.components` by the layer
+ * A separate block, and ordered after `forte.components` by the layer
  * statement in layers.css, so these beat the rules above on layer order alone
  * — inside the components layer they would compete on specificity and lose,
  * most visibly with `opacity`, which forced-colors does not override.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* The opt-out, and the hairline that replaces the boundary the
      * substitution would have drawn. Written here rather than through
-     * `.pui-preserve-color` so the border is system-coloured ONLY under forced
+     * `.forte-preserve-color` so the border is system-coloured ONLY under forced
      * colours — see the note at the top of this file.
      *
      * The handles are on the list because their white ring is a real colour

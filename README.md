@@ -1,16 +1,16 @@
-# pretty-ui
+# forte-ui
 
 An accessible React component library built on [Base UI](https://base-ui.com),
 styled with CSS Modules and a design system that rebuilds itself around a single
 colour.
 
 ```bash
-npm install @dofortech/pretty-ui
+npm install @dofortech/forte-ui
 ```
 
 ```tsx
-import "@dofortech/pretty-ui/theme.css";
-import { Button } from "@dofortech/pretty-ui";
+import "@dofortech/forte-ui/theme.css";
+import { Button } from "@dofortech/forte-ui";
 
 export function Example() {
   return <Button tone="danger">Delete</Button>;
@@ -23,7 +23,7 @@ One variable re-skins everything:
 
 ```css
 :root {
-  --pui-accent-seed: #6d43d4;
+  --forte-accent-seed: #6d43d4;
 }
 ```
 
@@ -32,14 +32,14 @@ for solid fills derive from it — in both light and dark mode, with no JavaScri
 and no build step. It works through CSS relative colour syntax:
 
 ```css
---pui-accent-3: oklch(from var(--pui-accent-seed) 0.954 min(0.043, calc(c * 0.17)) h);
+--forte-accent-3: oklch(from var(--forte-accent-seed) 0.954 min(0.043, calc(c * 0.17)) h);
 ```
 
-Also available: `--pui-secondary-seed`, `--pui-neutral-tint` (how much brand hue
-bleeds into the greys), and `data-pui-radius` / `data-pui-density` /
-`data-pui-motion` / `data-theme` attributes.
+Also available: `--forte-secondary-seed`, `--forte-neutral-tint` (how much brand hue
+bleeds into the greys), and `data-forte-radius` / `data-forte-density` /
+`data-forte-motion` / `data-theme` attributes.
 
-Scoping works too — put `.pui-theme` or `data-pui-theme` on any element to
+Scoping works too — put `.forte-theme` or `data-forte-theme` on any element to
 re-theme just that subtree. The ramps are re-declared on those selectors
 specifically so this works; overriding the seed on an arbitrary element does
 not, because a `var()` inside a custom property is substituted where the
@@ -47,7 +47,7 @@ property is *declared*.
 
 ## Contrast is measured, not asserted
 
-`pnpm --filter @dofortech/pretty-ui test` sweeps **119,108 in-gamut seeds** and
+`pnpm --filter @dofortech/forte-ui test` sweeps **119,108 in-gamut seeds** and
 asserts every pair the ramp promises. Current floors:
 
 | Pair | Minimum | Requirement |
@@ -79,7 +79,7 @@ easings, resolved at author time.
 Reduced motion is handled once, in the token layer, so no component stylesheet
 contains a media query:
 
-- Geometry tokens (`--pui-travel-*`, `--pui-scale-*`) collapse; durations
+- Geometry tokens (`--forte-travel-*`, `--forte-scale-*`) collapse; durations
   shorten rather than disappearing, because an opacity fade is the part that
   helps.
 - Scales interpolate toward `1`, never toward `0`.
@@ -106,18 +106,18 @@ Beyond what Base UI provides:
 
 ## Overriding
 
-Everything ships inside `@layer pretty-ui.*`, which loses to unlayered author
+Everything ships inside `@layer forte.*`, which loses to unlayered author
 CSS — your rules and utility classes win without `!important`.
 
 The flip side is a documented opt-out: an unlayered `transition` or
-`--pui-motion-ok: 1` in your app will also defeat the library's reduced-motion
+`--forte-motion-ok: 1` in your app will also defeat the library's reduced-motion
 handling.
 
-Note that component knobs such as `--pui-button-radius` are declared on the
+Note that component knobs such as `--forte-button-radius` are declared on the
 component's own root element, so they must be set **on that element** (through
 `className` or `style`), not on an ancestor — an element's own declaration beats
-an inherited value. The global `--pui-color-*` / `--pui-radius-*` /
-`--pui-space-*` tokens the knobs resolve to *are* inherited, so those can be
+an inherited value. The global `--forte-color-*` / `--forte-radius-*` /
+`--forte-space-*` tokens the knobs resolve to *are* inherited, so those can be
 re-pointed from `:root` or a theme scope.
 
 ## Repository
@@ -131,7 +131,7 @@ apps/docs       the documentation site — Next.js 16, MDX, Shiki
 pnpm dev         # docs site at :3000
 pnpm build       # everything
 pnpm typecheck
-pnpm --filter @dofortech/pretty-ui test   # the contrast harness
+pnpm --filter @dofortech/forte-ui test   # the contrast harness
 ```
 
 Conventions for adding a component are in

@@ -51,7 +51,7 @@ anchoring instead — unlike a tooltip, it is announced.
 ## Import
 
 ```tsx
-import { Tooltip } from "@dofortech/pretty-ui";
+import { Tooltip } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -120,7 +120,7 @@ from it, rather than dimming the way a menu's shortcut does. A tooltip's
 surface is the inverse of the page — near-white on near-black — and no mid-grey
 on it is one of the pairs the contrast harness measures, so a dimmed shortcut
 would be a guess at SC 1.4.3 on permanently visible text. Retune it with
-`--pui-tooltip-shortcut-bg` and the three knobs beside it, which is also how a
+`--forte-tooltip-shortcut-bg` and the three knobs beside it, which is also how a
 re-skinned popup keeps its cap legible.
 
 ## Accessibility
@@ -198,35 +198,35 @@ opacity fade with no travel and no scale.
 
 ## Theming
 
-Every value below is a custom property you can override. `--pui-tooltip-z-index`
+Every value below is a custom property you can override. `--forte-tooltip-z-index`
 is declared on the positioner; all the others are declared on the popup.
 
 <ThemingTable component="Tooltip" />
 
-The stylesheet also computes `--pui-tooltip-enter-x` and `--pui-tooltip-enter-y`
-from `--pui-tooltip-travel` and the resolved `data-side`. They are internal;
-change `--pui-tooltip-travel` instead.
+The stylesheet also computes `--forte-tooltip-enter-x` and `--forte-tooltip-enter-y`
+from `--forte-tooltip-travel` and the resolved `data-side`. They are internal;
+change `--forte-tooltip-travel` instead.
 
 Where you set these matters. Every popup property is declared on the popup's own
 element, so setting one on an ancestor, on `:root` or on a theme scope has no
 effect — the element's own declaration wins over an inherited value. Override
 them on the popup itself, by passing `className` to `Tooltip.Popup` (an
-unlayered rule beats the library's `@layer pretty-ui.components`, whatever its
+unlayered rule beats the library's `@layer forte.components`, whatever its
 specificity). The portal makes the ancestor route doubly useless: the popup
 renders on `document.body`, so nothing above the *trigger* is an ancestor of it
 in the first place.
 
 To re-skin every tooltip at once, re-point the global tokens the defaults
-resolve to — `--pui-gray-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-font-*`,
-`--pui-shadow-*`, `--pui-travel-sm`. The popup only reads those and never
+resolve to — `--forte-gray-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-font-*`,
+`--forte-shadow-*`, `--forte-travel-sm`. The popup only reads those and never
 re-declares them, so a value set on `:root` or a theme scope does reach it. The
-knobs with literal defaults — `--pui-tooltip-max-width`,
-`--pui-tooltip-arrow-width`, `--pui-tooltip-arrow-height`, and the shortcut
-cap's `--pui-tooltip-shortcut-bg` and `--pui-tooltip-shortcut-border-color`,
+knobs with literal defaults — `--forte-tooltip-max-width`,
+`--forte-tooltip-arrow-width`, `--forte-tooltip-arrow-height`, and the shortcut
+cap's `--forte-tooltip-shortcut-bg` and `--forte-tooltip-shortcut-border-color`,
 mixed from the popup's own `currentColor` — have no global token behind them,
 so those can only be changed on the popup itself.
 
-`--pui-tooltip-z-index` is declared on the positioner, not the popup, so
+`--forte-tooltip-z-index` is declared on the positioner, not the popup, so
 restacking a single tooltip goes through `positionerClassName` rather than
 `className`.
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@dofortech/pretty-ui";
+import { Slider } from "@dofortech/forte-ui";
 
 const tones = [
   { tone: "primary", label: "Primary", value: 40 },

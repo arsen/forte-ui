@@ -25,7 +25,7 @@
  * No prefers-reduced-motion block, here or in any component file: the only
  * motion is a colour transition, and its duration token shortens itself.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on Calendar's own root, so an
      * ancestor's value is only ever inherited and never wins — and so the
@@ -36,109 +36,109 @@
      * the arrows and the caption row all measure from it, so a consumer
      * resizing a calendar sets one value rather than six. It is a control
      * height rather than a space token so the grid follows
-     * `data-pui-density` the way every other control in the library does. */
+     * `data-forte-density` the way every other control in the library does. */
     /** Size of one day cell, and the measure everything else derives from */
-    --pui-calendar-cell-size: var(--pui-control-h-md);
+    --forte-calendar-cell-size: var(--forte-control-h-md);
     /** Size of the two navigation arrows */
-    --pui-calendar-nav-size: var(--pui-calendar-cell-size);
+    --forte-calendar-nav-size: var(--forte-calendar-cell-size);
     /** Space between months shown side by side */
-    --pui-calendar-gap: var(--pui-space-5);
+    --forte-calendar-gap: var(--forte-space-5);
     /** Space between the weekday header and the first week */
-    --pui-calendar-head-gap: var(--pui-space-1);
+    --forte-calendar-head-gap: var(--forte-space-1);
     /* Applied as padding INSIDE each cell, so two adjacent days end up two
      * gaps apart on both axes. Without it, days that touch fuse into one
      * shape: two selected days side by side read as a range, and the same
      * weekday selected on consecutive weeks reads as a vertical bar. */
     /** Space around a day inside its cell. `0px` fuses the grid into one block */
-    --pui-calendar-day-gap: 2px;
+    --forte-calendar-day-gap: 2px;
 
     /* Caption. */
     /** Month and year text size */
-    --pui-calendar-caption-font-size: var(--pui-font-size-2);
+    --forte-calendar-caption-font-size: var(--forte-font-size-2);
     /** Month and year text weight */
-    --pui-calendar-caption-font-weight: var(--pui-font-weight-semibold);
+    --forte-calendar-caption-font-weight: var(--forte-font-weight-semibold);
     /** Month and year colour */
-    --pui-calendar-caption-color: var(--pui-color-foreground);
+    --forte-calendar-caption-color: var(--forte-color-foreground);
 
     /* Column headers and the week-number gutter. `-subtle` is below the text
      * contrast floor for body copy but these are labels for a column whose
      * content says the same thing, and neither is ever the only cue. */
     /** Weekday initials text size */
-    --pui-calendar-weekday-font-size: var(--pui-font-size-1);
+    --forte-calendar-weekday-font-size: var(--forte-font-size-1);
     /** Weekday initials colour */
-    --pui-calendar-weekday-color: var(--pui-color-foreground-subtle);
+    --forte-calendar-weekday-color: var(--forte-color-foreground-subtle);
     /** ISO week-number colour */
-    --pui-calendar-week-number-color: var(--pui-color-foreground-subtle);
+    --forte-calendar-week-number-color: var(--forte-color-foreground-subtle);
 
     /* Days. */
     /** Day number text size */
-    --pui-calendar-day-font-size: var(--pui-font-size-2);
+    --forte-calendar-day-font-size: var(--forte-font-size-2);
     /** Corner radius of a day */
-    --pui-calendar-day-radius: var(--pui-radius-2);
+    --forte-calendar-day-radius: var(--forte-radius-2);
     /** Day number colour */
-    --pui-calendar-day-color: var(--pui-color-foreground);
+    --forte-calendar-day-color: var(--forte-color-foreground);
     /** Colour of days belonging to the neighbouring month */
-    --pui-calendar-day-color-outside: var(--pui-color-foreground-subtle);
+    --forte-calendar-day-color-outside: var(--forte-color-foreground-subtle);
     /** Day fill on hover */
-    --pui-calendar-day-bg-hover: var(--pui-color-panel-hover);
+    --forte-calendar-day-bg-hover: var(--forte-color-panel-hover);
     /** Fill of a selected day, and of the two ends of a range */
-    --pui-calendar-day-selected-bg: var(--pui-color-primary);
+    --forte-calendar-day-selected-bg: var(--forte-color-primary);
     /** Fill of a selected day on hover */
-    --pui-calendar-day-selected-bg-hover: var(--pui-color-primary-hover);
+    --forte-calendar-day-selected-bg-hover: var(--forte-color-primary-hover);
     /** Text colour on a selected day */
-    --pui-calendar-day-selected-color: var(--pui-color-on-primary);
+    --forte-calendar-day-selected-color: var(--forte-color-on-primary);
 
     /* Range. The band sits on the cell, the ends on the button. */
     /** Fill of the days between the two ends of a range */
-    --pui-calendar-range-bg: var(--pui-color-primary-soft);
+    --forte-calendar-range-bg: var(--forte-color-primary-soft);
     /** Fill of the band a half-picked range shows under the pointer */
-    --pui-calendar-preview-bg: var(--pui-color-panel-hover);
+    --forte-calendar-preview-bg: var(--forte-color-panel-hover);
 
     /* Today. The dot is a second, non-colour cue: `aria-current="date"` says
      * it to a screen reader, the dot says it to everyone else, and neither
      * depends on telling the accent hue from the foreground. */
     /** Colour of today's number */
-    --pui-calendar-today-color: var(--pui-color-primary-text);
+    --forte-calendar-today-color: var(--forte-color-primary-text);
     /** Diameter of the dot under today's number. `0px` removes it */
-    --pui-calendar-today-dot-size: 3px;
+    --forte-calendar-today-dot-size: 3px;
 
     /* Colour only ever crossfades — see the note about hover geometry in the
      * motion principles: a day that lifts under the pointer moves its own hit
      * box, and in a grid this dense that oscillates. */
     /** Length of a day's hover and selection crossfade */
-    --pui-calendar-duration: var(--pui-duration-fast);
+    --forte-calendar-duration: var(--forte-duration-fast);
     /** Curve of a day's hover and selection crossfade */
-    --pui-calendar-ease: var(--pui-ease-standard);
+    --forte-calendar-ease: var(--forte-ease-standard);
 
     /* Not a knob — the column width the header cells and the day cells have
      * to agree on. Naming it once is what stops the two drifting apart when
      * either input changes. */
-    --pui-calendar-track: calc(
-      var(--pui-calendar-cell-size) + var(--pui-calendar-day-gap) * 2
+    --forte-calendar-track: calc(
+      var(--forte-calendar-cell-size) + var(--forte-calendar-day-gap) * 2
     );
 
     box-sizing: border-box;
     display: inline-flex;
     flex-direction: column;
-    gap: var(--pui-space-2);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    gap: var(--forte-space-2);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Size presets re-point the knobs and nothing else. No `md` block: the
    * defaults above ARE `md`. */
   .root[data-size="sm"] {
-    --pui-calendar-cell-size: var(--pui-control-h-sm);
-    --pui-calendar-caption-font-size: var(--pui-font-size-1);
-    --pui-calendar-day-font-size: var(--pui-font-size-1);
-    --pui-calendar-gap: var(--pui-space-4);
+    --forte-calendar-cell-size: var(--forte-control-h-sm);
+    --forte-calendar-caption-font-size: var(--forte-font-size-1);
+    --forte-calendar-day-font-size: var(--forte-font-size-1);
+    --forte-calendar-gap: var(--forte-space-4);
   }
 
   .root[data-size="lg"] {
-    --pui-calendar-cell-size: var(--pui-control-h-lg);
-    --pui-calendar-caption-font-size: var(--pui-font-size-3);
-    --pui-calendar-day-font-size: var(--pui-font-size-3);
-    --pui-calendar-weekday-font-size: var(--pui-font-size-2);
+    --forte-calendar-cell-size: var(--forte-control-h-lg);
+    --forte-calendar-caption-font-size: var(--forte-font-size-3);
+    --forte-calendar-day-font-size: var(--forte-font-size-3);
+    --forte-calendar-weekday-font-size: var(--forte-font-size-2);
   }
 
   /* Layout ------------------------------------------------------------------
@@ -156,7 +156,7 @@
   .months {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--pui-calendar-gap);
+    gap: var(--forte-calendar-gap);
   }
 
   .month {
@@ -176,7 +176,7 @@
 
   /* The height knob is NOT set here. It has to be an inline style on the
    * button (see Calendar.tsx): Button's own `[data-size="sm"]` rule declares
-   * `--pui-button-height` on the very same element at (0,2,0), so a class
+   * `--forte-button-height` on the very same element at (0,2,0), so a class
    * selector here ties on nothing and loses — the arrows came out 28px inside
    * a 36px caption row, a misalignment visible only with the dropdowns. */
   .navButton {
@@ -184,7 +184,7 @@
   }
 
   /* One glyph, drawn pointing forward, mirrored for the back arrow. The
-   * inline axis is physical, so `--pui-direction` turns both around in RTL —
+   * inline axis is physical, so `--forte-direction` turns both around in RTL —
    * a chevron that keeps pointing right in an RTL calendar points at the
    * month you just came from. */
   .navIcon {
@@ -192,11 +192,11 @@
   }
 
   .navIcon[data-nav-icon="next"] {
-    scale: var(--pui-direction) 1;
+    scale: var(--forte-direction) 1;
   }
 
   .navIcon[data-nav-icon="previous"] {
-    scale: calc(-1 * var(--pui-direction)) 1;
+    scale: calc(-1 * var(--forte-direction)) 1;
   }
 
   /* Caption ---------------------------------------------------------------- */
@@ -205,20 +205,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-space-1);
+    gap: var(--forte-space-1);
     /* Matches the arrows, so the caption row is exactly as tall as the strip
      * overlaying it however the caption is laid out. */
-    min-block-size: var(--pui-calendar-nav-size);
+    min-block-size: var(--forte-calendar-nav-size);
     /* Keeps a long month name — or a pair of dropdowns — clear of the arrows
      * sitting over the ends of this row. */
-    padding-inline: var(--pui-calendar-nav-size);
+    padding-inline: var(--forte-calendar-nav-size);
   }
 
   .captionLabel {
-    color: var(--pui-calendar-caption-color);
-    font-size: var(--pui-calendar-caption-font-size);
-    font-weight: var(--pui-calendar-caption-font-weight);
-    line-height: var(--pui-line-height-normal);
+    color: var(--forte-calendar-caption-color);
+    font-size: var(--forte-calendar-caption-font-size);
+    font-weight: var(--forte-calendar-caption-font-weight);
+    line-height: var(--forte-line-height-normal);
     white-space: nowrap;
     /* Chrome, not a control: an idle click should not start a text selection
      * that then looks like a failed interaction. */
@@ -241,12 +241,12 @@
   }
 
   .weekday {
-    inline-size: var(--pui-calendar-track);
-    padding: 0 0 var(--pui-calendar-head-gap);
-    color: var(--pui-calendar-weekday-color);
-    font-size: var(--pui-calendar-weekday-font-size);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-normal);
+    inline-size: var(--forte-calendar-track);
+    padding: 0 0 var(--forte-calendar-head-gap);
+    color: var(--forte-calendar-weekday-color);
+    font-size: var(--forte-calendar-weekday-font-size);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-normal);
     text-align: center;
     cursor: default;
     -webkit-user-select: none;
@@ -254,10 +254,10 @@
   }
 
   .weekNumber {
-    padding: 0 var(--pui-space-2) 0 0;
-    color: var(--pui-calendar-week-number-color);
-    font-size: var(--pui-calendar-weekday-font-size);
-    font-weight: var(--pui-font-weight-normal);
+    padding: 0 var(--forte-space-2) 0 0;
+    color: var(--forte-calendar-week-number-color);
+    font-size: var(--forte-calendar-weekday-font-size);
+    font-weight: var(--forte-font-weight-normal);
     text-align: end;
     cursor: default;
     -webkit-user-select: none;
@@ -273,9 +273,9 @@
   .cell {
     box-sizing: border-box;
     position: relative;
-    inline-size: var(--pui-calendar-track);
-    block-size: var(--pui-calendar-track);
-    padding: var(--pui-calendar-day-gap);
+    inline-size: var(--forte-calendar-track);
+    block-size: var(--forte-calendar-track);
+    padding: var(--forte-calendar-day-gap);
   }
 
   /* Inset on the block axis, so week rows stay visibly separate; full bleed
@@ -284,28 +284,28 @@
   .cell[data-in-range]::before {
     content: "";
     position: absolute;
-    inset-block: var(--pui-calendar-day-gap);
+    inset-block: var(--forte-calendar-day-gap);
     inset-inline: 0;
-    background-color: var(--pui-calendar-range-bg);
+    background-color: var(--forte-calendar-range-bg);
   }
 
   /* The tentative half of a half-picked range: quieter than the committed
    * band, because it disappears again the moment the pointer moves on. Same
    * specificity as the rule above, so order is what decides. */
   .cell[data-preview]::before {
-    background-color: var(--pui-calendar-preview-bg);
+    background-color: var(--forte-calendar-preview-bg);
   }
 
   /* Logical corners, so the band opens at the range's start and closes at its
    * end in both writing directions without a second rule. */
   .cell[data-range-start]::before {
-    border-start-start-radius: var(--pui-calendar-day-radius);
-    border-end-start-radius: var(--pui-calendar-day-radius);
+    border-start-start-radius: var(--forte-calendar-day-radius);
+    border-end-start-radius: var(--forte-calendar-day-radius);
   }
 
   .cell[data-range-end]::before {
-    border-start-end-radius: var(--pui-calendar-day-radius);
-    border-end-end-radius: var(--pui-calendar-day-radius);
+    border-start-end-radius: var(--forte-calendar-day-radius);
+    border-end-end-radius: var(--forte-calendar-day-radius);
   }
 
   /* Days -------------------------------------------------------------------- */
@@ -324,29 +324,29 @@
     block-size: 100%;
     /* SC 2.5.8. Bites at data-size="sm" under a compact density, where the
      * control height drops below 24px. */
-    min-inline-size: var(--pui-target-min);
-    min-block-size: var(--pui-target-min);
+    min-inline-size: var(--forte-target-min);
+    min-block-size: var(--forte-target-min);
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: var(--pui-calendar-day-radius);
+    border-radius: var(--forte-calendar-day-radius);
     background-color: transparent;
-    color: var(--pui-calendar-day-color);
+    color: var(--forte-calendar-day-color);
     font-family: inherit;
-    font-size: var(--pui-calendar-day-font-size);
-    font-weight: var(--pui-font-weight-normal);
+    font-size: var(--forte-calendar-day-font-size);
+    font-weight: var(--forte-font-weight-normal);
     /* Figures of one width, or the columns twitch as the month walks from
      * single to double digits. */
     font-variant-numeric: tabular-nums;
     line-height: 1;
     cursor: pointer;
     transition:
-      background-color var(--pui-calendar-duration) var(--pui-calendar-ease),
-      color var(--pui-calendar-duration) var(--pui-calendar-ease);
+      background-color var(--forte-calendar-duration) var(--forte-calendar-ease),
+      color var(--forte-calendar-duration) var(--forte-calendar-ease);
   }
 
   .day[data-outside] {
-    color: var(--pui-calendar-day-color-outside);
+    color: var(--forte-calendar-day-color-outside);
   }
 
   /* Hover excludes a selected day, which has its own stronger pair below —
@@ -354,23 +354,23 @@
    * under the pointer. */
   @media (hover: hover) {
     .day:hover:not([data-selected], [aria-disabled="true"]) {
-      background-color: var(--pui-calendar-day-bg-hover);
-      color: var(--pui-color-foreground);
+      background-color: var(--forte-calendar-day-bg-hover);
+      color: var(--forte-color-foreground);
     }
 
     .day[data-selected]:hover {
-      background-color: var(--pui-calendar-day-selected-bg-hover);
+      background-color: var(--forte-calendar-day-selected-bg-hover);
     }
   }
 
   .day[data-selected] {
-    background-color: var(--pui-calendar-day-selected-bg);
-    color: var(--pui-calendar-day-selected-color);
-    font-weight: var(--pui-font-weight-medium);
+    background-color: var(--forte-calendar-day-selected-bg);
+    color: var(--forte-calendar-day-selected-color);
+    font-weight: var(--forte-font-weight-medium);
   }
 
   /* `opacity` is the non-forced-colors treatment only — the generic
-   * `[aria-disabled="true"]` rule in patterns.css (layer pretty-ui.a11y,
+   * `[aria-disabled="true"]` rule in patterns.css (layer forte.a11y,
    * ordered after this one) restores `opacity: 1` and paints GrayText, so the
    * fade cannot survive into HCM and read as enabled. */
   .day[aria-disabled="true"] {
@@ -379,8 +379,8 @@
   }
 
   .day[data-today] {
-    color: var(--pui-calendar-today-color);
-    font-weight: var(--pui-font-weight-semibold);
+    color: var(--forte-calendar-today-color);
+    font-weight: var(--forte-font-weight-semibold);
   }
 
   /* Centred with `inset-inline: 0` and an auto margin rather than a
@@ -390,12 +390,12 @@
   .day[data-today]::after {
     content: "";
     position: absolute;
-    inset-block-end: calc(var(--pui-calendar-today-dot-size) + 1px);
+    inset-block-end: calc(var(--forte-calendar-today-dot-size) + 1px);
     inset-inline: 0;
-    inline-size: var(--pui-calendar-today-dot-size);
-    block-size: var(--pui-calendar-today-dot-size);
+    inline-size: var(--forte-calendar-today-dot-size);
+    block-size: var(--forte-calendar-today-dot-size);
     margin-inline: auto;
-    border-radius: var(--pui-radius-full);
+    border-radius: var(--forte-radius-full);
     /* Rides the number's colour through selection, hover and every tone a
      * consumer re-points, so it never needs a palette of its own. */
     background-color: currentColor;
@@ -404,15 +404,15 @@
   /* Footer ------------------------------------------------------------------ */
 
   .footer {
-    color: var(--pui-color-foreground-muted);
-    font-size: var(--pui-font-size-1);
-    line-height: var(--pui-line-height-normal);
+    color: var(--forte-color-foreground-muted);
+    font-size: var(--forte-font-size-1);
+    line-height: var(--forte-line-height-normal);
     text-align: center;
   }
 }
 
 /* Forced colors --------------------------------------------------------------
- * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by
  * layer alone.
  *
  * patterns.css already covers most of this: `[data-selected]` and
@@ -433,7 +433,7 @@
  * would be Highlight — the same one a committed range uses, which would make
  * a guess look like a decision.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .day[data-today]::after {
       background-color: CanvasText;

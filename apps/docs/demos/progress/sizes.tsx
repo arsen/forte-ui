@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@dofortech/pretty-ui";
+import { Progress } from "@dofortech/forte-ui";
 
 const SIZES = [
   { size: "sm", thickness: "4px" },
@@ -14,7 +14,7 @@ export default function ProgressSizes() {
       {SIZES.map(({ size, thickness }) => (
         // `size` is thickness, not length: the bar fills its container in
         // every size. Length belongs to the layout the bar sits in, which is
-        // why it is `--pui-progress-length` rather than a fourth step here.
+        // why it is `--forte-progress-length` rather than a fourth step here.
         <Progress.Root key={size} size={size} value={48}>
           <Progress.Label className="flex items-baseline gap-2">
             <code className="font-mono">{size}</code>

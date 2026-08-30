@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 
 /**
  * Copies the code from the nearest <pre>'s textContent.
@@ -48,7 +48,7 @@ export function CopyButton({ className }: { className?: string }) {
       <span aria-hidden="true">{copied ? <CheckIcon /> : <CopyIcon />}</span>
       {/* aria-label alone does not re-announce on change for all screen
         * readers, so the state change is also pushed through a live region. */}
-      <span className="pui-visually-hidden" role="status" aria-live="polite">
+      <span className="forte-visually-hidden" role="status" aria-live="polite">
         {copied ? "Copied to clipboard" : ""}
       </span>
     </Button>

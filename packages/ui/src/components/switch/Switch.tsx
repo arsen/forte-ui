@@ -80,7 +80,7 @@ export interface SwitchProps
  * ```
  *
  * Motion — the thumb's position *is* the state, not decoration, so its travel
- * is never multiplied by `--pui-motion-ok`. Under reduced motion the thumb
+ * is never multiplied by `--forte-motion-ok`. Under reduced motion the thumb
  * still moves; only the spring flattens, because the duration token it rides
  * on shortens. The track colour, the thumb colour and the checkmark change
  * alongside it so state never rests on movement alone.
@@ -92,20 +92,20 @@ export const Switch = React.forwardRef<HTMLElement, SwitchProps>(function Switch
   return (
     <BaseSwitch.Root
       ref={ref}
-      // `pui-target` grows the hit area to the SC 2.5.8 minimum without
+      // `forte-target` grows the hit area to the SC 2.5.8 minimum without
       // changing the painted track, which is only 20px tall at `md`.
-      className={clsx(styles.root, "pui-focus-ring", "pui-target", className)}
-      data-pui="switch"
+      className={clsx(styles.root, "forte-focus-ring", "forte-target", className)}
+      data-forte="switch"
       data-size={size}
       {...props}
     >
-      <BaseSwitch.Thumb className={clsx(styles.thumb, thumbClassName)} data-pui="switch-thumb">
+      <BaseSwitch.Thumb className={clsx(styles.thumb, thumbClassName)} data-forte="switch-thumb">
         {stateIcon ? (
           // Decorative: the checked state already reaches assistive tech
           // through the root's role="switch" + aria-checked.
           <svg
-            className={clsx(styles.icon, "pui-icon")}
-            data-pui="switch-icon"
+            className={clsx(styles.icon, "forte-icon")}
+            data-forte="switch-icon"
             viewBox="0 0 12 12"
             aria-hidden="true"
             focusable="false"
@@ -114,7 +114,7 @@ export const Switch = React.forwardRef<HTMLElement, SwitchProps>(function Switch
              * follows the thumb's forced `color` instead of painting a
              * system-coloured block. `fill="none"` is a presentation
              * attribute and still beats the inherited fill from
-             * `.pui-icon`. */}
+             * `.forte-icon`. */}
             <path
               d="M2.6 6.3 4.9 8.6 9.4 3.7"
               fill="none"

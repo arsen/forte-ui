@@ -37,7 +37,7 @@
  * No prefers-reduced-motion block, here or anywhere else in a component file:
  * the travel token collapses to 0px and the durations shorten on their own.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on Collapsible.Root itself, so an
      * ancestor's value is only ever inherited and never wins. Re-skin one
@@ -51,13 +51,13 @@
     /** Corner radius of the card. The trigger takes the same radius, so its
      * focus ring follows the card rather than being shaved by the card's own
      * clip — squaring off its bottom two corners while the panel is open */
-    --pui-collapsible-radius: 0px;
+    --forte-collapsible-radius: 0px;
     /** Background behind the whole component */
-    --pui-collapsible-bg: transparent;
+    --forte-collapsible-bg: transparent;
     /** Border around the card */
-    --pui-collapsible-border-width: 0px;
+    --forte-collapsible-border-width: 0px;
     /** Colour of that border */
-    --pui-collapsible-border-color: var(--pui-color-border-muted);
+    --forte-collapsible-border-color: var(--forte-color-border-muted);
 
     /* Trigger.
      *
@@ -66,16 +66,16 @@
      * to the side of the text is pressable and nothing claims to be. */
     /** How wide the button is. `fit-content` is what makes the plain trigger
      * exactly as wide as its own label */
-    --pui-collapsible-trigger-width: fit-content;
+    --forte-collapsible-trigger-width: fit-content;
     /** Inline padding of the trigger */
-    --pui-collapsible-trigger-px: 0px;
+    --forte-collapsible-trigger-px: 0px;
     /** Block padding of the trigger */
-    --pui-collapsible-trigger-py: var(--pui-space-1);
+    --forte-collapsible-trigger-py: var(--forte-space-1);
     /** Space between the label and the marker — a minimum, once the trigger is
      * full width */
-    --pui-collapsible-trigger-gap: var(--pui-control-gap);
+    --forte-collapsible-trigger-gap: var(--forte-control-gap);
     /** Trigger background at rest */
-    --pui-collapsible-trigger-bg: transparent;
+    --forte-collapsible-trigger-bg: transparent;
     /* Hover is a colour change on the label, not a fill.
      *
      * The Accordion argues the other way round and both are right for their
@@ -85,15 +85,15 @@
      * box exactly. `contained` restores the row and the fill along with it. */
     /** Trigger background on hover. Unset in `plain`, where the colour change
      * below is the cue instead */
-    --pui-collapsible-trigger-bg-hover: var(--pui-collapsible-trigger-bg);
+    --forte-collapsible-trigger-bg-hover: var(--forte-collapsible-trigger-bg);
     /** Label colour */
-    --pui-collapsible-trigger-color: var(--pui-color-foreground);
+    --forte-collapsible-trigger-color: var(--forte-color-foreground);
     /** Label colour on hover */
-    --pui-collapsible-trigger-color-hover: var(--pui-color-primary-text);
+    --forte-collapsible-trigger-color-hover: var(--forte-color-primary-text);
     /** Label size */
-    --pui-collapsible-trigger-font-size: var(--pui-font-size-2);
+    --forte-collapsible-trigger-font-size: var(--forte-font-size-2);
     /** Label weight */
-    --pui-collapsible-trigger-font-weight: var(--pui-font-weight-medium);
+    --forte-collapsible-trigger-font-weight: var(--forte-font-weight-medium);
 
     /* Icon. `currentColor` in `plain`, so the chevron travels with the label
      * through rest, hover and disabled without a second pair of tokens to keep
@@ -101,27 +101,27 @@
      * same word group. `contained` puts it at the far end of a wide row, where
      * it has to recede instead, and swaps in the Accordion's two greys. */
     /** Marker colour when closed */
-    --pui-collapsible-icon-color: currentColor;
+    --forte-collapsible-icon-color: currentColor;
     /** Marker colour when open */
-    --pui-collapsible-icon-color-open: currentColor;
+    --forte-collapsible-icon-color-open: currentColor;
     /** How far the marker turns when the panel opens */
-    --pui-collapsible-icon-rotate: 180deg;
+    --forte-collapsible-icon-rotate: 180deg;
 
     /* Panel. Unlike the Accordion, `plain` DOES get a block-start knob: its
-     * trigger's own padding is one `--pui-space-1`, far too little to separate
+     * trigger's own padding is one `--forte-space-1`, far too little to separate
      * a heading from its body on its own. `contained` zeroes it again, because
-     * there the trigger's `--pui-space-3` already does the job and a second
+     * there the trigger's `--forte-space-3` already does the job and a second
      * helping double-spaces the row. */
     /** Inline padding of the panel content */
-    --pui-collapsible-panel-px: 0px;
+    --forte-collapsible-panel-px: 0px;
     /** Block-start padding of the panel content */
-    --pui-collapsible-panel-pt: var(--pui-space-2);
+    --forte-collapsible-panel-pt: var(--forte-space-2);
     /** Block-end padding of the panel content */
-    --pui-collapsible-panel-pb: 0px;
+    --forte-collapsible-panel-pb: 0px;
     /** Body text colour */
-    --pui-collapsible-panel-color: var(--pui-color-foreground-muted);
+    --forte-collapsible-panel-color: var(--forte-color-foreground-muted);
     /** Body text size */
-    --pui-collapsible-panel-font-size: var(--pui-font-size-2);
+    --forte-collapsible-panel-font-size: var(--forte-font-size-2);
 
     /* One duration and one curve for the height and the content's slide, so
      * the two cannot drift apart. Deliberately NOT a spring: an overshooting
@@ -129,10 +129,10 @@
      * band of empty background under the last line before settling back, and
      * the springs that do not overshoot are only slower ease-outs. */
     /** Length of the height change, and of the content's slide */
-    --pui-collapsible-duration: var(--pui-duration-normal);
+    --forte-collapsible-duration: var(--forte-duration-normal);
     /** Curve for both. Deliberately not a spring: overshooting `height` flashes
      * a band of empty background under the last line before settling */
-    --pui-collapsible-ease: var(--pui-ease-standard);
+    --forte-collapsible-ease: var(--forte-ease-standard);
 
     box-sizing: border-box;
     /* Block, not a flex column. A flex `gap` between the trigger and the panel
@@ -142,12 +142,12 @@
      * that is supposed to be invisible. The panel's own padding, which a zero
      * content box clips away, is the spacing that cannot get that wrong. */
     display: block;
-    border: var(--pui-collapsible-border-width) solid
-      var(--pui-collapsible-border-color);
-    border-radius: var(--pui-collapsible-radius);
-    background-color: var(--pui-collapsible-bg);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    border: var(--forte-collapsible-border-width) solid
+      var(--forte-collapsible-border-color);
+    border-radius: var(--forte-collapsible-radius);
+    background-color: var(--forte-collapsible-bg);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Contained: the disclosure becomes a card, sized and coloured to match one
@@ -155,29 +155,29 @@
    * set of them. Everything here is a knob the defaults above already declared
    * — except the clip, which is structural and explained on its own line. */
   .root[data-variant="contained"] {
-    --pui-collapsible-radius: var(--pui-radius-surface);
-    --pui-collapsible-bg: var(--pui-color-panel);
-    --pui-collapsible-border-width: 1px;
+    --forte-collapsible-radius: var(--forte-radius-surface);
+    --forte-collapsible-bg: var(--forte-color-panel);
+    --forte-collapsible-border-width: 1px;
 
-    --pui-collapsible-trigger-width: 100%;
-    --pui-collapsible-trigger-px: var(--pui-space-3);
-    --pui-collapsible-trigger-py: var(--pui-space-3);
+    --forte-collapsible-trigger-width: 100%;
+    --forte-collapsible-trigger-px: var(--forte-space-3);
+    --forte-collapsible-trigger-py: var(--forte-space-3);
     /* Minimum space between the label and the icon, so a label long enough to
      * fill the row still cannot run into it. */
-    --pui-collapsible-trigger-gap: var(--pui-space-4);
-    --pui-collapsible-trigger-bg-hover: var(--pui-color-panel-hover);
-    --pui-collapsible-trigger-color-hover: var(--pui-collapsible-trigger-color);
+    --forte-collapsible-trigger-gap: var(--forte-space-4);
+    --forte-collapsible-trigger-bg-hover: var(--forte-color-panel-hover);
+    --forte-collapsible-trigger-color-hover: var(--forte-collapsible-trigger-color);
 
     /* `-subtle` is 3.73:1 — below the floor for text, fine for a non-text
      * indicator (SC 1.4.11), and `prefers-contrast: more` promotes it anyway.
      * It is never the only cue: `aria-expanded` and the panel itself say the
      * same thing. */
-    --pui-collapsible-icon-color: var(--pui-color-foreground-subtle);
-    --pui-collapsible-icon-color-open: var(--pui-color-foreground);
+    --forte-collapsible-icon-color: var(--forte-color-foreground-subtle);
+    --forte-collapsible-icon-color-open: var(--forte-color-foreground);
 
-    --pui-collapsible-panel-px: var(--pui-space-3);
-    --pui-collapsible-panel-pt: 0px;
-    --pui-collapsible-panel-pb: var(--pui-space-4);
+    --forte-collapsible-panel-px: var(--forte-space-3);
+    --forte-collapsible-panel-pt: 0px;
+    --forte-collapsible-panel-pb: var(--forte-space-4);
 
     /* Structural, not a knob: it clips the trigger's hover fill and anything
      * the consumer paints behind the panel to the card's curve, so neither has
@@ -192,7 +192,7 @@
   /* Applied to the whole root, not just the trigger: a disabled collapsible
    * that happens to be open would otherwise show fully-enabled body text under
    * a greyed-out trigger. `opacity` is the non-forced-colors treatment only —
-   * the generic `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y,
+   * the generic `[data-disabled]` rule in patterns.css (layer forte.a11y,
    * ordered after this one) restores `opacity: 1` and paints GrayText, so the
    * 55% cannot survive into HCM and read as enabled. */
   .root[data-disabled] {
@@ -212,37 +212,37 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--pui-collapsible-trigger-gap);
-    width: var(--pui-collapsible-trigger-width);
+    gap: var(--forte-collapsible-trigger-gap);
+    width: var(--forte-collapsible-trigger-width);
     /* SC 2.5.8 in both axes. The vertical floor is the one that usually bites,
      * but `plain` shrink-wraps its label, and a one-word trigger ("More") with
      * the icon suppressed would otherwise fall under 24px wide. */
-    min-height: var(--pui-target-min);
-    min-width: var(--pui-target-min);
-    padding: var(--pui-collapsible-trigger-py) var(--pui-collapsible-trigger-px);
+    min-height: var(--forte-target-min);
+    min-width: var(--forte-target-min);
+    padding: var(--forte-collapsible-trigger-py) var(--forte-collapsible-trigger-px);
     margin: 0;
     border: 0;
     /* Same radius as the card. In `contained` that is what stops the inset
      * focus ring having its corners shaved off by the card's own clip; in
      * `plain` it is 0, which is also what makes the [data-panel-open] rule
      * below a no-op there rather than one needing a variant to guard it. */
-    border-radius: var(--pui-collapsible-radius);
+    border-radius: var(--forte-collapsible-radius);
 
-    background-color: var(--pui-collapsible-trigger-bg);
-    color: var(--pui-collapsible-trigger-color);
+    background-color: var(--forte-collapsible-trigger-bg);
+    color: var(--forte-collapsible-trigger-color);
 
     font-family: inherit;
-    font-size: var(--pui-collapsible-trigger-font-size);
-    font-weight: var(--pui-collapsible-trigger-font-weight);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-collapsible-trigger-font-size);
+    font-weight: var(--forte-collapsible-trigger-font-weight);
+    line-height: var(--forte-line-height-normal);
     text-align: start;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Open, the row's bottom edge is the seam with the panel rather than the
@@ -258,8 +258,8 @@
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled]) {
-      background-color: var(--pui-collapsible-trigger-bg-hover);
-      color: var(--pui-collapsible-trigger-color-hover);
+      background-color: var(--forte-collapsible-trigger-bg-hover);
+      color: var(--forte-collapsible-trigger-color-hover);
     }
   }
 
@@ -269,13 +269,13 @@
 
   /* Owns the flexible column, so a long label wraps inside the row instead of
    * pushing the icon out of it. A flex row rather than a plain box: an icon
-   * passed alongside the text lines up on `--pui-control-gap` without a
+   * passed alongside the text lines up on `--forte-control-gap` without a
    * wrapper. */
   .label {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-    gap: var(--pui-control-gap);
+    gap: var(--forte-control-gap);
     min-width: 0;
   }
 
@@ -283,12 +283,12 @@
    * `rotate` as its own property, not through the `transform` shorthand, so
    * nothing else the consumer puts on this box has to share one slot with it.
    *
-   * The angle is NOT multiplied by --pui-motion-ok. Under reduced motion the
+   * The angle is NOT multiplied by --forte-motion-ok. Under reduced motion the
    * chevron still has to end up pointing the other way — it is the state, and
    * only the trip between the two states is motion. The duration collapses on
    * its own, so the flip becomes instantaneous rather than absent.
    *
-   * Nor is it multiplied by --pui-direction. A chevron pointing DOWN that
+   * Nor is it multiplied by --forte-direction. A chevron pointing DOWN that
    * turns 180° is the same gesture in both writing directions; an
    * inline-facing one turning 90° would not be, because `rotate` is physical
    * and has no logical form. */
@@ -297,20 +297,20 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    color: var(--pui-collapsible-icon-color);
+    color: var(--forte-collapsible-icon-color);
     rotate: 0deg;
     /* Spring easing paired with its own duration token — a shorter one
      * truncates the curve mid-bounce and reads as a stutter. */
     transition:
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      rotate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      rotate var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   /* In `plain` the marker's colour IS the label's — `currentColor`, recomputed
    * from the trigger every frame while the trigger's own colour transition
    * runs. Transitioning it a second time here would set the chevron chasing a
    * target that keeps moving under it, so on hover it would trail the word
-   * beside it by up to a whole --pui-duration-fast. Dropping `color` from the
+   * beside it by up to a whole --forte-duration-fast. Dropping `color` from the
    * list leaves it locked to the label.
    *
    * The whole shorthand is restated rather than just `transition-property`:
@@ -318,13 +318,13 @@
    * `rotate` would take the FIRST of them — the 160ms meant for colour — which
    * truncates the spring mid-bounce. */
   .trigger[data-variant="plain"] .icon {
-    transition: rotate var(--pui-duration-spring-snappy)
-      var(--pui-ease-spring-snappy);
+    transition: rotate var(--forte-duration-spring-snappy)
+      var(--forte-ease-spring-snappy);
   }
 
   .trigger[data-panel-open] .icon {
-    color: var(--pui-collapsible-icon-color-open);
-    rotate: var(--pui-collapsible-icon-rotate);
+    color: var(--forte-collapsible-icon-color-open);
+    rotate: var(--forte-collapsible-icon-rotate);
   }
 
   /* Panel ------------------------------------------------------------------
@@ -335,11 +335,11 @@
     box-sizing: border-box;
     height: var(--collapsible-panel-height);
     overflow: hidden;
-    color: var(--pui-collapsible-panel-color);
-    font-size: var(--pui-collapsible-panel-font-size);
-    line-height: var(--pui-line-height-normal);
-    transition: height var(--pui-collapsible-duration)
-      var(--pui-collapsible-ease);
+    color: var(--forte-collapsible-panel-color);
+    font-size: var(--forte-collapsible-panel-font-size);
+    line-height: var(--forte-line-height-normal);
+    transition: height var(--forte-collapsible-duration)
+      var(--forte-collapsible-ease);
   }
 
   .panel[data-starting-style],
@@ -351,34 +351,34 @@
    * what stops the text from looking pasted in at full opacity behind a
    * moving edge. It starts slightly high and drops back: the panel clips it
    * from below, so travelling downward is the direction that reads as being
-   * uncovered. --pui-travel-sm is 0px under reduced motion, leaving the fade
+   * uncovered. --forte-travel-sm is 0px under reduced motion, leaving the fade
    * — which is the part that helps there. */
   .content {
-    padding: var(--pui-collapsible-panel-pt) var(--pui-collapsible-panel-px)
-      var(--pui-collapsible-panel-pb);
+    padding: var(--forte-collapsible-panel-pt) var(--forte-collapsible-panel-px)
+      var(--forte-collapsible-panel-pb);
     opacity: 1;
     translate: 0 0;
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-collapsible-duration) var(--pui-collapsible-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-collapsible-duration) var(--forte-collapsible-ease);
   }
 
   .panel[data-starting-style] .content,
   .panel[data-ending-style] .content {
     opacity: 0;
-    translate: 0 calc(-1 * var(--pui-travel-sm));
+    translate: 0 calc(-1 * var(--forte-travel-sm));
   }
 }
 
 /* Forced colors --------------------------------------------------------------
- * In `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so it
+ * In `forte.a11y`, which is ordered after `forte.components`, so it
  * beats everything above by layer alone — no `!important`, no specificity
  * inflation.
  *
  * What patterns.css already handles, and must not be restated here:
  *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is
  *     the only reliable disabled cue once opacity stops being honoured.
- *   - `.pui-focus-ring:focus-visible` becomes a Highlight outline.
+ *   - `.forte-focus-ring:focus-visible` becomes a Highlight outline.
  *
  * What is collapsible-specific: the `contained` card's border. Its colour
  * comes from a token, and a token resolves to a colour forced-colors then
@@ -391,7 +391,7 @@
  * chevron's rotation is geometry, so it survives forced colors untouched and
  * goes on saying whether the panel is open.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .root[data-variant="contained"] {
       border-color: CanvasText;

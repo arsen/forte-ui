@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, NumberField } from "@dofortech/pretty-ui";
+import { Field, NumberField } from "@dofortech/forte-ui";
 
 /**
  * `pixelSensitivity` is how far the pointer has to travel for one step, so it

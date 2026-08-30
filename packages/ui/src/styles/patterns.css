@@ -5,7 +5,7 @@
  * consumers both need to apply them, and because the forced-colors rules below
  * have to reach every surface the library renders.
  */
-@layer pretty-ui.patterns {
+@layer forte.patterns {
   /* ------------------------------------------------------------------------
    * Focus ring
    *
@@ -15,83 +15,83 @@
    * mode, where box-shadow is forced to `none`. The box-shadow here only
    * fills the offset gap with the contrasting second tone.
    * --------------------------------------------------------------------- */
-  .pui-focus-ring:focus-visible,
-  .pui-focus-ring-within:has(:focus-visible) {
-    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
-    outline-offset: var(--pui-focus-ring-offset);
-    box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+  .forte-focus-ring:focus-visible,
+  .forte-focus-ring-within:has(:focus-visible) {
+    outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
+    outline-offset: var(--forte-focus-ring-offset);
+    box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
   }
 
-  /* `.pui-focus-ring-within` is a statement that the WRAPPER rings on behalf of
+  /* `.forte-focus-ring-within` is a statement that the WRAPPER rings on behalf of
    * whatever inside it holds focus — Slider's and ColorPicker's thumbs over
    * their hidden inputs, NumberField's group over its text field. So that inner
    * element must not draw the UA's own ring on top, or the control wears two.
    *
    * The `:not()` is what keeps this from also silencing a nested part that
    * legitimately rings ITSELF (NumberField's steppers sit inside its group and
-   * carry `.pui-focus-ring`). Written as an exclusion rather than left to
-   * document order because this rule and `.pui-focus-ring:focus-visible` below
+   * carry `.forte-focus-ring`). Written as an exclusion rather than left to
+   * document order because this rule and `.forte-focus-ring:focus-visible` below
    * are both (0,2,0): disjoint sets settle it, a tie would not. `:where()`
    * keeps the exclusion itself out of the specificity.
    *
    * This replaces the `outline: none` each such component used to restate. */
-  .pui-focus-ring-within
-    :where(:not(.pui-focus-ring, .pui-focus-ring-within)):focus-visible {
+  .forte-focus-ring-within
+    :where(:not(.forte-focus-ring, .forte-focus-ring-within)):focus-visible {
     outline: none;
   }
 
   /* Inside a clipping context — list rows, tab strips, select items — an
    * outward ring would be cut off. Invert it. */
-  .pui-focus-ring[data-focus-inset]:focus-visible {
-    outline-offset: calc(-1 * var(--pui-focus-ring-width) - 1px);
+  .forte-focus-ring[data-focus-inset]:focus-visible {
+    outline-offset: calc(-1 * var(--forte-focus-ring-width) - 1px);
     box-shadow: inset 0 0 0
-      calc(var(--pui-focus-ring-width) + var(--pui-focus-ring-offset))
-      var(--pui-focus-ring-outer);
+      calc(var(--forte-focus-ring-width) + var(--forte-focus-ring-offset))
+      var(--forte-focus-ring-outer);
   }
 
   /* SC 2.4.11 Focus Not Obscured: keep a focused control from scrolling to
    * rest underneath sticky chrome. Apps should also set scroll-padding-block
    * on their scroll container to match their header height. */
-  :where(.pui-focus-ring, .pui-focus-ring-within) {
-    scroll-margin: var(--pui-space-5, 1.5rem);
+  :where(.forte-focus-ring, .forte-focus-ring-within) {
+    scroll-margin: var(--forte-space-5, 1.5rem);
   }
 
   /* ------------------------------------------------------------------------
    * Hit target — SC 2.5.8 (24x24 minimum)
    * Grows the interactive area without changing the visual box.
    * --------------------------------------------------------------------- */
-  .pui-target {
+  .forte-target {
     position: relative;
   }
 
-  .pui-target::after {
+  .forte-target::after {
     content: "";
     position: absolute;
     inset: 50% auto auto 50%;
     translate: -50% -50%;
-    width: max(100%, var(--pui-target-min));
-    height: max(100%, var(--pui-target-min));
+    width: max(100%, var(--forte-target-min));
+    height: max(100%, var(--forte-target-min));
   }
 
   /* ------------------------------------------------------------------------
    * Scrim
    * --------------------------------------------------------------------- */
-  .pui-scrim {
+  .forte-scrim {
     position: fixed;
     inset: 0;
-    background-color: var(--pui-scrim-color);
-    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+    background-color: var(--forte-scrim-color);
+    transition: opacity var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
-  .pui-scrim[data-starting-style],
-  .pui-scrim[data-ending-style] {
+  .forte-scrim[data-starting-style],
+  .forte-scrim[data-ending-style] {
     opacity: 0;
   }
 
   @supports (backdrop-filter: blur(1px)) {
     @media (prefers-reduced-transparency: no-preference) and (prefers-contrast: no-preference) {
-      .pui-scrim {
-        backdrop-filter: blur(var(--pui-scrim-blur));
+      .forte-scrim {
+        backdrop-filter: blur(var(--forte-scrim-blur));
       }
     }
   }
@@ -104,11 +104,11 @@
    * So a border that is invisible normally becomes the visible boundary that
    * keeps a popup from dissolving into the page once shadows are stripped.
    * --------------------------------------------------------------------- */
-  .pui-hc-surface {
+  .forte-hc-surface {
     border: 1px solid transparent;
   }
 
-  .pui-icon {
+  .forte-icon {
     fill: currentColor;
     stroke: currentColor;
   }
@@ -122,7 +122,7 @@
    * tree. `white-space: nowrap` prevents a long string collapsing to one
    * character per line, which some screen readers then read letter by letter.
    * --------------------------------------------------------------------- */
-  .pui-visually-hidden:not(:focus-within) {
+  .forte-visually-hidden:not(:focus-within) {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -137,7 +137,7 @@
   /* Opt out only where colour IS the information — a swatch, a chart key.
    * This also disables the automatic text backplate, so anything inside must
    * supply its own contrast and its own boundary. */
-  .pui-preserve-color {
+  .forte-preserve-color {
     forced-color-adjust: none;
     border: 1px solid CanvasText;
   }
@@ -146,11 +146,11 @@
 /**
  * Accessibility overrides.
  *
- * These live in `pretty-ui.a11y`, which is ordered AFTER `pretty-ui.components`,
+ * These live in `forte.a11y`, which is ordered AFTER `forte.components`,
  * so they beat component CSS by layer order alone — no specificity games, and
  * no `!important`. See layers.css for why that ordering is load-bearing.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   /* ------------------------------------------------------------------------
    * Forced colors (Windows High Contrast)
    *
@@ -159,7 +159,7 @@
    * div/span, so the library has to assign the keywords itself.
    * --------------------------------------------------------------------- */
   @media (forced-colors: active) {
-    .pui-hc-surface {
+    .forte-hc-surface {
       border-color: CanvasText;
       background-color: Canvas;
       color: CanvasText;
@@ -172,7 +172,7 @@
      * and never turns GrayText. Excluding disabled here makes the two rules
      * cover disjoint sets instead of competing. */
     :is(
-      .pui-hc-selected,
+      .forte-hc-selected,
       [data-selected],
       [data-checked],
       [data-highlighted],
@@ -183,9 +183,9 @@
       color: HighlightText;
     }
 
-    :is(.pui-hc-selected, [data-checked], [data-highlighted], [aria-selected="true"]):not(
+    :is(.forte-hc-selected, [data-checked], [data-highlighted], [aria-selected="true"]):not(
       [data-disabled], [aria-disabled="true"], :disabled
-    ) :where(svg, .pui-icon) {
+    ) :where(svg, .forte-icon) {
       fill: HighlightText;
       stroke: HighlightText;
     }
@@ -199,13 +199,13 @@
       opacity: 1;
     }
 
-    :where([data-disabled], [aria-disabled="true"], :disabled) :where(svg, .pui-icon) {
+    :where([data-disabled], [aria-disabled="true"], :disabled) :where(svg, .forte-icon) {
       fill: GrayText;
       stroke: GrayText;
     }
 
-    .pui-focus-ring:focus-visible,
-    .pui-focus-ring-within:has(:focus-visible) {
+    .forte-focus-ring:focus-visible,
+    .forte-focus-ring-within:has(:focus-visible) {
       outline: 3px solid Highlight;
       outline-offset: 2px;
       box-shadow: none;
@@ -213,23 +213,23 @@
 
     /* Purely decorative and gradient-dependent — hide rather than show a
      * meaningless system-coloured block. */
-    .pui-hc-decorative {
+    .forte-hc-decorative {
       display: none;
     }
 
-    .pui-scrim {
+    .forte-scrim {
       background-color: Canvas;
       backdrop-filter: none;
       opacity: 1;
     }
 
-    .pui-link {
+    .forte-link {
       color: LinkText;
       text-decoration: underline;
     }
 
     /* The invisible hit-target expander would otherwise paint. */
-    .pui-target::after {
+    .forte-target::after {
       display: none;
     }
   }

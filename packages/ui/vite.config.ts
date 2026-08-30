@@ -25,10 +25,10 @@ const entries = Object.fromEntries(
 
 // Global stylesheets (theme/reset) are not imported by any JS entry, so they
 // would not be emitted by the bundler. Copy them verbatim into dist so
-// consumers can `import "@dofortech/pretty-ui/theme.css"`.
+// consumers can `import "@dofortech/forte-ui/theme.css"`.
 function copyGlobalStyles(): Plugin {
   return {
-    name: "pretty-ui:copy-global-styles",
+    name: "forte-ui:copy-global-styles",
     apply: "build",
     closeBundle() {
       const from = resolve(root, "src/styles");
@@ -53,7 +53,7 @@ function copyGlobalStyles(): Plugin {
 function preserveUseClient(): Plugin {
   const clientModules = new Set<string>();
   return {
-    name: "pretty-ui:preserve-use-client",
+    name: "forte-ui:preserve-use-client",
     transform(code, id) {
       if (/^\s*(["'])use client\1/.test(code)) clientModules.add(id);
       return null;

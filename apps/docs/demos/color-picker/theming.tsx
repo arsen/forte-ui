@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ColorPicker } from "@dofortech/pretty-ui";
+import { ColorPicker } from "@dofortech/forte-ui";
 
 export default function ColorPickerTheming() {
   return (
@@ -12,11 +12,11 @@ export default function ColorPickerTheming() {
           * no fork. They stay in a `style` object rather than becoming utility
           * classes because a class cannot set an arbitrary custom property. */
         style={{
-          "--pui-color-picker-width": "19rem",
-          "--pui-color-picker-area-height": "11rem",
-          "--pui-color-picker-area-radius": "var(--pui-radius-4)",
-          "--pui-color-picker-rail-thickness": "1rem",
-          "--pui-color-picker-swatch-radius": "var(--pui-radius-full)",
+          "--forte-color-picker-width": "19rem",
+          "--forte-color-picker-area-height": "11rem",
+          "--forte-color-picker-area-radius": "var(--forte-radius-4)",
+          "--forte-color-picker-rail-thickness": "1rem",
+          "--forte-color-picker-swatch-radius": "var(--forte-radius-full)",
         } as React.CSSProperties}
       >
         <ColorPicker.Area />

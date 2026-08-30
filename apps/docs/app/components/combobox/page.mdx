@@ -29,7 +29,7 @@ input automatically, any other shape needs `itemToStringLabel`.
 ## Import
 
 ```tsx
-import { Combobox } from "@dofortech/pretty-ui";
+import { Combobox } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -37,7 +37,7 @@ import { Combobox } from "@dofortech/pretty-ui";
 ### Sizes
 
 `size` on `<Combobox.InputGroup>` sets the field's height floor, inline
-padding and font size, on the same `--pui-control-*` scale as `Input` and
+padding and font size, on the same `--forte-control-*` scale as `Input` and
 `Select.Trigger` — the three line up on one row. The popup is unaffected.
 
 <DemoBlock id="combobox/sizes" />
@@ -161,33 +161,33 @@ attribute (`highlightItemOnHover`, on by default), so style rows off
 
 ## Theming
 
-Every `--pui-combobox-*` property below is declared on the surface that owns
+Every `--forte-combobox-*` property below is declared on the surface that owns
 it, and an element's own declaration beats an inherited value — so setting one
 on `:root`, on a theme scope or on any ancestor has no effect. The popup is
 portalled to `<body>` as well, so an ancestor of the *field* is not even in
 its tree. Set each property on the part that declares it, through that part's
 `className` (an unlayered rule beats the library's `@layer
-pretty-ui.components`, whatever its specificity) or an inline `style`:
+forte.components`, whatever its specificity) or an inline `style`:
 
 - `Combobox.Label` declares the four `label-*` properties.
 - `Combobox.InputGroup` declares every `field-*` property plus
-  `--pui-combobox-input-min-width` and `--pui-combobox-button-size` — the
+  `--forte-combobox-input-min-width` and `--forte-combobox-button-size` — the
   input and the icon buttons read those but never redeclare them, so the
   group is the place to set them.
 - `Combobox.Trigger` declares the `trigger-*` properties; they style its
   standalone select-like shape only.
 - `Combobox.Chip` declares the `chip-*` properties.
 - `Combobox.Popup` declares the `popup-*` and motion properties plus
-  `--pui-combobox-item-px`, `--pui-combobox-item-gap` and
-  `--pui-combobox-item-indicator-size` — the layout knobs the list, the
+  `--forte-combobox-item-px`, `--forte-combobox-item-gap` and
+  `--forte-combobox-item-indicator-size` — the layout knobs the list, the
   items, the group labels and the status rows read but never redeclare.
-- `positionerClassName` reaches `--pui-combobox-z-index`, the only property
+- `positionerClassName` reaches `--forte-combobox-z-index`, the only property
   declared on the positioner.
-- `Combobox.List` declares `--pui-combobox-list-padding-y`; `Combobox.Item`
+- `Combobox.List` declares `--forte-combobox-list-padding-y`; `Combobox.Item`
   declares the `item-*` colour and font properties.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*`, `--pui-space-*` — are the exception: the component only
+The global tokens these resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*`, `--forte-space-*` — are the exception: the component only
 reads those and never redeclares them, so re-pointing them on `:root` or on a
 theme scope does re-skin every combobox.
 

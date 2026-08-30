@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@dofortech/pretty-ui";
+import { Progress } from "@dofortech/forte-ui";
 
 const TONES = [
   { tone: "primary", label: "Syncing", value: 40 },

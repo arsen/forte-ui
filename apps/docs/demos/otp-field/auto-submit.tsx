@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Field, Form, OTPField } from "@dofortech/pretty-ui";
+import { Button, Field, Form, OTPField } from "@dofortech/forte-ui";
 
 // Stands in for the request a real app would make.
 const CORRECT = "482913";

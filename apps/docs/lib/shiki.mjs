@@ -34,7 +34,7 @@ export const highlighter = await createHighlighterCore({
 export const shikiOptions = {
   themes: { light: "github-light", dark: "github-dark" },
   defaultColor: false,
-  cssVariablePrefix: "--pui-shiki-",
+  cssVariablePrefix: "--forte-shiki-",
 };
 
 /**

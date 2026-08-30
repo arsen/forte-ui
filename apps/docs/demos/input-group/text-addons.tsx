@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, InputGroup } from "@dofortech/pretty-ui";
+import { Field, InputGroup } from "@dofortech/forte-ui";
 
 export default function InputGroupTextAddons() {
   return (

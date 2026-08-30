@@ -1,7 +1,7 @@
 "use client";
 
 import { Copy } from "lucide-react";
-import { Button, ButtonGroup, Input } from "@dofortech/pretty-ui";
+import { Button, ButtonGroup, Input } from "@dofortech/forte-ui";
 
 const ICON = "size-4 shrink-0";
 
@@ -16,7 +16,7 @@ export default function ButtonGroupInput() {
       </ButtonGroup.Text>
       <Input
         id="clone-url"
-        defaultValue="github.com/dofortech/pretty-ui.git"
+        defaultValue="github.com/dofortech/forte-ui.git"
         readOnly
       />
       <Button variant="outline" tone="neutral" iconOnly aria-label="Copy URL">

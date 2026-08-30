@@ -1,6 +1,6 @@
 "use client";
 
-import { DatePicker, Field } from "@dofortech/pretty-ui";
+import { DatePicker, Field } from "@dofortech/forte-ui";
 
 export default function DatePickerWithField() {
   return (

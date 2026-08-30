@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@dofortech/pretty-ui";
+import { Badge } from "@dofortech/forte-ui";
 
 export default function BadgeCustom() {
   return (
@@ -10,8 +10,8 @@ export default function BadgeCustom() {
       <Badge
         tone="primary"
         style={{
-          "--pui-badge-radius": "var(--pui-radius-1)",
-          "--pui-badge-font-weight": "var(--pui-font-weight-bold)",
+          "--forte-badge-radius": "var(--forte-radius-1)",
+          "--forte-badge-font-weight": "var(--forte-font-weight-bold)",
         } as React.CSSProperties}
       >
         v0.4.0
@@ -23,8 +23,8 @@ export default function BadgeCustom() {
         variant="outline"
         dot
         style={{
-          "--pui-badge-dot-color": "var(--pui-color-success)",
-          "--pui-badge-dot-size": "0.625em",
+          "--forte-badge-dot-color": "var(--forte-color-success)",
+          "--forte-badge-dot-size": "0.625em",
         } as React.CSSProperties}
       >
         eu-west-1
@@ -36,7 +36,7 @@ export default function BadgeCustom() {
         size="lg"
         shape="pill"
         style={{
-          "--pui-badge-padding-x": "var(--pui-space-4)",
+          "--forte-badge-padding-x": "var(--forte-space-4)",
         } as React.CSSProperties}
       >
         Preview build

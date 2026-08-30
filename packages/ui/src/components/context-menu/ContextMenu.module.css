@@ -4,7 +4,7 @@
  * One rule, and the shortness is the design rather than an omission. Base UI's
  * `context-menu` entry point re-exports the Menu parts unchanged —
  * `ContextMenu.Popup` IS `Menu.Popup`, `ContextMenu.Item` IS `Menu.Item` — so
- * the popup, the rows, the separators and every `--pui-menu-*` knob they
+ * the popup, the rows, the separators and every `--forte-menu-*` knob they
  * declare are already styled by `menu/Menu.module.css` and are deliberately
  * not restated here. Two stylesheets for one surface would have to be kept
  * pixel-identical by hand, and the first divergence would show up only in
@@ -19,7 +19,7 @@
  * the only element this component styles.
  */
 
-@layer pretty-ui.components {
+@layer forte.components {
   /* ------------------------------------------------------------------------
    * Trigger
    *
@@ -27,7 +27,7 @@
    * card, a table row, a canvas — so this rule adds as close to nothing as it
    * can: no background, no padding, no `display`, and no `cursor`, so the
    * content underneath keeps the affordances it came with (a caret over text,
-   * an arrow over an image). There is also no `.pui-focus-ring`: the element
+   * an arrow over an image). There is also no `.forte-focus-ring`: the element
    * is not focusable, which is exactly why a context menu can never be the
    * only route to a command.
    *
@@ -40,9 +40,9 @@
    * --------------------------------------------------------------------- */
   .trigger {
     /** Colour of the ring that marks the region while its menu is open */
-    --pui-context-menu-trigger-ring-color: var(--pui-color-primary);
+    --forte-context-menu-trigger-ring-color: var(--forte-color-primary);
     /** Width of that ring. Set it to 0 to leave the region unmarked */
-    --pui-context-menu-trigger-ring-width: 2px;
+    --forte-context-menu-trigger-ring-width: 2px;
     /* Drawn INSIDE the region's own box by default, which is what the negative
      * value buys: a trigger is usually flush inside a card or a list, and an
      * outward ring would be shaved off by the first ancestor with
@@ -50,8 +50,8 @@
      * around it. */
     /** How far the ring sits outside the region's box; negative draws it
      * inside */
-    --pui-context-menu-trigger-ring-offset: calc(
-      -1 * var(--pui-context-menu-trigger-ring-width)
+    --forte-context-menu-trigger-ring-offset: calc(
+      -1 * var(--forte-context-menu-trigger-ring-width)
     );
 
     /* A long press is a tap that has not finished, so Android and iOS paint
@@ -73,8 +73,8 @@
    * outline, which forced-colors mode would repaint as a system colour and
    * leave ringing every trigger on the page at all times. */
   .trigger[data-popup-open] {
-    outline: var(--pui-context-menu-trigger-ring-width) solid
-      var(--pui-context-menu-trigger-ring-color);
-    outline-offset: var(--pui-context-menu-trigger-ring-offset);
+    outline: var(--forte-context-menu-trigger-ring-width) solid
+      var(--forte-context-menu-trigger-ring-color);
+    outline-offset: var(--forte-context-menu-trigger-ring-offset);
   }
 }

@@ -8,7 +8,7 @@ import {
   Form,
   Input,
   Select,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 
 const SCOPES = {
   read: "Read only",

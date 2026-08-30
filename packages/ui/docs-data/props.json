@@ -47,7 +47,7 @@
   },
   "AccordionTrigger": {
     "name": "AccordionTrigger",
-    "description": "The button that opens and closes the panel. Renders a `<button>` and must\nsit inside an `Accordion.Header`.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--pui-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.",
+    "description": "The button that opens and closes the panel. Renders a `<button>` and must\nsit inside an `Accordion.Header`.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--forte-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.",
     "props": [
       {
         "name": "className",
@@ -163,7 +163,7 @@
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "The glyph to draw. Defaults to the standard one for the root's `tone`,\nand any `svg` passed here is sized to `--pui-alert-icon-size` without\nneeding a size prop of its own."
+        "description": "The glyph to draw. Defaults to the standard one for the root's `tone`,\nand any `svg` passed here is sized to `--forte-alert-icon-size` without\nneeding a size prop of its own."
       },
       {
         "name": "className",
@@ -228,7 +228,7 @@
   },
   "AspectRatio": {
     "name": "AspectRatio",
-    "description": "A box that holds its shape, whatever goes in it.\n\n```tsx\n<AspectRatio ratio=\"video\">\n  <img src=\"/cover.jpg\" alt=\"\" />\n</AspectRatio>\n```\n\nThe reason to reach for it is layout shift: the box occupies its final size\nfrom the first paint, so an image that arrives half a second later drops\ninto space that was already reserved instead of shoving the page down.\n\nBase UI has no aspect-ratio primitive — there is no interaction to model —\nso this is built on the CSS property directly rather than on the\n`padding-bottom: 56.25%` trick the property replaced. Two things follow from\nthat, and both are the point:\n\n- **Children stack.** The box is a one-cell grid and every direct child is\n  placed in that cell, in source order, without leaving flow. A caption over\n  a photo is two elements and no `position: absolute`:\n\n  ```tsx\n  <AspectRatio ratio=\"photo\" variant=\"filled\">\n    <img src=\"/cover.jpg\" alt=\"\" />\n    <figcaption style={{ placeSelf: \"end start\" }}>Lisbon, 2019</figcaption>\n  </AspectRatio>\n  ```\n\n- **Either axis can be the measured one.** `basis=\"block\"` takes a definite\n  height and derives the width, which a percentage padding cannot do at all.\n\nMedia children are sized and `object-fit` for you — see `fit`. Everything\nvisual is a `--pui-aspect-*` custom property, and the state is on\n`data-variant`, `data-fit` and `data-basis`, so a box can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=filled]:...`) without wrapping it.",
+    "description": "A box that holds its shape, whatever goes in it.\n\n```tsx\n<AspectRatio ratio=\"video\">\n  <img src=\"/cover.jpg\" alt=\"\" />\n</AspectRatio>\n```\n\nThe reason to reach for it is layout shift: the box occupies its final size\nfrom the first paint, so an image that arrives half a second later drops\ninto space that was already reserved instead of shoving the page down.\n\nBase UI has no aspect-ratio primitive — there is no interaction to model —\nso this is built on the CSS property directly rather than on the\n`padding-bottom: 56.25%` trick the property replaced. Two things follow from\nthat, and both are the point:\n\n- **Children stack.** The box is a one-cell grid and every direct child is\n  placed in that cell, in source order, without leaving flow. A caption over\n  a photo is two elements and no `position: absolute`:\n\n  ```tsx\n  <AspectRatio ratio=\"photo\" variant=\"filled\">\n    <img src=\"/cover.jpg\" alt=\"\" />\n    <figcaption style={{ placeSelf: \"end start\" }}>Lisbon, 2019</figcaption>\n  </AspectRatio>\n  ```\n\n- **Either axis can be the measured one.** `basis=\"block\"` takes a definite\n  height and derives the width, which a percentage padding cannot do at all.\n\nMedia children are sized and `object-fit` for you — see `fit`. Everything\nvisual is a `--forte-aspect-*` custom property, and the state is on\n`data-variant`, `data-fit` and `data-basis`, so a box can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=filled]:...`) without wrapping it.",
     "props": [
       {
         "name": "basis",
@@ -256,7 +256,7 @@
         "type": "AspectRatioFit",
         "required": false,
         "defaultValue": "cover",
-        "description": "How direct media children — `img`, `video`, `canvas`, `iframe`, `embed`,\n`object`, and the `img` inside a `picture` — fill the box. It is an\n`object-fit` value, applied for you: media is stretched to the frame on\nboth axes first, so without it an image is either letterboxed or\noverflowing, and every caller ends up writing the same three declarations\non the child by hand.\n\n`cover` crops to fill and is what a media slot almost always wants;\n`contain` fits the whole image inside and leaves bars, which is right when\nthe subject must not be cut — a logo, a diagram, a product shot on white.\n\nTo keep an image from being cropped in the wrong place, set\n`--pui-aspect-position`."
+        "description": "How direct media children — `img`, `video`, `canvas`, `iframe`, `embed`,\n`object`, and the `img` inside a `picture` — fill the box. It is an\n`object-fit` value, applied for you: media is stretched to the frame on\nboth axes first, so without it an image is either letterboxed or\noverflowing, and every caller ends up writing the same three declarations\non the child by hand.\n\n`cover` crops to fill and is what a media slot almost always wants;\n`contain` fits the whole image inside and leaves bars, which is right when\nthe subject must not be cut — a logo, a diagram, a product shot on white.\n\nTo keep an image from being cropped in the wrong place, set\n`--forte-aspect-position`."
       },
       {
         "name": "ratio",
@@ -297,7 +297,7 @@
         "type": "AvatarShape",
         "required": false,
         "defaultValue": "circle",
-        "description": "The silhouette. `circle` is the convention for people; `rounded` and\n`square` read as an object — a workspace, a repository, a bot.\n\n`circle` stays a circle under `data-pui-radius=\"none\"`, because you asked\nfor one. Only `rounded` follows the radius preset."
+        "description": "The silhouette. `circle` is the convention for people; `rounded` and\n`square` read as an object — a workspace, a repository, a bot.\n\n`circle` stays a circle under `data-forte-radius=\"none\"`, because you asked\nfor one. Only `rounded` follows the radius preset."
       },
       {
         "name": "size",
@@ -344,7 +344,7 @@
   },
   "AvatarFallback": {
     "name": "AvatarFallback",
-    "description": "What shows when there is no image, or when the image fails: initials, an\nicon, a `+3` counter.\n\nAn `svg` child is sized to `--pui-avatar-icon-size` automatically, so a\nlucide or Heroicons glyph needs no wrapper and no size prop of its own.",
+    "description": "What shows when there is no image, or when the image fails: initials, an\nicon, a `+3` counter.\n\nAn `svg` child is sized to `--forte-avatar-icon-size` automatically, so a\nlucide or Heroicons glyph needs no wrapper and no size prop of its own.",
     "props": [
       {
         "name": "className",
@@ -418,7 +418,7 @@
   },
   "Badge": {
     "name": "Badge",
-    "description": "A small label for status, counts and categories.\n\nBase UI has no badge primitive — there is no interaction to model and no\nstate machine to get right — so this is built on `useRender` alone, which is\nwhat gives it the `render` prop the rest of the library has.\n\n```tsx\n<Badge>Beta</Badge>\n<Badge tone=\"success\" dot>Active</Badge>\n<Badge variant=\"solid\" tone=\"danger\" shape=\"pill\" count={12} />\n<Badge variant=\"solid\" tone=\"danger\" shape=\"pill\" count={480} />  // 99+\n<Badge tone=\"neutral\" variant=\"outline\" render={<a href=\"/tags/css\" />}>css</Badge>\n```\n\nStyling is driven by `data-*` attributes and `--pui-badge-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with Tailwind\narbitrary variants (`data-[tone=success]:...`) without wrapping.",
+    "description": "A small label for status, counts and categories.\n\nBase UI has no badge primitive — there is no interaction to model and no\nstate machine to get right — so this is built on `useRender` alone, which is\nwhat gives it the `render` prop the rest of the library has.\n\n```tsx\n<Badge>Beta</Badge>\n<Badge tone=\"success\" dot>Active</Badge>\n<Badge variant=\"solid\" tone=\"danger\" shape=\"pill\" count={12} />\n<Badge variant=\"solid\" tone=\"danger\" shape=\"pill\" count={480} />  // 99+\n<Badge tone=\"neutral\" variant=\"outline\" render={<a href=\"/tags/css\" />}>css</Badge>\n```\n\nStyling is driven by `data-*` attributes and `--forte-badge-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with Tailwind\narbitrary variants (`data-[tone=success]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -460,14 +460,14 @@
         "type": "BadgeShape",
         "required": false,
         "defaultValue": "rounded",
-        "description": "Corner treatment. `rounded` follows `--pui-radius-control`, so it moves\nwith a `data-pui-radius` preset like everything else; `pill` is fully\nround, which is the conventional shape for a count."
+        "description": "Corner treatment. `rounded` follows `--forte-radius-control`, so it moves\nwith a `data-forte-radius` preset like everything else; `pill` is fully\nround, which is the conventional shape for a count."
       },
       {
         "name": "size",
         "type": "BadgeSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the badge. The three differ mostly in how much air surrounds the\nlabel: the type scale bottoms out at `--pui-font-size-1`, so `sm` and\n`md` share it and `lg` steps up.\n\nUnlike a control, a badge is not resized by `data-pui-density` — its\nheight comes from the text it sits beside, which is the thing it should\ntrack."
+        "description": "Size of the badge. The three differ mostly in how much air surrounds the\nlabel: the type scale bottoms out at `--forte-font-size-1`, so `sm` and\n`md` share it and `lg` steps up.\n\nUnlike a control, a badge is not resized by `data-forte-density` — its\nheight comes from the text it sits beside, which is the thing it should\ntrack."
       },
       {
         "name": "tone",
@@ -648,7 +648,7 @@
   },
   "Button": {
     "name": "Button",
-    "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--pui-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",
+    "description": "A button built on Base UI's unstyled `Button` primitive.\n\nStyling is driven entirely by `data-*` attributes and `--forte-button-*`\ncustom properties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -697,7 +697,7 @@
         "type": "ButtonSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-forte-density` setting."
       },
       {
         "name": "tone",
@@ -952,7 +952,7 @@
         "type": "CalendarSize",
         "required": false,
         "defaultValue": "\"md\"",
-        "description": "Cell size and text size. Follows the ambient `data-pui-density` too."
+        "description": "Cell size and text size. Follows the ambient `data-forte-density` too."
       },
       {
         "name": "today",
@@ -972,7 +972,7 @@
   },
   "Checkbox": {
     "name": "Checkbox",
-    "description": "A checkbox built on Base UI's unstyled `Checkbox` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Root`.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-indeterminate`, `data-disabled`, `data-readonly`, and the `Field`\nvalidity attributes) on both the root and the indicator, and every visual\ndecision is a `--pui-checkbox-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[indeterminate]:...`) without wrapping.",
+    "description": "A checkbox built on Base UI's unstyled `Checkbox` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Root`.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-indeterminate`, `data-disabled`, `data-readonly`, and the `Field`\nvalidity attributes) on both the root and the indicator, and every visual\ndecision is a `--forte-checkbox-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[indeterminate]:...`) without wrapping.",
     "props": [
       {
         "name": "checked",
@@ -1109,7 +1109,7 @@
   },
   "CollapsibleTrigger": {
     "name": "CollapsibleTrigger",
-    "description": "The button that opens and closes the panel. Renders a `<button>` carrying\n`aria-expanded` and an `aria-controls` pointing at the panel.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--pui-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.\n\nKeep the text as the accessible name. `aria-expanded` already announces open\nand closed, so a trigger reading \"Details\" needs no \"show/hide\" wording of\nits own, and an icon-only trigger has no name at all.",
+    "description": "The button that opens and closes the panel. Renders a `<button>` carrying\n`aria-expanded` and an `aria-controls` pointing at the panel.\n\n`children` is wrapped in a label box rather than laid out directly: the row\nis `justify-content: space-between`, so two loose children would push apart\nto opposite ends instead of an icon-plus-text reading as one label. The box\nis itself a flex row with `--forte-control-gap`, so an icon passed alongside\nthe text lines up without a wrapper.\n\nKeep the text as the accessible name. `aria-expanded` already announces open\nand closed, so a trigger reading \"Details\" needs no \"show/hide\" wording of\nits own, and an icon-only trigger has no name at all.",
     "props": [
       {
         "name": "className",
@@ -1396,7 +1396,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--pui-popover-backdrop-z-index` goes."
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--forte-popover-backdrop-z-index` goes."
       },
       {
         "name": "children",
@@ -1466,7 +1466,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--pui-popover-z-index`."
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--forte-popover-z-index`."
       },
       {
         "name": "positionMethod",
@@ -1514,7 +1514,7 @@
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--pui-popover-bg`, so a custom skin usually needs nothing here."
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--forte-popover-bg`, so a custom skin usually needs nothing here."
       },
       {
         "name": "className",
@@ -1740,7 +1740,7 @@
   },
   "ComboboxInputGroup": {
     "name": "ComboboxInputGroup",
-    "description": "The field shell: a `<div>` that wraps `<Combobox.Input>` and its associated\ncontrols — `<Combobox.Trigger>`, `<Combobox.Clear>`, `<Combobox.Chips>` —\nand carries all of the control chrome (border, background, sizes,\nvariants), so the input inside stays bare and the buttons sit inside the\nboundary. Focus lives on the input; the group rings for it via\n`.pui-focus-ring-within`.",
+    "description": "The field shell: a `<div>` that wraps `<Combobox.Input>` and its associated\ncontrols — `<Combobox.Trigger>`, `<Combobox.Clear>`, `<Combobox.Chips>` —\nand carries all of the control chrome (border, background, sizes,\nvariants), so the input inside stays bare and the buttons sit inside the\nboundary. Focus lives on the input; the group rings for it via\n`.forte-focus-ring-within`.",
     "props": [
       {
         "name": "className",
@@ -1761,7 +1761,7 @@
         "type": "ComboboxSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the field. Height, inline padding and font size move together,\nand the actual numbers follow the ambient `data-pui-density` setting.\nMatches `Input` and `Select.Trigger`, so the three line up on one row."
+        "description": "Size of the field. Height, inline padding and font size move together,\nand the actual numbers follow the ambient `data-forte-density` setting.\nMatches `Input` and `Select.Trigger`, so the three line up on one row."
       },
       {
         "name": "variant",
@@ -1970,7 +1970,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. Use this to reach `--pui-combobox-z-index`, the\nonly knob declared on the positioner."
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. Use this to reach `--forte-combobox-z-index`, the\nonly knob declared on the positioner."
       },
       {
         "name": "side",
@@ -1984,7 +1984,7 @@
         "type": "number | OffsetFunction",
         "required": false,
         "defaultValue": "8",
-        "description": "Gap in pixels between the anchor and the popup. The default clears the\nfocus ring rather than sitting flush against it: unlike `Select`, focus\nstays on the field while the popup is open, so the group's two-tone ring\n(`--pui-focus-ring-offset` + `--pui-focus-ring-width`, 4px together) is\npainted in exactly the gap this measures."
+        "description": "Gap in pixels between the anchor and the popup. The default clears the\nfocus ring rather than sitting flush against it: unlike `Select`, focus\nstays on the field while the popup is open, so the group's two-tone ring\n(`--forte-focus-ring-offset` + `--forte-focus-ring-width`, 4px together) is\npainted in exactly the gap this measures."
       }
     ]
   },
@@ -2246,7 +2246,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. This is the only way to reach\n`--pui-menu-z-index`, the one property declared there."
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup. This is the only way to reach\n`--forte-menu-z-index`, the one property declared there."
       },
       {
         "name": "side",
@@ -2308,7 +2308,7 @@
         "type": "MenuItemTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the row draws from. `danger` is for an action\nthat destroys something, and is the only alternative offered: the\nhighlight already paints `--pui-color-primary-soft`, so a primary-toned\nrow would be indistinguishable from the row the user is currently on."
+        "description": "Which semantic colour set the row draws from. `danger` is for an action\nthat destroys something, and is the only alternative offered: the\nhighlight already paints `--forte-color-primary-soft`, so a primary-toned\nrow would be indistinguishable from the row the user is currently on."
       }
     ]
   },
@@ -2793,7 +2793,7 @@
         "type": "DatePickerSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the field. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+        "description": "Size of the field. Actual dimensions also follow the ambient\n`data-forte-density` setting."
       },
       {
         "name": "variant",
@@ -2846,7 +2846,7 @@
   },
   "DatePickerPopup": {
     "name": "DatePickerPopup",
-    "description": "The floating surface, and the column inside it that stacks the calendar\nover an optional `DatePicker.Footer`.\n\nThe surface itself is a `Popover.Popup` and keeps that component's own\nmarker and `--pui-popover-*` knobs — it is a popover surface, and there is\nnothing date-shaped about it. The panel it wraps is this component's part,\nwhich is what a consumer targets to reach the picker's own popup and not\nevery popover on the page.\n\nEvery `Popover.Popup` prop except `size` is forwarded, so `side`, `align`\nand `sideOffset` work as usual. `size` is not: a calendar has an intrinsic\nwidth and a width cap would only ever fight it.",
+    "description": "The floating surface, and the column inside it that stacks the calendar\nover an optional `DatePicker.Footer`.\n\nThe surface itself is a `Popover.Popup` and keeps that component's own\nmarker and `--forte-popover-*` knobs — it is a popover surface, and there is\nnothing date-shaped about it. The panel it wraps is this component's part,\nwhich is what a consumer targets to reach the picker's own popup and not\nevery popover on the page.\n\nEvery `Popover.Popup` prop except `size` is forwarded, so `side`, `align`\nand `sideOffset` work as usual. `size` is not: a calendar has an intrinsic\nwidth and a width cap would only ever fight it.",
     "props": [
       {
         "name": "align",
@@ -2888,7 +2888,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--pui-popover-backdrop-z-index` goes."
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--forte-popover-backdrop-z-index` goes."
       },
       {
         "name": "className",
@@ -2944,7 +2944,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--pui-popover-z-index`."
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--forte-popover-z-index`."
       },
       {
         "name": "positionMethod",
@@ -3104,7 +3104,7 @@
         "type": "CalendarSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Cell size and text size. Follows the ambient `data-pui-density` too."
+        "description": "Cell size and text size. Follows the ambient `data-forte-density` too."
       },
       {
         "name": "today",
@@ -3137,7 +3137,7 @@
   },
   "DatePickerClear": {
     "name": "DatePickerClear",
-    "description": "Empties the selection. A `Button`, so it answers to `variant`, `tone` and\n`size` — and tags itself `data-pui=\"button\"` rather than being handed a\nmarker, the way every composed component in the library does.\n\nIt disables itself when there is nothing to clear, and when the root is\n`required`. Disabled rather than hidden: a control that disappears as you\nreach for it is worse than one that is visibly unavailable, and the popup\nwould reflow under the pointer.",
+    "description": "Empties the selection. A `Button`, so it answers to `variant`, `tone` and\n`size` — and tags itself `data-forte=\"button\"` rather than being handed a\nmarker, the way every composed component in the library does.\n\nIt disables itself when there is nothing to clear, and when the root is\n`required`. Disabled rather than hidden: a control that disappears as you\nreach for it is worse than one that is visibly unavailable, and the popup\nwould reflow under the pointer.",
     "props": [
       {
         "name": "children",
@@ -3193,7 +3193,7 @@
         "type": "ButtonSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-forte-density` setting."
       },
       {
         "name": "tone",
@@ -3322,7 +3322,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the scrollable viewport that positions the\npopup. Use it to change alignment (e.g. pin the dialog to the top), or to\nre-point `--pui-dialog-z-index` — it defaults to 40, one band under the\nanchored popups, so a `Select` or `Tooltip` inside a dialog stays above\nit. The backdrop reads `--pui-dialog-backdrop-z-index` (39) from\n`backdropClassName`, since it is the viewport's sibling."
+        "description": "Additional class name(s) for the scrollable viewport that positions the\npopup. Use it to change alignment (e.g. pin the dialog to the top), or to\nre-point `--forte-dialog-z-index` — it defaults to 40, one band under the\nanchored popups, so a `Select` or `Tooltip` inside a dialog stays above\nit. The backdrop reads `--forte-dialog-backdrop-z-index` (39) from\n`backdropClassName`, since it is the viewport's sibling."
       }
     ]
   },
@@ -3503,14 +3503,14 @@
         "type": "DrawerVariant",
         "required": false,
         "defaultValue": "edge",
-        "description": "`\"edge\"` sits flush against the side of the screen and rounds only its\ntwo inner corners. `\"floating\"` insets the whole surface by\n`--pui-drawer-inset` and rounds all four, so the page shows through\naround it."
+        "description": "`\"edge\"` sits flush against the side of the screen and rounds only its\ntwo inner corners. `\"floating\"` insets the whole surface by\n`--forte-drawer-inset` and rounds all four, so the page shows through\naround it."
       },
       {
         "name": "viewportClassName",
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the fixed container the popup is placed in.\nIt owns `--pui-drawer-z-index` and `--pui-drawer-inset` — the popup reads\nthe inset from here by inheritance, so setting it once on the viewport\nkeeps the surface and the gap around it in agreement."
+        "description": "Additional class name(s) for the fixed container the popup is placed in.\nIt owns `--forte-drawer-z-index` and `--forte-drawer-inset` — the popup reads\nthe inset from here by inheritance, so setting it once on the viewport\nkeeps the surface and the gap around it in agreement."
       }
     ]
   },
@@ -3529,7 +3529,7 @@
   },
   "DrawerContent": {
     "name": "DrawerContent",
-    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also the drawer's scroll container, which is what keeps a\n`Drawer.Handle` from scrolling away and lets a `Drawer.Footer` placed\n*outside* it pin to the bottom of the drawer.\n\nOn a `top`/`bottom` drawer it caps and centres its own width through\n`--pui-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
+    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also the drawer's scroll container, which is what keeps a\n`Drawer.Handle` from scrolling away and lets a `Drawer.Footer` placed\n*outside* it pin to the bottom of the drawer.\n\nOn a `top`/`bottom` drawer it caps and centres its own width through\n`--forte-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
     "props": [
       {
         "name": "className",
@@ -3608,7 +3608,7 @@
   },
   "DrawerSwipeArea": {
     "name": "DrawerSwipeArea",
-    "description": "An invisible strip along the drawer's own edge that opens it when swiped\ninward.\n\nRenders a `<div>`, pinned with `position: fixed` and sized by\n`--pui-drawer-swipe-area-size`. It sits *outside* the portal — it has to\nexist while the drawer is closed — so it is the one part that lives beside\n`Drawer.Trigger` rather than inside `Drawer.Popup`.\n\nIt covers that strip of the page for pointer purposes, so anything the app\nputs hard against that edge becomes unreachable. Pair it with a real\ntrigger; a gesture with no visible control is undiscoverable, and it is not\navailable to a keyboard or screen-reader user at all.",
+    "description": "An invisible strip along the drawer's own edge that opens it when swiped\ninward.\n\nRenders a `<div>`, pinned with `position: fixed` and sized by\n`--forte-drawer-swipe-area-size`. It sits *outside* the portal — it has to\nexist while the drawer is closed — so it is the one part that lives beside\n`Drawer.Trigger` rather than inside `Drawer.Popup`.\n\nIt covers that strip of the page for pointer purposes, so anything the app\nputs hard against that edge becomes unreachable. Pair it with a real\ntrigger; a gesture with no visible control is undiscoverable, and it is not\navailable to a keyboard or screen-reader user at all.",
     "props": [
       {
         "name": "className",
@@ -3747,7 +3747,7 @@
   },
   "Form": {
     "name": "Form",
-    "description": "A `<form>` that collects the validation state of every `Field` inside it,\nbuilt on Base UI's `Form` primitive.\n\n```tsx\n<Form\n  onFormSubmit={async (values) => {\n    const result = await save(values);\n    if (!result.ok) setErrors(result.errors); // keys match Field.Root name\n  }}\n  errors={errors}\n>\n  <Field.Root name=\"email\">…</Field.Root>\n  <Button type=\"submit\">Save</Button>\n</Form>\n```\n\nTwo things it does that a bare `<form>` does not: it blocks submission while\nany field is invalid and moves focus to the first one that failed, and it\nroutes the `errors` object back to the right `Field.Error` by `name` — which\nis why the `name` belongs on `Field.Root` rather than on the control.\n\nIt lays out as a column with `--pui-form-gap` between children, since a form\nis nearly always a stack of fields. Set `display` through `className` for\nanything else; the gap is a knob rather than a hardcoded rule for exactly\nthat reason.",
+    "description": "A `<form>` that collects the validation state of every `Field` inside it,\nbuilt on Base UI's `Form` primitive.\n\n```tsx\n<Form\n  onFormSubmit={async (values) => {\n    const result = await save(values);\n    if (!result.ok) setErrors(result.errors); // keys match Field.Root name\n  }}\n  errors={errors}\n>\n  <Field.Root name=\"email\">…</Field.Root>\n  <Button type=\"submit\">Save</Button>\n</Form>\n```\n\nTwo things it does that a bare `<form>` does not: it blocks submission while\nany field is invalid and moves focus to the first one that failed, and it\nroutes the `errors` object back to the right `Field.Error` by `name` — which\nis why the `name` belongs on `Field.Root` rather than on the control.\n\nIt lays out as a column with `--forte-form-gap` between children, since a form\nis nearly always a stack of fields. Set `display` through `className` for\nanything else; the gap is a knob rather than a hardcoded rule for exactly\nthat reason.",
     "props": [
       {
         "name": "actionsRef",
@@ -3795,7 +3795,7 @@
   },
   "Input": {
     "name": "Input",
-    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control reach for `Textarea`, which is the same\n`Field.Control` rendered as a `<textarea>` and adds the things a paragraph of\ntext needs — row-based sizing, a growth ceiling, and `autoResize`.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "description": "A text input built on Base UI's `Input` primitive.\n\nBase UI's `Input` *is* `Field.Control` — the same component under a friendlier\nname — so this needs no wiring to participate in a `Field`: put one inside a\n`Field.Root` and it picks up the label, the description, the error message,\n`name`, `disabled` and the validity attributes automatically. Outside a field\nit is an ordinary `<input>`, so `type`, `placeholder`, `required`, `pattern`\nand the rest all pass straight through.\n\n```tsx\n<Field.Root name=\"email\">\n  <Field.Label>Email</Field.Label>\n  <Input type=\"email\" required placeholder=\"you@example.com\" />\n  <Field.Error />\n</Field.Root>\n```\n\nFor a multi-line control reach for `Textarea`, which is the same\n`Field.Control` rendered as a `<textarea>` and adds the things a paragraph of\ntext needs — row-based sizing, a growth ceiling, and `autoResize`.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--forte-input-*` custom property, so it can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -3816,7 +3816,7 @@
         "type": "InputSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the control. Height, inline padding and font size all move\ntogether, and the actual numbers follow the ambient `data-pui-density`\nsetting. Matches `Select.Trigger`'s scale, so an input and a select on the\nsame row line up.\n\nThis shadows the native `size` attribute (which sets a width in\ncharacters). Reach for `fullWidth`, a CSS `inline-size`, or\n`render={<input size={10} />}` if you need that instead."
+        "description": "Size of the control. Height, inline padding and font size all move\ntogether, and the actual numbers follow the ambient `data-forte-density`\nsetting. Matches `Select.Trigger`'s scale, so an input and a select on the\nsame row line up.\n\nThis shadows the native `size` attribute (which sets a width in\ncharacters). Reach for `fullWidth`, a CSS `inline-size`, or\n`render={<input size={10} />}` if you need that instead."
       },
       {
         "name": "variant",
@@ -3829,7 +3829,7 @@
   },
   "InputGroupRoot": {
     "name": "InputGroupRoot",
-    "description": "The field shell: a `<div>` that draws one control boundary — border,\nbackground, radius, sizes, variants — around a bare `<InputGroup.Input>` or\n`<InputGroup.Textarea>` and any number of `<InputGroup.Addon>`s, so icons,\nprefixes and buttons sit *inside* the field instead of bolted onto it.\n\nFocus lives on the control; the group rings for it via\n`.pui-focus-ring-within`, so the whole field lights up the way a plain\n`Input` does. Buttons inside addons ring themselves, and the group stands\ndown while they do.\n\nThe group is a caret region, not a button: clicking anywhere in it —\na prefix, an icon, the padding — focuses the control, exactly as clicking\nthe empty end of a plain input places the caret. Interactive children keep\nthe gesture for themselves.\n\nThere is no `disabled` prop here on purpose. Disabled, read-only and\ninvalid all belong to the control (or the `Field.Root` above it), and the\ngroup watches them through `:has()` — one source of truth, no way for the\nshell and the control to disagree.",
+    "description": "The field shell: a `<div>` that draws one control boundary — border,\nbackground, radius, sizes, variants — around a bare `<InputGroup.Input>` or\n`<InputGroup.Textarea>` and any number of `<InputGroup.Addon>`s, so icons,\nprefixes and buttons sit *inside* the field instead of bolted onto it.\n\nFocus lives on the control; the group rings for it via\n`.forte-focus-ring-within`, so the whole field lights up the way a plain\n`Input` does. Buttons inside addons ring themselves, and the group stands\ndown while they do.\n\nThe group is a caret region, not a button: clicking anywhere in it —\na prefix, an icon, the padding — focuses the control, exactly as clicking\nthe empty end of a plain input places the caret. Interactive children keep\nthe gesture for themselves.\n\nThere is no `disabled` prop here on purpose. Disabled, read-only and\ninvalid all belong to the control (or the `Field.Root` above it), and the\ngroup watches them through `:has()` — one source of truth, no way for the\nshell and the control to disagree.",
     "props": [
       {
         "name": "className",
@@ -3850,7 +3850,7 @@
         "type": "InputGroupSize",
         "required": false,
         "defaultValue": "sm",
-        "description": "Size of the group. Height, inline padding and font size move together for\nthe control and every addon at once, and the numbers come from the same\n`--pui-control-*` tokens `Input` and `Select.Trigger` read — so a group\nand a plain input on one row are the same height at every\n`data-pui-density` setting."
+        "description": "Size of the group. Height, inline padding and font size move together for\nthe control and every addon at once, and the numbers come from the same\n`--forte-control-*` tokens `Input` and `Select.Trigger` read — so a group\nand a plain input on one row are the same height at every\n`data-forte-density` setting."
       },
       {
         "name": "variant",
@@ -3957,7 +3957,7 @@
   },
   "InputGroupButton": {
     "name": "InputGroupButton",
-    "description": "A `Button` preset for life inside an addon: `ghost` + `neutral` so it reads\nas part of the field rather than a call to action, and sized by the group —\nthe CSS caps it to the field's inner height, so at `sm` the visual box can\ndip below 24px. That is why this wrapper exists instead of a line of docs:\nit adds `.pui-target`, which floors the *hit* area at 24×24 without\ntouching the visual one.\n\nIt is otherwise exactly `Button` — every prop passes through, so\n`variant=\"solid\"` turns the end addon into a primary action when the design\ncalls for one. `iconOnly` still needs its `aria-label`.",
+    "description": "A `Button` preset for life inside an addon: `ghost` + `neutral` so it reads\nas part of the field rather than a call to action, and sized by the group —\nthe CSS caps it to the field's inner height, so at `sm` the visual box can\ndip below 24px. That is why this wrapper exists instead of a line of docs:\nit adds `.forte-target`, which floors the *hit* area at 24×24 without\ntouching the visual one.\n\nIt is otherwise exactly `Button` — every prop passes through, so\n`variant=\"solid\"` turns the end addon into a primary action when the design\ncalls for one. `iconOnly` still needs its `aria-label`.",
     "props": [
       {
         "name": "className",
@@ -4006,7 +4006,7 @@
         "type": "ButtonSize",
         "required": false,
         "defaultValue": "sm",
-        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-forte-density` setting."
       },
       {
         "name": "tone",
@@ -4088,7 +4088,7 @@
   },
   "Menubar": {
     "name": "Menubar",
-    "description": "A row of menus that behave as one strip, built on Base UI's `Menubar`\nprimitive.\n\nIt has no parts of its own: the menus inside it are ordinary\n[`Menu`](/components/menu) components, which is Base UI's own anatomy and\nis what makes every Menu feature — submenus, checkable rows, shortcuts,\n`render` on the trigger — available here without a second set of\ncomponents to learn.\n\n```tsx\n<Menubar>\n  <Menu.Root>\n    <Menu.Trigger>File</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>New document</Menu.Item>\n      <Menu.Item>Open…</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n  <Menu.Root>\n    <Menu.Trigger>Edit</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>Undo</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n</Menubar>\n```\n\nBeing in the bar is what changes the menus' behaviour, and Base UI does all\nof it: `Tab` reaches the bar once and the arrow keys move between triggers\nfrom there, and once one menu is open the others take over on hover, so the\nwhole row reads as a single control rather than a line of buttons. The\nlibrary's contribution is the look — a `<Menu.Trigger>` inside a `Menubar`\ndrops its standalone button chrome for the flat strip item the bar wants.\nA trigger given `render` keeps whatever it was rendered as.\n\nEvery visual decision is a `--pui-menubar-*` custom property declared on\nthis element, including the ones the triggers read, so a bar can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=contained]:...`) without wrapping.",
+    "description": "A row of menus that behave as one strip, built on Base UI's `Menubar`\nprimitive.\n\nIt has no parts of its own: the menus inside it are ordinary\n[`Menu`](/components/menu) components, which is Base UI's own anatomy and\nis what makes every Menu feature — submenus, checkable rows, shortcuts,\n`render` on the trigger — available here without a second set of\ncomponents to learn.\n\n```tsx\n<Menubar>\n  <Menu.Root>\n    <Menu.Trigger>File</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>New document</Menu.Item>\n      <Menu.Item>Open…</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n  <Menu.Root>\n    <Menu.Trigger>Edit</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>Undo</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n</Menubar>\n```\n\nBeing in the bar is what changes the menus' behaviour, and Base UI does all\nof it: `Tab` reaches the bar once and the arrow keys move between triggers\nfrom there, and once one menu is open the others take over on hover, so the\nwhole row reads as a single control rather than a line of buttons. The\nlibrary's contribution is the look — a `<Menu.Trigger>` inside a `Menubar`\ndrops its standalone button chrome for the flat strip item the bar wants.\nA trigger given `render` keeps whatever it was rendered as.\n\nEvery visual decision is a `--forte-menubar-*` custom property declared on\nthis element, including the ones the triggers read, so a bar can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=contained]:...`) without wrapping.",
     "props": [
       {
         "name": "children",
@@ -4534,7 +4534,7 @@
   },
   "NavigationMenuContent": {
     "name": "NavigationMenuContent",
-    "description": "One item's panel. Renders a `<div>`, which Base UI moves into the shared\npopup's viewport while the item is open.\n\nIt is a grid rather than a bare box because that is what every panel turns\nout to be, and `columns` is the only part of it that changes. Pass a\n`className` of your own for anything else — the layout rules here are all\ninside `@layer pretty-ui.components` and lose to unlayered author CSS.",
+    "description": "One item's panel. Renders a `<div>`, which Base UI moves into the shared\npopup's viewport while the item is open.\n\nIt is a grid rather than a bare box because that is what every panel turns\nout to be, and `columns` is the only part of it that changes. Pass a\n`className` of your own for anything else — the layout rules here are all\ninside `@layer forte.components` and lose to unlayered author CSS.",
     "props": [
       {
         "name": "children",
@@ -4555,7 +4555,7 @@
         "type": "NavigationMenuColumns",
         "required": false,
         "defaultValue": "1",
-        "description": "How many columns the children are laid out in. The grid collapses to\nfewer on its own when the panel is narrower than\n`--pui-navigation-menu-column-width`, so a three-column panel becomes one\ncolumn on a phone without a media query."
+        "description": "How many columns the children are laid out in. The grid collapses to\nfewer on its own when the panel is narrower than\n`--forte-navigation-menu-column-width`, so a three-column panel becomes one\ncolumn on a phone without a media query."
       },
       {
         "name": "keepMounted",
@@ -4740,7 +4740,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup, and the element that carries the travel between\ntriggers. This is the only way to reach the four properties declared\nthere: `--pui-navigation-menu-z-index`, `--pui-navigation-menu-bridge`,\nand the `-move-duration` / `-move-ease` pair the popup inherits for its\nown resize."
+        "description": "Additional class name(s) for the positioner — the absolutely positioned\nwrapper around the popup, and the element that carries the travel between\ntriggers. This is the only way to reach the four properties declared\nthere: `--forte-navigation-menu-z-index`, `--forte-navigation-menu-bridge`,\nand the `-move-duration` / `-move-ease` pair the popup inherits for its\nown resize."
       },
       {
         "name": "side",
@@ -4754,7 +4754,7 @@
         "type": "number | OffsetFunction",
         "required": false,
         "defaultValue": "8",
-        "description": "Gap in pixels between the bar and the panel. The stylesheet bridges this\ngap so the pointer can cross it without the panel closing — change\n`--pui-navigation-menu-bridge` to match if you change this."
+        "description": "Gap in pixels between the bar and the panel. The stylesheet bridges this\ngap so the pointer can cross it without the panel closing — change\n`--forte-navigation-menu-bridge` to match if you change this."
       }
     ]
   },
@@ -4774,7 +4774,7 @@
         "type": "NumberFieldSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the control. Height, inline padding, stepper width and font size\nall move together, and the numbers come from the same `--pui-control-*`\ntokens `Input` and `Select.Trigger` read — so the three line up on one row\nat every `data-pui-density` setting."
+        "description": "Size of the control. Height, inline padding, stepper width and font size\nall move together, and the numbers come from the same `--forte-control-*`\ntokens `Input` and `Select.Trigger` read — so the three line up on one row\nat every `data-forte-density` setting."
       },
       {
         "name": "variant",
@@ -4787,7 +4787,7 @@
   },
   "NumberFieldGroup": {
     "name": "NumberFieldGroup",
-    "description": "The bordered shell holding the steppers and the input. Renders a `<div>`, and\nit — not the input — is the element that looks like the control: the input\ninside it is borderless and transparent, so the three segments read as one\nbox.\n\nWhich is why the group carries `.pui-focus-ring-within` rather than the input\ncarrying `.pui-focus-ring`. Focusing the text field rings the whole control,\nthe way focusing an `Input` rings the whole input — and since the steppers are\nnot tab stops, that is the only ring anyone sees by default. An app that puts\nthem back in the tab order gets an inset ring on the button instead; the\nstylesheet suppresses the group's ring in that case so the two never stack.\n\nThe one thing that DOES stack is an app-level global `:focus-visible` rule.\nIt outranks every `pretty-ui` layer by design, so it re-rings the input this\ncomponent deliberately left unringed, and the control wears two rings — a\nrounded one around the group and a square-cornered one around the middle\nsegment. Scope such a rule away from parts a component already rings:\n`:focus-visible:not(:where(.pui-focus-ring-within *))`.\n\n`data-scrubbing` lands here while a `ScrubArea` drag is running, which is\nwhat ties the drag happening on the label back to the value it is changing.",
+    "description": "The bordered shell holding the steppers and the input. Renders a `<div>`, and\nit — not the input — is the element that looks like the control: the input\ninside it is borderless and transparent, so the three segments read as one\nbox.\n\nWhich is why the group carries `.forte-focus-ring-within` rather than the input\ncarrying `.forte-focus-ring`. Focusing the text field rings the whole control,\nthe way focusing an `Input` rings the whole input — and since the steppers are\nnot tab stops, that is the only ring anyone sees by default. An app that puts\nthem back in the tab order gets an inset ring on the button instead; the\nstylesheet suppresses the group's ring in that case so the two never stack.\n\nThe one thing that DOES stack is an app-level global `:focus-visible` rule.\nIt outranks every `forte-ui` layer by design, so it re-rings the input this\ncomponent deliberately left unringed, and the control wears two rings — a\nrounded one around the group and a square-cornered one around the middle\nsegment. Scope such a rule away from parts a component already rings:\n`:focus-visible:not(:where(.forte-focus-ring-within *))`.\n\n`data-scrubbing` lands here while a `ScrubArea` drag is running, which is\nwhat ties the drag happening on the label back to the value it is changing.",
     "props": [
       {
         "name": "className",
@@ -4894,7 +4894,7 @@
   },
   "NumberFieldScrubAreaCursor": {
     "name": "NumberFieldScrubAreaCursor",
-    "description": "The stand-in for the mouse pointer while a scrub is running. Renders a\n`<span>` portalled to `<body>` and positioned by Base UI, only while the drag\nis live.\n\n`ScrubArea` renders one for you; reach for this directly only to supply a\ndifferent glyph, and pass `cursor={false}` to the scrub area when you do.\n\nTwo consequences of the portal are worth knowing. It does not inherit a\n`.pui-theme` scope, so it paints from whatever the document root resolves —\nthe same trade every portalled surface in this library makes. And Base UI\nwrites `transform` on it on every pointer move, so nothing here may animate\nor set that property.\n\nIt does not render at all in Safari (which shifts the layout when a pointer\nlock is taken) or after a denied lock; the native cursor stays visible in\nboth cases, so the drag still works — it just looks ordinary.",
+    "description": "The stand-in for the mouse pointer while a scrub is running. Renders a\n`<span>` portalled to `<body>` and positioned by Base UI, only while the drag\nis live.\n\n`ScrubArea` renders one for you; reach for this directly only to supply a\ndifferent glyph, and pass `cursor={false}` to the scrub area when you do.\n\nTwo consequences of the portal are worth knowing. It does not inherit a\n`.forte-theme` scope, so it paints from whatever the document root resolves —\nthe same trade every portalled surface in this library makes. And Base UI\nwrites `transform` on it on every pointer move, so nothing here may animate\nor set that property.\n\nIt does not render at all in Safari (which shifts the layout when a pointer\nlock is taken) or after a denied lock; the native cursor stays visible in\nboth cases, so the drag still works — it just looks ordinary.",
     "props": [
       {
         "name": "children",
@@ -4914,7 +4914,7 @@
   },
   "OTPFieldRoot": {
     "name": "OTPFieldRoot",
-    "description": "Groups every slot of a one-time-code field and owns the value. Renders a\n`<div role=\"group\">` laid out as a wrapping flex row, plus a visually hidden\n`<input>` beside it that carries the whole code into form submission and\nconstraint validation.\n\n```tsx\n<Field.Root name=\"code\">\n  <Field.Label>Verification code</Field.Label>\n  <OTPField.Root length={6} />\n</Field.Root>\n```\n\nThe value is one string, not one per slot: `value`, `defaultValue`,\n`onValueChange` and `onValueComplete` all speak in `\"123456\"`. Typing\nadvances, Backspace retreats, and a paste fills from the slot it lands on —\nBase UI owns all of that, including clamping to `length` and filtering by\n`validationType`.\n\n`autoComplete` defaults to `\"one-time-code\"`, which is what lets iOS and\nAndroid offer a code straight from the SMS that just arrived. Do not\noverride it without a reason.\n\nState is exposed on `data-*` (`data-complete`, `data-filled`,\n`data-disabled`, `data-readonly`, plus `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched` and `data-focused` inside a `Field.Root`) and\nevery visual decision is a `--pui-otp-field-*` custom property, so it can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[complete]:...`) without wrapping.",
+    "description": "Groups every slot of a one-time-code field and owns the value. Renders a\n`<div role=\"group\">` laid out as a wrapping flex row, plus a visually hidden\n`<input>` beside it that carries the whole code into form submission and\nconstraint validation.\n\n```tsx\n<Field.Root name=\"code\">\n  <Field.Label>Verification code</Field.Label>\n  <OTPField.Root length={6} />\n</Field.Root>\n```\n\nThe value is one string, not one per slot: `value`, `defaultValue`,\n`onValueChange` and `onValueComplete` all speak in `\"123456\"`. Typing\nadvances, Backspace retreats, and a paste fills from the slot it lands on —\nBase UI owns all of that, including clamping to `length` and filtering by\n`validationType`.\n\n`autoComplete` defaults to `\"one-time-code\"`, which is what lets iOS and\nAndroid offer a code straight from the SMS that just arrived. Do not\noverride it without a reason.\n\nState is exposed on `data-*` (`data-complete`, `data-filled`,\n`data-disabled`, `data-readonly`, plus `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched` and `data-focused` inside a `Field.Root`) and\nevery visual decision is a `--forte-otp-field-*` custom property, so it can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[complete]:...`) without wrapping.",
     "props": [
       {
         "name": "length",
@@ -4956,7 +4956,7 @@
         "type": "OTPFieldSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the slots. Sets their square side and the character's font size\ntogether, and the side comes from the same `--pui-control-*` tokens\n`Input` and `Select.Trigger` read — so a code field lines up with the rest\nof a form at every `data-pui-density` setting."
+        "description": "Size of the slots. Sets their square side and the character's font size\ntogether, and the side comes from the same `--forte-control-*` tokens\n`Input` and `Select.Trigger` read — so a code field lines up with the rest\nof a form at every `data-forte-density` setting."
       },
       {
         "name": "validationType",
@@ -4989,7 +4989,7 @@
   },
   "OTPFieldSeparator": {
     "name": "OTPFieldSeparator",
-    "description": "The dash between two groups of slots — the `123 – 456` shape a six-digit\ncode is usually printed in. Renders the library's `Separator`, so it carries\n`data-pui=\"separator\"` rather than a marker of its own; scope to it with\n`[data-pui=\"otp-field\"] [data-pui=\"separator\"]`.\n\nIt is a **horizontal** rule sized to `--pui-otp-field-separator-length`,\nnot a vertical bar, and it counts against nothing: `length` is the number of\n`Input`s, so a separator can go anywhere between them.\n\n```tsx\n<OTPField.Root length={6}>\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Separator />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n</OTPField.Root>\n```",
+    "description": "The dash between two groups of slots — the `123 – 456` shape a six-digit\ncode is usually printed in. Renders the library's `Separator`, so it carries\n`data-forte=\"separator\"` rather than a marker of its own; scope to it with\n`[data-forte=\"otp-field\"] [data-forte=\"separator\"]`.\n\nIt is a **horizontal** rule sized to `--forte-otp-field-separator-length`,\nnot a vertical bar, and it counts against nothing: `length` is the number of\n`Input`s, so a separator can go anywhere between them.\n\n```tsx\n<OTPField.Root length={6}>\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Separator />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n</OTPField.Root>\n```",
     "props": [
       {
         "name": "className",
@@ -5210,7 +5210,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--pui-popover-backdrop-z-index` goes."
+        "description": "Additional class name(s) for the backdrop element. The popup's own\n`className` cannot reach it, since the backdrop is a sibling rendered\ninside this component. Also where `--forte-popover-backdrop-z-index` goes."
       },
       {
         "name": "className",
@@ -5266,7 +5266,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--pui-popover-z-index`."
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single popover through\n`--forte-popover-z-index`."
       },
       {
         "name": "positionMethod",
@@ -5314,7 +5314,7 @@
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--pui-popover-bg`, so a custom skin usually needs nothing here."
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--forte-popover-bg`, so a custom skin usually needs nothing here."
       },
       {
         "name": "className",
@@ -5635,7 +5635,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single card through\n`--pui-preview-card-z-index`."
+        "description": "Additional class name(s) for the positioner element, which owns placement\nand `z-index`. Use it to re-stack a single card through\n`--forte-preview-card-z-index`."
       },
       {
         "name": "positionMethod",
@@ -5683,7 +5683,7 @@
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the card's colours\nthrough `--pui-preview-card-bg`, so a custom skin usually needs nothing\nhere."
+        "description": "Replaces the built-in wedge. The default SVG inherits the card's colours\nthrough `--forte-preview-card-bg`, so a custom skin usually needs nothing\nhere."
       },
       {
         "name": "className",
@@ -5730,7 +5730,7 @@
         "type": "ProgressSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Thickness of the bar and the size of the label row — `4px`, `6px` or\n`10px` of track. The bar's *length* is not a size: it fills its container\nby default, and `--pui-progress-length` is the knob for anything else."
+        "description": "Thickness of the bar and the size of the label row — `4px`, `6px` or\n`10px` of track. The bar's *length* is not a size: it fills its container\nby default, and `--forte-progress-length` is the knob for anything else."
       },
       {
         "name": "tone",
@@ -5743,7 +5743,7 @@
   },
   "ProgressLabel": {
     "name": "ProgressLabel",
-    "description": "Names what is being waited on. Renders a `<span>` wired to the root with\n`aria-labelledby`, so it is the bar's accessible name — a progress bar\nwithout one announces a bare percentage and leaves the listener to guess\nwhat it is a percentage of.\n\nWrap it in `.pui-visually-hidden` when the surrounding page already says it\nin words; that keeps the name in the accessibility tree without repeating it\non screen.",
+    "description": "Names what is being waited on. Renders a `<span>` wired to the root with\n`aria-labelledby`, so it is the bar's accessible name — a progress bar\nwithout one announces a bare percentage and leaves the listener to guess\nwhat it is a percentage of.\n\nWrap it in `.forte-visually-hidden` when the surrounding page already says it\nin words; that keeps the name in the accessibility tree without repeating it\non screen.",
     "props": [
       {
         "name": "className",
@@ -5822,7 +5822,7 @@
   },
   "ProgressCircleTrack": {
     "name": "ProgressCircleTrack",
-    "description": "The ring's canvas and the rail behind the arc. Renders an `<svg>` on a\n`0 0 100 100` viewBox — Base UI's `Track` is a `<div>` by default and is\nre-rendered through its `render` prop, which is also what keeps the\n`data-complete` / `data-progressing` / `data-indeterminate` attributes on\nit.\n\nThe viewBox is what makes the stroke width scale: everything inside is\nmeasured against a ring 100 units across, and the size of a unit is whatever\n`--pui-progress-circle-size` says.\n\n`render` is intentionally not forwarded. Replacing the `<svg>` would take\nthe coordinate space every rule in the stylesheet is written against with\nit, and the failure is silent — a ring that simply does not draw.",
+    "description": "The ring's canvas and the rail behind the arc. Renders an `<svg>` on a\n`0 0 100 100` viewBox — Base UI's `Track` is a `<div>` by default and is\nre-rendered through its `render` prop, which is also what keeps the\n`data-complete` / `data-progressing` / `data-indeterminate` attributes on\nit.\n\nThe viewBox is what makes the stroke width scale: everything inside is\nmeasured against a ring 100 units across, and the size of a unit is whatever\n`--forte-progress-circle-size` says.\n\n`render` is intentionally not forwarded. Replacing the `<svg>` would take\nthe coordinate space every rule in the stylesheet is written against with\nit, and the failure is silent — a ring that simply does not draw.",
     "props": [
       {
         "name": "className",
@@ -5835,7 +5835,7 @@
   },
   "ProgressCircleIndicator": {
     "name": "ProgressCircleIndicator",
-    "description": "The arc. A `<circle>` with `pathLength=\"100\"`, which renormalises its\ncircumference to 100 units so `stroke-dashoffset` can be driven straight\nfrom the percentage without anyone computing 2πr — including when\n`--pui-progress-circle-thickness` changes the radius out from under it.\n\nBase UI still writes its inline `width` / `height` / `inset-inline-start`\nhere while the bar is determinate. None of the three applies to a `<circle>`\nin CSS, so they are inert; the value reaches the arc through\n`--pui-progress-circle-percent` on the root instead.",
+    "description": "The arc. A `<circle>` with `pathLength=\"100\"`, which renormalises its\ncircumference to 100 units so `stroke-dashoffset` can be driven straight\nfrom the percentage without anyone computing 2πr — including when\n`--forte-progress-circle-thickness` changes the radius out from under it.\n\nBase UI still writes its inline `width` / `height` / `inset-inline-start`\nhere while the bar is determinate. None of the three applies to a `<circle>`\nin CSS, so they are inert; the value reaches the arc through\n`--forte-progress-circle-percent` on the root instead.",
     "props": [
       {
         "name": "className",
@@ -5874,7 +5874,7 @@
   },
   "Radio": {
     "name": "Radio",
-    "description": "One option in a `RadioGroup`, built on Base UI's unstyled `Radio` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Item`.\n\nA radio only means anything inside a `RadioGroup`: the group owns the value,\nand it is what makes the set one tab stop with the arrow keys moving between\noptions. A lone `<Radio />` renders, but nothing can ever select it.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-disabled`, `data-readonly`, and the `Field` validity attributes) on\nboth the root and the indicator, and every visual decision is a\n`--pui-radio-*` custom property, so it can be re-skinned from plain CSS or\ntargeted with Tailwind arbitrary variants (`data-[checked]:...`) without\nwrapping.",
+    "description": "One option in a `RadioGroup`, built on Base UI's unstyled `Radio` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Item`.\n\nA radio only means anything inside a `RadioGroup`: the group owns the value,\nand it is what makes the set one tab stop with the arrow keys moving between\noptions. A lone `<Radio />` renders, but nothing can ever select it.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-disabled`, `data-readonly`, and the `Field` validity attributes) on\nboth the root and the indicator, and every visual decision is a\n`--forte-radio-*` custom property, so it can be re-skinned from plain CSS or\ntargeted with Tailwind arbitrary variants (`data-[checked]:...`) without\nwrapping.",
     "props": [
       {
         "name": "value",
@@ -5916,7 +5916,7 @@
         "type": "RadioSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the painted circle. The dot is derived from it rather than fixed,\nso it keeps its proportion at every size and when a consumer overrides\n`--pui-radio-size` to something off the scale."
+        "description": "Size of the painted circle. The dot is derived from it rather than fixed,\nso it keeps its proportion at every size and when a consumer overrides\n`--forte-radio-size` to something off the scale."
       },
       {
         "name": "tone",
@@ -6303,7 +6303,7 @@
         "type": "SelectSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the trigger. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+        "description": "Size of the trigger. Actual dimensions also follow the ambient\n`data-forte-density` setting."
       },
       {
         "name": "variant",
@@ -6540,7 +6540,7 @@
   },
   "Separator": {
     "name": "Separator",
-    "description": "A rule between things, built on Base UI's `Separator` primitive.\n\n```tsx\n<Separator />\n<Separator orientation=\"vertical\" />\n```\n\nA vertical separator has no length of its own — it is an empty box. Inside a\nflex row it stretches to the tallest sibling; anywhere else it falls back to\none line's height, which `--pui-separator-min-length` controls. That is the\none thing worth knowing before reaching for it:\n\n```tsx\n<div style={{ display: \"flex\", alignItems: \"center\", gap: \"var(--pui-space-3)\" }}>\n  <span>Draft</span>\n  <Separator orientation=\"vertical\" />\n  <span>Edited 3m ago</span>\n</div>\n```\n\nIn prose, swap the element for the one HTML already has for this:\n\n```tsx\n<Separator render={<hr />} />\n```\n\nEvery visual decision is a `--pui-separator-*` custom property, and the\norientation is on `data-orientation`, so it can be re-skinned from plain CSS\nor targeted with Tailwind arbitrary variants\n(`data-[orientation=vertical]:...`) without wrapping.",
+    "description": "A rule between things, built on Base UI's `Separator` primitive.\n\n```tsx\n<Separator />\n<Separator orientation=\"vertical\" />\n```\n\nA vertical separator has no length of its own — it is an empty box. Inside a\nflex row it stretches to the tallest sibling; anywhere else it falls back to\none line's height, which `--forte-separator-min-length` controls. That is the\none thing worth knowing before reaching for it:\n\n```tsx\n<div style={{ display: \"flex\", alignItems: \"center\", gap: \"var(--forte-space-3)\" }}>\n  <span>Draft</span>\n  <Separator orientation=\"vertical\" />\n  <span>Edited 3m ago</span>\n</div>\n```\n\nIn prose, swap the element for the one HTML already has for this:\n\n```tsx\n<Separator render={<hr />} />\n```\n\nEvery visual decision is a `--forte-separator-*` custom property, and the\norientation is on `data-orientation`, so it can be re-skinned from plain CSS\nor targeted with Tailwind arbitrary variants\n(`data-[orientation=vertical]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -6616,7 +6616,7 @@
         "type": "SkeletonVariant",
         "required": false,
         "defaultValue": "rect",
-        "description": "The silhouette. `rect` is a block — a thumbnail, a card, a button.\n`circle` is an avatar or a status dot, and stays round under\n`data-pui-radius=\"none\"`.\n\n`text` is a thin bar the height of the ink a line of text actually puts\ndown, and it is `inline-block`, so it can sit inside a real sentence —\n\"posted by ▓▓▓▓ an hour ago\". Note that it paints the ink and nothing\nelse: standing on its own in a column it is SHORTER than the line it\nreplaces, because the leading is missing. Reach for `Skeleton.Text` there,\n`lines={1}` included — reserving the whole line box is exactly what it is\nfor."
+        "description": "The silhouette. `rect` is a block — a thumbnail, a card, a button.\n`circle` is an avatar or a status dot, and stays round under\n`data-forte-radius=\"none\"`.\n\n`text` is a thin bar the height of the ink a line of text actually puts\ndown, and it is `inline-block`, so it can sit inside a real sentence —\n\"posted by ▓▓▓▓ an hour ago\". Note that it paints the ink and nothing\nelse: standing on its own in a column it is SHORTER than the line it\nreplaces, because the leading is missing. Reach for `Skeleton.Text` there,\n`lines={1}` included — reserving the whole line box is exactly what it is\nfor."
       },
       {
         "name": "width",
@@ -6629,7 +6629,7 @@
   },
   "SkeletonText": {
     "name": "SkeletonText",
-    "description": "A paragraph's worth of placeholder lines, measured like type.\n\nThis — not `Skeleton.Root variant=\"text\"` — is what to put where real text\nwill go, `lines={1}` included. A bare text root paints only the ink; this\none reserves the whole line box, leading and all, which is what keeps the\npage from moving when the words arrive.\n\nA line paints `--pui-skeleton-ink` rather than its whole line box, the\nleading becomes the gap, and half a leading sits above the first line and\nbelow the last — which is what makes the block exactly `lines × 1em ×\nline-height` tall. Set the font size on this element and the whole thing\nrescales; it is what the metrics are relative to.\n\n```tsx\n<Skeleton.Text lines={4} />\n<Skeleton.Text lines={1} className=\"w-32\" />\n<Skeleton.Text lines={2} className=\"text-5\" />\n```",
+    "description": "A paragraph's worth of placeholder lines, measured like type.\n\nThis — not `Skeleton.Root variant=\"text\"` — is what to put where real text\nwill go, `lines={1}` included. A bare text root paints only the ink; this\none reserves the whole line box, leading and all, which is what keeps the\npage from moving when the words arrive.\n\nA line paints `--forte-skeleton-ink` rather than its whole line box, the\nleading becomes the gap, and half a leading sits above the first line and\nbelow the last — which is what makes the block exactly `lines × 1em ×\nline-height` tall. Set the font size on this element and the whole thing\nrescales; it is what the metrics are relative to.\n\n```tsx\n<Skeleton.Text lines={4} />\n<Skeleton.Text lines={1} className=\"w-32\" />\n<Skeleton.Text lines={2} className=\"text-5\" />\n```",
     "props": [
       {
         "name": "animation",
@@ -6810,7 +6810,7 @@
   },
   "SliderThumb": {
     "name": "SliderThumb",
-    "description": "One draggable handle. Renders a `<div>` wrapping a visually hidden\n`<input type=\"range\">` — the input is the real control, so it is what takes\nfocus and what a screen reader reads.\n\nThat split is why the focus ring is `.pui-focus-ring-within` rather than\n`.pui-focus-ring`: the thumb `<div>` never matches `:focus-visible` itself.\n\nA range slider needs one `Thumb` per value, each with an `index` — without\nit the thumbs only find their order once the composite list has registered\non the client, so a server-rendered range slider paints both handles at the\nfirst value and jumps on hydration. Give each one an `aria-label` too; the\n`Label` names the group, not the individual handles.",
+    "description": "One draggable handle. Renders a `<div>` wrapping a visually hidden\n`<input type=\"range\">` — the input is the real control, so it is what takes\nfocus and what a screen reader reads.\n\nThat split is why the focus ring is `.forte-focus-ring-within` rather than\n`.forte-focus-ring`: the thumb `<div>` never matches `:focus-visible` itself.\n\nA range slider needs one `Thumb` per value, each with an `index` — without\nit the thumbs only find their order once the composite list has registered\non the client, so a server-rendered range slider paints both handles at the\nfirst value and jumps on hydration. Give each one an `aria-label` too; the\n`Label` names the group, not the individual handles.",
     "props": [
       {
         "name": "className",
@@ -6823,7 +6823,7 @@
   },
   "Spinner": {
     "name": "Spinner",
-    "description": "A busy indicator, in four flavours.\n\nBase UI has no spinner primitive — there is no interaction to model and no\nstate machine to get right — so this is the one component in the library\nthat is not built on one. What it does have is the part everybody gets\nwrong: an indicator that is announced once and correctly, and an animation\nthat stays informative when the user has asked for less motion.\n\n```tsx\n<Spinner />\n<Spinner variant=\"bars\" size=\"lg\" label=\"Loading invoices\" labelPlacement=\"end\" />\n<Spinner decorative variant=\"dots\" tone=\"current\" />\n```\n\nStyling is driven by `data-*` attributes and `--pui-spinner-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with Tailwind\narbitrary variants (`data-[variant=dots]:...`) without wrapping.",
+    "description": "A busy indicator, in four flavours.\n\nBase UI has no spinner primitive — there is no interaction to model and no\nstate machine to get right — so this is the one component in the library\nthat is not built on one. What it does have is the part everybody gets\nwrong: an indicator that is announced once and correctly, and an animation\nthat stays informative when the user has asked for less motion.\n\n```tsx\n<Spinner />\n<Spinner variant=\"bars\" size=\"lg\" label=\"Loading invoices\" labelPlacement=\"end\" />\n<Spinner decorative variant=\"dots\" tone=\"current\" />\n```\n\nStyling is driven by `data-*` attributes and `--forte-spinner-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with Tailwind\narbitrary variants (`data-[variant=dots]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -6878,7 +6878,7 @@
   },
   "Switch": {
     "name": "Switch",
-    "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--pui-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",
+    "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--forte-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",
     "props": [
       {
         "name": "className",
@@ -7033,7 +7033,7 @@
   },
   "Textarea": {
     "name": "Textarea",
-    "description": "A multi-line text control.\n\nBase UI has no textarea primitive, so this is built on `Field.Control` — the\nsame component `Input` is — rendered as a `<textarea>`. That is what makes it\nparticipate in a `Field` with no wiring: drop one inside a `Field.Root` and\nit picks up the label, the description, the error message, the `name` used on\nsubmit, and the validity attributes.\n\n```tsx\n<Field.Root name=\"bio\">\n  <Field.Label>Bio</Field.Label>\n  <Textarea rows={4} placeholder=\"Tell us about yourself\" />\n  <Field.Error />\n</Field.Root>\n```\n\nHeight is expressed in rows rather than pixels — `rows` is the floor,\n`maxRows` the ceiling, and `autoResize` moves between them as the user types.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--pui-textarea-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
+    "description": "A multi-line text control.\n\nBase UI has no textarea primitive, so this is built on `Field.Control` — the\nsame component `Input` is — rendered as a `<textarea>`. That is what makes it\nparticipate in a `Field` with no wiring: drop one inside a `Field.Root` and\nit picks up the label, the description, the error message, the `name` used on\nsubmit, and the validity attributes.\n\n```tsx\n<Field.Root name=\"bio\">\n  <Field.Label>Bio</Field.Label>\n  <Textarea rows={4} placeholder=\"Tell us about yourself\" />\n  <Field.Error />\n</Field.Root>\n```\n\nHeight is expressed in rows rather than pixels — `rows` is the floor,\n`maxRows` the ceiling, and `autoResize` moves between them as the user types.\n\nState is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,\n`data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual\ndecision is a `--forte-textarea-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[invalid]:...`) without wrapping.",
     "props": [
       {
         "name": "autoResize",
@@ -7096,7 +7096,7 @@
         "type": "TextareaSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the control. Inline padding, block padding and font size move\ntogether, and the numbers come from the same `--pui-control-*` tokens\n`Input` and `Select.Trigger` read — so a textarea stacked under an input\nshares its optical inset at every `data-pui-density` setting.\n\nA `<textarea>` has no native `size` attribute, so unlike `Input` this\nshadows nothing."
+        "description": "Size of the control. Inline padding, block padding and font size move\ntogether, and the numbers come from the same `--forte-control-*` tokens\n`Input` and `Select.Trigger` read — so a textarea stacked under an input\nshares its optical inset at every `data-forte-density` setting.\n\nA `<textarea>` has no native `size` attribute, so unlike `Input` this\nshadows nothing."
       },
       {
         "name": "variant",
@@ -7332,7 +7332,7 @@
   },
   "Toggle": {
     "name": "Toggle",
-    "description": "A two-state button that is either on or off, built on Base UI's unstyled\n`Toggle` primitive. Renders a `<button>` with `aria-pressed`.\n\nReach for it when the button *is* the state — bold, mute, pin, favourite —\nand the effect is immediate and local. If the state is a setting the user\nconfirms later, use [`Switch`](/components/switch) or\n[`Checkbox`](/components/checkbox), which carry a label and a form value; a\ntoggle button has neither.\n\nState is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)\nand every visual decision is a `--pui-toggle-*` custom property, so it can\nbe re-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[pressed]:...`) without wrapping.",
+    "description": "A two-state button that is either on or off, built on Base UI's unstyled\n`Toggle` primitive. Renders a `<button>` with `aria-pressed`.\n\nReach for it when the button *is* the state — bold, mute, pin, favourite —\nand the effect is immediate and local. If the state is a setting the user\nconfirms later, use [`Switch`](/components/switch) or\n[`Checkbox`](/components/checkbox), which carry a label and a form value; a\ntoggle button has neither.\n\nState is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)\nand every visual decision is a `--forte-toggle-*` custom property, so it can\nbe re-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[pressed]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -8013,7 +8013,7 @@
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--pui-tooltip-bg`, so a custom skin usually needs nothing here."
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--forte-tooltip-bg`, so a custom skin usually needs nothing here."
       },
       {
         "name": "className",

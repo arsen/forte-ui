@@ -1,11 +1,11 @@
 /**
- * The pretty-ui motion table — source of truth for every motion token.
+ * The forte-ui motion table — source of truth for every motion token.
  *
  * Why this is generated rather than hand-written: the derived geometry tokens
  * must be RESTATED verbatim in each override block. A derived token does not
- * re-derive from an inherited `--pui-motion-ok`, because `var()` inside an
+ * re-derive from an inherited `--forte-motion-ok`, because `var()` inside an
  * unregistered custom property is substituted where the property is declared.
- * So `[data-pui-motion="reduce"]` has to spell out every travel and scale
+ * So `[data-forte-motion="reduce"]` has to spell out every travel and scale
  * value itself. Hand-maintained, adding one token and forgetting one block
  * silently breaks subtree scoping while the global media query keeps working —
  * a bug that only shows up in the one place nobody tests. Generating all four

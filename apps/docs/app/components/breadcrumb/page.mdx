@@ -18,7 +18,7 @@ A breadcrumb is the line above a page that says where the page sits: `Home › S
 ## Import
 
 ```tsx
-import { Breadcrumb } from "@dofortech/pretty-ui";
+import { Breadcrumb } from "@dofortech/forte-ui";
 ```
 
 `Breadcrumb` is a namespace of seven parts. The full anatomy, with every optional layer present:
@@ -59,7 +59,7 @@ The shape a real app writes. `React.Children.toArray` flattens what a `.map()` r
 
 <DemoBlock id="breadcrumb/separators" />
 
-The default chevron mirrors itself in RTL. A separator you pass does **not** — mirroring a glyph would turn a `/` into a `\`, so only the built-in icon consults `--pui-direction`. Flip the demo to RTL with the frame's direction control to see both halves of that.
+The default chevron mirrors itself in RTL. A separator you pass does **not** — mirroring a glyph would turn a `/` into a `\`, so only the built-in icon consults `--forte-direction`. Flip the demo to RTL with the frame's direction control to see both halves of that.
 
 ### Variants
 
@@ -110,7 +110,7 @@ Framework links go in through `render`, which replaces the rendered `<a>` withou
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Breadcrumb } from "@dofortech/pretty-ui";
+import { Breadcrumb } from "@dofortech/forte-ui";
 
 export function Trail() {
   const segments = usePathname().split("/").filter(Boolean);
@@ -160,7 +160,7 @@ Everything else the component does by default:
 - **`List` is an `<ol>`.** The trail's meaning *is* the order, and "list, 4 items" tells a reader how deep they are before they walk it.
 - **Separators are `role="presentation" aria-hidden="true"`.** They are punctuation; a screen reader reading "greater than" between every crumb is noise. The role also keeps them out of the item count, so the number announced is the number of crumbs.
 - **`Page` is a `<span aria-current="page">`, not a link.** A link to the page you are already on is a control that does nothing. The cue is never colour alone: `aria-current` carries it in the accessibility tree, and a weight change carries it on screen.
-- **Crumbs meet the 24×24 target floor** (SC 2.5.8) through `.pui-target`, which grows the hit box without moving anything — so the `plain` variant can keep the zero padding its look depends on.
+- **Crumbs meet the 24×24 target floor** (SC 2.5.8) through `.forte-target`, which grows the hit box without moving anything — so the `plain` variant can keep the zero padding its look depends on.
 - **Under forced colors, every link is underlined.** The only thing separating an ancestor from the current page in the `plain` variant is a colour, and forced colors flattens both to `CanvasText`; the underline restores the distinction in the one channel that mode preserves.
 
 ## Theming

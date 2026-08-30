@@ -97,7 +97,7 @@ export const ProgressCircleRoot = React.forwardRef<HTMLDivElement, ProgressCircl
         <BaseProgress.Root
           ref={ref}
           className={clsx(styles.root, className)}
-          data-pui="progress-circle"
+          data-forte="progress-circle"
           data-size={size}
           data-tone={tone}
           value={value}
@@ -119,7 +119,7 @@ export const ProgressCircleRoot = React.forwardRef<HTMLDivElement, ProgressCircl
           // override the percentage if it really means to.
           style={(state) =>
             ({
-              "--pui-progress-circle-percent": percent ?? 0,
+              "--forte-progress-circle-percent": percent ?? 0,
               ...(typeof style === "function" ? style(state) : style),
             }) as React.CSSProperties
           }
@@ -157,7 +157,7 @@ export interface ProgressCircleTrackProps extends Omit<BaseTrackProps, "classNam
  *
  * The viewBox is what makes the stroke width scale: everything inside is
  * measured against a ring 100 units across, and the size of a unit is whatever
- * `--pui-progress-circle-size` says.
+ * `--forte-progress-circle-size` says.
  *
  * `render` is intentionally not forwarded. Replacing the `<svg>` would take
  * the coordinate space every rule in the stylesheet is written against with
@@ -175,16 +175,16 @@ export const ProgressCircleTrack = React.forwardRef<SVGSVGElement, ProgressCircl
         ref={ref as unknown as React.Ref<HTMLDivElement>}
         render={<svg viewBox="0 0 100 100" aria-hidden="true" />}
         className={clsx(styles.track, className)}
-        data-pui="progress-circle-track"
+        data-forte="progress-circle-track"
         data-size={size}
         data-tone={tone}
         {...props}
       >
-        {/* Rule 9 exempts SVG descendants from `data-pui` because they are
+        {/* Rule 9 exempts SVG descendants from `data-forte` because they are
           * normally an icon's anonymous paths. These two are not: the rail and
           * the arc are the ring's two halves, they have style keys of their
           * own, and a consumer restyling one must be able to say which. */}
-        <circle className={styles.rail} data-pui="progress-circle-rail" cx="50" cy="50" r="46" />
+        <circle className={styles.rail} data-forte="progress-circle-rail" cx="50" cy="50" r="46" />
         {children}
       </BaseProgress.Track>
     );
@@ -214,12 +214,12 @@ export interface ProgressCircleIndicatorProps
  * The arc. A `<circle>` with `pathLength="100"`, which renormalises its
  * circumference to 100 units so `stroke-dashoffset` can be driven straight
  * from the percentage without anyone computing 2πr — including when
- * `--pui-progress-circle-thickness` changes the radius out from under it.
+ * `--forte-progress-circle-thickness` changes the radius out from under it.
  *
  * Base UI still writes its inline `width` / `height` / `inset-inline-start`
  * here while the bar is determinate. None of the three applies to a `<circle>`
  * in CSS, so they are inert; the value reaches the arc through
- * `--pui-progress-circle-percent` on the root instead.
+ * `--forte-progress-circle-percent` on the root instead.
  */
 export const ProgressCircleIndicator = React.forwardRef<
   SVGCircleElement,
@@ -235,7 +235,7 @@ export const ProgressCircleIndicator = React.forwardRef<
       // thickness, which is what draws if the CSS `r` property is unsupported.
       render={<circle cx="50" cy="50" r="46" pathLength="100" />}
       className={clsx(styles.indicator, className)}
-      data-pui="progress-circle-indicator"
+      data-forte="progress-circle-indicator"
       data-size={size}
       data-tone={tone}
       {...props}
@@ -274,7 +274,7 @@ export const ProgressCircleValue = React.forwardRef<HTMLSpanElement, ProgressCir
       <BaseProgress.Value
         ref={ref}
         className={clsx(styles.value, className)}
-        data-pui="progress-circle-value"
+        data-forte="progress-circle-value"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -312,7 +312,7 @@ export const ProgressCircleLabel = React.forwardRef<HTMLSpanElement, ProgressCir
       <BaseProgress.Label
         ref={ref}
         className={clsx(styles.label, className)}
-        data-pui="progress-circle-label"
+        data-forte="progress-circle-label"
         data-size={size}
         data-tone={tone}
         {...props}

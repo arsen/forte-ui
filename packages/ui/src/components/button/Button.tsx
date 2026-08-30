@@ -27,7 +27,7 @@ export interface ButtonProps extends Omit<BaseButtonProps, "className"> {
   tone?: ButtonTone;
   /**
    * Size of the button. Actual dimensions also follow the ambient
-   * `data-pui-density` setting.
+   * `data-forte-density` setting.
    * @default "md"
    */
   size?: ButtonSize;
@@ -74,7 +74,7 @@ export interface ButtonProps extends Omit<BaseButtonProps, "className"> {
 /**
  * A button built on Base UI's unstyled `Button` primitive.
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-button-*`
+ * Styling is driven entirely by `data-*` attributes and `--forte-button-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.
  */
@@ -99,8 +99,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <BaseButton
         ref={ref}
-        className={clsx(styles.root, "pui-focus-ring", className)}
-        data-pui="button"
+        className={clsx(styles.root, "forte-focus-ring", className)}
+        data-forte="button"
         data-variant={variant}
         data-tone={tone}
         data-size={size}
@@ -118,7 +118,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-busy={loading || undefined}
         {...props}
       >
-        <span className={styles.content} data-pui="button-content">{children}</span>
+        <span className={styles.content} data-forte="button-content">{children}</span>
         {loading ? (
           <>
             <Spinner
@@ -133,19 +133,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               // worse than one, which is exactly what `decorative` is for.
               decorative
               // The one knob Button has to reach in through. Spinner declares
-              // `--pui-spinner-size` on its OWN root, so an inherited value
+              // `--forte-spinner-size` on its OWN root, so an inherited value
               // never wins; setting it inline lands it on that element while
               // still resolving through Button's knob, so overriding
-              // `--pui-button-spinner-size` on the button still works.
+              // `--forte-button-spinner-size` on the button still works.
               style={
                 {
-                  "--pui-spinner-size": "var(--pui-button-spinner-size)",
+                  "--forte-spinner-size": "var(--forte-button-spinner-size)",
                 } as React.CSSProperties
               }
             />
             {/* Visually redundant with the spinner, but the spinner is
              * decorative; this is what actually reaches assistive tech. */}
-            <span className="pui-visually-hidden">{loadingLabel}</span>
+            <span className="forte-visually-hidden">{loadingLabel}</span>
           </>
         ) : null}
       </BaseButton>

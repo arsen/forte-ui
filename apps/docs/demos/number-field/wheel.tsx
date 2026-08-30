@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, NumberField } from "@dofortech/pretty-ui";
+import { Field, NumberField } from "@dofortech/forte-ui";
 
 export default function NumberFieldWheel() {
   return (

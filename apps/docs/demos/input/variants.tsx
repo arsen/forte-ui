@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@dofortech/pretty-ui";
+import { Input } from "@dofortech/forte-ui";
 
 const VARIANTS = ["outline", "soft", "ghost"] as const;
 

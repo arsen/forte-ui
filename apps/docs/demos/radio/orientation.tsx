@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Radio, RadioGroup } from "@dofortech/pretty-ui";
+import { Field, Radio, RadioGroup } from "@dofortech/forte-ui";
 
 const SPEEDS = [
   { value: "1", label: "1x" },

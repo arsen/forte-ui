@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/pretty-ui";
+import { Resizable } from "@dofortech/forte-ui";
 
 /* `autoSaveId` writes the layout to localStorage and reads it back on the next
  * mount. Drag the divider, reload the page, and the split is where you left
@@ -9,7 +9,7 @@ import { Resizable } from "@dofortech/pretty-ui";
 export default function ResizablePersisted() {
   return (
     <Resizable.Group
-      autoSaveId="pretty-ui-docs-demo"
+      autoSaveId="forte-ui-docs-demo"
       orientation="horizontal"
       className="h-40 w-full max-w-2xl overflow-hidden rounded-surface border border-border-muted"
     >
@@ -19,7 +19,7 @@ export default function ResizablePersisted() {
       <Resizable.Handle grip />
       <Resizable.Panel minSize={20}>
         <div className="h-full p-4 text-2 text-foreground-muted">
-          Stored under <code className="font-mono">pui-resizable:pretty-ui-docs-demo</code>.
+          Stored under <code className="font-mono">forte-resizable:forte-ui-docs-demo</code>.
         </div>
       </Resizable.Panel>
     </Resizable.Group>

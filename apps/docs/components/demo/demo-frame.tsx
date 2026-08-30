@@ -17,7 +17,7 @@ export type DemoScope = {
  * light/dark toggle.
  *
  * The theme scoping works because the library re-declares its colour ramps on
- * `.pui-theme` and `[data-pui-theme]`, not only on `:root`. A custom property
+ * `.forte-theme` and `[data-forte-theme]`, not only on `:root`. A custom property
  * containing `var()` is substituted at the element where it is DECLARED, so
  * setting a seed on a descendant of `:root` alone would change nothing. It is
  * also why the frame's colours are written as `bg-background` rather than a
@@ -43,14 +43,14 @@ export function DemoFrame({
         "bg-background text-foreground",
         // The shell clips the frame, so the frame never rounds its own corners.
         "rounded-none",
-        "pui-theme",
+        "forte-theme",
         className,
       )}
       // `dir` is a real HTML attribute, not a CSS trick — it drives Base UI's
       // keyboard direction handling as well as the visual flow.
       dir={scope.dir}
       data-theme={scope.theme === "inherit" ? undefined : scope.theme}
-      data-pui-motion={scope.motion === "inherit" ? undefined : "reduce"}
+      data-forte-motion={scope.motion === "inherit" ? undefined : "reduce"}
     >
       {children}
     </div>
@@ -62,7 +62,7 @@ const THEMES: DemoScope["theme"][] = ["inherit", "light", "dark"];
 /* One control in the strip. `pointer` because it acts; the font trio because
  * there is no Preflight and a bare <button> would otherwise be 13px Arial. */
 const CONTROL = [
-  "inline-flex min-h-(--pui-target-min) cursor-pointer items-center gap-1",
+  "inline-flex min-h-(--forte-target-min) cursor-pointer items-center gap-1",
   // Not `[font:inherit]`: Tailwind emits arbitrary properties after ordinary
   // utilities, and the `font` shorthand carries a `font-size` — so it silently
   // overwrote the `text-1` sitting right next to it.
@@ -70,7 +70,7 @@ const CONTROL = [
   "text-foreground-muted transition-[color,background-color] duration-fast ease-standard",
   "hover:bg-panel-hover hover:text-foreground",
   "data-active:bg-primary-soft data-active:text-primary-text",
-  "pui-focus-ring",
+  "forte-focus-ring",
 ].join(" ");
 
 /** The control strip. Kept separate so a demo can be rendered without it. */

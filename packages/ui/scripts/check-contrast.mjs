@@ -6,7 +6,7 @@
  * the curve caps (notably accent-11's light cap of 0.490) were tuned against
  * this, and a plausible-looking tweak can quietly drop a hue below AA.
  *
- *   pnpm --filter @dofortech/pretty-ui check:contrast
+ *   pnpm --filter @dofortech/forte-ui check:contrast
  */
 import { ACCENT_CURVE, GRAY_CURVE } from "./ramp.mjs";
 
@@ -134,7 +134,7 @@ const CHECKS = [
  *
  * These hues are pinned in tokens.css and do not move with the seed, so they
  * are checked once rather than swept: there is no grid to sweep. They are here
- * anyway because nothing else would catch them. `--pui-warning-9` is a light
+ * anyway because nothing else would catch them. `--forte-warning-9` is a light
  * amber, so its `on-` token is near-BLACK while the other three are near-white,
  * and a plausible-looking edit that made them uniform would ship a 1.8:1 label
  * with no test to say so.

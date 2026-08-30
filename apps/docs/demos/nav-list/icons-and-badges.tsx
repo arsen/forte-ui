@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { NavList } from "@dofortech/pretty-ui";
+import { NavList } from "@dofortech/forte-ui";
 import { ChartLine, FlaskConical, Home, Settings, Users } from "lucide-react";
 
 /* `size-4 shrink-0` — sized from the space scale, so icons follow density

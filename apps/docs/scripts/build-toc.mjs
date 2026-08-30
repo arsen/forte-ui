@@ -29,7 +29,7 @@
  * That staleness is survivable because the rail treats this file as a seed and
  * reconciles against the rendered DOM on mount; see components/toc.tsx.
  *
- *   pnpm --filter @dofortech/pretty-ui-docs toc
+ *   pnpm --filter @dofortech/forte-ui-docs toc
  */
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -94,7 +94,7 @@ entries.sort((a, b) => a.route.localeCompare(b.route));
 
 const out = `/**
  * GENERATED FILE — do not edit by hand.
- * Regenerate with:  pnpm --filter @dofortech/pretty-ui-docs toc
+ * Regenerate with:  pnpm --filter @dofortech/forte-ui-docs toc
  *
  * The h2/h3 headings of every MDX page, keyed by route, so the "On this page"
  * rail can be server-rendered from a layout that cannot see the page. It is a

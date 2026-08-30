@@ -73,13 +73,13 @@
  *
  * `block-size: auto` is not interpolable, so the collapse needs a from-value.
  * `Alert.tsx` measures the card at the moment it is asked to leave and hands
- * the number over as `--pui-alert-exit-from`, then forces a style
+ * the number over as `--forte-alert-exit-from`, then forces a style
  * recalculation before applying `[data-ending-style]` — see the phase comment
  * there. Both the padding and the border have to collapse too: `box-sizing` is
  * `border-box`, so at `block-size: 0` they would still hold the card 50px
  * open.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the alert itself, so a value set on
      * an ancestor is only INHERITED and loses to these. Re-skin one alert by
@@ -88,63 +88,63 @@
      * the global tokens on the right-hand side. */
     /** Space between the icon, the message and the trailing controls. A
      * margin on each part rather than a `column-gap` — see the header. */
-    --pui-alert-gap: var(--pui-space-3);
+    --forte-alert-gap: var(--forte-space-3);
     /** Space between the title and the description. */
-    --pui-alert-row-gap: var(--pui-space-1);
-    /** Padding inside the card. Follows `data-pui-density`. */
-    --pui-alert-padding: var(--pui-surface-p);
-    /** Corner radius. Follows `data-pui-radius`. */
-    --pui-alert-radius: var(--pui-radius-surface);
+    --forte-alert-row-gap: var(--forte-space-1);
+    /** Padding inside the card. Follows `data-forte-density`. */
+    --forte-alert-padding: var(--forte-surface-p);
+    /** Corner radius. Follows `data-forte-radius`. */
+    --forte-alert-radius: var(--forte-radius-surface);
     /** Width of the card's edge. */
-    --pui-alert-border-width: 1px;
+    --forte-alert-border-width: 1px;
     /** Size of the glyph in `Alert.Icon`. */
-    --pui-alert-icon-size: var(--pui-space-4);
+    --forte-alert-icon-size: var(--forte-space-4);
     /** Size of the title. */
-    --pui-alert-title-font-size: var(--pui-font-size-2);
+    --forte-alert-title-font-size: var(--forte-font-size-2);
     /** Weight of the title. It is what separates the title from the
      * description on a `soft` card, where both are the same colour. */
-    --pui-alert-title-font-weight: var(--pui-font-weight-semibold);
+    --forte-alert-title-font-weight: var(--forte-font-weight-semibold);
     /** Size of the description. */
-    --pui-alert-font-size: var(--pui-font-size-2);
+    --forte-alert-font-size: var(--forte-font-size-2);
 
     /* Exit. There is no enter counterpart — see the header. */
     /** Length of the leaving gesture. Never reaches `0s`: at exactly zero no
      * transition object is created, `finished` never resolves, and the card
      * that is waiting on it stays in the DOM for good. */
-    --pui-alert-exit-duration: var(--pui-duration-fast);
+    --forte-alert-exit-duration: var(--forte-duration-fast);
     /** Curve of the leaving gesture. */
-    --pui-alert-exit-ease: var(--pui-ease-exit);
+    --forte-alert-exit-ease: var(--forte-ease-exit);
     /** How far the card slides along the inline axis as it goes. `md`, the
      * same distance `Dialog` leaves on — an alert is a surface, not a list
      * row. A travel token, so it collapses to `0px` under reduced motion on
      * its own and the fade is left to carry the dismissal. */
-    --pui-alert-exit-travel: var(--pui-travel-md);
+    --forte-alert-exit-travel: var(--forte-travel-md);
 
     /* Per-tone palette. Overridden by [data-tone]; neutral is the default. */
     /** Tone's tinted surface */
-    --pui-alert-tone-soft: var(--pui-gray-3);
+    --forte-alert-tone-soft: var(--forte-gray-3);
     /** Tone's edge */
-    --pui-alert-tone-border: var(--pui-color-border);
+    --forte-alert-tone-border: var(--forte-color-border);
     /** Tone's title colour on that surface */
-    --pui-alert-tone-title: var(--pui-color-foreground);
+    --forte-alert-tone-title: var(--forte-color-foreground);
     /** Tone's body colour on that surface. Separate from the title's because
      * `neutral` wants a muted grey here and the coloured tones want their own
      * step 11 — the pair the harness guarantees. */
-    --pui-alert-tone-body: var(--pui-color-foreground-muted);
+    --forte-alert-tone-body: var(--forte-color-foreground-muted);
     /** Tone's glyph colour, which is the only tone signal `outline` keeps */
-    --pui-alert-tone-accent: var(--pui-color-foreground-muted);
+    --forte-alert-tone-accent: var(--forte-color-foreground-muted);
 
     /* Filled in per variant below; this is the `soft` set. */
     /** Fill behind the card. Set by `variant` from the tone. */
-    --pui-alert-bg: var(--pui-alert-tone-soft);
+    --forte-alert-bg: var(--forte-alert-tone-soft);
     /** Edge colour. Set by `variant` from the tone. */
-    --pui-alert-border-color: var(--pui-alert-tone-border);
+    --forte-alert-border-color: var(--forte-alert-tone-border);
     /** Title colour. Set by `variant` from the tone. */
-    --pui-alert-title-color: var(--pui-alert-tone-title);
+    --forte-alert-title-color: var(--forte-alert-tone-title);
     /** Description colour. Set by `variant` from the tone. */
-    --pui-alert-body-color: var(--pui-alert-tone-body);
+    --forte-alert-body-color: var(--forte-alert-tone-body);
     /** Glyph colour. Set by `variant` from the tone. */
-    --pui-alert-icon-color: var(--pui-alert-tone-accent);
+    --forte-alert-icon-color: var(--forte-alert-tone-accent);
 
     box-sizing: border-box;
     /* The containing block for `.close`. `relative` alone deliberately — no
@@ -155,15 +155,15 @@
     /* icon · message · action. An empty `auto` track is zero wide, and there
      * is no `column-gap` to survive it — see the header. */
     grid-template-columns: auto minmax(0, 1fr) auto;
-    row-gap: var(--pui-alert-row-gap);
+    row-gap: var(--forte-alert-row-gap);
 
-    padding: var(--pui-alert-padding);
-    border: var(--pui-alert-border-width) solid var(--pui-alert-border-color);
-    border-radius: var(--pui-alert-radius);
-    background-color: var(--pui-alert-bg);
+    padding: var(--forte-alert-padding);
+    border: var(--forte-alert-border-width) solid var(--forte-alert-border-color);
+    border-radius: var(--forte-alert-radius);
+    background-color: var(--forte-alert-bg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-alert-font-size);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-alert-font-size);
   }
 
   /* Icon -------------------------------------------------------------------
@@ -181,20 +181,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    block-size: calc(var(--pui-alert-title-font-size) * var(--pui-line-height-tight));
-    margin-inline-end: var(--pui-alert-gap);
+    block-size: calc(var(--forte-alert-title-font-size) * var(--forte-line-height-tight));
+    margin-inline-end: var(--forte-alert-gap);
 
-    color: var(--pui-alert-icon-color);
+    color: var(--forte-alert-icon-color);
     pointer-events: none;
   }
 
-  /* Targeted as an element rather than through `.pui-icon`, which is local
+  /* Targeted as an element rather than through `.forte-icon`, which is local
    * inside a CSS module and would match nothing — and which sets
    * `fill: currentColor`, turning a stroked outline into a solid blob. */
   .icon svg {
     display: block;
-    inline-size: var(--pui-alert-icon-size);
-    block-size: var(--pui-alert-icon-size);
+    inline-size: var(--forte-alert-icon-size);
+    block-size: var(--forte-alert-icon-size);
   }
 
   /* Message ---------------------------------------------------------------- */
@@ -202,10 +202,10 @@
     grid-column: 2;
     grid-row: 1;
 
-    color: var(--pui-alert-title-color);
-    font-size: var(--pui-alert-title-font-size);
-    font-weight: var(--pui-alert-title-font-weight);
-    line-height: var(--pui-line-height-tight);
+    color: var(--forte-alert-title-color);
+    font-size: var(--forte-alert-title-font-size);
+    font-weight: var(--forte-alert-title-font-weight);
+    line-height: var(--forte-line-height-tight);
     /* A short title should not be left hanging one word on its own line. */
     text-wrap: balance;
   }
@@ -215,9 +215,9 @@
   .description {
     grid-column: 2;
 
-    color: var(--pui-alert-body-color);
-    font-size: var(--pui-alert-font-size);
-    line-height: var(--pui-line-height-normal);
+    color: var(--forte-alert-body-color);
+    font-size: var(--forte-alert-font-size);
+    line-height: var(--forte-line-height-normal);
   }
 
   /* The description takes a list or a second paragraph, so the outer margins
@@ -247,8 +247,8 @@
     align-self: center;
     display: flex;
     align-items: center;
-    gap: var(--pui-space-2);
-    margin-inline-start: var(--pui-alert-gap);
+    gap: var(--forte-space-2);
+    margin-inline-start: var(--forte-alert-gap);
   }
 
   .root:has(> .title):has(> .description) > .action {
@@ -262,32 +262,32 @@
   .close {
     box-sizing: border-box;
     position: absolute;
-    inset-block-start: var(--pui-alert-padding);
-    inset-inline-end: var(--pui-alert-padding);
+    inset-block-start: var(--forte-alert-padding);
+    inset-inline-end: var(--forte-alert-padding);
     /* The button is taller than the line it belongs to, so half the overhang
      * comes back off the top. That centres the "×" on the title's first line
      * rather than leaving it floating above the text. */
     margin-block-start: calc(
-      (var(--pui-alert-title-font-size) * var(--pui-line-height-tight) -
-            var(--pui-target-min)) / 2
+      (var(--forte-alert-title-font-size) * var(--forte-line-height-tight) -
+            var(--forte-target-min)) / 2
     );
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    inline-size: var(--pui-target-min);
-    block-size: var(--pui-target-min);
+    inline-size: var(--forte-target-min);
+    block-size: var(--forte-target-min);
     padding: 0;
     border: 0;
-    border-radius: var(--pui-radius-control);
+    border-radius: var(--forte-radius-control);
 
     background-color: transparent;
-    color: var(--pui-alert-body-color);
+    color: var(--forte-alert-body-color);
 
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* The button is out of flow, so nothing reserves room for it — a long title
@@ -297,26 +297,26 @@
    * `Alert.Close`'s slot gets the padding too. */
   .root:has(> .close) {
     padding-inline-end: calc(
-      var(--pui-alert-padding) + var(--pui-target-min) + var(--pui-space-2)
+      var(--forte-alert-padding) + var(--forte-target-min) + var(--forte-space-2)
     );
   }
 
   .close svg {
-    inline-size: var(--pui-alert-icon-size);
-    block-size: var(--pui-alert-icon-size);
+    inline-size: var(--forte-alert-icon-size);
+    block-size: var(--forte-alert-icon-size);
   }
 
   /* `@media (hover: hover)` so a touch device does not leave the button stuck
    * in its hover colour after a tap. */
   @media (hover: hover) {
     .close:hover {
-      background-color: var(--pui-color-panel-hover);
-      color: var(--pui-alert-title-color);
+      background-color: var(--forte-color-panel-hover);
+      color: var(--forte-alert-title-color);
     }
   }
 
   .close:active {
-    background-color: var(--pui-color-panel-active);
+    background-color: var(--forte-color-panel-active);
   }
 
   /* Exit -------------------------------------------------------------------
@@ -330,7 +330,7 @@
     /* The card's own measured height, supplied by `Alert.tsx`. The only value
      * in this file that is not a token, because it is not a design decision —
      * it is how tall this particular card happened to be. */
-    block-size: var(--pui-alert-exit-from);
+    block-size: var(--forte-alert-exit-from);
     /* The text does not reflow into a narrowing box on the way out; it is
      * clipped. Reflowing it would re-wrap every line as the card closed. */
     overflow: hidden;
@@ -340,11 +340,11 @@
      * toggling their own padding or border would get an unasked-for 160ms
      * animation out of it. */
     transition:
-      opacity var(--pui-alert-exit-duration) var(--pui-alert-exit-ease),
-      translate var(--pui-alert-exit-duration) var(--pui-alert-exit-ease),
-      block-size var(--pui-alert-exit-duration) var(--pui-alert-exit-ease),
-      padding-block var(--pui-alert-exit-duration) var(--pui-alert-exit-ease),
-      border-block-width var(--pui-alert-exit-duration) var(--pui-alert-exit-ease);
+      opacity var(--forte-alert-exit-duration) var(--forte-alert-exit-ease),
+      translate var(--forte-alert-exit-duration) var(--forte-alert-exit-ease),
+      block-size var(--forte-alert-exit-duration) var(--forte-alert-exit-ease),
+      padding-block var(--forte-alert-exit-duration) var(--forte-alert-exit-ease),
+      border-block-width var(--forte-alert-exit-duration) var(--forte-alert-exit-ease);
   }
 
   .root[data-ending-style] {
@@ -357,10 +357,10 @@
 
     opacity: 0;
     /* `translate` and `transform` are physical, so the distance — always
-     * positive — is signed by `--pui-direction`: the card leaves toward the
+     * positive — is signed by `--forte-direction`: the card leaves toward the
      * inline-end, which is where the × it was dismissed from sits, in LTR and
      * RTL alike. */
-    translate: calc(var(--pui-alert-exit-travel) * var(--pui-direction));
+    translate: calc(var(--forte-alert-exit-travel) * var(--forte-direction));
   }
 
   /* Tones ------------------------------------------------------------------
@@ -371,63 +371,63 @@
    *
    * `neutral` is the one tone whose title and body differ: it has a real grey
    * scale to separate them with. The coloured tones put both in step 11 and
-   * let `--pui-alert-title-font-weight` do the work, because a second, lighter
+   * let `--forte-alert-title-font-weight` do the work, because a second, lighter
    * tint of the same hue is not a colour the ramp promises anything about.
    * ---------------------------------------------------------------------- */
   .root[data-tone="neutral"] {
-    --pui-alert-tone-soft: var(--pui-gray-3);
-    --pui-alert-tone-border: var(--pui-color-border);
-    --pui-alert-tone-title: var(--pui-color-foreground);
-    --pui-alert-tone-body: var(--pui-color-foreground-muted);
-    --pui-alert-tone-accent: var(--pui-color-foreground-muted);
+    --forte-alert-tone-soft: var(--forte-gray-3);
+    --forte-alert-tone-border: var(--forte-color-border);
+    --forte-alert-tone-title: var(--forte-color-foreground);
+    --forte-alert-tone-body: var(--forte-color-foreground-muted);
+    --forte-alert-tone-accent: var(--forte-color-foreground-muted);
   }
 
   .root[data-tone="primary"] {
-    --pui-alert-tone-soft: var(--pui-color-primary-soft);
-    --pui-alert-tone-border: var(--pui-color-primary-border);
-    --pui-alert-tone-title: var(--pui-color-primary-text);
-    --pui-alert-tone-body: var(--pui-color-primary-text);
-    --pui-alert-tone-accent: var(--pui-color-primary-text);
+    --forte-alert-tone-soft: var(--forte-color-primary-soft);
+    --forte-alert-tone-border: var(--forte-color-primary-border);
+    --forte-alert-tone-title: var(--forte-color-primary-text);
+    --forte-alert-tone-body: var(--forte-color-primary-text);
+    --forte-alert-tone-accent: var(--forte-color-primary-text);
   }
 
   .root[data-tone="secondary"] {
-    --pui-alert-tone-soft: var(--pui-color-secondary-soft);
-    --pui-alert-tone-border: var(--pui-color-secondary-border);
-    --pui-alert-tone-title: var(--pui-color-secondary-text);
-    --pui-alert-tone-body: var(--pui-color-secondary-text);
-    --pui-alert-tone-accent: var(--pui-color-secondary-text);
+    --forte-alert-tone-soft: var(--forte-color-secondary-soft);
+    --forte-alert-tone-border: var(--forte-color-secondary-border);
+    --forte-alert-tone-title: var(--forte-color-secondary-text);
+    --forte-alert-tone-body: var(--forte-color-secondary-text);
+    --forte-alert-tone-accent: var(--forte-color-secondary-text);
   }
 
   .root[data-tone="success"] {
-    --pui-alert-tone-soft: var(--pui-color-success-soft);
-    --pui-alert-tone-border: var(--pui-color-success-border);
-    --pui-alert-tone-title: var(--pui-color-success-text);
-    --pui-alert-tone-body: var(--pui-color-success-text);
-    --pui-alert-tone-accent: var(--pui-color-success-text);
+    --forte-alert-tone-soft: var(--forte-color-success-soft);
+    --forte-alert-tone-border: var(--forte-color-success-border);
+    --forte-alert-tone-title: var(--forte-color-success-text);
+    --forte-alert-tone-body: var(--forte-color-success-text);
+    --forte-alert-tone-accent: var(--forte-color-success-text);
   }
 
   .root[data-tone="warning"] {
-    --pui-alert-tone-soft: var(--pui-color-warning-soft);
-    --pui-alert-tone-border: var(--pui-color-warning-border);
-    --pui-alert-tone-title: var(--pui-color-warning-text);
-    --pui-alert-tone-body: var(--pui-color-warning-text);
-    --pui-alert-tone-accent: var(--pui-color-warning-text);
+    --forte-alert-tone-soft: var(--forte-color-warning-soft);
+    --forte-alert-tone-border: var(--forte-color-warning-border);
+    --forte-alert-tone-title: var(--forte-color-warning-text);
+    --forte-alert-tone-body: var(--forte-color-warning-text);
+    --forte-alert-tone-accent: var(--forte-color-warning-text);
   }
 
   .root[data-tone="danger"] {
-    --pui-alert-tone-soft: var(--pui-color-danger-soft);
-    --pui-alert-tone-border: var(--pui-color-danger-border);
-    --pui-alert-tone-title: var(--pui-color-danger-text);
-    --pui-alert-tone-body: var(--pui-color-danger-text);
-    --pui-alert-tone-accent: var(--pui-color-danger-text);
+    --forte-alert-tone-soft: var(--forte-color-danger-soft);
+    --forte-alert-tone-border: var(--forte-color-danger-border);
+    --forte-alert-tone-title: var(--forte-color-danger-text);
+    --forte-alert-tone-body: var(--forte-color-danger-text);
+    --forte-alert-tone-accent: var(--forte-color-danger-text);
   }
 
   .root[data-tone="info"] {
-    --pui-alert-tone-soft: var(--pui-color-info-soft);
-    --pui-alert-tone-border: var(--pui-color-info-border);
-    --pui-alert-tone-title: var(--pui-color-info-text);
-    --pui-alert-tone-body: var(--pui-color-info-text);
-    --pui-alert-tone-accent: var(--pui-color-info-text);
+    --forte-alert-tone-soft: var(--forte-color-info-soft);
+    --forte-alert-tone-border: var(--forte-color-info-border);
+    --forte-alert-tone-title: var(--forte-color-info-text);
+    --forte-alert-tone-body: var(--forte-color-info-text);
+    --forte-alert-tone-accent: var(--forte-color-info-text);
   }
 
   /* Variants ---------------------------------------------------------------
@@ -436,19 +436,19 @@
    * type from the neutral scale.
    * ---------------------------------------------------------------------- */
   .root[data-variant="soft"] {
-    --pui-alert-bg: var(--pui-alert-tone-soft);
-    --pui-alert-border-color: var(--pui-alert-tone-border);
-    --pui-alert-title-color: var(--pui-alert-tone-title);
-    --pui-alert-body-color: var(--pui-alert-tone-body);
-    --pui-alert-icon-color: var(--pui-alert-tone-accent);
+    --forte-alert-bg: var(--forte-alert-tone-soft);
+    --forte-alert-border-color: var(--forte-alert-tone-border);
+    --forte-alert-title-color: var(--forte-alert-tone-title);
+    --forte-alert-body-color: var(--forte-alert-tone-body);
+    --forte-alert-icon-color: var(--forte-alert-tone-accent);
   }
 
   .root[data-variant="outline"] {
-    --pui-alert-bg: var(--pui-color-panel);
-    --pui-alert-border-color: var(--pui-color-border);
-    --pui-alert-title-color: var(--pui-color-foreground);
-    --pui-alert-body-color: var(--pui-color-foreground-muted);
-    --pui-alert-icon-color: var(--pui-alert-tone-accent);
+    --forte-alert-bg: var(--forte-color-panel);
+    --forte-alert-border-color: var(--forte-color-border);
+    --forte-alert-title-color: var(--forte-color-foreground);
+    --forte-alert-body-color: var(--forte-color-foreground-muted);
+    --forte-alert-icon-color: var(--forte-alert-tone-accent);
   }
 }
 
@@ -456,7 +456,7 @@
  * Accessibility overrides — see layers.css for why these cannot live in the
  * components layer.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Every background collapses to a system colour here, so `soft` and
      * `outline` become the same card and the tone stops being visible at all.

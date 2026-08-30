@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { NavList } from "@dofortech/pretty-ui";
+import { NavList } from "@dofortech/forte-ui";
 import { cn } from "@/lib/cn";
 import { TOC, type TocHeading } from "./toc-registry";
 import { EYEBROW, STICKY_COLUMN } from "./styles";
@@ -55,16 +55,16 @@ import { EYEBROW, STICKY_COLUMN } from "./styles";
  * `build-toc.mjs` filters to the same two depths; if these two ever disagree,
  * the seeded rail is visibly rewritten on mount.
  *
- * `:not([data-pui])` excludes headings a COMPONENT rendered. Several library
+ * `:not([data-forte])` excludes headings a COMPONENT rendered. Several library
  * parts are headings with generated ids — `Dialog.Title` and `Toast.Title` are
  * both `<h2 id>` — because that id is what wires up `aria-labelledby`. Most of
  * them are portalled to `<body>` and so are out of `#main` and out of reach
  * anyway, but not all: a toast viewport given a `container` renders inside the
  * page, and the first demo on the Toast page put "Profile saved" in this rail
- * for as long as the toast was on screen. `data-pui` is the marker every part
+ * for as long as the toast was on screen. `data-forte` is the marker every part
  * the library renders carries, and nothing MDX produces has one, so it
  * separates the two exactly. */
-const HEADINGS = "h2[id]:not([data-pui]), h3[id]:not([data-pui])";
+const HEADINGS = "h2[id]:not([data-forte]), h3[id]:not([data-forte])";
 
 /* A stable identity for "this route has no generated entry", so the effect
  * below is not re-run by a fresh `[]` on every render. */
@@ -118,7 +118,7 @@ const durationMs = (name: string) => {
  * jump across most of the page reaches `slow`. */
 const MS_PER_PX = 0.25;
 
-/* Ease-out, the shape of `--pui-ease-standard`: leaves quickly, settles. It is
+/* Ease-out, the shape of `--forte-ease-standard`: leaves quickly, settles. It is
  * written out instead of read from the token because a scroll offset is not a
  * CSS property — there is nothing to hand a CSS easing to, and parsing
  * `cubic-bezier()` only to re-solve it here is more machinery than the
@@ -164,18 +164,18 @@ function scrollToHeading(el: HTMLElement) {
 
   /* The library's answer for scrolling under reduced motion is not a shorter
    * animation but no animation: `a11y.css` forces `scroll-behavior: auto` on
-   * html, body and `.pui-scroll`. Reading `--pui-motion-ok` rather than
+   * html, body and `.forte-scroll`. Reading `--forte-motion-ok` rather than
    * matchMedia matches that through the in-page control too, which sets
-   * `data-pui-motion` and never touches the media query. */
-  const motionOk = parseFloat(getComputedStyle(doc).getPropertyValue("--pui-motion-ok"));
+   * `data-forte-motion` and never touches the media query. */
+  const motionOk = parseFloat(getComputedStyle(doc).getPropertyValue("--forte-motion-ok"));
   if (motionOk !== 1 || Math.abs(distance) < 1) {
     window.scrollTo({ top: to, behavior: "instant" });
     return;
   }
 
   const duration = Math.min(
-    durationMs("--pui-duration-slow"),
-    Math.max(durationMs("--pui-duration-fast"), Math.abs(distance) * MS_PER_PX),
+    durationMs("--forte-duration-slow"),
+    Math.max(durationMs("--forte-duration-fast"), Math.abs(distance) * MS_PER_PX),
   );
 
   const start = performance.now();

@@ -1,6 +1,6 @@
 "use client";
 
-import { Textarea } from "@dofortech/pretty-ui";
+import { Textarea } from "@dofortech/forte-ui";
 
 const VARIANTS = ["outline", "soft", "ghost"] as const;
 

@@ -318,7 +318,7 @@ function firstSelectedDay(mode: CalendarMode, selection: unknown): Date | null {
  * Decorative — the arrows carry their meaning in the button's `aria-label`.
  * One glyph pointing forward, mirrored for the back arrow with `scale`: the
  * chevron travels along the inline axis, which has no logical form, so the
- * flip is a physical one that `--pui-direction` turns around in RTL. See
+ * flip is a physical one that `--forte-direction` turns around in RTL. See
  * `.navIcon` in the stylesheet.
  * ---------------------------------------------------------------------- */
 
@@ -348,11 +348,11 @@ function ChevronIcon(props: React.ComponentProps<"svg">) {
  * because Button's icon-only sizing treats its height as a floor and grows
  * for `icon + padding` — with the default padding the 16px chevron would
  * outgrow a `sm` calendar's 28px nav square and knock the arrows out of the
- * caption row they overlay. The calendar's geometry is `--pui-calendar-*`'s
+ * caption row they overlay. The calendar's geometry is `--forte-calendar-*`'s
  * to decide, not the button's. */
 const NAV_BUTTON_STYLE = {
-  "--pui-button-height": "var(--pui-calendar-nav-size)",
-  "--pui-button-icon-padding": "0px",
+  "--forte-button-height": "var(--forte-calendar-nav-size)",
+  "--forte-button-icon-padding": "0px",
 } as React.CSSProperties;
 
 /* -------------------------------------------------------------------------
@@ -468,7 +468,7 @@ export interface CalendarProps<M extends CalendarMode = "single">
    */
   captionLayout?: CalendarCaptionLayout;
   /**
-   * Cell size and text size. Follows the ambient `data-pui-density` too.
+   * Cell size and text size. Follows the ambient `data-forte-density` too.
    * @default "md"
    */
   size?: CalendarSize;
@@ -764,7 +764,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
       }
       pendingFocus.current = false;
       const node = rootRef.current?.querySelector<HTMLElement>(
-        `[data-pui="calendar-day"][data-day="${tabTargetKey}"]:not([data-outside])`,
+        `[data-forte="calendar-day"][data-day="${tabTargetKey}"]:not([data-outside])`,
       );
       node?.focus();
     });
@@ -875,7 +875,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
 
       if (!showMonthDropdown && !showYearDropdown) {
         return (
-          <div className={styles.caption} data-pui="calendar-caption">
+          <div className={styles.caption} data-forte="calendar-caption">
             {/* Named, and announced when it changes: paging with the arrows
              * moves nothing visible for a screen reader otherwise. */}
             <span
@@ -883,7 +883,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
               role="status"
               aria-live="polite"
               className={styles.captionLabel}
-              data-pui="calendar-caption-label"
+              data-forte="calendar-caption-label"
             >
               {monthYearText}
             </span>
@@ -912,8 +912,8 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
       const goToDisplayed = (next: Date) => goToMonth(addMonths(next, -index));
 
       return (
-        <div className={styles.caption} data-pui="calendar-caption">
-          <span id={captionId} role="status" aria-live="polite" className="pui-visually-hidden">
+        <div className={styles.caption} data-forte="calendar-caption">
+          <span id={captionId} role="status" aria-live="polite" className="forte-visually-hidden">
             {monthYearText}
           </span>
 
@@ -948,7 +948,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
               </Select.Popup>
             </Select.Root>
           ) : (
-            <span className={styles.captionLabel} data-pui="calendar-caption-label">
+            <span className={styles.captionLabel} data-forte="calendar-caption-label">
               {formatters.month.format(month)}
             </span>
           )}
@@ -990,7 +990,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
               </Select.Popup>
             </Select.Root>
           ) : (
-            <span className={styles.captionLabel} data-pui="calendar-caption-label">
+            <span className={styles.captionLabel} data-forte="calendar-caption-label">
               {formatters.year.format(month)}
             </span>
           )}
@@ -1006,7 +1006,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
         // The cell still exists: a ragged row would misalign the columns and
         // leave the grid's row lengths uneven.
         return (
-          <td key={key} role="gridcell" className={styles.cell} data-pui="calendar-cell" data-empty />
+          <td key={key} role="gridcell" className={styles.cell} data-forte="calendar-cell" data-empty />
         );
       }
 
@@ -1027,7 +1027,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
           // be one.
           aria-selected={selected || (inBand && !band!.preview) || undefined}
           className={styles.cell}
-          data-pui="calendar-cell"
+          data-forte="calendar-cell"
           data-in-range={inBand || undefined}
           data-range-start={bandStart || undefined}
           data-range-end={bandEnd || undefined}
@@ -1039,9 +1039,9 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
             // Inset ring: the cells sit edge to edge so the range band is
             // continuous, and an outward ring would be drawn over the two
             // neighbours instead of around the focused day.
-            className={clsx(styles.day, "pui-focus-ring")}
+            className={clsx(styles.day, "forte-focus-ring")}
             data-focus-inset
-            data-pui="calendar-day"
+            data-forte="calendar-day"
             data-day={key}
             data-selected={selected || undefined}
             data-today={isToday || undefined}
@@ -1077,7 +1077,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
         role="group"
         aria-label={labels.calendar}
         className={clsx(styles.root, className)}
-        data-pui="calendar"
+        data-forte="calendar"
         data-size={size}
         data-mode={mode}
         // The preview follows the pointer, so it has to be dropped when the
@@ -1088,12 +1088,12 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
         onPointerLeave={() => setPreviewDay(focusedDay)}
         {...rest}
       >
-        <div className={styles.body} data-pui="calendar-body">
+        <div className={styles.body} data-forte="calendar-body">
           {/* Overlays the caption row rather than taking a row of its own, so
             * a two-month view gets one pair of arrows on the outer edges.
             * The container is pointer-transparent; only the buttons are not,
             * or it would swallow clicks meant for the dropdowns beneath. */}
-          <div className={styles.nav} data-pui="calendar-nav">
+          <div className={styles.nav} data-forte="calendar-nav">
             <Button
               variant={navVariant}
               tone="neutral"
@@ -1130,26 +1130,26 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
             </Button>
           </div>
 
-          <div className={styles.months} data-pui="calendar-months">
+          <div className={styles.months} data-forte="calendar-months">
             {months.map((month, index) => (
-              <div key={monthOrdinal(month)} className={styles.month} data-pui="calendar-month">
+              <div key={monthOrdinal(month)} className={styles.month} data-forte="calendar-month">
                 {renderCaption(month, index)}
 
                 <table
                   role="grid"
                   aria-labelledby={`${captionIdBase}-caption-${index}`}
                   className={styles.grid}
-                  data-pui="calendar-grid"
+                  data-forte="calendar-grid"
                 >
-                  <thead data-pui="calendar-weekdays">
+                  <thead data-forte="calendar-weekdays">
                     <tr className={styles.weekdayRow}>
                       {showWeekNumbers ? (
                         <th
                           scope="col"
                           className={styles.weekNumber}
-                          data-pui="calendar-week-number-header"
+                          data-forte="calendar-week-number-header"
                         >
-                          <span className="pui-visually-hidden">{labels.weekNumber}</span>
+                          <span className="forte-visually-hidden">{labels.weekNumber}</span>
                         </th>
                       ) : null}
                       {weekdays.map((weekday) => (
@@ -1157,26 +1157,26 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
                           key={weekday.getDay()}
                           scope="col"
                           className={styles.weekday}
-                          data-pui="calendar-weekday"
+                          data-forte="calendar-weekday"
                         >
                           {/* Abbreviated for the eye, spelled out for the ear:
                             * "Mo" is read as a word by most screen readers. */}
                           <span aria-hidden="true">{formatters.weekdayShort.format(weekday)}</span>
-                          <span className="pui-visually-hidden">
+                          <span className="forte-visually-hidden">
                             {formatters.weekdayLong.format(weekday)}
                           </span>
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody data-pui="calendar-weeks">
+                  <tbody data-forte="calendar-weeks">
                     {weeksByMonth[index]!.map((week) => (
-                      <tr key={dayKey(week[0]!)} className={styles.week} data-pui="calendar-week">
+                      <tr key={dayKey(week[0]!)} className={styles.week} data-forte="calendar-week">
                         {showWeekNumbers ? (
                           <th
                             scope="row"
                             className={styles.weekNumber}
-                            data-pui="calendar-week-number"
+                            data-forte="calendar-week-number"
                           >
                             {isoWeek(week[0]!)}
                           </th>
@@ -1192,7 +1192,7 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
         </div>
 
         {footer ? (
-          <div role="status" className={styles.footer} data-pui="calendar-footer">
+          <div role="status" className={styles.footer} data-forte="calendar-footer">
             {footer}
           </div>
         ) : null}

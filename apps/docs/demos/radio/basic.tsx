@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Radio, RadioGroup } from "@dofortech/pretty-ui";
+import { Field, Radio, RadioGroup } from "@dofortech/forte-ui";
 
 const REGIONS = [
   { value: "iad", label: "Washington, D.C." },

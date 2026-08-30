@@ -21,7 +21,7 @@ export type OTPFieldValidationType = NonNullable<BaseRootProps["validationType"]
 
 /**
  * `size` and `variant` are chosen on `OTPField.Root`, and the slots paint
- * themselves from `--pui-otp-field-*` properties the root declares — so
+ * themselves from `--forte-otp-field-*` properties the root declares — so
  * inheritance alone is enough to make them *look* right, and this context
  * exists for the other half of the contract: every slot republishes them as
  * `data-size` / `data-variant` so a consumer can write `data-[size=lg]:…` on
@@ -86,9 +86,9 @@ export interface OTPFieldRootProps
   autoSubmit?: BaseRootProps["autoSubmit"];
   /**
    * Size of the slots. Sets their square side and the character's font size
-   * together, and the side comes from the same `--pui-control-*` tokens
+   * together, and the side comes from the same `--forte-control-*` tokens
    * `Input` and `Select.Trigger` read — so a code field lines up with the rest
-   * of a form at every `data-pui-density` setting.
+   * of a form at every `data-forte-density` setting.
    * @default "md"
    */
   size?: OTPFieldSize;
@@ -146,7 +146,7 @@ export interface OTPFieldRootProps
  * State is exposed on `data-*` (`data-complete`, `data-filled`,
  * `data-disabled`, `data-readonly`, plus `data-invalid`, `data-valid`,
  * `data-dirty`, `data-touched` and `data-focused` inside a `Field.Root`) and
- * every visual decision is a `--pui-otp-field-*` custom property, so it can be
+ * every visual decision is a `--forte-otp-field-*` custom property, so it can be
  * re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[complete]:...`) without wrapping.
  */
@@ -163,7 +163,7 @@ export const OTPFieldRoot = React.forwardRef<HTMLDivElement, OTPFieldRootProps>(
           ref={ref}
           length={length}
           className={clsx(styles.root, className)}
-          data-pui="otp-field"
+          data-forte="otp-field"
           data-size={size}
           data-variant={variant}
           {...props}
@@ -217,11 +217,11 @@ export const OTPFieldInput = React.forwardRef<HTMLInputElement, OTPFieldInputPro
     return (
       <BaseOTPField.Input
         ref={ref}
-        // No `pui-target`: a slot is square on the `--pui-control-h-*` scale,
+        // No `forte-target`: a slot is square on the `--forte-control-h-*` scale,
         // and the smallest combination the library can produce — `sm` at
         // `compact` density — is 24×24, exactly the SC 2.5.8 floor.
-        className={clsx(styles.input, "pui-focus-ring", className)}
-        data-pui="otp-field-input"
+        className={clsx(styles.input, "forte-focus-ring", className)}
+        data-forte="otp-field-input"
         data-size={size}
         data-variant={variant}
         {...props}
@@ -251,10 +251,10 @@ export interface OTPFieldSeparatorProps extends SeparatorProps {
 /**
  * The dash between two groups of slots — the `123 – 456` shape a six-digit
  * code is usually printed in. Renders the library's `Separator`, so it carries
- * `data-pui="separator"` rather than a marker of its own; scope to it with
- * `[data-pui="otp-field"] [data-pui="separator"]`.
+ * `data-forte="separator"` rather than a marker of its own; scope to it with
+ * `[data-forte="otp-field"] [data-forte="separator"]`.
  *
- * It is a **horizontal** rule sized to `--pui-otp-field-separator-length`,
+ * It is a **horizontal** rule sized to `--forte-otp-field-separator-length`,
  * not a vertical bar, and it counts against nothing: `length` is the number of
  * `Input`s, so a separator can go anywhere between them.
  *

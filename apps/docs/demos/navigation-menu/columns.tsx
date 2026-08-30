@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/pretty-ui";
+import { NavigationMenu } from "@dofortech/forte-ui";
 
 const links = [
   { title: "Quick start", description: "Install the package and render a button." },
@@ -22,7 +22,7 @@ export default function NavigationMenuColumns() {
             <NavigationMenu.Trigger>
               {columns === 1 ? "One column" : `${columns} columns`}
             </NavigationMenu.Trigger>
-            {/* The panel's width is `columns × --pui-navigation-menu-column-width`.
+            {/* The panel's width is `columns × --forte-navigation-menu-column-width`.
               * Narrow the frame and the grid drops to fewer columns on its own —
               * `minmax(min(<column>, 100%), 1fr)` is what allows a track to
               * shrink below its own minimum instead of overflowing. */}

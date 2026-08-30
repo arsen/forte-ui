@@ -267,10 +267,10 @@ export const MenuTrigger = React.forwardRef(function MenuTrigger<Payload>(
       render={render}
       className={clsx(
         render === undefined && styles.trigger,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="menu-trigger"
+      data-forte="menu-trigger"
       {...props}
     />
   );
@@ -356,7 +356,7 @@ export interface MenuPopupProps extends Omit<BasePopupProps, "className"> {
   /**
    * Additional class name(s) for the positioner — the absolutely positioned
    * wrapper around the popup. This is the only way to reach
-   * `--pui-menu-z-index`, the one property declared there.
+   * `--forte-menu-z-index`, the one property declared there.
    */
   positionerClassName?: string;
 }
@@ -403,13 +403,13 @@ export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
       <BaseMenu.Portal container={container}>
         {backdrop ? (
           <BaseMenu.Backdrop
-            className={clsx(styles.backdrop, "pui-scrim")}
-            data-pui="menu-backdrop"
+            className={clsx(styles.backdrop, "forte-scrim")}
+            data-forte="menu-backdrop"
           />
         ) : null}
         <BaseMenu.Positioner
           className={clsx(styles.positioner, positionerClassName)}
-          data-pui="menu-positioner"
+          data-forte="menu-positioner"
           side={side ?? placement.side}
           align={align}
           sideOffset={sideOffset ?? placement.sideOffset}
@@ -417,14 +417,14 @@ export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
           collisionPadding={collisionPadding}
           anchor={anchor}
         >
-          {/* `pui-hc-surface` carries a transparent border that becomes a
+          {/* `forte-hc-surface` carries a transparent border that becomes a
             * system-coloured boundary in forced-colors mode, where the
             * box-shadow is stripped and the popup would otherwise dissolve
             * into the page behind it. */}
           <BaseMenu.Popup
             ref={ref}
-            className={clsx(styles.popup, "pui-hc-surface", className)}
-            data-pui="menu-popup"
+            className={clsx(styles.popup, "forte-hc-surface", className)}
+            data-forte="menu-popup"
             {...props}
           >
             {children}
@@ -448,7 +448,7 @@ export interface MenuItemProps extends Omit<BaseMenu.Item.Props, "className"> {
   /**
    * Which semantic colour set the row draws from. `danger` is for an action
    * that destroys something, and is the only alternative offered: the
-   * highlight already paints `--pui-color-primary-soft`, so a primary-toned
+   * highlight already paints `--forte-color-primary-soft`, so a primary-toned
    * row would be indistinguishable from the row the user is currently on.
    * @default "neutral"
    */
@@ -491,8 +491,8 @@ export const MenuItem = React.forwardRef<HTMLDivElement, MenuItemProps>(
     return (
       <BaseMenu.Item
         ref={ref}
-        className={clsx(styles.item, "pui-focus-ring", className)}
-        data-pui="menu-item"
+        className={clsx(styles.item, "forte-focus-ring", className)}
+        data-forte="menu-item"
         data-tone={tone}
         data-focus-inset=""
         {...props}
@@ -555,8 +555,8 @@ export const MenuLinkItem = React.forwardRef<
   return (
     <BaseMenu.LinkItem
       ref={ref}
-      className={clsx(styles.item, styles.linkItem, "pui-focus-ring", className)}
-      data-pui="menu-link-item"
+      className={clsx(styles.item, styles.linkItem, "forte-focus-ring", className)}
+      data-forte="menu-link-item"
       data-focus-inset=""
       {...props}
     >
@@ -626,10 +626,10 @@ export const MenuCheckboxItem = React.forwardRef<
       className={clsx(
         styles.item,
         styles.checkboxItem,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="menu-checkbox-item"
+      data-forte="menu-checkbox-item"
       data-focus-inset=""
       {...props}
     >
@@ -638,7 +638,7 @@ export const MenuCheckboxItem = React.forwardRef<
         * item was toggled — the one frame the user is looking straight at. */}
       <BaseMenu.CheckboxItemIndicator
         className={styles.itemIndicator}
-        data-pui="menu-item-indicator"
+        data-forte="menu-item-indicator"
         keepMounted
       >
         {indicator ?? <CheckIcon />}
@@ -699,7 +699,7 @@ export const MenuRadioGroup = React.forwardRef<
     <BaseMenu.RadioGroup
       ref={ref}
       className={clsx(styles.group, className)}
-      data-pui="menu-radio-group"
+      data-forte="menu-radio-group"
       {...props}
     />
   );
@@ -752,10 +752,10 @@ export const MenuRadioItem = React.forwardRef<
       className={clsx(
         styles.item,
         styles.radioItem,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="menu-radio-item"
+      data-forte="menu-radio-item"
       data-focus-inset=""
       {...props}
     >
@@ -763,7 +763,7 @@ export const MenuRadioItem = React.forwardRef<
         * column has to exist whether or not this is the chosen row. */}
       <BaseMenu.RadioItemIndicator
         className={styles.itemIndicator}
-        data-pui="menu-item-indicator"
+        data-forte="menu-item-indicator"
         keepMounted
       >
         {indicator ?? <DotIcon />}
@@ -797,7 +797,7 @@ export const MenuGroup = React.forwardRef<HTMLDivElement, MenuGroupProps>(
       <BaseMenu.Group
         ref={ref}
         className={clsx(styles.group, className)}
-        data-pui="menu-group"
+        data-forte="menu-group"
         {...props}
       />
     );
@@ -830,7 +830,7 @@ export const MenuGroupLabel = React.forwardRef<
     <BaseMenu.GroupLabel
       ref={ref}
       className={clsx(styles.groupLabel, className)}
-      data-pui="menu-group-label"
+      data-forte="menu-group-label"
       {...props}
     />
   );
@@ -868,7 +868,7 @@ export const MenuSeparator = React.forwardRef<
     <BaseMenu.Separator
       ref={ref}
       className={clsx(styles.separator, className)}
-      data-pui="menu-separator"
+      data-forte="menu-separator"
       {...props}
     />
   );
@@ -952,15 +952,15 @@ export const MenuSubmenuTrigger = React.forwardRef<
       className={clsx(
         styles.item,
         styles.submenuTrigger,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="menu-submenu-trigger"
+      data-forte="menu-submenu-trigger"
       data-focus-inset=""
       {...props}
     >
       {children}
-      <span className={styles.submenuIcon} data-pui="menu-submenu-icon">
+      <span className={styles.submenuIcon} data-forte="menu-submenu-icon">
         {icon ?? <ChevronIcon />}
       </span>
     </BaseMenu.SubmenuTrigger>
@@ -1008,7 +1008,7 @@ export const MenuShortcut = React.forwardRef<HTMLSpanElement, MenuShortcutProps>
       <span
         ref={ref}
         className={clsx(styles.shortcut, className)}
-        data-pui="menu-shortcut"
+        data-forte="menu-shortcut"
         aria-hidden="true"
         {...props}
       />
@@ -1034,15 +1034,15 @@ export const MenuShortcut = React.forwardRef<HTMLSpanElement, MenuShortcutProps>
  * </Menu.Root>
  * ```
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-menu-*` custom
+ * Styling is driven entirely by `data-*` attributes and `--forte-menu-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[highlighted]:...`) without wrapping. Each part
  * declares its own knobs, so an ancestor's value is only inherited and loses —
  * set them on the part itself via `className`. The popup is portalled to
  * `<body>` as well, so an ancestor of the trigger could not reach it in any
- * case; `positionerClassName` reaches `--pui-menu-z-index`, the only property
- * declared on the positioner. The global `--pui-color-*` / `--pui-control-*` /
- * `--pui-radius-*` / `--pui-space-*` tokens these resolve to ARE inherited, so
+ * case; `positionerClassName` reaches `--forte-menu-z-index`, the only property
+ * declared on the positioner. The global `--forte-color-*` / `--forte-control-*` /
+ * `--forte-radius-*` / `--forte-space-*` tokens these resolve to ARE inherited, so
  * re-pointing those from `:root` or a theme scope moves every menu at once.
  */
 export const Menu = {

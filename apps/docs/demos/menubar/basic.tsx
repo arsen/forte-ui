@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Menubar } from "@dofortech/pretty-ui";
+import { Menu, Menubar } from "@dofortech/forte-ui";
 
 export default function MenubarBasic() {
   return (

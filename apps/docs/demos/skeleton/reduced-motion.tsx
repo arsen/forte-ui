@@ -1,8 +1,8 @@
 "use client";
 
-import { Skeleton } from "@dofortech/pretty-ui";
+import { Skeleton } from "@dofortech/forte-ui";
 
-/* `data-pui-motion` is the same switch the demo frame's reduced-motion toggle
+/* `data-forte-motion` is the same switch the demo frame's reduced-motion toggle
  * flips, and it works on any element — so the right-hand column below is
  * genuinely running under reduced motion while the left-hand one is not, on
  * the same page at the same time. `full` on the left is not decoration either:
@@ -19,7 +19,7 @@ export default function SkeletonReducedMotion() {
   return (
     <div className="flex flex-wrap gap-7">
       {COLUMNS.map(({ motion, title }) => (
-        <div key={motion} data-pui-motion={motion} className="grid gap-4">
+        <div key={motion} data-forte-motion={motion} className="grid gap-4">
           <span className="text-1 font-medium text-foreground-muted">{title}</span>
           {ANIMATIONS.map((animation) => (
             <div key={animation} className="grid gap-2">

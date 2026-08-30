@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Combobox } from "@dofortech/pretty-ui";
+import { Combobox } from "@dofortech/forte-ui";
 
 const languages = [
   "C#",

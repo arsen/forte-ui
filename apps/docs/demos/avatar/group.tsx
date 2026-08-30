@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Avatar } from "@dofortech/pretty-ui";
+import { Avatar } from "@dofortech/forte-ui";
 
 const TEAM = [
   { name: "Ada Lovelace", initials: "AL", src: "/avatars/ada.svg" },
@@ -31,7 +31,7 @@ export default function AvatarGroup() {
 
       {/* The overlap is a length rather than a fraction, so a group of larger
         * avatars says how much larger. */}
-      <Avatar.Group style={{ "--pui-avatar-group-overlap": "1.25rem" } as CSSProperties}>
+      <Avatar.Group style={{ "--forte-avatar-group-overlap": "1.25rem" } as CSSProperties}>
         {TEAM.slice(0, 3).map((person) => (
           <Avatar.Root key={person.name} size="xl" shape="rounded">
             <Avatar.Image src={person.src} alt={person.name} />

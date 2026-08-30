@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/pretty-ui";
+import { Resizable } from "@dofortech/forte-ui";
 
 const ITEMS = [
   { icon: "◫", label: "Files" },

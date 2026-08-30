@@ -12,7 +12,7 @@
  *         →  Portal  →  Positioner  →  Popup  →  Arrow / Viewport
  *
  * `Root` renders no DOM element, so there is no `.root` rule here; the popup
- * is the styling anchor and carries the `--pui-preview-card-*` knobs.
+ * is the styling anchor and carries the `--forte-preview-card-*` knobs.
  *
  * Base UI's `Backdrop` part is deliberately not wrapped. A scrim says the page
  * behind it is inert, and nothing here makes that true — there is no `modal`
@@ -21,8 +21,8 @@
  * A preview that has to take the page over is a `Popover`.
  *
  * Motion notes, all load-bearing:
- *   - No `prefers-reduced-motion` block. `--pui-travel-sm` collapses to 0px
- *     and `--pui-scale-enter` to exactly 1, so the gesture degrades to a
+ *   - No `prefers-reduced-motion` block. `--forte-travel-sm` collapses to 0px
+ *     and `--forte-scale-enter` to exactly 1, so the gesture degrades to a
  *     plain opacity fade without this file knowing reduced motion exists.
  *   - Enter/exit runs on TRANSITIONS keyed off [data-starting-style] /
  *     [data-ending-style], never keyframes. A transition can be cancelled
@@ -55,13 +55,13 @@
  * than `100vw` because a registered initial value has to be computationally
  * independent.
  */
-@property --pui-preview-card-available-width {
+@property --forte-preview-card-available-width {
   syntax: "<length>";
   inherits: false;
   initial-value: 100000px;
 }
 
-@layer pretty-ui.components {
+@layer forte.components {
   /* ------------------------------------------------------------------------
    * Trigger
    *
@@ -80,32 +80,32 @@
    * --------------------------------------------------------------------- */
   .trigger {
     /** Link colour */
-    --pui-preview-card-trigger-color: var(--pui-color-primary-text);
+    --forte-preview-card-trigger-color: var(--forte-color-primary-text);
     /** Colour of the link's underline. Muted by default so the rule reads as
      * an underline rather than as a second line of text. */
-    --pui-preview-card-trigger-underline-color: color-mix(
+    --forte-preview-card-trigger-underline-color: color-mix(
       in oklab,
       currentcolor 45%,
       transparent
     );
     /** Distance between the text baseline and its underline */
-    --pui-preview-card-trigger-underline-offset: 0.15em;
+    --forte-preview-card-trigger-underline-offset: 0.15em;
 
-    color: var(--pui-preview-card-trigger-color);
+    color: var(--forte-preview-card-trigger-color);
     cursor: pointer;
     text-decoration: underline;
-    text-decoration-color: var(--pui-preview-card-trigger-underline-color);
+    text-decoration-color: var(--forte-preview-card-trigger-underline-color);
     /* `from-font` where the font ships a thickness, so the rule sits where the
      * typeface's designer put it and matches the surrounding prose. */
     text-decoration-thickness: from-font;
-    text-underline-offset: var(--pui-preview-card-trigger-underline-offset);
-    transition: text-decoration-color var(--pui-duration-fast)
-      var(--pui-ease-standard);
+    text-underline-offset: var(--forte-preview-card-trigger-underline-offset);
+    transition: text-decoration-color var(--forte-duration-fast)
+      var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .trigger:hover {
-      --pui-preview-card-trigger-underline-color: currentcolor;
+      --forte-preview-card-trigger-underline-color: currentcolor;
     }
   }
 
@@ -113,7 +113,7 @@
    * Without it a pointer that has travelled into the card leaves no trace of
    * which of a paragraph's six links it belongs to. */
   .trigger[data-popup-open] {
-    --pui-preview-card-trigger-underline-color: currentcolor;
+    --forte-preview-card-trigger-underline-color: currentcolor;
   }
 
   /* ------------------------------------------------------------------------
@@ -128,9 +128,9 @@
    * --------------------------------------------------------------------- */
   .positioner {
     /** Stacking order of the positioner */
-    --pui-preview-card-z-index: 50;
+    --forte-preview-card-z-index: 50;
 
-    z-index: var(--pui-preview-card-z-index);
+    z-index: var(--forte-preview-card-z-index);
   }
 
   /* ------------------------------------------------------------------------
@@ -144,73 +144,73 @@
      * `PreviewCard.Popup`, whose rule is unlayered and so beats this layer) or
      * re-point the global tokens below, which this file only ever reads. */
     /** Card surface colour */
-    --pui-preview-card-bg: var(--pui-color-overlay);
+    --forte-preview-card-bg: var(--forte-color-overlay);
     /** Card text colour */
-    --pui-preview-card-fg: var(--pui-color-foreground);
+    --forte-preview-card-fg: var(--forte-color-foreground);
     /** Corner radius */
-    --pui-preview-card-radius: var(--pui-radius-surface);
+    --forte-preview-card-radius: var(--forte-radius-surface);
     /** Padding inside the card */
-    --pui-preview-card-padding: var(--pui-surface-p);
+    --forte-preview-card-padding: var(--forte-surface-p);
     /** Vertical gap between the card's children */
-    --pui-preview-card-gap: var(--pui-space-3);
+    --forte-preview-card-gap: var(--forte-space-3);
     /** Card shadow (stripped by the browser in forced-colors mode, which is
-     * why the element also carries `.pui-hc-surface`) */
-    --pui-preview-card-shadow: var(--pui-shadow-4);
+     * why the element also carries `.forte-hc-surface`) */
+    --forte-preview-card-shadow: var(--forte-shadow-4);
     /* A hairline, for the same reason Popover has one: this surface floats
      * over undimmed content, where overlay and background are a single step
      * apart on the grey ramp and the shadow is doing nearly all the
-     * separating. `.pui-hc-surface` already reserves a 1px transparent border
+     * separating. `.forte-hc-surface` already reserves a 1px transparent border
      * on this element, so painting it costs no layout. */
     /** Width of the hairline that separates the card from the page */
-    --pui-preview-card-border-width: 1px;
+    --forte-preview-card-border-width: 1px;
     /** Colour of that hairline. The arrow's outline follows it. */
-    --pui-preview-card-border-color: var(--pui-color-border);
+    --forte-preview-card-border-color: var(--forte-color-border);
     /** Base font size inside the card */
-    --pui-preview-card-font-size: var(--pui-font-size-2);
+    --forte-preview-card-font-size: var(--forte-font-size-2);
     /* No width token exists in the inventory — widths are layout, not theme —
      * so the size scale lives in this knob and stays overridable per app. */
     /** Width cap, further clamped to the space the positioner reports as
      * available; what the `size` prop sets — `16rem` for `sm`, `26rem` for
      * `lg` */
-    --pui-preview-card-max-width: 20rem;
-    /* Sized in `em` so the arrow tracks --pui-preview-card-font-size. Declared
+    --forte-preview-card-max-width: 20rem;
+    /* Sized in `em` so the arrow tracks --forte-preview-card-font-size. Declared
      * here rather than on .arrow because the arrow is always a child of this
      * element and inherits them, which keeps both parts retunable from one
      * place. */
     /** Arrow base width */
-    --pui-preview-card-arrow-width: 1em;
+    --forte-preview-card-arrow-width: 1em;
     /** Arrow height, and the distance it is pushed out from the card */
-    --pui-preview-card-arrow-height: 0.5em;
+    --forte-preview-card-arrow-height: 0.5em;
 
     /* Motion knobs, broken out so an app can retune the feel — or flatten it
      * entirely — without restating the transition. */
     /** How far the card slides in from, per side */
-    --pui-preview-card-travel: var(--pui-travel-sm);
+    --forte-preview-card-travel: var(--forte-travel-sm);
     /** Scale the card grows from and shrinks back to */
-    --pui-preview-card-enter-scale: var(--pui-scale-enter);
+    --forte-preview-card-enter-scale: var(--forte-scale-enter);
     /* No spring, where Popover has one. A popover arrives because the user
      * pressed something and is owed a reply with some snap to it; this card
      * arrives because the user held still, and an overshoot on something
      * nobody asked for reads as the page twitching. `emphasized` keeps the
      * arrival deliberate without the bounce. */
     /** Length of the opening gesture */
-    --pui-preview-card-enter-duration: var(--pui-duration-normal);
+    --forte-preview-card-enter-duration: var(--forte-duration-normal);
     /** Curve of the opening gesture */
-    --pui-preview-card-enter-ease: var(--pui-ease-emphasized);
+    --forte-preview-card-enter-ease: var(--forte-ease-emphasized);
     /* Shorter than the entrance: leaving is something the pointer has already
      * decided by moving on, and a slow exit follows the cursor around. */
     /** Length of the closing gesture */
-    --pui-preview-card-exit-duration: var(--pui-duration-fast);
+    --forte-preview-card-exit-duration: var(--forte-duration-fast);
     /** Curve of the closing gesture */
-    --pui-preview-card-exit-ease: var(--pui-ease-exit);
+    --forte-preview-card-exit-ease: var(--forte-ease-exit);
     /** How long the card takes to resize between two links' content; only in
      * play when a `PreviewCard.Viewport` is present */
-    --pui-preview-card-resize-duration: var(--pui-duration-normal);
+    --forte-preview-card-resize-duration: var(--forte-duration-normal);
 
     /* Enter/exit displacement, resolved per side just below. Defaults to the
      * `side="bottom"` case, which is this component's default side. */
-    --pui-preview-card-enter-x: 0px;
-    --pui-preview-card-enter-y: calc(-1 * var(--pui-preview-card-travel));
+    --forte-preview-card-enter-x: 0px;
+    --forte-preview-card-enter-y: calc(-1 * var(--forte-preview-card-travel));
 
     box-sizing: border-box;
     /* The Arrow is absolutely positioned by the positioner (an inline style),
@@ -218,7 +218,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-preview-card-gap);
+    gap: var(--forte-preview-card-gap);
     /* Shrink-to-fit up to the cap, rather than filling it: a card holding a
      * name and a line of bio should not be as wide as one holding a paragraph.
      * --available-width is published by the Positioner and inherited here; it
@@ -228,30 +228,30 @@
     inline-size: max-content;
     /* Routed through the registered property above rather than read straight
      * from --available-width; see the note on the @property block. */
-    --pui-preview-card-available-width: var(--available-width, 100000px);
+    --forte-preview-card-available-width: var(--available-width, 100000px);
     max-inline-size: min(
-      var(--pui-preview-card-max-width),
-      var(--pui-preview-card-available-width)
+      var(--forte-preview-card-max-width),
+      var(--forte-preview-card-available-width)
     );
-    padding: var(--pui-preview-card-padding);
-    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+    padding: var(--forte-preview-card-padding);
+    /* Beats the transparent border `.forte-hc-surface` sets, on layer order
      * alone — patterns is ordered before components. Forced colors then wins
      * it back from the a11y layer, which is ordered after both. */
-    border: var(--pui-preview-card-border-width) solid
-      var(--pui-preview-card-border-color);
-    border-radius: var(--pui-preview-card-radius);
+    border: var(--forte-preview-card-border-width) solid
+      var(--forte-preview-card-border-color);
+    border-radius: var(--forte-preview-card-radius);
 
-    background-color: var(--pui-preview-card-bg);
-    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+    background-color: var(--forte-preview-card-bg);
+    /* With the transparent 1px border from `.forte-hc-surface`, padding-box
      * stops the background bleeding out under it. */
     background-clip: padding-box;
-    color: var(--pui-preview-card-fg);
-    box-shadow: var(--pui-preview-card-shadow);
+    color: var(--forte-preview-card-fg);
+    box-shadow: var(--forte-preview-card-shadow);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-preview-card-font-size);
-    line-height: var(--pui-line-height-normal);
-    letter-spacing: var(--pui-letter-spacing-normal);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-preview-card-font-size);
+    line-height: var(--forte-line-height-normal);
+    letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
     /* Grow out of the link rather than out of the card's own centre.
@@ -262,9 +262,9 @@
      * legible early and the movement finishes behind readable content,
      * instead of the card spending the whole entrance half-transparent. */
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-preview-card-enter-duration)
-        var(--pui-preview-card-enter-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      transform var(--forte-preview-card-enter-duration)
+        var(--forte-preview-card-enter-ease);
   }
 
   /* Directional rise: the card starts a few pixels nearer the link and settles
@@ -273,13 +273,13 @@
    * :is(), whose argument list is forgiving — an engine without :dir() support
    * drops only that branch and the physical sides keep working. */
   .popup[data-side="top"] {
-    --pui-preview-card-enter-x: 0px;
-    --pui-preview-card-enter-y: var(--pui-preview-card-travel);
+    --forte-preview-card-enter-x: 0px;
+    --forte-preview-card-enter-y: var(--forte-preview-card-travel);
   }
 
   .popup[data-side="bottom"] {
-    --pui-preview-card-enter-x: 0px;
-    --pui-preview-card-enter-y: calc(-1 * var(--pui-preview-card-travel));
+    --forte-preview-card-enter-x: 0px;
+    --forte-preview-card-enter-y: calc(-1 * var(--forte-preview-card-travel));
   }
 
   .popup:is(
@@ -287,8 +287,8 @@
     [data-side="inline-start"]:dir(ltr),
     [data-side="inline-end"]:dir(rtl)
   ) {
-    --pui-preview-card-enter-x: var(--pui-preview-card-travel);
-    --pui-preview-card-enter-y: 0px;
+    --forte-preview-card-enter-x: var(--forte-preview-card-travel);
+    --forte-preview-card-enter-y: 0px;
   }
 
   .popup:is(
@@ -296,8 +296,8 @@
     [data-side="inline-end"]:dir(ltr),
     [data-side="inline-start"]:dir(rtl)
   ) {
-    --pui-preview-card-enter-x: calc(-1 * var(--pui-preview-card-travel));
-    --pui-preview-card-enter-y: 0px;
+    --forte-preview-card-enter-x: calc(-1 * var(--forte-preview-card-travel));
+    --forte-preview-card-enter-y: 0px;
   }
 
   /* Closing retraces the entrance rather than puffing outward, so the two
@@ -308,15 +308,15 @@
   .popup[data-ending-style] {
     opacity: 0;
     transform: translate(
-        var(--pui-preview-card-enter-x),
-        var(--pui-preview-card-enter-y)
+        var(--forte-preview-card-enter-x),
+        var(--forte-preview-card-enter-y)
       )
-      scale(var(--pui-preview-card-enter-scale));
+      scale(var(--forte-preview-card-enter-scale));
   }
 
   .popup[data-ending-style] {
-    transition-duration: var(--pui-preview-card-exit-duration);
-    transition-timing-function: var(--pui-preview-card-exit-ease);
+    transition-duration: var(--forte-preview-card-exit-duration);
+    transition-timing-function: var(--forte-preview-card-exit-ease);
   }
 
   /* Base UI sets `data-instant` when the change was NOT a considered
@@ -331,15 +331,15 @@
 
   /* Sizes ------------------------------------------------------------------ */
   .popup[data-size="sm"] {
-    --pui-preview-card-max-width: 16rem;
+    --forte-preview-card-max-width: 16rem;
   }
 
   .popup[data-size="md"] {
-    --pui-preview-card-max-width: 20rem;
+    --forte-preview-card-max-width: 20rem;
   }
 
   .popup[data-size="lg"] {
-    --pui-preview-card-max-width: 26rem;
+    --forte-preview-card-max-width: 26rem;
   }
 
   /* ------------------------------------------------------------------------
@@ -366,17 +366,17 @@
    * --------------------------------------------------------------------- */
   .arrow {
     display: block;
-    width: var(--pui-preview-card-arrow-width);
-    height: var(--pui-preview-card-arrow-height);
+    width: var(--forte-preview-card-arrow-width);
+    height: var(--forte-preview-card-arrow-height);
   }
 
   .arrow[data-side="top"] {
-    bottom: calc(-1 * var(--pui-preview-card-arrow-height));
+    bottom: calc(-1 * var(--forte-preview-card-arrow-height));
     rotate: 180deg;
   }
 
   .arrow[data-side="bottom"] {
-    top: calc(-1 * var(--pui-preview-card-arrow-height));
+    top: calc(-1 * var(--forte-preview-card-arrow-height));
     rotate: 0deg;
   }
 
@@ -388,8 +388,8 @@
     right: calc(
       -0.5 *
         (
-          var(--pui-preview-card-arrow-width) +
-            var(--pui-preview-card-arrow-height)
+          var(--forte-preview-card-arrow-width) +
+            var(--forte-preview-card-arrow-height)
         )
     );
     rotate: 90deg;
@@ -403,8 +403,8 @@
     left: calc(
       -0.5 *
         (
-          var(--pui-preview-card-arrow-width) +
-            var(--pui-preview-card-arrow-height)
+          var(--forte-preview-card-arrow-width) +
+            var(--forte-preview-card-arrow-height)
         )
     );
     rotate: -90deg;
@@ -418,17 +418,17 @@
 
   /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
   .arrowFill {
-    fill: var(--pui-preview-card-bg);
+    fill: var(--forte-preview-card-bg);
   }
 
   /* The larger triangle sitting under the fill, showing only as a hairline
    * along the two slopes because the fill triangle is inset from it. That is
    * what continues the card's own border around the wedge — set
-   * `--pui-preview-card-border-color: transparent` and the arrow goes back to
+   * `--forte-preview-card-border-color: transparent` and the arrow goes back to
    * a flat wedge, in step with the card. It is also the path forced-colors
    * repaints below. */
   .arrowBorder {
-    fill: var(--pui-preview-card-border-color);
+    fill: var(--forte-preview-card-border-color);
   }
 
   /* ------------------------------------------------------------------------
@@ -449,12 +449,12 @@
    * --------------------------------------------------------------------- */
   .viewport {
     /** How far the incoming and outgoing content slide during a swap */
-    --pui-preview-card-viewport-travel: var(--pui-travel-sm);
+    --forte-preview-card-viewport-travel: var(--forte-travel-sm);
     /* Which way the swap slides, resolved from `data-activation-direction`
      * below. Internal on purpose — a plain comment, so theming-docgen does not
      * publish it: it is an intermediate, and the knob to turn is
-     * --pui-preview-card-viewport-travel. */
-    --pui-preview-card-viewport-x: 0px;
+     * --forte-preview-card-viewport-travel. */
+    --forte-preview-card-viewport-x: 0px;
 
     /* The clone's inline `position: absolute` needs this element as its
      * containing block, or it would escape to the popup — or further. */
@@ -473,7 +473,7 @@
      * what has to be cropped is the outgoing clone during a resize, which
      * overflows by the difference between two panel heights. */
     overflow-clip-margin: calc(
-      var(--pui-focus-ring-width) + var(--pui-focus-ring-offset)
+      var(--forte-focus-ring-width) + var(--forte-focus-ring-offset)
     );
   }
 
@@ -483,10 +483,10 @@
      * own, so the card's column layout has to be restated one level down. */
     display: flex;
     flex-direction: column;
-    gap: var(--pui-preview-card-gap);
+    gap: var(--forte-preview-card-gap);
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-duration-normal) var(--pui-ease-emphasized);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-duration-normal) var(--forte-ease-emphasized);
   }
 
   /* The outgoing clone is frozen at the size it had when it was current — Base
@@ -504,7 +504,7 @@
    * resizing on the block axis, and adding a vertical slide on top of that
    * reads as two things moving at once.
    *
-   * `--pui-direction` is deliberately NOT applied here, and this is one of the
+   * `--forte-direction` is deliberately NOT applied here, and this is one of the
    * two places in the library where leaving it out is correct. The usual
    * rule — multiply any inline-axis distance by it, because `translate` is
    * physical and the inline axis is not — assumes the INTENT is logical
@@ -514,25 +514,25 @@
    * LTR. Flipping it would send the content away from the link the pointer
    * just arrived at. */
   .viewport[data-activation-direction~="right"] {
-    --pui-preview-card-viewport-x: var(--pui-preview-card-viewport-travel);
+    --forte-preview-card-viewport-x: var(--forte-preview-card-viewport-travel);
   }
 
   .viewport[data-activation-direction~="left"] {
-    --pui-preview-card-viewport-x: calc(
-      -1 * var(--pui-preview-card-viewport-travel)
+    --forte-preview-card-viewport-x: calc(
+      -1 * var(--forte-preview-card-viewport-travel)
     );
   }
 
   .viewport > [data-current][data-starting-style] {
     opacity: 0;
-    translate: var(--pui-preview-card-viewport-x) 0;
+    translate: var(--forte-preview-card-viewport-x) 0;
   }
 
   /* The clone leaves the way the newcomer came in — opposite side, same
    * distance — so the pair reads as one strip sliding across. */
   .viewport > [data-previous][data-ending-style] {
     opacity: 0;
-    translate: calc(-1 * var(--pui-preview-card-viewport-x)) 0;
+    translate: calc(-1 * var(--forte-preview-card-viewport-x)) 0;
   }
 
   /* A `data-instant` swap was not a considered navigation; see the note on the
@@ -553,11 +553,11 @@
     width: var(--popup-width, auto);
     height: var(--popup-height, auto);
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-preview-card-enter-duration)
-        var(--pui-preview-card-enter-ease),
-      width var(--pui-preview-card-resize-duration) var(--pui-ease-emphasized),
-      height var(--pui-preview-card-resize-duration) var(--pui-ease-emphasized);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      transform var(--forte-preview-card-enter-duration)
+        var(--forte-preview-card-enter-ease),
+      width var(--forte-preview-card-resize-duration) var(--forte-ease-emphasized),
+      height var(--forte-preview-card-resize-duration) var(--forte-ease-emphasized);
 
     /* The viewport has taken over the column for its own two children, and the
      * card's gap would add a phantom row beside its single child. */
@@ -570,11 +570,11 @@
  * components layer. Layer order outranks specificity completely, so a
  * forced-colors rule placed earlier could never win.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* System colour keywords survive the forced-colors substitution, so this
      * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
-     * matching the CanvasText border `.pui-hc-surface` puts on the popup. */
+     * matching the CanvasText border `.forte-hc-surface` puts on the popup. */
     .arrowFill {
       fill: Canvas;
     }

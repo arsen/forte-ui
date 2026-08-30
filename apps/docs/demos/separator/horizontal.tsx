@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator } from "@dofortech/pretty-ui";
+import { Separator } from "@dofortech/forte-ui";
 
 export default function SeparatorHorizontal() {
   return (

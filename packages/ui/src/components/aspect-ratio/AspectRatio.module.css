@@ -43,12 +43,12 @@
  *    focus-scroll target, and blocks `position: sticky` from escaping it.
  *    `clip` paints the same and does none of that.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the box itself, so a value set on an
      * ancestor is only INHERITED and loses to these. Re-skin one box by
      * setting them via `className` or `style` (an unlayered consumer rule
-     * beats `@layer pretty-ui.components` at any specificity); re-skin every
+     * beats `@layer forte.components` at any specificity); re-skin every
      * box by re-pointing the global tokens on the right-hand side. */
 
     /* Two properties for one value, and the indirection is the whole point.
@@ -60,46 +60,46 @@
      * `ratio` the one prop in this library a consumer cannot override from
      * plain CSS.
      *
-     * So the PROP writes `--pui-aspect-ratio-seed`, and the KNOB below reads
+     * So the PROP writes `--forte-aspect-ratio-seed`, and the KNOB below reads
      * it with a fallback. Both declarations sit on this element, so `var()`
      * substitution happens in the right place; and because the knob is
-     * declared inside `@layer pretty-ui.components`, an unlayered consumer
+     * declared inside `@layer forte.components`, an unlayered consumer
      * rule — a class, a media query, a container query — beats it at any
      * specificity and the ratio becomes responsive without a re-render:
      *
-     *   @media (width < 40rem) { .hero { --pui-aspect-ratio: 4 / 3 } }
+     *   @media (width < 40rem) { .hero { --forte-aspect-ratio: 4 / 3 } }
      */
     /** The shape the box holds, as a CSS `aspect-ratio` value. The `ratio`
      * prop seeds it; declare it yourself — in a media or container query — for
      * a shape that changes with the layout, and your declaration wins. */
-    --pui-aspect-ratio: var(--pui-aspect-ratio-seed, 1);
+    --forte-aspect-ratio: var(--forte-aspect-ratio-seed, 1);
     /** How direct media children fill the box. `fit` sets this. */
-    --pui-aspect-fit: cover;
+    --forte-aspect-fit: cover;
     /* Only meaningful when the media is being cropped, which is exactly when
      * it matters: `cover` on a portrait photo in a wide box cuts the head off
      * at `50% 50%`, and `50% 25%` is the fix. */
     /** Which part of a cropped image survives the crop — an `object-position`
      * value. */
-    --pui-aspect-position: 50% 50%;
+    --forte-aspect-position: 50% 50%;
     /* Zero by default: a bare aspect box is layout, not chrome, and a
      * surprise corner radius on a photo is harder to undo than to ask for.
      * Both chrome variants raise it. */
     /** Corner radius. `0px` for `plain`; both other variants raise it to
-     * `--pui-radius-surface`. */
-    --pui-aspect-radius: 0px;
+     * `--forte-radius-surface`. */
+    --forte-aspect-radius: 0px;
     /** What sits behind the content. `variant="filled"` sets it — which is
      * what makes the box its own placeholder while an image loads. */
-    --pui-aspect-background: transparent;
+    --forte-aspect-background: transparent;
     /** Frame colour. Only painted when the width below is non-zero. */
-    --pui-aspect-border-color: var(--pui-color-border-muted);
+    --forte-aspect-border-color: var(--forte-color-border-muted);
     /** Frame width. `0px` unless `variant="outlined"` — or forced colours are
      * active, where `filled` takes one too so its placeholder does not vanish
      * into the page. */
-    --pui-aspect-border-width: 0px;
+    --forte-aspect-border-width: 0px;
 
     box-sizing: border-box;
 
-    aspect-ratio: var(--pui-aspect-ratio);
+    aspect-ratio: var(--forte-aspect-ratio);
 
     /* See notes 1 and 2 in the header. */
     display: grid;
@@ -110,9 +110,9 @@
      * inside it — and then the ratio holds while the LAYOUT overflows. */
     min-inline-size: 0;
 
-    background-color: var(--pui-aspect-background);
-    border: var(--pui-aspect-border-width) solid var(--pui-aspect-border-color);
-    border-radius: var(--pui-aspect-radius);
+    background-color: var(--forte-aspect-background);
+    border: var(--forte-aspect-border-width) solid var(--forte-aspect-border-color);
+    border-radius: var(--forte-aspect-radius);
 
     /* No `cursor` here, deliberately, and it is the one place in this library
      * where saying nothing is the correct move.
@@ -193,8 +193,8 @@
      * a few stray pixels below the image — the classic gap that makes a
      * "perfectly fitted" photo sit 4px proud of its frame. */
     display: block;
-    object-fit: var(--pui-aspect-fit);
-    object-position: var(--pui-aspect-position);
+    object-fit: var(--forte-aspect-fit);
+    object-position: var(--forte-aspect-position);
     /* An iframe brings a UA border; an image dragged out of the frame is
      * rarely what a media slot wants to offer. */
     border: 0;
@@ -205,29 +205,29 @@
    * an inline style: an inline declaration would outrank every consumer rule
    * that is not `!important`, and there is no `!important` in this library.
    * Each value is spelled out because the knob is also the documented escape
-   * hatch — a consumer setting `--pui-aspect-fit` directly is overriding these
+   * hatch — a consumer setting `--forte-aspect-fit` directly is overriding these
    * rules, not fighting the element's own style attribute. */
   .root[data-fit="cover"] {
-    --pui-aspect-fit: cover;
+    --forte-aspect-fit: cover;
   }
 
   .root[data-fit="contain"] {
-    --pui-aspect-fit: contain;
+    --forte-aspect-fit: contain;
   }
 
   .root[data-fit="fill"] {
-    --pui-aspect-fit: fill;
+    --forte-aspect-fit: fill;
   }
 
   .root[data-fit="scale-down"] {
-    --pui-aspect-fit: scale-down;
+    --forte-aspect-fit: scale-down;
   }
 
   /* `none` keeps the media at its intrinsic size, cropped by the frame around
    * it — which only reads as deliberate because the box still sizes the
    * element to 100% and lets `object-fit` decide what to paint inside it. */
   .root[data-fit="none"] {
-    --pui-aspect-fit: none;
+    --forte-aspect-fit: none;
   }
 
   /* Variants -------------------------------------------------------------- */
@@ -235,8 +235,8 @@
   /* A hairline frame. Reads as "this is a slot" — useful when the media may be
    * light-on-light and would otherwise have no edge at all. */
   .root[data-variant="outlined"] {
-    --pui-aspect-border-width: 1px;
-    --pui-aspect-radius: var(--pui-radius-surface);
+    --forte-aspect-border-width: 1px;
+    --forte-aspect-radius: var(--forte-radius-surface);
   }
 
   /* A recessed panel. Its whole point is that it is visible BEFORE the media
@@ -244,12 +244,12 @@
    * box with a background is a placeholder that already occupies the right
    * space. That is the anti-layout-shift story finished, not just started. */
   .root[data-variant="filled"] {
-    --pui-aspect-background: var(--pui-color-panel);
-    --pui-aspect-radius: var(--pui-radius-surface);
+    --forte-aspect-background: var(--forte-color-panel);
+    --forte-aspect-radius: var(--forte-radius-surface);
   }
 }
 
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Backgrounds are replaced with a system colour under forced colours, so
      * `filled`'s panel flattens into the page and the placeholder — the one
@@ -258,7 +258,7 @@
      * one way to keep the slot on screen. `outlined` needs nothing: its border
      * already survives. */
     .root[data-variant="filled"] {
-      --pui-aspect-border-width: 1px;
+      --forte-aspect-border-width: 1px;
     }
   }
 }

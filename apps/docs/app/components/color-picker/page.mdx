@@ -26,7 +26,7 @@ keyboard handling, pointer capture and RTL flip come from.
 ## Import
 
 ```tsx
-import { ColorPicker } from "@dofortech/pretty-ui";
+import { ColorPicker } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -258,7 +258,7 @@ Two further notes:
   who cannot use a canvas at all, `ColorPicker.Input` is the exact route in and
   out, and it is why the text field is not optional in practice.
 - **Under forced colours**, the canvas, the rails, the swatches and the previews
-  opt out of substitution (`.pui-preserve-color`) and take a system-coloured
+  opt out of substitution (`.forte-preserve-color`) and take a system-coloured
   hairline as their boundary — because in this one component the colour *is* the
   content, and substituting it would leave four identical rectangles.
 
@@ -284,10 +284,10 @@ would never reach it:
 
 | Property | Holds |
 | :-- | :-- |
-| `--pui-color-picker-color` | the current colour, alpha included |
-| `--pui-color-picker-solid` | the same colour at full alpha |
-| `--pui-color-picker-hue` | its hue in degrees, unitless |
-| `--pui-color-picker-on-color` | `black` or `white`, whichever reads on it |
+| `--forte-color-picker-color` | the current colour, alpha included |
+| `--forte-color-picker-solid` | the same colour at full alpha |
+| `--forte-color-picker-hue` | its hue in degrees, unitless |
+| `--forte-color-picker-on-color` | `black` or `white`, whichever reads on it |
 
 Read them if you are skinning a part; do not set them.
 
@@ -378,5 +378,5 @@ hues and eight cool ones. Exported alongside the component, so an app can extend
 it rather than restate it.
 
 ```tsx
-import { DEFAULT_SWATCHES } from "@dofortech/pretty-ui";
+import { DEFAULT_SWATCHES } from "@dofortech/forte-ui";
 ```

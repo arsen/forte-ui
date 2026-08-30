@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, PreviewCard } from "@dofortech/pretty-ui";
+import { Avatar, PreviewCard } from "@dofortech/forte-ui";
 
 export default function PreviewCardBasic() {
   return (

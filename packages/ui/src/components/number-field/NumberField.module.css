@@ -19,13 +19,13 @@
  *
  *   1. The group is NOT `overflow: hidden`. Clipping it would be the obvious
  *      way to round the steppers' outer corners, and it would also clip
- *      `.pui-target`'s hit-area expander — the one thing keeping a `compact`
+ *      `.forte-target`'s hit-area expander — the one thing keeping a `compact`
  *      `sm` stepper above the 24px SC 2.5.8 floor. The steppers state their own
  *      logical corner radii instead, which costs two rules and flips in RTL for
  *      free.
  *
  *   2. Focus is drawn ONCE. The group rings itself through
- *      `.pui-focus-ring-within`, so focusing the text field rings the whole
+ *      `.forte-focus-ring-within`, so focusing the text field rings the whole
  *      control — and since Base UI keeps both steppers out of the tab order,
  *      that is the only ring anyone sees by default. The steppers still carry
  *      an inset ring for the app that puts them back with `tabIndex={0}`, and
@@ -40,15 +40,15 @@
  *      that has already moved. Colour transitions are fine: those have an end.
  *
  *   4. There is deliberately no `prefers-reduced-motion` block. The motion
- *      tokens collapse their own geometry — `--pui-scale-press` becomes exactly
+ *      tokens collapse their own geometry — `--forte-scale-press` becomes exactly
  *      1 — so consuming them is already correct.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* Root ------------------------------------------------------------------
    * A column: the scrub area (wrapping the label) above the group. */
   .root {
     /** Space between the scrub area and the group */
-    --pui-number-field-gap: var(--pui-space-2);
+    --forte-number-field-gap: var(--forte-space-2);
 
     box-sizing: border-box;
     display: flex;
@@ -56,7 +56,7 @@
     /* `stretch`, so a `fullWidth` group fills the column. The scrub area opts
      * out of it on its own — see `.scrubArea`. */
     align-items: stretch;
-    gap: var(--pui-number-field-gap);
+    gap: var(--forte-number-field-gap);
     /* Deliberately NO `min-inline-size: 0`, which `Field.Root` and `Input` both
      * carry and which would look like the obvious thing to copy.
      *
@@ -74,28 +74,28 @@
    * Component tokens are declared HERE, on the element that consumes them, so
    * a value set on an ancestor is only INHERITED and loses to this
    * declaration. Re-skin one field through `className` (an unlayered consumer
-   * rule beats `@layer pretty-ui.components` at any specificity) or an inline
+   * rule beats `@layer forte.components` at any specificity) or an inline
    * `style`; move every field at once by re-pointing the global tokens on the
    * right-hand side, which this file only reads. */
   .group {
     /** Control height (reset per `size`) */
-    --pui-number-field-height: var(--pui-control-h-md);
+    --forte-number-field-height: var(--forte-control-h-md);
     /** Corner radius */
-    --pui-number-field-radius: var(--pui-radius-control);
+    --forte-number-field-radius: var(--forte-radius-control);
     /** Border width */
-    --pui-number-field-border-width: 1px;
+    --forte-number-field-border-width: 1px;
     /** Rule between a stepper and the input */
-    --pui-number-field-separator-width: 1px;
+    --forte-number-field-separator-width: 1px;
     /** Colour of the rule between a stepper and the input (reset per `variant`) */
-    --pui-number-field-separator-color: var(--pui-color-border-muted);
+    --forte-number-field-separator-color: var(--forte-color-border-muted);
 
     /* Colour slots, filled in per variant below. */
     /** Background (reset per `variant`) */
-    --pui-number-field-bg: var(--pui-color-background);
+    --forte-number-field-bg: var(--forte-color-background);
     /** Border colour (reset per `variant`, by `data-invalid`, and while scrubbing) */
-    --pui-number-field-border-color: var(--pui-color-border);
+    --forte-number-field-border-color: var(--forte-color-border);
     /** Border colour on hover */
-    --pui-number-field-border-color-hover: var(--pui-color-border-strong);
+    --forte-number-field-border-color-hover: var(--forte-color-border-strong);
 
     box-sizing: border-box;
     display: inline-flex;
@@ -104,12 +104,12 @@
     align-items: stretch;
     inline-size: fit-content;
     min-inline-size: 0;
-    block-size: var(--pui-number-field-height);
+    block-size: var(--forte-number-field-height);
     margin: 0;
-    border: var(--pui-number-field-border-width) solid
-      var(--pui-number-field-border-color);
-    border-radius: var(--pui-number-field-radius);
-    background-color: var(--pui-number-field-bg);
+    border: var(--forte-number-field-border-width) solid
+      var(--forte-number-field-border-color);
+    border-radius: var(--forte-number-field-radius);
+    background-color: var(--forte-number-field-bg);
     /* The steppers paint their own hover wash right up to the group's border;
      * without a stacking context of its own the group's border can be painted
      * over by them at the rounded corners. `isolation` opens one without the
@@ -117,13 +117,13 @@
     isolation: isolate;
 
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .group:hover:not([data-disabled], [data-readonly]) {
-      border-color: var(--pui-number-field-border-color-hover);
+      border-color: var(--forte-number-field-border-color-hover);
     }
   }
 
@@ -139,18 +139,18 @@
   /* Read-only still shows its value and its text is still selectable, so it
    * must not look disabled — only inert. */
   .group[data-readonly] {
-    --pui-number-field-bg: var(--pui-color-panel);
+    --forte-number-field-bg: var(--forte-color-panel);
   }
 
   /* While a scrub is running the pointer is somewhere else entirely — locked,
    * and over the label. Tinting the group's boundary is what connects the drag
    * to the number it is moving. */
   .group[data-scrubbing] {
-    --pui-number-field-border-color: var(--pui-color-primary);
-    --pui-number-field-border-color-hover: var(--pui-color-primary);
+    --forte-number-field-border-color: var(--forte-color-primary);
+    --forte-number-field-border-color-hover: var(--forte-color-primary);
   }
 
-  /* A focused stepper draws its own inset ring. `.pui-focus-ring-within` on
+  /* A focused stepper draws its own inset ring. `.forte-focus-ring-within` on
    * this element matches `:has(:focus-visible)`, which is true for a stepper
    * as well, so without this the control would wear two rings at once. Only
    * reachable once an app opts the steppers into the tab order — Base UI ships
@@ -163,34 +163,34 @@
 
   /* Sizes ------------------------------------------------------------------ */
   .group[data-size="sm"] {
-    --pui-number-field-height: var(--pui-control-h-sm);
+    --forte-number-field-height: var(--forte-control-h-sm);
   }
 
   .group[data-size="md"] {
-    --pui-number-field-height: var(--pui-control-h-md);
+    --forte-number-field-height: var(--forte-control-h-md);
   }
 
   .group[data-size="lg"] {
-    --pui-number-field-height: var(--pui-control-h-lg);
+    --forte-number-field-height: var(--forte-control-h-lg);
   }
 
   /* Variants --------------------------------------------------------------- */
   .group[data-variant="outline"] {
-    --pui-number-field-bg: var(--pui-color-background);
-    --pui-number-field-border-color: var(--pui-color-border);
+    --forte-number-field-bg: var(--forte-color-background);
+    --forte-number-field-border-color: var(--forte-color-border);
   }
 
   .group[data-variant="soft"] {
-    --pui-number-field-bg: var(--pui-color-panel);
+    --forte-number-field-bg: var(--forte-color-panel);
     /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
      * keeps the field outlined there while staying invisible normally. */
-    --pui-number-field-border-color: transparent;
+    --forte-number-field-border-color: transparent;
   }
 
   .group[data-variant="ghost"] {
-    --pui-number-field-bg: transparent;
-    --pui-number-field-border-color: transparent;
-    --pui-number-field-separator-color: transparent;
+    --forte-number-field-bg: transparent;
+    --forte-number-field-border-color: transparent;
+    --forte-number-field-separator-color: transparent;
   }
 
   /* Validity ---------------------------------------------------------------
@@ -201,34 +201,34 @@
    * are both (0,2,0), so document order is the only thing deciding whether a
    * failed `soft` field gets the danger boundary or the transparent one. */
   .group[data-invalid] {
-    --pui-number-field-border-color: var(--pui-color-danger-border);
-    --pui-number-field-border-color-hover: var(--pui-color-danger);
+    --forte-number-field-border-color: var(--forte-color-danger-border);
+    --forte-number-field-border-color-hover: var(--forte-color-danger);
   }
 
   /* Input ------------------------------------------------------------------ */
   .input {
     /** Inline padding (reset per `size`) */
-    --pui-number-field-input-padding-x: var(--pui-control-px-md);
+    --forte-number-field-input-padding-x: var(--forte-control-px-md);
     /** Font size (reset per `size`) */
-    --pui-number-field-input-font-size: var(--pui-font-size-2);
+    --forte-number-field-input-font-size: var(--forte-font-size-2);
     /** Room for the DIGITS at rest, before any `fullWidth` stretching. The
      * inline padding is added to it below rather than eaten out of it, so the
      * knob means what it says: `5ch` is five characters of room, not a box
      * five characters wide with the padding taken out of the middle */
-    --pui-number-field-input-width: 5ch;
+    --forte-number-field-input-width: 5ch;
     /** Where the digits sit. `center` because the field is flanked by two
      * steppers; `end` reads better in a table of figures */
-    --pui-number-field-input-text-align: center;
+    --forte-number-field-input-text-align: center;
     /** Text colour */
-    --pui-number-field-input-fg: var(--pui-color-foreground);
+    --forte-number-field-input-fg: var(--forte-color-foreground);
     /** Placeholder colour */
-    --pui-number-field-input-placeholder-fg: var(--pui-color-foreground-muted);
+    --forte-number-field-input-placeholder-fg: var(--forte-color-foreground-muted);
     /** Caret colour */
-    --pui-number-field-input-caret-color: var(--pui-color-primary);
+    --forte-number-field-input-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --pui-number-field-input-selection-bg: var(--pui-color-primary-soft);
+    --forte-number-field-input-selection-bg: var(--forte-color-primary-soft);
     /** Selection text colour */
-    --pui-number-field-input-selection-fg: var(--pui-color-primary-text);
+    --forte-number-field-input-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
     /* `inline-size`, and NOT `flex-basis`, is what gives the field its resting
@@ -245,27 +245,27 @@
      * the padding has to be added back or a `5ch` field shows two characters at
      * `md` and none at `lg`. */
     inline-size: calc(
-      var(--pui-number-field-input-width) + 2 *
-        var(--pui-number-field-input-padding-x)
+      var(--forte-number-field-input-width) + 2 *
+        var(--forte-number-field-input-padding-x)
     );
     min-inline-size: 0;
     padding-block: 0;
-    padding-inline: var(--pui-number-field-input-padding-x);
+    padding-inline: var(--forte-number-field-input-padding-x);
     margin: 0;
     border: 0;
     /* The group paints the box. An opaque background here would show as a
      * rectangle over it once the group is tinted — while scrubbing, or under a
      * `soft` variant. */
     background-color: transparent;
-    color: var(--pui-number-field-input-fg);
-    caret-color: var(--pui-number-field-input-caret-color);
-    text-align: var(--pui-number-field-input-text-align);
+    color: var(--forte-number-field-input-fg);
+    caret-color: var(--forte-number-field-input-caret-color);
+    text-align: var(--forte-number-field-input-text-align);
 
     /* A UA stylesheet gives form controls their own font, not the page's. */
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-number-field-input-font-size);
-    font-weight: var(--pui-font-weight-normal);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-number-field-input-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-tight);
     /* Not typographic polish. A scrub rewrites the value every couple of pixels
      * of pointer travel, and proportional figures change width as the digits
      * change — the number visibly breathes for the whole drag. Tabular figures
@@ -275,35 +275,35 @@
     /* The UA `text` cursor is correct and is left alone — see the cursor table
      * in AGENTS.md. A text field is not an element that acts on click; it is a
      * region you place a caret in. */
-    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* There is deliberately no `.input:focus-visible { outline: none }` here. The
-   * group's `.pui-focus-ring-within` already carries that suppression for every
+   * group's `.forte-focus-ring-within` already carries that suppression for every
    * element it rings on behalf of — see patterns.css — and restating it per
    * component is how the two drift.
    *
    * What neither can answer for is an APP-level `:focus-visible` rule. Anything
-   * unlayered, or in a layer of the app's own, outranks every `pretty-ui` layer
+   * unlayered, or in a layer of the app's own, outranks every `forte-ui` layer
    * by design, so a global focus ring re-rings this segment while the group
    * rings the whole control and the field wears two — one rounded, one square-
    * cornered. The library cannot and should not win that fight; scope the app's
    * rule away from the parts a component already rings, the way the docs site
    * does:
    *
-   *   :focus-visible:not(:where(.pui-focus-ring-within *)) { … }
+   *   :focus-visible:not(:where(.forte-focus-ring-within *)) { … }
    */
 
   .input::placeholder {
-    color: var(--pui-number-field-input-placeholder-fg);
+    color: var(--forte-number-field-input-placeholder-fg);
     /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
      * measured 5.82:1 back under AA. */
     opacity: 1;
   }
 
   .input::selection {
-    background-color: var(--pui-number-field-input-selection-bg);
-    color: var(--pui-number-field-input-selection-fg);
+    background-color: var(--forte-number-field-input-selection-bg);
+    color: var(--forte-number-field-input-selection-fg);
   }
 
   .input[data-disabled] {
@@ -311,40 +311,40 @@
   }
 
   .input[data-size="sm"] {
-    --pui-number-field-input-padding-x: var(--pui-control-px-sm);
-    --pui-number-field-input-font-size: var(--pui-font-size-1);
+    --forte-number-field-input-padding-x: var(--forte-control-px-sm);
+    --forte-number-field-input-font-size: var(--forte-font-size-1);
   }
 
   .input[data-size="md"] {
-    --pui-number-field-input-padding-x: var(--pui-control-px-md);
-    --pui-number-field-input-font-size: var(--pui-font-size-2);
+    --forte-number-field-input-padding-x: var(--forte-control-px-md);
+    --forte-number-field-input-font-size: var(--forte-font-size-2);
   }
 
   .input[data-size="lg"] {
-    --pui-number-field-input-padding-x: var(--pui-control-px-lg);
-    --pui-number-field-input-font-size: var(--pui-font-size-3);
+    --forte-number-field-input-padding-x: var(--forte-control-px-lg);
+    --forte-number-field-input-font-size: var(--forte-font-size-3);
   }
 
   /* Steppers ---------------------------------------------------------------
    * One rule for both buttons: they are the same button mirrored, and two
-   * copies of these declarations would drift. They keep distinct `data-pui`
+   * copies of these declarations would drift. They keep distinct `data-forte`
    * markers all the same — the marker names the PART, which is Base UI's
    * anatomy and a consumer's only stable selector, while the class names the
    * rule. The `$=` selectors below are how the stylesheet tells them apart, and
    * attribute selectors are the one kind CSS Modules does not hash. */
   .stepper {
     /** Stepper glyph size (reset per `size`) */
-    --pui-number-field-stepper-icon-size: var(--pui-font-size-3);
+    --forte-number-field-stepper-icon-size: var(--forte-font-size-3);
     /** Stepper glyph colour */
-    --pui-number-field-stepper-fg: var(--pui-color-foreground-muted);
+    --forte-number-field-stepper-fg: var(--forte-color-foreground-muted);
     /** Stepper glyph colour on hover */
-    --pui-number-field-stepper-fg-hover: var(--pui-color-foreground);
+    --forte-number-field-stepper-fg-hover: var(--forte-color-foreground);
     /** Stepper background on hover */
-    --pui-number-field-stepper-bg-hover: var(--pui-color-panel-hover);
+    --forte-number-field-stepper-bg-hover: var(--forte-color-panel-hover);
     /** Stepper background while held */
-    --pui-number-field-stepper-bg-active: var(--pui-color-panel-active);
+    --forte-number-field-stepper-bg-active: var(--forte-color-panel-active);
     /** How far a stepper squashes while held */
-    --pui-number-field-stepper-press-scale: var(--pui-scale-press);
+    --forte-number-field-stepper-press-scale: var(--forte-scale-press);
 
     box-sizing: border-box;
     display: inline-flex;
@@ -358,7 +358,7 @@
     margin: 0;
     border: 0;
     background-color: transparent;
-    color: var(--pui-number-field-stepper-fg);
+    color: var(--forte-number-field-stepper-fg);
 
     -webkit-user-select: none;
     user-select: none;
@@ -368,62 +368,62 @@
      * property. */
     scale: 1;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   .stepper svg {
-    inline-size: var(--pui-number-field-stepper-icon-size);
-    block-size: var(--pui-number-field-stepper-icon-size);
+    inline-size: var(--forte-number-field-stepper-icon-size);
+    block-size: var(--forte-number-field-stepper-icon-size);
   }
 
   /* The group is not clipped — see the header — so each stepper rounds its own
    * outer corners to the group's radius less its border. `max(0px, …)` because
-   * `data-pui-radius="none"` makes the subtraction negative, and a negative
+   * `data-forte-radius="none"` makes the subtraction negative, and a negative
    * `border-radius` invalidates the declaration.
    *
    * Logical longhands, so `dir="rtl"` moves the decrement to the right-hand end
    * and its corners follow without a second rule. */
-  .stepper[data-pui$="decrement"] {
-    border-inline-end: var(--pui-number-field-separator-width) solid
-      var(--pui-number-field-separator-color);
+  .stepper[data-forte$="decrement"] {
+    border-inline-end: var(--forte-number-field-separator-width) solid
+      var(--forte-number-field-separator-color);
     border-start-start-radius: max(
       0px,
-      calc(var(--pui-number-field-radius) - var(--pui-number-field-border-width))
+      calc(var(--forte-number-field-radius) - var(--forte-number-field-border-width))
     );
     border-end-start-radius: max(
       0px,
-      calc(var(--pui-number-field-radius) - var(--pui-number-field-border-width))
+      calc(var(--forte-number-field-radius) - var(--forte-number-field-border-width))
     );
   }
 
-  .stepper[data-pui$="increment"] {
-    border-inline-start: var(--pui-number-field-separator-width) solid
-      var(--pui-number-field-separator-color);
+  .stepper[data-forte$="increment"] {
+    border-inline-start: var(--forte-number-field-separator-width) solid
+      var(--forte-number-field-separator-color);
     border-start-end-radius: max(
       0px,
-      calc(var(--pui-number-field-radius) - var(--pui-number-field-border-width))
+      calc(var(--forte-number-field-radius) - var(--forte-number-field-border-width))
     );
     border-end-end-radius: max(
       0px,
-      calc(var(--pui-number-field-radius) - var(--pui-number-field-border-width))
+      calc(var(--forte-number-field-radius) - var(--forte-number-field-border-width))
     );
   }
 
   @media (hover: hover) {
     .stepper:hover:not([data-disabled], [data-readonly]) {
-      background-color: var(--pui-number-field-stepper-bg-hover);
-      color: var(--pui-number-field-stepper-fg-hover);
+      background-color: var(--forte-number-field-stepper-bg-hover);
+      color: var(--forte-number-field-stepper-fg-hover);
     }
   }
 
   .stepper:active:not([data-disabled], [data-readonly]) {
-    background-color: var(--pui-number-field-stepper-bg-active);
-    scale: var(--pui-number-field-stepper-press-scale);
+    background-color: var(--forte-number-field-stepper-bg-active);
+    scale: var(--forte-number-field-stepper-press-scale);
     /* Snap in, spring out: activation should feel immediate, and a stepper is
      * the one part here people hold down and repeat. */
-    transition-duration: var(--pui-duration-instant);
+    transition-duration: var(--forte-duration-instant);
   }
 
   /* Inert, not disabled — the value is still readable and selectable, so the
@@ -443,84 +443,84 @@
    * `NumberField.ScrubArea` for which cue covers which moment. */
   .scrubArea {
     /** Space between the label and the grip */
-    --pui-number-field-scrub-gap: var(--pui-space-1);
+    --forte-number-field-scrub-gap: var(--forte-space-1);
     /** Inline padding of the drag surface, and the negative margin that keeps
      * the label optically aligned with the group under it */
-    --pui-number-field-scrub-padding-x: var(--pui-space-1);
+    --forte-number-field-scrub-padding-x: var(--forte-space-1);
     /** Corner radius of the drag surface */
-    --pui-number-field-scrub-radius: var(--pui-radius-2);
+    --forte-number-field-scrub-radius: var(--forte-radius-2);
     /** Background of the drag surface (reset while scrubbing) */
-    --pui-number-field-scrub-bg: transparent;
+    --forte-number-field-scrub-bg: transparent;
     /** Background of the drag surface on hover */
-    --pui-number-field-scrub-bg-hover: var(--pui-color-panel-hover);
+    --forte-number-field-scrub-bg-hover: var(--forte-color-panel-hover);
     /** Grip colour (reset while scrubbing) */
-    --pui-number-field-scrub-grip-fg: var(--pui-color-foreground-subtle);
+    --forte-number-field-scrub-grip-fg: var(--forte-color-foreground-subtle);
     /** How present the grip is at rest. It has to read as an affordance
      * without competing with the label it sits beside */
-    --pui-number-field-scrub-grip-opacity: 0.7;
+    --forte-number-field-scrub-grip-opacity: 0.7;
     /** The pointer shown over the drag surface. Reset to `ns-resize` by
      * `direction="vertical"` */
-    --pui-number-field-scrub-cursor: ew-resize;
+    --forte-number-field-scrub-cursor: ew-resize;
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
-    gap: var(--pui-number-field-scrub-gap);
+    gap: var(--forte-number-field-scrub-gap);
     /* The root is a stretching column; this takes only the width of its label,
      * so the drag surface never extends past the words that look draggable. */
     align-self: flex-start;
     /* Cancels the padding so the label's first letter still lines up with the
      * group's border below it. */
-    margin-inline: calc(-1 * var(--pui-number-field-scrub-padding-x));
-    padding-inline: var(--pui-number-field-scrub-padding-x);
-    border-radius: var(--pui-number-field-scrub-radius);
-    background-color: var(--pui-number-field-scrub-bg);
+    margin-inline: calc(-1 * var(--forte-number-field-scrub-padding-x));
+    padding-inline: var(--forte-number-field-scrub-padding-x);
+    border-radius: var(--forte-number-field-scrub-radius);
+    background-color: var(--forte-number-field-scrub-bg);
 
     /* A deliberate exception to the pointer rule in AGENTS.md. `cursor:
      * pointer` promises "click me and something happens", and clicking a scrub
      * area does nothing whatsoever — the value only moves once the pointer
      * does. The resize cursor is what the platform already uses for this
      * gesture, so it is both the honest answer and the familiar one. */
-    cursor: var(--pui-number-field-scrub-cursor);
+    cursor: var(--forte-number-field-scrub-cursor);
     /* Base UI sets both of these inline as well. Restated here so the surface
      * still behaves if a consumer swaps the element with `render`. */
     -webkit-user-select: none;
     user-select: none;
     touch-action: none;
 
-    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .scrubArea[data-direction="vertical"] {
-    --pui-number-field-scrub-cursor: ns-resize;
+    --forte-number-field-scrub-cursor: ns-resize;
   }
 
-  /* Every pretty-ui part declares its own `cursor`, and an element's own
+  /* Every forte-ui part declares its own `cursor`, and an element's own
    * declaration beats an inherited one — so a `Field.Label` in here would keep
    * the `default` arrow it sets for chrome and swallow the one cue the pointer
    * has. (0,2,0) against the label's (0,1,0), in the same layer. Children with
-   * no `data-pui` need nothing: `cursor` inherits. */
-  .scrubArea [data-pui] {
+   * no `data-forte` need nothing: `cursor` inherits. */
+  .scrubArea [data-forte] {
     cursor: inherit;
   }
 
   @media (hover: hover) {
     .scrubArea:hover:not([data-disabled], [data-readonly]) {
-      --pui-number-field-scrub-bg: var(--pui-number-field-scrub-bg-hover);
-      --pui-number-field-scrub-grip-opacity: 1;
+      --forte-number-field-scrub-bg: var(--forte-number-field-scrub-bg-hover);
+      --forte-number-field-scrub-grip-opacity: 1;
     }
   }
 
   .scrubArea[data-scrubbing] {
-    --pui-number-field-scrub-bg: var(--pui-color-primary-soft);
-    --pui-number-field-scrub-grip-fg: var(--pui-color-primary-text);
-    --pui-number-field-scrub-grip-opacity: 1;
+    --forte-number-field-scrub-bg: var(--forte-color-primary-soft);
+    --forte-number-field-scrub-grip-fg: var(--forte-color-primary-text);
+    --forte-number-field-scrub-grip-opacity: 1;
   }
 
   /* Neither state can drag, so neither advertises that it can. */
   .scrubArea[data-disabled],
   .scrubArea[data-readonly] {
-    --pui-number-field-scrub-cursor: default;
+    --forte-number-field-scrub-cursor: default;
   }
 
   .scrubArea[data-disabled] {
@@ -533,14 +533,14 @@
      * glyphs do it: an inline style beats every stylesheet rule, and the rules
      * below have to be able to take this element away entirely. */
     display: block;
-    color: var(--pui-number-field-scrub-grip-fg);
-    opacity: var(--pui-number-field-scrub-grip-opacity);
-    /* Not gated on `--pui-motion-ok`: this is a static orientation, not a
+    color: var(--forte-number-field-scrub-grip-fg);
+    opacity: var(--forte-number-field-scrub-grip-opacity);
+    /* Not gated on `--forte-motion-ok`: this is a static orientation, not a
      * gesture — there is nothing here for reduced motion to collapse. */
     rotate: 0deg;
     transition:
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      opacity var(--pui-duration-fast) var(--pui-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      opacity var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .scrubArea[data-direction="vertical"] .scrubGrip {
@@ -556,31 +556,31 @@
   /* Scrub cursor -----------------------------------------------------------
    * Portalled to <body> and positioned by Base UI, which writes `transform` on
    * this element on every pointer move — so nothing here may set or animate
-   * that property. It also means the element does not inherit a `.pui-theme`
+   * that property. It also means the element does not inherit a `.forte-theme`
    * scope: it paints from whatever the document root resolves, the same trade
    * every portalled surface in this library makes. */
   .scrubAreaCursor {
     /** Stacking order of the stand-in pointer. One band above `Tooltip`: it
      * replaces the mouse cursor, so nothing may cover it */
-    --pui-number-field-scrub-cursor-z-index: 60;
+    --forte-number-field-scrub-cursor-z-index: 60;
     /** Fill of the stand-in pointer */
-    --pui-number-field-scrub-cursor-fg: var(--pui-color-foreground);
+    --forte-number-field-scrub-cursor-fg: var(--forte-color-foreground);
     /** The halo painted behind the fill, so the glyph stays readable over
      * whatever the drag happens to cross */
-    --pui-number-field-scrub-cursor-halo: var(--pui-color-background);
+    --forte-number-field-scrub-cursor-halo: var(--forte-color-background);
     /** Halo thickness */
-    --pui-number-field-scrub-cursor-halo-width: 3px;
+    --forte-number-field-scrub-cursor-halo-width: 3px;
 
-    z-index: var(--pui-number-field-scrub-cursor-z-index);
+    z-index: var(--forte-number-field-scrub-cursor-z-index);
     display: block;
     line-height: 0;
   }
 
   .scrubAreaCursor svg {
     display: block;
-    fill: var(--pui-number-field-scrub-cursor-fg);
-    stroke: var(--pui-number-field-scrub-cursor-halo);
-    stroke-width: var(--pui-number-field-scrub-cursor-halo-width);
+    fill: var(--forte-number-field-scrub-cursor-fg);
+    stroke: var(--forte-number-field-scrub-cursor-halo);
+    stroke-width: var(--forte-number-field-scrub-cursor-halo-width);
     stroke-linejoin: round;
     /* Draws the stroke FIRST, so the halo sits behind the fill instead of
      * eating three pixels off every edge of the arrow. */
@@ -593,14 +593,14 @@
 }
 
 /* Forced colours -----------------------------------------------------------
- * Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+ * Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * The group is a <div>, not a field, so the UA assigns it nothing; and the
  * `soft` and `ghost` variants' `transparent` border is replaced with a system
  * colour of the engine's choosing rather than left invisible. Both are why the
  * whole box has to be restated here. */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .group {
       background-color: Field;

@@ -2,14 +2,14 @@
 
 import * as React from "react";
 import { Check, Copy, Eye, EyeOff } from "lucide-react";
-import { InputGroup } from "@dofortech/pretty-ui";
+import { InputGroup } from "@dofortech/forte-ui";
 
 export default function InputGroupButtons() {
   const [visible, setVisible] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
 
   const copy = async () => {
-    await navigator.clipboard.writeText("https://pretty-ui.dev/install");
+    await navigator.clipboard.writeText("https://forte-ui.dev/install");
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1500);
   };
@@ -40,7 +40,7 @@ export default function InputGroupButtons() {
       <InputGroup.Root fullWidth>
         <InputGroup.Input
           readOnly
-          defaultValue="https://pretty-ui.dev/install"
+          defaultValue="https://forte-ui.dev/install"
           aria-label="Install link"
         />
         <InputGroup.Addon align="inline-end">
@@ -49,7 +49,7 @@ export default function InputGroupButtons() {
           </InputGroup.Button>
         </InputGroup.Addon>
       </InputGroup.Root>
-      <span aria-live="polite" className="pui-visually-hidden">
+      <span aria-live="polite" className="forte-visually-hidden">
         {copied ? "Link copied" : ""}
       </span>
     </div>

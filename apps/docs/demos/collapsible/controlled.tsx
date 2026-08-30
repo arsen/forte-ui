@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Collapsible } from "@dofortech/pretty-ui";
+import { Button, Collapsible } from "@dofortech/forte-ui";
 
 const stack = "flex w-full max-w-lg flex-col gap-3";
 

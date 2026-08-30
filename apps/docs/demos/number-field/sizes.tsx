@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, NumberField } from "@dofortech/pretty-ui";
+import { Input, NumberField } from "@dofortech/forte-ui";
 
 const SIZES = ["sm", "md", "lg"] as const;
 

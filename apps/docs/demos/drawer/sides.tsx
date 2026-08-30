@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, type DrawerSide } from "@dofortech/pretty-ui";
+import { Button, Drawer, type DrawerSide } from "@dofortech/forte-ui";
 
 const SIDES: { side: DrawerSide; label: string; blurb: string }[] = [
   {

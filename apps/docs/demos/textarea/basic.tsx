@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Textarea } from "@dofortech/pretty-ui";
+import { Field, Textarea } from "@dofortech/forte-ui";
 
 export default function TextareaBasic() {
   return (

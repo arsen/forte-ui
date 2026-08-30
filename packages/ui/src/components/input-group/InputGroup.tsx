@@ -25,9 +25,9 @@ export interface InputGroupRootProps
   /**
    * Size of the group. Height, inline padding and font size move together for
    * the control and every addon at once, and the numbers come from the same
-   * `--pui-control-*` tokens `Input` and `Select.Trigger` read — so a group
+   * `--forte-control-*` tokens `Input` and `Select.Trigger` read — so a group
    * and a plain input on one row are the same height at every
-   * `data-pui-density` setting.
+   * `data-forte-density` setting.
    * @default "md"
    */
   size?: InputGroupSize;
@@ -54,7 +54,7 @@ export interface InputGroupRootProps
 
 /** The selector the root uses to find its control for click-to-focus. */
 const CONTROL_SELECTOR =
-  '[data-pui="input-group-input"], [data-pui="input-group-textarea"]';
+  '[data-forte="input-group-input"], [data-forte="input-group-textarea"]';
 
 /** Elements a pointer-down inside the group must be left alone on: they are
  * interactive in their own right, and stealing the gesture would break them. */
@@ -68,7 +68,7 @@ const INTERACTIVE_SELECTOR =
  * prefixes and buttons sit *inside* the field instead of bolted onto it.
  *
  * Focus lives on the control; the group rings for it via
- * `.pui-focus-ring-within`, so the whole field lights up the way a plain
+ * `.forte-focus-ring-within`, so the whole field lights up the way a plain
  * `Input` does. Buttons inside addons ring themselves, and the group stands
  * down while they do.
  *
@@ -120,8 +120,8 @@ export const InputGroupRoot = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={clsx(styles.root, "pui-focus-ring-within", className)}
-      data-pui="input-group"
+      className={clsx(styles.root, "forte-focus-ring-within", className)}
+      data-forte="input-group"
       data-size={size}
       data-variant={variant}
       data-full-width={fullWidth || undefined}
@@ -166,12 +166,12 @@ export const InputGroupInput = React.forwardRef<
   return (
     <BaseInput
       ref={ref}
-      // No `.pui-focus-ring`: the group rings on behalf of this element
-      // through `.pui-focus-ring-within`, which also silences the UA ring
+      // No `.forte-focus-ring`: the group rings on behalf of this element
+      // through `.forte-focus-ring-within`, which also silences the UA ring
       // here. A second ring on the segment inside the ringed box is exactly
       // the double-ring that split is designed to prevent.
       className={clsx(styles.input, className)}
-      data-pui="input-group-input"
+      data-forte="input-group-input"
       {...props}
     />
   );
@@ -257,16 +257,16 @@ export const InputGroupTextarea = React.forwardRef<
     ref: setRef,
     render: render ?? <textarea />,
     className: clsx(styles.textarea, className),
-    "data-pui": "input-group-textarea",
+    "data-forte": "input-group-textarea",
     "data-auto-resize": autoResize || undefined,
     rows,
     style: {
       // Row counts reach CSS as custom properties because the height they
       // describe is `calc(rows * 1lh + padding)` — a value only the
       // stylesheet knows the other terms of.
-      "--pui-input-group-rows": String(rows),
+      "--forte-input-group-rows": String(rows),
       ...(maxRows != null
-        ? { "--pui-input-group-max-rows": String(maxRows) }
+        ? { "--forte-input-group-max-rows": String(maxRows) }
         : null),
       // Consumer last, per the same rule that puts `className` last.
       ...style,
@@ -331,7 +331,7 @@ export const InputGroupAddon = React.forwardRef<
     <div
       ref={ref}
       className={clsx(styles.addon, className)}
-      data-pui="input-group-addon"
+      data-forte="input-group-addon"
       data-align={align}
       {...props}
     />
@@ -365,7 +365,7 @@ export const InputGroupText = React.forwardRef<
     <span
       ref={ref}
       className={clsx(styles.text, className)}
-      data-pui="input-group-text"
+      data-forte="input-group-text"
       {...props}
     />
   );
@@ -382,7 +382,7 @@ export interface InputGroupButtonProps extends ButtonProps {}
  * as part of the field rather than a call to action, and sized by the group —
  * the CSS caps it to the field's inner height, so at `sm` the visual box can
  * dip below 24px. That is why this wrapper exists instead of a line of docs:
- * it adds `.pui-target`, which floors the *hit* area at 24×24 without
+ * it adds `.forte-target`, which floors the *hit* area at 24×24 without
  * touching the visual one.
  *
  * It is otherwise exactly `Button` — every prop passes through, so
@@ -396,16 +396,16 @@ export const InputGroupButton = React.forwardRef<
   { variant = "ghost", tone = "neutral", size = "sm", className, ...props },
   ref,
 ) {
-  // Composed pretty-ui component: `Button` tags its own root with
-  // `data-pui="button"`, and this wrapper deliberately does not rename it —
-  // scope with `[data-pui="input-group-addon"] [data-pui="button"]`.
+  // Composed forte-ui component: `Button` tags its own root with
+  // `data-forte="button"`, and this wrapper deliberately does not rename it —
+  // scope with `[data-forte="input-group-addon"] [data-forte="button"]`.
   return (
     <Button
       ref={ref}
       variant={variant}
       tone={tone}
       size={size}
-      className={clsx("pui-target", className)}
+      className={clsx("forte-target", className)}
       {...props}
     />
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu } from "@dofortech/pretty-ui";
+import { Menu } from "@dofortech/forte-ui";
 
 const ORDERS = {
   newest: "Newest first",

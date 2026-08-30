@@ -1,6 +1,6 @@
 "use client";
 
-import { ColorPicker } from "@dofortech/pretty-ui";
+import { ColorPicker } from "@dofortech/forte-ui";
 
 export default function ColorPickerBasic() {
   return (

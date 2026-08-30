@@ -42,13 +42,13 @@
  *      its ring is drawn inside its own box and cannot be shaved off along the
  *      panel edge (SC 2.4.11).
  *
- *   5. No `prefers-reduced-motion` block. `--pui-travel-*` collapses to 0px,
- *      `--pui-scale-enter` to exactly 1, and `--pui-duration-move` to 1ms, so
+ *   5. No `prefers-reduced-motion` block. `--forte-travel-*` collapses to 0px,
+ *      `--forte-scale-enter` to exactly 1, and `--forte-duration-move` to 1ms, so
  *      the panel appears and swaps without travelling and without this file
  *      knowing reduced motion exists.
  */
 
-@layer pretty-ui.components {
+@layer forte.components {
   /* ------------------------------------------------------------------------
    * Root
    *
@@ -60,41 +60,41 @@
    * --------------------------------------------------------------------- */
   .root {
     /** Space between adjacent items in the bar */
-    --pui-navigation-menu-gap: var(--pui-space-1);
+    --forte-navigation-menu-gap: var(--forte-space-1);
 
     /* The `plain` row: a Trigger in the bar, and a Link that navigates
      * straight out instead of opening a panel. Both draw from this one set so
      * they sit level in the same list — a bar where the two are a pixel apart
      * in height is the classic symptom of styling them separately. */
     /** Height of a `plain` row */
-    --pui-navigation-menu-row-height: var(--pui-control-h-md);
+    --forte-navigation-menu-row-height: var(--forte-control-h-md);
     /** Inline padding inside a `plain` row */
-    --pui-navigation-menu-row-px: var(--pui-control-px-md);
+    --forte-navigation-menu-row-px: var(--forte-control-px-md);
     /** Gap between a `plain` row's label and its icon */
-    --pui-navigation-menu-row-gap: var(--pui-control-gap);
+    --forte-navigation-menu-row-gap: var(--forte-control-gap);
     /** Corner radius of a `plain` row */
-    --pui-navigation-menu-row-radius: var(--pui-radius-control);
+    --forte-navigation-menu-row-radius: var(--forte-radius-control);
     /** Text colour of a `plain` row at rest */
-    --pui-navigation-menu-row-fg: var(--pui-color-foreground);
+    --forte-navigation-menu-row-fg: var(--forte-color-foreground);
     /** Background of a hovered `plain` row */
-    --pui-navigation-menu-row-bg-hover: var(--pui-color-panel-hover);
+    --forte-navigation-menu-row-bg-hover: var(--forte-color-panel-hover);
     /* The open row and the current page share one treatment. They are the same
      * statement — "this is the part of the site you are in" — and giving them
      * two would leave a bar with both showing two kinds of emphasis at once. */
     /** Background of the row whose panel is open, and of the current page's row */
-    --pui-navigation-menu-row-bg-open: var(--pui-color-primary-soft);
+    --forte-navigation-menu-row-bg-open: var(--forte-color-primary-soft);
     /** Text colour of those same two rows */
-    --pui-navigation-menu-row-fg-open: var(--pui-color-primary-text);
+    --forte-navigation-menu-row-fg-open: var(--forte-color-primary-text);
     /** Font size of a `plain` row */
-    --pui-navigation-menu-row-font-size: var(--pui-font-size-2);
+    --forte-navigation-menu-row-font-size: var(--forte-font-size-2);
     /** Font weight of a `plain` row */
-    --pui-navigation-menu-row-font-weight: var(--pui-font-weight-medium);
+    --forte-navigation-menu-row-font-weight: var(--forte-font-weight-medium);
 
     /** Size the chevron is drawn at, in both variants */
-    --pui-navigation-menu-icon-size: var(--pui-space-4);
+    --forte-navigation-menu-icon-size: var(--forte-space-4);
 
     box-sizing: border-box;
-    font-family: var(--pui-font-sans);
+    font-family: var(--forte-font-sans);
   }
 
   /* ------------------------------------------------------------------------
@@ -109,7 +109,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--pui-navigation-menu-gap);
+    gap: var(--forte-navigation-menu-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -170,8 +170,8 @@
      * gets `pointer` when it has an href. */
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .trigger[data-variant="plain"],
@@ -179,18 +179,18 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-navigation-menu-row-gap);
-    block-size: var(--pui-navigation-menu-row-height);
-    /* SC 2.5.8: a dense preset takes --pui-control-h-md below 24px. */
-    min-block-size: var(--pui-target-min);
-    padding-inline: var(--pui-navigation-menu-row-px);
-    border-radius: var(--pui-navigation-menu-row-radius);
+    gap: var(--forte-navigation-menu-row-gap);
+    block-size: var(--forte-navigation-menu-row-height);
+    /* SC 2.5.8: a dense preset takes --forte-control-h-md below 24px. */
+    min-block-size: var(--forte-target-min);
+    padding-inline: var(--forte-navigation-menu-row-px);
+    border-radius: var(--forte-navigation-menu-row-radius);
 
-    color: var(--pui-navigation-menu-row-fg);
+    color: var(--forte-navigation-menu-row-fg);
 
-    font-size: var(--pui-navigation-menu-row-font-size);
-    font-weight: var(--pui-navigation-menu-row-font-weight);
-    line-height: var(--pui-line-height-tight);
+    font-size: var(--forte-navigation-menu-row-font-size);
+    font-weight: var(--forte-navigation-menu-row-font-weight);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
@@ -200,7 +200,7 @@
   @media (hover: hover) {
     .trigger[data-variant="plain"]:hover:not([data-popup-open]),
     .link[data-variant="plain"]:hover:not([data-active]) {
-      background-color: var(--pui-navigation-menu-row-bg-hover);
+      background-color: var(--forte-navigation-menu-row-bg-hover);
     }
   }
 
@@ -209,8 +209,8 @@
    * produced the panel currently under it. */
   .trigger[data-variant="plain"][data-popup-open],
   .link[data-variant="plain"][data-active] {
-    background-color: var(--pui-navigation-menu-row-bg-open);
-    color: var(--pui-navigation-menu-row-fg-open);
+    background-color: var(--forte-navigation-menu-row-bg-open);
+    color: var(--forte-navigation-menu-row-fg-open);
   }
 
   /* Card: the block shape inside a panel. A card Trigger and a card Link are
@@ -221,38 +221,38 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-navigation-menu-card-gap);
+    gap: var(--forte-navigation-menu-card-gap);
     inline-size: 100%;
-    min-block-size: var(--pui-target-min);
-    padding: var(--pui-navigation-menu-card-p);
-    border-radius: var(--pui-navigation-menu-card-radius);
+    min-block-size: var(--forte-target-min);
+    padding: var(--forte-navigation-menu-card-p);
+    border-radius: var(--forte-navigation-menu-card-radius);
 
-    color: var(--pui-navigation-menu-card-fg);
+    color: var(--forte-navigation-menu-card-fg);
 
-    font-size: var(--pui-navigation-menu-card-font-size);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-navigation-menu-card-font-size);
+    line-height: var(--forte-line-height-normal);
   }
 
   /* Room for the chevron, which is out of flow and would otherwise be sat on
    * by a long title. Only the Trigger reserves it — a card Link has none. */
   .trigger[data-variant="card"] {
     padding-inline-end: calc(
-      var(--pui-navigation-menu-card-p) + var(--pui-navigation-menu-icon-size) +
-        var(--pui-navigation-menu-card-gap)
+      var(--forte-navigation-menu-card-p) + var(--forte-navigation-menu-icon-size) +
+        var(--forte-navigation-menu-card-gap)
     );
   }
 
   @media (hover: hover) {
     .trigger[data-variant="card"]:hover:not([data-popup-open]),
     .link[data-variant="card"]:hover:not([data-active]) {
-      background-color: var(--pui-navigation-menu-card-bg-hover);
+      background-color: var(--forte-navigation-menu-card-bg-hover);
     }
   }
 
   .trigger[data-variant="card"][data-popup-open],
   .link[data-variant="card"][data-active] {
-    background-color: var(--pui-navigation-menu-card-bg-active);
-    color: var(--pui-navigation-menu-card-fg-active);
+    background-color: var(--forte-navigation-menu-card-bg-active);
+    color: var(--forte-navigation-menu-card-fg-active);
   }
 
   /* ------------------------------------------------------------------------
@@ -260,19 +260,19 @@
    * --------------------------------------------------------------------- */
   .linkTitle {
     display: block;
-    font-size: var(--pui-navigation-menu-card-font-size);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    font-size: var(--forte-navigation-menu-card-font-size);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
   }
 
   .linkDescription {
     display: block;
     /* -muted, not -subtle: this is permanently visible text, so SC 1.4.3
      * applies and -subtle is 3.73:1. */
-    color: var(--pui-navigation-menu-card-fg-muted);
-    font-size: var(--pui-font-size-1);
-    font-weight: var(--pui-font-weight-normal);
-    line-height: var(--pui-line-height-normal);
+    color: var(--forte-navigation-menu-card-fg-muted);
+    font-size: var(--forte-font-size-1);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-normal);
     /* Long enough descriptions wrap; balancing them keeps a two-line one from
      * leaving a single orphaned word under a full line. */
     text-wrap: pretty;
@@ -297,13 +297,13 @@
     /* Pointer events off so the chevron never becomes the hover target inside
      * its own trigger — the parent's cursor shows through. */
     pointer-events: none;
-    transition: rotate var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: rotate var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .icon svg {
     display: block;
-    inline-size: var(--pui-navigation-menu-icon-size);
-    block-size: var(--pui-navigation-menu-icon-size);
+    inline-size: var(--forte-navigation-menu-icon-size);
+    block-size: var(--forte-navigation-menu-icon-size);
   }
 
   /* Only the `plain` chevron flips: it points down at a panel that drops below
@@ -317,13 +317,13 @@
   /* `translate` and `scale` as independent properties rather than one
    * `transform`, so the centring and the RTL mirror do not fight over it. The
    * mirror is the rule about the inline axis having no logical form: the glyph
-   * is drawn pointing right, and `--pui-direction` is -1 in RTL. */
+   * is drawn pointing right, and `--forte-direction` is -1 in RTL. */
   .trigger[data-variant="card"] .icon {
     position: absolute;
-    inset-inline-end: var(--pui-navigation-menu-card-p);
+    inset-inline-end: var(--forte-navigation-menu-card-p);
     top: 50%;
     translate: 0 -50%;
-    scale: var(--pui-direction) 1;
+    scale: var(--forte-direction) 1;
   }
 
   /* ------------------------------------------------------------------------
@@ -334,7 +334,7 @@
    * to look at it reads as a far bigger interruption than it is. It earns its
    * keep on a phone, where the panel covers most of the viewport anyway.
    *
-   * `.pui-scrim` supplies position/inset, the colour, the optional blur, the
+   * `.forte-scrim` supplies position/inset, the colour, the optional blur, the
    * fade and the forced-colors treatment. Only stacking is component-local.
    * --------------------------------------------------------------------- */
   .backdrop {
@@ -342,12 +342,12 @@
      * positioner's SIBLING inside the portal — nothing on the positioner can
      * reach it, and `NavigationMenu.Popup` exposes no class name for it. */
     /** Stacking order of the backdrop */
-    --pui-navigation-menu-backdrop-z-index: 49;
+    --forte-navigation-menu-backdrop-z-index: 49;
 
-    /* Restated from `.pui-scrim` so the @supports override below has an
+    /* Restated from `.forte-scrim` so the @supports override below has an
      * explicit default to flip. */
     position: fixed;
-    z-index: var(--pui-navigation-menu-backdrop-z-index);
+    z-index: var(--forte-navigation-menu-backdrop-z-index);
   }
 
   /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
@@ -375,21 +375,21 @@
   .positioner {
     /** Stacking order of the positioner. 50 is the band Menu, Popover, Tooltip
      * and Select sit in — anchored popups all belong above a Dialog's 40 */
-    --pui-navigation-menu-z-index: 50;
+    --forte-navigation-menu-z-index: 50;
     /* Paired with `sideOffset`, whose default is 8. Change one and change the
      * other, or the pointer crosses dead space on the way to the panel and
      * `closeDelay` alone has to save it. */
     /** Depth of the invisible bridge across the gap between the bar and the
      * panel, so the pointer can travel to the panel without closing it */
-    --pui-navigation-menu-bridge: var(--pui-space-2);
+    --forte-navigation-menu-bridge: var(--forte-space-2);
     /** How long the panel takes to travel to another trigger, and to resize
      * between two panels */
-    --pui-navigation-menu-move-duration: var(--pui-duration-move);
+    --forte-navigation-menu-move-duration: var(--forte-duration-move);
     /** The curve it travels on */
-    --pui-navigation-menu-move-ease: var(--pui-ease-emphasized);
+    --forte-navigation-menu-move-ease: var(--forte-ease-emphasized);
 
     box-sizing: border-box;
-    z-index: var(--pui-navigation-menu-z-index);
+    z-index: var(--forte-navigation-menu-z-index);
     /* Frozen at the size Base UI measured, so the positioner does not reflow
      * to the incoming panel a frame before the popup transitions to it. Both
      * are absent on the first open — see the header note. */
@@ -398,8 +398,8 @@
     max-inline-size: var(--available-width);
 
     transition-property: top, left, right, bottom;
-    transition-duration: var(--pui-navigation-menu-move-duration);
-    transition-timing-function: var(--pui-navigation-menu-move-ease);
+    transition-duration: var(--forte-navigation-menu-move-duration);
+    transition-timing-function: var(--forte-navigation-menu-move-ease);
   }
 
   /* Base UI sets `data-instant` when the change was NOT a considered move — a
@@ -421,14 +421,14 @@
 
   .positioner[data-side="top"]::before {
     inset-inline: 0;
-    bottom: calc(-1 * var(--pui-navigation-menu-bridge));
-    block-size: var(--pui-navigation-menu-bridge);
+    bottom: calc(-1 * var(--forte-navigation-menu-bridge));
+    block-size: var(--forte-navigation-menu-bridge);
   }
 
   .positioner[data-side="bottom"]::before {
     inset-inline: 0;
-    top: calc(-1 * var(--pui-navigation-menu-bridge));
-    block-size: var(--pui-navigation-menu-bridge);
+    top: calc(-1 * var(--forte-navigation-menu-bridge));
+    block-size: var(--forte-navigation-menu-bridge);
   }
 
   /* `inline-start`/`inline-end` are legal `data-side` values as well as the
@@ -441,8 +441,8 @@
       [data-side="inline-end"]:dir(rtl)
     )::before {
     inset-block: 0;
-    right: calc(-1 * var(--pui-navigation-menu-bridge));
-    inline-size: var(--pui-navigation-menu-bridge);
+    right: calc(-1 * var(--forte-navigation-menu-bridge));
+    inline-size: var(--forte-navigation-menu-bridge);
   }
 
   .positioner:is(
@@ -451,8 +451,8 @@
       [data-side="inline-start"]:dir(rtl)
     )::before {
     inset-block: 0;
-    left: calc(-1 * var(--pui-navigation-menu-bridge));
-    inline-size: var(--pui-navigation-menu-bridge);
+    left: calc(-1 * var(--forte-navigation-menu-bridge));
+    inline-size: var(--forte-navigation-menu-bridge);
   }
 
   /* ------------------------------------------------------------------------
@@ -467,104 +467,104 @@
      * element once it is open, which is what lets a single `className` on
      * `NavigationMenu.Popup` retune a whole panel. */
     /** Panel surface colour */
-    --pui-navigation-menu-bg: var(--pui-color-overlay);
+    --forte-navigation-menu-bg: var(--forte-color-overlay);
     /** Panel text colour */
-    --pui-navigation-menu-fg: var(--pui-color-foreground);
+    --forte-navigation-menu-fg: var(--forte-color-foreground);
     /** Corner radius */
-    --pui-navigation-menu-radius: var(--pui-radius-surface);
+    --forte-navigation-menu-radius: var(--forte-radius-surface);
     /** Panel shadow (stripped by the browser in forced-colors mode, which is
-     * why the element also carries `.pui-hc-surface`) */
-    --pui-navigation-menu-shadow: var(--pui-shadow-4);
+     * why the element also carries `.forte-hc-surface`) */
+    --forte-navigation-menu-shadow: var(--forte-shadow-4);
     /* A hairline, and not the redundancy it looks like next to the shadow. The
      * panel floats over undimmed content, and at overlay-on-background the two
      * surfaces are within a step of each other on the grey ramp — in dark mode
      * the shadow is nearly the only thing separating them, and it is the first
-     * casualty of a bright page behind it. `.pui-hc-surface` already reserves a
+     * casualty of a bright page behind it. `.forte-hc-surface` already reserves a
      * 1px transparent border on this element, so painting it costs no layout. */
     /** Width of the hairline that separates the panel from the page */
-    --pui-navigation-menu-border-width: 1px;
+    --forte-navigation-menu-border-width: 1px;
     /** Colour of that hairline. The arrow's outline follows it. */
-    --pui-navigation-menu-border-color: var(--pui-color-border);
+    --forte-navigation-menu-border-color: var(--forte-color-border);
 
     /* Panel layout. No width token exists in the inventory — widths are
      * layout, not theme — so the column measure lives in a knob and stays
      * overridable per app. */
     /** Padding inside a panel */
-    --pui-navigation-menu-content-p: var(--pui-space-2);
+    --forte-navigation-menu-content-p: var(--forte-space-2);
     /** Gap between the cards in a panel */
-    --pui-navigation-menu-content-gap: var(--pui-space-1);
+    --forte-navigation-menu-content-gap: var(--forte-space-1);
     /** Width of one column. `Content`'s `columns` prop multiplies it, and the
      * grid drops to fewer columns on its own once the panel is narrower than
      * one of them — which is what makes a three-column panel work on a phone
      * without a media query */
-    --pui-navigation-menu-column-width: 15rem;
+    --forte-navigation-menu-column-width: 15rem;
     /** Space left between the panel and the window edge when the columns above
      * would not fit */
-    --pui-navigation-menu-content-inset: var(--pui-space-5);
+    --forte-navigation-menu-content-inset: var(--forte-space-5);
 
     /* The card row. */
     /** Padding inside a card */
-    --pui-navigation-menu-card-p: var(--pui-space-3);
+    --forte-navigation-menu-card-p: var(--forte-space-3);
     /** Gap between a card's title and its description */
-    --pui-navigation-menu-card-gap: var(--pui-space-1);
+    --forte-navigation-menu-card-gap: var(--forte-space-1);
     /** Corner radius of a card */
-    --pui-navigation-menu-card-radius: var(--pui-radius-control);
+    --forte-navigation-menu-card-radius: var(--forte-radius-control);
     /** Card text colour at rest */
-    --pui-navigation-menu-card-fg: var(--pui-color-foreground);
+    --forte-navigation-menu-card-fg: var(--forte-color-foreground);
     /** Colour of a card's description line */
-    --pui-navigation-menu-card-fg-muted: var(--pui-color-foreground-muted);
+    --forte-navigation-menu-card-fg-muted: var(--forte-color-foreground-muted);
     /** Background of a hovered card */
-    --pui-navigation-menu-card-bg-hover: var(--pui-color-panel-hover);
+    --forte-navigation-menu-card-bg-hover: var(--forte-color-panel-hover);
     /** Background of the current page's card, and of a card whose nested menu
      * is open */
-    --pui-navigation-menu-card-bg-active: var(--pui-color-primary-soft);
+    --forte-navigation-menu-card-bg-active: var(--forte-color-primary-soft);
     /** Text colour of those same two cards */
-    --pui-navigation-menu-card-fg-active: var(--pui-color-primary-text);
+    --forte-navigation-menu-card-fg-active: var(--forte-color-primary-text);
     /** Base font size inside a card */
-    --pui-navigation-menu-card-font-size: var(--pui-font-size-2);
+    --forte-navigation-menu-card-font-size: var(--forte-font-size-2);
 
     /* Sized in `em` so the arrow tracks the panel's font size. Declared here
      * rather than on `.arrow` because the arrow is always a child of this
      * element and inherits them, which keeps both parts retunable from one
      * place. */
     /** Arrow base width */
-    --pui-navigation-menu-arrow-width: 1em;
+    --forte-navigation-menu-arrow-width: 1em;
     /** Arrow height, and the distance it is pushed out from the panel */
-    --pui-navigation-menu-arrow-height: 0.5em;
+    --forte-navigation-menu-arrow-height: 0.5em;
 
     /* Motion knobs, broken out so an app can retune the feel — or flatten it
-     * entirely — without restating the transitions. `--pui-navigation-menu-
+     * entirely — without restating the transitions. `--forte-navigation-menu-
      * move-duration` and `-move-ease` are NOT here: they belong to the
      * positioner and are inherited, because the travel and the resize are one
      * movement. */
     /** How far the panel slides in from, per side */
-    --pui-navigation-menu-travel: var(--pui-travel-sm);
+    --forte-navigation-menu-travel: var(--forte-travel-sm);
     /** Scale the panel grows from and shrinks back to */
-    --pui-navigation-menu-enter-scale: var(--pui-scale-enter);
+    --forte-navigation-menu-enter-scale: var(--forte-scale-enter);
     /* `normal` paired with the snappy spring, which is the pairing Menu,
      * Popover, Select and the Tabs indicator already use. Pairing a spring
      * with its own settle time is about not CROPPING the curve; running the
      * whole curve compressed still plays every stop, overshoot included. */
     /** Length of the opening gesture */
-    --pui-navigation-menu-enter-duration: var(--pui-duration-normal);
+    --forte-navigation-menu-enter-duration: var(--forte-duration-normal);
     /** Curve of the opening gesture */
-    --pui-navigation-menu-enter-ease: var(--pui-ease-spring-snappy);
+    --forte-navigation-menu-enter-ease: var(--forte-ease-spring-snappy);
     /* Shorter than the entrance, and no spring: an arrival has to read as a
      * surface settling into place, while a dismissal is something the user has
      * already decided on and only needs confirming. */
     /** Length of the closing gesture */
-    --pui-navigation-menu-exit-duration: var(--pui-duration-fast);
+    --forte-navigation-menu-exit-duration: var(--forte-duration-fast);
     /** Curve of the closing gesture */
-    --pui-navigation-menu-exit-ease: var(--pui-ease-exit);
+    --forte-navigation-menu-exit-ease: var(--forte-ease-exit);
     /** How far the outgoing and incoming panels slide past each other when the
      * popup is handed from one trigger to another */
-    --pui-navigation-menu-swap-travel: var(--pui-travel-lg);
+    --forte-navigation-menu-swap-travel: var(--forte-travel-lg);
 
     /* Enter/exit displacement, resolved per side just below. Defaults to the
      * `side="bottom"` case, which is this component's default side. */
-    --pui-navigation-menu-enter-x: 0px;
-    --pui-navigation-menu-enter-y: calc(
-      -1 * var(--pui-navigation-menu-travel)
+    --forte-navigation-menu-enter-x: 0px;
+    --forte-navigation-menu-enter-y: calc(
+      -1 * var(--forte-navigation-menu-travel)
     );
 
     box-sizing: border-box;
@@ -583,23 +583,23 @@
     /* Never taller than the space Base UI measured between the bar and the
      * viewport edge; past that the panel scrolls. */
     max-block-size: var(--available-height);
-    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+    /* Beats the transparent border `.forte-hc-surface` sets, on layer order
      * alone — patterns is ordered before components. Forced colors then wins
      * it back from the a11y layer, which is ordered after both. */
-    border: var(--pui-navigation-menu-border-width) solid
-      var(--pui-navigation-menu-border-color);
-    border-radius: var(--pui-navigation-menu-radius);
+    border: var(--forte-navigation-menu-border-width) solid
+      var(--forte-navigation-menu-border-color);
+    border-radius: var(--forte-navigation-menu-radius);
 
-    background-color: var(--pui-navigation-menu-bg);
-    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+    background-color: var(--forte-navigation-menu-bg);
+    /* With the transparent 1px border from `.forte-hc-surface`, padding-box
      * stops the background bleeding out under it. */
     background-clip: padding-box;
-    color: var(--pui-navigation-menu-fg);
-    box-shadow: var(--pui-navigation-menu-shadow);
+    color: var(--forte-navigation-menu-fg);
+    box-shadow: var(--forte-navigation-menu-shadow);
 
-    font-family: var(--pui-font-sans);
-    line-height: var(--pui-line-height-normal);
-    letter-spacing: var(--pui-letter-spacing-normal);
+    font-family: var(--forte-font-sans);
+    line-height: var(--forte-line-height-normal);
+    letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
     /* Grow out of the trigger rather than out of the panel's own centre.
@@ -612,26 +612,26 @@
      * two size properties run on the positioner's move timing, because the
      * resize and the travel are the same gesture seen from two elements. */
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-navigation-menu-enter-duration)
-        var(--pui-navigation-menu-enter-ease),
-      width var(--pui-navigation-menu-move-duration)
-        var(--pui-navigation-menu-move-ease),
-      height var(--pui-navigation-menu-move-duration)
-        var(--pui-navigation-menu-move-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      transform var(--forte-navigation-menu-enter-duration)
+        var(--forte-navigation-menu-enter-ease),
+      width var(--forte-navigation-menu-move-duration)
+        var(--forte-navigation-menu-move-ease),
+      height var(--forte-navigation-menu-move-duration)
+        var(--forte-navigation-menu-move-ease);
   }
 
   /* Directional rise: the panel starts a few pixels nearer the bar and settles
    * outward. */
   .popup[data-side="top"] {
-    --pui-navigation-menu-enter-x: 0px;
-    --pui-navigation-menu-enter-y: var(--pui-navigation-menu-travel);
+    --forte-navigation-menu-enter-x: 0px;
+    --forte-navigation-menu-enter-y: var(--forte-navigation-menu-travel);
   }
 
   .popup[data-side="bottom"] {
-    --pui-navigation-menu-enter-x: 0px;
-    --pui-navigation-menu-enter-y: calc(
-      -1 * var(--pui-navigation-menu-travel)
+    --forte-navigation-menu-enter-x: 0px;
+    --forte-navigation-menu-enter-y: calc(
+      -1 * var(--forte-navigation-menu-travel)
     );
   }
 
@@ -640,8 +640,8 @@
       [data-side="inline-start"]:dir(ltr),
       [data-side="inline-end"]:dir(rtl)
     ) {
-    --pui-navigation-menu-enter-x: var(--pui-navigation-menu-travel);
-    --pui-navigation-menu-enter-y: 0px;
+    --forte-navigation-menu-enter-x: var(--forte-navigation-menu-travel);
+    --forte-navigation-menu-enter-y: 0px;
   }
 
   .popup:is(
@@ -649,10 +649,10 @@
       [data-side="inline-end"]:dir(ltr),
       [data-side="inline-start"]:dir(rtl)
     ) {
-    --pui-navigation-menu-enter-x: calc(
-      -1 * var(--pui-navigation-menu-travel)
+    --forte-navigation-menu-enter-x: calc(
+      -1 * var(--forte-navigation-menu-travel)
     );
-    --pui-navigation-menu-enter-y: 0px;
+    --forte-navigation-menu-enter-y: 0px;
   }
 
   /* Closing retraces the entrance rather than puffing outward, so the two
@@ -662,15 +662,15 @@
   .popup[data-ending-style] {
     opacity: 0;
     transform: translate(
-        var(--pui-navigation-menu-enter-x),
-        var(--pui-navigation-menu-enter-y)
+        var(--forte-navigation-menu-enter-x),
+        var(--forte-navigation-menu-enter-y)
       )
-      scale(var(--pui-navigation-menu-enter-scale));
+      scale(var(--forte-navigation-menu-enter-scale));
   }
 
   .popup[data-ending-style] {
-    transition-duration: var(--pui-navigation-menu-exit-duration);
-    transition-timing-function: var(--pui-navigation-menu-exit-ease);
+    transition-duration: var(--forte-navigation-menu-exit-duration);
+    transition-timing-function: var(--forte-navigation-menu-exit-ease);
   }
 
   /* ------------------------------------------------------------------------
@@ -678,14 +678,14 @@
    * --------------------------------------------------------------------- */
   .arrow {
     display: block;
-    inline-size: var(--pui-navigation-menu-arrow-width);
-    block-size: var(--pui-navigation-menu-arrow-height);
+    inline-size: var(--forte-navigation-menu-arrow-width);
+    block-size: var(--forte-navigation-menu-arrow-height);
     /* Base UI re-writes the arrow's own offset every time the popup moves to
      * another trigger. On the positioner's timing, so the wedge and the panel
      * arrive together instead of the wedge chasing it. */
     transition-property: left, right, top, bottom;
-    transition-duration: var(--pui-navigation-menu-move-duration);
-    transition-timing-function: var(--pui-navigation-menu-move-ease);
+    transition-duration: var(--forte-navigation-menu-move-duration);
+    transition-timing-function: var(--forte-navigation-menu-move-ease);
   }
 
   /* `data-instant` is on the positioner, not the arrow, so the wedge has to be
@@ -696,12 +696,12 @@
   }
 
   .arrow[data-side="top"] {
-    bottom: calc(-1 * var(--pui-navigation-menu-arrow-height));
+    bottom: calc(-1 * var(--forte-navigation-menu-arrow-height));
     rotate: 180deg;
   }
 
   .arrow[data-side="bottom"] {
-    top: calc(-1 * var(--pui-navigation-menu-arrow-height));
+    top: calc(-1 * var(--forte-navigation-menu-arrow-height));
     rotate: 0deg;
   }
 
@@ -713,8 +713,8 @@
     right: calc(
       -0.5 *
         (
-          var(--pui-navigation-menu-arrow-width) +
-            var(--pui-navigation-menu-arrow-height)
+          var(--forte-navigation-menu-arrow-width) +
+            var(--forte-navigation-menu-arrow-height)
         )
     );
     rotate: 90deg;
@@ -728,8 +728,8 @@
     left: calc(
       -0.5 *
         (
-          var(--pui-navigation-menu-arrow-width) +
-            var(--pui-navigation-menu-arrow-height)
+          var(--forte-navigation-menu-arrow-width) +
+            var(--forte-navigation-menu-arrow-height)
         )
     );
     rotate: -90deg;
@@ -743,17 +743,17 @@
 
   /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
   .arrowFill {
-    fill: var(--pui-navigation-menu-bg);
+    fill: var(--forte-navigation-menu-bg);
   }
 
   /* The larger triangle sitting under the fill, showing only as a hairline
    * along the two slopes because the fill triangle is inset from it. That is
    * what continues the panel's own border around the wedge — set
-   * `--pui-navigation-menu-border-color: transparent` and the arrow goes back
+   * `--forte-navigation-menu-border-color: transparent` and the arrow goes back
    * to a flat wedge, in step with the panel. It is also the path forced-colors
    * repaints below. */
   .arrowBorder {
-    fill: var(--pui-navigation-menu-border-color);
+    fill: var(--forte-navigation-menu-border-color);
   }
 
   /* ------------------------------------------------------------------------
@@ -786,8 +786,8 @@
   .content {
     /* Internal on purpose — a plain comment, so theming-docgen does not
      * publish it: it is what `columns` sets, and the knob to turn is
-     * --pui-navigation-menu-column-width. */
-    --pui-navigation-menu-columns: 1;
+     * --forte-navigation-menu-column-width. */
+    --forte-navigation-menu-columns: 1;
 
     box-sizing: border-box;
     display: grid;
@@ -796,10 +796,10 @@
      * fewer columns. */
     grid-template-columns: repeat(
       auto-fit,
-      minmax(min(var(--pui-navigation-menu-column-width), 100%), 1fr)
+      minmax(min(var(--forte-navigation-menu-column-width), 100%), 1fr)
     );
-    gap: var(--pui-navigation-menu-content-gap);
-    padding: var(--pui-navigation-menu-content-p);
+    gap: var(--forte-navigation-menu-content-gap);
+    padding: var(--forte-navigation-menu-content-p);
     /* An absolute width rather than a percentage, because the popup this sits
      * in is sized FROM this element and a percentage would be circular. The
      * `min()` is the phone case, and it is a hard bound rather than
@@ -808,13 +808,13 @@
      * measured at three columns wide. */
     inline-size: min(
       calc(
-        var(--pui-navigation-menu-columns) *
-          var(--pui-navigation-menu-column-width) +
-          (var(--pui-navigation-menu-columns) - 1) *
-          var(--pui-navigation-menu-content-gap) + 2 *
-          var(--pui-navigation-menu-content-p)
+        var(--forte-navigation-menu-columns) *
+          var(--forte-navigation-menu-column-width) +
+          (var(--forte-navigation-menu-columns) - 1) *
+          var(--forte-navigation-menu-content-gap) + 2 *
+          var(--forte-navigation-menu-content-p)
       ),
-      calc(100vw - 2 * var(--pui-navigation-menu-content-inset))
+      calc(100vw - 2 * var(--forte-navigation-menu-content-inset))
     );
     max-inline-size: var(--available-width);
     /* Fills the popup, which is what lets a shorter panel's background reach
@@ -829,23 +829,23 @@
 
     /* Internal: which way this panel slides, resolved from
      * `data-activation-direction` below. */
-    --pui-navigation-menu-swap-x: 0px;
-    --pui-navigation-menu-swap-y: 0px;
+    --forte-navigation-menu-swap-x: 0px;
+    --forte-navigation-menu-swap-y: 0px;
 
     /* Opacity is the shorter half again: the incoming panel is readable before
      * it has finished arriving. */
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-navigation-menu-move-duration)
-        var(--pui-navigation-menu-move-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-navigation-menu-move-duration)
+        var(--forte-navigation-menu-move-ease);
   }
 
   .content[data-columns="2"] {
-    --pui-navigation-menu-columns: 2;
+    --forte-navigation-menu-columns: 2;
   }
 
   .content[data-columns="3"] {
-    --pui-navigation-menu-columns: 3;
+    --forte-navigation-menu-columns: 3;
   }
 
   /* `data-activation-direction` names where the NEW trigger sits relative to
@@ -854,37 +854,37 @@
    * `getBoundingClientRect()`, which makes it already physical: "right" means
    * physically to the right in RTL exactly as in LTR. This is therefore one of
    * the two places in the library where an inline-axis distance is NOT
-   * multiplied by `--pui-direction` — flipping it would throw the panel away
+   * multiplied by `--forte-direction` — flipping it would throw the panel away
    * from the trigger the user just reached for. (The other is
    * `Popover`'s viewport, for the same reason.) */
   .content[data-starting-style],
   .content[data-ending-style] {
     opacity: 0;
-    translate: var(--pui-navigation-menu-swap-x)
-      var(--pui-navigation-menu-swap-y);
+    translate: var(--forte-navigation-menu-swap-x)
+      var(--forte-navigation-menu-swap-y);
   }
 
   .content[data-starting-style][data-activation-direction="right"],
   .content[data-ending-style][data-activation-direction="left"] {
-    --pui-navigation-menu-swap-x: var(--pui-navigation-menu-swap-travel);
+    --forte-navigation-menu-swap-x: var(--forte-navigation-menu-swap-travel);
   }
 
   .content[data-starting-style][data-activation-direction="left"],
   .content[data-ending-style][data-activation-direction="right"] {
-    --pui-navigation-menu-swap-x: calc(
-      -1 * var(--pui-navigation-menu-swap-travel)
+    --forte-navigation-menu-swap-x: calc(
+      -1 * var(--forte-navigation-menu-swap-travel)
     );
   }
 
   .content[data-starting-style][data-activation-direction="down"],
   .content[data-ending-style][data-activation-direction="up"] {
-    --pui-navigation-menu-swap-y: var(--pui-navigation-menu-swap-travel);
+    --forte-navigation-menu-swap-y: var(--forte-navigation-menu-swap-travel);
   }
 
   .content[data-starting-style][data-activation-direction="up"],
   .content[data-ending-style][data-activation-direction="down"] {
-    --pui-navigation-menu-swap-y: calc(
-      -1 * var(--pui-navigation-menu-swap-travel)
+    --forte-navigation-menu-swap-y: calc(
+      -1 * var(--forte-navigation-menu-swap-travel)
     );
   }
 }
@@ -901,7 +901,7 @@
  * open and which page you are on — plus the descendant that declares its own
  * colour and so does not inherit its row's.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .trigger[data-popup-open],
     .link[data-active] {
@@ -916,7 +916,7 @@
 
     /* System colour keywords survive the forced-colors substitution, so this
      * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
-     * matching the CanvasText border `.pui-hc-surface` puts on the popup. */
+     * matching the CanvasText border `.forte-hc-surface` puts on the popup. */
     .arrowFill {
       fill: Canvas;
     }

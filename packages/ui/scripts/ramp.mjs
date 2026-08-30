@@ -1,5 +1,5 @@
 /**
- * The pretty-ui colour curve — the single source of truth for every ramp.
+ * The forte-ui colour curve — the single source of truth for every ramp.
  *
  * Step semantics follow the Radix Colors convention:
  *   1-2   app / subtle background
@@ -48,8 +48,8 @@ export const ACCENT_CURVE = [
 ];
 
 /**
- * Neutral curve. Lightness values are the existing, measured pretty-ui greys —
- * only a hue-matched sliver of chroma is added, scaled by --pui-neutral-tint.
+ * Neutral curve. Lightness values are the existing, measured forte-ui greys —
+ * only a hue-matched sliver of chroma is added, scaled by --forte-neutral-tint.
  * The tint cap rises through the mid steps and falls again at the text tiers so
  * body copy never reads as coloured. ChromaΔ is small enough that lightness —
  * and therefore the measured contrast of every neutral pair — is unchanged.

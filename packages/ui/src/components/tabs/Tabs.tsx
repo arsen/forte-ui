@@ -89,7 +89,7 @@ const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(function TabsRo
       <BaseTabs.Root
         ref={ref}
         className={clsx(styles.root, className)}
-        data-pui="tabs"
+        data-forte="tabs"
         data-variant={variant}
         data-overflow={overflow}
         {...props}
@@ -118,7 +118,7 @@ const px = (value: string) => parseFloat(value) || 0;
  * The clearance is read off the CSS rather than fixed, so the result matches
  * what the browser already does when the same tab is reached with the arrow
  * keys instead: `scroll-margin` on the tab — the stylesheet sets it from
- * `--pui-tabs-scroll-peek`, deliberately wider than the ScrollArea's fade so
+ * `--forte-tabs-scroll-peek`, deliberately wider than the ScrollArea's fade so
  * the neighbouring tab stays partly painted instead of the strip looking as
  * though it ended — plus any `scroll-padding` a consumer has put on the
  * container.
@@ -160,15 +160,15 @@ function scrollTabIntoView(
 /**
  * `smooth`, unless motion is suppressed.
  *
- * Read off `--pui-motion-ok` rather than
+ * Read off `--forte-motion-ok` rather than
  * `matchMedia("(prefers-reduced-motion: reduce)")`, because the token carries
- * both the OS preference AND a `data-pui-motion="reduce"` scope — so the
+ * both the OS preference AND a `data-forte-motion="reduce"` scope — so the
  * in-page motion toggle turns this off along with everything else, which a
  * media query alone would not. It is registered as a `<number>`, so the
  * computed value is always exactly `"1"` or `"0"`.
  */
 function scrollBehavior(element: HTMLElement): ScrollBehavior {
-  return getComputedStyle(element).getPropertyValue("--pui-motion-ok").trim() === "0"
+  return getComputedStyle(element).getPropertyValue("--forte-motion-ok").trim() === "0"
     ? "auto"
     : "smooth";
 }
@@ -235,7 +235,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
     // Our own marker rather than `[data-active]` alone: that attribute is
     // generic enough that a consumer's own element inside a tab could carry
     // it, and the indicator would then be measured against the wrong box.
-    const tab = list.querySelector<HTMLElement>('[data-pui="tabs-tab"][data-active]');
+    const tab = list.querySelector<HTMLElement>('[data-forte="tabs-tab"][data-active]');
     if (tab) scrollTabIntoView(viewport, tab, behavior);
   }, []);
 
@@ -284,7 +284,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
     <BaseTabs.List
       ref={setRefs}
       className={clsx(styles.list, className)}
-      data-pui="tabs-list"
+      data-forte="tabs-list"
       activateOnFocus={activateOnFocus}
       loopFocus={loopFocus}
       data-variant={variant}
@@ -313,7 +313,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
    * UI hides the native scrollbars on the viewport itself, so leaving the part
    * out is all it takes.
    *
-   * No `data-pui` on these parts: rule 9 — a composed pretty-ui component tags
+   * No `data-forte` on these parts: rule 9 — a composed forte-ui component tags
    * its own root, and consumers scope with a descendant selector. */
   return (
     <ScrollArea.Root className={styles.scroller}>
@@ -355,8 +355,8 @@ const TabsTab = React.forwardRef<HTMLElement, TabsTabProps>(function TabsTab(
   return (
     <BaseTabs.Tab
       ref={ref}
-      className={clsx(styles.tab, "pui-focus-ring", className)}
-      data-pui="tabs-tab"
+      className={clsx(styles.tab, "forte-focus-ring", className)}
+      data-forte="tabs-tab"
       // The strip is a clipping context — a pill list has padding and a line
       // list can scroll — so the ring is flipped inward and cannot be cropped.
       data-focus-inset=""
@@ -406,7 +406,7 @@ const TabsIndicator = React.forwardRef<HTMLSpanElement, TabsIndicatorProps>(
       <BaseTabs.Indicator
         ref={ref}
         className={clsx(styles.indicator, className)}
-        data-pui="tabs-indicator"
+        data-forte="tabs-indicator"
         renderBeforeHydration={renderBeforeHydration}
         data-variant={variant}
         {...props}
@@ -448,8 +448,8 @@ const TabsPanel = React.forwardRef<HTMLDivElement, TabsPanelProps>(function Tabs
   return (
     <BaseTabs.Panel
       ref={ref}
-      className={clsx(styles.panel, "pui-focus-ring", className)}
-      data-pui="tabs-panel"
+      className={clsx(styles.panel, "forte-focus-ring", className)}
+      data-forte="tabs-panel"
       keepMounted={keepMounted}
       data-variant={variant}
       {...props}
@@ -478,7 +478,7 @@ const TabsPanel = React.forwardRef<HTMLDivElement, TabsPanelProps>(function Tabs
  * with more tabs than room scrolls rather than spilling out of its container,
  * and activating a tab that is off the edge brings it into view — set
  * `overflow="visible"` on `Tabs.Root` to opt out. Styling is driven entirely by
- * `data-*` attributes and `--pui-tabs-*` custom properties, so it can be
+ * `data-*` attributes and `--forte-tabs-*` custom properties, so it can be
  * re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[variant=pill]:...`) without wrapping.
  */

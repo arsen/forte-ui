@@ -496,7 +496,7 @@ export function sameColor(a: Rgba, b: Rgba): boolean {
  * The palette `ColorPicker.Swatches` falls back to: eight neutrals, eight warm
  * hues and eight cool ones, in three rows of eight.
  *
- * Deliberately NOT built from the pretty-ui ramp. Those tokens are `var()`
+ * Deliberately NOT built from the forte-ui ramp. Those tokens are `var()`
  * references that resolve differently per theme scope and per light/dark, and a
  * picker has to hand back a concrete colour the consumer can store — a swatch
  * that means one thing in dark mode and another in light is not a colour, it is

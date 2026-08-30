@@ -9,25 +9,25 @@
  * forced-colors, and the parts of reduced motion that tokens provably cannot
  * reach. (The reduced-motion token overrides themselves live in motion.css.)
  */
-@layer pretty-ui.tokens {
+@layer forte.tokens {
   :root,
-  .pui-theme,
-  [data-pui-theme] {
-    --pui-focus-ring-width: 2px;
-    --pui-focus-ring-offset: 2px;
+  .forte-theme,
+  [data-forte-theme] {
+    --forte-focus-ring-width: 2px;
+    --forte-focus-ring-offset: 2px;
 
     /* Two tones that contrast with EACH OTHER, not with the page. That is the
      * whole trick: whatever sits behind the control, one of the ring's two
      * boundaries still clears the 3:1 that SC 1.4.11 requires. A single-tone
      * accent-coloured ring cannot promise that — the previous
-     * `--pui-color-focus-ring: var(--pui-accent-9)` measured 2.61:1 on a light
+     * `--forte-color-focus-ring: var(--forte-accent-9)` measured 2.61:1 on a light
      * background and failed outright, while passing comfortably in dark mode,
      * which is exactly how it went unnoticed. */
-    --pui-focus-ring-inner: light-dark(oklch(0.240 0 0), oklch(0.995 0 0));
-    --pui-focus-ring-outer: light-dark(oklch(0.995 0 0), oklch(0.178 0 0));
+    --forte-focus-ring-inner: light-dark(oklch(0.240 0 0), oklch(0.995 0 0));
+    --forte-focus-ring-outer: light-dark(oklch(0.995 0 0), oklch(0.178 0 0));
 
     /* Retained so existing overrides keep working. */
-    --pui-color-focus-ring: var(--pui-focus-ring-inner);
+    --forte-color-focus-ring: var(--forte-focus-ring-inner);
   }
 
   /* ------------------------------------------------------------------------
@@ -39,29 +39,29 @@
    * --------------------------------------------------------------------- */
   @media (prefers-contrast: more) {
     :root,
-    .pui-theme,
-    [data-pui-theme] {
-      --pui-color-foreground-muted: var(--pui-gray-12);
+    .forte-theme,
+    [data-forte-theme] {
+      --forte-color-foreground-muted: var(--forte-gray-12);
       /* Promotes the 3.73:1 subtle tier to 5.82:1, making it safe for text. */
-      --pui-color-foreground-subtle: var(--pui-gray-11);
-      --pui-color-border: var(--pui-gray-12);
-      --pui-color-border-muted: var(--pui-gray-11);
-      --pui-color-border-strong: var(--pui-gray-12);
-      --pui-focus-ring-width: 3px;
-      --pui-shadow-1: none;
-      --pui-shadow-2: none;
-      --pui-shadow-3: none;
-      --pui-shadow-4: none;
-      --pui-scrim-color: light-dark(oklch(0 0 0 / 0.7), oklch(0 0 0 / 0.85));
+      --forte-color-foreground-subtle: var(--forte-gray-11);
+      --forte-color-border: var(--forte-gray-12);
+      --forte-color-border-muted: var(--forte-gray-11);
+      --forte-color-border-strong: var(--forte-gray-12);
+      --forte-focus-ring-width: 3px;
+      --forte-shadow-1: none;
+      --forte-shadow-2: none;
+      --forte-shadow-3: none;
+      --forte-shadow-4: none;
+      --forte-scrim-color: light-dark(oklch(0 0 0 / 0.7), oklch(0 0 0 / 0.85));
     }
   }
 
   @media (prefers-contrast: less) {
     :root,
-    .pui-theme,
-    [data-pui-theme] {
-      --pui-color-border: var(--pui-gray-6);
-      --pui-color-foreground-muted: var(--pui-gray-10);
+    .forte-theme,
+    [data-forte-theme] {
+      --forte-color-border: var(--forte-gray-6);
+      --forte-color-foreground-muted: var(--forte-gray-10);
     }
   }
 
@@ -69,11 +69,11 @@
    * legibility must never depend on this query having matched. */
   @media (prefers-reduced-transparency: reduce) {
     :root,
-    .pui-theme,
-    [data-pui-theme] {
-      --pui-scrim-color: light-dark(oklch(0.242 0 0), oklch(0.100 0 0));
-      --pui-scrim-blur: 0px;
-      --pui-glass-alpha: 1;
+    .forte-theme,
+    [data-forte-theme] {
+      --forte-scrim-color: light-dark(oklch(0.242 0 0), oklch(0.100 0 0));
+      --forte-scrim-blur: 0px;
+      --forte-glass-alpha: 1;
     }
   }
 }
@@ -81,7 +81,7 @@
 /**
  * The parts of reduced motion that no token can reach.
  */
-@layer pretty-ui.patterns {
+@layer forte.patterns {
   @media (prefers-reduced-motion: reduce) {
     /* `animation-duration` is IGNORED on a scroll or view progress timeline,
      * so no duration token can stop a parallax. The timeline itself has to be
@@ -91,12 +91,12 @@
      *   @media (prefers-reduced-motion: no-preference)
      *   @supports (animation-timeline: view()) { ... }
      * and never gate visibility on it. */
-    :where([style*="animation-timeline"], .pui-scroll-anim) {
+    :where([style*="animation-timeline"], .forte-scroll-anim) {
       animation-timeline: none !important;
       animation-name: none !important;
     }
 
-    :where(html, body, .pui-scroll) {
+    :where(html, body, .forte-scroll) {
       scroll-behavior: auto;
     }
 
@@ -108,7 +108,7 @@
     }
   }
 
-  :where([data-pui-motion="reduce"], [data-pui-motion="off"]) {
+  :where([data-forte-motion="reduce"], [data-forte-motion="off"]) {
     scroll-behavior: auto;
   }
 

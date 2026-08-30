@@ -23,7 +23,7 @@
  * house style happens not to produce — a missing final semicolon, unusual
  * whitespace — instead of silently dropping a declaration.
  *
- *   pnpm --filter @dofortech/pretty-ui docgen
+ *   pnpm --filter @dofortech/forte-ui docgen
  */
 import { mkdirSync, writeFileSync, readdirSync, existsSync, readFileSync } from "node:fs";
 import { join, basename } from "node:path";

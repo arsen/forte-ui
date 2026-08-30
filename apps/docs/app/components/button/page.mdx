@@ -19,7 +19,7 @@ Use a Button for anything that happens in the page — submitting a form, openin
 ## Import
 
 ```tsx
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -32,7 +32,7 @@ import { Button } from "@dofortech/pretty-ui";
 
 ### Sizes
 
-`size` sets the height, horizontal padding and font size. The values come from the control tokens, so the ambient `data-pui-density` setting moves them too: `size="sm"` is 28px tall by default and exactly 24px under `data-pui-density="compact"`, which is the SC 2.5.8 floor — the density scale deliberately stops there. `fullWidth` is separate from size — it stretches the button to its container, for stacked forms and mobile action bars.
+`size` sets the height, horizontal padding and font size. The values come from the control tokens, so the ambient `data-forte-density` setting moves them too: `size="sm"` is 28px tall by default and exactly 24px under `data-forte-density="compact"`, which is the SC 2.5.8 floor — the density scale deliberately stops there. `fullWidth` is separate from size — it stretches the button to its container, for stacked forms and mobile action bars.
 
 <DemoBlock id="button/sizes" />
 
@@ -40,7 +40,7 @@ import { Button } from "@dofortech/pretty-ui";
 
 `loading` shows a spinner, hides the label from paint while keeping its width so the button cannot resize under the pointer, sets `aria-busy`, and blocks activation. Use it for the span of one request, and pair it with a `loadingLabel` that names the operation.
 
-The indicator is [`Spinner`](/components/spinner)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text colour, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--pui-button-spinner-size`.
+The indicator is [`Spinner`](/components/spinner)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text colour, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--forte-button-spinner-size`.
 
 <DemoBlock id="button/loading" />
 
@@ -54,7 +54,7 @@ The indicator is [`Spinner`](/components/spinner)'s `ring`, rendered `decorative
 
 ### Icon-only
 
-`iconOnly` makes the button square, guarantees the icon `--pui-button-icon-padding` of space on every side, and floors the square at the control height and at `--pui-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. When icon plus padding outgrows that floor the button grows with it, so the icon never crowds the corners — which matters most under `data-pui-radius="pill"`, where the corner is the nearest point of the curve. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
+`iconOnly` makes the button square, guarantees the icon `--forte-button-icon-padding` of space on every side, and floors the square at the control height and at `--forte-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. When icon plus padding outgrows that floor the button grows with it, so the icon never crowds the corners — which matters most under `data-forte-radius="pill"`, where the corner is the nearest point of the curve. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
 
 <DemoBlock id="button/icon-only" />
 
@@ -108,17 +108,17 @@ Two disabled states behave differently, and the difference matters. A plain `dis
 
 ## Theming
 
-Every property below is declared on the button's own root element. That means setting one on `:root`, on a theme class or on a wrapper has no effect — the element's own declaration wins over an inherited value. Override them on the button itself, through the `className` prop (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. To move every button at once, re-point the global tokens in the Default column instead — `--pui-color-*`, `--pui-radius-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope. State is exposed on data attributes — `data-variant`, `data-tone`, `data-size`, `data-loading`, `data-icon-only`, `data-full-width`, `data-disabled` — which is also what Tailwind arbitrary variants like `data-[variant=solid]:…` target.
+Every property below is declared on the button's own root element. That means setting one on `:root`, on a theme class or on a wrapper has no effect — the element's own declaration wins over an inherited value. Override them on the button itself, through the `className` prop (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. To move every button at once, re-point the global tokens in the Default column instead — `--forte-color-*`, `--forte-radius-*`, `--forte-control-*` and `--forte-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope. State is exposed on data attributes — `data-variant`, `data-tone`, `data-size`, `data-loading`, `data-icon-only`, `data-full-width`, `data-disabled` — which is also what Tailwind arbitrary variants like `data-[variant=solid]:…` target.
 
 <ThemingTable component="Button" />
 
-The two groups are layered: `variant` decides which of the `--pui-button-tone-*` values become the background, text and border slots, and `tone` decides what those values are. To restyle a whole tone, override the `tone` properties; to restyle one button, override the slots directly.
+The two groups are layered: `variant` decides which of the `--forte-button-tone-*` values become the background, text and border slots, and `tone` decides what those values are. To restyle a whole tone, override the `tone` properties; to restyle one button, override the slots directly.
 
 ```css
 .checkout-cta {
-  --pui-button-radius: var(--pui-radius-full);
-  --pui-button-tone-solid: var(--pui-color-secondary);
-  --pui-button-tone-on-solid: var(--pui-color-on-secondary);
+  --forte-button-radius: var(--forte-radius-full);
+  --forte-button-tone-solid: var(--forte-color-secondary);
+  --forte-button-tone-on-solid: var(--forte-color-on-secondary);
 }
 ```
 

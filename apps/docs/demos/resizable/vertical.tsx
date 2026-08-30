@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/pretty-ui";
+import { Resizable } from "@dofortech/forte-ui";
 
 export default function ResizableVertical() {
   return (

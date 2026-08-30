@@ -10,10 +10,10 @@
  * Four decisions carry the file.
  *
  * 1. The height is CONTENT-driven — one tight line plus padding — and is
- *    deliberately not pinned to `--pui-control-h-*`. A badge annotates text
+ *    deliberately not pinned to `--forte-control-h-*`. A badge annotates text
  *    and sits inside it; a chip locked to a 2.25rem control height towers
  *    over the sentence it belongs to. The corollary is that
- *    `data-pui-density` does not resize it, which is right: density is about
+ *    `data-forte-density` does not resize it, which is right: density is about
  *    how tightly CONTROLS pack, and this is not one.
  *
  * 2. The border is always reserved and usually transparent. Only `outline`
@@ -21,7 +21,7 @@
  *    cannot move a badge by a pixel — and under forced colours, where
  *    `transparent` is replaced by a system colour, that reserved edge is the
  *    whole reason a solid or soft chip does not dissolve into the page. It is
- *    the same trick `.pui-hc-surface` plays, applied to every variant at once.
+ *    the same trick `.forte-hc-surface` plays, applied to every variant at once.
  *
  * 3. Interactivity is read off the ELEMENT, not off a prop. `render` can turn
  *    this span into an `<a href>` or a `<button>`, and only then do the
@@ -40,99 +40,99 @@
  * As everywhere else, there is no `prefers-reduced-motion` block here: the
  * only thing that moves is colour, and the duration tokens shorten themselves.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens, declared HERE on the badge itself so an ancestor's
      * value is only inherited and never wins. Re-skin one badge by setting
      * these through `className` or `style`; re-skin every badge by
      * re-pointing the global tokens on the right-hand side. */
     /** Corner radius. `shape="pill"` re-points it. */
-    --pui-badge-radius: var(--pui-radius-control);
+    --forte-badge-radius: var(--forte-radius-control);
     /** Label size; reassigned by `size`. */
-    --pui-badge-font-size: var(--pui-font-size-1);
+    --forte-badge-font-size: var(--forte-font-size-1);
     /** Label weight. Badges are small; medium is what keeps them legible
      * against body text without shouting. */
-    --pui-badge-font-weight: var(--pui-font-weight-medium);
+    --forte-badge-font-weight: var(--forte-font-weight-medium);
     /** Space between the dot, an icon and the label. */
-    --pui-badge-gap: var(--pui-space-1);
+    --forte-badge-gap: var(--forte-space-1);
     /** Block padding; reassigned by `size`. Together with one tight line this
      * is what sets the badge's height. */
-    --pui-badge-padding-y: var(--pui-space-1);
+    --forte-badge-padding-y: var(--forte-space-1);
     /** Inline padding; reassigned by `size`. */
-    --pui-badge-padding-x: var(--pui-space-2);
+    --forte-badge-padding-x: var(--forte-space-2);
     /** Border thickness. Reserved by every variant; only `outline` colours it. */
-    --pui-badge-border-width: 1px;
-    /** Size of an `svg` child. `1em`, so it tracks `--pui-badge-font-size`
+    --forte-badge-border-width: 1px;
+    /** Size of an `svg` child. `1em`, so it tracks `--forte-badge-font-size`
      * and needs no rule per size — and stays in proportion if a consumer
      * re-points the font size. */
-    --pui-badge-icon-size: 1em;
+    --forte-badge-icon-size: 1em;
     /** Diameter of the leading dot. */
-    --pui-badge-dot-size: 0.5em;
+    --forte-badge-dot-size: 0.5em;
     /** Colour of that dot. `currentColor` by default, so it matches the label
      * through every variant and tone without a slot of its own. */
-    --pui-badge-dot-color: currentColor;
+    --forte-badge-dot-color: currentColor;
     /** Smallest inline size. `count` re-points it at the badge's own height,
      * which is what rounds a one-digit tally into a circle. */
-    --pui-badge-min-inline-size: auto;
+    --forte-badge-min-inline-size: auto;
     /** How long a hover or theme change takes to cross-fade. */
-    --pui-badge-duration: var(--pui-duration-fast);
+    --forte-badge-duration: var(--forte-duration-fast);
 
     /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
     /** Tone's solid fill */
-    --pui-badge-tone-solid: var(--pui-color-primary);
+    --forte-badge-tone-solid: var(--forte-color-primary);
     /** Tone's solid fill under the pointer, for a badge that is a link or a
      * button. The three tones with no authored hover step derive one further
      * down. */
-    --pui-badge-tone-solid-hover: var(--pui-color-primary-hover);
+    --forte-badge-tone-solid-hover: var(--forte-color-primary-hover);
     /** Text colour on the solid fill */
-    --pui-badge-tone-on-solid: var(--pui-color-on-primary);
+    --forte-badge-tone-on-solid: var(--forte-color-on-primary);
     /** Tone's tinted fill, and the hover wash for `outline` and `ghost` */
-    --pui-badge-tone-soft: var(--pui-color-primary-soft);
+    --forte-badge-tone-soft: var(--forte-color-primary-soft);
     /** Tinted fill under the pointer. The four tones with no authored
      * soft-hover step derive one further down. */
-    --pui-badge-tone-soft-hover: var(--pui-color-primary-soft-hover);
+    --forte-badge-tone-soft-hover: var(--forte-color-primary-soft-hover);
     /** Label colour for `soft`, `outline` and `ghost` */
-    --pui-badge-tone-text: var(--pui-color-primary-text);
+    --forte-badge-tone-text: var(--forte-color-primary-text);
     /** Border colour for `outline` */
-    --pui-badge-tone-border: var(--pui-color-primary-border);
+    --forte-badge-tone-border: var(--forte-color-primary-border);
 
     /* Colour slots, filled in per variant below. */
     /** Resting background; filled in by `variant` */
-    --pui-badge-bg: transparent;
+    --forte-badge-bg: transparent;
     /** Background under the pointer, for an interactive badge only */
-    --pui-badge-bg-hover: transparent;
+    --forte-badge-bg-hover: transparent;
     /** Label and icon colour */
-    --pui-badge-fg: var(--pui-color-foreground);
+    --forte-badge-fg: var(--forte-color-foreground);
     /** Border colour */
-    --pui-badge-border-color: transparent;
+    --forte-badge-border-color: transparent;
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-badge-gap);
-    min-inline-size: var(--pui-badge-min-inline-size);
+    gap: var(--forte-badge-gap);
+    min-inline-size: var(--forte-badge-min-inline-size);
     /* Deliberately no `max-inline-size`. Capping it while the label is
      * `nowrap` and nothing clips would paint the text straight through the
      * border — a cap is only useful next to truncation, and truncation on a
      * flex row full of anonymous items is not something CSS does honestly.
      * A label too long for its column is a wording problem; wrap the text
      * yourself if you need it cut. */
-    padding-block: var(--pui-badge-padding-y);
-    padding-inline: var(--pui-badge-padding-x);
-    border: var(--pui-badge-border-width) solid var(--pui-badge-border-color);
-    border-radius: var(--pui-badge-radius);
+    padding-block: var(--forte-badge-padding-y);
+    padding-inline: var(--forte-badge-padding-x);
+    border: var(--forte-badge-border-width) solid var(--forte-badge-border-color);
+    border-radius: var(--forte-badge-radius);
 
-    background-color: var(--pui-badge-bg);
-    color: var(--pui-badge-fg);
+    background-color: var(--forte-badge-bg);
+    color: var(--forte-badge-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-badge-font-size);
-    font-weight: var(--pui-badge-font-weight);
-    /* Tight, and the reason the height works out: `--pui-badge-padding-y`
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-badge-font-size);
+    font-weight: var(--forte-badge-font-weight);
+    /* Tight, and the reason the height works out: `--forte-badge-padding-y`
      * plus `1em × 1.2` is the whole box, so a size only has to name a font
      * size and a padding. */
-    line-height: var(--pui-line-height-tight);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
     text-decoration: none;
     vertical-align: middle;
@@ -145,9 +145,9 @@
     user-select: none;
 
     transition:
-      background-color var(--pui-badge-duration) var(--pui-ease-standard),
-      border-color var(--pui-badge-duration) var(--pui-ease-standard),
-      color var(--pui-badge-duration) var(--pui-ease-standard);
+      background-color var(--forte-badge-duration) var(--forte-ease-standard),
+      border-color var(--forte-badge-duration) var(--forte-ease-standard),
+      color var(--forte-badge-duration) var(--forte-ease-standard);
   }
 
   /* An icon inside the badge. Sized from the label rather than from a token
@@ -155,8 +155,8 @@
    * rendering fault. */
   .root svg {
     flex: 0 0 auto;
-    inline-size: var(--pui-badge-icon-size);
-    block-size: var(--pui-badge-icon-size);
+    inline-size: var(--forte-badge-icon-size);
+    block-size: var(--forte-badge-icon-size);
   }
 
   /* The status dot. Decorative — `aria-hidden` in the markup — and marked
@@ -164,10 +164,10 @@
    * rather than reverting over the dot. */
   .dot {
     flex: 0 0 auto;
-    inline-size: var(--pui-badge-dot-size);
-    block-size: var(--pui-badge-dot-size);
-    border-radius: var(--pui-radius-full);
-    background-color: var(--pui-badge-dot-color);
+    inline-size: var(--forte-badge-dot-size);
+    block-size: var(--forte-badge-dot-size);
+    border-radius: var(--forte-radius-full);
+    background-color: var(--forte-badge-dot-color);
     pointer-events: none;
   }
 
@@ -176,26 +176,26 @@
    * bottom of the type scale and anything smaller would be invented. What
    * separates the three is how much air is around the text. */
   .root[data-size="sm"] {
-    --pui-badge-padding-y: 0px;
-    --pui-badge-padding-x: var(--pui-space-2);
-    --pui-badge-font-size: var(--pui-font-size-1);
+    --forte-badge-padding-y: 0px;
+    --forte-badge-padding-x: var(--forte-space-2);
+    --forte-badge-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-badge-padding-y: var(--pui-space-1);
-    --pui-badge-padding-x: var(--pui-space-2);
-    --pui-badge-font-size: var(--pui-font-size-1);
+    --forte-badge-padding-y: var(--forte-space-1);
+    --forte-badge-padding-x: var(--forte-space-2);
+    --forte-badge-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="lg"] {
-    --pui-badge-padding-y: var(--pui-space-1);
-    --pui-badge-padding-x: var(--pui-space-3);
-    --pui-badge-font-size: var(--pui-font-size-2);
+    --forte-badge-padding-y: var(--forte-space-1);
+    --forte-badge-padding-x: var(--forte-space-3);
+    --forte-badge-font-size: var(--forte-font-size-2);
   }
 
   /* Shape ----------------------------------------------------------------- */
   .root[data-shape="pill"] {
-    --pui-badge-radius: var(--pui-radius-pill);
+    --forte-badge-radius: var(--forte-radius-pill);
   }
 
   /* Counts ---------------------------------------------------------------- */
@@ -207,13 +207,13 @@
    * CSS to measure it with; keep it in step with the box above. */
   .root[data-count] {
     /* Tighter than a word's padding, and that is what makes the floor bind at
-     * all: with `--pui-space-2` on both sides a single digit already measures
+     * all: with `--forte-space-2` on both sides a single digit already measures
      * wider than the badge is tall, so the minimum below would never be
      * reached and the circle would come out an egg. */
-    --pui-badge-padding-x: var(--pui-space-1);
-    --pui-badge-min-inline-size: calc(
-      1em * var(--pui-line-height-tight) + 2 * var(--pui-badge-padding-y) + 2 *
-        var(--pui-badge-border-width)
+    --forte-badge-padding-x: var(--forte-space-1);
+    --forte-badge-min-inline-size: calc(
+      1em * var(--forte-line-height-tight) + 2 * var(--forte-badge-padding-y) + 2 *
+        var(--forte-badge-border-width)
     );
 
     font-variant-numeric: tabular-nums;
@@ -221,32 +221,32 @@
 
   /* Tones ----------------------------------------------------------------- */
   .root[data-tone="secondary"] {
-    --pui-badge-tone-solid: var(--pui-color-secondary);
-    --pui-badge-tone-solid-hover: var(--pui-color-secondary-hover);
-    --pui-badge-tone-on-solid: var(--pui-color-on-secondary);
-    --pui-badge-tone-soft: var(--pui-color-secondary-soft);
-    --pui-badge-tone-soft-hover: var(--pui-color-secondary-soft-hover);
-    --pui-badge-tone-text: var(--pui-color-secondary-text);
-    --pui-badge-tone-border: var(--pui-color-secondary-border);
+    --forte-badge-tone-solid: var(--forte-color-secondary);
+    --forte-badge-tone-solid-hover: var(--forte-color-secondary-hover);
+    --forte-badge-tone-on-solid: var(--forte-color-on-secondary);
+    --forte-badge-tone-soft: var(--forte-color-secondary-soft);
+    --forte-badge-tone-soft-hover: var(--forte-color-secondary-soft-hover);
+    --forte-badge-tone-text: var(--forte-color-secondary-text);
+    --forte-badge-tone-border: var(--forte-color-secondary-border);
   }
 
   .root[data-tone="neutral"] {
-    --pui-badge-tone-solid: var(--pui-gray-12);
-    --pui-badge-tone-solid-hover: var(--pui-gray-11);
-    --pui-badge-tone-on-solid: var(--pui-gray-1);
-    --pui-badge-tone-soft: var(--pui-gray-3);
-    --pui-badge-tone-soft-hover: var(--pui-gray-4);
-    --pui-badge-tone-text: var(--pui-color-foreground);
-    --pui-badge-tone-border: var(--pui-color-border);
+    --forte-badge-tone-solid: var(--forte-gray-12);
+    --forte-badge-tone-solid-hover: var(--forte-gray-11);
+    --forte-badge-tone-on-solid: var(--forte-gray-1);
+    --forte-badge-tone-soft: var(--forte-gray-3);
+    --forte-badge-tone-soft-hover: var(--forte-gray-4);
+    --forte-badge-tone-text: var(--forte-color-foreground);
+    --forte-badge-tone-border: var(--forte-color-border);
   }
 
   .root[data-tone="danger"] {
-    --pui-badge-tone-solid: var(--pui-color-danger);
-    --pui-badge-tone-solid-hover: var(--pui-color-danger-hover);
-    --pui-badge-tone-on-solid: var(--pui-color-on-danger);
-    --pui-badge-tone-soft: var(--pui-color-danger-soft);
-    --pui-badge-tone-text: var(--pui-color-danger-text);
-    --pui-badge-tone-border: var(--pui-color-danger-border);
+    --forte-badge-tone-solid: var(--forte-color-danger);
+    --forte-badge-tone-solid-hover: var(--forte-color-danger-hover);
+    --forte-badge-tone-on-solid: var(--forte-color-on-danger);
+    --forte-badge-tone-soft: var(--forte-color-danger-soft);
+    --forte-badge-tone-text: var(--forte-color-danger-text);
+    --forte-badge-tone-border: var(--forte-color-danger-border);
   }
 
   /* The three status tones below stop at `soft`, `text` and `border`: the
@@ -254,27 +254,27 @@
    * the derived defaults declared on `.root`. That is the whole reason those
    * defaults are expressions rather than tokens. */
   .root[data-tone="success"] {
-    --pui-badge-tone-solid: var(--pui-color-success);
-    --pui-badge-tone-on-solid: var(--pui-color-on-success);
-    --pui-badge-tone-soft: var(--pui-color-success-soft);
-    --pui-badge-tone-text: var(--pui-color-success-text);
-    --pui-badge-tone-border: var(--pui-color-success-border);
+    --forte-badge-tone-solid: var(--forte-color-success);
+    --forte-badge-tone-on-solid: var(--forte-color-on-success);
+    --forte-badge-tone-soft: var(--forte-color-success-soft);
+    --forte-badge-tone-text: var(--forte-color-success-text);
+    --forte-badge-tone-border: var(--forte-color-success-border);
   }
 
   .root[data-tone="warning"] {
-    --pui-badge-tone-solid: var(--pui-color-warning);
-    --pui-badge-tone-on-solid: var(--pui-color-on-warning);
-    --pui-badge-tone-soft: var(--pui-color-warning-soft);
-    --pui-badge-tone-text: var(--pui-color-warning-text);
-    --pui-badge-tone-border: var(--pui-color-warning-border);
+    --forte-badge-tone-solid: var(--forte-color-warning);
+    --forte-badge-tone-on-solid: var(--forte-color-on-warning);
+    --forte-badge-tone-soft: var(--forte-color-warning-soft);
+    --forte-badge-tone-text: var(--forte-color-warning-text);
+    --forte-badge-tone-border: var(--forte-color-warning-border);
   }
 
   .root[data-tone="info"] {
-    --pui-badge-tone-solid: var(--pui-color-info);
-    --pui-badge-tone-on-solid: var(--pui-color-on-info);
-    --pui-badge-tone-soft: var(--pui-color-info-soft);
-    --pui-badge-tone-text: var(--pui-color-info-text);
-    --pui-badge-tone-border: var(--pui-color-info-border);
+    --forte-badge-tone-solid: var(--forte-color-info);
+    --forte-badge-tone-on-solid: var(--forte-color-on-info);
+    --forte-badge-tone-soft: var(--forte-color-info-soft);
+    --forte-badge-tone-text: var(--forte-color-info-text);
+    --forte-badge-tone-border: var(--forte-color-info-border);
   }
 
   /* The derived hover fills, for the tones whose ramp has no step to name.
@@ -290,49 +290,49 @@
    * tones that did NOT is one rule instead of three, and adding a tone with a
    * full ramp later means deleting a name rather than remembering a rule. */
   .root:not([data-tone="primary"], [data-tone="secondary"], [data-tone="neutral"], [data-tone="danger"]) {
-    --pui-badge-tone-solid-hover: color-mix(
+    --forte-badge-tone-solid-hover: color-mix(
       in oklab,
-      var(--pui-badge-tone-solid) 92%,
+      var(--forte-badge-tone-solid) 92%,
       black
     );
   }
 
   .root:not([data-tone="primary"], [data-tone="secondary"], [data-tone="neutral"]) {
-    --pui-badge-tone-soft-hover: color-mix(
+    --forte-badge-tone-soft-hover: color-mix(
       in oklab,
-      var(--pui-badge-tone-soft) 92%,
-      var(--pui-badge-tone-text)
+      var(--forte-badge-tone-soft) 92%,
+      var(--forte-badge-tone-text)
     );
   }
 
   /* Variants -------------------------------------------------------------- */
   .root[data-variant="solid"] {
-    --pui-badge-bg: var(--pui-badge-tone-solid);
-    --pui-badge-bg-hover: var(--pui-badge-tone-solid-hover);
-    --pui-badge-fg: var(--pui-badge-tone-on-solid);
+    --forte-badge-bg: var(--forte-badge-tone-solid);
+    --forte-badge-bg-hover: var(--forte-badge-tone-solid-hover);
+    --forte-badge-fg: var(--forte-badge-tone-on-solid);
   }
 
   .root[data-variant="soft"] {
-    --pui-badge-bg: var(--pui-badge-tone-soft);
-    --pui-badge-bg-hover: var(--pui-badge-tone-soft-hover);
-    --pui-badge-fg: var(--pui-badge-tone-text);
+    --forte-badge-bg: var(--forte-badge-tone-soft);
+    --forte-badge-bg-hover: var(--forte-badge-tone-soft-hover);
+    --forte-badge-fg: var(--forte-badge-tone-text);
   }
 
   .root[data-variant="outline"] {
-    --pui-badge-bg: transparent;
-    --pui-badge-bg-hover: var(--pui-badge-tone-soft);
-    --pui-badge-fg: var(--pui-badge-tone-text);
-    --pui-badge-border-color: var(--pui-badge-tone-border);
+    --forte-badge-bg: transparent;
+    --forte-badge-bg-hover: var(--forte-badge-tone-soft);
+    --forte-badge-fg: var(--forte-badge-tone-text);
+    --forte-badge-border-color: var(--forte-badge-tone-border);
   }
 
   .root[data-variant="ghost"] {
-    --pui-badge-bg: transparent;
-    --pui-badge-bg-hover: var(--pui-badge-tone-soft);
-    --pui-badge-fg: var(--pui-badge-tone-text);
+    --forte-badge-bg: transparent;
+    --forte-badge-bg-hover: var(--forte-badge-tone-soft);
+    --forte-badge-fg: var(--forte-badge-tone-text);
   }
 
   .root[data-tone="neutral"]:is([data-variant="outline"], [data-variant="ghost"]) {
-    --pui-badge-bg-hover: var(--pui-color-panel-hover);
+    --forte-badge-bg-hover: var(--forte-color-panel-hover);
   }
 
   /* Interactive ----------------------------------------------------------- */
@@ -347,7 +347,7 @@
   /* SC 2.5.8: the visual chip is smaller than 24px at `sm`, and at `md` it
    * only just clears it in height and not in width for a short label. The
    * pseudo-element grows the pointer target without moving anything on
-   * screen. This is `.pui-target`'s rule, restated rather than composed,
+   * screen. This is `.forte-target`'s rule, restated rather than composed,
    * because the class would have to be applied in the markup and the markup
    * is exactly what cannot tell whether this badge ended up interactive. */
   .root:is(button, [href], [role="button"], [role="link"])::after {
@@ -355,8 +355,8 @@
     position: absolute;
     inset: 50% auto auto 50%;
     translate: -50% -50%;
-    inline-size: max(100%, var(--pui-target-min));
-    block-size: max(100%, var(--pui-target-min));
+    inline-size: max(100%, var(--forte-target-min));
+    block-size: max(100%, var(--forte-target-min));
   }
 
   @media (hover: hover) {
@@ -365,7 +365,7 @@
         [aria-disabled="true"],
         :disabled
       ) {
-      background-color: var(--pui-badge-bg-hover);
+      background-color: var(--forte-badge-bg-hover);
     }
   }
 
@@ -392,7 +392,7 @@
 }
 
 /* Forced colors --------------------------------------------------------------
- * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by
  * layer alone rather than by out-specifying the rules above.
  *
  * Most of the badge survives on its own: author backgrounds are replaced, and
@@ -400,7 +400,7 @@
  * turns into a real system-coloured edge, so all four variants converge on the
  * same outlined chip. Two things do not survive.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* The dot is painted with a background, and backgrounds go to `Canvas`.
      * A system colour keyword is preserved, so name one. */
@@ -409,7 +409,7 @@
     }
 
     /* The hit-target expander would otherwise paint — the same reason
-     * patterns.css hides `.pui-target::after` here. */
+     * patterns.css hides `.forte-target::after` here. */
     .root::after {
       display: none;
     }

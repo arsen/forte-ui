@@ -5,7 +5,7 @@
  *
  * The two differ on purpose in what they publish. theming.json is a curated
  * docs table: a knob appears only when someone wrote a doc comment for it.
- * tokens.json is an INVENTORY: every `--pui-*` declaration in the styles
+ * tokens.json is an INVENTORY: every `--forte-*` declaration in the styles
  * directory appears, doc comment or not, because its consumers — a theme
  * editor rendering controls, drift checks against the CONTRIBUTING.md list —
  * need the complete set, and a token silently missing from the manifest is
@@ -21,11 +21,11 @@
  *                  Scan order puts tokens.css and the two generated files
  *                  first so a cross-file tie can only be won by the file
  *                  that defines the family, not the one that retunes it.
- *   family         the segment after `--pui-`, mechanically. Grouping only;
+ *   family         the segment after `--forte-`, mechanically. Grouping only;
  *                  carries no semantics.
  *   declarations   every declaration of the property across the directory,
  *                  in scan order, with its selector, file, and any `media` /
- *                  `supports` condition — the `data-pui-radius` presets, the
+ *                  `supports` condition — the `data-forte-radius` presets, the
  *                  dark-mode ramp, the forced-colors rewrites in a11y.css.
  *                  Order within the array is CSS source order, which is
  *                  meaningful: tokens.css layers ordered fallbacks under
@@ -45,7 +45,7 @@
  * extraction has to survive formatting the house style happens not to
  * produce, instead of silently dropping a declaration.
  *
- *   pnpm --filter @dofortech/pretty-ui docgen
+ *   pnpm --filter @dofortech/forte-ui docgen
  */
 import { mkdirSync, writeFileSync, readdirSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -77,7 +77,7 @@ function inKeyframes(node) {
 }
 
 /** The `@media` / `@supports` conditions a node sits under. `@layer` is
- * deliberately not recorded: every declaration here is in pretty-ui.tokens
+ * deliberately not recorded: every declaration here is in forte.tokens
  * (a11y.css included — it retunes tokens), so it would be constant noise. */
 function conditions(node) {
   const out = {};
@@ -120,7 +120,7 @@ for (const file of files) {
   if (css.includes("GENERATED FILE")) generatedFiles.add(file);
   const ast = postcss.parse(css, { from: path });
 
-  ast.walkDecls(/^--pui-/, (decl) => {
+  ast.walkDecls(/^--forte-/, (decl) => {
     if (inKeyframes(decl) || decl.parent.type !== "rule") return;
     const entry = tokens.get(decl.prop) ?? { declarations: [], description: null };
     entry.declarations.push({
@@ -137,7 +137,7 @@ for (const file of files) {
 
   ast.walkAtRules("property", (at) => {
     const name = at.params.trim();
-    if (!name.startsWith("--pui-")) return;
+    if (!name.startsWith("--forte-")) return;
     const reg = {};
     at.walkDecls((d) => {
       if (d.prop === "syntax") reg.syntax = d.value.replace(/^["']|["']$/g, "");
@@ -149,7 +149,7 @@ for (const file of files) {
 }
 
 /* A registered property nobody declares still exists — registration IS its
- * declaration (that is `--pui-direction`'s whole safety net). Seed an entry
+ * declaration (that is `--forte-direction`'s whole safety net). Seed an entry
  * so it cannot fall out of the inventory. */
 for (const name of registrations.keys()) {
   if (!tokens.has(name)) tokens.set(name, { declarations: [], description: null });
@@ -163,7 +163,7 @@ for (const name of [...tokens.keys()].sort()) {
     (registrations.has(name) ? null : declarations[0]);
   out[name] = {
     name,
-    family: name.slice("--pui-".length).split("-")[0],
+    family: name.slice("--forte-".length).split("-")[0],
     value: base?.value ?? registrations.get(name)?.initialValue ?? declarations[0]?.value,
     ...(description ? { description } : {}),
     ...(base ? { file: base.file, generated: generatedFiles.has(base.file) } : {}),

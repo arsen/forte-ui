@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Slider } from "@dofortech/pretty-ui";
+import { Slider } from "@dofortech/forte-ui";
 
 const row = "flex items-start gap-6";
 
@@ -9,7 +9,7 @@ export default function SliderVertical() {
   return (
     <div className={row}>
       {/* Vertical turns the same parts 90°: the root becomes one centred
-        * column, and --pui-slider-length now describes the block axis. Up and
+        * column, and --forte-slider-length now describes the block axis. Up and
         * Right increase the value in both orientations. */}
       <Slider.Root orientation="vertical" defaultValue={35}>
         <Slider.Label>Bass</Slider.Label>
@@ -36,7 +36,7 @@ export default function SliderVertical() {
       <Slider.Root
         orientation="vertical"
         defaultValue={[20, 80]}
-        style={{ "--pui-slider-length": "12rem" } as CSSProperties}
+        style={{ "--forte-slider-length": "12rem" } as CSSProperties}
       >
         <Slider.Label>Treble</Slider.Label>
         <Slider.Value />

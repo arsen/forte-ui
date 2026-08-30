@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert } from "@dofortech/pretty-ui";
+import { Alert } from "@dofortech/forte-ui";
 
 const TONES = [
   ["neutral", "Scheduled maintenance", "The API will be read-only on Sunday from 02:00 UTC."],

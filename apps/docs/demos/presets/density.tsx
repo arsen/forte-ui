@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Field, Input } from "@dofortech/pretty-ui";
+import { Button, Field, Input } from "@dofortech/forte-ui";
 
 const PRESETS = ["compact", undefined, "spacious"] as const;
 
@@ -10,7 +10,7 @@ export default function DensityPresets() {
       {PRESETS.map((preset) => (
         <div
           key={preset ?? "default"}
-          data-pui-density={preset}
+          data-forte-density={preset}
           className="grid w-[11rem] gap-2 rounded-surface border border-border-muted bg-panel p-surface"
         >
           <Field.Root name={`email-${preset ?? "default"}`}>

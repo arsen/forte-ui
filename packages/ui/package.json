@@ -1,5 +1,5 @@
 {
-  "name": "@dofortech/pretty-ui",
+  "name": "@dofortech/forte-ui",
   "version": "0.0.0",
   "description": "A React UI component library built on Base UI, styled with CSS Modules and a themeable CSS-variable design system.",
   "license": "MIT",

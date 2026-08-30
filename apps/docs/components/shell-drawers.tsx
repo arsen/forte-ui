@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Drawer } from "@dofortech/pretty-ui";
+import { Button, Drawer } from "@dofortech/forte-ui";
 import { List, Menu } from "lucide-react";
 import { ICON } from "./styles";
 import { NavLinks } from "./nav";
@@ -30,7 +30,7 @@ import { TocList, goToHeading, useActiveHeading, useTocHeadings } from "./toc";
  * header's GitHub mark is the exception and comes from react-icons — lucide
  * dropped its brand icons, and a brand mark should be the owner's own.
  *
- * The `ICON` class they carry — and the reason `.pui-icon` is not it — is in
+ * The `ICON` class they carry — and the reason `.forte-icon` is not it — is in
  * `styles.ts`, next to the other strings more than one component depends on.
  */
 

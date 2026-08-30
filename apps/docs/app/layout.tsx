@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 // Import order is load-bearing. `@layer` fixes an order at first appearance,
-// so theme.css must come first (it declares the six `pretty-ui.*` layers) and
+// so theme.css must come first (it declares the six `forte.*` layers) and
 // globals.css second (it declares `docs, theme, base, components, utilities`,
 // which is what puts Tailwind's utilities last and lets them win over the
 // site's own base rules). tailwind.css only fills layers those two already
 // positioned.
-import "@dofortech/pretty-ui/theme.css";
+import "@dofortech/forte-ui/theme.css";
 import "./globals.css";
 import "./tailwind.css";
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 import { SiGithub } from "react-icons/si";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { ICON } from "@/components/styles";
@@ -18,7 +18,7 @@ import { Toc } from "@/components/toc";
 import { NavDrawer, TocDrawer } from "@/components/shell-drawers";
 
 export const metadata: Metadata = {
-  title: { default: "pretty-ui", template: "%s · pretty-ui" },
+  title: { default: "forte-ui", template: "%s · forte-ui" },
   description:
     "An accessible React component library built on Base UI. One CSS variable re-themes the entire system, motion respects every user preference, and nothing ships a runtime.",
 };
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 // header toggle reads to label itself and what it flips, so an unset attribute
 // would mean neither the button nor the first click knows which way round the
 // page currently is.
-const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('pui-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}r.setAttribute('data-theme',t);var s=JSON.parse(localStorage.getItem('pui-studio')||'null');if(s&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-pui-'+d,s.root.data[d]);}}}catch(e){}})();`;
+const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('forte-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}r.setAttribute('data-theme',t);var s=JSON.parse(localStorage.getItem('forte-studio')||'null');if(s&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-forte-'+d,s.root.data[d]);}}}catch(e){}})();`;
 
 // Visible only on focus. WCAG SC 2.4.1 Bypass Blocks — without it a keyboard
 // user tabs through the entire sidebar on every page load.
@@ -85,10 +85,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {/* Decorative: hidden in forced-colors, where a gradient becomes
                     * a meaningless flat system-coloured block. */}
                   <span
-                    className="size-5 rounded-3 bg-[linear-gradient(135deg,var(--pui-accent-9),var(--pui-secondary-9))] pui-hc-decorative"
+                    className="size-5 rounded-3 bg-[linear-gradient(135deg,var(--forte-accent-9),var(--forte-secondary-9))] forte-hc-decorative"
                     aria-hidden="true"
                   />
-                  pretty-ui
+                  forte-ui
                 </a>
               </div>
               <div className="inline-flex items-center gap-2">
@@ -115,11 +115,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   iconOnly
                   nativeButton={false}
                   role="link"
-                  aria-label="pretty-ui on GitHub"
+                  aria-label="forte-ui on GitHub"
                   title="GitHub"
                   render={
                     <a
-                      href="https://github.com/dofortech/pretty-ui"
+                      href="https://github.com/dofortech/forte-ui"
                       target="_blank"
                       rel="noreferrer"
                     />

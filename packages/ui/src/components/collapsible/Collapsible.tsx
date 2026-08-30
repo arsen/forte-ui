@@ -32,7 +32,7 @@ const CollapsibleVariantContext = React.createContext<CollapsibleVariant>("plain
  *
  * A chevron pointing DOWN that rotates 180°, rather than one pointing at the
  * inline-end edge that rotates 90°. Rotation has no logical form, so an
- * inline-facing chevron would have to multiply its angle by `--pui-direction`
+ * inline-facing chevron would have to multiply its angle by `--forte-direction`
  * to survive RTL; a symmetric down/up flip is the same gesture in both
  * directions and needs nothing.
  * ---------------------------------------------------------------------- */
@@ -100,7 +100,7 @@ function CollapsibleRoot({
     <CollapsibleVariantContext.Provider value={variant}>
       <BaseCollapsible.Root
         className={clsx(styles.root, className)}
-        data-pui="collapsible"
+        data-forte="collapsible"
         data-variant={variant}
         {...props}
       >
@@ -142,7 +142,7 @@ export interface CollapsibleTriggerProps extends Omit<BaseTriggerProps, "classNa
  * `children` is wrapped in a label box rather than laid out directly: the row
  * is `justify-content: space-between`, so two loose children would push apart
  * to opposite ends instead of an icon-plus-text reading as one label. The box
- * is itself a flex row with `--pui-control-gap`, so an icon passed alongside
+ * is itself a flex row with `--forte-control-gap`, so an icon passed alongside
  * the text lines up without a wrapper.
  *
  * Keep the text as the accessible name. `aria-expanded` already announces open
@@ -159,8 +159,8 @@ const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, CollapsibleTrigge
     return (
       <BaseCollapsible.Trigger
         ref={ref}
-        className={clsx(styles.trigger, "pui-focus-ring", className)}
-        data-pui="collapsible-trigger"
+        className={clsx(styles.trigger, "forte-focus-ring", className)}
+        data-forte="collapsible-trigger"
         // Only in `contained`. That variant clips the root to the card's
         // corners so the hover fill stays inside them, which makes it a
         // clipping container — an outset ring would be cropped along the
@@ -172,9 +172,9 @@ const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, CollapsibleTrigge
         data-variant={variant}
         {...props}
       >
-        <span className={clsx(styles.label, labelClassName)} data-pui="collapsible-label">{children}</span>
+        <span className={clsx(styles.label, labelClassName)} data-forte="collapsible-label">{children}</span>
         {icon === null ? null : (
-          <span className={styles.icon} data-pui="collapsible-icon" aria-hidden="true">
+          <span className={styles.icon} data-forte="collapsible-icon" aria-hidden="true">
             {icon}
           </span>
         )}
@@ -219,11 +219,11 @@ const CollapsiblePanel = React.forwardRef<HTMLDivElement, CollapsiblePanelProps>
       <BaseCollapsible.Panel
         ref={ref}
         className={clsx(styles.panel, className)}
-        data-pui="collapsible-panel"
+        data-forte="collapsible-panel"
         data-variant={variant}
         {...props}
       >
-        <div className={clsx(styles.content, contentClassName)} data-pui="collapsible-content">{children}</div>
+        <div className={clsx(styles.content, contentClassName)} data-forte="collapsible-content">{children}</div>
       </BaseCollapsible.Panel>
     );
   },
@@ -243,7 +243,7 @@ const CollapsiblePanel = React.forwardRef<HTMLDivElement, CollapsiblePanelProps>
  * JavaScript. The panel is unmounted while closed unless `keepMounted` or
  * `hiddenUntilFound` says otherwise.
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-collapsible-*`
+ * Styling is driven entirely by `data-*` attributes and `--forte-collapsible-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=contained]:...`) without
  * wrapping.

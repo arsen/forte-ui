@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@dofortech/pretty-ui";
+import { Badge } from "@dofortech/forte-ui";
 
 const SIZES = ["sm", "md", "lg"] as const;
 

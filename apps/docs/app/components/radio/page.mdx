@@ -29,7 +29,7 @@ submission, so none of that appears in the demo code.
 ## Import
 
 ```tsx
-import { Radio, RadioGroup } from "@dofortech/pretty-ui";
+import { Radio, RadioGroup } from "@dofortech/forte-ui";
 ```
 
 A `Radio` only means something inside a `RadioGroup`. The group owns the value,
@@ -43,7 +43,7 @@ renders, but nothing can ever select it.
 `size` sets the painted circle — `0.875rem`, `1rem` or `1.25rem`, matching
 `Checkbox` step for step so the two line up in a form that mixes them. The dot
 is a fraction of the circle rather than a fixed length, so it stays in
-proportion at every size and if you override `--pui-radio-size` to something off
+proportion at every size and if you override `--forte-radio-size` to something off
 the scale. The fraction itself is retuned per size, because a dot under about
 5px stops reading as a dot.
 
@@ -220,12 +220,12 @@ The group renders a `<div role="radiogroup">`; each option exposes
 </Callout>
 
 **Motion.** The dot scales from `0` to `1` on a duration token, not on a
-`--pui-scale-*` token, and that distinction is the whole reason it survives
+`--forte-scale-*` token, and that distinction is the whole reason it survives
 reduced motion. A scale token collapses toward `1` under
 `prefers-reduced-motion: reduce`, which for a mark animating *toward* `1` would
 mean never appearing at all — and the dot is the only thing separating the
 selected option from the rest for anyone who cannot rely on the fill colour.
-Durations only shorten, so the dot still pops; `--pui-duration-spring-snappy`
+Durations only shorten, so the dot still pops; `--forte-duration-spring-snappy`
 drops from 400ms to 120ms and the spring flattens into what reads as an instant
 appearance.
 
@@ -253,21 +253,21 @@ element's own declaration beats an inherited value.
 The three `-hover` values only ever apply on devices that report hover support,
 so a touch device never sticks in a hover colour after a tap.
 
-`tone` reassigns `--pui-radio-fill`, `--pui-radio-fill-hover` and
-`--pui-radio-dot-color` — `primary`, `secondary`, `danger` or `neutral`. Inside
+`tone` reassigns `--forte-radio-fill`, `--forte-radio-fill-hover` and
+`--forte-radio-dot-color` — `primary`, `secondary`, `danger` or `neutral`. Inside
 a `Field.Root`, an invalid field overrides those and the border colours with the
 danger palette, so a validation failure never renders in a brand colour.
 
 <Callout kind="note">
-  A shape opts out of the `data-pui-radius` presets when its roundness is
+  A shape opts out of the `data-forte-radius` presets when its roundness is
   meaning rather than style — the radio and
   [`Spinner`](/components/spinner)'s circles both do.
-  `--pui-radio-radius` defaults to `50%` rather than to
-  `var(--pui-radius-full)`. Round is not a style choice on a radio — it is the
+  `--forte-radio-radius` defaults to `50%` rather than to
+  `var(--forte-radius-full)`. Round is not a style choice on a radio — it is the
   only thing telling a reader "pick one of these" rather than "tick any of
-  these", and the `none` preset sets `--pui-radius-full: 0`, which would render
+  these", and the `none` preset sets `--forte-radius-full: 0`, which would render
   a radio as a square indistinguishable from the checkbox beside it. Set
-  `--pui-radio-radius: var(--pui-radius-full)` to opt back in.
+  `--forte-radio-radius: var(--forte-radius-full)` to opt back in.
 </Callout>
 
 ## API reference

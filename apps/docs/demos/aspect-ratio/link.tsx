@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/pretty-ui";
+import { AspectRatio } from "@dofortech/forte-ui";
 
 /**
  * `render` swaps the `<div>` for whatever the box actually is — here, the
@@ -8,7 +8,7 @@ import { AspectRatio } from "@dofortech/pretty-ui";
  *
  * Two things follow, and both are the component doing less rather than more:
  *
- *   - It rings. `AspectRatio` carries `.pui-focus-ring`, which costs a plain
+ *   - It rings. `AspectRatio` carries `.forte-focus-ring`, which costs a plain
  *     `<div>` nothing — the class only paints on `:focus-visible`, which a
  *     non-focusable element never matches — and gives a linked frame the
  *     library's two-tone ring instead of the UA's outline. Tab to it and see.

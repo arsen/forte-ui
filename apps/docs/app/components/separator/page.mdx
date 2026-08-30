@@ -20,7 +20,7 @@ that it does. It runs either way: `horizontal` across stacked content,
 ## Import
 
 ```tsx
-import { Separator } from "@dofortech/pretty-ui";
+import { Separator } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -33,7 +33,7 @@ Set `orientation="vertical"` and the rule turns, along with the
 A vertical separator is an empty box, so it has no length of its own. Inside a
 flex row it stretches to the tallest sibling; anywhere else — in ordinary flow,
 or between inline items like the metadata below — it falls back to one line's
-height. That floor is `--pui-separator-min-length`, and it is the only reason a
+height. That floor is `--forte-separator-min-length`, and it is the only reason a
 vertical rule is ever visible outside a flex container.
 
 <DemoBlock id="separator/vertical" />
@@ -47,7 +47,7 @@ between, without anyone measuring the buttons.
   If a vertical rule renders as nothing, its container is almost certainly not
   a flex or grid row — a `position: absolute` parent and a plain block parent
   both leave it with nothing to stretch against. Give the container
-  `display: flex`, or set `--pui-separator-min-length` to the length you want.
+  `display: flex`, or set `--forte-separator-min-length` to the length you want.
 </Callout>
 
 ### Line style
@@ -64,9 +64,9 @@ Two knobs place the rule, and they are named after the axes rather than after
 `margin` because which physical side each one touches flips with the
 orientation:
 
-- `--pui-separator-spacing` runs **along** the axis being separated — the gap
+- `--forte-separator-spacing` runs **along** the axis being separated — the gap
   between the rule and the content on either side of it.
-- `--pui-separator-inset` runs **across** it — how far the rule is pulled in
+- `--forte-separator-inset` runs **across** it — how far the rule is pulled in
   from the container's edges. Negative values push it back out, which is how a
   rule inside a padded panel becomes full-bleed.
 
@@ -106,8 +106,8 @@ it visually — a screen reader then reads the page's decoration out loud. Pass
   A separator carries no text and no state, so it has no contrast floor of its
   own under SC 1.4.11 — it is not a user-interface component and does not
   convey information that is unavailable elsewhere. The default
-  `--pui-color-border-muted` is therefore tuned to be quiet. If a rule is the
-  *only* thing separating two groups, raise it to `--pui-color-border` and
+  `--forte-color-border-muted` is therefore tuned to be quiet. If a rule is the
+  *only* thing separating two groups, raise it to `--forte-color-border` and
   treat it as a graphical object that needs 3:1.
 </Callout>
 

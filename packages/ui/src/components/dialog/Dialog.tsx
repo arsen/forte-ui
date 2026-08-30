@@ -117,10 +117,10 @@ export const DialogTrigger = React.forwardRef(function DialogTrigger<Payload>(
       render={render}
       className={clsx(
         render === undefined && styles.trigger,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="dialog-trigger"
+      data-forte="dialog-trigger"
       {...props}
     />
   );
@@ -156,10 +156,10 @@ export const AlertDialogTrigger = React.forwardRef(
         render={render}
         className={clsx(
           render === undefined && styles.trigger,
-          "pui-focus-ring",
+          "forte-focus-ring",
           className,
         )}
-        data-pui="dialog-trigger"
+        data-forte="dialog-trigger"
         {...props}
       />
     );
@@ -214,9 +214,9 @@ export interface DialogPopupProps
   /**
    * Additional class name(s) for the scrollable viewport that positions the
    * popup. Use it to change alignment (e.g. pin the dialog to the top), or to
-   * re-point `--pui-dialog-z-index` — it defaults to 40, one band under the
+   * re-point `--forte-dialog-z-index` — it defaults to 40, one band under the
    * anchored popups, so a `Select` or `Tooltip` inside a dialog stays above
-   * it. The backdrop reads `--pui-dialog-backdrop-z-index` (39) from
+   * it. The backdrop reads `--forte-dialog-backdrop-z-index` (39) from
    * `backdropClassName`, since it is the viewport's sibling.
    */
   viewportClassName?: string;
@@ -262,29 +262,29 @@ export const DialogPopup = React.forwardRef<HTMLDivElement, DialogPopupProps>(
         {backdrop ? (
           <BaseDialog.Backdrop
             forceRender={forceBackdrop}
-            className={clsx(styles.backdrop, "pui-scrim", backdropClassName)}
-            data-pui="dialog-backdrop"
+            className={clsx(styles.backdrop, "forte-scrim", backdropClassName)}
+            data-forte="dialog-backdrop"
           />
         ) : null}
         <BaseDialog.Viewport
           data-size={size}
           className={clsx(styles.viewport, viewportClassName)}
-          data-pui="dialog-viewport"
+          data-forte="dialog-viewport"
         >
           <BaseDialog.Popup
             ref={ref}
             // The popup is programmatically focused when the dialog opens by
             // touch, and that focus is keyboard-visible when it opens by
             // keyboard — so it needs a real ring, not the UA default.
-            // `pui-hc-surface` gives it a boundary in forced-colors mode,
+            // `forte-hc-surface` gives it a boundary in forced-colors mode,
             // where the shadow above is stripped entirely.
             className={clsx(
               styles.popup,
-              "pui-focus-ring",
-              "pui-hc-surface",
+              "forte-focus-ring",
+              "forte-hc-surface",
               className,
             )}
-            data-pui="dialog-popup"
+            data-forte="dialog-popup"
             data-size={size}
             {...props}
           >
@@ -336,8 +336,8 @@ export const DialogSurface = React.forwardRef<
       ref={ref}
       // The forced-colors boundary moves here with the paint: the popup
       // surrenders its own in the `a11y` layer once this element exists.
-      className={clsx(styles.surface, "pui-hc-surface", className)}
-      data-pui="dialog-surface"
+      className={clsx(styles.surface, "forte-hc-surface", className)}
+      data-forte="dialog-surface"
       {...props}
     />
   );
@@ -370,7 +370,7 @@ export const DialogTitle = React.forwardRef<
     <BaseDialog.Title
       ref={ref}
       className={clsx(styles.title, className)}
-      data-pui="dialog-title"
+      data-forte="dialog-title"
       {...props}
     />
   );
@@ -399,7 +399,7 @@ export const DialogDescription = React.forwardRef<
     <BaseDialog.Description
       ref={ref}
       className={clsx(styles.description, className)}
-      data-pui="dialog-description"
+      data-forte="dialog-description"
       {...props}
     />
   );
@@ -443,10 +443,10 @@ export const DialogClose = React.forwardRef<
       render={render}
       className={clsx(
         render === undefined && styles.close,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="dialog-close"
+      data-forte="dialog-close"
       data-icon-only={iconOnly || undefined}
       {...props}
     />
@@ -485,7 +485,7 @@ export const DialogFooter = React.forwardRef<HTMLDivElement, DialogFooterProps>(
       <div
         ref={ref}
         className={clsx(styles.footer, className)}
-        data-pui="dialog-footer"
+        data-forte="dialog-footer"
         data-align={align}
         {...props}
       />
@@ -525,7 +525,7 @@ export interface DialogMessageOptions {
   tone?: ButtonTone;
   /**
    * Additional class name(s) for the popup — the place to set a
-   * `--pui-dialog-*` knob for one call.
+   * `--forte-dialog-*` knob for one call.
    */
   className?: string;
 }
@@ -809,7 +809,7 @@ function createDialogStore(): DialogStore {
     open({ alert, Content, payload, dismissValue }) {
       return new Promise((resolve) => {
         dialogCount += 1;
-        const id = `pui-dialog-${dialogCount}`;
+        const id = `forte-dialog-${dialogCount}`;
         const entry: DialogEntry = {
           id,
           open: true,
@@ -1230,7 +1230,7 @@ function DialogConfirmWithInputView({
           close(true);
         }}
       >
-        <Field.Root name="pui-dialog-confirm">
+        <Field.Root name="forte-dialog-confirm">
           <Field.Label>{inputLabel}</Field.Label>
           {/* First tabbable element in the popup, so it takes focus on open. */}
           <Input

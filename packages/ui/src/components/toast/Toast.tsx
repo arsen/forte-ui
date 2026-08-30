@@ -487,7 +487,7 @@ const ItemContext = React.createContext<ToastObject | null>(null);
 function useToastItem(part: string): ToastObject {
   const toast = React.useContext(ItemContext);
   if (toast == null) {
-    throw new Error(`pretty-ui: <Toast.${part}> must be rendered inside <Toast.Item>.`);
+    throw new Error(`forte-ui: <Toast.${part}> must be rendered inside <Toast.Item>.`);
   }
   return toast;
 }
@@ -671,7 +671,7 @@ export const ToastViewport = React.forwardRef<HTMLDivElement, ToastViewportProps
           <BaseToast.Viewport
             ref={ref}
             className={clsx(styles.viewport, className)}
-            data-pui="toast-viewport"
+            data-forte="toast-viewport"
             data-position={position}
             data-contained={container != null || undefined}
             {...props}
@@ -808,15 +808,15 @@ export const ToastItem = React.forwardRef<HTMLDivElement, ToastItemProps>(
           // forced-colors mode, where its shadow is stripped. It is also
           // focusable — Base UI gives the root `tabIndex={0}` so the whole
           // card is reachable — hence a real ring rather than the UA default.
-          className={clsx(styles.root, "pui-focus-ring", "pui-hc-surface", className)}
-          data-pui="toast"
+          className={clsx(styles.root, "forte-focus-ring", "forte-hc-surface", className)}
+          data-forte="toast"
           {...props}
         >
-          <BaseToast.Content className={styles.content} data-pui="toast-content">
+          <BaseToast.Content className={styles.content} data-forte="toast-content">
             {children ?? (
               <>
                 {icon === false ? null : <ToastIcon />}
-                <div className={styles.body} data-pui="toast-body">
+                <div className={styles.body} data-forte="toast-body">
                   <ToastTitle />
                   <ToastDescription />
                 </div>
@@ -887,7 +887,7 @@ export const ToastIcon = React.forwardRef<HTMLSpanElement, ToastIconProps>(
       <span
         ref={ref}
         className={clsx(styles.icon, className)}
-        data-pui="toast-icon"
+        data-forte="toast-icon"
         {...props}
       >
         {content}
@@ -921,7 +921,7 @@ export const ToastTitle = React.forwardRef<HTMLHeadingElement, ToastTitleProps>(
       <BaseToast.Title
         ref={ref}
         className={clsx(styles.title, className)}
-        data-pui="toast-title"
+        data-forte="toast-title"
         {...props}
       />
     );
@@ -951,7 +951,7 @@ export const ToastDescription = React.forwardRef<
     <BaseToast.Description
       ref={ref}
       className={clsx(styles.description, className)}
-      data-pui="toast-description"
+      data-forte="toast-description"
       {...props}
     />
   );
@@ -988,10 +988,10 @@ export const ToastAction = React.forwardRef<HTMLButtonElement, ToastActionProps>
         render={render}
         className={clsx(
           render === undefined && styles.action,
-          "pui-focus-ring",
+          "forte-focus-ring",
           className,
         )}
-        data-pui="toast-action"
+        data-forte="toast-action"
         {...props}
       />
     );
@@ -1023,10 +1023,10 @@ export const ToastClose = React.forwardRef<HTMLButtonElement, ToastCloseProps>(
         render={render}
         className={clsx(
           render === undefined && styles.close,
-          "pui-focus-ring",
+          "forte-focus-ring",
           className,
         )}
-        data-pui="toast-close"
+        data-forte="toast-close"
         aria-label="Close"
         {...props}
       >
@@ -1078,7 +1078,7 @@ export const ToastClose = React.forwardRef<HTMLButtonElement, ToastCloseProps>(
  * background,** so a toast raised while the user was in another tab is still
  * there when they come back.
  *
- * Styling is driven by `data-*` attributes and `--pui-toast-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-toast-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[type=error]:...`) without wrapping anything.
  */

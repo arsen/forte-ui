@@ -4,7 +4,7 @@ import { Callout } from "@/components/callout";
 export const metadata = {
   title: "Styling components",
   description:
-    "Restyle one component instead of the whole system — theming knobs, stable data-pui part selectors, state attributes, and CSS that wins without !important.",
+    "Restyle one component instead of the whole system — theming knobs, stable data-forte part selectors, state attributes, and CSS that wins without !important.",
 };
 
 # Styling components
@@ -12,29 +12,29 @@ export const metadata = {
 The [global tokens](/customization/tokens) move every component at once. This page is about moving *one* — one component, one variant, one instance — using the three mechanisms every component exposes, in the order you should reach for them:
 
 1. **Props** — `variant`, `tone`, `size`. If the look you want is a supported combination, it is already there.
-2. **Theming knobs** — per-component custom properties like `--pui-button-radius`, documented in the *Theming* table on each component's page.
-3. **Your own CSS** — targeting the stable `data-pui` part markers and `data-*` state attributes. The escape hatch with no ceiling.
+2. **Theming knobs** — per-component custom properties like `--forte-button-radius`, documented in the *Theming* table on each component's page.
+3. **Your own CSS** — targeting the stable `data-forte` part markers and `data-*` state attributes. The escape hatch with no ceiling.
 
 ## Theming knobs
 
-Every component declares its knobs on its own root element, each defaulting to a semantic token — `--pui-button-radius: var(--pui-radius-control)`. Override one and only that component changes; leave it alone and the component keeps following the global token.
+Every component declares its knobs on its own root element, each defaulting to a semantic token — `--forte-button-radius: var(--forte-radius-control)`. Override one and only that component changes; leave it alone and the component keeps following the global token.
 
 <DemoBlock id="styling/knobs" />
 
 The full knob list for each component is generated from its stylesheet and rendered on its page — [Button's](/components/button#theming), for example.
 
 <Callout kind="warn">
-  Knobs are declared **on the component's root element**, and that placement is the mechanism: an element's own declaration beats anything it would inherit. So setting `--pui-button-radius` on `:root` or a wrapper does nothing — it has to land on the button itself, via `className` and a CSS rule, or an inline `style`. To move *all* buttons, re-point the global token in the knob's default instead: `--pui-radius-control` reaches every control at once.
+  Knobs are declared **on the component's root element**, and that placement is the mechanism: an element's own declaration beats anything it would inherit. So setting `--forte-button-radius` on `:root` or a wrapper does nothing — it has to land on the button itself, via `className` and a CSS rule, or an inline `style`. To move *all* buttons, re-point the global token in the knob's default instead: `--forte-radius-control` reaches every control at once.
 </Callout>
 
 ## Parts and states
 
 CSS Modules hashes the library's class names, so they change between releases and are not yours to target. What is stable — and public API, covered by semver — are the data attributes:
 
-- **`data-pui` names every part.** The root element carries `data-pui="button"`, `data-pui="select"`; inner parts carry `data-pui="select-trigger"`, `data-pui="dialog-title"`, and so on for every element a component renders.
+- **`data-forte` names every part.** The root element carries `data-forte="button"`, `data-forte="select"`; inner parts carry `data-forte="select-trigger"`, `data-forte="dialog-title"`, and so on for every element a component renders.
 - **`data-*` carries every state.** `data-variant`, `data-tone`, `data-size`, `data-disabled`, `data-loading`, `data-checked`, plus whatever Base UI publishes for the primitive — open states, placement, validity.
 
-Combined with the fact that everything the library ships sits in `@layer pretty-ui.*` — and layered rules lose to your unlayered CSS regardless of specificity — plain CSS can restyle anything, no `!important`, no specificity contest:
+Combined with the fact that everything the library ships sits in `@layer forte.*` — and layered rules lose to your unlayered CSS regardless of specificity — plain CSS can restyle anything, no `!important`, no specificity contest:
 
 <DemoBlock id="styling/parts" />
 
@@ -42,21 +42,21 @@ The same selectors work as Tailwind arbitrary variants — `data-[variant=solid]
 
 ```css
 /* every select trigger, but only while its popup is open */
-[data-pui="select-trigger"][data-popup-open] {
-  border-color: var(--pui-color-primary-border);
+[data-forte="select-trigger"][data-popup-open] {
+  border-color: var(--forte-color-primary-border);
 }
 ```
 
-Write your values as tokens (`var(--pui-shadow-2)`, not a literal) and your customisations keep responding to the seed, the presets and dark mode like the library's own styles do.
+Write your values as tokens (`var(--forte-shadow-2)`, not a literal) and your customisations keep responding to the seed, the presets and dark mode like the library's own styles do.
 
 ## What you take on
 
 The library's defaults carry guarantees your CSS can silently defeat, because winning the cascade means winning against the accessibility rules too:
 
 <Callout kind="a11y">
-  Three things to preserve when restyling. **Motion:** a hand-written `transition` ignores the motion tokens, so it keeps animating under reduced motion — animate with `var(--pui-duration-*)` and `var(--pui-travel-*)` and the collapse comes free. **Contrast:** repainting text or fills exits the certified palette; re-check your pairs. **Affordance:** every interactive part ships `cursor: pointer`, visible focus via `outline`, and 24px minimum targets — overriding those is possible, and each one is a real usability regression.
+  Three things to preserve when restyling. **Motion:** a hand-written `transition` ignores the motion tokens, so it keeps animating under reduced motion — animate with `var(--forte-duration-*)` and `var(--forte-travel-*)` and the collapse comes free. **Contrast:** repainting text or fills exits the certified palette; re-check your pairs. **Affordance:** every interactive part ships `cursor: pointer`, visible focus via `outline`, and 24px minimum targets — overriding those is possible, and each one is a real usability regression.
 </Callout>
 
 ## When CSS keeps repeating itself
 
-If you find the same part-selector rule in project after project — every app adds a resting shadow to solid buttons, say — that is the signal it should be a knob. [Open an issue](https://github.com/dofortech/pretty-ui/issues): adding one is a single declaration plus a doc comment in the component's stylesheet, and it lands in the generated theming tables automatically.
+If you find the same part-selector rule in project after project — every app adds a resting shadow to solid buttons, say — that is the signal it should be a knob. [Open an issue](https://github.com/dofortech/forte-ui/issues): adding one is a single declaration plus a doc comment in the component's stylesheet, and it lands in the generated theming tables automatically.

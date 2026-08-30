@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb } from "@dofortech/pretty-ui";
+import { Breadcrumb } from "@dofortech/forte-ui";
 import { FileText, Folder, House } from "lucide-react";
 
 /* Crumbs are flex, so an svg goes in as a plain child. The stylesheet sizes a
@@ -17,7 +17,7 @@ export default function BreadcrumbIcons() {
         <Breadcrumb.Item>
           <Breadcrumb.Link href="#" title="Home">
             <House aria-hidden />
-            <span className="pui-visually-hidden">Home</span>
+            <span className="forte-visually-hidden">Home</span>
           </Breadcrumb.Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>

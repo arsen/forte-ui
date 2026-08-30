@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Radio, RadioGroup } from "@dofortech/pretty-ui";
+import { Radio, RadioGroup } from "@dofortech/forte-ui";
 
-const row = "flex cursor-pointer items-center gap-(--pui-control-gap)";
+const row = "flex cursor-pointer items-center gap-(--forte-control-gap)";
 
 export default function RadioNativeButton() {
   const groupLabelId = React.useId();

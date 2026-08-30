@@ -5,7 +5,7 @@ import {
   Button,
   Drawer,
   type DrawerSnapPoint,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 
 // A peek, a half sheet, and the whole screen. Strings carry their own unit;
 // numbers at or below 1 are read as a fraction of the viewport.

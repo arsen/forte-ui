@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Switch } from "@dofortech/pretty-ui";
+import { Field, Switch } from "@dofortech/forte-ui";
 
 const sizes = [
   { size: "sm", label: "Small" },

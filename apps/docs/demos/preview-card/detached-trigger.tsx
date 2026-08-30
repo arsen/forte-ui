@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, PreviewCard } from "@dofortech/pretty-ui";
+import { Button, PreviewCard } from "@dofortech/forte-ui";
 
 type Doc = { id: string; title: string; note: string };
 

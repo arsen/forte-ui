@@ -22,7 +22,7 @@ needs a special case.
 ## Import
 
 ```tsx
-import { Badge } from "@dofortech/pretty-ui";
+import { Badge } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -44,15 +44,15 @@ dark mode and forced-colors support in a single line.
 ### Sizes
 
 The three sizes differ mostly in how much air surrounds the label. The type
-scale bottoms out at `--pui-font-size-1`, so `sm` and `md` share it and `lg`
+scale bottoms out at `--forte-font-size-1`, so `sm` and `md` share it and `lg`
 steps up; what separates `sm` from `md` is that `sm` drops its block padding
 entirely.
 
 <DemoBlock id="badge/sizes" />
 
 A badge's height comes from its own text — one tight line plus padding — rather
-than from `--pui-control-h-*`. That is what lets it sit inside a sentence
-without stretching the line, and it is also why `data-pui-density` does not
+than from `--forte-control-h-*`. That is what lets it sit inside a sentence
+without stretching the line, and it is also why `data-forte-density` does not
 resize it: density is about how tightly *controls* pack, and a badge is not
 one.
 
@@ -183,7 +183,7 @@ Three things are worth doing at the call site:
   message — see the callout above.
 - **Give a bare count a name.** `<Badge count={12} />` next to an inbox icon
   reads as "twelve" and nothing else. Put the noun somewhere: visible text, an
-  `aria-label` on the surrounding button or link, or a `.pui-visually-hidden`
+  `aria-label` on the surrounding button or link, or a `.forte-visually-hidden`
   span inside the badge.
 - **Announce a count that changes.** A badge that updates while the page is
   open changes silently; if the change matters, wrap it in your own live
@@ -193,7 +193,7 @@ Under forced colours the four variants converge on a single outlined chip, and
 that is correct rather than a compromise: author backgrounds are replaced by
 system colours, so the fill can no longer carry the difference. Each variant
 reserves its 1px border whether or not it paints one, and `transparent` becomes
-a real system-coloured edge in that mode — the same trick `.pui-hc-surface`
+a real system-coloured edge in that mode — the same trick `.forte-hc-surface`
 plays, applied to every variant at once. The dot is repainted as `CanvasText`,
 since a background would otherwise go to `Canvas` and disappear.
 
@@ -206,7 +206,7 @@ since a background would otherwise go to `Canvas` and disappear.
 
 ## Theming
 
-Every visual decision is a `--pui-badge-*` custom property declared on the
+Every visual decision is a `--forte-badge-*` custom property declared on the
 badge's own root, so a re-skin is a `style` object or one CSS rule rather than a
 new variant.
 
@@ -214,11 +214,11 @@ new variant.
 
 Two of the knobs are worth reading twice:
 
-- `--pui-badge-border-width` is reserved by *every* variant, not only
+- `--forte-badge-border-width` is reserved by *every* variant, not only
   `outline`. Changing it moves all four together, which is the point — a
   variant swap must not resize the badge, and the reserved edge is what keeps
   the chip visible under forced colours.
-- `--pui-badge-min-inline-size` is what `count` re-points, and its value
+- `--forte-badge-min-inline-size` is what `count` re-points, and its value
   restates the badge's own height in a `calc()` because CSS has nothing to
   measure that height with. Override the padding or the line height on a count
   badge and you own the minimum too, or the circle stops being round.

@@ -351,7 +351,7 @@ const AlertRoot = React.forwardRef<HTMLDivElement, AlertRootProps>(function Aler
         ref={setRefs}
         role={ROLE[live]}
         className={clsx(styles.root, className)}
-        data-pui="alert"
+        data-forte="alert"
         data-variant={variant}
         data-tone={tone}
         data-exiting={phase ? "" : undefined}
@@ -361,7 +361,7 @@ const AlertRoot = React.forwardRef<HTMLDivElement, AlertRootProps>(function Aler
          * it was asked to leave. */
         style={
           phase
-            ? ({ "--pui-alert-exit-from": `${heightRef.current}px`, ...style } as React.CSSProperties)
+            ? ({ "--forte-alert-exit-from": `${heightRef.current}px`, ...style } as React.CSSProperties)
             : style
         }
         {...props}
@@ -380,7 +380,7 @@ export interface AlertIconProps
   extends Omit<React.ComponentPropsWithoutRef<"span">, "className"> {
   /**
    * The glyph to draw. Defaults to the standard one for the root's `tone`,
-   * and any `svg` passed here is sized to `--pui-alert-icon-size` without
+   * and any `svg` passed here is sized to `--forte-alert-icon-size` without
    * needing a size prop of its own.
    */
   children?: React.ReactNode;
@@ -415,7 +415,7 @@ const AlertIcon = React.forwardRef<HTMLSpanElement, AlertIconProps>(function Ale
   }
 
   return (
-    <span ref={ref} className={clsx(styles.icon, className)} data-pui="alert-icon" {...props}>
+    <span ref={ref} className={clsx(styles.icon, className)} data-forte="alert-icon" {...props}>
       {content}
     </span>
   );
@@ -452,7 +452,7 @@ const AlertTitle = React.forwardRef<HTMLDivElement, AlertTitleProps>(function Al
   ref,
 ) {
   return (
-    <div ref={ref} className={clsx(styles.title, className)} data-pui="alert-title" {...props}>
+    <div ref={ref} className={clsx(styles.title, className)} data-forte="alert-title" {...props}>
       {children}
     </div>
   );
@@ -481,7 +481,7 @@ const AlertDescription = React.forwardRef<HTMLDivElement, AlertDescriptionProps>
       <div
         ref={ref}
         className={clsx(styles.description, className)}
-        data-pui="alert-description"
+        data-forte="alert-description"
         {...props}
       >
         {children}
@@ -521,7 +521,7 @@ const AlertAction = React.forwardRef<HTMLDivElement, AlertActionProps>(function 
   ref,
 ) {
   return (
-    <div ref={ref} className={clsx(styles.action, className)} data-pui="alert-action" {...props}>
+    <div ref={ref} className={clsx(styles.action, className)} data-forte="alert-action" {...props}>
       {children}
     </div>
   );
@@ -566,8 +566,8 @@ const AlertClose = React.forwardRef<HTMLButtonElement, AlertCloseProps>(function
     <button
       ref={ref}
       type="button"
-      className={clsx(styles.close, "pui-focus-ring", className)}
-      data-pui="alert-close"
+      className={clsx(styles.close, "forte-focus-ring", className)}
+      data-forte="alert-close"
       aria-label="Dismiss"
       onClick={(event) => {
         onClick?.(event);
@@ -627,7 +627,7 @@ const AlertClose = React.forwardRef<HTMLButtonElement, AlertCloseProps>(function
  * because React unmounts an element the frame it stops being rendered, so an
  * alert dismissed by a plain conditional can never animate out.
  *
- * Styling is driven by `data-*` attributes and `--pui-alert-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-alert-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[tone=danger]:...`) without wrapping.
  */

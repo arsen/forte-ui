@@ -14,7 +14,7 @@ export interface InputProps
   extends Omit<BaseInputProps, "className" | "size"> {
   /**
    * Size of the control. Height, inline padding and font size all move
-   * together, and the actual numbers follow the ambient `data-pui-density`
+   * together, and the actual numbers follow the ambient `data-forte-density`
    * setting. Matches `Select.Trigger`'s scale, so an input and a select on the
    * same row line up.
    *
@@ -68,7 +68,7 @@ export interface InputProps
  *
  * State is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,
  * `data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual
- * decision is a `--pui-input-*` custom property, so it can be re-skinned from
+ * decision is a `--forte-input-*` custom property, so it can be re-skinned from
  * plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[invalid]:...`) without wrapping.
  */
@@ -80,11 +80,11 @@ export const Input = React.forwardRef<HTMLElement, InputProps>(
     return (
       <BaseInput
         ref={ref}
-        // No `pui-target` here: the SC 2.5.8 floor is about pointer targets
+        // No `forte-target` here: the SC 2.5.8 floor is about pointer targets
         // that are smaller than 24px, and even a `compact` `sm` input is
         // 24px tall and at least as wide as its text.
-        className={clsx(styles.root, "pui-focus-ring", className)}
-        data-pui="input"
+        className={clsx(styles.root, "forte-focus-ring", className)}
+        data-forte="input"
         data-size={size}
         data-variant={variant}
         data-full-width={fullWidth || undefined}

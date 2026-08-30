@@ -103,7 +103,7 @@ export interface MenubarProps extends Omit<BaseMenubarProps, "className"> {
  * drops its standalone button chrome for the flat strip item the bar wants.
  * A trigger given `render` keeps whatever it was rendered as.
  *
- * Every visual decision is a `--pui-menubar-*` custom property declared on
+ * Every visual decision is a `--forte-menubar-*` custom property declared on
  * this element, including the ones the triggers read, so a bar can be
  * re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[variant=contained]:...`) without wrapping.
@@ -119,7 +119,7 @@ export const Menubar = React.forwardRef<HTMLDivElement, MenubarProps>(
         orientation={orientation}
         disabled={disabled}
         className={clsx(styles.root, className)}
-        data-pui="menubar"
+        data-forte="menubar"
         data-variant={variant}
         /* Base UI's own state attributes are `data-orientation`, `data-modal`
          * and `data-has-submenu-open` — there is no `data-disabled` among

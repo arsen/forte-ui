@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Radio, RadioGroup } from "@dofortech/pretty-ui";
+import { Radio, RadioGroup } from "@dofortech/forte-ui";
 
 // `cursor-pointer` is not decoration: a plain <label> is not one of ours, so it
 // carries none of Field.Label's styling — including the pointer cursor it gets
 // for wrapping a control.
-const row = "flex cursor-pointer items-center gap-(--pui-control-gap)";
+const row = "flex cursor-pointer items-center gap-(--forte-control-gap)";
 
 export default function RadioLabelling() {
   const groupLabelId = React.useId();

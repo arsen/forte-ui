@@ -23,7 +23,7 @@ The difference is not decorative. A drawer's edge is what makes the drag gesture
 ## Import
 
 ```tsx
-import { Drawer } from "@dofortech/pretty-ui";
+import { Drawer } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -46,7 +46,7 @@ On a top or bottom drawer it is a *maximum*, so a short sheet is only as tall as
 
 ### Floating
 
-`variant="floating"` insets the whole surface by `--pui-drawer-inset` and rounds all four corners, so the page shows through around it. The default, `variant="edge"`, sits flush and rounds only the two corners facing into the page.
+`variant="floating"` insets the whole surface by `--forte-drawer-inset` and rounds all four corners, so the page shows through around it. The default, `variant="edge"`, sits flush and rounds only the two corners facing into the page.
 
 Floating also switches off the bleed, because it has nothing left to cover — see [The skirt](#the-skirt).
 
@@ -80,7 +80,7 @@ Focus needs nothing extra in the usual case. With no trigger to return to, Base 
 
 ### Nested drawers
 
-A `Drawer.Root` rendered inside a `Drawer.Popup` stacks. The parent shrinks toward its own outer edge by `--pui-drawer-nested-scale-step` per level, so it recedes straight backward rather than sliding out from under the child, and fades `--pui-drawer-nested-scrim` over itself so the two surfaces stay told apart. Base UI suppresses the child's own backdrop, which is what keeps the parent visible behind it instead of scrimmed twice — pass `forceBackdrop` to a nested `Drawer.Popup` that genuinely needs one.
+A `Drawer.Root` rendered inside a `Drawer.Popup` stacks. The parent shrinks toward its own outer edge by `--forte-drawer-nested-scale-step` per level, so it recedes straight backward rather than sliding out from under the child, and fades `--forte-drawer-nested-scrim` over itself so the two surfaces stay told apart. Base UI suppresses the child's own backdrop, which is what keeps the parent visible behind it instead of scrimmed twice — pass `forceBackdrop` to a nested `Drawer.Popup` that genuinely needs one.
 
 Escape closes the topmost drawer only, so a nested drawer steps back to its parent rather than dismissing the whole stack.
 
@@ -114,7 +114,7 @@ Snap points are ignored on `left` and `right` drawers, which have no snap axis.
 
 The scrim behaves differently here, and it has to. Base UI publishes one variable, `--drawer-swipe-progress`, for two different quantities: without snap points it is how far a dismissing drag has travelled, and clearing the scrim as the drawer leaves is the whole point of it. With snap points it is instead the sheet's position within its snap range, and it reaches exactly `1` at the *lowest* snap — so a peeking sheet would sit over a completely undimmed page that is nonetheless still inert.
 
-So when snap points and modality are combined, the scrim stops at `--pui-drawer-backdrop-floor` instead of vanishing. It still tracks the sheet in between, darkening as it is raised and lightening as it is lowered. A drawer with `modal={false}` gets no floor, because there the undimmed page really is usable.
+So when snap points and modality are combined, the scrim stops at `--forte-drawer-backdrop-floor` instead of vanishing. It still tracks the sheet in between, darkening as it is raised and lightening as it is lowered. A drawer with `modal={false}` gets no floor, because there the undimmed page really is usable.
 
 ### Swipe to open
 
@@ -138,7 +138,7 @@ Leave it on for anything that reaches a touch screen. A drag toward the edge is 
 
 That is the whole reason this part stayed separate instead of being folded into `Drawer.Popup` the way the portal and viewport were. Folding it in would have made every drawer text-selectable and left `Drawer.Handle` — which has to be draggable with a mouse — with nowhere to live. Keep the handle outside `Drawer.Content`, and the body inside it.
 
-It also caps its own width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so `Drawer.Content` stops at `32rem` and centres itself there. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--pui-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
+It also caps its own width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so `Drawer.Content` stops at `32rem` and centres itself there. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--forte-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
 
 ## Accessibility
 
@@ -176,31 +176,31 @@ Wrap a bottom sheet that contains text fields in `Drawer.VirtualKeyboardProvider
 
 Every property below is declared on the element it styles. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect — and the drawer is portalled to `<body>` in any case, so an ancestor of the trigger is not even in the tree.
 
-Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`.
+Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
+The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
 
 <ThemingTable component="Drawer" />
 
-`--pui-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
+`--forte-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
 
 ## Motion
 
 The drawer slides in from its edge and back out to it. There is no scale and no fade, because it does not need either: a surface that arrives from a specific direction has already said where it came from.
 
-The entrance rides `--pui-ease-spring-precise`, the one spring in the set that does not overshoot. Overshoot here is not a flourish, it is a defect — the drawer would sail *past* flush and pull away from the very edge it is supposed to be attached to. Springs that overshoot belong on things that arrive in open space, like a dialog.
+The entrance rides `--forte-ease-spring-precise`, the one spring in the set that does not overshoot. Overshoot here is not a flourish, it is a defect — the drawer would sail *past* flush and pull away from the very edge it is supposed to be attached to. Springs that overshoot belong on things that arrive in open space, like a dialog.
 
-The exit accelerates on `--pui-ease-exit`, which is where a drawer parts company with `Dialog`. Dialog's exit geometry runs `linear` because it never arrives anywhere: it is cut short by unmounting, halfway through a fade, and an easing curve is a statement about arriving. A drawer *does* arrive. It stays opaque the whole way and comes to rest exactly off-screen, so a curve that reads as "leaving" is the honest description of what actually happens.
+The exit accelerates on `--forte-ease-exit`, which is where a drawer parts company with `Dialog`. Dialog's exit geometry runs `linear` because it never arrives anywhere: it is cut short by unmounting, halfway through a fade, and an easing curve is a statement about arriving. A drawer *does* arrive. It stays opaque the whole way and comes to rest exactly off-screen, so a curve that reads as "leaving" is the honest description of what actually happens.
 
 ### Reduced motion
 
-The slide is 100% of the drawer's own size, which no travel token can express, so it is literal geometry — gated on `--pui-motion-ok` and collapsing to nothing on its own. What takes its place is a fade, faded *in* by `--pui-motion-off` so it costs nothing when motion is allowed. A drawer that slides has no business also dissolving; a drawer that cannot slide would otherwise just be switched on.
+The slide is 100% of the drawer's own size, which no travel token can express, so it is literal geometry — gated on `--forte-motion-ok` and collapsing to nothing on its own. What takes its place is a fade, faded *in* by `--forte-motion-off` so it costs nothing when motion is allowed. A drawer that slides has no business also dissolving; a drawer that cannot slide would otherwise just be switched on.
 
 Neither behaviour needs a `prefers-reduced-motion` query in this component, and there isn't one.
 
 ### One rule set, four sides
 
-Everything the four sides disagree about numerically is derived from a two-number unit vector — `--pui-drawer-axis-x` and `--pui-drawer-axis-y` — pointing from the middle of the screen toward the edge the drawer rests against. Each side sets it once. The closed position and the skirt both fall out of it, so neither is written four times and neither can drift from the other.
+Everything the four sides disagree about numerically is derived from a two-number unit vector — `--forte-drawer-axis-x` and `--forte-drawer-axis-y` — pointing from the middle of the screen toward the edge the drawer rests against. Each side sets it once. The closed position and the skirt both fall out of it, so neither is written four times and neither can drift from the other.
 
 What is left in the per-side blocks is the handful of things that are genuinely different declarations rather than the same declaration with a different number in it: which way the popup aligns itself in the viewport grid, whether the size applies to width or height, which two corners are rounded, and where the nested-stacking scale shrinks toward.
 

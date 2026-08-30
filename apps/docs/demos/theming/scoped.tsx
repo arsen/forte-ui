@@ -1,14 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { Button, Switch } from "@dofortech/pretty-ui";
+import { Button, Switch } from "@dofortech/forte-ui";
 
-// The seed only works on an element carrying `data-pui-theme` (or the
-// `.pui-theme` class) — the library re-derives its ramps on that selector.
+// The seed only works on an element carrying `data-forte-theme` (or the
+// `.forte-theme` class) — the library re-derives its ramps on that selector.
 // The same style on a plain <div> would change nothing.
 const FOREST = {
-  "--pui-accent-seed": "#0f7a52",
-  "--pui-secondary-seed": "#a16207",
+  "--forte-accent-seed": "#0f7a52",
+  "--forte-secondary-seed": "#a16207",
 } as React.CSSProperties;
 
 export default function ScopedTheme() {
@@ -23,7 +23,7 @@ export default function ScopedTheme() {
 function Card({ title, scope }: { title: string; scope?: React.CSSProperties }) {
   return (
     <div
-      data-pui-theme={scope ? "" : undefined}
+      data-forte-theme={scope ? "" : undefined}
       style={scope}
       className="grid gap-3 rounded-surface border border-border-muted bg-background p-5"
     >

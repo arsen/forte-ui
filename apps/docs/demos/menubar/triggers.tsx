@@ -1,7 +1,7 @@
 "use client";
 
 import { EllipsisVertical } from "lucide-react";
-import { Button, Menu, Menubar } from "@dofortech/pretty-ui";
+import { Button, Menu, Menubar } from "@dofortech/forte-ui";
 
 export default function MenubarTriggers() {
   return (

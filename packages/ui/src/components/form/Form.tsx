@@ -80,7 +80,7 @@ export interface FormProps<
  * routes the `errors` object back to the right `Field.Error` by `name` — which
  * is why the `name` belongs on `Field.Root` rather than on the control.
  *
- * It lays out as a column with `--pui-form-gap` between children, since a form
+ * It lays out as a column with `--forte-form-gap` between children, since a form
  * is nearly always a stack of fields. Set `display` through `className` for
  * anything else; the gap is a knob rather than a hardcoded rule for exactly
  * that reason.
@@ -88,5 +88,5 @@ export interface FormProps<
 export function Form<
   FormValues extends Record<string, unknown> = Record<string, unknown>,
 >({ className, ...props }: FormProps<FormValues>): React.JSX.Element {
-  return <BaseForm className={clsx(styles.root, className)} data-pui="form" {...props} />;
+  return <BaseForm className={clsx(styles.root, className)} data-forte="form" {...props} />;
 }

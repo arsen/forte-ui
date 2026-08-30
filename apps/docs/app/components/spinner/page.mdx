@@ -29,7 +29,7 @@ once and correctly, and animating it in a way that survives
 ## Import
 
 ```tsx
-import { Spinner } from "@dofortech/pretty-ui";
+import { Spinner } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -37,7 +37,7 @@ import { Spinner } from "@dofortech/pretty-ui";
 ### Variants
 
 The four are interchangeable. Each is laid out as a fraction of
-`--pui-spinner-size` and none of them overflows it, so swapping `variant`
+`--forte-spinner-size` and none of them overflows it, so swapping `variant`
 never moves anything beside the spinner — including in a row of mixed ones.
 
 Which to pick is a question of voice:
@@ -58,8 +58,8 @@ thinner one.
 
 <DemoBlock id="spinner/sizes" />
 
-The label scales too, dropping to `--pui-font-size-1` at `sm` and rising to
-`--pui-font-size-3` at `lg`.
+The label scales too, dropping to `--forte-font-size-1` at `sm` and rising to
+`--forte-font-size-3` at `lg`.
 
 ### Tones
 
@@ -122,14 +122,14 @@ and it is in the DOM from the first render. The spinner inside it is
 
 Every variant keeps working under `prefers-reduced-motion: reduce`, and each
 one gets there differently. The two columns below are running side by side on
-the same page — the right-hand one carries `data-pui-motion="reduce"`.
+the same page — the right-hand one carries `data-forte-motion="reduce"`.
 
 <DemoBlock id="spinner/reduced-motion" />
 
-- **`ring`** stops rotating: `--pui-spin-turn` collapses to `0turn`. A second
+- **`ring`** stops rotating: `--forte-spin-turn` collapses to `0turn`. A second
   animation that is always running — and is a no-op at full motion, because
-  `--pui-pulse-dip` is `1` there — takes over as a slow opacity breathe.
-- **`dots`** stop hopping: the hop is a `--pui-travel-*` token, so it goes to
+  `--forte-pulse-dip` is `1` there — takes over as a slow opacity breathe.
+- **`dots`** stop hopping: the hop is a `--forte-travel-*` token, so it goes to
   `0px`. The staggered opacity wave is untouched and carries the whole thing.
 - **`bars`** do not change at all. Nothing about them ever moved — the sense of
   rotation is entirely in the phase offset between eight fading spokes. That is
@@ -139,12 +139,12 @@ the same page — the right-hand one carries `data-pui-motion="reduce"`.
   faded out entirely, which is not tidiness: the two haloes are distinguishable
   only by radius, and frozen at the same radius they would cross-fade in
   antiphase into a ring of near-constant opacity that reads as nothing
-  happening. `--pui-motion-off` — which is always `1 - --pui-motion-ok` — is
+  happening. `--forte-motion-off` — which is always `1 - --forte-motion-ok` — is
   what removes it.
 
 <Callout kind="a11y">
-  No loop duration is ever shortened. `--pui-duration-loop-spin` is 800ms in
-  every motion state, including `data-pui-motion="off"`. The rest of the system
+  No loop duration is ever shortened. `--forte-duration-loop-spin` is 800ms in
+  every motion state, including `data-forte-motion="off"`. The rest of the system
   collapses durations toward `1ms`, but a *repeating* animation driven to 1ms
   flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which is the opposite
   of an accessibility win. The fastest thing on this page cycles at 1.25Hz.
@@ -196,22 +196,22 @@ element, and an element's own declaration beats an inherited value.
 <ThemingTable component="Spinner" />
 
 <Callout kind="note">
-  `--pui-spinner-track` derives from `--pui-spinner-color`, and a `var()` inside
+  `--forte-spinner-track` derives from `--forte-spinner-color`, and a `var()` inside
   an unregistered custom property is substituted where the property is
   *declared* — on the spinner root. Re-point the colour on an ancestor and the
   track keeps the old default. Set both on the spinner, or set neither.
 </Callout>
 
 Two more values are written by the component rather than by you, and are listed
-here only so a `var()` typo is recognisable: `--pui-spinner-count` is the number
+here only so a `var()` typo is recognisable: `--forte-spinner-count` is the number
 of animated children the current variant renders, set on the root, and
-`--pui-spinner-i` is a child's index, set on each part. Every piece of per-child
+`--forte-spinner-i` is a child's index, set on each part. Every piece of per-child
 geometry is derived from the pair — a bar's angle is `i / count` of a turn, a
 dot's stagger is a fraction of the cycle — which is why the stylesheet needs no
 `nth-child` chain and why the bar count can be changed in one place.
 
 Circles in this component use a literal `50%` rather than
-`var(--pui-radius-full)`, so `data-pui-radius="none"` cannot square off the
+`var(--forte-radius-full)`, so `data-forte-radius="none"` cannot square off the
 ring, the dots or the halo — round is what those shapes *are*, not how they are
 styled. That is the same test [`Radio`](/components/radio) and the
 [`Button`](/components/button) spinner apply, and the only grounds on which

@@ -1,6 +1,6 @@
 "use client";
 
-import { PreviewCard } from "@dofortech/pretty-ui";
+import { PreviewCard } from "@dofortech/forte-ui";
 
 const SIDES = ["top", "right", "bottom", "left"] as const;
 

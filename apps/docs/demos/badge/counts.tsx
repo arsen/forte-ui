@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Badge, Button } from "@dofortech/pretty-ui";
+import { Badge, Button } from "@dofortech/forte-ui";
 
 export default function BadgeCounts() {
   const [count, setCount] = React.useState(9);

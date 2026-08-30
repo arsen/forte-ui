@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog, useDialog } from "@dofortech/pretty-ui";
+import { Button, Dialog, useDialog } from "@dofortech/forte-ui";
 
 const receipt = "m-0 font-mono text-1 text-foreground-muted";
 

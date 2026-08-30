@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Toast, useToast } from "@dofortech/pretty-ui";
+import { Button, Toast, useToast } from "@dofortech/forte-ui";
 
 function Buttons() {
   const toast = useToast();

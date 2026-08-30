@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, type CalendarSize } from "@dofortech/pretty-ui";
+import { Calendar, type CalendarSize } from "@dofortech/forte-ui";
 
 const SIZES: CalendarSize[] = ["sm", "md", "lg"];
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { Button, Field, Input } from "@dofortech/pretty-ui";
+import { Button, Field, Input } from "@dofortech/forte-ui";
 
-// Every class below resolves to a pretty-ui token through the bridge:
-// gap-4 is --pui-space-4, p-surface is --pui-surface-p, bg-panel is
-// --pui-color-panel, text-3 is --pui-font-size-3 — and rounded-pill on the
+// Every class below resolves to a forte-ui token through the bridge:
+// gap-4 is --forte-space-4, p-surface is --forte-surface-p, bg-panel is
+// --forte-color-panel, text-3 is --forte-font-size-3 — and rounded-pill on the
 // Button is a utility beating the component's own radius, no !important.
 export default function TokenUtilities() {
   return (

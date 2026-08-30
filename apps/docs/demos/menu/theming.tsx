@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu } from "@dofortech/pretty-ui";
+import { Menu } from "@dofortech/forte-ui";
 
 export default function MenuTheming() {
   return (
@@ -14,21 +14,21 @@ export default function MenuTheming() {
       <Menu.Popup
         style={
           {
-            "--pui-menu-radius": "var(--pui-radius-5)",
-            "--pui-menu-min-width": "15rem",
-            "--pui-menu-padding-y": "var(--pui-space-2)",
-            "--pui-menu-item-px": "var(--pui-space-4)",
-            "--pui-menu-border-color": "var(--pui-color-primary-border)",
+            "--forte-menu-radius": "var(--forte-radius-5)",
+            "--forte-menu-min-width": "15rem",
+            "--forte-menu-padding-y": "var(--forte-space-2)",
+            "--forte-menu-item-px": "var(--forte-space-4)",
+            "--forte-menu-border-color": "var(--forte-color-primary-border)",
           } as React.CSSProperties
         }
       >
         <Menu.Item
           style={
             {
-              "--pui-menu-item-bg-highlighted":
-                "var(--pui-color-secondary-soft)",
-              "--pui-menu-item-fg-highlighted":
-                "var(--pui-color-secondary-text)",
+              "--forte-menu-item-bg-highlighted":
+                "var(--forte-color-secondary-soft)",
+              "--forte-menu-item-fg-highlighted":
+                "var(--forte-color-secondary-text)",
             } as React.CSSProperties
           }
         >

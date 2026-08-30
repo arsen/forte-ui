@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Tooltip } from "@dofortech/pretty-ui";
+import { Button, Tooltip } from "@dofortech/forte-ui";
 
 const SIDES = ["top", "right", "bottom", "left"] as const;
 
