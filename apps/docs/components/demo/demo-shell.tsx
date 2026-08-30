@@ -30,7 +30,18 @@ export function DemoShell({
 
   return (
     <div className="my-5 overflow-hidden rounded-surface border border-border-muted bg-panel">
-      <Tabs.Root defaultValue="preview" variant="line" className="block">
+      {/* The rail is off because the HEADER draws it instead, one row out. The
+        * strip shares that row with the filename, so a `line` variant's own
+        * rail spans the two tabs and stops — a 155px stub sitting one pixel
+        * above the header's full-width border, in the same colour. A knob
+        * rather than a class: it is a custom property, which a utility cannot
+        * set, and it has to land on Tabs.Root, which is where it is declared. */}
+      <Tabs.Root
+        defaultValue="preview"
+        variant="line"
+        className="block"
+        style={{ "--pui-tabs-rail-width": "0px" } as React.CSSProperties}
+      >
         <div className="flex items-center justify-between gap-3 border-b border-border-muted px-3">
           <Tabs.List className="gap-1">
             <Tabs.Tab value="preview" className="text-2">Preview</Tabs.Tab>
