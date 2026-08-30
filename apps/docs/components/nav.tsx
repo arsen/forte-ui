@@ -51,6 +51,7 @@ const NAV: NavGroup[] = [
       { title: "Badge", href: "/components/badge" },
       { title: "Breadcrumb", href: "/components/breadcrumb" },
       { title: "Button", href: "/components/button" },
+      { title: "Button Group", href: "/components/button-group" },
       { title: "Calendar", href: "/components/calendar" },
       { title: "Checkbox", href: "/components/checkbox" },
       { title: "Checkbox Group", href: "/components/checkbox-group" },

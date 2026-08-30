@@ -79,6 +79,14 @@ export type {
 export { Button } from "./components/button";
 export type { ButtonProps, ButtonVariant, ButtonTone, ButtonSize } from "./components/button";
 
+export { ButtonGroup } from "./components/button-group";
+export type {
+  ButtonGroupOrientation,
+  ButtonGroupRootProps,
+  ButtonGroupSeparatorProps,
+  ButtonGroupTextProps,
+} from "./components/button-group";
+
 export { Calendar } from "./components/calendar";
 export type {
   CalendarMode,

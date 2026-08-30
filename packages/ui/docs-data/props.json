@@ -715,6 +715,73 @@
       }
     ]
   },
+  "ButtonGroupRoot": {
+    "name": "ButtonGroupRoot",
+    "description": "The group container. Renders a `<div role=\"group\">`.\n\n```tsx\n<ButtonGroup.Root aria-label=\"Message actions\">\n  <Button variant=\"outline\" tone=\"neutral\">Archive</Button>\n  <Button variant=\"outline\" tone=\"neutral\">Report</Button>\n  <Button variant=\"outline\" tone=\"neutral\">Snooze</Button>\n</ButtonGroup.Root>\n```\n\nDirect children are fused: inner corners squared, one hairline between\nneighbours, outer corners kept. The children stay ordinary components with\ntheir own props — the group never reaches into them beyond that edge.\n\n`role=\"group\"` has no name of its own, so give the group `aria-label` (or\npoint `aria-labelledby` at a heading) when the grouping carries meaning a\nscreen reader should hear — without one it is purely visual.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "ButtonGroupOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the controls fuse — a row or a column. Layout only: unlike\n[`Toolbar`](/components/toolbar), a button group adds no keyboard\nbehaviour, so there is no arrow-key axis to move."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component."
+      }
+    ]
+  },
+  "ButtonGroupSeparator": {
+    "name": "ButtonGroupSeparator",
+    "description": "The seam between two fused controls that have no visible border of their\nown. Renders a `<div role=\"separator\">`.\n\nReach for it between `solid` or `soft` buttons — fused bare they read as\none unbroken slab of colour. `outline` neighbours need none: their own\nborders already draw the seam, and a separator there doubles the line.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "ButtonGroupOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the line runs. Defaults to the *opposite* of the group's\norientation — a row gets vertical seams — which is almost always what you\nwant, so leave it unset."
+      }
+    ]
+  },
+  "ButtonGroupText": {
+    "name": "ButtonGroupText",
+    "description": "A non-interactive cell fused in with the controls — a unit, a prefix, a\ncount. Renders a `<div>`.\n\nIt has no height of its own on purpose: the group stretches it to match\nwhatever control it sits beside, so one cell serves every size.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component — pass\n`render={<label htmlFor=\"…\" />}` when the cell names the input fused\nbeside it, so clicking it focuses the field."
+      }
+    ]
+  },
   "Calendar": {
     "name": "Calendar",
     "description": "A month grid for picking one day, several days, or a range.\n\n```tsx\nconst [date, setDate] = React.useState<Date>();\n\n<Calendar mode=\"single\" selected={date} onSelect={setDate} />\n```\n\nIt owns no date library. Month arithmetic goes through the `Date`\nconstructor (DST-safe by construction) and every name on screen comes from\n`Intl.DateTimeFormat`, so the whole component adds nothing to a consumer's\nbundle beyond itself.\n\nThe grid is a real `<table role=\"grid\">` with a roving tabindex: one Tab\nstop for the whole calendar, arrows to move a day, <kbd>Page Up</kbd> /\n<kbd>Page Down</kbd> to move a month, and <kbd>Shift</kbd> with either to\nmove a year. Days that cannot be picked are `aria-disabled` rather than\n`disabled`, so navigation can cross them.",
