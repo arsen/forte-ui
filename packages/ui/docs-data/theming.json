@@ -4468,6 +4468,227 @@
       }
     ]
   },
+  "InputGroup": {
+    "name": "InputGroup",
+    "tokens": [
+      {
+        "name": "--pui-input-group-height",
+        "value": "var(--pui-control-h-md)",
+        "description": "Minimum height of the group (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-px",
+        "value": "var(--pui-control-px-md)",
+        "description": "Inline padding between the border and the content (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-py",
+        "value": "var(--pui-space-1)",
+        "description": "Block padding; also the inset buttons keep from the border",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Font size of the control and the addons (reset per `size`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--pui-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--pui-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--pui-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-gap",
+        "value": "var(--pui-control-gap)",
+        "description": "Gap between the control and each addon, and between an addon's items",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-border-width",
+        "value": "1px",
+        "description": "Border width",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-icon-size",
+        "value": "var(--pui-font-size-3)",
+        "description": "Icon size inside addons",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-button-size",
+        "value": "var(--pui-input-group-inner-h)",
+        "description": "Size of buttons inside addons: block size always, inline size too when `iconOnly`. Fills the field's inner height, so at `sm` it dips below the 24px SC 2.5.8 floor — which is why `InputGroup.Button` carries `.pui-target`: the HIT area stays 24x24 while the visual box tracks the field",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-bg",
+        "value": "var(--pui-color-background)",
+        "description": "Background (reset per `variant`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root:has(:is(.input, .textarea)[readonly])",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--pui-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-bg-hover",
+        "value": "var(--pui-color-panel-hover)",
+        "description": "Background on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-fg",
+        "value": "var(--pui-color-foreground)",
+        "description": "Text colour of the control",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-addon-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Addon text and icon colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-placeholder-fg",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Placeholder colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour (reset per `variant`, and by the control's `data-invalid`)",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root:has(:is(.input, .textarea)[data-invalid])",
+            "value": "var(--pui-color-danger-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--pui-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"ghost\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-border-color-hover",
+        "value": "var(--pui-color-border-strong)",
+        "description": "Border colour on hover",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root:has(:is(.input, .textarea)[data-invalid])",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-caret-color",
+        "value": "var(--pui-color-primary)",
+        "description": "Caret colour",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root:has(:is(.input, .textarea)[data-invalid])",
+            "value": "var(--pui-color-danger)"
+          }
+        ]
+      },
+      {
+        "name": "--pui-input-group-selection-bg",
+        "value": "var(--pui-color-primary-soft)",
+        "description": "Selection background",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-input-group-selection-fg",
+        "value": "var(--pui-color-primary-text)",
+        "description": "Selection text colour",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Menu": {
     "name": "Menu",
     "tokens": [

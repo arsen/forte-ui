@@ -3760,6 +3760,203 @@
       }
     ]
   },
+  "InputGroupRoot": {
+    "name": "InputGroupRoot",
+    "description": "The field shell: a `<div>` that draws one control boundary — border,\nbackground, radius, sizes, variants — around a bare `<InputGroup.Input>` or\n`<InputGroup.Textarea>` and any number of `<InputGroup.Addon>`s, so icons,\nprefixes and buttons sit *inside* the field instead of bolted onto it.\n\nFocus lives on the control; the group rings for it via\n`.pui-focus-ring-within`, so the whole field lights up the way a plain\n`Input` does. Buttons inside addons ring themselves, and the group stands\ndown while they do.\n\nThe group is a caret region, not a button: clicking anywhere in it —\na prefix, an icon, the padding — focuses the control, exactly as clicking\nthe empty end of a plain input places the caret. Interactive children keep\nthe gesture for themselves.\n\nThere is no `disabled` prop here on purpose. Disabled, read-only and\ninvalid all belong to the control (or the `Field.Root` above it), and the\ngroup watches them through `:has()` — one source of truth, no way for the\nshell and the control to disagree.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the group to fill the width of its container. Only needed outside\na `Field.Root` — a field is a flex column, so a group inside one already\nstretches."
+      },
+      {
+        "name": "size",
+        "type": "InputGroupSize",
+        "required": false,
+        "defaultValue": "sm",
+        "description": "Size of the group. Height, inline padding and font size move together for\nthe control and every addon at once, and the numbers come from the same\n`--pui-control-*` tokens `Input` and `Select.Trigger` read — so a group\nand a plain input on one row are the same height at every\n`data-pui-density` setting."
+      },
+      {
+        "name": "variant",
+        "type": "InputGroupVariant",
+        "required": false,
+        "defaultValue": "ghost",
+        "description": "How much visual weight the group carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance — the\nsame three `Input` has, because to a reader the group *is* the input."
+      }
+    ]
+  },
+  "InputGroupInput": {
+    "name": "InputGroupInput",
+    "description": "The text control, rendered bare: the group owns the border, the background\nand the height, so this element is transparent and stretches to fill\nwhatever the addons leave.\n\nLike `Input`, this is Base UI's `Input` — which *is* `Field.Control` — so a\ngroup inside a `Field.Root` picks up the label, the description, the error\nmessage, `name` and the validity attributes with no wiring, and the group's\nboundary recolours from the `data-invalid` this element carries.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "InputGroupTextarea": {
+    "name": "InputGroupTextarea",
+    "description": "The multi-line control, rendered bare the way `InputGroup.Input` is — the\ngroup draws the box. Height is counted in rows, exactly as `Textarea`\ncounts it, and pairs naturally with `align=\"block-start\"` /\n`align=\"block-end\"` addons for a header row of actions or a footer row\nwith a character count.\n\nThere is no `resize` prop: the group's boundary is not this element's, so a\nnative resize handle would sit visibly inside the field and drag a corner\nthat is not the corner of anything. `autoResize` is the way a composer\ngrows here.",
+    "props": [
+      {
+        "name": "autoResize",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Grow with the content as the user types, between `rows` and `maxRows` —\nthe same behaviour, and the same `field-sizing` implementation with the\nsame fallback, as `Textarea`'s `autoResize`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "defaultValue": null,
+        "description": "The number of rows the box may grow to before it starts scrolling\ninstead. Only a ceiling: a textarea shorter than this is unaffected.\nUnset means no ceiling."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: string, eventDetails: { reason: \"none\"; event: Event; cancel: () => void; allowPropagation: () => void; isCanceled: boolean; isPropagationAllowed: boolean; trigger: Element; }) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Callback fired when the value changes. Use when controlled."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, FieldControlState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replace the rendered element. Defaults to a `<textarea>`."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "defaultValue": "3",
+        "description": "The number of rows the box is at its shortest. Sets the native `rows`\nattribute and the floor the control can never shrink below — including\nunder `autoResize`."
+      }
+    ]
+  },
+  "InputGroupAddon": {
+    "name": "InputGroupAddon",
+    "description": "A slot inside the field for everything that is not the value: icons,\nprefixes and suffixes (wrap words in `<InputGroup.Text>`), buttons\n(`<InputGroup.Button>`), a `Spinner`, a keyboard hint.\n\nPlacement is visual, driven by CSS `order`, so DOM order is free to follow\nfocus order: put an addon that holds a button *after* the control in the\nsource and the Tab sequence reads control-then-button even while the button\ndraws at the start edge.\n\nPurely decorative content — icons above all — still needs\n`aria-hidden=\"true\"`: the group cannot know which children carry meaning.\nText that names or explains the control belongs to the field\n(`Field.Label`, `Field.Description`), not in here; a sighted-only prefix\nlike a currency sign should be restated where assistive technology will\nmeet it.",
+    "props": [
+      {
+        "name": "align",
+        "type": "InputGroupAddonAlign",
+        "required": false,
+        "defaultValue": "inline-start",
+        "description": "Which edge of the control the addon sits against. The `inline` pair\nshares the control's row; the `block` pair takes a full-width row of its\nown, above or below — the shape a textarea's toolbar or footer wants.\n\nAlignment is logical, so `inline-start` is the left edge in LTR and the\nright edge in RTL with no extra work."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "InputGroupText": {
+    "name": "InputGroupText",
+    "description": "Words inside an addon — a protocol, a unit, a domain, a count. A styled\n`<span>`: muted, unwrappable, sized by the group. Give it an `id` and point\nthe control's `aria-describedby` at it when the text is information rather\nthan decoration.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "InputGroupButton": {
+    "name": "InputGroupButton",
+    "description": "A `Button` preset for life inside an addon: `ghost` + `neutral` so it reads\nas part of the field rather than a call to action, and sized by the group —\nthe CSS caps it to the field's inner height, so at `sm` the visual box can\ndip below 24px. That is why this wrapper exists instead of a line of docs:\nit adds `.pui-target`, which floors the *hit* area at 24×24 without\ntouching the visual one.\n\nIt is otherwise exactly `Button` — every prop passes through, so\n`variant=\"solid\"` turns the end addon into a primary action when the design\ncalls for one. `iconOnly` still needs its `aria-label`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "focusableWhenDisabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true while `loading`, otherwise false",
+        "description": "Keep the button focusable while it is disabled. A native `disabled`\nbutton is blurred by the browser, which drops focus to `<body>` and loses\nthe user's place in the tab order — and takes `aria-busy` and\n`loadingLabel` out of earshot with it. Left unset, this turns itself on\nfor the duration of `loading` so the busy state is actually announced;\npass it explicitly to override."
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stretch the button to fill the width of its container."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render as a square button sized for a single icon. Enforces the 24px\nminimum hit target from WCAG SC 2.5.8. Always pair with `aria-label`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show a busy indicator and block interaction. The label keeps its space so\nthe button cannot resize mid-interaction."
+      },
+      {
+        "name": "loadingLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "\"Loading\"",
+        "description": "Announced to assistive technology while `loading` is true. Without it, a\nscreen reader user gets no signal that anything is happening."
+      },
+      {
+        "name": "size",
+        "type": "ButtonSize",
+        "required": false,
+        "defaultValue": "sm",
+        "description": "Size of the button. Actual dimensions also follow the ambient\n`data-pui-density` setting."
+      },
+      {
+        "name": "tone",
+        "type": "ButtonTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+      },
+      {
+        "name": "variant",
+        "type": "ButtonVariant",
+        "required": false,
+        "defaultValue": "ghost",
+        "description": "How much visual weight the button carries."
+      }
+    ]
+  },
   "MenuTrigger": {
     "name": "MenuTrigger",
     "description": "The button that opens the menu. Renders a `<button>`.\n\nBase UI wires it to the popup with `aria-haspopup=\"menu\"`, `aria-expanded`\nand `aria-controls`, so it needs no `aria-label` describing the menu itself.\nAn icon-only trigger still needs a name of its own, as any icon-only button\ndoes.",

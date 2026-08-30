@@ -1,0 +1,206 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Input Group",
+  description:
+    "One field boundary around a text control and its trimmings — icons, prefixes, buttons and counters that sit inside the field instead of bolted onto it.",
+};
+
+# Input Group
+
+A search icon, a `https://` prefix, a clear button, a character counter — the
+things that belong *inside* a text field but are not the value. `InputGroup`
+draws one control boundary around a bare [Input](/components/input) or
+[Textarea](/components/textarea) and any number of addons, and the whole
+assembly focuses, hovers, disables and errors as a single control — because to
+the person using it, it is one.
+
+<DemoBlock id="input-group/basic" />
+
+Focus lives on the control and the group rings for it, exactly the way
+[Number Field](/components/number-field) and [Combobox](/components/combobox)
+ring their shells. Clicking anywhere in the box — a prefix, an icon, the
+padding — places the caret, the same gesture the empty end of a plain input
+offers; buttons inside keep their clicks to themselves.
+
+## Import
+
+```tsx
+import { InputGroup } from "@dofortech/pretty-ui";
+```
+
+## Anatomy
+
+```tsx
+<InputGroup.Root>
+  <InputGroup.Addon>{/* icons, <InputGroup.Text>, buttons */}</InputGroup.Addon>
+  <InputGroup.Input />        {/* or <InputGroup.Textarea /> */}
+  <InputGroup.Addon align="inline-end">
+    <InputGroup.Button iconOnly aria-label="…">…</InputGroup.Button>
+  </InputGroup.Addon>
+</InputGroup.Root>
+```
+
+`align` places an addon on one of the four edges: the `inline` pair shares the
+control's row, the `block` pair takes a full-width row above or below.
+Placement is visual, driven by CSS `order`, so DOM order is free to follow
+focus order — an addon holding a button can sit *after* the control in the
+source and still draw at the start edge. Alignment is logical, so a group is
+correct in RTL with no extra work.
+
+## Examples
+
+### Text affixes
+
+Wrap words in `<InputGroup.Text>` — a protocol, a unit, a domain. The affixes
+are visual; give assistive technology the same information through the field's
+label or `aria-describedby`.
+
+<DemoBlock id="input-group/text-addons" />
+
+### Buttons
+
+`<InputGroup.Button>` is `Button` preset for life inside a field: `ghost` +
+`neutral` so it reads as part of the control, sized to the field's inner
+height, and wearing `.pui-target` so the hit area stays 24×24 even where the
+visual box dips under it. Every `Button` prop passes through — turn the end
+addon into a primary action with `variant="solid"` when the design calls for
+one.
+
+<DemoBlock id="input-group/buttons" />
+
+### Loading
+
+A [Spinner](/components/spinner) in an addon announces itself — it is its own
+live region, so there is nothing to wire beyond its `label`.
+
+<DemoBlock id="input-group/loading" />
+
+### Multi-line
+
+`<InputGroup.Textarea>` is the multi-line control, with `Textarea`'s row
+maths: `rows` is the floor, `maxRows` the ceiling, `autoResize` moves between
+them. Block addons are the natural companions — a toolbar above, a footer with
+a counter and a send button below.
+
+<DemoBlock id="input-group/textarea" />
+
+<Callout kind="note">
+  There is no `resize` prop here, deliberately. The group's boundary is not
+  the textarea's, so a native resize handle would sit visibly *inside* the
+  field, dragging a corner that is not the corner of anything. `autoResize` is
+  how a composer grows.
+</Callout>
+
+### Sizes
+
+`size` moves the group's height, inline padding and font size together — for
+the control and every addon at once — on the same `--pui-control-*` scale the
+rest of the set reads, so a group and a select on one row line up at every
+density.
+
+<DemoBlock id="input-group/sizes" />
+
+### Variants
+
+The same three `Input` has, because the group *is* the input to a reader:
+`outline` reads as a form control, `soft` as a filled field, `ghost` as an
+inline affordance.
+
+<DemoBlock id="input-group/variants" />
+
+### States
+
+The group has no `disabled`, `readOnly` or `invalid` props, and that is the
+point: every state lives on the control (or the [Field](/components/field)
+above it), and the shell watches it through `:has()` — one source of truth, no
+way for the box and the control to disagree. Disabled dims the whole group;
+read-only tints it; invalid recolours the boundary and the caret, and nothing
+else — recolouring the value or the addons would make the user's own answer
+look like the error message.
+
+<DemoBlock id="input-group/states" />
+
+### In a Field
+
+`InputGroup.Input` **is** `Field.Control` — the same primitive `Input` is — so
+a group inside a `Field.Root` picks up the label, the description, the error
+message, `name` and the validity attributes with no wiring.
+
+<DemoBlock id="input-group/field" />
+
+## Accessibility
+
+The group's `<div>` is `role="presentation"`: what assistive technology should
+meet is the control and the buttons, not the box around them.
+
+- **Name the control**, not the group — `<Field.Label>` or `aria-label` on
+  `InputGroup.Input` / `InputGroup.Textarea`.
+- **Decorative icons get `aria-hidden="true"`.** The group cannot know which
+  children carry meaning, so it hides nothing for you.
+- **Affixes that carry information** — a currency, a unit, a count — should
+  reach the control through `aria-describedby` pointing at the
+  `<InputGroup.Text>`'s `id`, or be folded into the field's description. A
+  sighted user reads "$" next to the value; the label should say as much.
+- **Icon-only buttons need `aria-label`**, same as everywhere else.
+- **Keep DOM order matching focus order.** Placement is CSS `order`, so a
+  start-edge addon holding a button can — and should — come after the control
+  in the source when tabbing to it after the field is the natural reading.
+
+Consumers can target the group's watched states from plain CSS or Tailwind the
+same way the shell does: `has-[[data-disabled]]:opacity-50`,
+`has-[[data-invalid]]:…`.
+
+In forced-colors mode the box is restated as `Field` / `FieldText` with a
+`FieldText` boundary — the root is a `<div>`, so the UA assigns it nothing on
+its own, and the `soft` / `ghost` variants' `transparent` border would
+otherwise be replaced with an arbitrary system colour. A disabled group also
+restates `opacity: 1` and `GrayText`: opacity is one of the few things
+forced-colors does not override, and the generic remedy keys on a
+`data-disabled` the root deliberately does not carry.
+
+## Theming
+
+Every `--pui-input-group-*` property is declared on the group element itself,
+and an element's own declaration beats an inherited one — so set them on the
+group, through `className` (an unlayered rule beats
+`@layer pretty-ui.components` at any specificity) or an inline `style`. The
+global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
+`--pui-radius-*` — are what to re-point from `:root` or a theme scope to move
+every group at once.
+
+<ThemingTable component="InputGroup" />
+
+## API reference
+
+### InputGroup.Root
+
+<PropTable component="InputGroupRoot" />
+
+### InputGroup.Input
+
+Everything else is a native `<input>` prop and passes straight through, plus
+Base UI's `render`, `onValueChange` and `defaultValue`.
+
+<PropTable component="InputGroupInput" />
+
+### InputGroup.Textarea
+
+<PropTable component="InputGroupTextarea" />
+
+### InputGroup.Addon
+
+<PropTable component="InputGroupAddon" />
+
+### InputGroup.Text
+
+<PropTable component="InputGroupText" />
+
+### InputGroup.Button
+
+Accepts every [Button](/components/button) prop; only the defaults differ.
+
+<PropTable component="InputGroupButton" />

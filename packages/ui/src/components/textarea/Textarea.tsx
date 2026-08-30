@@ -103,8 +103,12 @@ const useIsoLayoutEffect =
  * Deliberately a no-op where the property IS supported: one CSS declaration
  * does the whole job during layout, and an inline `block-size` written on top
  * of it would fight the stylesheet's own min/max clamps.
+ *
+ * Exported for `InputGroup.Textarea`, which is the same control rendered bare
+ * inside a group shell and must grow by exactly the same rules — but NOT
+ * re-exported from the package: it is shared implementation, not API.
  */
-function useAutoSize(enabled: boolean) {
+export function useAutoSize(enabled: boolean) {
   const ref = React.useRef<HTMLTextAreaElement | null>(null);
   const syncRef = React.useRef<() => void>(() => {});
 

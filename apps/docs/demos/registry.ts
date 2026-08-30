@@ -315,6 +315,24 @@ import d_input_states from "./input/states";
 import d_input_states_src from "./input/states?raw";
 import d_input_variants from "./input/variants";
 import d_input_variants_src from "./input/variants?raw";
+import d_input_group_basic from "./input-group/basic";
+import d_input_group_basic_src from "./input-group/basic?raw";
+import d_input_group_buttons from "./input-group/buttons";
+import d_input_group_buttons_src from "./input-group/buttons?raw";
+import d_input_group_field from "./input-group/field";
+import d_input_group_field_src from "./input-group/field?raw";
+import d_input_group_loading from "./input-group/loading";
+import d_input_group_loading_src from "./input-group/loading?raw";
+import d_input_group_sizes from "./input-group/sizes";
+import d_input_group_sizes_src from "./input-group/sizes?raw";
+import d_input_group_states from "./input-group/states";
+import d_input_group_states_src from "./input-group/states?raw";
+import d_input_group_text_addons from "./input-group/text-addons";
+import d_input_group_text_addons_src from "./input-group/text-addons?raw";
+import d_input_group_textarea from "./input-group/textarea";
+import d_input_group_textarea_src from "./input-group/textarea?raw";
+import d_input_group_variants from "./input-group/variants";
+import d_input_group_variants_src from "./input-group/variants?raw";
 import d_menu_basic from "./menu/basic";
 import d_menu_basic_src from "./menu/basic?raw";
 import d_menu_checkbox_items from "./menu/checkbox-items";
@@ -870,6 +888,15 @@ export type DemoId =
   | "input/sizes"
   | "input/states"
   | "input/variants"
+  | "input-group/basic"
+  | "input-group/buttons"
+  | "input-group/field"
+  | "input-group/loading"
+  | "input-group/sizes"
+  | "input-group/states"
+  | "input-group/text-addons"
+  | "input-group/textarea"
+  | "input-group/variants"
   | "menu/basic"
   | "menu/checkbox-items"
   | "menu/disabled"
@@ -1227,6 +1254,15 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input/sizes": { Component: d_input_sizes, source: d_input_sizes_src, file: "input/sizes.tsx" },
   "input/states": { Component: d_input_states, source: d_input_states_src, file: "input/states.tsx" },
   "input/variants": { Component: d_input_variants, source: d_input_variants_src, file: "input/variants.tsx" },
+  "input-group/basic": { Component: d_input_group_basic, source: d_input_group_basic_src, file: "input-group/basic.tsx" },
+  "input-group/buttons": { Component: d_input_group_buttons, source: d_input_group_buttons_src, file: "input-group/buttons.tsx" },
+  "input-group/field": { Component: d_input_group_field, source: d_input_group_field_src, file: "input-group/field.tsx" },
+  "input-group/loading": { Component: d_input_group_loading, source: d_input_group_loading_src, file: "input-group/loading.tsx" },
+  "input-group/sizes": { Component: d_input_group_sizes, source: d_input_group_sizes_src, file: "input-group/sizes.tsx" },
+  "input-group/states": { Component: d_input_group_states, source: d_input_group_states_src, file: "input-group/states.tsx" },
+  "input-group/text-addons": { Component: d_input_group_text_addons, source: d_input_group_text_addons_src, file: "input-group/text-addons.tsx" },
+  "input-group/textarea": { Component: d_input_group_textarea, source: d_input_group_textarea_src, file: "input-group/textarea.tsx" },
+  "input-group/variants": { Component: d_input_group_variants, source: d_input_group_variants_src, file: "input-group/variants.tsx" },
   "menu/basic": { Component: d_menu_basic, source: d_menu_basic_src, file: "menu/basic.tsx" },
   "menu/checkbox-items": { Component: d_menu_checkbox_items, source: d_menu_checkbox_items_src, file: "menu/checkbox-items.tsx" },
   "menu/disabled": { Component: d_menu_disabled, source: d_menu_disabled_src, file: "menu/disabled.tsx" },
