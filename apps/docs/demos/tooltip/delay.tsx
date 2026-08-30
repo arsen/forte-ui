@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Tooltip } from "@dofortech/forte-ui";
+import { Button, Tooltip } from "@forte-ui/react";
 
 export default function TooltipDelay() {
   return (

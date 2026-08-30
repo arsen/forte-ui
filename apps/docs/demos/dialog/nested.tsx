@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog } from "@dofortech/forte-ui";
+import { Button, Dialog } from "@forte-ui/react";
 
 export default function DialogNested() {
   return (

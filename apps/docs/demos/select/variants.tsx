@@ -1,6 +1,6 @@
 "use client";
 
-import { Select } from "@dofortech/forte-ui";
+import { Select } from "@forte-ui/react";
 
 const sortOrders = {
   newest: "Newest first",

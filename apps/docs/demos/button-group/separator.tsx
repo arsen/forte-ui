@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ButtonGroup } from "@dofortech/forte-ui";
+import { Button, ButtonGroup } from "@forte-ui/react";
 
 export default function ButtonGroupSeparator() {
   return (

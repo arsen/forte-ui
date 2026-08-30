@@ -45,7 +45,7 @@
  * extraction has to survive formatting the house style happens not to
  * produce, instead of silently dropping a declaration.
  *
- *   pnpm --filter @dofortech/forte-ui docgen
+ *   pnpm --filter @forte-ui/react docgen
  */
 import { mkdirSync, writeFileSync, readdirSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";

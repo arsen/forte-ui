@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Popover } from "@dofortech/forte-ui";
+import { Button, Popover } from "@forte-ui/react";
 
 type Env = { id: string; name: string; region: string; lines: string[] };
 

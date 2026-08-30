@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Field, Textarea } from "@dofortech/forte-ui";
+import { Field, Textarea } from "@forte-ui/react";
 
 const LIMIT = 160;
 

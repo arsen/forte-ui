@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert } from "@dofortech/forte-ui";
+import { Alert } from "@forte-ui/react";
 import { PartyPopper, Rocket } from "lucide-react";
 
 /* `size-4` is `--forte-space-4`, so the glyph follows the space scale like every

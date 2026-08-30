@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Input } from "@dofortech/forte-ui";
+import { Field, Input } from "@forte-ui/react";
 
 const TAKEN = ["acme", "admin", "root"];
 

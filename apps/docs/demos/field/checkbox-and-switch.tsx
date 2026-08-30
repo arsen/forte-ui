@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Field, Switch } from "@dofortech/forte-ui";
+import { Checkbox, Field, Switch } from "@forte-ui/react";
 
 export default function FieldCheckboxAndSwitch() {
   return (

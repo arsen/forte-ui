@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@dofortech/forte-ui";
+import { Spinner } from "@forte-ui/react";
 
 export default function SpinnerLabels() {
   return (

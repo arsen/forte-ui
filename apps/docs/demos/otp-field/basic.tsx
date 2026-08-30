@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, OTPField } from "@dofortech/forte-ui";
+import { Field, OTPField } from "@forte-ui/react";
 
 export default function OTPFieldBasic() {
   return (

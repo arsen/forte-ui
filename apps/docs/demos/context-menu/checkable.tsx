@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ContextMenu } from "@dofortech/forte-ui";
+import { ContextMenu } from "@forte-ui/react";
 
 export default function ContextMenuCheckable() {
   const [grid, setGrid] = React.useState(true);

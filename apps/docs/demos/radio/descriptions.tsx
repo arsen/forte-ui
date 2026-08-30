@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Radio, RadioGroup } from "@dofortech/forte-ui";
+import { Field, Radio, RadioGroup } from "@forte-ui/react";
 
 const VISIBILITY = [
   {

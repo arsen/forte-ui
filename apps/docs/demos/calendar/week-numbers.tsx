@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar } from "@dofortech/forte-ui";
+import { Calendar } from "@forte-ui/react";
 
 export default function CalendarWeekNumbers() {
   return (

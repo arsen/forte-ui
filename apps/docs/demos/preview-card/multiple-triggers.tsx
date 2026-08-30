@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, PreviewCard } from "@dofortech/forte-ui";
+import { Avatar, PreviewCard } from "@forte-ui/react";
 
 type Person = {
   id: string;

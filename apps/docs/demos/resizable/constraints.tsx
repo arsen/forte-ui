@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Resizable } from "@dofortech/forte-ui";
+import { Resizable } from "@forte-ui/react";
 
 /* `minSize` and `maxSize` take a px string as readily as a percentage, and a
  * px constraint is re-resolved against the group's measured width — so the

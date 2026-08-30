@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 export default function ButtonAsLink() {
   return (

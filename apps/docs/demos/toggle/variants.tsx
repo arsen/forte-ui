@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Toggle } from "@dofortech/forte-ui";
+import { Toggle } from "@forte-ui/react";
 
 const VARIANTS = ["solid", "soft", "outline"] as const;
 

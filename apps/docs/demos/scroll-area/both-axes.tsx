@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@dofortech/forte-ui";
+import { ScrollArea } from "@forte-ui/react";
 
 const LOG = `12:04:01.229  info   build    resolved 1,284 modules in 3.1s
 12:04:01.884  info   build    tokens.color.css regenerated from ramp.mjs (12 steps x 3 ramps)

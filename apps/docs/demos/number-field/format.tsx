@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Field, NumberField } from "@dofortech/forte-ui";
+import { Field, NumberField } from "@forte-ui/react";
 
 // A formatted value is longer than a bare one, so the field needs more than the
 // default 5ch. A component knob, so it stays in a `style` object — no utility

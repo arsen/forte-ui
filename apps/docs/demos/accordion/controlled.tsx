@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Accordion, Button } from "@dofortech/forte-ui";
+import { Accordion, Button } from "@forte-ui/react";
 
 const SECTIONS = [
   { value: "scope", title: "Scope", body: "Two teams, six weeks, one repository." },

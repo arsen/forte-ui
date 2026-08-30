@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Avatar, Button, Textarea } from "@dofortech/forte-ui";
+import { Avatar, Button, Textarea } from "@forte-ui/react";
 
 export default function TextareaComposer() {
   const [draft, setDraft] = React.useState("");

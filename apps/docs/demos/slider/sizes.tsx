@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@dofortech/forte-ui";
+import { Slider } from "@forte-ui/react";
 
 const sizes = [
   { size: "sm", label: "Small" },

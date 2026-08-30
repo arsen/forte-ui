@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox, CheckboxGroup } from "@dofortech/forte-ui";
+import { Checkbox, CheckboxGroup } from "@forte-ui/react";
 
 // `cursor-pointer` is not decoration: a plain <label> is not one of ours, so it
 // carries none of Field.Label's styling — including the pointer cursor it gets

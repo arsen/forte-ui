@@ -1,6 +1,6 @@
 /**
  * GENERATED FILE — do not edit by hand.
- * Regenerate with:  pnpm --filter @dofortech/forte-ui-docs registry
+ * Regenerate with:  pnpm --filter @forte-ui/docs registry
  *
  * Each demo is imported TWICE from the same path: once as a component (which
  * renders, and is type-checked) and once through the ?raw loader (the exact

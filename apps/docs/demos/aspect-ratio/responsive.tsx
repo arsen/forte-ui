@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/forte-ui";
+import { AspectRatio } from "@forte-ui/react";
 
 /**
  * A ratio that changes with the layout — and the reason `ratio` seeds a knob

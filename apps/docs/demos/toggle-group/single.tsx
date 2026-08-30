@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Toggle, ToggleGroup } from "@dofortech/forte-ui";
+import { Toggle, ToggleGroup } from "@forte-ui/react";
 
 export default function ToggleGroupSingle() {
   const [value, setValue] = React.useState<string[]>(["balanced"]);

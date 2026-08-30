@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 const VARIANTS = ["soft", "solid", "outline"] as const;
 const TONES = ["neutral", "primary", "secondary", "danger"] as const;

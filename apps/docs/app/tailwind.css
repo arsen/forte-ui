@@ -4,7 +4,7 @@
  * Demos are documentation: the class list a reader copies out of one is the
  * example they will paste into their own app. So this file does not bolt a
  * second design system onto the page — it uses the same bridge a consumer
- * would: `@dofortech/forte-ui/tailwind.css` re-points Tailwind's theme at
+ * would: `@forte-ui/react/tailwind.css` re-points Tailwind's theme at
  * the forte-ui tokens and deletes the stock scales that would let a demo
  * hardcode a value the token system is supposed to own. `gap-5` therefore
  * means `--forte-space-5`, `bg-primary` means `--forte-color-primary`, and
@@ -26,7 +26,7 @@
  * builds on, and which it does not restate. Importing `theme.css` and
  * `utilities.css` on their own is the documented way to opt out.
  */
-@import "@dofortech/forte-ui/tailwind.css";
+@import "@forte-ui/react/tailwind.css";
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 

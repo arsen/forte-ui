@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/forte-ui";
+import { AspectRatio } from "@forte-ui/react";
 
 /**
  * `render` swaps the `<div>` for whatever the box actually is — here, the

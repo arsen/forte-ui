@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@dofortech/forte-ui";
+import { Skeleton } from "@forte-ui/react";
 
 /* Explicit newlines rather than natural wrapping, so this is provably three
  * lines at every viewport width — which is what makes the overlay below a

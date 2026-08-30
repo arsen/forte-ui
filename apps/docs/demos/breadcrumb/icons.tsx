@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb } from "@dofortech/forte-ui";
+import { Breadcrumb } from "@forte-ui/react";
 import { FileText, Folder, House } from "lucide-react";
 
 /* Crumbs are flex, so an svg goes in as a plain child. The stylesheet sizes a

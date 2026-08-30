@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog, Input } from "@dofortech/forte-ui";
+import { Button, Dialog, Input } from "@forte-ui/react";
 
 const LINK = "https://orbit.example.com/p/8fa21c";
 

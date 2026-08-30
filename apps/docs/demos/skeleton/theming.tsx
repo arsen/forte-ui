@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Skeleton } from "@dofortech/forte-ui";
+import { Skeleton } from "@forte-ui/react";
 
 /* Every visual decision is a custom property on the skeleton root, so a
  * restyle is a `style` object rather than a new variant. These stay a style

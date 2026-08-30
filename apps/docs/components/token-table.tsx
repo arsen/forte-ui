@@ -1,4 +1,4 @@
-import tokens from "@dofortech/forte-ui/docs-data/tokens.json";
+import tokens from "@forte-ui/react/docs-data/tokens.json";
 import { cn } from "@/lib/cn";
 import { inline } from "./theming-table";
 import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";

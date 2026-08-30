@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/forte-ui";
+import { Resizable } from "@forte-ui/react";
 
 export default function ResizableVertical() {
   return (

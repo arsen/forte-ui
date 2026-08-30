@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox, CheckboxGroup } from "@dofortech/forte-ui";
+import { Checkbox, CheckboxGroup } from "@forte-ui/react";
 
 const row = "flex cursor-pointer items-center gap-(--forte-control-gap)";
 

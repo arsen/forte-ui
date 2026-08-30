@@ -1,7 +1,7 @@
 /**
  * Generates src/styles/tokens.color.css from the curve table in ramp.mjs.
  *
- * Run via `pnpm --filter @dofortech/forte-ui tokens`. The output is committed
+ * Run via `pnpm --filter @forte-ui/react tokens`. The output is committed
  * so consumers never need this script — it exists so the curve stays auditable
  * data rather than 100 lines of hand-copied near-identical declarations, and so
  * accent and secondary provably share one curve.
@@ -62,7 +62,7 @@ const gray = grayRamp();
 const banner = `/**
  * GENERATED FILE — do not edit by hand.
  * Source of truth: packages/ui/scripts/ramp.mjs
- * Regenerate with:  pnpm --filter @dofortech/forte-ui tokens
+ * Regenerate with:  pnpm --filter @forte-ui/react tokens
  */\n`;
 
 const css = `${banner}

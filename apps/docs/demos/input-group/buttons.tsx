@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Check, Copy, Eye, EyeOff } from "lucide-react";
-import { InputGroup } from "@dofortech/forte-ui";
+import { InputGroup } from "@forte-ui/react";
 
 export default function InputGroupButtons() {
   const [visible, setVisible] = React.useState(false);

@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Textarea } from "@dofortech/forte-ui";
+import { Field, Textarea } from "@forte-ui/react";
 
 export default function TextareaAutoResize() {
   return (

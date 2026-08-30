@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, InputGroup } from "@dofortech/forte-ui";
+import { Field, InputGroup } from "@forte-ui/react";
 
 export default function InputGroupStates() {
   return (

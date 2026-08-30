@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/forte-ui";
+import { AspectRatio } from "@forte-ui/react";
 
 export default function AspectRatioBasic() {
   return (

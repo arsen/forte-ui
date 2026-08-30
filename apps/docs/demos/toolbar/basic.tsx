@@ -1,7 +1,7 @@
 "use client";
 
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from "lucide-react";
-import { Toggle, ToggleGroup, Toolbar } from "@dofortech/forte-ui";
+import { Toggle, ToggleGroup, Toolbar } from "@forte-ui/react";
 
 const ICON = "size-4 shrink-0";
 

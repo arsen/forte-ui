@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Calendar, type CalendarRange } from "@dofortech/forte-ui";
+import { Calendar, type CalendarRange } from "@forte-ui/react";
 
 /* Whole days apart, counted through the calendar rather than the clock:
  * subtracting timestamps is an hour out across a DST boundary, which turns a

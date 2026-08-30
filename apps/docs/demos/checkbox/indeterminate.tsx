@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox, Field } from "@dofortech/forte-ui";
+import { Checkbox, Field } from "@forte-ui/react";
 
 const FILES = [
   { value: "report", label: "quarterly-report.pdf" },

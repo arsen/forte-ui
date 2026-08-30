@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Toast } from "@dofortech/forte-ui";
+import { Button, Toast } from "@forte-ui/react";
 
 // Created at module scope, outside React. In an app this lives in its own
 // file — `export const toaster = Toast.createManager()` — and anything that

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Field, NumberField } from "@dofortech/forte-ui";
+import { Field, NumberField } from "@forte-ui/react";
 
 /**
  * Two scrub areas driving something you can watch move, because the point of

@@ -19,7 +19,7 @@ Tabs put several views of the same subject in one place and show one at a time. 
 ## Import
 
 ```tsx
-import { Tabs } from "@dofortech/forte-ui";
+import { Tabs } from "@forte-ui/react";
 ```
 
 `Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list. `Tabs.List` renders a [`ScrollArea`](/components/scroll-area) around itself unless `overflow="visible"` is set on the root — its own `className`, `ref` and props still land on the `tablist` element, but it is no longer the outermost box of the strip.

@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator } from "@dofortech/forte-ui";
+import { Separator } from "@forte-ui/react";
 
 const VARIANTS = ["solid", "dashed", "dotted"] as const;
 

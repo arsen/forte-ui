@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Checkbox, CheckboxGroup, Field } from "@dofortech/forte-ui";
+import { Button, Checkbox, CheckboxGroup, Field } from "@forte-ui/react";
 
 const TOPICS = [
   { value: "releases", label: "Product releases" },

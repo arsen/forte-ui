@@ -1,6 +1,6 @@
 "use client";
 
-import { InputGroup, Spinner } from "@dofortech/forte-ui";
+import { InputGroup, Spinner } from "@forte-ui/react";
 
 export default function InputGroupLoading() {
   return (

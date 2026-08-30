@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/forte-ui";
+import { AspectRatio } from "@forte-ui/react";
 
 /* `clip` is on by default because media overflowing its own frame is a bug.
  * The exception is the decoration that is MEANT to break out — a badge on a

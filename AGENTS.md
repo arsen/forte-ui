@@ -7,7 +7,7 @@ file. `CLAUDE.md` is a symlink to this file — one document, two names.
 
 ## What this project is
 
-`@dofortech/forte-ui` is an accessible React component library built on
+`@forte-ui/react` is an accessible React component library built on
 [Base UI](https://base-ui.com) primitives, styled with CSS Modules and a design
 system that rebuilds its entire palette from **one colour variable** using CSS
 relative colour syntax — no JavaScript, no build step, no runtime theming layer.
@@ -68,11 +68,11 @@ drift the command exists to repair.
 Each generator still has its own script when you want just one:
 
 ```bash
-pnpm --filter @dofortech/forte-ui tokens         # the generated CSS
-pnpm --filter @dofortech/forte-ui docgen         # props.json + theming.json
-pnpm --filter @dofortech/forte-ui check:contrast # the ramp gate
-pnpm --filter @dofortech/forte-ui-docs registry  # the demo registry
-pnpm --filter @dofortech/forte-ui-docs toc       # the "On this page" seed
+pnpm --filter @forte-ui/react tokens         # the generated CSS
+pnpm --filter @forte-ui/react docgen         # props.json + theming.json
+pnpm --filter @forte-ui/react check:contrast # the ramp gate
+pnpm --filter @forte-ui/docs registry  # the demo registry
+pnpm --filter @forte-ui/docs toc       # the "On this page" seed
 ```
 
 `check:contrast` is deliberately outside `generate` — it is a gate, not a
@@ -437,7 +437,7 @@ Reach for utilities instead of a `style={{ ... }}` object for anything that is
 layout or typography.
 
 The token mapping itself is no longer a docs file: it ships from the library
-as the **`@dofortech/forte-ui/tailwind.css` bridge** (source:
+as the **`@forte-ui/react/tailwind.css` bridge** (source:
 [`packages/ui/src/styles/tailwind.css`](packages/ui/src/styles/tailwind.css)),
 which is the same file a consumer imports. It re-points Tailwind's theme at
 the forte-ui tokens, deletes the stock scales, and pins the cascade-layer
@@ -637,8 +637,8 @@ base rules without a single `!important`.
 ### Before you call it done
 
 ```bash
-pnpm --filter @dofortech/forte-ui typecheck
-pnpm --filter @dofortech/forte-ui test     # only if you touched ramp.mjs
+pnpm --filter @forte-ui/react typecheck
+pnpm --filter @forte-ui/react test     # only if you touched ramp.mjs
 pnpm dev                                    # then look at it
 ```
 

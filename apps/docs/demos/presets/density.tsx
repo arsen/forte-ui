@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Field, Input } from "@dofortech/forte-ui";
+import { Button, Field, Input } from "@forte-ui/react";
 
 const PRESETS = ["compact", undefined, "spacious"] as const;
 

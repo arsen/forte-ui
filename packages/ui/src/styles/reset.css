@@ -2,7 +2,7 @@
  * Optional minimal reset for forte-ui primitives.
  * Scoped into the `forte-ui` cascade layer so it never overrides consumer
  * styles. Import is optional:
- *   import "@dofortech/forte-ui/styles/reset.css";
+ *   import "@forte-ui/react/styles/reset.css";
  */
 @layer forte {
   :where(.forte-reset *, .forte-reset) {

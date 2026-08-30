@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Popover } from "@dofortech/forte-ui";
+import { Button, Popover } from "@forte-ui/react";
 
 const SIDES = ["top", "right", "bottom", "left"] as const;
 

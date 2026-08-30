@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 const TEAM = [
   { name: "Ada Lovelace", initials: "AL", src: "/avatars/ada.svg" },

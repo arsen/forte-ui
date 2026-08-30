@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Textarea } from "@dofortech/forte-ui";
+import { Field, Textarea } from "@forte-ui/react";
 
 const SIZES = ["sm", "md", "lg"] as const;
 

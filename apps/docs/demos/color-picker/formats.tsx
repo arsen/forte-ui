@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ColorPicker, type ColorPickerFormat } from "@dofortech/forte-ui";
+import { ColorPicker, type ColorPickerFormat } from "@forte-ui/react";
 
 export default function ColorPickerFormats() {
   const [value, setValue] = React.useState("oklch(0.5413 0.2466 293.01)");

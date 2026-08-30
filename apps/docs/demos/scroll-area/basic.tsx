@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@dofortech/forte-ui";
+import { ScrollArea } from "@forte-ui/react";
 
 const RELEASES = [
   ["4.2.0", "Scroll areas gained a gradient edge fade."],

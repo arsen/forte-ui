@@ -1,4 +1,4 @@
-# @dofortech/forte-ui
+# @forte-ui/react
 
 An accessible React component library built on [Base UI](https://base-ui.com)
 primitives. One CSS variable re-themes the entire system, motion respects every
@@ -21,14 +21,14 @@ CSS custom properties.
 ## Install
 
 ```bash
-pnpm add @dofortech/forte-ui
+pnpm add @forte-ui/react
 ```
 
 React 18 or 19 is a peer dependency. Then import the one required stylesheet
 once, at the root of your app, before any component renders:
 
 ```tsx
-import "@dofortech/forte-ui/theme.css";
+import "@forte-ui/react/theme.css";
 ```
 
 Per-component styles load automatically with each component you import — they
@@ -36,7 +36,7 @@ require a bundler that understands CSS imports from `node_modules` (Vite,
 Next.js and webpack all qualify).
 
 ```tsx
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 <Button variant="soft" tone="danger" size="lg">
   Delete
@@ -135,7 +135,7 @@ The package ships a bridge that points Tailwind's theme at the forte-ui
 tokens. Import it **before** Tailwind in the stylesheet that sets Tailwind up:
 
 ```css
-@import "@dofortech/forte-ui/tailwind.css";
+@import "@forte-ui/react/tailwind.css";
 @import "tailwindcss";
 ```
 
@@ -190,7 +190,7 @@ so `text-2` (a font size here) parses as a text colour and
 ships a `cn` already configured for the bridge:
 
 ```ts
-import { cn } from "@dofortech/forte-ui/cn";
+import { cn } from "@forte-ui/react/cn";
 
 cn("p-4", condition && "p-6"); // -> "p-6" when condition holds
 ```
@@ -203,7 +203,7 @@ extend it with `createCn`, which takes the same `{ extend, override }` shape
 as tailwind-merge itself and *appends* your names to the library's scales:
 
 ```ts
-import { createCn } from "@dofortech/forte-ui/cn";
+import { createCn } from "@forte-ui/react/cn";
 
 export const cn = createCn({
   extend: {
@@ -216,7 +216,7 @@ export const cn = createCn({
 ```
 
 For setups that are not `cn`-shaped at all, the underlying
-`tailwindMergeConfig` stays exported from `@dofortech/forte-ui/tailwind-merge`
+`tailwindMergeConfig` stays exported from `@forte-ui/react/tailwind-merge`
 as a plain data object.
 
 Colours need no entry — the colour scale already matches any name — and

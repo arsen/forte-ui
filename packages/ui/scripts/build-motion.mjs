@@ -1,6 +1,6 @@
 /**
  * Generates src/styles/motion.css from motion.mjs.
- * Run via `pnpm --filter @dofortech/forte-ui tokens`.
+ * Run via `pnpm --filter @forte-ui/react tokens`.
  */
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -46,7 +46,7 @@ function stateBlock(selectors, { durationKey, geometryKey, motionOk, comment }) 
 const css = `/**
  * GENERATED FILE — do not edit by hand.
  * Source of truth: packages/ui/scripts/motion.mjs
- * Regenerate with:  pnpm --filter @dofortech/forte-ui tokens
+ * Regenerate with:  pnpm --filter @forte-ui/react tokens
  *
  * This is the ONLY prefers-reduced-motion block in the library. Component
  * stylesheets must never write their own — they consume the tokens below and

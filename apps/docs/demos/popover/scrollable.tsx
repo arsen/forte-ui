@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Popover, ScrollArea } from "@dofortech/forte-ui";
+import { Button, Popover, ScrollArea } from "@forte-ui/react";
 
 const ACTIVITY = [
   ["09:41", "Deploy eu-central-1 finished in 3.4s"],

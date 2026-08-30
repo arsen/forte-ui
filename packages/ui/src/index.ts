@@ -2,7 +2,7 @@
 
 // Every export in this barrel is a client component, so the barrel itself is a
 // client boundary. Marking it here means a consumer can `import { Button } from
-// "@dofortech/forte-ui"` directly inside a React Server Component without
+// "@forte-ui/react"` directly inside a React Server Component without
 // having to wrap it — which is the import everyone writes first.
 
 export { Accordion } from "./components/accordion";

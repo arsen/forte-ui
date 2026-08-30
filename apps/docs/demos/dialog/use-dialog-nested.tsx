@@ -8,7 +8,7 @@ import {
   Input,
   useDialog,
   type CustomDialogProps,
-} from "@dofortech/forte-ui";
+} from "@forte-ui/react";
 
 const receipt = "m-0 font-mono text-1 text-foreground-muted";
 

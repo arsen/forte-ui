@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@dofortech/forte-ui";
+import { Skeleton } from "@forte-ui/react";
 
 const VARIANTS = [
   { variant: "rect", note: "Blocks and thumbnails", className: "h-16 w-28" },

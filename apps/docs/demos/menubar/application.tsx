@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu, Menubar, Separator } from "@dofortech/forte-ui";
+import { Menu, Menubar, Separator } from "@forte-ui/react";
 
 export default function MenubarApplication() {
   const [wrap, setWrap] = React.useState(true);

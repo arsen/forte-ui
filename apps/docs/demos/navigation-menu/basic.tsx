@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/forte-ui";
+import { NavigationMenu } from "@forte-ui/react";
 
 const components = [
   { href: "/components/button", title: "Button", description: "The one control everything else is measured against." },

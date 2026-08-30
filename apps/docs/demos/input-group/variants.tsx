@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { InputGroup } from "@dofortech/forte-ui";
+import { InputGroup } from "@forte-ui/react";
 
 const VARIANTS = ["outline", "soft", "ghost"] as const;
 

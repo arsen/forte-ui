@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@dofortech/forte-ui";
+import { Button, Input } from "@forte-ui/react";
 
 const PRESETS = [undefined, "none", "soft", "pill"] as const;
 

@@ -18,7 +18,7 @@ A nav list is the vertical list of links a sidebar is made of: sections with sma
 ## Import
 
 ```tsx
-import { NavList } from "@dofortech/forte-ui";
+import { NavList } from "@forte-ui/react";
 ```
 
 `NavList` is a namespace of ten parts. The full anatomy, with every optional layer present:
@@ -97,7 +97,7 @@ Framework links go in through `render`, which replaces the rendered `<a>` withou
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NavList } from "@dofortech/forte-ui";
+import { NavList } from "@forte-ui/react";
 
 export function DocsNav() {
   const pathname = usePathname();

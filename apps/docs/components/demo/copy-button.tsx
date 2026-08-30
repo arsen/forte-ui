@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 /**
  * Copies the code from the nearest <pre>'s textContent.

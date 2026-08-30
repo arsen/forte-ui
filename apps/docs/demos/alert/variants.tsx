@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert } from "@dofortech/forte-ui";
+import { Alert } from "@forte-ui/react";
 
 const VARIANTS = ["soft", "outline"] as const;
 

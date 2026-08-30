@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress, ProgressCircle } from "@dofortech/forte-ui";
+import { Progress, ProgressCircle } from "@forte-ui/react";
 
 /* `data-forte-motion` is the same switch the demo frame's reduced-motion toggle
  * flips, and it works on any element — so the right-hand column is genuinely

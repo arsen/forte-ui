@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, ScrollArea } from "@dofortech/forte-ui";
+import { Button, Dialog, ScrollArea } from "@forte-ui/react";
 
 const CLAUSES = [
   "1. Accounts. You are responsible for everything that happens under your account, including anything done by teammates you invite. Keep your credentials to yourself, and tell us within 24 hours if you think someone else has them.",

@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { NavList } from "@dofortech/forte-ui";
+import { NavList } from "@forte-ui/react";
 
 /**
  * The documentation page list, and the markup for it.

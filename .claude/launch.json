@@ -4,7 +4,7 @@
     {
       "name": "docs",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@dofortech/forte-ui-docs", "exec", "next", "dev"],
+      "runtimeArgs": ["--filter", "@forte-ui/docs", "exec", "next", "dev"],
       "autoPort": true
     }
   ]

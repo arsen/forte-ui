@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Calendar } from "@dofortech/forte-ui";
+import { Button, Calendar } from "@forte-ui/react";
 
 /* `weekStartsOn` is a separate prop because it cannot be read from the locale
  * in every browser — so the pairing is stated here rather than guessed. */

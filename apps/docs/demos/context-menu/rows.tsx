@@ -1,7 +1,7 @@
 "use client";
 
 import { Copy, FileText, FolderOpen, Pencil, Trash2 } from "lucide-react";
-import { ContextMenu } from "@dofortech/forte-ui";
+import { ContextMenu } from "@forte-ui/react";
 
 const FILES = ["Q3 report.pdf", "budget.xlsx", "team offsite.md"];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@dofortech/forte-ui";
+import { Spinner } from "@forte-ui/react";
 
 const TONES = ["primary", "secondary", "danger", "neutral"] as const;
 

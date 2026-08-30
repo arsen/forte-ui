@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, type DialogSize } from "@dofortech/forte-ui";
+import { Button, Dialog, type DialogSize } from "@forte-ui/react";
 
 const SIZES: { size: DialogSize; label: string }[] = [
   { size: "sm", label: "Small" },

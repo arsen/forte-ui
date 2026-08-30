@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs } from "@dofortech/forte-ui";
+import { Tabs } from "@forte-ui/react";
 
 const REGIONS = [
   { value: "us-east-1", label: "US East (N. Virginia)", detail: "42 instances, 3 alarms." },

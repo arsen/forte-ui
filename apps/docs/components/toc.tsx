@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { NavList } from "@dofortech/forte-ui";
+import { NavList } from "@forte-ui/react";
 import { cn } from "@/lib/cn";
 import { TOC, type TocHeading } from "./toc-registry";
 import { EYEBROW, STICKY_COLUMN } from "./styles";

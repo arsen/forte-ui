@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Spinner } from "@dofortech/forte-ui";
+import { Spinner } from "@forte-ui/react";
 
 /* Every visual decision is a custom property on the spinner root, so a
  * restyle is a `style` object rather than a new variant. Note that all three

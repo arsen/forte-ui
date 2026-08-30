@@ -5,10 +5,10 @@ import type { Metadata } from "next";
 // which is what puts Tailwind's utilities last and lets them win over the
 // site's own base rules). tailwind.css only fills layers those two already
 // positioned.
-import "@dofortech/forte-ui/theme.css";
+import "@forte-ui/react/theme.css";
 import "./globals.css";
 import "./tailwind.css";
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 import { SiGithub } from "react-icons/si";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { ICON } from "@/components/styles";

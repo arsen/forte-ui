@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Separator } from "@dofortech/forte-ui";
+import { Button, Separator } from "@forte-ui/react";
 
 export default function SeparatorToolbar() {
   return (

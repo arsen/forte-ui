@@ -1,6 +1,6 @@
 "use client";
 
-import { Toolbar } from "@dofortech/forte-ui";
+import { Toolbar } from "@forte-ui/react";
 
 export default function ToolbarLink() {
   return (

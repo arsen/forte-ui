@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Progress, ProgressCircle } from "@dofortech/forte-ui";
+import { Button, Progress, ProgressCircle } from "@forte-ui/react";
 
 /* The realistic shape of a real upload, and the reason `value` accepts `null`
  * rather than there being an `indeterminate` prop: the same bar is

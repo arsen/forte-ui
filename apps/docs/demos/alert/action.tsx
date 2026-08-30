@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button } from "@dofortech/forte-ui";
+import { Alert, Button } from "@forte-ui/react";
 
 export default function AlertAction() {
   return (

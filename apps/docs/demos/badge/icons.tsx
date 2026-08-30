@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@dofortech/forte-ui";
+import { Badge } from "@forte-ui/react";
 import { Check, GitPullRequest, Lock, Sparkles, TriangleAlert } from "lucide-react";
 
 /* No size class on any of these: the badge sizes an `svg` child at `1em`, so

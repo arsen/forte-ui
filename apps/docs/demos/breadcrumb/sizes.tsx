@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb, type BreadcrumbSize } from "@dofortech/forte-ui";
+import { Breadcrumb, type BreadcrumbSize } from "@forte-ui/react";
 
 const SIZES: BreadcrumbSize[] = ["sm", "md", "lg"];
 

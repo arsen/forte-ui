@@ -6,7 +6,7 @@
  * the curve caps (notably accent-11's light cap of 0.490) were tuned against
  * this, and a plausible-looking tweak can quietly drop a hue below AA.
  *
- *   pnpm --filter @dofortech/forte-ui check:contrast
+ *   pnpm --filter @forte-ui/react check:contrast
  */
 import { ACCENT_CURVE, GRAY_CURVE } from "./ramp.mjs";
 

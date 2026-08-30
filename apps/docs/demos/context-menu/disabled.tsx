@@ -1,6 +1,6 @@
 "use client";
 
-import { ContextMenu } from "@dofortech/forte-ui";
+import { ContextMenu } from "@forte-ui/react";
 
 export default function ContextMenuDisabled() {
   return (

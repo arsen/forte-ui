@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Drawer } from "@dofortech/forte-ui";
+import { Button, Drawer } from "@forte-ui/react";
 
 type Review = {
   id: string;
