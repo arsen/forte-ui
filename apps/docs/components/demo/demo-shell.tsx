@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Tabs } from "@dofortech/pretty-ui";
+import { Tabs } from "@dofortech/forte-ui";
 import { DemoFrame, DemoControls, type DemoScope } from "./demo-frame";
 
 const INITIAL: DemoScope = { theme: "inherit", dir: "ltr", motion: "inherit" };
@@ -40,7 +40,7 @@ export function DemoShell({
         defaultValue="preview"
         variant="line"
         className="block"
-        style={{ "--pui-tabs-rail-width": "0px" } as React.CSSProperties}
+        style={{ "--forte-tabs-rail-width": "0px" } as React.CSSProperties}
       >
         <div className="flex items-center justify-between gap-3 border-b border-border-muted px-3">
           <Tabs.List className="gap-1">

@@ -1,11 +1,11 @@
 /**
- * Optional minimal reset for pretty-ui primitives.
- * Scoped into the `pretty-ui` cascade layer so it never overrides consumer
+ * Optional minimal reset for forte-ui primitives.
+ * Scoped into the `forte-ui` cascade layer so it never overrides consumer
  * styles. Import is optional:
- *   import "@dofortech/pretty-ui/styles/reset.css";
+ *   import "@dofortech/forte-ui/styles/reset.css";
  */
-@layer pretty-ui {
-  :where(.pui-reset *, .pui-reset) {
+@layer forte {
+  :where(.forte-reset *, .forte-reset) {
     box-sizing: border-box;
   }
 }

@@ -1,4 +1,4 @@
-import props from "@dofortech/pretty-ui/docs-data/props.json";
+import props from "@dofortech/forte-ui/docs-data/props.json";
 import { cn } from "@/lib/cn";
 import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";
 
@@ -34,7 +34,7 @@ export function PropTable({ component, only }: { component: string; only?: strin
   return (
     <div className={TABLE_WRAP}>
       <table className={TABLE}>
-        <caption className="pui-visually-hidden">Props for {component}</caption>
+        <caption className="forte-visually-hidden">Props for {component}</caption>
         <thead>
           <tr>
             <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Prop</th>

@@ -24,21 +24,21 @@
  * itself: a toolbar has no states of its own. Everything that animates in here
  * is a control that animates on its own terms.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens, declared here on the bar itself so an ancestor's value
      * is only inherited and never wins. Re-skin one bar by setting them on it
      * (an unlayered consumer rule beats this layer at any specificity);
      * re-skin every bar by re-pointing the global tokens they resolve to. */
     /** Gap between items. `size` re-points it. */
-    --pui-toolbar-gap: var(--pui-space-2);
+    --forte-toolbar-gap: var(--forte-space-2);
     /** Padding inside the bar. `size` re-points it; `variant="plain"` drops it
      * to `0`. */
-    --pui-toolbar-padding: var(--pui-space-2);
+    --forte-toolbar-padding: var(--forte-space-2);
     /** Corner radius. `variant="plain"` drops it to `0`. */
-    --pui-toolbar-radius: var(--pui-radius-surface);
+    --forte-toolbar-radius: var(--forte-radius-surface);
     /** Fill behind the bar. `variant` sets it. */
-    --pui-toolbar-bg: transparent;
+    --forte-toolbar-bg: transparent;
     /* Declared even when there is nothing to draw, and `transparent` rather
      * than absent, because `transparent` is NOT preserved under forced colours
      * — it is replaced with a system colour. Reserving the 1px here is what
@@ -46,23 +46,23 @@
      * where its fill disappears, without adding 2px of border and shifting
      * every item in the bar. */
     /** Border width. */
-    --pui-toolbar-border-width: 1px;
+    --forte-toolbar-border-width: 1px;
     /** Border colour. `variant` sets it. */
-    --pui-toolbar-border-color: transparent;
+    --forte-toolbar-border-color: transparent;
     /** Drop shadow. Unset by default — a toolbar is part of the page, not a
      * surface floating over it. */
-    --pui-toolbar-shadow: none;
+    --forte-toolbar-shadow: none;
 
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--pui-toolbar-gap);
-    padding: var(--pui-toolbar-padding);
-    border: var(--pui-toolbar-border-width) solid var(--pui-toolbar-border-color);
-    border-radius: var(--pui-toolbar-radius);
-    background-color: var(--pui-toolbar-bg);
-    box-shadow: var(--pui-toolbar-shadow);
+    gap: var(--forte-toolbar-gap);
+    padding: var(--forte-toolbar-padding);
+    border: var(--forte-toolbar-border-width) solid var(--forte-toolbar-border-color);
+    border-radius: var(--forte-toolbar-radius);
+    background-color: var(--forte-toolbar-bg);
+    box-shadow: var(--forte-toolbar-shadow);
 
     /* Chrome, not a control: the bar itself performs no action, so it takes
      * `default` per the cursor table in AGENTS.md. Each item inside declares
@@ -92,18 +92,18 @@
    * in the TSX, so these stay in step without this file knowing anything about
    * Button or Input. */
   .root[data-size="sm"] {
-    --pui-toolbar-gap: var(--pui-space-1);
-    --pui-toolbar-padding: var(--pui-space-1);
+    --forte-toolbar-gap: var(--forte-space-1);
+    --forte-toolbar-padding: var(--forte-space-1);
   }
 
   .root[data-size="md"] {
-    --pui-toolbar-gap: var(--pui-space-2);
-    --pui-toolbar-padding: var(--pui-space-2);
+    --forte-toolbar-gap: var(--forte-space-2);
+    --forte-toolbar-padding: var(--forte-space-2);
   }
 
   .root[data-size="lg"] {
-    --pui-toolbar-gap: var(--pui-space-2);
-    --pui-toolbar-padding: var(--pui-space-3);
+    --forte-toolbar-gap: var(--forte-space-2);
+    --forte-toolbar-padding: var(--forte-space-3);
   }
 
   /* Variants ---------------------------------------------------------------
@@ -113,23 +113,23 @@
    * a row of buttons that does not line up with the thing it acts on reads as
    * a mistake. */
   .root[data-variant="plain"] {
-    --pui-toolbar-padding: 0px;
-    --pui-toolbar-radius: 0px;
-    --pui-toolbar-bg: transparent;
-    --pui-toolbar-border-color: transparent;
+    --forte-toolbar-padding: 0px;
+    --forte-toolbar-radius: 0px;
+    --forte-toolbar-bg: transparent;
+    --forte-toolbar-border-color: transparent;
   }
 
   .root[data-variant="panel"] {
-    --pui-toolbar-bg: var(--pui-color-panel);
-    --pui-toolbar-border-color: transparent;
+    --forte-toolbar-bg: var(--forte-color-panel);
+    --forte-toolbar-border-color: transparent;
   }
 
   /* Background, not `transparent`: an outline bar is a container, and one laid
    * over striped or image content with only a border would let that content
    * run behind its controls. */
   .root[data-variant="outline"] {
-    --pui-toolbar-bg: var(--pui-color-background);
-    --pui-toolbar-border-color: var(--pui-color-border);
+    --forte-toolbar-bg: var(--forte-color-background);
+    --forte-toolbar-border-color: var(--forte-color-border);
   }
 
   /* Group ------------------------------------------------------------------
@@ -140,13 +140,13 @@
   .group {
     /** Gap between items inside the group. Tighter than the bar's own gap,
      * which is what makes a cluster read as one. */
-    --pui-toolbar-group-gap: var(--pui-space-1);
+    --forte-toolbar-group-gap: var(--forte-space-1);
 
     box-sizing: border-box;
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--pui-toolbar-group-gap);
+    gap: var(--forte-toolbar-group-gap);
   }
 
   /* `stretch`, not `center`: in a column the items have to take the group's
@@ -178,17 +178,17 @@
    * `auto`. */
   .separator {
     /** Line thickness. */
-    --pui-toolbar-separator-thickness: 1px;
+    --forte-toolbar-separator-thickness: 1px;
     /** Line colour. */
-    --pui-toolbar-separator-color: var(--pui-color-border);
+    --forte-toolbar-separator-color: var(--forte-color-border);
     /* Not zero, unlike `Separator`'s: a rule running the full height of a
      * padded bar touches the fill's top and bottom edges and reads as a seam
      * splitting the bar in two, rather than as a divider between two groups
      * inside it. */
     /** How far the rule stops short of the bar's inner edges. */
-    --pui-toolbar-separator-inset: var(--pui-space-1);
+    --forte-toolbar-separator-inset: var(--forte-space-1);
     /** Length floor for a rule with nothing to stretch against. */
-    --pui-toolbar-separator-min-length: 1lh;
+    --forte-toolbar-separator-min-length: 1lh;
 
     box-sizing: border-box;
     /* Zeroed before either is set below, so `render={<hr />}` works: the UA
@@ -215,11 +215,11 @@
      * stretch", not "be zero wide". */
     inline-size: 0;
     block-size: auto;
-    min-block-size: var(--pui-toolbar-separator-min-length);
+    min-block-size: var(--forte-toolbar-separator-min-length);
     border-inline-start:
-      var(--pui-toolbar-separator-thickness) solid
-      var(--pui-toolbar-separator-color);
-    margin-block: var(--pui-toolbar-separator-inset);
+      var(--forte-toolbar-separator-thickness) solid
+      var(--forte-toolbar-separator-color);
+    margin-block: var(--forte-toolbar-separator-inset);
   }
 
   /* …and the rule in a VERTICAL one. */
@@ -228,9 +228,9 @@
     /* The mirror of the above: pins the block axis. */
     block-size: 0;
     border-block-start:
-      var(--pui-toolbar-separator-thickness) solid
-      var(--pui-toolbar-separator-color);
-    margin-inline: var(--pui-toolbar-separator-inset);
+      var(--forte-toolbar-separator-thickness) solid
+      var(--forte-toolbar-separator-color);
+    margin-inline: var(--forte-toolbar-separator-inset);
   }
 
   /* Link -------------------------------------------------------------------
@@ -244,53 +244,53 @@
    * 28px tall, and a link is as wide as its text. */
   .link {
     /** Height. `size` re-points it. */
-    --pui-toolbar-link-height: var(--pui-control-h-md);
+    --forte-toolbar-link-height: var(--forte-control-h-md);
     /** Inline padding. */
-    --pui-toolbar-link-padding-x: var(--pui-space-2);
+    --forte-toolbar-link-padding-x: var(--forte-space-2);
     /** Corner radius — for the hover fill and the focus ring, which both need
      * to match the buttons beside it. */
-    --pui-toolbar-link-radius: var(--pui-radius-control);
+    --forte-toolbar-link-radius: var(--forte-radius-control);
     /** Label size. `size` re-points it. */
-    --pui-toolbar-link-font-size: var(--pui-font-size-2);
+    --forte-toolbar-link-font-size: var(--forte-font-size-2);
     /** Label colour. */
-    --pui-toolbar-link-color: var(--pui-color-primary-text);
+    --forte-toolbar-link-color: var(--forte-color-primary-text);
     /** Fill on hover. */
-    --pui-toolbar-link-bg-hover: var(--pui-color-panel-hover);
+    --forte-toolbar-link-bg-hover: var(--forte-color-panel-hover);
     /* Muted by default so the rule reads as an underline rather than as a
      * second line of text, then brought to full strength on hover. */
     /** Underline colour. */
-    --pui-toolbar-link-underline-color: color-mix(
+    --forte-toolbar-link-underline-color: color-mix(
       in oklab,
       currentcolor 45%,
       transparent
     );
     /** Distance between the text baseline and its underline. */
-    --pui-toolbar-link-underline-offset: 0.15em;
+    --forte-toolbar-link-underline-offset: 0.15em;
     /** Colour transitions between states. */
-    --pui-toolbar-link-duration: var(--pui-duration-fast);
+    --forte-toolbar-link-duration: var(--forte-duration-fast);
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-control-gap);
-    block-size: var(--pui-toolbar-link-height);
-    padding-inline: var(--pui-toolbar-link-padding-x);
-    border-radius: var(--pui-toolbar-link-radius);
+    gap: var(--forte-control-gap);
+    block-size: var(--forte-toolbar-link-height);
+    padding-inline: var(--forte-toolbar-link-padding-x);
+    border-radius: var(--forte-toolbar-link-radius);
 
-    color: var(--pui-toolbar-link-color);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-toolbar-link-font-size);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    color: var(--forte-toolbar-link-color);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-toolbar-link-font-size);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     text-decoration: underline;
-    text-decoration-color: var(--pui-toolbar-link-underline-color);
+    text-decoration-color: var(--forte-toolbar-link-underline-color);
     /* `from-font` where the font ships a thickness, so the rule sits where the
      * typeface's designer put it. */
     text-decoration-thickness: from-font;
-    text-underline-offset: var(--pui-toolbar-link-underline-offset);
+    text-underline-offset: var(--forte-toolbar-link-underline-offset);
 
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
@@ -298,39 +298,39 @@
      * a `box-shadow` halo, and `outline` cannot be transitioned — animating
      * only half of it makes the ring assemble in two stages on every Tab. */
     transition:
-      background-color var(--pui-toolbar-link-duration) var(--pui-ease-standard),
-      text-decoration-color var(--pui-toolbar-link-duration)
-        var(--pui-ease-standard);
+      background-color var(--forte-toolbar-link-duration) var(--forte-ease-standard),
+      text-decoration-color var(--forte-toolbar-link-duration)
+        var(--forte-ease-standard);
   }
 
   /* Gated on real hover support so a touch device does not stick in the hover
    * fill after a tap. */
   @media (hover: hover) {
     .link:hover {
-      --pui-toolbar-link-underline-color: currentcolor;
+      --forte-toolbar-link-underline-color: currentcolor;
 
-      background-color: var(--pui-toolbar-link-bg-hover);
+      background-color: var(--forte-toolbar-link-bg-hover);
     }
   }
 
   .link[data-size="sm"] {
-    --pui-toolbar-link-height: var(--pui-control-h-sm);
-    --pui-toolbar-link-font-size: var(--pui-font-size-1);
+    --forte-toolbar-link-height: var(--forte-control-h-sm);
+    --forte-toolbar-link-font-size: var(--forte-font-size-1);
   }
 
   .link[data-size="md"] {
-    --pui-toolbar-link-height: var(--pui-control-h-md);
-    --pui-toolbar-link-font-size: var(--pui-font-size-2);
+    --forte-toolbar-link-height: var(--forte-control-h-md);
+    --forte-toolbar-link-font-size: var(--forte-font-size-2);
   }
 
   .link[data-size="lg"] {
-    --pui-toolbar-link-height: var(--pui-control-h-lg);
-    --pui-toolbar-link-font-size: var(--pui-font-size-3);
+    --forte-toolbar-link-height: var(--forte-control-h-lg);
+    --forte-toolbar-link-font-size: var(--forte-font-size-3);
   }
 }
 
 /* Forced colours -------------------------------------------------------------
- * Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so
+ * Top-level `forte.a11y`, ordered after `forte.components`, so
  * everything here beats the rules above by layer alone.
  *
  * Only the bar's own fill needs rescuing. `panel` and `outline` both paint a
@@ -341,14 +341,14 @@
  * which is correct: it never claimed to be a surface.
  *
  * The separator needs nothing — it is drawn with a border, which forced
- * colours keeps — and the link inherits `LinkText` from the `.pui-link` rule
+ * colours keeps — and the link inherits `LinkText` from the `.forte-link` rule
  * in patterns.css.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .root[data-variant="panel"],
     .root[data-variant="outline"] {
-      --pui-toolbar-border-color: CanvasText;
+      --forte-toolbar-border-color: CanvasText;
     }
   }
 }

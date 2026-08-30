@@ -211,8 +211,8 @@ function TooltipTrigger<Payload = unknown>({
 }: TooltipTriggerProps<Payload>) {
   return (
     <BaseTooltip.Trigger<Payload>
-      className={clsx(styles.trigger, "pui-focus-ring", className)}
-      data-pui="tooltip-trigger"
+      className={clsx(styles.trigger, "forte-focus-ring", className)}
+      data-forte="tooltip-trigger"
       {...props}
     />
   );
@@ -358,7 +358,7 @@ const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
       <BaseTooltip.Portal keepMounted={keepMounted} container={container}>
         <BaseTooltip.Positioner
           className={clsx(styles.positioner, positionerClassName)}
-          data-pui="tooltip-positioner"
+          data-forte="tooltip-positioner"
           side={side}
           align={align}
           sideOffset={sideOffset}
@@ -372,13 +372,13 @@ const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
           positionMethod={positionMethod}
           disableAnchorTracking={disableAnchorTracking}
         >
-          {/* .pui-hc-surface carries a transparent border. `transparent` is
+          {/* .forte-hc-surface carries a transparent border. `transparent` is
            * not preserved in forced-colors mode, so it becomes the visible
            * system-coloured boundary that replaces the stripped shadow. */}
           <BaseTooltip.Popup
             ref={ref}
-            className={clsx(styles.popup, "pui-hc-surface", className)}
-            data-pui="tooltip-popup"
+            className={clsx(styles.popup, "forte-hc-surface", className)}
+            data-forte="tooltip-popup"
             {...props}
           >
             {children}
@@ -397,7 +397,7 @@ export interface TooltipArrowProps
   extends Omit<BaseTooltip.Arrow.Props, "className"> {
   /**
    * Replaces the built-in wedge. The default SVG inherits the popup's colours
-   * through `--pui-tooltip-bg`, so a custom skin usually needs nothing here.
+   * through `--forte-tooltip-bg`, so a custom skin usually needs nothing here.
    */
   children?: React.ReactNode;
   /**
@@ -426,7 +426,7 @@ const TooltipArrow = React.forwardRef<HTMLDivElement, TooltipArrowProps>(
       <BaseTooltip.Arrow
         ref={ref}
         className={clsx(styles.arrow, className)}
-        data-pui="tooltip-arrow"
+        data-forte="tooltip-arrow"
         {...props}
       >
         {children ?? <ArrowSvg />}
@@ -445,7 +445,7 @@ function ArrowSvg() {
   return (
     <svg
       className={styles.arrowSvg}
-      data-pui="tooltip-arrow-svg"
+      data-forte="tooltip-arrow-svg"
       viewBox="0 0 20 10"
       preserveAspectRatio="none"
       aria-hidden="true"
@@ -511,7 +511,7 @@ const TooltipShortcut = React.forwardRef<HTMLSpanElement, TooltipShortcutProps>(
       <span
         ref={ref}
         className={clsx(styles.shortcut, className)}
-        data-pui="tooltip-shortcut"
+        data-forte="tooltip-shortcut"
         {...props}
       />
     );
@@ -563,7 +563,7 @@ const TooltipShortcut = React.forwardRef<HTMLSpanElement, TooltipShortcutProps>(
  * - For transient feedback ("Copied!"), prefer an anchored `Toast`, which is
  *   announced.
  *
- * Styling is driven by `data-*` attributes and `--pui-tooltip-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-tooltip-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[side=top]:...`) without wrapping.
  */

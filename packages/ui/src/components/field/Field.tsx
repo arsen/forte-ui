@@ -38,7 +38,7 @@ export const FieldRoot = React.forwardRef<HTMLDivElement, FieldRootProps>(
       <BaseField.Root
         ref={ref}
         className={clsx(styles.root, className)}
-        data-pui="field"
+        data-forte="field"
         {...props}
       />
     );
@@ -106,7 +106,7 @@ export const FieldLabel = React.forwardRef<HTMLElement, FieldLabelProps>(
         // says the whole thing.
         render={render ?? (nativeLabel ? undefined : <div />)}
         className={clsx(styles.label, className)}
-        data-pui="field-label"
+        data-forte="field-label"
         {...props}
       />
     );
@@ -146,7 +146,7 @@ export const FieldDescription = React.forwardRef<
     <BaseField.Description
       ref={ref}
       className={clsx(styles.description, className)}
-      data-pui="field-description"
+      data-forte="field-description"
       {...props}
     />
   );
@@ -197,7 +197,7 @@ export const FieldError = React.forwardRef<HTMLDivElement, FieldErrorProps>(
       <BaseField.Error
         ref={ref}
         className={clsx(styles.error, className)}
-        data-pui="field-error"
+        data-forte="field-error"
         {...props}
       />
     );
@@ -237,7 +237,7 @@ export const FieldItem = React.forwardRef<HTMLDivElement, FieldItemProps>(
       <BaseField.Item
         ref={ref}
         className={clsx(styles.item, className)}
-        data-pui="field-item"
+        data-forte="field-item"
         {...props}
       />
     );

@@ -2,7 +2,7 @@
  * Spinner
  *
  * Four indicators, one box. Every variant is laid out as a fraction of
- * `--pui-spinner-size` and none of them overflows it, so `variant` can be
+ * `--forte-spinner-size` and none of them overflows it, so `variant` can be
  * changed on a whim without anything beside the spinner moving. The dots are
  * the load-bearing case: three at `size/4` with two gaps at `size/8` come to
  * exactly `size`, which is why those two fractions are what they are.
@@ -11,24 +11,24 @@
  * The tokens collapse their own geometry, and each variant is built so that
  * what survives the collapse is still a busy indicator:
  *
- *   ring    `--pui-spin-turn` goes to 0turn and the comet stops. A second,
+ *   ring    `--forte-spin-turn` goes to 0turn and the comet stops. A second,
  *           always-running opacity animation — a no-op at full motion, because
- *           `--pui-pulse-dip` is 1 there — becomes the visible cue.
- *   dots    the hop is a `--pui-travel-*` token, so it goes to 0px; the
+ *           `--forte-pulse-dip` is 1 there — becomes the visible cue.
+ *   dots    the hop is a `--forte-travel-*` token, so it goes to 0px; the
  *           staggered opacity wave is untouched and carries the whole thing.
  *   bars    pure opacity, nothing to collapse. Identical animation either way,
  *           which is what makes it the safe pick when a spinner has to look
  *           the same for everyone.
- *   pulse   the halo stops expanding, and `--pui-motion-off` fades the SECOND
+ *   pulse   the halo stops expanding, and `--forte-motion-off` fades the SECOND
  *           halo out entirely — two haloes frozen at the same radius would
  *           cross-fade into each other and read as a static ring. See below.
  *
- * None of the loop durations is ever shortened: `--pui-duration-loop-spin` is
+ * None of the loop durations is ever shortened: `--forte-duration-loop-spin` is
  * 800ms in every motion state. A loop driven to 1ms would flash at ~1000Hz,
  * which is a WCAG 2.3.1 seizure hazard rather than an accessibility win. At
  * 800ms the fastest thing here cycles at 1.25Hz.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the spinner itself, so a value set
      * on an ancestor is only INHERITED and loses to these. Re-skin one spinner
@@ -37,68 +37,68 @@
      * re-pointing the global tokens on the right-hand side. */
     /** Diameter of the indicator. `size` sets `1rem` / `1.5rem` / `2rem`;
      * everything else is a fraction of it and follows on its own. */
-    --pui-spinner-size: 1.5rem;
+    --forte-spinner-size: 1.5rem;
     /* The floor matters at `sm`, where an eighth of 16px is 2px exactly and
      * anything thinner starts to disappear against a light surface. */
     /** Ring stroke and halo border. */
-    --pui-spinner-thickness: max(2px, calc(var(--pui-spinner-size) / 8));
+    --forte-spinner-thickness: max(2px, calc(var(--forte-spinner-size) / 8));
     /** Space between the indicator and a visible label. */
-    --pui-spinner-gap: var(--pui-control-gap);
+    --forte-spinner-gap: var(--forte-control-gap);
     /* Overridden to the slower loop for `pulse` below — a halo that breathes
      * at the ring's rate reads as agitated rather than ambient. */
     /** One full cycle. `variant="pulse"` raises it to
-     * `--pui-duration-loop-pulse`. */
-    --pui-spinner-duration: var(--pui-duration-loop-spin);
+     * `--forte-duration-loop-pulse`. */
+    --forte-spinner-duration: var(--forte-duration-loop-spin);
 
     /** The indicator's colour. Becomes the indicator's `color`, and every part
      * fills with `currentColor`. */
-    --pui-spinner-color: var(--pui-color-primary);
-    /* Derives from `--pui-spinner-color`, and `var()` inside an unregistered
+    --forte-spinner-color: var(--forte-color-primary);
+    /* Derives from `--forte-spinner-color`, and `var()` inside an unregistered
      * custom property is substituted where the property is DECLARED — so
      * overriding the colour on an ancestor leaves this stale. Override on
      * the spinner itself, where both declarations meet, and it re-derives. */
     /** The faint full ring the comet travels along. Set it to `transparent` for
      * a bare arc. */
-    --pui-spinner-track: color-mix(in oklab, var(--pui-spinner-color) 18%, transparent);
+    --forte-spinner-track: color-mix(in oklab, var(--forte-spinner-color) 18%, transparent);
 
     /** Colour of a visible label. */
-    --pui-spinner-label-color: var(--pui-color-foreground-muted);
+    --forte-spinner-label-color: var(--forte-color-foreground-muted);
     /** Font size of a visible label. Retuned by `size`. */
-    --pui-spinner-label-size: var(--pui-font-size-2);
+    --forte-spinner-label-size: var(--forte-font-size-2);
 
     /* Never 0: a part that vanishes outright makes the count of dots look
      * unstable, and the bar ring loses its shape. */
     /** How far a dot fades at the bottom of its hop. */
-    --pui-spinner-dot-dim: 0.25;
+    --forte-spinner-dot-dim: 0.25;
     /** How far a bar fades at the back of the sweep. */
-    --pui-spinner-bar-dim: 0.15;
+    --forte-spinner-bar-dim: 0.15;
 
     /** Thickness of one spoke. */
-    --pui-spinner-bar-width: calc(var(--pui-spinner-size) / 9);
+    --forte-spinner-bar-width: calc(var(--forte-spinner-size) / 9);
     /** Length of one spoke. */
-    --pui-spinner-bar-length: calc(var(--pui-spinner-size) / 3.2);
+    --forte-spinner-bar-length: calc(var(--forte-spinner-size) / 3.2);
 
     /* The hop height. `min()` of a travel token and a fraction of the size
      * gets both properties at once: it scales down with `size="sm"`, where a
      * flat 4px would throw a 4px dot most of its own height, and it collapses
-     * to 0px under reduced motion because `--pui-travel-sm` does — `min(0px,
-     * anything positive)` is 0px. No media query, no `--pui-motion-ok`. */
+     * to 0px under reduced motion because `--forte-travel-sm` does — `min(0px,
+     * anything positive)` is 0px. No media query, no `--forte-motion-ok`. */
     /** How high a dot hops. Collapses to `0px` under reduced motion, because
-     * `--pui-travel-sm` does. */
-    --pui-spinner-dot-travel: min(var(--pui-travel-sm), calc(var(--pui-spinner-size) / 5));
+     * `--forte-travel-sm` does. */
+    --forte-spinner-dot-travel: min(var(--forte-travel-sm), calc(var(--forte-spinner-size) / 5));
 
     /* Gated per rule 11: it interpolates toward 1 rather than toward 0 — a
      * scale token driven to 0 would collapse the element to nothing instead
      * of holding still. */
-    /** Scale a halo starts from, as a factor. Gated on `--pui-motion-ok`, so it
+    /** Scale a halo starts from, as a factor. Gated on `--forte-motion-ok`, so it
      * is exactly `1` under reduced motion and the halo holds still. */
-    --pui-spinner-ripple-min: calc(1 - 0.6 * var(--pui-motion-ok));
+    --forte-spinner-ripple-min: calc(1 - 0.6 * var(--forte-motion-ok));
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-spinner-gap);
+    gap: var(--forte-spinner-gap);
     /* Sits a spinner on the text baseline's line box when it is used inline —
      * without it an inline-flex box hangs below the words beside it. */
     vertical-align: middle;
@@ -121,37 +121,37 @@
      * indicator by twice the stroke and shove the label sideways. */
     box-sizing: border-box;
     flex-shrink: 0;
-    width: var(--pui-spinner-size);
+    width: var(--forte-spinner-size);
     aspect-ratio: 1;
     /* The one place the tone lands. Every part below fills with
      * `currentColor`, which means forced-colors gets the whole component right
      * for free: it remaps `color`, so every fill follows to `CanvasText`. */
-    color: var(--pui-spinner-color);
+    color: var(--forte-spinner-color);
   }
 
   .label {
-    color: var(--pui-spinner-label-color);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-spinner-label-size);
-    line-height: var(--pui-line-height-tight);
+    color: var(--forte-spinner-label-color);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-spinner-label-size);
+    line-height: var(--forte-line-height-tight);
   }
 
   /* Sizes ------------------------------------------------------------------
    * Only the diameter and the label move; everything else is a fraction of
    * the diameter and follows on its own. */
   .root[data-size="sm"] {
-    --pui-spinner-size: 1rem;
-    --pui-spinner-label-size: var(--pui-font-size-1);
+    --forte-spinner-size: 1rem;
+    --forte-spinner-label-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-spinner-size: 1.5rem;
-    --pui-spinner-label-size: var(--pui-font-size-2);
+    --forte-spinner-size: 1.5rem;
+    --forte-spinner-label-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-spinner-size: 2rem;
-    --pui-spinner-label-size: var(--pui-font-size-3);
+    --forte-spinner-size: 2rem;
+    --forte-spinner-label-size: var(--forte-font-size-3);
   }
 
   /* Tones ------------------------------------------------------------------
@@ -160,23 +160,23 @@
    * link or a badge it inherits whatever that thing's text colour is, and
    * keeps matching it through hover and disabled states. */
   .root[data-tone="primary"] {
-    --pui-spinner-color: var(--pui-color-primary);
+    --forte-spinner-color: var(--forte-color-primary);
   }
 
   .root[data-tone="secondary"] {
-    --pui-spinner-color: var(--pui-color-secondary);
+    --forte-spinner-color: var(--forte-color-secondary);
   }
 
   .root[data-tone="danger"] {
-    --pui-spinner-color: var(--pui-color-danger);
+    --forte-spinner-color: var(--forte-color-danger);
   }
 
   .root[data-tone="neutral"] {
-    --pui-spinner-color: var(--pui-color-foreground-muted);
+    --forte-spinner-color: var(--forte-color-foreground-muted);
   }
 
   .root[data-tone="current"] {
-    --pui-spinner-color: currentColor;
+    --forte-spinner-color: currentColor;
   }
 
   /* Ring -------------------------------------------------------------------
@@ -188,20 +188,20 @@
    * Drawn as a background rather than as four borders because a border can
    * only give hard quarter-circle steps; there is no way to taper one. */
   .root[data-variant="ring"] .indicator {
-    /* `50%`, not `--pui-radius-full`: under `data-pui-radius="none"` that
+    /* `50%`, not `--forte-radius-full`: under `data-forte-radius="none"` that
      * token is 0, and this shape is a circle by definition, not by taste. The
      * mask would stay round while the forced-colors border below went square.
-     * Same test as `--pui-radio-radius`: roundness here is meaning, not
+     * Same test as `--forte-radio-radius`: roundness here is meaning, not
      * style. */
     border-radius: 50%;
-    background-color: var(--pui-spinner-track);
-    background-image: conic-gradient(from 0deg, transparent, var(--pui-spinner-color));
+    background-color: var(--forte-spinner-track);
+    background-image: conic-gradient(from 0deg, transparent, var(--forte-spinner-color));
     /* Alpha of the mask image is what shows through, so `transparent` hides
      * the disc and the opaque stop keeps the outer band. `0` as the second
      * stop's position means "wherever the previous one ended". */
     mask: radial-gradient(
       farthest-side,
-      transparent calc(100% - var(--pui-spinner-thickness)),
+      transparent calc(100% - var(--forte-spinner-thickness)),
       black 0
     );
     /* Both animations always run; the tokens decide which one is VISIBLE.
@@ -209,23 +209,23 @@
      * breathe is a no-op. Under reduced motion they invert — 0turn and 0.45 —
      * and the breathe becomes the entire busy cue. */
     animation:
-      pui-spinner-spin var(--pui-spinner-duration) linear infinite,
-      pui-spinner-breathe var(--pui-duration-loop-pulse) var(--pui-ease-standard) infinite;
+      forte-spinner-spin var(--forte-spinner-duration) linear infinite,
+      forte-spinner-breathe var(--forte-duration-loop-pulse) var(--forte-ease-standard) infinite;
   }
 
   /* Dots -------------------------------------------------------------------
    * Laid out with `flex-direction: row`, which follows the inline direction:
    * in RTL the browser reverses the visual order for us, so the stagger below
-   * still runs in reading order and nothing needs `--pui-direction`. */
+   * still runs in reading order and nothing needs `--forte-direction`. */
   .root[data-variant="dots"] .indicator {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: calc(var(--pui-spinner-size) / 8);
+    gap: calc(var(--forte-spinner-size) / 8);
   }
 
   .root[data-variant="dots"] .part {
-    width: calc(var(--pui-spinner-size) / 4);
+    width: calc(var(--forte-spinner-size) / 4);
     aspect-ratio: 1;
     border-radius: 50%;
     background-color: currentColor;
@@ -234,44 +234,44 @@
      * mount; making that style identical to the first keyframe is what stops
      * the set flickering into life. Negative delays would avoid the wait but
      * reverse the wave, sending it right to left. */
-    opacity: var(--pui-spinner-dot-dim);
-    animation: pui-spinner-hop var(--pui-spinner-duration) var(--pui-ease-standard) infinite;
-    animation-delay: calc(var(--pui-spinner-i) * var(--pui-spinner-duration) / 6);
+    opacity: var(--forte-spinner-dot-dim);
+    animation: forte-spinner-hop var(--forte-spinner-duration) var(--forte-ease-standard) infinite;
+    animation-delay: calc(var(--forte-spinner-i) * var(--forte-spinner-duration) / 6);
   }
 
   /* Bars -------------------------------------------------------------------
-   * Eight spokes around a hub, each fading from full to `--pui-spinner-bar-dim`
+   * Eight spokes around a hub, each fading from full to `--forte-spinner-bar-dim`
    * over one cycle, offset by a cycle divided by the count. Nothing moves —
    * the sense of rotation is entirely in the phase offset, which is why this
    * variant survives reduced motion untouched.
    *
    * Every spoke is placed at the top and then rotated about the hub, so the
-   * count is free: `--pui-spinner-count` comes from the DOM (see
+   * count is free: `--forte-spinner-count` comes from the DOM (see
    * PART_COUNT in Spinner.tsx) and both the angle and the offset divide by it. */
   .root[data-variant="bars"] .part {
     position: absolute;
     inset-block-start: 0;
-    inset-inline-start: calc(50% - var(--pui-spinner-bar-width) / 2);
-    width: var(--pui-spinner-bar-width);
-    height: var(--pui-spinner-bar-length);
+    inset-inline-start: calc(50% - var(--forte-spinner-bar-width) / 2);
+    width: var(--forte-spinner-bar-width);
+    height: var(--forte-spinner-bar-length);
     /* A bar is a stroke, not a circle — `radius="none"` squaring off its caps
      * is a legitimate look, so this one does follow the preset. */
-    border-radius: var(--pui-radius-full);
+    border-radius: var(--forte-radius-full);
     background-color: currentColor;
     /* Measured from the bar's own top edge, which sits on the container's, so
      * half the diameter down lands exactly on the hub. */
-    transform-origin: 50% calc(var(--pui-spinner-size) / 2);
-    rotate: calc(var(--pui-spinner-i) * 1turn / var(--pui-spinner-count));
-    opacity: var(--pui-spinner-bar-dim);
-    animation: pui-spinner-sweep var(--pui-spinner-duration) linear infinite;
+    transform-origin: 50% calc(var(--forte-spinner-size) / 2);
+    rotate: calc(var(--forte-spinner-i) * 1turn / var(--forte-spinner-count));
+    opacity: var(--forte-spinner-bar-dim);
+    animation: forte-spinner-sweep var(--forte-spinner-duration) linear infinite;
     /* Negative, so every bar is already mid-cycle on the first frame and none
      * of them waits. Subtracting the count before scaling puts bar 0 at the
      * START of its fade while bar 1 is one step further along, which is what
      * makes the bright spoke travel clockwise; the obvious
      * `-i * duration / count` runs the highlight backwards. */
     animation-delay: calc(
-      (var(--pui-spinner-i) - var(--pui-spinner-count)) * var(--pui-spinner-duration) /
-        var(--pui-spinner-count)
+      (var(--forte-spinner-i) - var(--forte-spinner-count)) * var(--forte-spinner-duration) /
+        var(--forte-spinner-count)
     );
   }
 
@@ -280,7 +280,7 @@
    * rather than another child because it never animates — it is what keeps the
    * spinner from going completely blank between haloes. */
   .root[data-variant="pulse"] {
-    --pui-spinner-duration: var(--pui-duration-loop-pulse);
+    --forte-spinner-duration: var(--forte-duration-loop-pulse);
   }
 
   .root[data-variant="pulse"] .indicator::before {
@@ -288,7 +288,7 @@
     position: absolute;
     inset: 50% auto auto 50%;
     translate: -50% -50%;
-    width: calc(var(--pui-spinner-size) * 0.34);
+    width: calc(var(--forte-spinner-size) * 0.34);
     aspect-ratio: 1;
     border-radius: 50%;
     background-color: currentColor;
@@ -296,69 +296,69 @@
 
   .root[data-variant="pulse"] .part {
     /* Peak opacity, and the whole reduced-motion story for this variant.
-     * `--pui-motion-off` is 0 normally, so every halo peaks at 1. Under
+     * `--forte-motion-off` is 0 normally, so every halo peaks at 1. Under
      * reduced motion it is 1, so halo 0 still peaks at 1 and halo 1 peaks at
      * 0 — invisible. That matters because the haloes are only distinguishable
      * by RADIUS, and reduced motion freezes them both at the same radius:
      * left running, the two would cross-fade in antiphase into a ring of
      * near-constant opacity that looks like nothing is happening at all. */
-    --pui-spinner-ripple-peak: calc(1 - var(--pui-spinner-i) * var(--pui-motion-off));
+    --forte-spinner-ripple-peak: calc(1 - var(--forte-spinner-i) * var(--forte-motion-off));
 
     position: absolute;
     inset: 0;
     box-sizing: border-box;
     border-radius: 50%;
-    border: var(--pui-spinner-thickness) solid currentColor;
+    border: var(--forte-spinner-thickness) solid currentColor;
     /* Matches the 0% frame, for the same reason the dots do. */
     opacity: 0;
-    animation: pui-spinner-ripple var(--pui-spinner-duration) var(--pui-ease-standard) infinite;
-    animation-delay: calc(var(--pui-spinner-i) * var(--pui-spinner-duration) / 2);
+    animation: forte-spinner-ripple var(--forte-spinner-duration) var(--forte-ease-standard) infinite;
+    animation-delay: calc(var(--forte-spinner-i) * var(--forte-spinner-duration) / 2);
   }
 
   /* Keyframes -------------------------------------------------------------- */
-  @keyframes pui-spinner-spin {
+  @keyframes forte-spinner-spin {
     to {
-      rotate: var(--pui-spin-turn);
+      rotate: var(--forte-spin-turn);
     }
   }
 
-  @keyframes pui-spinner-breathe {
+  @keyframes forte-spinner-breathe {
     50% {
-      opacity: var(--pui-pulse-dip);
+      opacity: var(--forte-pulse-dip);
     }
   }
 
-  @keyframes pui-spinner-hop {
+  @keyframes forte-spinner-hop {
     0%,
     100% {
-      opacity: var(--pui-spinner-dot-dim);
+      opacity: var(--forte-spinner-dot-dim);
       translate: 0 0;
     }
 
     45% {
       opacity: 1;
-      translate: 0 calc(-1 * var(--pui-spinner-dot-travel));
+      translate: 0 calc(-1 * var(--forte-spinner-dot-travel));
     }
   }
 
-  @keyframes pui-spinner-sweep {
+  @keyframes forte-spinner-sweep {
     from {
       opacity: 1;
     }
 
     to {
-      opacity: var(--pui-spinner-bar-dim);
+      opacity: var(--forte-spinner-bar-dim);
     }
   }
 
-  @keyframes pui-spinner-ripple {
+  @keyframes forte-spinner-ripple {
     0% {
-      scale: var(--pui-spinner-ripple-min);
+      scale: var(--forte-spinner-ripple-min);
       opacity: 0;
     }
 
     30% {
-      opacity: var(--pui-spinner-ripple-peak);
+      opacity: var(--forte-spinner-ripple-peak);
     }
 
     100% {
@@ -372,7 +372,7 @@
  * Accessibility overrides — see layers.css for why these cannot live in the
  * components layer.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Forced colors remaps `background-color`, `color` and `border-color`, but
      * NOT `background-image` — so the comet would keep its brand hue while the
@@ -387,7 +387,7 @@
     .root[data-variant="ring"] .indicator {
       background-image: none;
       mask: none;
-      border: var(--pui-spinner-thickness) solid CanvasText;
+      border: var(--forte-spinner-thickness) solid CanvasText;
       border-block-start-color: Canvas;
     }
 

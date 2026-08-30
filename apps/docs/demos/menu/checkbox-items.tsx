@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu } from "@dofortech/pretty-ui";
+import { Menu } from "@dofortech/forte-ui";
 
 const COLUMNS = ["Status", "Assignee", "Due date", "Labels"] as const;
 

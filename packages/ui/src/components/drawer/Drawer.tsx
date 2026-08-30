@@ -194,10 +194,10 @@ export const DrawerTrigger = React.forwardRef(function DrawerTrigger<Payload>(
       render={render}
       className={clsx(
         render === undefined && styles.trigger,
-        "pui-focus-ring",
+        "forte-focus-ring",
         className,
       )}
-      data-pui="drawer-trigger"
+      data-forte="drawer-trigger"
       {...props}
     />
   );
@@ -221,7 +221,7 @@ export interface DrawerPopupProps
   /**
    * `"edge"` sits flush against the side of the screen and rounds only its
    * two inner corners. `"floating"` insets the whole surface by
-   * `--pui-drawer-inset` and rounds all four, so the page shows through
+   * `--forte-drawer-inset` and rounds all four, so the page shows through
    * around it.
    * @default "edge"
    */
@@ -260,7 +260,7 @@ export interface DrawerPopupProps
   backdropClassName?: string;
   /**
    * Additional class name(s) for the fixed container the popup is placed in.
-   * It owns `--pui-drawer-z-index` and `--pui-drawer-inset` — the popup reads
+   * It owns `--forte-drawer-z-index` and `--forte-drawer-inset` — the popup reads
    * the inset from here by inheritance, so setting it once on the viewport
    * keeps the surface and the gap around it in agreement.
    */
@@ -314,30 +314,30 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
           <BaseDrawer.Backdrop
             forceRender={forceBackdrop}
             data-scrim-floor={scrimFloor ? "" : undefined}
-            className={clsx(styles.backdrop, "pui-scrim", backdropClassName)}
-            data-pui="drawer-backdrop"
+            className={clsx(styles.backdrop, "forte-scrim", backdropClassName)}
+            data-forte="drawer-backdrop"
           />
         ) : null}
         <BaseDrawer.Viewport
           data-side={side}
           data-variant={variant}
           className={clsx(styles.viewport, viewportClassName)}
-          data-pui="drawer-viewport"
+          data-forte="drawer-viewport"
         >
           <BaseDrawer.Popup
             ref={ref}
             // The popup is programmatically focused when the drawer opens by
             // touch, and that focus is keyboard-visible when it opens by
             // keyboard — so it needs a real ring, not the UA default.
-            // `pui-hc-surface` gives it a boundary in forced-colors mode,
+            // `forte-hc-surface` gives it a boundary in forced-colors mode,
             // where the shadow above is stripped entirely.
             className={clsx(
               styles.popup,
-              "pui-focus-ring",
-              "pui-hc-surface",
+              "forte-focus-ring",
+              "forte-hc-surface",
               className,
             )}
-            data-pui="drawer-popup"
+            data-forte="drawer-popup"
             data-side={side}
             data-variant={variant}
             data-size={size}
@@ -389,7 +389,7 @@ export const DrawerHandle = React.forwardRef<HTMLDivElement, DrawerHandleProps>(
         ref={ref}
         aria-hidden="true"
         className={clsx(styles.handle, className)}
-        data-pui="drawer-handle"
+        data-forte="drawer-handle"
         {...props}
       />
     );
@@ -422,7 +422,7 @@ export interface DrawerContentProps
  * *outside* it pin to the bottom of the drawer.
  *
  * On a `top`/`bottom` drawer it caps and centres its own width through
- * `--pui-drawer-content-max-inline-size`, which is what keeps a full-width
+ * `--forte-drawer-content-max-inline-size`, which is what keeps a full-width
  * bottom sheet from running its text to both edges of a wide screen.
  */
 export const DrawerContent = React.forwardRef<
@@ -433,7 +433,7 @@ export const DrawerContent = React.forwardRef<
     <BaseDrawer.Content
       ref={ref}
       className={clsx(styles.content, className)}
-      data-pui="drawer-content"
+      data-forte="drawer-content"
       {...props}
     />
   );
@@ -466,7 +466,7 @@ export const DrawerTitle = React.forwardRef<
     <BaseDrawer.Title
       ref={ref}
       className={clsx(styles.title, className)}
-      data-pui="drawer-title"
+      data-forte="drawer-title"
       {...props}
     />
   );
@@ -495,7 +495,7 @@ export const DrawerDescription = React.forwardRef<
     <BaseDrawer.Description
       ref={ref}
       className={clsx(styles.description, className)}
-      data-pui="drawer-description"
+      data-forte="drawer-description"
       {...props}
     />
   );
@@ -537,10 +537,10 @@ export const DrawerClose = React.forwardRef<HTMLButtonElement, DrawerCloseProps>
         render={render}
         className={clsx(
           render === undefined && styles.close,
-          "pui-focus-ring",
+          "forte-focus-ring",
           className,
         )}
-        data-pui="drawer-close"
+        data-forte="drawer-close"
         data-icon-only={iconOnly || undefined}
         {...props}
       />
@@ -579,7 +579,7 @@ export const DrawerFooter = React.forwardRef<HTMLDivElement, DrawerFooterProps>(
       <div
         ref={ref}
         className={clsx(styles.footer, className)}
-        data-pui="drawer-footer"
+        data-forte="drawer-footer"
         data-align={align}
         {...props}
       />
@@ -605,7 +605,7 @@ export interface DrawerSwipeAreaProps
  * inward.
  *
  * Renders a `<div>`, pinned with `position: fixed` and sized by
- * `--pui-drawer-swipe-area-size`. It sits *outside* the portal — it has to
+ * `--forte-drawer-swipe-area-size`. It sits *outside* the portal — it has to
  * exist while the drawer is closed — so it is the one part that lives beside
  * `Drawer.Trigger` rather than inside `Drawer.Popup`.
  *
@@ -625,7 +625,7 @@ export const DrawerSwipeArea = React.forwardRef<
       ref={ref}
       data-side={side}
       className={clsx(styles.swipeArea, className)}
-      data-pui="drawer-swipe-area"
+      data-forte="drawer-swipe-area"
       {...props}
     />
   );

@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 
-// Plain, unlayered CSS: it beats the library's `@layer pretty-ui.components`
-// regardless of specificity. `data-pui` and the `data-*` state attributes are
+// Plain, unlayered CSS: it beats the library's `@layer forte.components`
+// regardless of specificity. `data-forte` and the `data-*` state attributes are
 // the stable selectors — the hashed class names are not.
 const css = `
-  .demo-depth [data-pui="button"][data-variant="solid"] {
-    box-shadow: var(--pui-shadow-2);
+  .demo-depth [data-forte="button"][data-variant="solid"] {
+    box-shadow: var(--forte-shadow-2);
   }
-  .demo-depth [data-pui="button"][data-variant="solid"]:active {
+  .demo-depth [data-forte="button"][data-variant="solid"]:active {
     box-shadow: none;
   }
 `;

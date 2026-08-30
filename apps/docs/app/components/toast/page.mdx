@@ -21,7 +21,7 @@ Two pieces make one: `Toast.Provider` near the root of the app, and `useToast()`
 ## Import
 
 ```tsx
-import { Toast, useToast } from "@dofortech/pretty-ui";
+import { Toast, useToast } from "@dofortech/forte-ui";
 ```
 
 ## Setup
@@ -29,7 +29,7 @@ import { Toast, useToast } from "@dofortech/pretty-ui";
 Mount the provider once, above everything that might raise a toast:
 
 ```tsx
-import { Toast } from "@dofortech/pretty-ui";
+import { Toast } from "@dofortech/forte-ui";
 
 export default function App({ children }) {
   return (
@@ -77,7 +77,7 @@ toast.show("Nothing in particular happened");
 toast.show({ title: "Deploy queued", type: "deploy" });
 ```
 
-`type` lands on `data-type`, so a type the library does not know still reaches your CSS (`[data-pui="toast"][data-type="deploy"]`) — it just gets the neutral glyph and accent.
+`type` lands on `data-type`, so a type the library does not know still reaches your CSS (`[data-forte="toast"][data-type="deploy"]`) — it just gets the neutral glyph and accent.
 
 Every method keeps the same identity for the life of the provider, so one pulled out by destructuring — `const { success } = useToast()` — is safe in a dependency array. The object itself is rebuilt whenever `toasts` changes, which is the only way a live list can be live.
 
@@ -149,7 +149,7 @@ That last one matters more than it sounds: without it, every toast raised while 
 
 <DemoBlock id="toast/positions" />
 
-A top stack grows downwards and its cards shrink toward the top edge; a bottom stack does the mirror image. Both are the same three declarations with the sign flipped, through `--pui-toast-stack-direction`.
+A top stack grows downwards and its cards shrink toward the top edge; a bottom stack does the mirror image. Both are the same three declarations with the sign flipped, through `--forte-toast-stack-direction`.
 
 Swipe-to-dismiss follows the position too: away from the edge the stack is pinned to, plus both inline directions. Both, rather than only the one matching `start` / `end`, because the gesture is physical while the position is logical — accepting either is both simpler and more forgiving. Override it with `swipeDirection`, or pass `[]` to turn it off.
 
@@ -177,7 +177,7 @@ Plenty of the things worth reporting do not happen inside a component: a fetch w
 
 ```ts
 // toaster.ts
-import { Toast } from "@dofortech/pretty-ui";
+import { Toast } from "@dofortech/forte-ui";
 export const toaster = Toast.createManager();
 
 // api.ts — no React anywhere
@@ -219,19 +219,19 @@ The four status glyphs are four distinct **shapes** — a tick, a cross, a trian
 
 Every property below is declared on the element it styles: the first six on the viewport, the rest on each toast card. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect — and the stack is portalled to `<body>`, so an ancestor of the code that raised the toast could not reach it in any case.
 
-Set the viewport's through `className` on `Toast.Provider` (which forwards it to the viewport) and the card's through `className` on `Toast.Item`. An unlayered rule beats the library's `@layer pretty-ui.components` whatever its specificity, so a plain class is enough — no `!important`.
+Set the viewport's through `className` on `Toast.Provider` (which forwards it to the viewport) and the card's through `className` on `Toast.Item`. An unlayered rule beats the library's `@layer forte.components` whatever its specificity, so a plain class is enough — no `!important`.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every toast.
+The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every toast.
 
-`--pui-toast-border` is the hairline around the card, and it is the one place a toast parts company with the library's other floating surfaces, which rely on a shadow and nothing else. A dialog has a scrim behind it and a select popup visibly grew out of its trigger; a toast arrives unannounced over whatever the page happens to be showing, and `--pui-color-overlay` is the same value as `--pui-color-background`. It matters twice over for the deck, whose cards behind the front one show as ~12px strips of exactly that colour — without an edge the stack reads as one card rather than three.
+`--forte-toast-border` is the hairline around the card, and it is the one place a toast parts company with the library's other floating surfaces, which rely on a shadow and nothing else. A dialog has a scrim behind it and a select popup visibly grew out of its trigger; a toast arrives unannounced over whatever the page happens to be showing, and `--forte-color-overlay` is the same value as `--forte-color-background`. It matters twice over for the deck, whose cards behind the front one show as ~12px strips of exactly that colour — without an edge the stack reads as one card rather than three.
 
-The card stays neutral in all five types, and only the glyph is coloured. Tinting five surfaces would need five new soft tokens and would still leave the type carried by colour alone; the glyph shapes and the text do that job instead. `--pui-toast-accent` is the one knob to re-point if you want a type to read louder — or set `--pui-toast-bg` under a `[data-type=...]` selector of your own.
+The card stays neutral in all five types, and only the glyph is coloured. Tinting five surfaces would need five new soft tokens and would still leave the type carried by colour alone; the glyph shapes and the text do that job instead. `--forte-toast-accent` is the one knob to re-point if you want a type to read louder — or set `--forte-toast-bg` under a `[data-type=...]` selector of your own.
 
 <ThemingTable component="Toast" />
 
 ### Motion
 
-The stack is four numbers Base UI measures and one CSS rule for each state. `--toast-index` is how far back a card sits, `--toast-offset-y` is the total height of everything in front of it, `--toast-height` is its own, and `--toast-frontmost-height` is the front card's. Collapsed, a card steps back by `--pui-toast-peek` and shrinks by `--pui-toast-stack-scale`; expanded, it moves by the real distance and returns to full size. The transition between the two is a plain interpolation of the same three properties, on `--pui-duration-move` — the token for positional moves whose distance is only known at runtime.
+The stack is four numbers Base UI measures and one CSS rule for each state. `--toast-index` is how far back a card sits, `--toast-offset-y` is the total height of everything in front of it, `--toast-height` is its own, and `--toast-frontmost-height` is the front card's. Collapsed, a card steps back by `--forte-toast-peek` and shrinks by `--forte-toast-stack-scale`; expanded, it moves by the real distance and returns to full size. The transition between the two is a plain interpolation of the same three properties, on `--forte-duration-move` — the token for positional moves whose distance is only known at runtime.
 
 Which property carries what is load-bearing, and the three are not interchangeable:
 
@@ -241,11 +241,11 @@ Which property carries what is load-bearing, and the three are not interchangeab
 
 Arriving and leaving are the same move in opposite directions — the card slides in from beyond the edge and back out the way it came — so a toast dismissed while it is still arriving reverses instead of snapping. A swiped toast leaves in the direction it was pushed, continuing from wherever the finger let go rather than restarting from zero.
 
-Each expanded card carries a transparent bridge half a gap deep on both block edges, and it is not decoration. Fanned out, the cards are separated by `--pui-toast-gap` of empty space, and the viewport underneath is `pointer-events: none` so it cannot swallow clicks meant for the page — which leaves a dead strip between every pair of cards. A pointer crossing one takes the stack with it: the viewport sees a `mouseleave`, the deck collapses, and it re-expands a frame later when the pointer lands on the next card. Reading down a stack of three made it jump twice. A pseudo-element hit-tests as the element that owns it, so the bridge *is* the card as far as the pointer is concerned, and consecutive bridges meet in the middle of every gap.
+Each expanded card carries a transparent bridge half a gap deep on both block edges, and it is not decoration. Fanned out, the cards are separated by `--forte-toast-gap` of empty space, and the viewport underneath is `pointer-events: none` so it cannot swallow clicks meant for the page — which leaves a dead strip between every pair of cards. A pointer crossing one takes the stack with it: the viewport sees a `mouseleave`, the deck collapses, and it re-expands a frame later when the pointer lands on the next card. Reading down a stack of three made it jump twice. A pseudo-element hit-tests as the element that owns it, so the bridge *is* the card as far as the pointer is concerned, and consecutive bridges meet in the middle of every gap.
 
 The `loading` spinner is a *descendant* of the toast root and not the root itself. Base UI waits on `root.getAnimations()` before removing a dismissed toast, and an infinite animation's promise never settles, so a spinning root would sit in the DOM for the life of the page. `getAnimations()` is not called with `subtree: true`, which is what makes a child safe.
 
-Reduced motion needs no work from you. The only literal geometry here is the enter and exit travel, and it is gated on `--pui-motion-ok`; the durations shorten on their own, leaving the fade. The collapsed deck's peek and scale are deliberately *not* collapsed — they are a static arrangement rather than an animation, and flattening them would remove the only sign that more than one toast is waiting.
+Reduced motion needs no work from you. The only literal geometry here is the enter and exit travel, and it is gated on `--forte-motion-ok`; the durations shorten on their own, leaving the fade. The collapsed deck's peek and scale are deliberately *not* collapsed — they are a static arrangement rather than an animation, and flattening them would remove the only sign that more than one toast is waiting.
 
 ## API reference
 

@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Progress, ProgressCircle } from "@dofortech/pretty-ui";
+import { Progress, ProgressCircle } from "@dofortech/forte-ui";
 
 /* Every visual decision is a custom property on the component's own root, so a
  * restyle is a `style` object rather than a new variant. They stay a `style`
@@ -12,17 +12,17 @@ const BARS: { label: string; style: CSSProperties }[] = [
   {
     label: "Hairline, square",
     style: {
-      "--pui-progress-thickness": "2px",
-      "--pui-progress-radius": "0",
+      "--forte-progress-thickness": "2px",
+      "--forte-progress-radius": "0",
     } as CSSProperties,
   },
   {
     label: "Chunky, inset rail",
     style: {
-      "--pui-progress-thickness": "16px",
-      "--pui-progress-track-bg": "var(--pui-color-panel-active)",
-      "--pui-progress-indicator-bg":
-        "linear-gradient(to right, var(--pui-color-secondary), var(--pui-color-primary))",
+      "--forte-progress-thickness": "16px",
+      "--forte-progress-track-bg": "var(--forte-color-panel-active)",
+      "--forte-progress-indicator-bg":
+        "linear-gradient(to right, var(--forte-color-secondary), var(--forte-color-primary))",
     } as CSSProperties,
   },
 ];
@@ -42,16 +42,16 @@ export default function ProgressTheming() {
 
       <div className="flex flex-wrap items-end gap-7">
         {/* Thickness is in viewBox units, so `14px` is 14% of the ring's
-          * diameter whatever `--pui-progress-circle-size` is set to. `r` is
+          * diameter whatever `--forte-progress-circle-size` is set to. `r` is
           * re-derived from it in CSS, which is what keeps a stroke this heavy
           * inside the ring instead of spilling past it. */}
         <ProgressCircle.Root
           value={64}
           style={
             {
-              "--pui-progress-circle-size": "6rem",
-              "--pui-progress-circle-thickness": "14px",
-              "--pui-progress-circle-cap": "butt",
+              "--forte-progress-circle-size": "6rem",
+              "--forte-progress-circle-thickness": "14px",
+              "--forte-progress-circle-cap": "butt",
             } as CSSProperties
           }
         >
@@ -66,10 +66,10 @@ export default function ProgressTheming() {
           value={64}
           style={
             {
-              "--pui-progress-circle-size": "6rem",
-              "--pui-progress-circle-thickness": "3px",
-              "--pui-progress-circle-rail": "transparent",
-              "--pui-progress-circle-value-size": "var(--pui-font-size-5)",
+              "--forte-progress-circle-size": "6rem",
+              "--forte-progress-circle-thickness": "3px",
+              "--forte-progress-circle-rail": "transparent",
+              "--forte-progress-circle-value-size": "var(--forte-font-size-5)",
             } as CSSProperties
           }
         >

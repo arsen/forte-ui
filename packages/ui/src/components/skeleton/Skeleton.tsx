@@ -42,7 +42,7 @@ export interface SkeletonRootProps
   /**
    * The silhouette. `rect` is a block — a thumbnail, a card, a button.
    * `circle` is an avatar or a status dot, and stays round under
-   * `data-pui-radius="none"`.
+   * `data-forte-radius="none"`.
    *
    * `text` is a thin bar the height of the ink a line of text actually puts
    * down, and it is `inline-block`, so it can sit inside a real sentence —
@@ -145,7 +145,7 @@ const SkeletonRoot = React.forwardRef<HTMLSpanElement, SkeletonRootProps>(functi
     <span
       ref={ref}
       className={clsx(styles.root, className)}
-      data-pui="skeleton"
+      data-forte="skeleton"
       data-variant={variant}
       data-animation={resolvedAnimation}
       // The placeholder is a picture of absence: there is nothing here to
@@ -154,15 +154,15 @@ const SkeletonRoot = React.forwardRef<HTMLSpanElement, SkeletonRootProps>(functi
       aria-hidden="true"
       style={
         {
-          "--pui-skeleton-width": toLength(width),
-          "--pui-skeleton-height": toLength(height),
+          "--forte-skeleton-width": toLength(width),
+          "--forte-skeleton-height": toLength(height),
           ...style,
         } as React.CSSProperties
       }
       {...props}
     >
       {children === undefined ? null : (
-        <span className={styles.content} data-pui="skeleton-content">
+        <span className={styles.content} data-forte="skeleton-content">
           {children}
         </span>
       )}
@@ -209,7 +209,7 @@ export interface SkeletonTextProps
  * one reserves the whole line box, leading and all, which is what keeps the
  * page from moving when the words arrive.
  *
- * A line paints `--pui-skeleton-ink` rather than its whole line box, the
+ * A line paints `--forte-skeleton-ink` rather than its whole line box, the
  * leading becomes the gap, and half a leading sits above the first line and
  * below the last — which is what makes the block exactly `lines × 1em ×
  * line-height` tall. Set the font size on this element and the whole thing
@@ -229,7 +229,7 @@ const SkeletonText = React.forwardRef<HTMLSpanElement, SkeletonTextProps>(functi
   if (!(loading ?? group?.loading ?? true)) return null;
 
   return (
-    <span ref={ref} className={clsx(styles.text, className)} data-pui="skeleton-text" {...props}>
+    <span ref={ref} className={clsx(styles.text, className)} data-forte="skeleton-text" {...props}>
       {Array.from({ length: Math.max(0, lines) }, (_, i) => (
         <SkeletonRoot
           key={i}
@@ -319,7 +319,7 @@ const SkeletonGroup = React.forwardRef<HTMLDivElement, SkeletonGroupProps>(funct
       <div
         ref={ref}
         className={clsx(styles.group, className)}
-        data-pui="skeleton-group"
+        data-forte="skeleton-group"
         data-loading={loading || undefined}
         // Says "the contents of this region are mid-update", which is the part
         // `role="status"` alone does not convey.
@@ -331,7 +331,7 @@ const SkeletonGroup = React.forwardRef<HTMLDivElement, SkeletonGroupProps>(funct
           * wrapper would make every arriving row re-read the ENTIRE region —
           * a table of forty invoices announced in full the moment it lands.
           * Kept to the message, it says one sentence and stops. */}
-        <span className="pui-visually-hidden" role="status">
+        <span className="forte-visually-hidden" role="status">
           {loading ? label : doneLabel}
         </span>
         {children}
@@ -360,7 +360,7 @@ const SkeletonGroup = React.forwardRef<HTMLDivElement, SkeletonGroupProps>(funct
  * </Skeleton.Group>
  * ```
  *
- * Styling is driven by `data-*` attributes and `--pui-skeleton-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-skeleton-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[variant=circle]:...`) without wrapping.
  */

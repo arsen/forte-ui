@@ -71,7 +71,7 @@ function PlusIcon(props: React.ComponentProps<"svg">) {
  *
  * Drawn pointing along the inline axis and rotated to the block axis by the
  * stylesheet, so one glyph covers both scrub directions. It is symmetric about
- * both axes, which is also why it needs no `--pui-direction` correction in
+ * both axes, which is also why it needs no `--forte-direction` correction in
  * RTL — there is no "forward" end to get backwards.
  */
 function ScrubGripIcon(props: React.ComponentProps<"svg">) {
@@ -159,9 +159,9 @@ type BaseRootProps = React.ComponentPropsWithoutRef<typeof BaseNumberField.Root>
 export interface NumberFieldRootProps extends Omit<BaseRootProps, "className"> {
   /**
    * Size of the control. Height, inline padding, stepper width and font size
-   * all move together, and the numbers come from the same `--pui-control-*`
+   * all move together, and the numbers come from the same `--forte-control-*`
    * tokens `Input` and `Select.Trigger` read — so the three line up on one row
-   * at every `data-pui-density` setting.
+   * at every `data-forte-density` setting.
    * @default "md"
    */
   size?: NumberFieldSize;
@@ -211,7 +211,7 @@ export const NumberFieldRoot = React.forwardRef<HTMLDivElement, NumberFieldRootP
         <BaseNumberField.Root
           ref={ref}
           className={clsx(styles.root, className)}
-          data-pui="number-field"
+          data-forte="number-field"
           data-size={size}
           data-variant={variant}
           {...props}
@@ -248,19 +248,19 @@ export interface NumberFieldGroupProps extends Omit<BaseGroupProps, "className">
  * inside it is borderless and transparent, so the three segments read as one
  * box.
  *
- * Which is why the group carries `.pui-focus-ring-within` rather than the input
- * carrying `.pui-focus-ring`. Focusing the text field rings the whole control,
+ * Which is why the group carries `.forte-focus-ring-within` rather than the input
+ * carrying `.forte-focus-ring`. Focusing the text field rings the whole control,
  * the way focusing an `Input` rings the whole input — and since the steppers are
  * not tab stops, that is the only ring anyone sees by default. An app that puts
  * them back in the tab order gets an inset ring on the button instead; the
  * stylesheet suppresses the group's ring in that case so the two never stack.
  *
  * The one thing that DOES stack is an app-level global `:focus-visible` rule.
- * It outranks every `pretty-ui` layer by design, so it re-rings the input this
+ * It outranks every `forte-ui` layer by design, so it re-rings the input this
  * component deliberately left unringed, and the control wears two rings — a
  * rounded one around the group and a square-cornered one around the middle
  * segment. Scope such a rule away from parts a component already rings:
- * `:focus-visible:not(:where(.pui-focus-ring-within *))`.
+ * `:focus-visible:not(:where(.forte-focus-ring-within *))`.
  *
  * `data-scrubbing` lands here while a `ScrubArea` drag is running, which is
  * what ties the drag happening on the label back to the value it is changing.
@@ -272,8 +272,8 @@ export const NumberFieldGroup = React.forwardRef<HTMLDivElement, NumberFieldGrou
     return (
       <BaseNumberField.Group
         ref={ref}
-        className={clsx(styles.group, "pui-focus-ring-within", className)}
-        data-pui="number-field-group"
+        className={clsx(styles.group, "forte-focus-ring-within", className)}
+        data-forte="number-field-group"
         data-size={size}
         data-variant={variant}
         data-full-width={fullWidth || undefined}
@@ -317,7 +317,7 @@ export const NumberFieldInput = React.forwardRef<HTMLInputElement, NumberFieldIn
       <BaseNumberField.Input
         ref={ref}
         className={clsx(styles.input, className)}
-        data-pui="number-field-input"
+        data-forte="number-field-input"
         data-size={size}
         data-variant={variant}
         {...props}
@@ -351,9 +351,9 @@ export interface NumberFieldIncrementProps
 /*
  * Both steppers share one `.stepper` rule — they are the same button mirrored,
  * and splitting them would be two copies of eleven declarations to keep in
- * step. They keep DISTINCT `data-pui` markers all the same: the marker names
+ * step. They keep DISTINCT `data-forte` markers all the same: the marker names
  * the PART, which is Base UI's anatomy and a consumer's only stable selector,
- * while the class names the rule. `.stepper[data-pui$="increment"]` is how the
+ * while the class names the rule. `.stepper[data-forte$="increment"]` is how the
  * stylesheet tells them apart where it has to.
  */
 function stepperClassName(className?: string) {
@@ -365,12 +365,12 @@ function stepperClassName(className?: string) {
     // in the tab order with `tabIndex={0}`, and `data-focus-inset` below flips
     // the ring inward: the buttons sit flush against the group's edge, so an
     // outward ring would be drawn over the input segment beside them.
-    "pui-focus-ring",
-    // At `sm` under `data-pui-density="compact"` the group is exactly 24px tall,
+    "forte-focus-ring",
+    // At `sm` under `data-forte-density="compact"` the group is exactly 24px tall,
     // so the button inside its border is 22px — under the SC 2.5.8 floor. This
     // grows the hit area without repainting anything, and unlike the ring it
     // matters on every configuration, since these are pointer targets first.
-    "pui-target",
+    "forte-target",
     className,
   );
 }
@@ -398,7 +398,7 @@ export const NumberFieldIncrement = React.forwardRef<
     <BaseNumberField.Increment
       ref={ref}
       className={stepperClassName(className)}
-      data-pui="number-field-increment"
+      data-forte="number-field-increment"
       data-size={size}
       data-variant={variant}
       data-focus-inset=""
@@ -446,7 +446,7 @@ export const NumberFieldDecrement = React.forwardRef<
     <BaseNumberField.Decrement
       ref={ref}
       className={stepperClassName(className)}
-      data-pui="number-field-decrement"
+      data-forte="number-field-decrement"
       data-size={size}
       data-variant={variant}
       data-focus-inset=""
@@ -548,7 +548,7 @@ export const NumberFieldScrubArea = React.forwardRef<
     );
     if (hasOwnCursor) {
       console.warn(
-        "[pretty-ui] NumberField.ScrubArea renders its own ScrubAreaCursor by " +
+        "[forte-ui] NumberField.ScrubArea renders its own ScrubAreaCursor by " +
           "default. Pass `cursor={false}` alongside your own, or drop yours.",
       );
     }
@@ -560,7 +560,7 @@ export const NumberFieldScrubArea = React.forwardRef<
         ref={ref}
         direction={direction}
         className={clsx(styles.scrubArea, className)}
-        data-pui="number-field-scrub-area"
+        data-forte="number-field-scrub-area"
         data-size={size}
         data-variant={variant}
         data-direction={direction}
@@ -568,7 +568,7 @@ export const NumberFieldScrubArea = React.forwardRef<
       >
         {children}
         {grip ? (
-          <ScrubGripIcon className={styles.scrubGrip} data-pui="number-field-scrub-grip" />
+          <ScrubGripIcon className={styles.scrubGrip} data-forte="number-field-scrub-grip" />
         ) : null}
         {cursor ? <NumberFieldScrubAreaCursor /> : null}
       </BaseNumberField.ScrubArea>
@@ -604,7 +604,7 @@ export interface NumberFieldScrubAreaCursorProps
  * different glyph, and pass `cursor={false}` to the scrub area when you do.
  *
  * Two consequences of the portal are worth knowing. It does not inherit a
- * `.pui-theme` scope, so it paints from whatever the document root resolves —
+ * `.forte-theme` scope, so it paints from whatever the document root resolves —
  * the same trade every portalled surface in this library makes. And Base UI
  * writes `transform` on it on every pointer move, so nothing here may animate
  * or set that property.
@@ -623,7 +623,7 @@ export const NumberFieldScrubAreaCursor = React.forwardRef<
     <BaseNumberField.ScrubAreaCursor
       ref={ref}
       className={clsx(styles.scrubAreaCursor, className)}
-      data-pui="number-field-scrub-area-cursor"
+      data-forte="number-field-scrub-area-cursor"
       data-direction={direction}
       {...props}
     >
@@ -662,7 +662,7 @@ export const NumberFieldScrubAreaCursor = React.forwardRef<
  * discovers. See `NumberField.ScrubArea` for the three cues and how to replace
  * them.
  *
- * Motion — the steppers snap in on `--pui-duration-instant` and spring back
+ * Motion — the steppers snap in on `--forte-duration-instant` and spring back
  * out, the way `Button` does. Nothing animates the value itself: it changes
  * every few pixels of a scrub, so a transition on the digits would spend the
  * whole gesture interpolating toward a number that has already moved.

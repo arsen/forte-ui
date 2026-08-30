@@ -15,7 +15,7 @@
  * prefers-reduced-motion block, here or in any component file — the duration
  * tokens shorten themselves.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on Breadcrumb.Root itself, so an
      * ancestor's value is only ever inherited and never wins — which is what
@@ -27,36 +27,36 @@
      * a wrapping trail has a second line, where the inline value would leave
      * the rows too far apart to read as one trail. */
     /** Space between a crumb and its separator */
-    --pui-breadcrumb-gap: var(--pui-space-2);
+    --forte-breadcrumb-gap: var(--forte-space-2);
     /** Space between rows of a wrapped trail */
-    --pui-breadcrumb-row-gap: var(--pui-space-1);
+    --forte-breadcrumb-row-gap: var(--forte-space-1);
     /** Space between an icon and its label inside one crumb */
-    --pui-breadcrumb-item-gap: var(--pui-control-gap);
+    --forte-breadcrumb-item-gap: var(--forte-control-gap);
     /** Text size of the whole trail */
-    --pui-breadcrumb-font-size: var(--pui-font-size-2);
+    --forte-breadcrumb-font-size: var(--forte-font-size-2);
 
     /* Crumbs. `-muted` on the ancestors and full foreground on the current
      * page is the contrast that carries "you are here" without relying on
      * hue — and both clear the 4.5:1 text floor on their own. */
     /** Colour of an ancestor crumb */
-    --pui-breadcrumb-color: var(--pui-color-foreground-muted);
+    --forte-breadcrumb-color: var(--forte-color-foreground-muted);
     /** Colour of an ancestor crumb under the pointer */
-    --pui-breadcrumb-color-hover: var(--pui-color-foreground);
+    --forte-breadcrumb-color-hover: var(--forte-color-foreground);
     /** Colour of the current page's crumb */
-    --pui-breadcrumb-color-current: var(--pui-color-foreground);
+    --forte-breadcrumb-color-current: var(--forte-color-foreground);
     /** Weight of the current page's crumb */
-    --pui-breadcrumb-font-weight-current: var(--pui-font-weight-medium);
+    --forte-breadcrumb-font-weight-current: var(--forte-font-weight-medium);
     /** How far a hover underline sits below the text */
-    --pui-breadcrumb-underline-offset: 0.2em;
+    --forte-breadcrumb-underline-offset: 0.2em;
 
     /* Separator. `-subtle` is below the text floor and fine here: this is a
      * non-text indicator (SC 1.4.11), and it carries no information the
      * order of the list does not already carry. Sized in `em` so it tracks
      * the text through every size preset and any font-size a consumer sets. */
     /** Colour of the separator */
-    --pui-breadcrumb-separator-color: var(--pui-color-foreground-subtle);
+    --forte-breadcrumb-separator-color: var(--forte-color-foreground-subtle);
     /** Size of the default chevron, relative to the trail's text */
-    --pui-breadcrumb-separator-size: 1em;
+    --forte-breadcrumb-separator-size: 1em;
 
     /* The ellipsis. It is the one thing in the trail that is a BUTTON rather
      * than a link, so it is padded like a chip in both variants — a bare icon
@@ -64,52 +64,52 @@
      * control. Defaulting to the chip knobs is what keeps it in step when
      * either those or the size preset move. */
     /** Inline padding of the ellipsis button */
-    --pui-breadcrumb-ellipsis-px: var(--pui-breadcrumb-chip-px);
+    --forte-breadcrumb-ellipsis-px: var(--forte-breadcrumb-chip-px);
     /** Block padding of the ellipsis button */
-    --pui-breadcrumb-ellipsis-py: var(--pui-breadcrumb-chip-py);
+    --forte-breadcrumb-ellipsis-py: var(--forte-breadcrumb-chip-py);
     /* Its own knob rather than the chip's: the ellipsis has a fill in BOTH
      * variants, so in `plain` — where no chip is ever painted — theming it
      * through a token named for one would be a lie. */
     /** Corner radius of the ellipsis button */
-    --pui-breadcrumb-ellipsis-radius: var(--pui-radius-control);
+    --forte-breadcrumb-ellipsis-radius: var(--forte-radius-control);
 
     /* The chip variant's fills. Only painted under data-variant="chip", but
      * declared unconditionally so a consumer can re-point them from one
      * place regardless of which variant is in use. */
     /** Inline padding of a chip */
-    --pui-breadcrumb-chip-px: var(--pui-space-2);
-    /** Block padding of a chip. Follows `data-pui-density` */
-    --pui-breadcrumb-chip-py: var(--pui-space-1);
-    /* `--pui-radius-control`, not a raw step off the scale. The
-     * `data-pui-radius` presets retarget the SEMANTIC tokens — a raw
-     * `--pui-radius-2` responds to `none` (which zeroes the scale itself) and
+    --forte-breadcrumb-chip-px: var(--forte-space-2);
+    /** Block padding of a chip. Follows `data-forte-density` */
+    --forte-breadcrumb-chip-py: var(--forte-space-1);
+    /* `--forte-radius-control`, not a raw step off the scale. The
+     * `data-forte-radius` presets retarget the SEMANTIC tokens — a raw
+     * `--forte-radius-2` responds to `none` (which zeroes the scale itself) and
      * ignores `soft` and `pill` entirely, so a pill-themed page would round
      * every button on it and leave these square. */
     /** Corner radius of a chip */
-    --pui-breadcrumb-chip-radius: var(--pui-radius-control);
+    --forte-breadcrumb-chip-radius: var(--forte-radius-control);
     /** Chip fill of an ancestor crumb under the pointer */
-    --pui-breadcrumb-chip-bg-hover: var(--pui-color-panel-hover);
+    --forte-breadcrumb-chip-bg-hover: var(--forte-color-panel-hover);
     /** Chip fill of the current page's crumb */
-    --pui-breadcrumb-chip-bg-current: var(--pui-color-panel-active);
+    --forte-breadcrumb-chip-bg-current: var(--forte-color-panel-active);
 
     box-sizing: border-box;
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-breadcrumb-font-size);
-    line-height: var(--pui-line-height-normal);
-    color: var(--pui-breadcrumb-color);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-breadcrumb-font-size);
+    line-height: var(--forte-line-height-normal);
+    color: var(--forte-breadcrumb-color);
   }
 
   /* Size presets re-point the knobs and nothing else. No `md` block: the
    * defaults above ARE `md`. */
   .root[data-size="sm"] {
-    --pui-breadcrumb-gap: var(--pui-space-1);
-    --pui-breadcrumb-font-size: var(--pui-font-size-1);
+    --forte-breadcrumb-gap: var(--forte-space-1);
+    --forte-breadcrumb-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="lg"] {
-    --pui-breadcrumb-gap: var(--pui-space-3);
-    --pui-breadcrumb-font-size: var(--pui-font-size-3);
-    --pui-breadcrumb-chip-px: var(--pui-space-3);
+    --forte-breadcrumb-gap: var(--forte-space-3);
+    --forte-breadcrumb-font-size: var(--forte-font-size-3);
+    --forte-breadcrumb-chip-px: var(--forte-space-3);
   }
 
   /* List -------------------------------------------------------------------- */
@@ -118,7 +118,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--pui-breadcrumb-row-gap) var(--pui-breadcrumb-gap);
+    gap: var(--forte-breadcrumb-row-gap) var(--forte-breadcrumb-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -141,15 +141,15 @@
   .page {
     display: inline-flex;
     align-items: center;
-    gap: var(--pui-breadcrumb-item-gap);
+    gap: var(--forte-breadcrumb-item-gap);
     min-width: 0;
-    border-radius: var(--pui-breadcrumb-chip-radius);
+    border-radius: var(--forte-breadcrumb-chip-radius);
     color: inherit;
     font: inherit;
     text-decoration: none;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* An svg placed straight into a crumb is an icon: it must not squash when
@@ -169,15 +169,15 @@
 
   @media (hover: hover) {
     .link:hover {
-      color: var(--pui-breadcrumb-color-hover);
+      color: var(--forte-breadcrumb-color-hover);
       text-decoration: underline;
-      text-underline-offset: var(--pui-breadcrumb-underline-offset);
+      text-underline-offset: var(--forte-breadcrumb-underline-offset);
     }
   }
 
   .page {
-    color: var(--pui-breadcrumb-color-current);
-    font-weight: var(--pui-breadcrumb-font-weight-current);
+    color: var(--forte-breadcrumb-color-current);
+    font-weight: var(--forte-breadcrumb-font-weight-current);
     /* Not a control — it is the label for where you already are, and an
      * `auto` cursor here would be the only thing in the trail suggesting it
      * might do something. Text stays selectable: it is content. */
@@ -187,24 +187,24 @@
   /* Chip variant ------------------------------------------------------------
    * Padding only exists here. The `plain` variant deliberately has none, so
    * the trail sits on the same rhythm as the prose above it — which is also
-   * why the crumbs carry `.pui-target` in the TSX rather than a min-height:
+   * why the crumbs carry `.forte-target` in the TSX rather than a min-height:
    * the 24×24 floor (SC 2.5.8) must not push the two variants apart. */
   .root[data-variant="chip"] .link,
   .root[data-variant="chip"] .page {
-    padding: var(--pui-breadcrumb-chip-py) var(--pui-breadcrumb-chip-px);
+    padding: var(--forte-breadcrumb-chip-py) var(--forte-breadcrumb-chip-px);
   }
 
   /* The fill IS the hover cue here, so the underline comes off: a tinted
    * chip with an underline in it reads as two states at once. */
   @media (hover: hover) {
     .root[data-variant="chip"] .link:hover {
-      background-color: var(--pui-breadcrumb-chip-bg-hover);
+      background-color: var(--forte-breadcrumb-chip-bg-hover);
       text-decoration: none;
     }
   }
 
   .root[data-variant="chip"] .page {
-    background-color: var(--pui-breadcrumb-chip-bg-current);
+    background-color: var(--forte-breadcrumb-chip-bg-current);
   }
 
   /* Separator ---------------------------------------------------------------
@@ -215,21 +215,21 @@
     display: inline-flex;
     flex: none;
     align-items: center;
-    color: var(--pui-breadcrumb-separator-color);
+    color: var(--forte-breadcrumb-separator-color);
     cursor: default;
     -webkit-user-select: none;
     user-select: none;
   }
 
   /* The chevron is drawn pointing right, and `scale` is physical — there is
-   * no logical form of it — so RTL is a sign flip on `--pui-direction`. The
+   * no logical form of it — so RTL is a sign flip on `--forte-direction`. The
    * selector is the icon's own class, not `> svg`, so a consumer's `/` or `·`
    * passed through `separator` is left alone: mirroring a glyph would turn a
    * slash into a backslash. */
   .separatorIcon {
-    inline-size: var(--pui-breadcrumb-separator-size);
-    block-size: var(--pui-breadcrumb-separator-size);
-    scale: var(--pui-direction) 1;
+    inline-size: var(--forte-breadcrumb-separator-size);
+    block-size: var(--forte-breadcrumb-separator-size);
+    scale: var(--forte-direction) 1;
   }
 
   /* Ellipsis ----------------------------------------------------------------
@@ -242,16 +242,16 @@
     align-items: center;
     justify-content: center;
     margin: 0;
-    padding: var(--pui-breadcrumb-ellipsis-py) var(--pui-breadcrumb-ellipsis-px);
+    padding: var(--forte-breadcrumb-ellipsis-py) var(--forte-breadcrumb-ellipsis-px);
     border: 0;
-    border-radius: var(--pui-breadcrumb-ellipsis-radius);
+    border-radius: var(--forte-breadcrumb-ellipsis-radius);
     background: none;
     color: inherit;
     font: inherit;
     cursor: default;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   button.ellipsis,
@@ -264,8 +264,8 @@
     button.ellipsis:hover,
     a.ellipsis:hover,
     [role="button"].ellipsis:hover {
-      background-color: var(--pui-breadcrumb-chip-bg-hover);
-      color: var(--pui-breadcrumb-color-hover);
+      background-color: var(--forte-breadcrumb-chip-bg-hover);
+      color: var(--forte-breadcrumb-color-hover);
     }
   }
 
@@ -306,9 +306,9 @@
    * one is set. */
   .root[data-overflow="scroll"] .list {
     flex-wrap: nowrap;
-    padding: var(--pui-space-1);
+    padding: var(--forte-space-1);
     /* SC 2.4.11, for the crumb a Tab lands on out of view. */
-    scroll-padding-inline: var(--pui-space-4);
+    scroll-padding-inline: var(--forte-space-4);
   }
 
   .root[data-overflow="scroll"] .item {
@@ -322,7 +322,7 @@
 }
 
 /* Forced colors --------------------------------------------------------------
- * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by
  * layer alone. patterns.css already handles the focus ring.
  *
  * What is Breadcrumb-specific: every cue that separates the current page from
@@ -336,11 +336,11 @@
  * The chip variant's fills go the same way, which is fine — with the links
  * underlined the trail still reads.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .link {
       text-decoration: underline;
-      text-underline-offset: var(--pui-breadcrumb-underline-offset);
+      text-underline-offset: var(--forte-breadcrumb-underline-offset);
     }
 
     .link:hover {

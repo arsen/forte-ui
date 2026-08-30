@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertDialog, Button } from "@dofortech/pretty-ui";
+import { AlertDialog, Button } from "@dofortech/forte-ui";
 
 export default function DialogAlert() {
   return (

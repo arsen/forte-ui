@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Checkbox, CheckboxGroup, Field } from "@dofortech/pretty-ui";
+import { Checkbox, CheckboxGroup, Field } from "@dofortech/forte-ui";
 
 const PERMISSIONS = [
   { value: "read", label: "Read code and issues" },

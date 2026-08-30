@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Input } from "@dofortech/pretty-ui";
+import { Field, Input } from "@dofortech/forte-ui";
 
 export default function InputStates() {
   return (

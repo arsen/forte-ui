@@ -106,7 +106,7 @@ function useColorPicker(part: string): ColorPickerContextValue {
  *
  * Inline is also the right precedence. These carry live state, the way Base
  * UI writes a slider thumb's position inline; a consumer retunes the picker
- * through the `--pui-color-picker-*` knobs in the stylesheet, none of which
+ * through the `--forte-color-picker-*` knobs in the stylesheet, none of which
  * this touches.
  */
 function useColorVars(context: ColorPickerContextValue): React.CSSProperties {
@@ -114,13 +114,13 @@ function useColorVars(context: ColorPickerContextValue): React.CSSProperties {
   return React.useMemo(
     () =>
       ({
-        "--pui-color-picker-color": css,
-        "--pui-color-picker-solid": solid,
+        "--forte-color-picker-color": css,
+        "--forte-color-picker-solid": solid,
         /* Unitless, so it can be dropped straight into `hsl()`. A `deg` here
          * would be rejected inside `calc()` the same way the ramp's hue
          * arithmetic is. */
-        "--pui-color-picker-hue": String(Math.round(hsva.h * 100) / 100),
-        "--pui-color-picker-on-color": onColor(rgba),
+        "--forte-color-picker-hue": String(Math.round(hsva.h * 100) / 100),
+        "--forte-color-picker-on-color": onColor(rgba),
       }) as React.CSSProperties,
     [css, solid, hsva.h, rgba],
   );
@@ -459,14 +459,14 @@ export const ColorPickerTrigger = React.forwardRef<
        * a consumer setting `style` on a part does not silently blank the
        * custom properties every gradient in it reads. Same everywhere below. */
       style={{ ...vars, ...style }}
-      data-pui="color-picker-trigger"
+      data-forte="color-picker-trigger"
       {...props}
     >
       {hideSwatch ? null : (
-        <span className={styles.triggerSwatch} data-pui="color-picker-trigger-swatch" />
+        <span className={styles.triggerSwatch} data-forte="color-picker-trigger-swatch" />
       )}
       {children}
-      <span className="pui-visually-hidden">{context.text}</span>
+      <span className="forte-visually-hidden">{context.text}</span>
     </Popover.Trigger>
   );
 });
@@ -524,11 +524,11 @@ export const ColorPickerPopup = React.forwardRef<
     <Popover.Popup ref={ref} className={clsx(styles.popup, className)} {...props}>
       {arrow ? <Popover.Arrow /> : null}
       {/* The panel, and not the popup itself, owns the padding and the column
-        * — which is also what gives the picker a `data-pui` marker of its own
+        * — which is also what gives the picker a `data-forte` marker of its own
         * inside a surface that is already tagged `popover-popup`. */}
       <div
         className={clsx(styles.panel, panelClassName)}
-        data-pui="color-picker-panel"
+        data-forte="color-picker-panel"
         data-disabled={disabled || undefined}
       >
         {children}
@@ -566,7 +566,7 @@ export const ColorPickerPanel = React.forwardRef<
     <div
       ref={ref}
       className={clsx(styles.panel, styles.standalonePanel, className)}
-      data-pui="color-picker-panel"
+      data-forte="color-picker-panel"
       data-disabled={disabled || undefined}
       {...props}
     />
@@ -602,7 +602,7 @@ export const ColorPickerRow = React.forwardRef<HTMLDivElement, ColorPickerRowPro
       <div
         ref={ref}
         className={clsx(styles.row, className)}
-        data-pui="color-picker-row"
+        data-forte="color-picker-row"
         {...props}
       />
     );
@@ -785,7 +785,7 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
       <div
         ref={areaRef}
         className={clsx(styles.area, className)}
-        data-pui="color-picker-area"
+        data-forte="color-picker-area"
         data-disabled={disabled || undefined}
         data-dragging={dragging || undefined}
         style={{ ...vars, ...style }}
@@ -796,8 +796,8 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
         {...props}
       >
         <div
-          className={clsx(styles.areaThumb, "pui-focus-ring-within")}
-          data-pui="color-picker-area-thumb"
+          className={clsx(styles.areaThumb, "forte-focus-ring-within")}
+          data-forte="color-picker-area-thumb"
           style={{
             /* Physical, not logical: see the note on RTL above. */
             left: `${exact(hsva.s)}%`,
@@ -894,18 +894,18 @@ function Rail({ channel, label, className, style, rest }: RailProps) {
       }
       onValueCommitted={() => commit(hue ? "hue" : "alpha")}
       className={clsx(styles.rail, className)}
-      data-pui={`color-picker-${channel}-slider`}
+      data-forte={`color-picker-${channel}-slider`}
       style={{ ...vars, ...style }}
       {...rest}
     >
       <BaseSlider.Control className={styles.railControl}>
         <BaseSlider.Track
           className={hue ? styles.hueTrack : styles.alphaTrack}
-          data-pui={`color-picker-${channel}-track`}
+          data-forte={`color-picker-${channel}-track`}
         >
           <BaseSlider.Thumb
-            className={clsx(styles.railThumb, "pui-focus-ring-within")}
-            data-pui={`color-picker-${channel}-thumb`}
+            className={clsx(styles.railThumb, "forte-focus-ring-within")}
+            data-forte={`color-picker-${channel}-thumb`}
             aria-label={label}
             getAriaValueText={(_formatted, raw) =>
               hue ? `${Math.round(raw)}°` : `${Math.round(raw)}%`
@@ -1070,7 +1070,7 @@ export const ColorPickerSwatches = React.forwardRef<
     onKeyDown?.(event);
     const items = Array.from(
       event.currentTarget.querySelectorAll<HTMLButtonElement>(
-        '[data-pui="color-picker-swatch"]:not(:disabled)',
+        '[data-forte="color-picker-swatch"]:not(:disabled)',
       ),
     );
     const index = items.indexOf(document.activeElement as HTMLButtonElement);
@@ -1126,11 +1126,11 @@ export const ColorPickerSwatches = React.forwardRef<
         aria-label={label}
         aria-disabled={disabled || undefined}
         className={clsx(styles.swatches, className)}
-        data-pui="color-picker-swatches"
+        data-forte="color-picker-swatches"
         data-disabled={disabled || undefined}
         style={
           {
-            "--pui-color-picker-swatch-columns": columns,
+            "--forte-color-picker-swatch-columns": columns,
             ...style,
           } as React.CSSProperties
         }
@@ -1204,13 +1204,13 @@ export const ColorPickerSwatch = React.forwardRef<
       aria-label={label ?? value}
       disabled={disabled || disabledProp}
       tabIndex={group ? (group.roving === value ? 0 : -1) : undefined}
-      className={clsx(styles.swatch, "pui-focus-ring", className)}
-      data-pui="color-picker-swatch"
+      className={clsx(styles.swatch, "forte-focus-ring", className)}
+      data-forte="color-picker-swatch"
       data-selected={selected || undefined}
       style={
         {
-          "--pui-color-picker-swatch": value,
-          "--pui-color-picker-swatch-on": parsed
+          "--forte-color-picker-swatch": value,
+          "--forte-color-picker-swatch-on": parsed
             ? onColor(hsvaToRgba(parsed))
             : "currentColor",
           ...style,
@@ -1274,7 +1274,7 @@ export const ColorPickerPreview = React.forwardRef<
       ref={ref}
       aria-hidden="true"
       className={clsx(styles.preview, className)}
-      data-pui="color-picker-preview"
+      data-forte="color-picker-preview"
       style={{ ...vars, ...style }}
       {...props}
     />
@@ -1305,7 +1305,7 @@ export const ColorPickerValue = React.forwardRef<
     <span
       ref={ref}
       className={clsx(styles.value, className)}
-      data-pui="color-picker-value"
+      data-forte="color-picker-value"
       {...props}
     >
       {text}
@@ -1364,7 +1364,7 @@ export function ColorPickerFormatSelect({
         variant="ghost"
         aria-label={label}
         className={clsx(styles.format, className)}
-        data-pui="color-picker-format"
+        data-forte="color-picker-format"
       >
         <Select.Value />
         <Select.Icon />
@@ -1443,8 +1443,8 @@ export const ColorPickerInput = React.forwardRef<
       aria-label={label}
       aria-invalid={invalid || undefined}
       value={draft ?? text}
-      className={clsx(styles.input, "pui-focus-ring", className)}
-      data-pui="color-picker-input"
+      className={clsx(styles.input, "forte-focus-ring", className)}
+      data-forte="color-picker-input"
       data-invalid={invalid || undefined}
       onChange={(event) => {
         const next = event.target.value;
@@ -1556,8 +1556,8 @@ export const ColorPickerEyeDropper = React.forwardRef<
       type="button"
       disabled={disabled || disabledProp}
       aria-label={label}
-      className={clsx(styles.eyeDropper, "pui-focus-ring", className)}
-      data-pui="color-picker-eye-dropper"
+      className={clsx(styles.eyeDropper, "forte-focus-ring", className)}
+      data-forte="color-picker-eye-dropper"
       onClick={(event) => {
         void pick();
         onClick?.(event);
@@ -1611,7 +1611,7 @@ export const ColorPickerHiddenInput = React.forwardRef<
       name={name}
       value={text}
       readOnly
-      data-pui="color-picker-hidden-input"
+      data-forte="color-picker-hidden-input"
       {...props}
     />
   );
@@ -1652,7 +1652,7 @@ export const ColorPickerHiddenInput = React.forwardRef<
  * `Root` + `Swatches`; one with no transparency simply leaves out
  * `AlphaSlider`, and the value it emits has no alpha channel in it.
  *
- * Styling is driven by `data-*` attributes and `--pui-color-picker-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-color-picker-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[selected]:...`) without wrapping.
  */

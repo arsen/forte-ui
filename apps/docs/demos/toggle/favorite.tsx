@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Toggle } from "@dofortech/pretty-ui";
+import { Toggle } from "@dofortech/forte-ui";
 
 export default function ToggleFavorite() {
   return (

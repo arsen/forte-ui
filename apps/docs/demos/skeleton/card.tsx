@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Avatar, Button, Skeleton } from "@dofortech/pretty-ui";
+import { Avatar, Button, Skeleton } from "@dofortech/forte-ui";
 
 const ARTICLE = {
   author: "Adaobi Okonkwo",

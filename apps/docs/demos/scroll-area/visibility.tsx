@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@dofortech/pretty-ui";
+import { ScrollArea } from "@dofortech/forte-ui";
 
 const LINES = Array.from({ length: 12 }, (_, i) => `Row ${i + 1}`);
 

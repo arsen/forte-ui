@@ -159,7 +159,7 @@ export const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
       <BaseSelect.Label
         ref={ref}
         className={clsx(styles.label, className)}
-        data-pui="select-label"
+        data-forte="select-label"
         {...props}
       />
     );
@@ -183,7 +183,7 @@ export interface SelectTriggerProps extends Omit<BaseTriggerProps, "className"> 
   variant?: SelectVariant;
   /**
    * Size of the trigger. Actual dimensions also follow the ambient
-   * `data-pui-density` setting.
+   * `data-forte-density` setting.
    * @default "md"
    */
   size?: SelectSize;
@@ -265,7 +265,7 @@ export const SelectTrigger = React.forwardRef<
         warnedRef.current = true;
         // eslint-disable-next-line no-console
         console.warn(
-          "[pretty-ui] <Select.Trigger> has no accessible name. Render a " +
+          "[forte-ui] <Select.Trigger> has no accessible name. Render a " +
             "<Select.Label> inside the same <Select.Root>, a " +
             "<Field.Label nativeLabel={false}> in the same <Field.Root>, or " +
             "pass aria-label to the trigger.",
@@ -278,8 +278,8 @@ export const SelectTrigger = React.forwardRef<
   return (
     <BaseSelect.Trigger
       ref={handleRef}
-      className={clsx(styles.trigger, "pui-focus-ring", className)}
-      data-pui="select-trigger"
+      className={clsx(styles.trigger, "forte-focus-ring", className)}
+      data-forte="select-trigger"
       data-variant={variant}
       data-size={size}
       data-full-width={fullWidth || undefined}
@@ -319,7 +319,7 @@ export const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
       <BaseSelect.Value
         ref={ref}
         className={clsx(styles.value, className)}
-        data-pui="select-value"
+        data-forte="select-value"
         {...props}
       />
     );
@@ -360,7 +360,7 @@ export const SelectIcon = React.forwardRef<HTMLSpanElement, SelectIconProps>(
       <BaseSelect.Icon
         ref={ref}
         className={clsx(styles.icon, className)}
-        data-pui="select-icon"
+        data-forte="select-icon"
         {...props}
       >
         {children ?? <CaretUpDownIcon />}
@@ -498,13 +498,13 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
       <BaseSelect.Portal container={container}>
         {backdrop ? (
           <BaseSelect.Backdrop
-            className={clsx(styles.backdrop, "pui-scrim")}
-            data-pui="select-backdrop"
+            className={clsx(styles.backdrop, "forte-scrim")}
+            data-forte="select-backdrop"
           />
         ) : null}
         <BaseSelect.Positioner
           className={clsx(styles.positioner, positionerClassName)}
-          data-pui="select-positioner"
+          data-forte="select-positioner"
           alignItemWithTrigger={alignItemWithTrigger}
           side={side}
           align={align}
@@ -512,24 +512,24 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
           alignOffset={alignOffset}
           collisionPadding={collisionPadding}
         >
-          {/* `pui-hc-surface` carries a transparent border that becomes a
+          {/* `forte-hc-surface` carries a transparent border that becomes a
             * system-coloured boundary in forced-colors mode, where the
             * box-shadow below is stripped and the popup would otherwise
             * dissolve into the page. */}
           <BaseSelect.Popup
             ref={ref}
-            className={clsx(styles.popup, "pui-hc-surface", className)}
-            data-pui="select-popup"
+            className={clsx(styles.popup, "forte-hc-surface", className)}
+            data-forte="select-popup"
             {...props}
           >
             {scrollArrows ? (
-              <BaseSelect.ScrollUpArrow className={styles.scrollArrow} data-pui="select-scroll-arrow">
+              <BaseSelect.ScrollUpArrow className={styles.scrollArrow} data-forte="select-scroll-arrow">
                 <CaretUpIcon />
               </BaseSelect.ScrollUpArrow>
             ) : null}
-            <BaseSelect.List className={styles.list} data-pui="select-list">{children}</BaseSelect.List>
+            <BaseSelect.List className={styles.list} data-forte="select-list">{children}</BaseSelect.List>
             {scrollArrows ? (
-              <BaseSelect.ScrollDownArrow className={styles.scrollArrow} data-pui="select-scroll-arrow">
+              <BaseSelect.ScrollDownArrow className={styles.scrollArrow} data-forte="select-scroll-arrow">
                 <CaretDownIcon />
               </BaseSelect.ScrollDownArrow>
             ) : null}
@@ -595,15 +595,15 @@ export const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
     return (
       <BaseSelect.Item
         ref={ref}
-        className={clsx(styles.item, "pui-focus-ring", className)}
-        data-pui="select-item"
+        className={clsx(styles.item, "forte-focus-ring", className)}
+        data-forte="select-item"
         data-focus-inset=""
         {...props}
       >
-        <BaseSelect.ItemIndicator className={styles.itemIndicator} data-pui="select-item-indicator">
+        <BaseSelect.ItemIndicator className={styles.itemIndicator} data-forte="select-item-indicator">
           {indicator ?? <CheckIcon />}
         </BaseSelect.ItemIndicator>
-        <BaseSelect.ItemText className={styles.itemText} data-pui="select-item-text">
+        <BaseSelect.ItemText className={styles.itemText} data-forte="select-item-text">
           {children}
         </BaseSelect.ItemText>
       </BaseSelect.Item>
@@ -636,7 +636,7 @@ export const SelectGroup = React.forwardRef<HTMLDivElement, SelectGroupProps>(
       <BaseSelect.Group
         ref={ref}
         className={clsx(styles.group, className)}
-        data-pui="select-group"
+        data-forte="select-group"
         {...props}
       />
     );
@@ -669,7 +669,7 @@ export const SelectGroupLabel = React.forwardRef<
     <BaseSelect.GroupLabel
       ref={ref}
       className={clsx(styles.groupLabel, className)}
-      data-pui="select-group-label"
+      data-forte="select-group-label"
       {...props}
     />
   );
@@ -707,7 +707,7 @@ export const SelectSeparator = React.forwardRef<
     <BaseSelect.Separator
       ref={ref}
       className={clsx(styles.separator, className)}
-      data-pui="select-separator"
+      data-forte="select-separator"
       {...props}
     />
   );
@@ -734,16 +734,16 @@ export const SelectSeparator = React.forwardRef<
  * </Select.Root>
  * ```
  *
- * Styling is driven entirely by `data-*` attributes and `--pui-select-*`
+ * Styling is driven entirely by `data-*` attributes and `--forte-select-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[highlighted]:...`) without wrapping.
  * Each part declares its own knobs, so an ancestor's value is only inherited
  * and loses — set them on the part itself via `className`. The popup is also
  * portalled to `<body>`, so an ancestor of the trigger could not reach it in
- * any case. `positionerClassName` reaches `--pui-select-z-index` and
- * `--pui-select-positioner-min-height`, the only two declared on the
- * positioner. The global `--pui-color-*` / `--pui-control-*` / `--pui-radius-*`
- * / `--pui-space-*` tokens these resolve to ARE inherited, so re-pointing
+ * any case. `positionerClassName` reaches `--forte-select-z-index` and
+ * `--forte-select-positioner-min-height`, the only two declared on the
+ * positioner. The global `--forte-color-*` / `--forte-control-*` / `--forte-radius-*`
+ * / `--forte-space-*` tokens these resolve to ARE inherited, so re-pointing
  * those from `:root` or a theme scope moves every select at once.
  */
 export const Select = {

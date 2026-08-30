@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, ColorPicker } from "@dofortech/pretty-ui";
+import { Button, ColorPicker } from "@dofortech/forte-ui";
 
 export default function ColorPickerForm() {
   const [submitted, setSubmitted] = React.useState<string | null>(null);

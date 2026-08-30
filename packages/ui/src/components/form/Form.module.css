@@ -5,15 +5,15 @@
  * worth undoing. The column is here because a form is nearly always a stack of
  * fields, and without it every consumer writes the same three declarations.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /** Space between the form's children */
-    --pui-form-gap: var(--pui-space-5);
+    --forte-form-gap: var(--forte-space-5);
 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-form-gap);
+    gap: var(--forte-form-gap);
 
     /* Same reason as Field and Fieldset: a text input inside refuses to shrink
      * below its ~20-character intrinsic width, so without this the form

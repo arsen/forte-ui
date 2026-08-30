@@ -30,7 +30,7 @@ trigger — anchored to where the user clicked instead of to a control.
 ## Import
 
 ```tsx
-import { ContextMenu } from "@dofortech/pretty-ui";
+import { ContextMenu } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -43,10 +43,10 @@ function rather than two that look alike.
 
 Three things follow from that, and they are the ones worth knowing:
 
-- The rows are themed with the `--pui-menu-*` knobs, not `--pui-context-menu-*`.
+- The rows are themed with the `--forte-menu-*` knobs, not `--forte-context-menu-*`.
   The trigger is the only part with properties of its own.
-- The parts carry the Menu markers — `data-pui="menu-popup"`,
-  `data-pui="menu-item"` — so a consumer who re-skins menu rows from plain CSS
+- The parts carry the Menu markers — `data-forte="menu-popup"`,
+  `data-forte="menu-item"` — so a consumer who re-skins menu rows from plain CSS
   re-skins both menus at once, which is almost always what they meant.
 - A list of rows can be handed to either popup without a wrapper deciding which
   namespace to render from.
@@ -169,7 +169,7 @@ tabindex and all.
 The trigger declares three properties, all of them about the ring that marks the
 region while its menu is open. Everything else on screen belongs to
 [Menu](/components/menu#theming) — the popup surface, the rows, the separators,
-the motion — and is set through the `--pui-menu-*` knobs on the parts that
+the motion — and is set through the `--forte-menu-*` knobs on the parts that
 declare them.
 
 Like every knob in the library these are declared on the element that owns them,

@@ -29,36 +29,36 @@
  * `stretch` above mean "fill the container" on the right axis for both
  * orientations, and nothing on the wrong one.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the separator itself, so a value set
      * on an ancestor is only INHERITED and loses to this declaration. To
      * re-skin one rule set them via `className` (an unlayered consumer rule
-     * beats `@layer pretty-ui.components` at any specificity) or an inline
+     * beats `@layer forte.components` at any specificity) or an inline
      * `style`; to move every rule at once, re-point the global tokens on the
      * right-hand side, which this file only reads and never re-declares. */
     /** Line colour */
-    --pui-separator-color: var(--pui-color-border-muted);
+    --forte-separator-color: var(--forte-color-border-muted);
     /** Line thickness */
-    --pui-separator-thickness: 1px;
+    --forte-separator-thickness: 1px;
     /** Line style; `variant` sets this */
-    --pui-separator-style: solid;
+    --forte-separator-style: solid;
     /* Block for horizontal, inline for vertical. Zero by default: the common
      * case is a flex or grid parent whose `gap` already spaces the rule, and
      * a built-in margin would add to it. Set it when the rule sits in
      * ordinary flow. */
     /** Margin along the axis being separated */
-    --pui-separator-spacing: 0px;
+    --forte-separator-spacing: 0px;
     /* This is how a rule inside a padded panel lines up with the panel's text
      * instead of running edge to edge. */
     /** Margin across it — how far in from the edges */
-    --pui-separator-inset: 0px;
+    --forte-separator-inset: 0px;
     /* Length floor for a VERTICAL rule that has nothing to stretch against —
      * in ordinary flow, or between inline items. `1lh` is one line box, which
      * is what makes `A | B` between two spans of text look right. Ignored by
      * horizontal rules, which get their length from the container. */
     /** Length floor for a vertical rule with nothing to stretch against */
-    --pui-separator-min-length: 1lh;
+    --forte-separator-min-length: 1lh;
 
     box-sizing: border-box;
 
@@ -98,10 +98,10 @@
      * "do not stretch" declaration, not a "be zero tall" one. */
     block-size: 0;
     border-block-start:
-      var(--pui-separator-thickness) var(--pui-separator-style)
-      var(--pui-separator-color);
-    margin-block: var(--pui-separator-spacing);
-    margin-inline: var(--pui-separator-inset);
+      var(--forte-separator-thickness) var(--forte-separator-style)
+      var(--forte-separator-color);
+    margin-block: var(--forte-separator-spacing);
+    margin-inline: var(--forte-separator-inset);
   }
 
   /* Vertical --------------------------------------------------------------
@@ -114,16 +114,16 @@
      * cannot widen the rule inside a flex COLUMN. */
     inline-size: 0;
     block-size: auto;
-    min-block-size: var(--pui-separator-min-length);
+    min-block-size: var(--forte-separator-min-length);
     /* Centres the rule on the text baseline's line box when it IS inline.
      * Without it the default `baseline` alignment sits an empty box's bottom
      * edge on the baseline, so the rule hangs above the text it divides. */
     vertical-align: middle;
     border-inline-start:
-      var(--pui-separator-thickness) var(--pui-separator-style)
-      var(--pui-separator-color);
-    margin-inline: var(--pui-separator-spacing);
-    margin-block: var(--pui-separator-inset);
+      var(--forte-separator-thickness) var(--forte-separator-style)
+      var(--forte-separator-color);
+    margin-inline: var(--forte-separator-spacing);
+    margin-block: var(--forte-separator-inset);
   }
 
   /* Line style ------------------------------------------------------------
@@ -131,10 +131,10 @@
    * declaration reaches both orientations. At 1px `dotted` renders as a very
    * fine stipple; that is the intent — it is the quietest rule in the set. */
   .root[data-variant="dashed"] {
-    --pui-separator-style: dashed;
+    --forte-separator-style: dashed;
   }
 
   .root[data-variant="dotted"] {
-    --pui-separator-style: dotted;
+    --forte-separator-style: dotted;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Collapsible } from "@dofortech/pretty-ui";
+import { Collapsible } from "@dofortech/forte-ui";
 
 const column = "flex w-full max-w-lg flex-col gap-3 text-2 leading-normal";
 

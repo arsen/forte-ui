@@ -34,11 +34,11 @@ import styles from "./ContextMenu.module.css";
  * components with a second stylesheet — would be two definitions of one thing
  * that have to stay pixel-identical by hand, which is the drift the generators
  * in this repo exist to prevent. It also means a consumer who re-skins
- * `[data-pui="menu-item"]` re-skins both, which is what they meant.
+ * `[data-forte="menu-item"]` re-skins both, which is what they meant.
  *
  * The one consequence to know about: rows inside a context menu carry the
- * Menu part markers (`data-pui="menu-item"`, `data-pui="menu-popup"`) and read
- * the `--pui-menu-*` knobs. Only the trigger is `--pui-context-menu-*`.
+ * Menu part markers (`data-forte="menu-item"`, `data-forte="menu-popup"`) and read
+ * the `--forte-menu-*` knobs. Only the trigger is `--forte-context-menu-*`.
  * ---------------------------------------------------------------------- */
 
 /* -------------------------------------------------------------------------
@@ -129,7 +129,7 @@ export const ContextMenuTrigger = React.forwardRef<
     <BaseContextMenu.Trigger
       ref={ref}
       className={clsx(styles.trigger, className)}
-      data-pui="context-menu-trigger"
+      data-forte="context-menu-trigger"
       {...props}
     >
       {children}
@@ -161,8 +161,8 @@ export const ContextMenuTrigger = React.forwardRef<
  * Everything below `Trigger` is the same component `Menu` uses — Base UI's own
  * `context-menu` entry point re-exports the Menu parts, and so does this one —
  * so the popup and its rows look identical, answer the same keyboard, and are
- * themed through the same `--pui-menu-*` knobs. The trigger is the only part
- * with `--pui-context-menu-*` properties of its own.
+ * themed through the same `--forte-menu-*` knobs. The trigger is the only part
+ * with `--forte-context-menu-*` properties of its own.
  *
  * Treat it as an enhancement: it is undiscoverable, unreachable from the
  * keyboard, and awkward on touch, so every command in it needs a visible home

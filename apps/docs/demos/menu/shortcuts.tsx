@@ -1,7 +1,7 @@
 "use client";
 
 import { Copy, Pencil, Scissors, Trash2 } from "lucide-react";
-import { Menu } from "@dofortech/pretty-ui";
+import { Menu } from "@dofortech/forte-ui";
 
 export default function MenuShortcuts() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, DatePicker, Popover } from "@dofortech/pretty-ui";
+import { Button, DatePicker, Popover } from "@dofortech/forte-ui";
 
 export default function DatePickerFooterDemo() {
   return (

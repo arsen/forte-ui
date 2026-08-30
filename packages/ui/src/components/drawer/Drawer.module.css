@@ -9,14 +9,14 @@
  *                                                →  Footer / Close
  *
  * `Root` renders no DOM element, so there is no `.root` rule here; the popup
- * is the styling anchor and carries most of the `--pui-drawer-*` knobs. Two
+ * is the styling anchor and carries most of the `--forte-drawer-*` knobs. Two
  * live elsewhere on purpose — see the notes on `.viewport` and `.backdrop`.
  *
  * ---------------------------------------------------------------------------
  * One rule set, four sides
  * ---------------------------------------------------------------------------
  * Every side-dependent value is derived from a two-number unit vector,
- * `--pui-drawer-axis-x` / `--pui-drawer-axis-y`, that points from the middle
+ * `--forte-drawer-axis-x` / `--forte-drawer-axis-y`, that points from the middle
  * of the screen toward the edge the drawer rests against. Each side sets it
  * once; the closed position and the skirt below both fall out of it, so
  * neither is written four times and neither can drift from the other.
@@ -51,19 +51,19 @@
  * ---------------------------------------------------------------------------
  *  - No `prefers-reduced-motion` block. The slide is literal geometry (100%
  *    of the drawer's own size, which no travel token can express), so it is
- *    gated on `--pui-motion-ok` and collapses to nothing on its own. What
- *    replaces it is a fade, faded IN by `--pui-motion-off` so it costs
+ *    gated on `--forte-motion-ok` and collapses to nothing on its own. What
+ *    replaces it is a fade, faded IN by `--forte-motion-off` so it costs
  *    nothing when motion is allowed: a drawer that slides should not also
  *    dissolve.
  *  - Enter/exit is done with transitions on [data-starting-style] /
  *    [data-ending-style], never keyframes, so closing a drawer mid-open
  *    reverses smoothly instead of snapping.
- *  - The entrance rides `--pui-ease-spring-precise`, the one spring in the
+ *  - The entrance rides `--forte-ease-spring-precise`, the one spring in the
  *    set that does not overshoot. Overshoot here is not a flourish but a
  *    defect: the drawer would sail PAST flush and pull away from the edge it
  *    is supposed to be attached to. The skirt would cover it, but a drawer
  *    that visibly bounces off its own edge is not what the bounce is for.
- *  - The exit accelerates (`--pui-ease-exit`) rather than running `linear`
+ *  - The exit accelerates (`--forte-ease-exit`) rather than running `linear`
  *    the way Dialog's does. Dialog's exit never arrives anywhere — it is cut
  *    short by unmounting, mid-fade. This one arrives: it is opaque the whole
  *    way and comes to rest exactly off-screen, so a curve that reads as
@@ -72,9 +72,9 @@
  *    `Promise.all(popup.getAnimations().map(a => a.finished))` before
  *    unmounting the popup, and an infinite animation never settles.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* Backdrop ---------------------------------------------------------------
-   * `.pui-scrim` already supplies position/inset, the scrim colour, the
+   * `.forte-scrim` already supplies position/inset, the scrim colour, the
    * optional blur and the forced-colors treatment. The opacity is taken over
    * here so the scrim can track the drag.
    * ---------------------------------------------------------------------- */
@@ -83,33 +83,33 @@
      * is the viewport's SIBLING inside the portal — nothing on the viewport
      * can reach it. Set it through `backdropClassName`. */
     /** Stacking band for the scrim; set through `backdropClassName` */
-    --pui-drawer-backdrop-z-index: 39;
+    --forte-drawer-backdrop-z-index: 39;
     /** How long the scrim takes to clear; set through `backdropClassName`.
-     * Dropped to `var(--pui-duration-fast)` after a swipe. */
-    --pui-drawer-backdrop-duration: var(--pui-duration-normal);
+     * Dropped to `var(--forte-duration-fast)` after a swipe. */
+    --forte-drawer-backdrop-duration: var(--forte-duration-normal);
     /** Curve the scrim clears on; set through `backdropClassName` */
-    --pui-drawer-backdrop-ease: var(--pui-ease-standard);
+    --forte-drawer-backdrop-ease: var(--forte-ease-standard);
     /* Zero for an ordinary drawer, where clearing completely IS the point. */
     /** How faint the scrim may get while the drawer is still open. `0.4` on a
      * modal drawer with snap points. */
-    --pui-drawer-backdrop-floor: 0;
+    --forte-drawer-backdrop-floor: 0;
 
-    /* Restated from `.pui-scrim` so the @supports override below has an
+    /* Restated from `.forte-scrim` so the @supports override below has an
      * explicit default to flip, and so the class always exists in the
      * stylesheet regardless of at-rule handling. */
     position: fixed;
-    z-index: var(--pui-drawer-backdrop-z-index);
+    z-index: var(--forte-drawer-backdrop-z-index);
 
     /* Half-dragging the drawer out takes the page half-way back to normal
      * brightness, so an abandoned gesture is legible in both directions and
      * the scrim never argues with where the drawer actually is. Base UI
      * writes the progress straight onto this element during a drag. */
     opacity: max(
-      var(--pui-drawer-backdrop-floor),
+      var(--forte-drawer-backdrop-floor),
       calc(1 - var(--drawer-swipe-progress, 0))
     );
-    transition: opacity var(--pui-drawer-backdrop-duration)
-      var(--pui-drawer-backdrop-ease);
+    transition: opacity var(--forte-drawer-backdrop-duration)
+      var(--forte-drawer-backdrop-ease);
   }
 
   /* Base UI reuses `--drawer-swipe-progress` for two different quantities.
@@ -126,10 +126,10 @@
    * The scrim keeps tracking the sheet in between — darkening as it is raised,
    * lightening as it is lowered — it simply stops short of vanishing. */
   .backdrop[data-scrim-floor] {
-    --pui-drawer-backdrop-floor: 0.4;
+    --forte-drawer-backdrop-floor: 0.4;
   }
 
-  /* `.pui-scrim` puts these on `[data-starting-style]` / `[data-ending-style]`
+  /* `.forte-scrim` puts these on `[data-starting-style]` / `[data-ending-style]`
    * already, but `patterns` is an EARLIER layer than `components` and layer
    * order outranks specificity completely — so the plain `.backdrop` opacity
    * above would beat them and the scrim would appear at full strength with no
@@ -146,7 +146,7 @@
    * quickly, and a scrim outliving it by a fifth of a second reads as the page
    * being slow to recover. */
   .backdrop[data-swipe-dismiss] {
-    --pui-drawer-backdrop-duration: var(--pui-duration-fast);
+    --forte-drawer-backdrop-duration: var(--forte-duration-fast);
   }
 
   /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
@@ -179,7 +179,7 @@
      * portals happen to land in. Matches Dialog, so the two slot into an
      * app's scale together. `viewportClassName` reaches it. */
     /** Stacking band for the drawer; set through `viewportClassName` */
-    --pui-drawer-z-index: 40;
+    --forte-drawer-z-index: 40;
 
     /* Declared HERE and not on the popup, which is the one exception to this
      * library's "knobs live on the element they style" rule, and a deliberate
@@ -189,26 +189,26 @@
      * leaving it undeclared there lets it INHERIT this value — one
      * declaration, both facts, no way to set one and forget the other. */
     /** Gap between the drawer and the edge of the screen; set through
-     * `viewportClassName`. `var(--pui-space-3)` when `variant="floating"`. */
-    --pui-drawer-inset: 0px;
+     * `viewportClassName`. `var(--forte-space-3)` when `variant="floating"`. */
+    --forte-drawer-inset: 0px;
 
     box-sizing: border-box;
     position: fixed;
-    z-index: var(--pui-drawer-z-index);
+    z-index: var(--forte-drawer-z-index);
     inset: 0;
     display: grid;
-    padding: var(--pui-drawer-inset);
+    padding: var(--forte-drawer-inset);
     /* Only ever non-zero inside a `Drawer.VirtualKeyboardProvider`, which is
      * what publishes it. Without the provider the fallback keeps this equal to
      * the line above; with it, a bottom sheet containing a text field rides
      * above the software keyboard instead of behind it. */
     padding-block-end: calc(
-      var(--pui-drawer-inset) + var(--drawer-keyboard-inset, 0px)
+      var(--forte-drawer-inset) + var(--drawer-keyboard-inset, 0px)
     );
   }
 
   .viewport[data-variant="floating"] {
-    --pui-drawer-inset: var(--pui-space-3);
+    --forte-drawer-inset: var(--forte-space-3);
   }
 
   /* While the popup animates out it is still painted and still on top; without
@@ -226,42 +226,42 @@
      * whose rule is unlayered and so beats this layer) or re-point the global
      * tokens below, which this file only ever reads.
      *
-     * `--pui-drawer-inset` is the one knob deliberately absent from this
+     * `--forte-drawer-inset` is the one knob deliberately absent from this
      * list — see the note on `.viewport`. */
     /** Popup background */
-    --pui-drawer-bg: var(--pui-color-overlay);
+    --forte-drawer-bg: var(--forte-color-overlay);
     /** Popup text colour */
-    --pui-drawer-fg: var(--pui-color-foreground);
+    --forte-drawer-fg: var(--forte-color-foreground);
     /** Corner radius — two corners for `edge`, four for `floating` */
-    --pui-drawer-radius: var(--pui-radius-surface);
+    --forte-drawer-radius: var(--forte-radius-surface);
     /** Padding inside the popup */
-    --pui-drawer-padding: var(--pui-surface-p);
+    --forte-drawer-padding: var(--forte-surface-p);
     /** Gap between the popup's children, and between the content's */
-    --pui-drawer-gap: var(--pui-space-4);
+    --forte-drawer-gap: var(--forte-space-4);
     /** Popup shadow */
-    --pui-drawer-shadow: var(--pui-shadow-4);
+    --forte-drawer-shadow: var(--forte-shadow-4);
     /** Base font size inside the popup */
-    --pui-drawer-font-size: var(--pui-font-size-2);
+    --forte-drawer-font-size: var(--forte-font-size-2);
     /* No width token exists in the inventory (widths are layout, not theme),
      * so the size scale lives in this knob and is overridable per app. */
     /** Extent along the drawer's own axis; what the `size` prop sets — `18rem`
      * for `sm`, `32rem` for `lg`, `100%` for `full`. */
-    --pui-drawer-size: 24rem;
+    --forte-drawer-size: 24rem;
     /* See the note at the top of the file. */
     /** How far the surface extends past its outer edge to cover an overdrag.
      * `0px` when `variant="floating"`. */
-    --pui-drawer-bleed: var(--pui-space-8);
+    --forte-drawer-bleed: var(--forte-space-8);
 
     /* Enter/exit gesture. Broken out into knobs so an app can retune the feel
      * without restating the transition. */
     /** Length of the opening slide */
-    --pui-drawer-duration: var(--pui-duration-spring-precise);
+    --forte-drawer-duration: var(--forte-duration-spring-precise);
     /** Curve of the opening slide */
-    --pui-drawer-ease: var(--pui-ease-spring-precise);
+    --forte-drawer-ease: var(--forte-ease-spring-precise);
     /** Length of the closing slide, before the velocity scalar */
-    --pui-drawer-exit-duration: var(--pui-duration-normal);
+    --forte-drawer-exit-duration: var(--forte-duration-normal);
     /** Curve of the closing slide */
-    --pui-drawer-exit-ease: var(--pui-ease-exit);
+    --forte-drawer-exit-ease: var(--forte-ease-exit);
 
     /* Nested stacking. The parent shrinks toward its own outer edge — see the
      * `transform-origin` in the per-side blocks — so it recedes behind the
@@ -275,41 +275,41 @@
      * seam across it rather than as two. The dim is what separates the
      * layers. */
     /** How much each nested drawer shrinks its parent */
-    --pui-drawer-nested-scale-step: 0.04;
+    --forte-drawer-nested-scale-step: 0.04;
     /** Colour the parent dims itself with under a nested drawer */
-    --pui-drawer-nested-scrim: var(--pui-scrim-color);
+    --forte-drawer-nested-scrim: var(--forte-scrim-color);
     /** How long the parent takes to recede under a child */
-    --pui-drawer-nested-duration: var(--pui-duration-spring-precise);
+    --forte-drawer-nested-duration: var(--forte-duration-spring-precise);
 
     /* The unit vector, pointing at the edge this drawer rests against. Zero
      * here is a real default and not a placeholder: a popup that somehow
      * carried no `data-side` would sit still rather than fly off in whichever
      * direction the last rule happened to name. */
-    --pui-drawer-axis-x: 0;
-    --pui-drawer-axis-y: 0;
+    --forte-drawer-axis-x: 0;
+    --forte-drawer-axis-y: 0;
 
     /* The closed position: the drawer's own full extent, plus the gap a
      * floating drawer has to cross before it reaches the edge, plus one pixel
      * so a fractional device pixel ratio cannot leave a hairline of the
      * surface showing along the edge.
      *
-     * Gated on --pui-motion-ok, so reduced motion lands the drawer at rest
+     * Gated on --forte-motion-ok, so reduced motion lands the drawer at rest
      * and lets the fade below carry the whole transition. The multiplication
      * has to wrap the entire expression: shortening the travel alone would
      * leave the +1px behind as a visible one-pixel jump. */
-    --pui-drawer-closed-shift: calc(
-      (100% + var(--pui-drawer-inset) + 1px) * var(--pui-motion-ok)
+    --forte-drawer-closed-shift: calc(
+      (100% + var(--forte-drawer-inset) + 1px) * var(--forte-motion-ok)
     );
 
     box-sizing: border-box;
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-drawer-gap);
-    padding: var(--pui-drawer-padding);
+    gap: var(--forte-drawer-gap);
+    padding: var(--forte-drawer-padding);
 
-    background-color: var(--pui-drawer-bg);
-    color: var(--pui-drawer-fg);
+    background-color: var(--forte-drawer-bg);
+    color: var(--forte-drawer-fg);
 
     /* First shadow is the skirt — zero blur, zero spread, offset along the
      * axis vector, painted in the drawer's own background colour, so it reads
@@ -318,14 +318,14 @@
      * how the floating variant switches it off without a second rule. The
      * elevation shadow follows, and paints under it. */
     box-shadow:
-      calc(var(--pui-drawer-axis-x) * var(--pui-drawer-bleed))
-        calc(var(--pui-drawer-axis-y) * var(--pui-drawer-bleed)) 0 0
-        var(--pui-drawer-bg),
-      var(--pui-drawer-shadow);
+      calc(var(--forte-drawer-axis-x) * var(--forte-drawer-bleed))
+        calc(var(--forte-drawer-axis-y) * var(--forte-drawer-bleed)) 0 0
+        var(--forte-drawer-bg),
+      var(--forte-drawer-shadow);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-drawer-font-size);
-    line-height: var(--pui-line-height-normal);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-drawer-font-size);
+    line-height: var(--forte-line-height-normal);
 
     /* A FALLBACK scroller, not the usual one. `Drawer.Content` scrolls in the
      * normal case (see its rule); this catches a drawer built without one, so
@@ -363,16 +363,16 @@
       )
     );
     scale: calc(
-      1 - var(--pui-drawer-nested-scale-step) * var(--pui-motion-ok) *
+      1 - var(--forte-drawer-nested-scale-step) * var(--forte-motion-ok) *
         var(--nested-drawers, 0)
     );
     transition:
-      transform var(--pui-drawer-duration) var(--pui-drawer-ease),
-      opacity var(--pui-drawer-duration) var(--pui-ease-standard),
-      scale var(--pui-drawer-nested-duration) var(--pui-ease-spring-precise),
+      transform var(--forte-drawer-duration) var(--forte-drawer-ease),
+      opacity var(--forte-drawer-duration) var(--forte-ease-standard),
+      scale var(--forte-drawer-nested-duration) var(--forte-ease-spring-precise),
       /* Paired with the overlay's own fade below, so the silhouette and the
        * surface inside it dim as one thing rather than in two steps. */
-      border-color var(--pui-drawer-nested-duration) var(--pui-ease-standard);
+      border-color var(--forte-drawer-nested-duration) var(--forte-ease-standard);
   }
 
   /* Waiting off-screen, and going back there. The same declaration serves
@@ -381,15 +381,15 @@
    *
    * The opacity is 1 — no fade — as long as motion is allowed, because a
    * drawer that slides has no need to dissolve as well. When the slide is
-   * suppressed `--pui-motion-off` flips to 1 and the fade appears in its
+   * suppressed `--forte-motion-off` flips to 1 and the fade appears in its
    * place, so the drawer still reads as arriving rather than being switched
    * on. */
   .popup[data-starting-style],
   .popup[data-ending-style] {
-    opacity: calc(1 - var(--pui-motion-off));
+    opacity: calc(1 - var(--forte-motion-off));
     transform: translate(
-      calc(var(--pui-drawer-axis-x) * var(--pui-drawer-closed-shift)),
-      calc(var(--pui-drawer-axis-y) * var(--pui-drawer-closed-shift))
+      calc(var(--forte-drawer-axis-x) * var(--forte-drawer-closed-shift)),
+      calc(var(--forte-drawer-axis-y) * var(--forte-drawer-closed-shift))
     );
   }
 
@@ -404,9 +404,9 @@
    * created and `transitionend` never fires. */
   .popup[data-ending-style] {
     transition-duration: calc(
-      var(--drawer-swipe-strength, 1) * var(--pui-drawer-exit-duration)
+      var(--drawer-swipe-strength, 1) * var(--forte-drawer-exit-duration)
     );
-    transition-timing-function: var(--pui-drawer-exit-ease);
+    transition-timing-function: var(--forte-drawer-exit-ease);
   }
 
   /* Sides ------------------------------------------------------------------
@@ -422,21 +422,21 @@
   .popup[data-side="left"],
   .popup[data-side="right"] {
     align-self: stretch;
-    inline-size: var(--pui-drawer-size);
+    inline-size: var(--forte-drawer-size);
     max-inline-size: 100%;
   }
 
   .popup[data-side="right"] {
-    --pui-drawer-axis-x: 1;
+    --forte-drawer-axis-x: 1;
     justify-self: end;
-    border-radius: var(--pui-drawer-radius) 0 0 var(--pui-drawer-radius);
+    border-radius: var(--forte-drawer-radius) 0 0 var(--forte-drawer-radius);
     transform-origin: 100% 50%;
   }
 
   .popup[data-side="left"] {
-    --pui-drawer-axis-x: -1;
+    --forte-drawer-axis-x: -1;
     justify-self: start;
-    border-radius: 0 var(--pui-drawer-radius) var(--pui-drawer-radius) 0;
+    border-radius: 0 var(--forte-drawer-radius) var(--forte-drawer-radius) 0;
     transform-origin: 0% 50%;
   }
 
@@ -445,41 +445,41 @@
   .popup[data-side="top"],
   .popup[data-side="bottom"] {
     justify-self: stretch;
-    max-block-size: min(var(--pui-drawer-size), 100%);
+    max-block-size: min(var(--forte-drawer-size), 100%);
   }
 
   .popup[data-side="bottom"] {
-    --pui-drawer-axis-y: 1;
+    --forte-drawer-axis-y: 1;
     align-self: end;
-    border-radius: var(--pui-drawer-radius) var(--pui-drawer-radius) 0 0;
+    border-radius: var(--forte-drawer-radius) var(--forte-drawer-radius) 0 0;
     transform-origin: 50% 100%;
   }
 
   .popup[data-side="top"] {
-    --pui-drawer-axis-y: -1;
+    --forte-drawer-axis-y: -1;
     align-self: start;
-    border-radius: 0 0 var(--pui-drawer-radius) var(--pui-drawer-radius);
+    border-radius: 0 0 var(--forte-drawer-radius) var(--forte-drawer-radius);
     transform-origin: 50% 0%;
   }
 
   /* Sizes ------------------------------------------------------------------ */
   .popup[data-size="sm"] {
-    --pui-drawer-size: 18rem;
+    --forte-drawer-size: 18rem;
   }
 
   .popup[data-size="md"] {
-    --pui-drawer-size: 24rem;
+    --forte-drawer-size: 24rem;
   }
 
   .popup[data-size="lg"] {
-    --pui-drawer-size: 32rem;
+    --forte-drawer-size: 32rem;
   }
 
   .popup[data-size="full"] {
-    --pui-drawer-size: 100%;
+    --forte-drawer-size: 100%;
   }
 
-  /* `--pui-drawer-size` is a MAXIMUM on the block axis, and a maximum of 100%
+  /* `--forte-drawer-size` is a MAXIMUM on the block axis, and a maximum of 100%
    * still leaves a short sheet at its content height. A drawer asked to fill
    * the screen has to say so outright. */
   .popup[data-size="full"][data-side="top"],
@@ -498,8 +498,8 @@
    * not.
    * ---------------------------------------------------------------------- */
   .popup[data-variant="floating"] {
-    --pui-drawer-bleed: 0px;
-    border-radius: var(--pui-drawer-radius);
+    --forte-drawer-bleed: 0px;
+    border-radius: var(--forte-drawer-radius);
   }
 
   /* Nested drawers ---------------------------------------------------------
@@ -521,20 +521,20 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background-color: var(--pui-drawer-nested-scrim);
+    background-color: var(--forte-drawer-nested-scrim);
     opacity: 0;
     pointer-events: none;
     /* Ramps in over the same window as the parent's retreat, so the dim and
      * the shrink read as one movement. */
-    transition: opacity var(--pui-drawer-nested-duration)
-      var(--pui-ease-standard);
+    transition: opacity var(--forte-drawer-nested-duration)
+      var(--forte-ease-standard);
   }
 
   .popup[data-nested-drawer-open]::after {
     opacity: 1;
   }
 
-  /* The overlay above stops at the PADDING box, and `.pui-hc-surface` gives
+  /* The overlay above stops at the PADDING box, and `.forte-hc-surface` gives
    * every floating surface a 1px transparent border outside it. Backgrounds
    * paint under a border by default, so that ring keeps the drawer's own
    * undimmed background and draws a bright outline around a parent that is
@@ -551,7 +551,7 @@
    * Forced-colors mode reassigns this to CanvasText from the `a11y` layer,
    * which is ordered after this one and therefore wins. */
   .popup[data-nested-drawer-open] {
-    border-color: var(--pui-drawer-nested-scrim);
+    border-color: var(--forte-drawer-nested-scrim);
   }
 
   /* Handle -----------------------------------------------------------------
@@ -561,19 +561,19 @@
    * ---------------------------------------------------------------------- */
   .handle {
     /** Long edge of the grab pill */
-    --pui-drawer-handle-length: 2.25rem;
+    --forte-drawer-handle-length: 2.25rem;
     /** Short edge of the grab pill */
-    --pui-drawer-handle-thickness: 0.25rem;
+    --forte-drawer-handle-thickness: 0.25rem;
     /** Grab pill colour */
-    --pui-drawer-handle-color: var(--pui-color-border-strong);
+    --forte-drawer-handle-color: var(--forte-color-border-strong);
     /* How far a side drawer's grip sits from the edge it hugs. Small enough to
      * stay inside the popup's padding, so it never collides with content. */
     /** How far a `left`/`right` grip sits from the edge it hugs */
-    --pui-drawer-handle-inset: var(--pui-space-2);
+    --forte-drawer-handle-inset: var(--forte-space-2);
 
     flex: none;
-    border-radius: var(--pui-radius-pill);
-    background-color: var(--pui-drawer-handle-color);
+    border-radius: var(--forte-radius-pill);
+    background-color: var(--forte-drawer-handle-color);
     /* The gesture belongs to the whole surface, so the pill must not become a
      * separate press target sitting in front of it. */
     pointer-events: none;
@@ -581,8 +581,8 @@
 
   .popup[data-side="top"] .handle,
   .popup[data-side="bottom"] .handle {
-    inline-size: var(--pui-drawer-handle-length);
-    block-size: var(--pui-drawer-handle-thickness);
+    inline-size: var(--forte-drawer-handle-length);
+    block-size: var(--forte-drawer-handle-thickness);
     /* Symmetric, so this stays correct in both directions. */
     margin-inline: auto;
   }
@@ -612,16 +612,16 @@
     position: absolute;
     top: 50%;
     translate: 0 -50%;
-    inline-size: var(--pui-drawer-handle-thickness);
-    block-size: var(--pui-drawer-handle-length);
+    inline-size: var(--forte-drawer-handle-thickness);
+    block-size: var(--forte-drawer-handle-length);
   }
 
   .popup[data-side="left"] .handle {
-    right: var(--pui-drawer-handle-inset);
+    right: var(--forte-drawer-handle-inset);
   }
 
   .popup[data-side="right"] .handle {
-    left: var(--pui-drawer-handle-inset);
+    left: var(--forte-drawer-handle-inset);
   }
 
   /* Content ---------------------------------------------------------------- */
@@ -629,7 +629,7 @@
     /* Side drawers are already narrow, so there is nothing to cap. */
     /** Maximum width of `Drawer.Content`, which then centres itself. `32rem` on
      * a `top`/`bottom` drawer. */
-    --pui-drawer-content-max-inline-size: 100%;
+    --forte-drawer-content-max-inline-size: 100%;
 
     /* This, and not the popup, is the drawer's scroll container.
      *
@@ -654,9 +654,9 @@
     overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-drawer-gap);
+    gap: var(--forte-drawer-gap);
     inline-size: 100%;
-    max-inline-size: var(--pui-drawer-content-max-inline-size);
+    max-inline-size: var(--forte-drawer-content-max-inline-size);
     margin-inline: auto;
   }
 
@@ -668,31 +668,31 @@
    * a grid or a toolbar and wants the full width. */
   .popup[data-side="top"] .content,
   .popup[data-side="bottom"] .content {
-    --pui-drawer-content-max-inline-size: 32rem;
+    --forte-drawer-content-max-inline-size: 32rem;
   }
 
   .title {
     margin: 0;
-    font-size: var(--pui-font-size-4);
-    font-weight: var(--pui-font-weight-semibold);
-    line-height: var(--pui-line-height-tight);
-    letter-spacing: var(--pui-letter-spacing-tight);
-    color: var(--pui-color-foreground);
+    font-size: var(--forte-font-size-4);
+    font-weight: var(--forte-font-weight-semibold);
+    line-height: var(--forte-line-height-tight);
+    letter-spacing: var(--forte-letter-spacing-tight);
+    color: var(--forte-color-foreground);
   }
 
   .description {
     margin: 0;
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
     /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body copy. */
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   /* A description belongs to the title above it, so it sits closer than the
    * drawer's own rhythm. Done by pulling the description up rather than by
    * introducing a header part, so the anatomy stays exactly Base UI's. */
   .title + .description {
-    margin-block-start: calc(var(--pui-space-1) - var(--pui-drawer-gap));
+    margin-block-start: calc(var(--forte-space-1) - var(--forte-drawer-gap));
   }
 
   .footer {
@@ -700,12 +700,12 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--pui-control-gap);
+    gap: var(--forte-control-gap);
     /* A drawer usually has room to spare along its own axis, so the actions
      * sink to the far end rather than floating under the content. Harmless
      * when there is no spare room — `auto` collapses to nothing. */
     margin-block-start: auto;
-    padding-block-start: var(--pui-space-1);
+    padding-block-start: var(--forte-space-1);
   }
 
   .footer[data-align="start"] {
@@ -732,13 +732,13 @@
    * ---------------------------------------------------------------------- */
   .swipeArea {
     /** Width of the swipe-to-open strip */
-    --pui-drawer-swipe-area-size: var(--pui-space-6);
+    --forte-drawer-swipe-area-size: var(--forte-space-6);
     /** Stacking band for that strip */
-    --pui-drawer-swipe-area-z-index: 38;
+    --forte-drawer-swipe-area-z-index: 38;
 
     box-sizing: border-box;
     position: fixed;
-    z-index: var(--pui-drawer-swipe-area-z-index);
+    z-index: var(--forte-drawer-swipe-area-z-index);
     /* `touch-action` is deliberately absent. Base UI sets it inline, per axis —
      * `pan-y` on a left/right strip, `pan-x` on a top/bottom one — so the
      * gesture is claimed on the drawer's axis while a scroll along the other
@@ -751,22 +751,22 @@
 
   .swipeArea[data-side="right"] {
     inset: 0 0 0 auto;
-    inline-size: var(--pui-drawer-swipe-area-size);
+    inline-size: var(--forte-drawer-swipe-area-size);
   }
 
   .swipeArea[data-side="left"] {
     inset: 0 auto 0 0;
-    inline-size: var(--pui-drawer-swipe-area-size);
+    inline-size: var(--forte-drawer-swipe-area-size);
   }
 
   .swipeArea[data-side="top"] {
     inset: 0 0 auto 0;
-    block-size: var(--pui-drawer-swipe-area-size);
+    block-size: var(--forte-drawer-swipe-area-size);
   }
 
   .swipeArea[data-side="bottom"] {
     inset: auto 0 0 0;
-    block-size: var(--pui-drawer-swipe-area-size);
+    block-size: var(--forte-drawer-swipe-area-size);
   }
 
   /* Trigger and Close ------------------------------------------------------
@@ -783,41 +783,41 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-control-gap);
-    height: var(--pui-control-h-md);
-    padding-inline: var(--pui-control-px-md);
+    gap: var(--forte-control-gap);
+    height: var(--forte-control-h-md);
+    padding-inline: var(--forte-control-px-md);
     margin: 0;
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-control);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-control);
 
-    background-color: var(--pui-color-panel);
-    color: var(--pui-color-foreground);
+    background-color: var(--forte-color-panel);
+    color: var(--forte-color-foreground);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-2);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-2);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled]),
     .close:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
+      background-color: var(--forte-color-panel-hover);
     }
   }
 
   .trigger:active:not([data-disabled]),
   .close:active:not([data-disabled]) {
-    background-color: var(--pui-color-panel-active);
+    background-color: var(--forte-color-panel-active);
   }
 
   .trigger[data-disabled],
@@ -831,16 +831,16 @@
   .close[data-icon-only] {
     padding-inline: 0;
     aspect-ratio: 1;
-    min-inline-size: max(var(--pui-control-h-md), var(--pui-target-min));
+    min-inline-size: max(var(--forte-control-h-md), var(--forte-target-min));
     border-color: transparent;
     background-color: transparent;
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   @media (hover: hover) {
     .close[data-icon-only]:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
-      color: var(--pui-color-foreground);
+      background-color: var(--forte-color-panel-hover);
+      color: var(--forte-color-foreground);
     }
   }
 }
@@ -848,15 +848,15 @@
 /**
  * Accessibility overrides.
  *
- * A separate block in `pretty-ui.a11y`, which is ordered AFTER
- * `pretty-ui.components`, so these win by layer order alone rather than by
+ * A separate block in `forte.a11y`, which is ordered AFTER
+ * `forte.components`, so these win by layer order alone rather than by
  * out-specifying the rules above.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Every background-color collapses to a system colour here, so the pill
      * would be painted in the same Canvas as the surface behind it and
-     * disappear. `.pui-hc-surface` has already given the popup `Canvas`, so
+     * disappear. `.forte-hc-surface` has already given the popup `Canvas`, so
      * `CanvasText` is the one value guaranteed to contrast with it. */
     .handle {
       background-color: CanvasText;
@@ -866,7 +866,7 @@
      * mode, so an overdrag would expose the scrim through the gap. The scrim
      * is painted as flat `Canvas` here, which is exactly what the skirt would
      * have covered it with — nothing to restore. The elevation shadow goes
-     * with it, which is what `.pui-hc-surface` supplies the border for. */
+     * with it, which is what `.forte-hc-surface` supplies the border for. */
     .popup {
       box-shadow: none;
     }
@@ -876,7 +876,7 @@
      * `opacity` alone — so at full opacity it stops being a dim and becomes a
      * blank panel covering the parent completely. Drop it. The separation it
      * provides is already carried here by the `CanvasText` border
-     * `.pui-hc-surface` gives both surfaces, which is the boundary this mode
+     * `.forte-hc-surface` gives both surfaces, which is the boundary this mode
      * relies on everywhere else. */
     .popup[data-nested-drawer-open]::after {
       display: none;

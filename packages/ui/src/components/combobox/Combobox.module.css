@@ -24,22 +24,22 @@
  *      re-activates the select-trigger's open/press backgrounds inside the
  *      field.
  *
- *   3. Focus is split the same way. The group carries `.pui-focus-ring-within`
+ *   3. Focus is split the same way. The group carries `.forte-focus-ring-within`
  *      and rings on behalf of the input (whose UA outline the pattern layer
- *      suppresses), while the buttons inside it carry `.pui-focus-ring` and
+ *      suppresses), while the buttons inside it carry `.forte-focus-ring` and
  *      ring themselves — the same split NumberField uses. The popup-hosted
  *      input is the one element that rings NOTHING, and that is deliberate:
  *      it holds focus for as long as the popup is open, so the reasoning is
  *      inline at `.popup .input:focus-visible` below.
  *
  *   4. There is deliberately no `prefers-reduced-motion` block. The motion
- *      tokens collapse their own geometry — `--pui-scale-enter` becomes 1 and
- *      `--pui-travel-sm` becomes 0px — so consuming them is already correct.
+ *      tokens collapse their own geometry — `--forte-scale-enter` becomes 1 and
+ *      `--forte-travel-sm` becomes 0px — so consuming them is already correct.
  *      Enter/exit is transitions on [data-starting-style]/[data-ending-style],
  *      never keyframes, so reopening mid-close reverses instead of snapping,
  *      and nothing `infinite` ever lands on the Popup or Positioner.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* Label ------------------------------------------------------------------
    * Renders a <div>, not a <label>; Base UI wires it to the TRIGGER with
    * aria-labelledby, so clicking it focuses the trigger without opening.
@@ -47,32 +47,32 @@
    * <label htmlFor> or a Field.Label — and skip this part. */
   .label {
     /** Label text colour */
-    --pui-combobox-label-fg: var(--pui-color-foreground);
+    --forte-combobox-label-fg: var(--forte-color-foreground);
     /** Label font size */
-    --pui-combobox-label-font-size: var(--pui-font-size-2);
+    --forte-combobox-label-font-size: var(--forte-font-size-2);
     /** Label font weight */
-    --pui-combobox-label-font-weight: var(--pui-font-weight-medium);
+    --forte-combobox-label-font-weight: var(--forte-font-weight-medium);
     /** Space between label and control */
-    --pui-combobox-label-gap: var(--pui-space-1);
+    --forte-combobox-label-gap: var(--forte-space-1);
 
     display: block;
-    margin-block-end: var(--pui-combobox-label-gap);
-    color: var(--pui-combobox-label-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-combobox-label-font-size);
-    font-weight: var(--pui-combobox-label-font-weight);
-    line-height: var(--pui-line-height-tight);
+    margin-block-end: var(--forte-combobox-label-gap);
+    color: var(--forte-combobox-label-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-combobox-label-font-size);
+    font-weight: var(--forte-combobox-label-font-weight);
+    line-height: var(--forte-line-height-tight);
     -webkit-user-select: none;
     user-select: none;
     cursor: default;
   }
 
   .label[data-disabled] {
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
   }
 
   /* InputGroup -------------------------------------------------------------
-   * The field shell. It reads the same `--pui-control-*` scale as Input and
+   * The field shell. It reads the same `--forte-control-*` scale as Input and
    * Select.Trigger, so the three sit at one height on a row — which is the
    * reason not to invent a private scale here. */
   .inputGroup {
@@ -83,15 +83,15 @@
      * this file only ever reads. */
     /** Field height floor (reset per `size`); the field GROWS past it when
      * chips wrap, which is why it is a min height and not a height */
-    --pui-combobox-field-height: var(--pui-control-h-md);
+    --forte-combobox-field-height: var(--forte-control-h-md);
     /** Field inline padding (reset per `size`) */
-    --pui-combobox-field-px: var(--pui-control-px-md);
+    --forte-combobox-field-px: var(--forte-control-px-md);
     /** Field font size (reset per `size`) */
-    --pui-combobox-field-font-size: var(--pui-font-size-2);
+    --forte-combobox-field-font-size: var(--forte-font-size-2);
     /** Gap between the input, the chips and the buttons */
-    --pui-combobox-field-gap: var(--pui-space-1);
+    --forte-combobox-field-gap: var(--forte-space-1);
     /** Field corner radius */
-    --pui-combobox-field-radius: var(--pui-radius-control);
+    --forte-combobox-field-radius: var(--forte-radius-control);
     /* The radius as actually PAINTED, capped at what a single row would give.
      * Private on purpose — a consumer retunes the knob above; this is the
      * derived value the inner parts have to agree with.
@@ -106,60 +106,60 @@
      * degrades it to a rounded rectangle of that radius once it is not, which
      * is the only shape a stadium can honestly become when it stops being as
      * wide as it is tall. */
-    --pui-combobox-field-radius-painted: min(
-      var(--pui-combobox-field-radius),
-      calc(var(--pui-combobox-field-height) / 2)
+    --forte-combobox-field-radius-painted: min(
+      var(--forte-combobox-field-radius),
+      calc(var(--forte-combobox-field-height) / 2)
     );
     /** Field border width */
-    --pui-combobox-field-border-width: 1px;
+    --forte-combobox-field-border-width: 1px;
     /* No width token exists in the inventory — widths are layout, not theme.
      * This is only a usable default so a bare combobox is not input-intrinsic
      * width; `fullWidth` and any consumer class beat it. */
     /** Default field width */
-    --pui-combobox-field-width: 16rem;
+    --forte-combobox-field-width: 16rem;
     /* The floor stops a wrap-heavy chip field from shrinking its input to a
      * caret-width sliver: the input refuses to go below this, and wraps to
      * its own line instead. */
     /** Smallest width the inline input keeps before wrapping under the chips */
-    --pui-combobox-input-min-width: var(--pui-space-8);
+    --forte-combobox-input-min-width: var(--forte-space-8);
     /* The field's INNER height: its own height less the block padding and the
      * two borders. Square, so the glyph gets the same air above and below as
      * it does either side. The borders were the term missing here — without
      * them the button is 2px taller than the space it sits in, and a `max()`
-     * against `--pui-target-min` on top of that made `sm` overflow by 6px and
+     * against `--forte-target-min` on top of that made `sm` overflow by 6px and
      * grow the field, breaking the one-row promise it shares with `Input` and
-     * `Select.Trigger`. The SC 2.5.8 floor is not this box's job: `.pui-target`
+     * `Select.Trigger`. The SC 2.5.8 floor is not this box's job: `.forte-target`
      * on the buttons grows the HIT area to 24x24 without touching the visual
      * one, the same split `.chipRemove` uses.
      *
-     * `--pui-space-1` here is the group's `padding-block` below, restated
+     * `--forte-space-1` here is the group's `padding-block` below, restated
      * because a custom property cannot read a longhand. Change one, change
      * both. */
     /** Size of the icon buttons (Trigger, Clear) inside the field */
-    --pui-combobox-button-size: calc(
-      var(--pui-combobox-field-height) - var(--pui-space-1) * 2 -
-        var(--pui-combobox-field-border-width) * 2
+    --forte-combobox-button-size: calc(
+      var(--forte-combobox-field-height) - var(--forte-space-1) * 2 -
+        var(--forte-combobox-field-border-width) * 2
     );
 
     /* The nesting rule — an inner radius is its outer one less the gap
-     * between them — rather than a fixed `--pui-radius-1`. A square corner is
+     * between them — rather than a fixed `--forte-radius-1`. A square corner is
      * only invisible while the field's own corner is square-ish: under
-     * `data-pui-radius="pill"` the field's cap curves away from the button
+     * `data-forte-radius="pill"` the field's cap curves away from the button
      * while the button stays rectangular, and its corners cross the border
      * and hang outside the field (3px at `lg`). Because the button is square
      * and fills the field's inner height, subtracting the end padding lands
      * it exactly concentric with the cap under `pill` — the huge radius
      * clamps to a circle of half the button, 4px inside the curve the whole
-     * way round. `max()` guards `data-pui-radius="none"`, where the field
+     * way round. `max()` guards `data-forte-radius="none"`, where the field
      * radius is 0 and the subtraction would go negative — an invalid radius
      * takes the whole declaration down with it, silently. NumberField's
      * steppers carry the same expression for the same reason; the only
      * difference is what they subtract, since they sit flush to the group's
      * border and these sit a padding in from it. */
     /** Corner radius of the icon buttons (Trigger, Clear) inside the field */
-    --pui-combobox-button-radius: max(
+    --forte-combobox-button-radius: max(
       0px,
-      calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1))
+      calc(var(--forte-combobox-field-radius-painted) - var(--forte-space-1))
     );
 
     /* Declared on the GROUP rather than on `.chip`, which is the part that
@@ -170,41 +170,41 @@
      * subtraction buys is what breaks. */
     /** Inline space a chip holds before its own label. Set it HERE, on the
      * group — a chip's own copy cannot reach the padding that pairs with it */
-    --pui-combobox-chip-inset: var(--pui-space-2);
+    --forte-combobox-chip-inset: var(--forte-space-2);
 
     /* Colour slots, filled in per variant below. */
     /** Field background (reset per `variant`) */
-    --pui-combobox-field-bg: var(--pui-color-background);
+    --forte-combobox-field-bg: var(--forte-color-background);
     /** Field background on hover */
-    --pui-combobox-field-bg-hover: var(--pui-color-panel-hover);
+    --forte-combobox-field-bg-hover: var(--forte-color-panel-hover);
     /** Field text colour */
-    --pui-combobox-field-fg: var(--pui-color-foreground);
+    --forte-combobox-field-fg: var(--forte-color-foreground);
     /** Field border colour (reset per `variant`, and by `data-invalid`) */
-    --pui-combobox-field-border-color: var(--pui-color-border);
+    --forte-combobox-field-border-color: var(--forte-color-border);
     /** Field border colour on hover */
-    --pui-combobox-field-border-color-hover: var(--pui-color-border-strong);
+    --forte-combobox-field-border-color-hover: var(--forte-color-border-strong);
 
     box-sizing: border-box;
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--pui-combobox-field-gap);
-    inline-size: var(--pui-combobox-field-width);
+    gap: var(--forte-combobox-field-gap);
+    inline-size: var(--forte-combobox-field-width);
     max-inline-size: 100%;
-    min-block-size: var(--pui-combobox-field-height);
-    padding-block: var(--pui-space-1);
-    padding-inline: var(--pui-combobox-field-px);
-    border: var(--pui-combobox-field-border-width) solid
-      var(--pui-combobox-field-border-color);
-    border-radius: var(--pui-combobox-field-radius-painted);
+    min-block-size: var(--forte-combobox-field-height);
+    padding-block: var(--forte-space-1);
+    padding-inline: var(--forte-combobox-field-px);
+    border: var(--forte-combobox-field-border-width) solid
+      var(--forte-combobox-field-border-color);
+    border-radius: var(--forte-combobox-field-radius-painted);
 
-    background-color: var(--pui-combobox-field-bg);
-    color: var(--pui-combobox-field-fg);
+    background-color: var(--forte-combobox-field-bg);
+    color: var(--forte-combobox-field-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-combobox-field-font-size);
-    font-weight: var(--pui-font-weight-normal);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-combobox-field-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-tight);
 
     /* The group is a caret region, not a button: clicking anywhere in it
      * focuses the input (and opens the popup), which is the text-field
@@ -212,15 +212,15 @@
      * for themselves. */
     cursor: text;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .inputGroup:hover:not([data-disabled], [data-readonly]) {
-      background-color: var(--pui-combobox-field-bg-hover);
-      border-color: var(--pui-combobox-field-border-color-hover);
+      background-color: var(--forte-combobox-field-bg-hover);
+      border-color: var(--forte-combobox-field-border-color-hover);
     }
   }
 
@@ -232,15 +232,15 @@
   /* Read-only still shows the value and its text is still selectable, so it
    * must not look disabled — only inert. */
   .inputGroup[data-readonly] {
-    --pui-combobox-field-bg: var(--pui-color-panel);
+    --forte-combobox-field-bg: var(--forte-color-panel);
     cursor: default;
   }
 
   /* Only the boundary changes. Recolouring the value text as well would make
    * the user's own answer look like the error message. */
   .inputGroup[data-invalid] {
-    --pui-combobox-field-border-color: var(--pui-color-danger-border);
-    --pui-combobox-field-border-color-hover: var(--pui-color-danger);
+    --forte-combobox-field-border-color: var(--forte-color-danger-border);
+    --forte-combobox-field-border-color-hover: var(--forte-color-danger);
   }
 
   .inputGroup[data-full-width] {
@@ -251,7 +251,7 @@
   /* The icon buttons carry their own padding, so the field's end padding on
    * top of it would push them visibly deeper than the input's text inset. */
   .inputGroup:has(.trigger, .clear) {
-    padding-inline-end: var(--pui-space-1);
+    padding-inline-end: var(--forte-space-1);
   }
 
   /* Same double-count at the start edge, and worse, because a chip is a filled
@@ -264,7 +264,7 @@
    * go. `max()` because at the smallest size under `compact` density the two
    * are equal, and a chip flush against the border reads as a clipping bug.
    *
-   * Not the flat `--pui-space-1` the end edge uses, and the difference is not
+   * Not the flat `--forte-space-1` the end edge uses, and the difference is not
    * an oversight: an icon button is transparent until hover, so its padding
    * costs nothing visually, while a chip's edge is drawn and needs the
    * clearance. Gated on `.chip`, not `.chips`, so an empty multiple field
@@ -272,46 +272,46 @@
    * single-select one's does. */
   .inputGroup:has(.chip) {
     padding-inline-start: max(
-      var(--pui-space-1),
-      calc(var(--pui-combobox-field-px) - var(--pui-combobox-chip-inset))
+      var(--forte-space-1),
+      calc(var(--forte-combobox-field-px) - var(--forte-combobox-chip-inset))
     );
   }
 
   /* Sizes */
   .inputGroup[data-size="sm"] {
-    --pui-combobox-field-height: var(--pui-control-h-sm);
-    --pui-combobox-field-px: var(--pui-control-px-sm);
-    --pui-combobox-field-font-size: var(--pui-font-size-1);
+    --forte-combobox-field-height: var(--forte-control-h-sm);
+    --forte-combobox-field-px: var(--forte-control-px-sm);
+    --forte-combobox-field-font-size: var(--forte-font-size-1);
   }
 
   .inputGroup[data-size="md"] {
-    --pui-combobox-field-height: var(--pui-control-h-md);
-    --pui-combobox-field-px: var(--pui-control-px-md);
-    --pui-combobox-field-font-size: var(--pui-font-size-2);
+    --forte-combobox-field-height: var(--forte-control-h-md);
+    --forte-combobox-field-px: var(--forte-control-px-md);
+    --forte-combobox-field-font-size: var(--forte-font-size-2);
   }
 
   .inputGroup[data-size="lg"] {
-    --pui-combobox-field-height: var(--pui-control-h-lg);
-    --pui-combobox-field-px: var(--pui-control-px-lg);
-    --pui-combobox-field-font-size: var(--pui-font-size-3);
+    --forte-combobox-field-height: var(--forte-control-h-lg);
+    --forte-combobox-field-px: var(--forte-control-px-lg);
+    --forte-combobox-field-font-size: var(--forte-font-size-3);
   }
 
   /* Variants */
   .inputGroup[data-variant="outline"] {
-    --pui-combobox-field-bg: var(--pui-color-background);
-    --pui-combobox-field-border-color: var(--pui-color-border);
+    --forte-combobox-field-bg: var(--forte-color-background);
+    --forte-combobox-field-border-color: var(--forte-color-border);
   }
 
   .inputGroup[data-variant="soft"] {
-    --pui-combobox-field-bg: var(--pui-color-panel);
+    --forte-combobox-field-bg: var(--forte-color-panel);
     /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
      * keeps the field outlined there while staying invisible normally. */
-    --pui-combobox-field-border-color: transparent;
+    --forte-combobox-field-border-color: transparent;
   }
 
   .inputGroup[data-variant="ghost"] {
-    --pui-combobox-field-bg: transparent;
-    --pui-combobox-field-border-color: transparent;
+    --forte-combobox-field-bg: transparent;
+    --forte-combobox-field-border-color: transparent;
   }
 
   /* Input ------------------------------------------------------------------
@@ -326,15 +326,15 @@
      * that, however far it could have shrunk. Basing it on the same floor the
      * min stops it at makes wrapping mean what it looks like it means: the
      * caret drops only when the smallest usable input no longer fits. */
-    flex: 1 1 var(--pui-combobox-input-min-width, 0);
-    min-inline-size: var(--pui-combobox-input-min-width, 0);
+    flex: 1 1 var(--forte-combobox-input-min-width, 0);
+    min-inline-size: var(--forte-combobox-input-min-width, 0);
     padding: 0;
     margin: 0;
     border: none;
     border-radius: 0;
     background-color: transparent;
     color: inherit;
-    caret-color: var(--pui-color-primary);
+    caret-color: var(--forte-color-primary);
 
     /* A UA stylesheet gives form controls their own font, not the host's. */
     font-family: inherit;
@@ -348,15 +348,15 @@
    * applies with no exemption, and it is often the only thing naming the
    * control. So `-muted` (5.82:1), not `-subtle` (non-text only). */
   .input::placeholder {
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
     /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
      * measured 5.82:1 back under AA. */
     opacity: 1;
   }
 
   .input::selection {
-    background-color: var(--pui-color-primary-soft);
-    color: var(--pui-color-primary-text);
+    background-color: var(--forte-color-primary-soft);
+    color: var(--forte-color-primary-text);
   }
 
   .inputGroup[data-disabled] .input {
@@ -369,49 +369,49 @@
    * shape it takes INSIDE the field shell is the override further down. */
   .trigger {
     /** Trigger height (reset per `size`; standalone shape only) */
-    --pui-combobox-trigger-height: var(--pui-control-h-md);
+    --forte-combobox-trigger-height: var(--forte-control-h-md);
     /** Trigger inline padding (reset per `size`; standalone shape only) */
-    --pui-combobox-trigger-padding-x: var(--pui-control-px-md);
+    --forte-combobox-trigger-padding-x: var(--forte-control-px-md);
     /** Trigger font size (reset per `size`; standalone shape only) */
-    --pui-combobox-trigger-font-size: var(--pui-font-size-2);
+    --forte-combobox-trigger-font-size: var(--forte-font-size-2);
     /** Gap between value and icon (standalone shape only) */
-    --pui-combobox-trigger-gap: var(--pui-control-gap);
+    --forte-combobox-trigger-gap: var(--forte-control-gap);
     /** Trigger corner radius (standalone shape only) */
-    --pui-combobox-trigger-radius: var(--pui-radius-control);
+    --forte-combobox-trigger-radius: var(--forte-radius-control);
     /** Trigger border width (standalone shape only) */
-    --pui-combobox-trigger-border-width: 1px;
+    --forte-combobox-trigger-border-width: 1px;
 
     /* Colour slots, filled in per variant below. */
     /** Trigger background (reset per `variant`; standalone shape only) */
-    --pui-combobox-trigger-bg: var(--pui-color-background);
+    --forte-combobox-trigger-bg: var(--forte-color-background);
     /** Trigger background on hover */
-    --pui-combobox-trigger-bg-hover: var(--pui-color-panel-hover);
+    --forte-combobox-trigger-bg-hover: var(--forte-color-panel-hover);
     /** Trigger background while pressed or open */
-    --pui-combobox-trigger-bg-active: var(--pui-color-panel-active);
+    --forte-combobox-trigger-bg-active: var(--forte-color-panel-active);
     /** Trigger text colour */
-    --pui-combobox-trigger-fg: var(--pui-color-foreground);
+    --forte-combobox-trigger-fg: var(--forte-color-foreground);
     /** Trigger border colour (reset per `variant`; standalone shape only) */
-    --pui-combobox-trigger-border-color: var(--pui-color-border);
+    --forte-combobox-trigger-border-color: var(--forte-color-border);
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--pui-combobox-trigger-gap);
-    height: var(--pui-combobox-trigger-height);
-    padding-inline: var(--pui-combobox-trigger-padding-x);
+    gap: var(--forte-combobox-trigger-gap);
+    height: var(--forte-combobox-trigger-height);
+    padding-inline: var(--forte-combobox-trigger-padding-x);
     margin: 0;
-    border: var(--pui-combobox-trigger-border-width) solid
-      var(--pui-combobox-trigger-border-color);
-    border-radius: var(--pui-combobox-trigger-radius);
+    border: var(--forte-combobox-trigger-border-width) solid
+      var(--forte-combobox-trigger-border-color);
+    border-radius: var(--forte-combobox-trigger-radius);
 
-    background-color: var(--pui-combobox-trigger-bg);
-    color: var(--pui-combobox-trigger-fg);
+    background-color: var(--forte-combobox-trigger-bg);
+    color: var(--forte-combobox-trigger-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-combobox-trigger-font-size);
-    font-weight: var(--pui-font-weight-normal);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-combobox-trigger-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-tight);
     text-align: start;
     white-space: nowrap;
 
@@ -421,22 +421,22 @@
      * performs an action shows one, native-widget conventions or not. */
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled], [data-readonly]) {
-      background-color: var(--pui-combobox-trigger-bg-hover);
+      background-color: var(--forte-combobox-trigger-bg-hover);
     }
   }
 
   .trigger[data-pressed]:not([data-disabled]),
   .trigger[data-popup-open] {
-    background-color: var(--pui-combobox-trigger-bg-active);
-    transition-duration: var(--pui-duration-instant);
+    background-color: var(--forte-combobox-trigger-bg-active);
+    transition-duration: var(--forte-duration-instant);
   }
 
   .trigger[data-disabled] {
@@ -445,19 +445,19 @@
   }
 
   .trigger[data-readonly] {
-    --pui-combobox-trigger-bg: var(--pui-color-panel);
+    --forte-combobox-trigger-bg: var(--forte-color-panel);
     cursor: default;
   }
 
   .trigger[data-invalid] {
-    --pui-combobox-trigger-border-color: var(--pui-color-danger-border);
+    --forte-combobox-trigger-border-color: var(--forte-color-danger-border);
   }
 
   /* Same reasoning as the input's ::placeholder: an enabled control's only
    * name is often this text, so it stays AA (`-muted`), merely lighter than
    * a chosen value. */
   .trigger[data-placeholder] {
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   .trigger[data-full-width] {
@@ -467,37 +467,37 @@
 
   /* Sizes (standalone shape only) */
   .trigger[data-size="sm"] {
-    --pui-combobox-trigger-height: var(--pui-control-h-sm);
-    --pui-combobox-trigger-padding-x: var(--pui-control-px-sm);
-    --pui-combobox-trigger-font-size: var(--pui-font-size-1);
+    --forte-combobox-trigger-height: var(--forte-control-h-sm);
+    --forte-combobox-trigger-padding-x: var(--forte-control-px-sm);
+    --forte-combobox-trigger-font-size: var(--forte-font-size-1);
   }
 
   .trigger[data-size="md"] {
-    --pui-combobox-trigger-height: var(--pui-control-h-md);
-    --pui-combobox-trigger-padding-x: var(--pui-control-px-md);
-    --pui-combobox-trigger-font-size: var(--pui-font-size-2);
+    --forte-combobox-trigger-height: var(--forte-control-h-md);
+    --forte-combobox-trigger-padding-x: var(--forte-control-px-md);
+    --forte-combobox-trigger-font-size: var(--forte-font-size-2);
   }
 
   .trigger[data-size="lg"] {
-    --pui-combobox-trigger-height: var(--pui-control-h-lg);
-    --pui-combobox-trigger-padding-x: var(--pui-control-px-lg);
-    --pui-combobox-trigger-font-size: var(--pui-font-size-3);
+    --forte-combobox-trigger-height: var(--forte-control-h-lg);
+    --forte-combobox-trigger-padding-x: var(--forte-control-px-lg);
+    --forte-combobox-trigger-font-size: var(--forte-font-size-3);
   }
 
   /* Variants (standalone shape only) */
   .trigger[data-variant="outline"] {
-    --pui-combobox-trigger-bg: var(--pui-color-background);
-    --pui-combobox-trigger-border-color: var(--pui-color-border);
+    --forte-combobox-trigger-bg: var(--forte-color-background);
+    --forte-combobox-trigger-border-color: var(--forte-color-border);
   }
 
   .trigger[data-variant="soft"] {
-    --pui-combobox-trigger-bg: var(--pui-color-panel);
-    --pui-combobox-trigger-border-color: transparent;
+    --forte-combobox-trigger-bg: var(--forte-color-panel);
+    --forte-combobox-trigger-border-color: transparent;
   }
 
   .trigger[data-variant="ghost"] {
-    --pui-combobox-trigger-bg: transparent;
-    --pui-combobox-trigger-border-color: transparent;
+    --forte-combobox-trigger-bg: transparent;
+    --forte-combobox-trigger-border-color: transparent;
   }
 
   /* Icon -------------------------------------------------------------------
@@ -507,12 +507,12 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    color: var(--pui-color-foreground-subtle);
-    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+    color: var(--forte-color-foreground-subtle);
+    transition: color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .trigger[data-popup-open] .icon {
-    color: var(--pui-color-foreground);
+    color: var(--forte-color-foreground);
   }
 
   /* The two carets of the default icon spread apart while the popup is open —
@@ -520,19 +520,19 @@
    * Only the built-in icon carries these classes; a caller's own icon is left
    * alone. `transform` rather than the `translate` property: this is an SVG
    * child, and the shorthand has the wider baseline there. The distance is
-   * half of `--pui-travel-xs`, so it still collapses to 0 under reduced
+   * half of `--forte-travel-xs`, so it still collapses to 0 under reduced
    * motion because the token does. */
   .caret {
-    transition: transform var(--pui-duration-spring-snappy)
-      var(--pui-ease-spring-snappy);
+    transition: transform var(--forte-duration-spring-snappy)
+      var(--forte-ease-spring-snappy);
   }
 
   .trigger[data-popup-open] .caret[data-direction="up"] {
-    transform: translateY(calc(-1 * var(--pui-travel-xs) / 2));
+    transform: translateY(calc(-1 * var(--forte-travel-xs) / 2));
   }
 
   .trigger[data-popup-open] .caret[data-direction="down"] {
-    transform: translateY(calc(var(--pui-travel-xs) / 2));
+    transform: translateY(calc(var(--forte-travel-xs) / 2));
   }
 
   /* Clear ------------------------------------------------------------------
@@ -545,19 +545,19 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    inline-size: var(--pui-combobox-button-size, var(--pui-target-min));
-    block-size: var(--pui-combobox-button-size, var(--pui-target-min));
+    inline-size: var(--forte-combobox-button-size, var(--forte-target-min));
+    block-size: var(--forte-combobox-button-size, var(--forte-target-min));
     padding: 0;
     margin: 0;
     border: none;
-    border-radius: var(--pui-combobox-button-radius, var(--pui-radius-1));
+    border-radius: var(--forte-combobox-button-radius, var(--forte-radius-1));
     background: none;
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      opacity var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      opacity var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .clear[data-starting-style],
@@ -578,7 +578,7 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    inline-size: var(--pui-combobox-button-size);
+    inline-size: var(--forte-combobox-button-size);
     /* `block-size` is the LAST word on the height here, and it has to be.
      * `block-size` and `height` are one property, so the `height: auto` that
      * used to follow this line — put there to cancel the standalone trigger's
@@ -587,24 +587,24 @@
      * below the caret and a hit target under the 24x24 floor. Cancelling the
      * base rule needs no extra declaration, because this one already is that
      * property, at higher specificity. */
-    block-size: var(--pui-combobox-button-size);
+    block-size: var(--forte-combobox-button-size);
     padding: 0;
     border: none;
-    border-radius: var(--pui-combobox-button-radius);
+    border-radius: var(--forte-combobox-button-radius);
     background: none;
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
     cursor: pointer;
   }
 
   @media (hover: hover) {
     .inputGroup :is(.trigger, .clear):hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
-      color: var(--pui-color-foreground);
+      background-color: var(--forte-color-panel-hover);
+      color: var(--forte-color-foreground);
     }
   }
 
   .inputGroup .trigger[data-popup-open] {
-    color: var(--pui-color-foreground);
+    color: var(--forte-color-foreground);
   }
 
   .inputGroup :is(.trigger, .clear)[data-disabled] {
@@ -619,45 +619,45 @@
     flex: 1 1 auto;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--pui-combobox-field-gap, var(--pui-space-1));
+    gap: var(--forte-combobox-field-gap, var(--forte-space-1));
     min-inline-size: 0;
   }
 
   .chip {
     /** Chip background */
-    --pui-combobox-chip-bg: var(--pui-color-panel);
+    --forte-combobox-chip-bg: var(--forte-color-panel);
     /** Chip text colour */
-    --pui-combobox-chip-fg: var(--pui-color-foreground);
+    --forte-combobox-chip-fg: var(--forte-color-foreground);
     /** Background of the chip keyboard navigation has reached */
-    --pui-combobox-chip-bg-highlighted: var(--pui-color-primary-soft);
+    --forte-combobox-chip-bg-highlighted: var(--forte-color-primary-soft);
     /** Text colour of that chip */
-    --pui-combobox-chip-fg-highlighted: var(--pui-color-primary-text);
+    --forte-combobox-chip-fg-highlighted: var(--forte-color-primary-text);
     /* Nested inside the field the same way the icon buttons are, and for the
      * same reason: a chip is a filled box parked in the field's corner, so a
      * square one crosses a curved border. The subtrahend is the chip's
      * smaller inset — its block padding, not its inline one — because the
      * corner is where both run out at once. */
     /** Chip corner radius */
-    --pui-combobox-chip-radius: max(
+    --forte-combobox-chip-radius: max(
       0px,
-      calc(var(--pui-combobox-field-radius-painted) - var(--pui-space-1))
+      calc(var(--forte-combobox-field-radius-painted) - var(--forte-space-1))
     );
     /** Chip font size */
-    --pui-combobox-chip-font-size: var(--pui-font-size-1);
+    --forte-combobox-chip-font-size: var(--forte-font-size-1);
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
-    gap: var(--pui-space-1);
+    gap: var(--forte-space-1);
     max-inline-size: 100%;
-    padding-block: var(--pui-space-1);
-    padding-inline-start: var(--pui-combobox-chip-inset, var(--pui-space-2));
-    padding-inline-end: var(--pui-space-1);
-    border-radius: var(--pui-combobox-chip-radius);
-    background-color: var(--pui-combobox-chip-bg);
-    color: var(--pui-combobox-chip-fg);
-    font-size: var(--pui-combobox-chip-font-size);
-    line-height: var(--pui-line-height-tight);
+    padding-block: var(--forte-space-1);
+    padding-inline-start: var(--forte-combobox-chip-inset, var(--forte-space-2));
+    padding-inline-end: var(--forte-space-1);
+    border-radius: var(--forte-combobox-chip-radius);
+    background-color: var(--forte-combobox-chip-bg);
+    color: var(--forte-combobox-chip-fg);
+    font-size: var(--forte-combobox-chip-font-size);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
     /* The chip itself is a token, not a control — its remove button is the
      * control. */
@@ -665,8 +665,8 @@
     -webkit-user-select: none;
     user-select: none;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* `data-highlighted` marks the chip keyboard navigation (ArrowLeft from
@@ -675,12 +675,12 @@
    * to the user: "this chip is the one about to be removed". */
   .chip[data-highlighted],
   .chip:focus-within {
-    background-color: var(--pui-combobox-chip-bg-highlighted);
-    color: var(--pui-combobox-chip-fg-highlighted);
+    background-color: var(--forte-combobox-chip-bg-highlighted);
+    color: var(--forte-combobox-chip-fg-highlighted);
   }
 
   .chip[data-disabled] {
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
   }
 
   .chipRemove {
@@ -689,21 +689,21 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    inline-size: var(--pui-space-4);
-    block-size: var(--pui-space-4);
+    inline-size: var(--forte-space-4);
+    block-size: var(--forte-space-4);
     padding: 0;
     border: none;
-    border-radius: var(--pui-radius-1);
+    border-radius: var(--forte-radius-1);
     background: none;
     color: inherit;
     cursor: pointer;
-    transition: background-color var(--pui-duration-fast)
-      var(--pui-ease-standard);
+    transition: background-color var(--forte-duration-fast)
+      var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .chipRemove:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-active);
+      background-color: var(--forte-color-panel-active);
     }
   }
 
@@ -712,24 +712,24 @@
   }
 
   /* Backdrop ---------------------------------------------------------------
-   * Opt-in. Geometry and the fade come from `.pui-scrim`; this only owns
+   * Opt-in. Geometry and the fade come from `.forte-scrim`; this only owns
    * stacking, so the two cannot disagree. */
   .backdrop {
     /* One below the positioner's 50, and declared locally because the
      * backdrop is the positioner's SIBLING inside the portal — nothing on
      * the positioner can reach it. */
     /** Stacking of the optional `backdrop` layer */
-    --pui-combobox-backdrop-z-index: 49;
+    --forte-combobox-backdrop-z-index: 49;
 
-    z-index: var(--pui-combobox-backdrop-z-index);
+    z-index: var(--forte-combobox-backdrop-z-index);
   }
 
   /* Positioner ------------------------------------------------------------- */
   .positioner {
     /** Stacking of the positioner */
-    --pui-combobox-z-index: 50;
+    --forte-combobox-z-index: 50;
 
-    z-index: var(--pui-combobox-z-index);
+    z-index: var(--forte-combobox-z-index);
     outline: 0;
   }
 
@@ -737,53 +737,53 @@
   .popup {
     /* Surface knobs. */
     /** Popup surface colour */
-    --pui-combobox-popup-bg: var(--pui-color-overlay);
+    --forte-combobox-popup-bg: var(--forte-color-overlay);
     /** Popup text colour */
-    --pui-combobox-popup-fg: var(--pui-color-foreground);
+    --forte-combobox-popup-fg: var(--forte-color-foreground);
     /** Popup corner radius */
-    --pui-combobox-popup-radius: var(--pui-radius-surface);
+    --forte-combobox-popup-radius: var(--forte-radius-surface);
     /** Popup shadow */
-    --pui-combobox-popup-shadow: var(--pui-shadow-4);
+    --forte-combobox-popup-shadow: var(--forte-shadow-4);
     /* A hairline, not redundancy next to the shadow: the popup floats over
      * undimmed content, and in dark mode the shadow is nearly the only thing
      * separating overlay from background — the border is what survives a
-     * bright page behind it. `.pui-hc-surface` already reserves the 1px, so
+     * bright page behind it. `.forte-hc-surface` already reserves the 1px, so
      * painting it costs no layout. */
     /** Width of the hairline that separates the popup from the page */
-    --pui-combobox-popup-border-width: 1px;
+    --forte-combobox-popup-border-width: 1px;
     /** Colour of that hairline */
-    --pui-combobox-popup-border-color: var(--pui-color-border);
+    --forte-combobox-popup-border-color: var(--forte-color-border);
 
     /* Motion knobs, broken out so an app can retune the feel — or flatten it
      * entirely — without restating the transition. Same directional-rise
      * gesture and the same enter/exit pairing Menu and Popover use. */
     /** How far the popup slides in from, per side */
-    --pui-combobox-travel: var(--pui-travel-sm);
+    --forte-combobox-travel: var(--forte-travel-sm);
     /** Scale the popup grows from and shrinks back to */
-    --pui-combobox-enter-scale: var(--pui-scale-enter);
+    --forte-combobox-enter-scale: var(--forte-scale-enter);
     /** Length of the opening gesture */
-    --pui-combobox-enter-duration: var(--pui-duration-normal);
+    --forte-combobox-enter-duration: var(--forte-duration-normal);
     /** Curve of the opening gesture */
-    --pui-combobox-enter-ease: var(--pui-ease-spring-snappy);
+    --forte-combobox-enter-ease: var(--forte-ease-spring-snappy);
     /** Length of the closing gesture */
-    --pui-combobox-exit-duration: var(--pui-duration-fast);
+    --forte-combobox-exit-duration: var(--forte-duration-fast);
     /** Curve of the closing gesture */
-    --pui-combobox-exit-ease: var(--pui-ease-exit);
+    --forte-combobox-exit-ease: var(--forte-ease-exit);
 
     /* Layout knobs shared by List, Item, GroupLabel, Empty and Status. They
      * live here because the group label and the status rows have to indent
      * in step with the items, and none of them is an item descendant. */
     /** Inline padding shared by items, group labels and status rows */
-    --pui-combobox-item-px: var(--pui-space-3);
+    --forte-combobox-item-px: var(--forte-space-3);
     /** Gap between the indicator column and the item text */
-    --pui-combobox-item-gap: var(--pui-control-gap);
+    --forte-combobox-item-gap: var(--forte-control-gap);
     /** Width of the check-mark column */
-    --pui-combobox-item-indicator-size: var(--pui-space-4);
+    --forte-combobox-item-indicator-size: var(--forte-space-4);
 
     /* Enter/exit displacement, resolved per side below. Defaults to the
      * `side="bottom"` case, which is this component's default side. */
-    --pui-combobox-enter-x: 0px;
-    --pui-combobox-enter-y: calc(-1 * var(--pui-combobox-travel));
+    --forte-combobox-enter-x: 0px;
+    --forte-combobox-enter-y: calc(-1 * var(--forte-combobox-travel));
 
     box-sizing: border-box;
     /* Column layout is what makes the input-inside-popup pattern work: the
@@ -803,17 +803,17 @@
     /* Required: the popup may never grow past the space Base UI measured
      * between the anchor and the viewport edge. */
     max-height: var(--available-height);
-    border: var(--pui-combobox-popup-border-width) solid
-      var(--pui-combobox-popup-border-color);
-    border-radius: var(--pui-combobox-popup-radius);
-    background-color: var(--pui-combobox-popup-bg);
-    /* With the transparent 1px border from `.pui-hc-surface`, padding-box
+    border: var(--forte-combobox-popup-border-width) solid
+      var(--forte-combobox-popup-border-color);
+    border-radius: var(--forte-combobox-popup-radius);
+    background-color: var(--forte-combobox-popup-bg);
+    /* With the transparent 1px border from `.forte-hc-surface`, padding-box
      * stops the background bleeding under it. */
     background-clip: padding-box;
-    color: var(--pui-combobox-popup-fg);
-    box-shadow: var(--pui-combobox-popup-shadow);
+    color: var(--forte-combobox-popup-fg);
+    box-shadow: var(--forte-combobox-popup-shadow);
 
-    font-family: var(--pui-font-sans);
+    font-family: var(--forte-font-sans);
 
     /* Grow out of the anchor rather than out of the popup's own centre.
      * `--transform-origin` is published by the Positioner and points back at
@@ -821,9 +821,9 @@
      * list is legible early and the spring settles behind readable rows. */
     transform-origin: var(--transform-origin);
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-combobox-enter-duration)
-        var(--pui-combobox-enter-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      transform var(--forte-combobox-enter-duration)
+        var(--forte-combobox-enter-ease);
   }
 
   /* Directional rise: the popup starts a few pixels nearer the anchor and
@@ -832,13 +832,13 @@
    * inside `:is()`, whose argument list is forgiving — an engine without
    * `:dir()` drops only that branch and the physical sides keep working. */
   .popup[data-side="top"] {
-    --pui-combobox-enter-x: 0px;
-    --pui-combobox-enter-y: var(--pui-combobox-travel);
+    --forte-combobox-enter-x: 0px;
+    --forte-combobox-enter-y: var(--forte-combobox-travel);
   }
 
   .popup[data-side="bottom"] {
-    --pui-combobox-enter-x: 0px;
-    --pui-combobox-enter-y: calc(-1 * var(--pui-combobox-travel));
+    --forte-combobox-enter-x: 0px;
+    --forte-combobox-enter-y: calc(-1 * var(--forte-combobox-travel));
   }
 
   .popup:is(
@@ -846,8 +846,8 @@
     [data-side="inline-start"]:dir(ltr),
     [data-side="inline-end"]:dir(rtl)
   ) {
-    --pui-combobox-enter-x: var(--pui-combobox-travel);
-    --pui-combobox-enter-y: 0px;
+    --forte-combobox-enter-x: var(--forte-combobox-travel);
+    --forte-combobox-enter-y: 0px;
   }
 
   .popup:is(
@@ -855,8 +855,8 @@
     [data-side="inline-end"]:dir(ltr),
     [data-side="inline-start"]:dir(rtl)
   ) {
-    --pui-combobox-enter-x: calc(-1 * var(--pui-combobox-travel));
-    --pui-combobox-enter-y: 0px;
+    --forte-combobox-enter-x: calc(-1 * var(--forte-combobox-travel));
+    --forte-combobox-enter-y: 0px;
   }
 
   /* Closing retraces the entrance rather than puffing outward, so the two
@@ -864,13 +864,13 @@
   .popup[data-starting-style],
   .popup[data-ending-style] {
     opacity: 0;
-    transform: translate(var(--pui-combobox-enter-x), var(--pui-combobox-enter-y))
-      scale(var(--pui-combobox-enter-scale));
+    transform: translate(var(--forte-combobox-enter-x), var(--forte-combobox-enter-y))
+      scale(var(--forte-combobox-enter-scale));
   }
 
   .popup[data-ending-style] {
-    transition-duration: var(--pui-combobox-exit-duration);
-    transition-timing-function: var(--pui-combobox-exit-ease);
+    transition-duration: var(--forte-combobox-exit-duration);
+    transition-timing-function: var(--forte-combobox-exit-ease);
   }
 
   /* Base UI sets `data-instant` when the change was NOT a considered
@@ -887,11 +887,11 @@
     flex: 0 0 auto;
     inline-size: 100%;
     min-inline-size: 0;
-    block-size: var(--pui-control-h-md);
-    padding-inline: var(--pui-combobox-item-px);
-    border-block-end: 1px solid var(--pui-color-border-muted);
+    block-size: var(--forte-control-h-md);
+    padding-inline: var(--forte-combobox-item-px);
+    border-block-end: 1px solid var(--forte-color-border-muted);
     border-radius: 0;
-    font-size: var(--pui-font-size-2);
+    font-size: var(--forte-font-size-2);
   }
 
   /* The search row is the ONE focusable thing in the popup, and Base UI moves
@@ -900,7 +900,7 @@
    * would therefore be painted for the popup's entire lifetime, which makes it
    * chrome rather than a state: it says nothing a reader can act on, and it is
    * what reads as a stray bright border around the search field. The caret
-   * (`caret-color: var(--pui-color-primary)` above) is the focus indicator
+   * (`caret-color: var(--forte-color-primary)` above) is the focus indicator
    * here, which is the accepted one for a text field under SC 2.4.7.
    *
    * There is a second reason this cannot be an ordinary ring. The popup is
@@ -926,7 +926,7 @@
   .popup[data-side="top"] .input {
     order: 1;
     border-block-end: none;
-    border-block-start: 1px solid var(--pui-color-border-muted);
+    border-block-start: 1px solid var(--forte-color-border-muted);
   }
 
   /* List -------------------------------------------------------------------
@@ -937,7 +937,7 @@
    * rest flush against the clipped edges (SC 2.4.11). */
   .list {
     /** Block padding inside the scrolling list */
-    --pui-combobox-list-padding-y: var(--pui-space-1);
+    --forte-combobox-list-padding-y: var(--forte-space-1);
 
     box-sizing: border-box;
     position: relative;
@@ -945,9 +945,9 @@
     min-block-size: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding-block: var(--pui-combobox-list-padding-y);
+    padding-block: var(--forte-combobox-list-padding-y);
     border-radius: inherit;
-    scroll-padding-block: var(--pui-combobox-list-padding-y);
+    scroll-padding-block: var(--forte-combobox-list-padding-y);
     outline: 0;
   }
 
@@ -967,12 +967,12 @@
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    gap: var(--pui-combobox-item-gap);
-    padding-block: var(--pui-list-item-py);
-    padding-inline: var(--pui-combobox-item-px);
-    color: var(--pui-color-foreground-muted);
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
+    gap: var(--forte-combobox-item-gap);
+    padding-block: var(--forte-list-item-py);
+    padding-inline: var(--forte-combobox-item-px);
+    color: var(--forte-color-foreground-muted);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
   }
 
   .empty:empty,
@@ -986,51 +986,51 @@
    * attribute — which is why there is no separate `:hover` rule. */
   .item {
     /** Item text colour */
-    --pui-combobox-item-fg: var(--pui-color-foreground);
+    --forte-combobox-item-fg: var(--forte-color-foreground);
     /** Background of the highlighted item */
-    --pui-combobox-item-bg-highlighted: var(--pui-color-primary-soft);
+    --forte-combobox-item-bg-highlighted: var(--forte-color-primary-soft);
     /** Text colour of the highlighted item */
-    --pui-combobox-item-fg-highlighted: var(--pui-color-primary-text);
+    --forte-combobox-item-fg-highlighted: var(--forte-color-primary-text);
     /** Text colour of the selected item */
-    --pui-combobox-item-fg-selected: var(--pui-color-primary-text);
+    --forte-combobox-item-fg-selected: var(--forte-color-primary-text);
     /** Item font size */
-    --pui-combobox-item-font-size: var(--pui-font-size-2);
+    --forte-combobox-item-font-size: var(--forte-font-size-2);
 
     box-sizing: border-box;
     position: relative;
     display: grid;
-    grid-template-columns: var(--pui-combobox-item-indicator-size) 1fr;
+    grid-template-columns: var(--forte-combobox-item-indicator-size) 1fr;
     align-items: center;
-    gap: var(--pui-combobox-item-gap);
-    min-height: var(--pui-target-min);
-    padding-block: var(--pui-list-item-py);
-    padding-inline: var(--pui-combobox-item-px);
-    color: var(--pui-combobox-item-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-combobox-item-font-size);
-    line-height: var(--pui-line-height-normal);
+    gap: var(--forte-combobox-item-gap);
+    min-height: var(--forte-target-min);
+    padding-block: var(--forte-list-item-py);
+    padding-inline: var(--forte-combobox-item-px);
+    color: var(--forte-combobox-item-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-combobox-item-font-size);
+    line-height: var(--forte-line-height-normal);
     -webkit-user-select: none;
     user-select: none;
     /* Choosing an option is an action; see the trigger for why this diverges
      * from a native listbox. */
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .item[data-selected] {
-    color: var(--pui-combobox-item-fg-selected);
-    font-weight: var(--pui-font-weight-medium);
+    color: var(--forte-combobox-item-fg-selected);
+    font-weight: var(--forte-font-weight-medium);
   }
 
   .item[data-highlighted] {
-    background-color: var(--pui-combobox-item-bg-highlighted);
-    color: var(--pui-combobox-item-fg-highlighted);
+    background-color: var(--forte-combobox-item-bg-highlighted);
+    color: var(--forte-combobox-item-fg-highlighted);
   }
 
   .item[data-disabled] {
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
     background-color: transparent;
     cursor: not-allowed;
   }
@@ -1044,14 +1044,14 @@
     /* The check is the one moment of feedback for the choice just made, so
      * it springs rather than fades. */
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   .itemIndicator[data-starting-style],
   .itemIndicator[data-ending-style] {
     opacity: 0;
-    scale: var(--pui-scale-enter);
+    scale: var(--forte-scale-enter);
   }
 
   .itemText {
@@ -1070,41 +1070,41 @@
 
   .groupLabel {
     /** Group label text colour */
-    --pui-combobox-group-label-fg: var(--pui-color-foreground-muted);
+    --forte-combobox-group-label-fg: var(--forte-color-foreground-muted);
     /** Group label text size */
-    --pui-combobox-group-label-font-size: var(--pui-font-size-1);
+    --forte-combobox-group-label-font-size: var(--forte-font-size-1);
     /* Tracking has to come back at this size, or a short uppercase word closes
      * up into a block. Same 0.06em NavList's section labels use — this is the
      * house heading idiom, not a new one. */
     /** Group label letter-spacing */
-    --pui-combobox-group-label-tracking: 0.06em;
+    --forte-combobox-group-label-tracking: 0.06em;
     /** Space above a group label, dropped on the first group in the list */
-    --pui-combobox-group-label-mt: var(--pui-space-2);
+    --forte-combobox-group-label-mt: var(--forte-space-2);
 
     box-sizing: border-box;
-    padding-block-start: var(--pui-space-1);
-    padding-block-end: var(--pui-space-1);
+    padding-block-start: var(--forte-space-1);
+    padding-block-end: var(--forte-space-1);
     /* At the LIST's text edge, not the item's. Indenting it past the
      * indicator column — which this rule used to do, to line its text up with
      * the item text — is what made it read as one more row: same x, same
      * rhythm, and only one colour step between them. A heading has to sit a
      * level UP from the rows it heads, and outdenting is the cue that costs
      * nothing to scan. */
-    padding-inline: var(--pui-combobox-item-px);
+    padding-inline: var(--forte-combobox-item-px);
     /* Whitespace belongs above a heading, with the group it introduces, not
      * below it with the group that ended. Dropped on the first label, where
      * there is no boundary to mark and the list's own padding already sits
      * above. */
-    margin-block-start: var(--pui-combobox-group-label-mt);
+    margin-block-start: var(--forte-combobox-group-label-mt);
     /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
      * non-text only. The case, tracking and weight are what carry the
      * hierarchy, so nothing is lost by meeting contrast here. */
-    color: var(--pui-combobox-group-label-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-combobox-group-label-font-size);
-    font-weight: var(--pui-font-weight-semibold);
-    letter-spacing: var(--pui-combobox-group-label-tracking);
-    line-height: var(--pui-line-height-tight);
+    color: var(--forte-combobox-group-label-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-combobox-group-label-font-size);
+    font-weight: var(--forte-font-weight-semibold);
+    letter-spacing: var(--forte-combobox-group-label-tracking);
+    line-height: var(--forte-line-height-tight);
     /* Presentational only — `text-transform` leaves the DOM text alone, so
      * assistive technology still announces the author's own casing. */
     text-transform: uppercase;
@@ -1127,22 +1127,22 @@
    * at its full 1px — same shape as `Select.module.css`. */
   .separator {
     box-sizing: border-box;
-    margin-block: var(--pui-space-1);
-    margin-inline: var(--pui-combobox-item-px);
+    margin-block: var(--forte-space-1);
+    margin-inline: var(--forte-combobox-item-px);
     block-size: 0;
-    border-block-start: 1px solid var(--pui-color-border-muted);
+    border-block-start: 1px solid var(--forte-color-border-muted);
   }
 
   .separator[data-orientation="vertical"] {
-    margin-block: var(--pui-space-1);
-    margin-inline: var(--pui-space-1);
+    margin-block: var(--forte-space-1);
+    margin-inline: var(--forte-space-1);
     block-size: auto;
     inline-size: 0;
     align-self: stretch;
     /* Load-bearing: without this reset a vertical separator carries BOTH
      * borders and renders a stray 1px tick across its top. */
     border-block-start: 0;
-    border-inline-start: 1px solid var(--pui-color-border-muted);
+    border-inline-start: 1px solid var(--forte-color-border-muted);
   }
 
   /* Row --------------------------------------------------------------------
@@ -1158,7 +1158,7 @@
 }
 
 /* Forced colors (Windows High Contrast) -------------------------------------
- * This block is in `pretty-ui.a11y`, ordered after `pretty-ui.components`,
+ * This block is in `forte.a11y`, ordered after `forte.components`,
  * so it beats the rules above by layer alone — no `!important`.
  *
  * The generic remedies in patterns.css already cover most of it: the
@@ -1169,7 +1169,7 @@
  * unless they are aligned by hand — and a descendant that declares its own
  * author colour does not inherit the host's GrayText when disabled, so the
  * placeholder and the icons are restated. */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .inputGroup {
       background-color: Field;

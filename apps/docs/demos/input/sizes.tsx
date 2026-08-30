@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, Select } from "@dofortech/pretty-ui";
+import { Input, Select } from "@dofortech/forte-ui";
 
 const SIZES = ["sm", "md", "lg"] as const;
 

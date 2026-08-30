@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Badge, Button } from "@dofortech/pretty-ui";
+import { Badge, Button } from "@dofortech/forte-ui";
 import { Bell, Inbox } from "lucide-react";
 
 export default function BadgeOnAButton() {

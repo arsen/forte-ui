@@ -7,7 +7,7 @@
  *
  * The tick is drawn on, not faded in: the SVG paths carry `pathLength="1"`,
  * so `stroke-dashoffset` runs 1 → 0 over a DURATION token. That distinction
- * matters. A mark animated with `--pui-travel-*` or `--pui-scale-*` would
+ * matters. A mark animated with `--forte-travel-*` or `--forte-scale-*` would
  * collapse to nothing under reduced motion, and the tick is information, not
  * decoration — it is the only thing separating "on" from "off" for anyone who
  * cannot rely on the fill colour. Durations are only shortened, never removed,
@@ -21,49 +21,49 @@
  * exclusive — a parent checkbox in a CheckboxGroup is indeterminate while
  * unchecked, so anything that must show a tick has to exclude it explicitly.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared on the checkbox element itself, so a value set
      * on an ancestor is only INHERITED and loses to this declaration. To
      * re-skin one checkbox, set them on the checkbox via `className` — an
-     * unlayered consumer rule beats `@layer pretty-ui.components` at any
+     * unlayered consumer rule beats `@layer forte.components` at any
      * specificity — or an inline `style`. To move every checkbox at once,
      * re-point the global tokens on the right-hand side below, which this
      * file only reads and never re-declares. */
     /** Width and height of the painted box. `size="sm"` sets `0.875rem`,
      * `size="lg"` sets `1.25rem`. */
-    --pui-checkbox-size: 1rem;
+    --forte-checkbox-size: 1rem;
     /** Corner radius of the box. */
-    --pui-checkbox-radius: var(--pui-radius-2);
+    --forte-checkbox-radius: var(--forte-radius-2);
     /** Border width. */
-    --pui-checkbox-border-width: 1px;
+    --forte-checkbox-border-width: 1px;
     /** Stroke width of the tick and dash. Unitless on purpose — the value is in
      * SVG user units inside a 16-unit viewBox, so the stroke scales with the
      * box instead of thinning out at larger sizes. `size` retunes it: `2.25`
      * for `sm`, `1.75` for `lg`. */
-    --pui-checkbox-mark-width: 2;
+    --forte-checkbox-mark-width: 2;
     /** Colour transitions on the box and the fade of the indicator. */
-    --pui-checkbox-duration: var(--pui-duration-fast);
+    --forte-checkbox-duration: var(--forte-duration-fast);
     /* The draw-in. A duration, never a travel/scale token. */
     /** How long the mark takes to draw in and out. */
-    --pui-checkbox-draw-duration: var(--pui-duration-normal);
+    --forte-checkbox-draw-duration: var(--forte-duration-normal);
 
     /* Colour slots, filled in per tone below. */
     /** Fill while unchecked. */
-    --pui-checkbox-bg: var(--pui-color-background);
+    --forte-checkbox-bg: var(--forte-color-background);
     /** Fill on hover while unchecked. */
-    --pui-checkbox-bg-hover: var(--pui-color-panel-hover);
+    --forte-checkbox-bg-hover: var(--forte-color-panel-hover);
     /** Border colour while unchecked. */
-    --pui-checkbox-border-color: var(--pui-color-border);
+    --forte-checkbox-border-color: var(--forte-color-border);
     /** Border colour on hover while unchecked. */
-    --pui-checkbox-border-color-hover: var(--pui-color-border-strong);
+    --forte-checkbox-border-color-hover: var(--forte-color-border-strong);
     /** Fill while checked or indeterminate. */
-    --pui-checkbox-fill: var(--pui-color-primary);
+    --forte-checkbox-fill: var(--forte-color-primary);
     /** Fill on hover while checked or indeterminate. */
-    --pui-checkbox-fill-hover: var(--pui-color-primary-hover);
+    --forte-checkbox-fill-hover: var(--forte-color-primary-hover);
     /** Colour of the tick and dash — it becomes the root's `color`, and the
      * marks stroke with `currentColor`. */
-    --pui-checkbox-mark-color: var(--pui-color-on-primary);
+    --forte-checkbox-mark-color: var(--forte-color-on-primary);
 
     box-sizing: border-box;
     position: relative;
@@ -71,43 +71,43 @@
     flex: none;
     align-items: center;
     justify-content: center;
-    inline-size: var(--pui-checkbox-size);
-    block-size: var(--pui-checkbox-size);
+    inline-size: var(--forte-checkbox-size);
+    block-size: var(--forte-checkbox-size);
     padding: 0;
     margin: 0;
-    border: var(--pui-checkbox-border-width) solid
-      var(--pui-checkbox-border-color);
-    border-radius: var(--pui-checkbox-radius);
-    background-color: var(--pui-checkbox-bg);
+    border: var(--forte-checkbox-border-width) solid
+      var(--forte-checkbox-border-color);
+    border-radius: var(--forte-checkbox-radius);
+    background-color: var(--forte-checkbox-bg);
     /* The marks stroke with currentColor, so this is the tick colour. */
-    color: var(--pui-checkbox-mark-color);
+    color: var(--forte-checkbox-mark-color);
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-checkbox-duration) var(--pui-ease-standard),
-      border-color var(--pui-checkbox-duration) var(--pui-ease-standard),
-      color var(--pui-checkbox-duration) var(--pui-ease-standard);
+      background-color var(--forte-checkbox-duration) var(--forte-ease-standard),
+      border-color var(--forte-checkbox-duration) var(--forte-ease-standard),
+      color var(--forte-checkbox-duration) var(--forte-ease-standard);
   }
 
   /* States ---------------------------------------------------------------- */
   @media (hover: hover) {
     .root:hover:not([data-disabled], [data-readonly]) {
-      background-color: var(--pui-checkbox-bg-hover);
-      border-color: var(--pui-checkbox-border-color-hover);
+      background-color: var(--forte-checkbox-bg-hover);
+      border-color: var(--forte-checkbox-border-color-hover);
     }
 
     .root[data-checked]:hover:not([data-disabled], [data-readonly]),
     .root[data-indeterminate]:hover:not([data-disabled], [data-readonly]) {
-      background-color: var(--pui-checkbox-fill-hover);
+      background-color: var(--forte-checkbox-fill-hover);
       border-color: transparent;
     }
   }
 
   .root[data-checked],
   .root[data-indeterminate] {
-    background-color: var(--pui-checkbox-fill);
+    background-color: var(--forte-checkbox-fill);
     /* Not `none`: transparent is NOT preserved under forced-colors, so this
      * border keeps the box outlined there while staying invisible normally. */
     border-color: transparent;
@@ -123,43 +123,43 @@
   }
 
   /* Sizes ----------------------------------------------------------------- */
-  /* The painted box stays small on purpose; `.pui-target` on the root carries
+  /* The painted box stays small on purpose; `.forte-target` on the root carries
    * the 24px minimum hit area (SC 2.5.8) in a pseudo-element instead. */
   .root[data-size="sm"] {
-    --pui-checkbox-size: 0.875rem;
-    --pui-checkbox-radius: var(--pui-radius-1);
-    --pui-checkbox-mark-width: 2.25;
+    --forte-checkbox-size: 0.875rem;
+    --forte-checkbox-radius: var(--forte-radius-1);
+    --forte-checkbox-mark-width: 2.25;
   }
 
   .root[data-size="md"] {
-    --pui-checkbox-size: 1rem;
-    --pui-checkbox-radius: var(--pui-radius-2);
-    --pui-checkbox-mark-width: 2;
+    --forte-checkbox-size: 1rem;
+    --forte-checkbox-radius: var(--forte-radius-2);
+    --forte-checkbox-mark-width: 2;
   }
 
   .root[data-size="lg"] {
-    --pui-checkbox-size: 1.25rem;
-    --pui-checkbox-radius: var(--pui-radius-3);
-    --pui-checkbox-mark-width: 1.75;
+    --forte-checkbox-size: 1.25rem;
+    --forte-checkbox-radius: var(--forte-radius-3);
+    --forte-checkbox-mark-width: 1.75;
   }
 
   /* Tones ----------------------------------------------------------------- */
   .root[data-tone="secondary"] {
-    --pui-checkbox-fill: var(--pui-color-secondary);
-    --pui-checkbox-fill-hover: var(--pui-color-secondary-hover);
-    --pui-checkbox-mark-color: var(--pui-color-on-secondary);
+    --forte-checkbox-fill: var(--forte-color-secondary);
+    --forte-checkbox-fill-hover: var(--forte-color-secondary-hover);
+    --forte-checkbox-mark-color: var(--forte-color-on-secondary);
   }
 
   .root[data-tone="danger"] {
-    --pui-checkbox-fill: var(--pui-color-danger);
-    --pui-checkbox-fill-hover: var(--pui-color-danger-hover);
-    --pui-checkbox-mark-color: var(--pui-color-on-danger);
+    --forte-checkbox-fill: var(--forte-color-danger);
+    --forte-checkbox-fill-hover: var(--forte-color-danger-hover);
+    --forte-checkbox-mark-color: var(--forte-color-on-danger);
   }
 
   .root[data-tone="neutral"] {
-    --pui-checkbox-fill: var(--pui-gray-12);
-    --pui-checkbox-fill-hover: var(--pui-gray-11);
-    --pui-checkbox-mark-color: var(--pui-gray-1);
+    --forte-checkbox-fill: var(--forte-gray-12);
+    --forte-checkbox-fill-hover: var(--forte-gray-11);
+    --forte-checkbox-mark-color: var(--forte-gray-1);
   }
 
   /* Validity -------------------------------------------------------------- */
@@ -167,11 +167,11 @@
    * failure must not be able to look like a brand-coloured success. Equal
    * specificity to the tone rules, so this block has to stay after them. */
   .root[data-invalid] {
-    --pui-checkbox-border-color: var(--pui-color-danger-border);
-    --pui-checkbox-border-color-hover: var(--pui-color-danger);
-    --pui-checkbox-fill: var(--pui-color-danger);
-    --pui-checkbox-fill-hover: var(--pui-color-danger-hover);
-    --pui-checkbox-mark-color: var(--pui-color-on-danger);
+    --forte-checkbox-border-color: var(--forte-color-danger-border);
+    --forte-checkbox-border-color-hover: var(--forte-color-danger);
+    --forte-checkbox-fill: var(--forte-color-danger);
+    --forte-checkbox-fill-hover: var(--forte-color-danger-hover);
+    --forte-checkbox-mark-color: var(--forte-color-on-danger);
   }
 
   /* Indicator ------------------------------------------------------------- */
@@ -187,7 +187,7 @@
     /* Clicks belong to the root (or the enclosing label), never to the tick. */
     pointer-events: none;
     opacity: 0;
-    transition: opacity var(--pui-checkbox-duration) var(--pui-ease-standard);
+    transition: opacity var(--forte-checkbox-duration) var(--forte-ease-standard);
   }
 
   .indicator[data-checked],
@@ -217,15 +217,15 @@
   .mark {
     fill: none;
     stroke: currentColor;
-    stroke-width: var(--pui-checkbox-mark-width);
+    stroke-width: var(--forte-checkbox-mark-width);
     stroke-linecap: round;
     stroke-linejoin: round;
     /* pathLength="1" on the element makes both of these fractions of the whole
      * stroke: 1 = fully retracted, 0 = fully drawn. */
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    transition: stroke-dashoffset var(--pui-checkbox-draw-duration)
-      var(--pui-ease-standard);
+    transition: stroke-dashoffset var(--forte-checkbox-draw-duration)
+      var(--forte-ease-standard);
   }
 
   .indicator[data-checked] .check {
@@ -251,17 +251,17 @@
 
   /* Group ----------------------------------------------------------------- */
   .group {
-    /** Gap between items in the group. `var(--pui-space-4)` when
+    /** Gap between items in the group. `var(--forte-space-4)` when
      * `orientation="horizontal"`. */
-    --pui-checkbox-group-gap: var(--pui-space-2);
+    --forte-checkbox-group-gap: var(--forte-space-2);
 
     display: flex;
     flex-direction: column;
-    gap: var(--pui-checkbox-group-gap);
+    gap: var(--forte-checkbox-group-gap);
   }
 
   .group[data-orientation="horizontal"] {
-    --pui-checkbox-group-gap: var(--pui-space-4);
+    --forte-checkbox-group-gap: var(--forte-space-4);
 
     flex-direction: row;
     flex-wrap: wrap;
@@ -269,7 +269,7 @@
 }
 
 /* Forced colours ---------------------------------------------------------- */
-/* Top-level `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so
+/* Top-level `forte.a11y`, which is ordered after `forte.components`, so
  * everything here beats the rules above by layer alone — no `!important`, no
  * padded selectors. Specificity still decides between rules *inside* this
  * block, including against the global forced-colors rules in patterns.css.
@@ -281,7 +281,7 @@
  * specificity, so the `.root` rules below would outrank its colours; the ones
  * this component actually needs are restated, and `opacity: 1` — which nothing
  * here competes with — is left to the global rule. */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .root {
       border-color: CanvasText;

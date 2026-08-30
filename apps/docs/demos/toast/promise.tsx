@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Toast, useToast } from "@dofortech/pretty-ui";
+import { Button, Toast, useToast } from "@dofortech/forte-ui";
 
 /** Stands in for a network call: resolves or rejects after a moment. */
 function publish(shouldFail: boolean) {

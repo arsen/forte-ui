@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@dofortech/pretty-ui";
+import { Skeleton } from "@dofortech/forte-ui";
 
 const ANIMATIONS = [
   { animation: "pulse", note: "Shallow opacity breathe" },

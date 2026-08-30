@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/pretty-ui";
+import { NavigationMenu } from "@dofortech/forte-ui";
 
 const components = [
   { href: "/components/button", title: "Button", description: "The one control everything else is measured against." },
@@ -20,7 +20,7 @@ export default function NavigationMenuBasic() {
     /* One `aria-label` per navigation on a page. It is what a screen-reader
      * user picks between in a landmark list, and two unnamed navigations there
      * are indistinguishable. */
-    <NavigationMenu.Root aria-label="pretty-ui documentation">
+    <NavigationMenu.Root aria-label="forte-ui documentation">
       <NavigationMenu.List>
         <NavigationMenu.Item>
           <NavigationMenu.Trigger>Components</NavigationMenu.Trigger>

@@ -1,6 +1,6 @@
 "use client";
 
-import { OTPField } from "@dofortech/pretty-ui";
+import { OTPField } from "@dofortech/forte-ui";
 
 export default function OTPFieldGrouped() {
   return (

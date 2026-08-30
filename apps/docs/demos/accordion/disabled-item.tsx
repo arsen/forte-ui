@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion } from "@dofortech/pretty-ui";
+import { Accordion } from "@dofortech/forte-ui";
 
 const width = "w-full max-w-lg";
 

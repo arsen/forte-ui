@@ -38,7 +38,7 @@ feel without stranding everyone else.
 ## Import
 
 ```tsx
-import { Popover } from "@dofortech/pretty-ui";
+import { Popover } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -265,8 +265,8 @@ exactly `1`, leaving a plain opacity fade.
 ## Theming
 
 Every value below is a custom property you can override.
-`--pui-popover-z-index` is declared on the positioner and
-`--pui-popover-backdrop-z-index` on the backdrop; the viewport pair is declared
+`--forte-popover-z-index` is declared on the positioner and
+`--forte-popover-backdrop-z-index` on the backdrop; the viewport pair is declared
 on the viewport, and everything else on the popup.
 
 <ThemingTable component="Popover" />
@@ -280,13 +280,13 @@ ancestor route doubly useless: the popup renders on `document.body`, so nothing
 above the *trigger* is an ancestor of it in the first place.
 
 To re-skin every popover at once, re-point the global tokens the defaults
-resolve to — `--pui-color-overlay`, `--pui-color-border`,
-`--pui-radius-surface`, `--pui-surface-p`, `--pui-shadow-4`, `--pui-space-*`,
-`--pui-font-*`, `--pui-travel-sm`. The popup only reads those and never
+resolve to — `--forte-color-overlay`, `--forte-color-border`,
+`--forte-radius-surface`, `--forte-surface-p`, `--forte-shadow-4`, `--forte-space-*`,
+`--forte-font-*`, `--forte-travel-sm`. The popup only reads those and never
 re-declares them, so a value set on `:root` or a theme scope does reach it. The
-knobs with literal defaults — `--pui-popover-max-width`,
-`--pui-popover-border-width`, `--pui-popover-arrow-width`,
-`--pui-popover-arrow-height` and the two z-indexes — have no global token behind
+knobs with literal defaults — `--forte-popover-max-width`,
+`--forte-popover-border-width`, `--forte-popover-arrow-width`,
+`--forte-popover-arrow-height` and the two z-indexes — have no global token behind
 them, so those can only be changed on the element itself.
 
 The hairline is worth a word, because `Dialog` and `Drawer` do without one.
@@ -294,13 +294,13 @@ Those sit on a scrim that has already darkened the page behind them; a popover
 floats over undimmed content, where the overlay and the page background are a
 single step apart on the grey ramp and the shadow is doing nearly all the
 separating — which is not enough in dark mode, and less than that over a bright
-photo. `--pui-popover-border-color: transparent` gives you the shadow-only look
+photo. `--forte-popover-border-color: transparent` gives you the shadow-only look
 back, and the arrow follows: its outline is the same token, so the wedge flattens
 in step with the surface rather than keeping an outline the popup no longer has.
 
-The stylesheet also computes `--pui-popover-enter-x` / `--pui-popover-enter-y`
-from `--pui-popover-travel` and the resolved `data-side`, and
-`--pui-popover-viewport-x` from `--pui-popover-viewport-travel` and
+The stylesheet also computes `--forte-popover-enter-x` / `--forte-popover-enter-y`
+from `--forte-popover-travel` and the resolved `data-side`, and
+`--forte-popover-viewport-x` from `--forte-popover-viewport-travel` and
 `data-activation-direction`. They are internal; change the travel tokens instead.
 
 ## API reference

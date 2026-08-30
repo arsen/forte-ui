@@ -19,7 +19,7 @@ A collapsible hides one region behind one button. Reach for it when a piece of t
 ## Import
 
 ```tsx
-import { Collapsible } from "@dofortech/pretty-ui";
+import { Collapsible } from "@dofortech/forte-ui";
 ```
 
 `Collapsible` is a namespace of three parts, and the nesting is fixed:
@@ -100,7 +100,7 @@ The height animation runs without a frame of JavaScript. Base UI measures the pa
 .panel {
   height: var(--collapsible-panel-height);
   overflow: hidden;
-  transition: height var(--pui-collapsible-duration) var(--pui-collapsible-ease);
+  transition: height var(--forte-collapsible-duration) var(--forte-collapsible-ease);
 }
 
 .panel[data-starting-style],
@@ -119,13 +119,13 @@ The panel's padding is not on the panel. A padding box survives a zero content b
 
 For the same reason there is no gap between the trigger and the panel: a flex `gap` on the root would still be painted while a mounted panel was closed, so the same markup would leave a band under the trigger or not depending on a prop that is meant to be invisible.
 
-The chevron flips on a spring (`--pui-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--pui-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
+The chevron flips on a spring (`--forte-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--forte-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
 
-There is no `prefers-reduced-motion` block in this stylesheet, and none anywhere else in a component file. The tokens do it: `--pui-duration-normal` collapses from 240ms to 120ms and `--pui-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
+There is no `prefers-reduced-motion` block in this stylesheet, and none anywhere else in a component file. The tokens do it: `--forte-duration-normal` collapses from 240ms to 120ms and `--forte-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
 
 ## Theming
 
-Every property below is declared on `Collapsible.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Collapsible.Root` itself, through its `className` or an inline `style`. To move every collapsible at once, re-point the global tokens in the Default column instead: `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
+Every property below is declared on `Collapsible.Root`, which is also why an ancestor is the wrong place to set one — the root element's own declaration beats an inherited value. Override them on `Collapsible.Root` itself, through its `className` or an inline `style`. To move every collapsible at once, re-point the global tokens in the Default column instead: `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-control-*` and `--forte-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
 
 Defaults are the `plain` variant; the Contained column gives the value only where the two differ.
 
@@ -134,7 +134,7 @@ Defaults are the `plain` variant; the Contained column gives the value only wher
   variantColumn={{ header: "`contained`", baseHeader: "Default (`plain`)", match: 'data-variant="contained"' }}
 />
 
-`variant="contained"` is itself implemented by overriding these on the root, plus one structural declaration — `overflow: hidden`, which clips the trigger's hover fill and anything you paint behind the panel to the card's curve. That clip is also why the trigger's focus ring is inset in `contained` and outset in `plain`. Setting the knobs yourself on a contained collapsible still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+`variant="contained"` is itself implemented by overriding these on the root, plus one structural declaration — `overflow: hidden`, which clips the trigger's hover fill and anything you paint behind the panel to the card's curve. That clip is also why the trigger's focus ring is inset in `contained` and outset in `plain`. Setting the knobs yourself on a contained collapsible still works: the library's rules live in the `forte.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 
 The parts also expose their state as data attributes — `data-variant`, `data-open`, `data-closed`, `data-panel-open`, `data-disabled` — so a Tailwind arbitrary variant such as `data-[panel-open]:...` can target them without a wrapper element.
 
@@ -144,7 +144,7 @@ The parts also expose their state as data attributes — `data-variant`, `data-o
 
 ## API reference
 
-Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `Collapsible.Root` also takes `open`, `defaultOpen`, `onOpenChange` and `disabled`; `Collapsible.Panel` takes `keepMounted` and `hiddenUntilFound`. All three parts take `render` for changing the underlying element.
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what forte-ui adds or changes the default of. `Collapsible.Root` also takes `open`, `defaultOpen`, `onOpenChange` and `disabled`; `Collapsible.Panel` takes `keepMounted` and `hiddenUntilFound`. All three parts take `render` for changing the underlying element.
 
 ### Collapsible.Root
 

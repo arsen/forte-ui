@@ -1,12 +1,12 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Field, NumberField } from "@dofortech/pretty-ui";
+import { Field, NumberField } from "@dofortech/forte-ui";
 
 // A formatted value is longer than a bare one, so the field needs more than the
 // default 5ch. A component knob, so it stays in a `style` object — no utility
 // class can set an arbitrary custom property.
-const wide = { "--pui-number-field-input-width": "8ch" } as CSSProperties;
+const wide = { "--forte-number-field-input-width": "8ch" } as CSSProperties;
 
 /**
  * `format` is `Intl.NumberFormatOptions` verbatim, so currency, percent and

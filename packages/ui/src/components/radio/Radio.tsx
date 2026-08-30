@@ -25,7 +25,7 @@ export interface RadioProps<Value = unknown>
   /**
    * Size of the painted circle. The dot is derived from it rather than fixed,
    * so it keeps its proportion at every size and when a consumer overrides
-   * `--pui-radio-size` to something off the scale.
+   * `--forte-radio-size` to something off the scale.
    * @default "md"
    */
   size?: RadioSize;
@@ -77,7 +77,7 @@ export interface RadioProps<Value = unknown>
  * State is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,
  * `data-disabled`, `data-readonly`, and the `Field` validity attributes) on
  * both the root and the indicator, and every visual decision is a
- * `--pui-radio-*` custom property, so it can be re-skinned from plain CSS or
+ * `--forte-radio-*` custom property, so it can be re-skinned from plain CSS or
  * targeted with Tailwind arbitrary variants (`data-[checked]:...`) without
  * wrapping.
  */
@@ -90,12 +90,12 @@ export function Radio<Value = unknown>({
 }: RadioProps<Value>): React.JSX.Element {
   return (
     <BaseRadio.Root
-      // `.pui-target` grows the hit area to the 24px SC 2.5.8 floor with an
+      // `.forte-target` grows the hit area to the 24px SC 2.5.8 floor with an
       // absolutely positioned pseudo-element, leaving the painted circle at
       // its designed size. The root is not inside a clipping container, so the
       // focus ring stays outset.
-      className={clsx(styles.root, "pui-target", "pui-focus-ring", className)}
-      data-pui="radio"
+      className={clsx(styles.root, "forte-target", "forte-focus-ring", className)}
+      data-forte="radio"
       data-size={size}
       data-tone={tone}
       {...props}
@@ -108,7 +108,7 @@ export function Radio<Value = unknown>({
         // starts from a rendered box.
         keepMounted
         className={clsx(styles.indicator, indicatorClassName)}
-        data-pui="radio-indicator"
+        data-forte="radio-indicator"
       />
     </BaseRadio.Root>
   );
@@ -199,7 +199,7 @@ export function RadioGroup<Value = unknown>({
   return (
     <BaseRadioGroup
       className={clsx(styles.group, className)}
-      data-pui="radio-group"
+      data-forte="radio-group"
       data-orientation={orientation}
       {...props}
     />

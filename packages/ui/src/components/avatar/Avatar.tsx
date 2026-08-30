@@ -32,7 +32,7 @@ export interface AvatarRootProps extends Omit<BaseRootProps, "className"> {
    * The silhouette. `circle` is the convention for people; `rounded` and
    * `square` read as an object — a workspace, a repository, a bot.
    *
-   * `circle` stays a circle under `data-pui-radius="none"`, because you asked
+   * `circle` stays a circle under `data-forte-radius="none"`, because you asked
    * for one. Only `rounded` follows the radius preset.
    * @default "circle"
    */
@@ -78,7 +78,7 @@ const AvatarRoot = React.forwardRef<HTMLSpanElement, AvatarRootProps>(function A
     <BaseAvatar.Root
       ref={ref}
       className={clsx(styles.root, className)}
-      data-pui="avatar"
+      data-forte="avatar"
       data-size={size}
       data-shape={shape}
       data-variant={variant}
@@ -128,7 +128,7 @@ const AvatarImage = React.forwardRef<HTMLImageElement, AvatarImageProps>(functio
     <BaseAvatar.Image
       ref={ref}
       className={clsx(styles.image, className)}
-      data-pui="avatar-image"
+      data-forte="avatar-image"
       {...props}
     />
   );
@@ -174,7 +174,7 @@ export interface AvatarFallbackProps extends Omit<BaseFallbackProps, "className"
  * What shows when there is no image, or when the image fails: initials, an
  * icon, a `+3` counter.
  *
- * An `svg` child is sized to `--pui-avatar-icon-size` automatically, so a
+ * An `svg` child is sized to `--forte-avatar-icon-size` automatically, so a
  * lucide or Heroicons glyph needs no wrapper and no size prop of its own.
  */
 const AvatarFallback = React.forwardRef<HTMLSpanElement, AvatarFallbackProps>(
@@ -183,7 +183,7 @@ const AvatarFallback = React.forwardRef<HTMLSpanElement, AvatarFallbackProps>(
       <BaseAvatar.Fallback
         ref={ref}
         className={clsx(styles.fallback, className)}
-        data-pui="avatar-fallback"
+        data-forte="avatar-fallback"
         delay={delay}
         {...props}
       >
@@ -194,12 +194,12 @@ const AvatarFallback = React.forwardRef<HTMLSpanElement, AvatarFallbackProps>(
           * the whole subtree. */}
         <span
           className={styles.content}
-          data-pui="avatar-fallback-content"
+          data-forte="avatar-fallback-content"
           aria-hidden={label ? "true" : undefined}
         >
           {children}
         </span>
-        {label ? <span className="pui-visually-hidden">{label}</span> : null}
+        {label ? <span className="forte-visually-hidden">{label}</span> : null}
       </BaseAvatar.Fallback>
     );
   },
@@ -276,7 +276,7 @@ const AvatarBadge = React.forwardRef<HTMLSpanElement, AvatarBadgeProps>(function
     <span
       ref={ref}
       className={clsx(styles.badge, className)}
-      data-pui="avatar-badge"
+      data-forte="avatar-badge"
       data-tone={tone}
       data-placement={placement}
       data-dot={isDot ? "" : undefined}
@@ -292,12 +292,12 @@ const AvatarBadge = React.forwardRef<HTMLSpanElement, AvatarBadgeProps>(function
         * it does not take the label down with the subtree. */}
       <span
         className={styles.badgeContent}
-        data-pui="avatar-badge-content"
+        data-forte="avatar-badge-content"
         aria-hidden={label ? "true" : undefined}
       >
         {children}
       </span>
-      {label ? <span className="pui-visually-hidden">{label}</span> : null}
+      {label ? <span className="forte-visually-hidden">{label}</span> : null}
     </span>
   );
 });
@@ -331,7 +331,7 @@ const AvatarGroup = React.forwardRef<HTMLSpanElement, AvatarGroupProps>(function
   ref,
 ) {
   return (
-    <span ref={ref} className={clsx(styles.group, className)} data-pui="avatar-group" {...props}>
+    <span ref={ref} className={clsx(styles.group, className)} data-forte="avatar-group" {...props}>
       {children}
     </span>
   );
@@ -356,7 +356,7 @@ const AvatarGroup = React.forwardRef<HTMLSpanElement, AvatarGroupProps>(function
  * </Avatar.Group>
  * ```
  *
- * Styling is driven by `data-*` attributes and `--pui-avatar-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-avatar-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[shape=square]:...`) without wrapping.
  */

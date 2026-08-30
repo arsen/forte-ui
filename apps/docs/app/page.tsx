@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 import { HeroThemer } from "@/components/home/hero-themer";
 import { CodeBlock } from "@/components/demo/code-block";
 import { Showcase } from "@/components/home/showcase";
@@ -7,11 +7,11 @@ import { EYEBROW, LEAD } from "@/components/styles";
 import { cn } from "@/lib/cn";
 
 const THEME_SNIPPET = `:root {
-  --pui-accent-seed: #6d43d4;
+  --forte-accent-seed: #6d43d4;
 }`;
 
-const USAGE_SNIPPET = `import "@dofortech/pretty-ui/theme.css";
-import { Button, Dialog } from "@dofortech/pretty-ui";
+const USAGE_SNIPPET = `import "@dofortech/forte-ui/theme.css";
+import { Button, Dialog } from "@dofortech/forte-ui";
 
 export function Example() {
   return <Button tone="danger">Delete</Button>;
@@ -68,7 +68,7 @@ export default function HomePage() {
           <span
             className={cn(
               "text-primary-text",
-              "gradient-text:bg-[linear-gradient(100deg,var(--pui-accent-11),var(--pui-secondary-9)_70%)]",
+              "gradient-text:bg-[linear-gradient(100deg,var(--forte-accent-11),var(--forte-secondary-9)_70%)]",
               "gradient-text:[-webkit-background-clip:text] gradient-text:bg-clip-text",
               "gradient-text:text-transparent",
             )}
@@ -133,7 +133,7 @@ export default function HomePage() {
                 // `hover:` is already `@media (hover: hover)` in v4, so a touch
                 // screen never sticks the lift on the last thing tapped. The
                 // travel token collapses to 0px under reduced motion on its own.
-                "hover:-translate-y-(--pui-travel-xs) hover:border-primary-border",
+                "hover:-translate-y-(--forte-travel-xs) hover:border-primary-border",
               )}
             >
               <h3 className="mb-2 text-3 font-semibold">{f.title}</h3>
@@ -145,7 +145,7 @@ export default function HomePage() {
 
       <section className={cn(SECTION, REVEAL)}>
         <h2 className={H2}>Get started</h2>
-        <CodeBlock code="npm install @dofortech/pretty-ui" lang="bash" />
+        <CodeBlock code="npm install @dofortech/forte-ui" lang="bash" />
         <CodeBlock code={USAGE_SNIPPET} lang="tsx" />
       </section>
     </div>
@@ -166,7 +166,7 @@ function Ramp({ name, label }: { name: string; label: string }) {
           <span
             key={i}
             className="block [forced-color-adjust:none]"
-            style={{ background: `var(--pui-${name}-${i + 1})` }}
+            style={{ background: `var(--forte-${name}-${i + 1})` }}
           />
         ))}
       </div>

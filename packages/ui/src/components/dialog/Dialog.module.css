@@ -11,12 +11,12 @@
  *                    →  Viewport  →  Popup  →  Title / Description / Close
  *
  * `Root` renders no DOM element, so there is no `.root` rule here; the popup
- * is the styling anchor and carries the `--pui-dialog-*` knobs.
+ * is the styling anchor and carries the `--forte-dialog-*` knobs.
  *
  * Motion notes, all load-bearing:
  *   - No `prefers-reduced-motion` block. The travel tokens collapse to 0px
- *     and `--pui-scale-enter` to 1, the exit scale is gated on
- *     `--pui-motion-ok`, and the spring durations shorten — so the geometry
+ *     and `--forte-scale-enter` to 1, the exit scale is gated on
+ *     `--forte-motion-ok`, and the spring durations shorten — so the geometry
  *     disappears on its own and the opacity fade, the part reduced-motion
  *     users actually want, stays.
  *   - Enter/exit is done with transitions on [data-starting-style] /
@@ -24,7 +24,7 @@
  *     reverses smoothly instead of snapping.
  *   - Same shape both ways — rise + grow in, sink + shrink out — so an
  *     interrupted open simply runs back down the path it came up. The
- *     entrance rides a spring (`--pui-ease-spring-snappy`), and the exit is
+ *     entrance rides a spring (`--forte-ease-spring-snappy`), and the exit is
  *     shorter still, because a dismissal the user already decided on has
  *     nothing left to show them. Both durations are the ones the anchored
  *     popups use — see the knobs.
@@ -32,21 +32,21 @@
  *     whole reason the exit reads as motion at all. Two failure modes sit on
  *     either side of it, and both look like "there is no exit animation":
  *
- *       Decelerate the geometry (`--pui-ease-standard`, or any ease-out) and
+ *       Decelerate the geometry (`--forte-ease-standard`, or any ease-out) and
  *       the popup covers 88% of its travel in the first half, then crawls —
  *       under a quarter-pixel across the entire final quarter of the gesture
  *       — while it is still fading down from 68% opacity. The movement ENDS
  *       well before the element does, so the dialog appears to freeze
  *       mid-flight and then get yanked out of the DOM.
  *
- *       Accelerate it (`--pui-ease-exit`, the obvious reading of "ease out of
+ *       Accelerate it (`--forte-ease-exit`, the obvious reading of "ease out of
  *       the way") and the opposite happens: about one pixel of travel while
  *       the popup is still opaque, with the rest spent after it has faded.
  *
  *     So the geometry runs `linear` — a uniform 2px per 40ms, still moving
  *     on the frame it disappears. An easing curve implies arrival somewhere,
  *     and an exit never arrives: it is cut short by its own removal. The
- *     opacity meanwhile runs on `--pui-ease-exit`, holding around 0.75
+ *     opacity meanwhile runs on `--forte-ease-exit`, holding around 0.75
  *     through the midpoint, so the surface stays legible for the part of the
  *     journey the eye actually reads.
  *   - Nothing here animates `infinite`. Base UI awaits
@@ -57,9 +57,9 @@
  *     Tooltip). The scale therefore grows from the popup's centre, which is
  *     the right origin for a centred surface anyway.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* Backdrop ---------------------------------------------------------------
-   * `.pui-scrim` already supplies position/inset, the scrim colour, the
+   * `.forte-scrim` already supplies position/inset, the scrim colour, the
    * optional blur, the fade transition and the starting/ending opacity, plus
    * the forced-colors treatment. Only the iOS correction is component-local.
    * ---------------------------------------------------------------------- */
@@ -67,32 +67,32 @@
     /* One below the viewport's 40, and declared locally because the backdrop
      * is the viewport's SIBLING inside the portal — nothing on the viewport
      * can reach it. */
-    --pui-dialog-backdrop-z-index: 39;
+    --forte-dialog-backdrop-z-index: 39;
 
-    /* `.pui-scrim` clears on `--pui-ease-standard`, a fast-starting curve,
+    /* `.forte-scrim` clears on `--forte-ease-standard`, a fast-starting curve,
      * which is right for a bare overlay but wrong here: the page behind
      * would snap back to full brightness while the dialog is still leaving,
      * and the eye follows the big brightness change rather than the popup.
      * These match the popup's exit instead — same length, same curve. Keep
-     * them in step with `--pui-dialog-exit-duration` /
-     * `--pui-dialog-exit-fade-ease` below; they are declared separately
+     * them in step with `--forte-dialog-exit-duration` /
+     * `--forte-dialog-exit-fade-ease` below; they are declared separately
      * because the popup's cannot reach a sibling. Set them through
      * `backdropClassName`. */
     /** How long the scrim takes to clear; set through `backdropClassName` */
-    --pui-dialog-backdrop-exit-duration: var(--pui-duration-fast);
+    --forte-dialog-backdrop-exit-duration: var(--forte-duration-fast);
     /** Curve the scrim clears on; set through `backdropClassName` */
-    --pui-dialog-backdrop-exit-ease: var(--pui-ease-exit);
+    --forte-dialog-backdrop-exit-ease: var(--forte-ease-exit);
 
-    /* Restated from `.pui-scrim` so the @supports override below has an
+    /* Restated from `.forte-scrim` so the @supports override below has an
      * explicit default to flip, and so the class always exists in the
      * stylesheet regardless of at-rule handling. */
     position: fixed;
-    z-index: var(--pui-dialog-backdrop-z-index);
+    z-index: var(--forte-dialog-backdrop-z-index);
   }
 
   .backdrop[data-ending-style] {
-    transition-duration: var(--pui-dialog-backdrop-exit-duration);
-    transition-timing-function: var(--pui-dialog-backdrop-exit-ease);
+    transition-duration: var(--forte-dialog-backdrop-exit-duration);
+    transition-timing-function: var(--forte-dialog-backdrop-exit-ease);
   }
 
   /* iOS 26+ shrinks the layout viewport under the URL bar while a fixed
@@ -114,7 +114,7 @@
   .viewport {
     /** Gap between the popup and the edge of the screen. `size="fullscreen"`
      * drops it to `0px`. */
-    --pui-dialog-viewport-padding: var(--pui-space-4);
+    --forte-dialog-viewport-padding: var(--forte-space-4);
     /* Stacking is not optional here. `position: fixed` alone leaves the
      * viewport at `z-index: auto`, which paints in the same band as every
      * other positioned-but-unstacked box on the page — and DOM order only
@@ -126,14 +126,14 @@
      * Tooltip opened INSIDE a dialog is above it whichever order the two
      * portals happen to land in. Re-point the knob to slot the dialog into an
      * app's own scale; `viewportClassName` reaches it. */
-    --pui-dialog-z-index: 40;
+    --forte-dialog-z-index: 40;
 
     box-sizing: border-box;
     position: fixed;
-    z-index: var(--pui-dialog-z-index);
+    z-index: var(--forte-dialog-z-index);
     inset: 0;
     display: flex;
-    padding: var(--pui-dialog-viewport-padding);
+    padding: var(--forte-dialog-viewport-padding);
     overflow-y: auto;
     /* Keep a scroll gesture that reaches the end of the dialog from chaining
      * to the page behind it. */
@@ -141,7 +141,7 @@
   }
 
   .viewport[data-size="fullscreen"] {
-    --pui-dialog-viewport-padding: 0px;
+    --forte-dialog-viewport-padding: 0px;
   }
 
   /* While the popup animates out it is still painted and still on top; without
@@ -159,49 +159,49 @@
      * whose rule is unlayered and so beats this layer) or re-point the global
      * tokens below, which this file only ever reads. */
     /** Popup background */
-    --pui-dialog-bg: var(--pui-color-overlay);
+    --forte-dialog-bg: var(--forte-color-overlay);
     /** Popup text colour */
-    --pui-dialog-fg: var(--pui-color-foreground);
+    --forte-dialog-fg: var(--forte-color-foreground);
     /** Corner radius. `size="fullscreen"` squares it off to `0px`. */
-    --pui-dialog-radius: var(--pui-radius-surface);
+    --forte-dialog-radius: var(--forte-radius-surface);
     /** Padding inside the popup */
-    --pui-dialog-padding: var(--pui-surface-p);
+    --forte-dialog-padding: var(--forte-surface-p);
     /** Vertical gap between the popup's children */
-    --pui-dialog-gap: var(--pui-space-4);
+    --forte-dialog-gap: var(--forte-space-4);
     /** Popup shadow */
-    --pui-dialog-shadow: var(--pui-shadow-4);
+    --forte-dialog-shadow: var(--forte-shadow-4);
     /** Base font size inside the popup */
-    --pui-dialog-font-size: var(--pui-font-size-2);
+    --forte-dialog-font-size: var(--forte-font-size-2);
     /* No width token exists in the inventory (widths are layout, not theme),
      * so the size scale lives in these knobs and is overridable per app. */
     /** Maximum popup width; what the `size` prop sets — `24rem` for `sm`,
      * `48rem` for `lg`, `100%` for `fullscreen`. */
-    --pui-dialog-max-inline-size: 32rem;
+    --forte-dialog-max-inline-size: 32rem;
     /* How far each nested dialog pushes its parent down, and how much it
      * shrinks it. The travel token collapses to 0px under reduced motion;
-     * the scale step is gated on --pui-motion-ok for the same reason. */
+     * the scale step is gated on --forte-motion-ok for the same reason. */
     /** How far each nested dialog pushes its parent down */
-    --pui-dialog-nested-offset: var(--pui-travel-lg);
+    --forte-dialog-nested-offset: var(--forte-travel-lg);
     /** How much each nested dialog shrinks its parent */
-    --pui-dialog-nested-scale-step: 0.04;
+    --forte-dialog-nested-scale-step: 0.04;
     /* The parent's retreat is a layout move, not a pop: `spring-precise` is
      * the one spring in the set with no overshoot, so the surface settles
      * under the child instead of bouncing beneath it. */
     /** How long the parent takes to retreat under a child */
-    --pui-dialog-nested-duration: var(--pui-duration-spring-precise);
+    --forte-dialog-nested-duration: var(--forte-duration-spring-precise);
 
     /* Enter/exit gesture. Broken out into knobs so an app can retune the
      * feel — or flatten it entirely — without restating the transition.
-     * `--pui-dialog-exit-scale` is written as a calc against --pui-motion-ok
+     * `--forte-dialog-exit-scale` is written as a calc against --forte-motion-ok
      * rather than a literal so it lands on exactly 1 under reduced motion;
      * multiplying a scale by `ok` instead would collapse the popup to
      * nothing. */
-    /** How far the popup rises as it opens. `var(--pui-travel-page)` when
+    /** How far the popup rises as it opens. `var(--forte-travel-page)` when
      * `size="fullscreen"`. */
-    --pui-dialog-enter-travel: var(--pui-travel-md);
+    --forte-dialog-enter-travel: var(--forte-travel-md);
     /** Scale the popup grows from. `1` when `size="fullscreen"`. */
-    --pui-dialog-enter-scale: var(--pui-scale-enter);
-    /* `normal`, not `--pui-duration-spring-snappy`. The rule elsewhere is to
+    --forte-dialog-enter-scale: var(--forte-scale-enter);
+    /* `normal`, not `--forte-duration-spring-snappy`. The rule elsewhere is to
      * pair a spring easing with its own settle time, and that rule is about
      * not CROPPING the curve — a 400ms spring cut off at 240ms stops
      * mid-bounce. Running the whole curve compressed is a different thing:
@@ -211,27 +211,27 @@
      * from a `Button` read as noticeably heavier than the `Select` opened
      * from the control beside it. */
     /** Length of the opening gesture */
-    --pui-dialog-enter-duration: var(--pui-duration-normal);
+    --forte-dialog-enter-duration: var(--forte-duration-normal);
     /** Curve of the opening gesture */
-    --pui-dialog-enter-ease: var(--pui-ease-spring-snappy);
-    /** How far the popup sinks as it closes. `var(--pui-travel-page)` when
+    --forte-dialog-enter-ease: var(--forte-ease-spring-snappy);
+    /** How far the popup sinks as it closes. `var(--forte-travel-page)` when
      * `size="fullscreen"`. */
-    --pui-dialog-exit-travel: var(--pui-travel-md);
+    --forte-dialog-exit-travel: var(--forte-travel-md);
     /** Scale the popup shrinks to. `1` when `size="fullscreen"`. */
-    --pui-dialog-exit-scale: calc(1 - 0.05 * var(--pui-motion-ok));
+    --forte-dialog-exit-scale: calc(1 - 0.05 * var(--forte-motion-ok));
     /* Shorter than the entrance, and deliberately so: an arrival has to
      * read as a surface settling into place, while a dismissal is something
      * the user has already decided on and only needs confirming. `fast` is
      * what every other popup in the set exits on. */
     /** Length of the closing gesture */
-    --pui-dialog-exit-duration: var(--pui-duration-fast);
+    --forte-dialog-exit-duration: var(--forte-duration-fast);
     /* `linear` on purpose, and the one place in the library that wants it —
      * see the note at the top of the file. Nothing eases toward a resting
      * place here, because the popup is removed rather than arriving. */
     /** Curve the closing *geometry* runs on */
-    --pui-dialog-exit-ease: linear;
+    --forte-dialog-exit-ease: linear;
     /** Curve the closing *fade* runs on */
-    --pui-dialog-exit-fade-ease: var(--pui-ease-exit);
+    --forte-dialog-exit-fade-ease: var(--forte-ease-exit);
 
     box-sizing: border-box;
     position: relative;
@@ -241,26 +241,26 @@
     margin: auto;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-dialog-gap);
+    gap: var(--forte-dialog-gap);
     inline-size: 100%;
-    max-inline-size: var(--pui-dialog-max-inline-size);
-    padding: var(--pui-dialog-padding);
-    border-radius: var(--pui-dialog-radius);
+    max-inline-size: var(--forte-dialog-max-inline-size);
+    padding: var(--forte-dialog-padding);
+    border-radius: var(--forte-dialog-radius);
 
-    background-color: var(--pui-dialog-bg);
-    color: var(--pui-dialog-fg);
-    box-shadow: var(--pui-dialog-shadow);
+    background-color: var(--forte-dialog-bg);
+    color: var(--forte-dialog-fg);
+    box-shadow: var(--forte-dialog-shadow);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-dialog-font-size);
-    line-height: var(--pui-line-height-normal);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-dialog-font-size);
+    line-height: var(--forte-line-height-normal);
 
     /* Nested stacking, driven by Base UI's --nested-dialogs counter. Animated
      * as independent `translate`/`scale` properties so the enter/exit
      * `transform` below can compose with them instead of overwriting them. */
-    translate: 0 calc(var(--pui-dialog-nested-offset) * var(--nested-dialogs, 0));
+    translate: 0 calc(var(--forte-dialog-nested-offset) * var(--nested-dialogs, 0));
     scale: calc(
-      1 - var(--pui-dialog-nested-scale-step) * var(--pui-motion-ok) *
+      1 - var(--forte-dialog-nested-scale-step) * var(--forte-motion-ok) *
         var(--nested-dialogs, 0)
     );
     /* Opacity is deliberately shorter than the transform: the surface is
@@ -268,21 +268,21 @@
      * behind readable content, instead of the whole dialog spending the
      * entrance half-transparent. */
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-dialog-enter-duration) var(--pui-dialog-enter-ease),
-      translate var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise),
-      scale var(--pui-dialog-nested-duration) var(--pui-ease-spring-precise),
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      transform var(--forte-dialog-enter-duration) var(--forte-dialog-enter-ease),
+      translate var(--forte-dialog-nested-duration) var(--forte-ease-spring-precise),
+      scale var(--forte-dialog-nested-duration) var(--forte-ease-spring-precise),
       /* In step with the ::after dim below — the two together are one
        * overlay, and a border that snapped while the surface faded would
        * announce itself as a separate thing. */
-      border-color var(--pui-dialog-nested-duration) var(--pui-ease-standard);
+      border-color var(--forte-dialog-nested-duration) var(--forte-ease-standard);
   }
 
   /* Rises into place from below and grows to full size. */
   .popup[data-starting-style] {
     opacity: 0;
-    transform: translateY(var(--pui-dialog-enter-travel))
-      scale(var(--pui-dialog-enter-scale));
+    transform: translateY(var(--forte-dialog-enter-travel))
+      scale(var(--forte-dialog-enter-scale));
   }
 
   /* Retraces the entrance — sinks back down and shrinks — so the dialog reads
@@ -297,13 +297,13 @@
    * the popup is leaving, its nested offset has no reason to outlive it. */
   .popup[data-ending-style] {
     opacity: 0;
-    transform: translateY(var(--pui-dialog-exit-travel))
-      scale(var(--pui-dialog-exit-scale));
+    transform: translateY(var(--forte-dialog-exit-travel))
+      scale(var(--forte-dialog-exit-scale));
     transition:
-      opacity var(--pui-dialog-exit-duration) var(--pui-dialog-exit-fade-ease),
-      transform var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease),
-      translate var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease),
-      scale var(--pui-dialog-exit-duration) var(--pui-dialog-exit-ease);
+      opacity var(--forte-dialog-exit-duration) var(--forte-dialog-exit-fade-ease),
+      transform var(--forte-dialog-exit-duration) var(--forte-dialog-exit-ease),
+      translate var(--forte-dialog-exit-duration) var(--forte-dialog-exit-ease),
+      scale var(--forte-dialog-exit-duration) var(--forte-dialog-exit-ease);
   }
 
   /* Nested dialogs ---------------------------------------------------------
@@ -317,13 +317,13 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background-color: var(--pui-scrim-color);
+    background-color: var(--forte-scrim-color);
     opacity: 0;
     pointer-events: none;
     /* Ramps in over the same window as the parent's retreat, so the dim and
      * the push read as one movement. */
-    transition: opacity var(--pui-dialog-nested-duration)
-      var(--pui-ease-standard);
+    transition: opacity var(--forte-dialog-nested-duration)
+      var(--forte-ease-standard);
   }
 
   .popup[data-nested-dialog-open]::after {
@@ -332,9 +332,9 @@
 
   /* The overlay above stops at the PADDING box — an absolutely positioned box
    * resolves `inset` against its containing block's padding box, not its
-   * border box — and `.pui-hc-surface` gives every floating surface a 1px
+   * border box — and `.forte-hc-surface` gives every floating surface a 1px
    * transparent border outside it. Backgrounds paint under a border by
-   * default, so that ring keeps the popup's own undimmed `--pui-dialog-bg`
+   * default, so that ring keeps the popup's own undimmed `--forte-dialog-bg`
    * and draws a bright outline around a parent that is supposed to have
    * receded: the one part of it still at full strength, and the most visible
    * part, because it is the silhouette. Barely readable in dark mode, glaring
@@ -349,7 +349,7 @@
    * Forced-colors mode reassigns this to CanvasText from the `a11y` layer,
    * which is ordered after this one and therefore wins. */
   .popup[data-nested-dialog-open] {
-    border-color: var(--pui-scrim-color);
+    border-color: var(--forte-scrim-color);
   }
 
   /* Elements outside the surface -------------------------------------------
@@ -381,7 +381,7 @@
    * match, and it opts out on its own anyway.
    * ---------------------------------------------------------------------- */
   .popup:has(> .surface) {
-    /* The properties, not the knobs — `--pui-dialog-bg`, `-padding` and
+    /* The properties, not the knobs — `--forte-dialog-bg`, `-padding` and
      * `-shadow` keep their values here so `.surface` inherits them and a
      * consumer retunes the panel from the popup exactly as before. */
     padding: 0;
@@ -410,66 +410,66 @@
     flex-direction: column;
     /* Reads the knobs off the popup, which is the element a consumer sets them
      * on and which is still this element's parent. Custom properties inherit,
-     * so nothing has to be restated and `style={{ "--pui-dialog-padding" }}`
+     * so nothing has to be restated and `style={{ "--forte-dialog-padding" }}`
      * on `Dialog.Popup` keeps working unchanged. */
-    gap: var(--pui-dialog-gap);
-    padding: var(--pui-dialog-padding);
-    border-radius: var(--pui-dialog-radius);
+    gap: var(--forte-dialog-gap);
+    padding: var(--forte-dialog-padding);
+    border-radius: var(--forte-dialog-radius);
 
-    background-color: var(--pui-dialog-bg);
-    color: var(--pui-dialog-fg);
-    box-shadow: var(--pui-dialog-shadow);
+    background-color: var(--forte-dialog-bg);
+    color: var(--forte-dialog-fg);
+    box-shadow: var(--forte-dialog-shadow);
   }
 
   /* Sizes ------------------------------------------------------------------ */
   .popup[data-size="sm"] {
-    --pui-dialog-max-inline-size: 24rem;
+    --forte-dialog-max-inline-size: 24rem;
   }
 
   .popup[data-size="md"] {
-    --pui-dialog-max-inline-size: 32rem;
+    --forte-dialog-max-inline-size: 32rem;
   }
 
   .popup[data-size="lg"] {
-    --pui-dialog-max-inline-size: 48rem;
+    --forte-dialog-max-inline-size: 48rem;
   }
 
   /* A fullscreen sheet has no visible edges for a scale to work against —
    * shrinking it just pulls the content away from a screen it is supposed to
    * fill — so it travels further and doesn't scale at all. */
   .popup[data-size="fullscreen"] {
-    --pui-dialog-max-inline-size: 100%;
-    --pui-dialog-radius: 0px;
-    --pui-dialog-enter-travel: var(--pui-travel-page);
-    --pui-dialog-enter-scale: 1;
-    --pui-dialog-exit-travel: var(--pui-travel-page);
-    --pui-dialog-exit-scale: 1;
+    --forte-dialog-max-inline-size: 100%;
+    --forte-dialog-radius: 0px;
+    --forte-dialog-enter-travel: var(--forte-travel-page);
+    --forte-dialog-enter-scale: 1;
+    --forte-dialog-exit-travel: var(--forte-travel-page);
+    --forte-dialog-exit-scale: 1;
     min-block-size: 100%;
   }
 
   /* Content ---------------------------------------------------------------- */
   .title {
     margin: 0;
-    font-size: var(--pui-font-size-4);
-    font-weight: var(--pui-font-weight-semibold);
-    line-height: var(--pui-line-height-tight);
-    letter-spacing: var(--pui-letter-spacing-tight);
-    color: var(--pui-color-foreground);
+    font-size: var(--forte-font-size-4);
+    font-weight: var(--forte-font-weight-semibold);
+    line-height: var(--forte-line-height-tight);
+    letter-spacing: var(--forte-letter-spacing-tight);
+    color: var(--forte-color-foreground);
   }
 
   .description {
     margin: 0;
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
     /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body copy. */
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   /* A description belongs to the title above it, so it sits closer than the
    * popup's own rhythm. Done by pulling the description up rather than by
    * introducing a header part, so the anatomy stays exactly Base UI's. */
   .title + .description {
-    margin-block-start: calc(var(--pui-space-1) - var(--pui-dialog-gap));
+    margin-block-start: calc(var(--forte-space-1) - var(--forte-dialog-gap));
   }
 
   .footer {
@@ -477,8 +477,8 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--pui-control-gap);
-    margin-block-start: var(--pui-space-1);
+    gap: var(--forte-control-gap);
+    margin-block-start: var(--forte-space-1);
   }
 
   .footer[data-align="start"] {
@@ -517,41 +517,41 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-control-gap);
-    height: var(--pui-control-h-md);
-    padding-inline: var(--pui-control-px-md);
+    gap: var(--forte-control-gap);
+    height: var(--forte-control-h-md);
+    padding-inline: var(--forte-control-px-md);
     margin: 0;
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-control);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-control);
 
-    background-color: var(--pui-color-panel);
-    color: var(--pui-color-foreground);
+    background-color: var(--forte-color-panel);
+    color: var(--forte-color-foreground);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-2);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-2);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled]),
     .close:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
+      background-color: var(--forte-color-panel-hover);
     }
   }
 
   .trigger:active:not([data-disabled]),
   .close:active:not([data-disabled]) {
-    background-color: var(--pui-color-panel-active);
+    background-color: var(--forte-color-panel-active);
   }
 
   .trigger[data-disabled],
@@ -565,27 +565,27 @@
   .close[data-icon-only] {
     padding-inline: 0;
     aspect-ratio: 1;
-    min-inline-size: max(var(--pui-control-h-md), var(--pui-target-min));
+    min-inline-size: max(var(--forte-control-h-md), var(--forte-target-min));
     border-color: transparent;
     background-color: transparent;
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   @media (hover: hover) {
     .close[data-icon-only]:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
-      color: var(--pui-color-foreground);
+      background-color: var(--forte-color-panel-hover);
+      color: var(--forte-color-foreground);
     }
   }
 }
 
 /* Forced colors ------------------------------------------------------------
- * Ordered after `pretty-ui.components`, so these win on layer order alone —
+ * Ordered after `forte.components`, so these win on layer order alone —
  * specificity is not what decides it. See CONTRIBUTING.md.
  * ------------------------------------------------------------------------ */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
-    /* `.pui-hc-surface` is on the popup unconditionally, and under forced
+    /* `.forte-hc-surface` is on the popup unconditionally, and under forced
      * colors it repaints that element as an opaque Canvas box with a
      * CanvasText outline. That is exactly right while the popup IS the panel,
      * and exactly wrong once it is only a transparent container: the box would
@@ -594,9 +594,9 @@
      * panel — which is the one silhouette the pattern exists to avoid.
      *
      * The treatment is not dropped, it moves: `Dialog.Surface` carries
-     * `.pui-hc-surface` itself, so the panel keeps its boundary. This rule
+     * `.forte-hc-surface` itself, so the panel keeps its boundary. This rule
      * only takes it off the container, and it is here rather than in the
-     * components block because `.pui-hc-surface` is applied from `a11y` and a
+     * components block because `.forte-hc-surface` is applied from `a11y` and a
      * components-layer rule can never outrank a layer above it. */
     .popup:has(> .surface) {
       border-color: transparent;

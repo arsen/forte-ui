@@ -44,37 +44,37 @@
  *      permanently misaligned. See `.list` for the full note.
  *
  *   4. There is deliberately no `prefers-reduced-motion` block. The motion
- *      tokens collapse their own geometry — `--pui-scale-enter` becomes 1 and
- *      `--pui-travel-xs` becomes 0px — so consuming them is already correct.
+ *      tokens collapse their own geometry — `--forte-scale-enter` becomes 1 and
+ *      `--forte-travel-xs` becomes 0px — so consuming them is already correct.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* Label ------------------------------------------------------------------
    * Renders a <div>, not a <label>; Base UI wires it to the trigger with
    * aria-labelledby, so clicking it focuses the trigger without opening. */
   .label {
     /** Label text colour */
-    --pui-select-label-fg: var(--pui-color-foreground);
+    --forte-select-label-fg: var(--forte-color-foreground);
     /** Label font size */
-    --pui-select-label-font-size: var(--pui-font-size-2);
+    --forte-select-label-font-size: var(--forte-font-size-2);
     /** Label font weight */
-    --pui-select-label-font-weight: var(--pui-font-weight-medium);
+    --forte-select-label-font-weight: var(--forte-font-weight-medium);
     /** Space between label and trigger */
-    --pui-select-label-gap: var(--pui-space-1);
+    --forte-select-label-gap: var(--forte-space-1);
 
     display: block;
-    margin-block-end: var(--pui-select-label-gap);
-    color: var(--pui-select-label-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-select-label-font-size);
-    font-weight: var(--pui-select-label-font-weight);
-    line-height: var(--pui-line-height-tight);
+    margin-block-end: var(--forte-select-label-gap);
+    color: var(--forte-select-label-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-select-label-font-size);
+    font-weight: var(--forte-select-label-font-weight);
+    line-height: var(--forte-line-height-tight);
     -webkit-user-select: none;
     user-select: none;
     cursor: default;
   }
 
   .label[data-disabled] {
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
   }
 
   /* Trigger ---------------------------------------------------------------- */
@@ -85,49 +85,49 @@
      * is unlayered and so beats this layer) or re-point the global tokens
      * below, which this file only ever reads. */
     /** Trigger height (reset per `size`) */
-    --pui-select-trigger-height: var(--pui-control-h-md);
+    --forte-select-trigger-height: var(--forte-control-h-md);
     /** Trigger inline padding (reset per `size`) */
-    --pui-select-trigger-padding-x: var(--pui-control-px-md);
+    --forte-select-trigger-padding-x: var(--forte-control-px-md);
     /** Trigger font size (reset per `size`) */
-    --pui-select-trigger-font-size: var(--pui-font-size-2);
+    --forte-select-trigger-font-size: var(--forte-font-size-2);
     /** Gap between value and icon */
-    --pui-select-trigger-gap: var(--pui-control-gap);
+    --forte-select-trigger-gap: var(--forte-control-gap);
     /** Trigger corner radius */
-    --pui-select-trigger-radius: var(--pui-radius-control);
+    --forte-select-trigger-radius: var(--forte-radius-control);
     /** Trigger border width */
-    --pui-select-trigger-border-width: 1px;
+    --forte-select-trigger-border-width: 1px;
 
     /* Colour slots, filled in per variant below. */
     /** Trigger background (reset per `variant`) */
-    --pui-select-trigger-bg: var(--pui-color-background);
+    --forte-select-trigger-bg: var(--forte-color-background);
     /** Trigger background on hover */
-    --pui-select-trigger-bg-hover: var(--pui-color-panel-hover);
+    --forte-select-trigger-bg-hover: var(--forte-color-panel-hover);
     /** Trigger background while pressed or open */
-    --pui-select-trigger-bg-active: var(--pui-color-panel-active);
+    --forte-select-trigger-bg-active: var(--forte-color-panel-active);
     /** Trigger text colour */
-    --pui-select-trigger-fg: var(--pui-color-foreground);
+    --forte-select-trigger-fg: var(--forte-color-foreground);
     /** Trigger border colour (reset per `variant`) */
-    --pui-select-trigger-border-color: var(--pui-color-border);
+    --forte-select-trigger-border-color: var(--forte-color-border);
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--pui-select-trigger-gap);
-    height: var(--pui-select-trigger-height);
-    padding-inline: var(--pui-select-trigger-padding-x);
+    gap: var(--forte-select-trigger-gap);
+    height: var(--forte-select-trigger-height);
+    padding-inline: var(--forte-select-trigger-padding-x);
     margin: 0;
-    border: var(--pui-select-trigger-border-width) solid
-      var(--pui-select-trigger-border-color);
-    border-radius: var(--pui-select-trigger-radius);
+    border: var(--forte-select-trigger-border-width) solid
+      var(--forte-select-trigger-border-color);
+    border-radius: var(--forte-select-trigger-radius);
 
-    background-color: var(--pui-select-trigger-bg);
-    color: var(--pui-select-trigger-fg);
+    background-color: var(--forte-select-trigger-bg);
+    color: var(--forte-select-trigger-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-select-trigger-font-size);
-    font-weight: var(--pui-font-weight-normal);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-select-trigger-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-tight);
     text-align: start;
     white-space: nowrap;
 
@@ -144,15 +144,15 @@
      * same event that opens the popup. A squash there fires while the list is
      * already unfolding rather than on the click, so it reads as a glitch. */
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled], [data-readonly]) {
-      background-color: var(--pui-select-trigger-bg-hover);
+      background-color: var(--forte-select-trigger-bg-hover);
     }
   }
 
@@ -161,8 +161,8 @@
    * working if that mapping ever splits. */
   .trigger[data-pressed]:not([data-disabled]),
   .trigger[data-popup-open] {
-    background-color: var(--pui-select-trigger-bg-active);
-    transition-duration: var(--pui-duration-instant);
+    background-color: var(--forte-select-trigger-bg-active);
+    transition-duration: var(--forte-duration-instant);
   }
 
   .trigger[data-disabled] {
@@ -173,14 +173,14 @@
   /* Read-only still shows the value and can still be opened for reading, so
    * it must not look disabled — only inert. */
   .trigger[data-readonly] {
-    --pui-select-trigger-bg: var(--pui-color-panel);
+    --forte-select-trigger-bg: var(--forte-color-panel);
     cursor: default;
   }
 
   /* Only the boundary changes. Recolouring the value text as well would make
    * the user's own answer look like the error message. */
   .trigger[data-invalid] {
-    --pui-select-trigger-border-color: var(--pui-color-danger-border);
+    --forte-select-trigger-border-color: var(--forte-color-danger-border);
   }
 
   .trigger[data-full-width] {
@@ -190,37 +190,37 @@
 
   /* Sizes */
   .trigger[data-size="sm"] {
-    --pui-select-trigger-height: var(--pui-control-h-sm);
-    --pui-select-trigger-padding-x: var(--pui-control-px-sm);
-    --pui-select-trigger-font-size: var(--pui-font-size-1);
+    --forte-select-trigger-height: var(--forte-control-h-sm);
+    --forte-select-trigger-padding-x: var(--forte-control-px-sm);
+    --forte-select-trigger-font-size: var(--forte-font-size-1);
   }
 
   .trigger[data-size="md"] {
-    --pui-select-trigger-height: var(--pui-control-h-md);
-    --pui-select-trigger-padding-x: var(--pui-control-px-md);
-    --pui-select-trigger-font-size: var(--pui-font-size-2);
+    --forte-select-trigger-height: var(--forte-control-h-md);
+    --forte-select-trigger-padding-x: var(--forte-control-px-md);
+    --forte-select-trigger-font-size: var(--forte-font-size-2);
   }
 
   .trigger[data-size="lg"] {
-    --pui-select-trigger-height: var(--pui-control-h-lg);
-    --pui-select-trigger-padding-x: var(--pui-control-px-lg);
-    --pui-select-trigger-font-size: var(--pui-font-size-3);
+    --forte-select-trigger-height: var(--forte-control-h-lg);
+    --forte-select-trigger-padding-x: var(--forte-control-px-lg);
+    --forte-select-trigger-font-size: var(--forte-font-size-3);
   }
 
   /* Variants */
   .trigger[data-variant="outline"] {
-    --pui-select-trigger-bg: var(--pui-color-background);
-    --pui-select-trigger-border-color: var(--pui-color-border);
+    --forte-select-trigger-bg: var(--forte-color-background);
+    --forte-select-trigger-border-color: var(--forte-color-border);
   }
 
   .trigger[data-variant="soft"] {
-    --pui-select-trigger-bg: var(--pui-color-panel);
-    --pui-select-trigger-border-color: transparent;
+    --forte-select-trigger-bg: var(--forte-color-panel);
+    --forte-select-trigger-border-color: transparent;
   }
 
   .trigger[data-variant="ghost"] {
-    --pui-select-trigger-bg: transparent;
-    --pui-select-trigger-border-color: transparent;
+    --forte-select-trigger-bg: transparent;
+    --forte-select-trigger-border-color: transparent;
   }
 
   /* Value ------------------------------------------------------------------
@@ -237,9 +237,9 @@
   /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3 applies
    * with no exemption, and it is often the only thing naming the control. So
    * `-muted` (5.82:1), not `-subtle` (3.73:1, non-text only). It still reads
-   * lighter than a chosen value, which uses `--pui-color-foreground`. */
+   * lighter than a chosen value, which uses `--forte-color-foreground`. */
   .value[data-placeholder] {
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   /* Icon ------------------------------------------------------------------- */
@@ -248,12 +248,12 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    color: var(--pui-color-foreground-subtle);
-    transition: color var(--pui-duration-fast) var(--pui-ease-standard);
+    color: var(--forte-color-foreground-subtle);
+    transition: color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .trigger[data-popup-open] .icon {
-    color: var(--pui-color-foreground);
+    color: var(--forte-color-foreground);
   }
 
   /* The two carets of the default icon spread apart while the popup is open,
@@ -262,33 +262,33 @@
    * icon is left alone, and only inherits the colour change above.
    *
    * `transform` rather than the `translate` property: this is an SVG child,
-   * and the shorthand has the wider baseline there. Half of `--pui-travel-xs`
+   * and the shorthand has the wider baseline there. Half of `--forte-travel-xs`
    * (1px) is the whole distance, and it still collapses to 0 under reduced
    * motion because the token does. */
   .caret {
-    transition: transform var(--pui-duration-spring-snappy)
-      var(--pui-ease-spring-snappy);
+    transition: transform var(--forte-duration-spring-snappy)
+      var(--forte-ease-spring-snappy);
   }
 
   .trigger[data-popup-open] .caret[data-direction="up"] {
-    transform: translateY(calc(-1 * var(--pui-travel-xs) / 2));
+    transform: translateY(calc(-1 * var(--forte-travel-xs) / 2));
   }
 
   .trigger[data-popup-open] .caret[data-direction="down"] {
-    transform: translateY(calc(var(--pui-travel-xs) / 2));
+    transform: translateY(calc(var(--forte-travel-xs) / 2));
   }
 
   /* Backdrop ---------------------------------------------------------------
-   * Opt-in. Geometry and the fade come from `.pui-scrim`; this only owns
+   * Opt-in. Geometry and the fade come from `.forte-scrim`; this only owns
    * stacking, so the two cannot disagree. */
   .backdrop {
     /* One below the positioner's 50, and declared locally because the
      * backdrop is the positioner's SIBLING inside the portal — nothing on the
      * positioner can reach it. */
     /** Stacking of the optional `backdrop` layer */
-    --pui-select-backdrop-z-index: 49;
+    --forte-select-backdrop-z-index: 49;
 
-    z-index: var(--pui-select-backdrop-z-index);
+    z-index: var(--forte-select-backdrop-z-index);
   }
 
   /* Positioner -------------------------------------------------------------
@@ -308,13 +308,13 @@
    * for the popup is free. */
   .positioner {
     /** Stacking of the positioner */
-    --pui-select-z-index: 50;
+    --forte-select-z-index: 50;
     /** How tall the popup must be able to get before `alignItemWithTrigger`
      * falls back to side placement — smaller falls back less often */
-    --pui-select-positioner-min-height: calc(var(--pui-control-h-md) * 2.5);
+    --forte-select-positioner-min-height: calc(var(--forte-control-h-md) * 2.5);
 
-    z-index: var(--pui-select-z-index);
-    min-height: var(--pui-select-positioner-min-height);
+    z-index: var(--forte-select-z-index);
+    min-height: var(--forte-select-positioner-min-height);
     pointer-events: none;
     -webkit-user-select: none;
     user-select: none;
@@ -324,62 +324,62 @@
   .popup {
     /* Surface knobs. */
     /** Popup surface colour */
-    --pui-select-popup-bg: var(--pui-color-overlay);
+    --forte-select-popup-bg: var(--forte-color-overlay);
     /** Popup text colour */
-    --pui-select-popup-fg: var(--pui-color-foreground);
+    --forte-select-popup-fg: var(--forte-color-foreground);
     /** Popup corner radius */
-    --pui-select-popup-radius: var(--pui-radius-surface);
+    --forte-select-popup-radius: var(--forte-radius-surface);
     /** Popup shadow */
-    --pui-select-popup-shadow: var(--pui-shadow-4);
+    --forte-select-popup-shadow: var(--forte-shadow-4);
     /* A hairline, not redundancy next to the shadow: the popup floats over
      * undimmed content, and in dark mode the shadow is nearly the only thing
      * separating overlay from background — the border is what survives a
-     * bright page behind it. `.pui-hc-surface` already reserves the 1px, so
+     * bright page behind it. `.forte-hc-surface` already reserves the 1px, so
      * painting it costs no layout. */
     /** Width of the hairline that separates the popup from the page */
-    --pui-select-popup-border-width: 1px;
+    --forte-select-popup-border-width: 1px;
     /** Colour of that hairline */
-    --pui-select-popup-border-color: var(--pui-color-border);
+    --forte-select-popup-border-color: var(--forte-color-border);
     /* Extra width claimed in alignItemWithTrigger mode, so the item text can
      * sit over the trigger's value text while the check indicator and the
      * end padding still have room outside the trigger's box. */
     /** Extra width the popup claims past the trigger in `alignItemWithTrigger`
      * mode */
-    --pui-select-popup-overhang: var(--pui-space-5);
+    --forte-select-popup-overhang: var(--forte-space-5);
 
     /* Motion knobs. The gesture is a vertical UNFOLD, not a zoom: only the
      * block axis is scaled, and `transform-origin` pins the edge the popup
      * grows out of, so it reads the way a collapsible opens. Both factors are
-     * derived from `--pui-scale-enter` (0.95) rather than written as literals,
+     * derived from `--forte-scale-enter` (0.95) rather than written as literals,
      * so they still collapse to exactly 1 under reduced motion — where that
      * token becomes 1 and the delta 0.
      *
      * The aligned factor is the larger of the two: that popup is anchored in
      * its middle, so each end only travels half the difference, and it needs
      * more of it to read as the same gesture. */
-    --pui-select-popup-unfold: calc(1 - (1 - var(--pui-scale-enter)) * 3);
-    --pui-select-popup-unfold-aligned: calc(
-      1 - (1 - var(--pui-scale-enter)) * 5
+    --forte-select-popup-unfold: calc(1 - (1 - var(--forte-scale-enter)) * 3);
+    --forte-select-popup-unfold-aligned: calc(
+      1 - (1 - var(--forte-scale-enter)) * 5
     );
     /* The fold's easing and the List's counter-fold factor. Both are read by
      * BOTH halves of the pair — this rule's `transition` and the List's
      * animation — so that the only place either can be changed is here, and
      * the two cannot drift apart. */
-    --pui-select-popup-ease: var(--pui-ease-spring-snappy);
-    --pui-select-counter-fold: calc(1 / var(--pui-select-popup-unfold));
+    --forte-select-popup-ease: var(--forte-ease-spring-snappy);
+    --forte-select-counter-fold: calc(1 / var(--forte-select-popup-unfold));
     /* Only the inline sides use this; see the [data-side] rules below. */
-    --pui-select-popup-travel: var(--pui-travel-sm);
-    --pui-select-popup-enter-x: 0px;
+    --forte-select-popup-travel: var(--forte-travel-sm);
+    --forte-select-popup-enter-x: 0px;
 
     /* Layout knobs shared by List, Item and GroupLabel. They live here
      * because the group label has to indent past the check indicator to line
      * its text up with the item text, and it is not an Item descendant. */
     /** Inline padding shared by items and group labels */
-    --pui-select-item-px: var(--pui-space-3);
+    --forte-select-item-px: var(--forte-space-3);
     /** Gap between the indicator column and the item text */
-    --pui-select-item-gap: var(--pui-control-gap);
+    --forte-select-item-gap: var(--forte-control-gap);
     /** Width of the check-mark column */
-    --pui-select-item-indicator-size: var(--pui-space-4);
+    --forte-select-item-indicator-size: var(--forte-space-4);
 
     box-sizing: border-box;
     /* The scroll arrows are absolutely positioned by Base UI (an inline
@@ -402,26 +402,26 @@
     /* Required: the popup may never grow past the space Base UI measured
      * between the anchor and the viewport edge. */
     max-height: var(--available-height);
-    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+    /* Beats the transparent border `.forte-hc-surface` sets, on layer order
      * alone — patterns is ordered before components. Forced colors then wins
      * it back from the a11y layer, which is ordered after both. */
-    border: var(--pui-select-popup-border-width) solid
-      var(--pui-select-popup-border-color);
-    border-radius: var(--pui-select-popup-radius);
-    background-color: var(--pui-select-popup-bg);
-    /* With a transparent 1px border from `.pui-hc-surface`, padding-box
+    border: var(--forte-select-popup-border-width) solid
+      var(--forte-select-popup-border-color);
+    border-radius: var(--forte-select-popup-radius);
+    background-color: var(--forte-select-popup-bg);
+    /* With a transparent 1px border from `.forte-hc-surface`, padding-box
      * stops the background bleeding under it. */
     background-clip: padding-box;
-    color: var(--pui-select-popup-fg);
-    box-shadow: var(--pui-select-popup-shadow);
+    color: var(--forte-select-popup-fg);
+    box-shadow: var(--forte-select-popup-shadow);
     /* Grow out of the anchor rather than out of the popup's own centre.
      * `--transform-origin` is published by the Positioner and points back at
      * the trigger — and in aligned mode Base UI re-points it at the selected
      * item's text, which is what makes the unfurl below work. */
     transform-origin: var(--transform-origin);
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      transform var(--pui-duration-normal) var(--pui-select-popup-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      transform var(--forte-duration-normal) var(--forte-select-popup-ease);
   }
 
   /* A popup placed above or below the trigger needs no help from a slide:
@@ -441,7 +441,7 @@
     [data-side="inline-start"]:dir(ltr),
     [data-side="inline-end"]:dir(rtl)
   ) {
-    --pui-select-popup-enter-x: var(--pui-select-popup-travel);
+    --forte-select-popup-enter-x: var(--forte-select-popup-travel);
   }
 
   .popup:is(
@@ -449,7 +449,7 @@
     [data-side="inline-end"]:dir(ltr),
     [data-side="inline-start"]:dir(rtl)
   ) {
-    --pui-select-popup-enter-x: calc(-1 * var(--pui-select-popup-travel));
+    --forte-select-popup-enter-x: calc(-1 * var(--forte-select-popup-travel));
   }
 
   /* Closing folds back the way it opened rather than puffing outward, so the
@@ -457,15 +457,15 @@
   .popup[data-starting-style],
   .popup[data-ending-style] {
     opacity: 0;
-    transform: translateX(var(--pui-select-popup-enter-x))
-      scaleY(var(--pui-select-popup-unfold));
+    transform: translateX(var(--forte-select-popup-enter-x))
+      scaleY(var(--forte-select-popup-unfold));
   }
 
   /* Leaving is quicker than arriving, and skips the spring: a settle on the
    * way out just delays getting out of the way. */
   .popup[data-ending-style] {
-    transition-duration: var(--pui-duration-fast);
-    transition-timing-function: var(--pui-ease-exit);
+    transition-duration: var(--forte-duration-fast);
+    transition-timing-function: var(--forte-ease-exit);
   }
 
   /* alignItemWithTrigger is active: the popup is already sitting on top of the
@@ -476,18 +476,18 @@
    *
    * Base UI temporarily clears `transform`/`scale`/`translate` on this element
    * while it measures the aligned geometry and restores them afterwards, so
-   * animating the property here is safe. `--pui-ease-spring-precise` is a
+   * animating the property here is safe. `--forte-ease-spring-precise` is a
    * critically-damped spring: organic, but with no overshoot — a side-placed
    * popup may settle past its final height because its far edge is unattached,
    * but this one is pinned to a row sitting on the trigger and must not
    * wobble against it. */
   .popup[data-side="none"] {
-    --pui-select-popup-ease: var(--pui-ease-spring-precise);
-    --pui-select-counter-fold: calc(
-      1 / var(--pui-select-popup-unfold-aligned)
+    --forte-select-popup-ease: var(--forte-ease-spring-precise);
+    --forte-select-counter-fold: calc(
+      1 / var(--forte-select-popup-unfold-aligned)
     );
 
-    min-width: calc(var(--anchor-width) + var(--pui-select-popup-overhang));
+    min-width: calc(var(--anchor-width) + var(--forte-select-popup-overhang));
     /* Not part of the motion — a standing optical correction. Base UI lands
      * the selected row a hair high in this mode (it positions the popup partly
      * through a scroll offset, and that can only be a whole pixel), measurably
@@ -502,7 +502,7 @@
   .popup[data-side="none"][data-ending-style] {
     opacity: 0;
     transform: translateY(1px)
-      scaleY(var(--pui-select-popup-unfold-aligned));
+      scaleY(var(--forte-select-popup-unfold-aligned));
   }
 
   /* List -------------------------------------------------------------------
@@ -516,16 +516,16 @@
    * to rest underneath a scroll arrow (SC 2.4.11). */
   .list {
     /** Block padding inside the scrolling list */
-    --pui-select-list-padding-y: var(--pui-space-1);
+    --forte-select-list-padding-y: var(--forte-space-1);
 
     box-sizing: border-box;
     position: relative;
     max-height: var(--available-height);
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding-block: var(--pui-select-list-padding-y);
+    padding-block: var(--forte-select-list-padding-y);
     border-radius: inherit;
-    scroll-padding-block: var(--pui-space-5);
+    scroll-padding-block: var(--forte-space-5);
     /* Same origin the Popup folds around. `--transform-origin` is a custom
      * property set on the Popup (aligned mode) or the Positioner (every other
      * mode), so it inherits down to here, and the two boxes are close enough
@@ -534,7 +534,7 @@
      * The transition here only ever runs the exit; the enter is the animation
      * below, for the reason spelled out there. */
     transform-origin: var(--transform-origin);
-    transition: transform var(--pui-duration-fast) var(--pui-ease-exit);
+    transition: transform var(--forte-duration-fast) var(--forte-ease-exit);
   }
 
   /* Counter-fold.
@@ -561,7 +561,7 @@
    * the scroller — it changes nothing. */
   @keyframes counterFold {
     from {
-      transform: scaleY(var(--pui-select-counter-fold));
+      transform: scaleY(var(--forte-select-counter-fold));
     }
   }
 
@@ -585,12 +585,12 @@
    * skips that measurement entirely while the popup is ending — so it stays a
    * transition, which reverses cleanly if the popup is reopened mid-close. */
   .popup:not([data-starting-style], [data-ending-style]) .list {
-    animation: counterFold var(--pui-duration-normal)
-      var(--pui-select-popup-ease);
+    animation: counterFold var(--forte-duration-normal)
+      var(--forte-select-popup-ease);
   }
 
   .popup[data-ending-style] .list {
-    transform: scaleY(var(--pui-select-counter-fold));
+    transform: scaleY(var(--forte-select-counter-fold));
   }
 
   /* Scroll arrows ----------------------------------------------------------
@@ -601,7 +601,7 @@
    * They are aria-hidden by Base UI for exactly that reason. */
   .scrollArrow {
     /** Height of a scroll arrow */
-    --pui-select-scroll-arrow-size: var(--pui-space-5);
+    --forte-select-scroll-arrow-size: var(--forte-space-5);
 
     box-sizing: border-box;
     /* `position: absolute` arrives as an inline style from Base UI. */
@@ -610,14 +610,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: var(--pui-select-scroll-arrow-size);
-    background-color: var(--pui-select-popup-bg);
-    color: var(--pui-color-foreground-muted);
+    height: var(--forte-select-scroll-arrow-size);
+    background-color: var(--forte-select-popup-bg);
+    color: var(--forte-color-foreground-muted);
     cursor: default;
     translate: 0 0;
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-duration-fast) var(--pui-ease-standard);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Each arrow slides in from the edge it is pinned to, so it reads as part of
@@ -631,14 +631,14 @@
     [data-starting-style],
     [data-ending-style]
   ) {
-    translate: 0 calc(-1 * var(--pui-travel-xs));
+    translate: 0 calc(-1 * var(--forte-travel-xs));
   }
 
   .scrollArrow[data-direction="down"]:is(
     [data-starting-style],
     [data-ending-style]
   ) {
-    translate: 0 var(--pui-travel-xs);
+    translate: 0 var(--forte-travel-xs);
   }
 
   .scrollArrow[data-direction="up"] {
@@ -675,51 +675,51 @@
    * attribute, which is why there is no separate `:hover` rule. */
   .item {
     /** Item text colour */
-    --pui-select-item-fg: var(--pui-color-foreground);
+    --forte-select-item-fg: var(--forte-color-foreground);
     /** Background of the highlighted item */
-    --pui-select-item-bg-highlighted: var(--pui-color-primary-soft);
+    --forte-select-item-bg-highlighted: var(--forte-color-primary-soft);
     /** Text colour of the highlighted item */
-    --pui-select-item-fg-highlighted: var(--pui-color-primary-text);
+    --forte-select-item-fg-highlighted: var(--forte-color-primary-text);
     /** Text colour of the selected item */
-    --pui-select-item-fg-selected: var(--pui-color-primary-text);
+    --forte-select-item-fg-selected: var(--forte-color-primary-text);
     /** Item font size */
-    --pui-select-item-font-size: var(--pui-font-size-2);
+    --forte-select-item-font-size: var(--forte-font-size-2);
 
     box-sizing: border-box;
     position: relative;
     display: grid;
-    grid-template-columns: var(--pui-select-item-indicator-size) 1fr;
+    grid-template-columns: var(--forte-select-item-indicator-size) 1fr;
     align-items: center;
-    gap: var(--pui-select-item-gap);
-    min-height: var(--pui-target-min);
-    padding-block: var(--pui-list-item-py);
-    padding-inline: var(--pui-select-item-px);
-    color: var(--pui-select-item-fg);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-select-item-font-size);
-    line-height: var(--pui-line-height-normal);
+    gap: var(--forte-select-item-gap);
+    min-height: var(--forte-target-min);
+    padding-block: var(--forte-list-item-py);
+    padding-inline: var(--forte-select-item-px);
+    color: var(--forte-select-item-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-select-item-font-size);
+    line-height: var(--forte-line-height-normal);
     -webkit-user-select: none;
     user-select: none;
     /* Choosing an option is an action; see the trigger for why this diverges
      * from a native listbox. */
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .item[data-selected] {
-    color: var(--pui-select-item-fg-selected);
-    font-weight: var(--pui-font-weight-medium);
+    color: var(--forte-select-item-fg-selected);
+    font-weight: var(--forte-font-weight-medium);
   }
 
   .item[data-highlighted] {
-    background-color: var(--pui-select-item-bg-highlighted);
-    color: var(--pui-select-item-fg-highlighted);
+    background-color: var(--forte-select-item-bg-highlighted);
+    color: var(--forte-select-item-fg-highlighted);
   }
 
   .item[data-disabled] {
-    color: var(--pui-color-foreground-subtle);
+    color: var(--forte-color-foreground-subtle);
     background-color: transparent;
     cursor: not-allowed;
   }
@@ -733,14 +733,14 @@
     /* The check is the one moment of feedback the user gets for the choice
      * they just made, so it springs rather than fades. */
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   .itemIndicator[data-starting-style],
   .itemIndicator[data-ending-style] {
     opacity: 0;
-    scale: var(--pui-scale-enter);
+    scale: var(--forte-scale-enter);
   }
 
   .itemText {
@@ -759,20 +759,20 @@
 
   .groupLabel {
     box-sizing: border-box;
-    padding-block: var(--pui-list-item-py);
+    padding-block: var(--forte-list-item-py);
     padding-inline-start: calc(
-      var(--pui-select-item-px) + var(--pui-select-item-indicator-size) +
-        var(--pui-select-item-gap)
+      var(--forte-select-item-px) + var(--forte-select-item-indicator-size) +
+        var(--forte-select-item-gap)
     );
-    padding-inline-end: var(--pui-select-item-px);
+    padding-inline-end: var(--forte-select-item-px);
     /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
      * non-text only. The semibold weight and font-size-1 already carry the
      * hierarchy, so nothing is lost by meeting contrast here. */
-    color: var(--pui-color-foreground-muted);
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-1);
-    font-weight: var(--pui-font-weight-semibold);
-    line-height: var(--pui-line-height-tight);
+    color: var(--forte-color-foreground-muted);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-1);
+    font-weight: var(--forte-font-weight-semibold);
+    line-height: var(--forte-line-height-tight);
     -webkit-user-select: none;
     user-select: none;
   }
@@ -792,15 +792,15 @@
    * reasoning. */
   .separator {
     box-sizing: border-box;
-    margin-block: var(--pui-space-1);
-    margin-inline: var(--pui-select-item-px);
+    margin-block: var(--forte-space-1);
+    margin-inline: var(--forte-select-item-px);
     block-size: 0;
-    border-block-start: 1px solid var(--pui-color-border-muted);
+    border-block-start: 1px solid var(--forte-color-border-muted);
   }
 
   .separator[data-orientation="vertical"] {
-    margin-block: var(--pui-space-1);
-    margin-inline: var(--pui-space-1);
+    margin-block: var(--forte-space-1);
+    margin-inline: var(--forte-space-1);
     block-size: auto;
     inline-size: 0;
     align-self: stretch;
@@ -808,13 +808,13 @@
      * nothing else here overrides it. Without this reset a vertical separator
      * carries BOTH borders and renders a stray 1px tick across its top. */
     border-block-start: 0;
-    border-inline-start: 1px solid var(--pui-color-border-muted);
+    border-inline-start: 1px solid var(--forte-color-border-muted);
   }
 }
 
 /* Forced colors (Windows High Contrast) -------------------------------------
- * This block is in `pretty-ui.a11y`, which is ordered after
- * `pretty-ui.components`, so it beats the rules above by layer alone — no
+ * This block is in `forte.a11y`, which is ordered after
+ * `forte.components`, so it beats the rules above by layer alone — no
  * `!important`, no specificity inflation.
  *
  * Almost everything is already handled globally by patterns.css: the generic
@@ -830,7 +830,7 @@
  * and is then forced to CanvasText, i.e. full contrast, i.e. it reads as
  * enabled. The trigger's icon and its placeholder are exactly that case.
  * ------------------------------------------------------------------------ */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .trigger[data-disabled] .icon,
     .trigger[data-disabled] .value[data-placeholder] {

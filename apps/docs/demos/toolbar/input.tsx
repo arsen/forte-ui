@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { Toolbar } from "@dofortech/pretty-ui";
+import { Toolbar } from "@dofortech/forte-ui";
 
 const ICON = "size-4 shrink-0";
 

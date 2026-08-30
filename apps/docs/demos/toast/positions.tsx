@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Select, Toast, useToast, type ToastPosition } from "@dofortech/pretty-ui";
+import { Button, Select, Toast, useToast, type ToastPosition } from "@dofortech/forte-ui";
 
 const POSITIONS: Record<ToastPosition, string> = {
   "top-start": "Top start",

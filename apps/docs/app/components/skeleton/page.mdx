@@ -30,7 +30,7 @@ motion.
 ## Import
 
 ```tsx
-import { Skeleton } from "@dofortech/pretty-ui";
+import { Skeleton } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -105,7 +105,7 @@ already does better than a prop could.
 
 `text` is `inline-block`, so a short one can sit inside a real sentence —
 "posted by ▓▓▓▓ an hour ago" — and share its baseline row. `circle` stays a
-circle under `data-pui-radius="none"`, because round is what that shape *is*
+circle under `data-forte-radius="none"`, because round is what that shape *is*
 rather than how it is styled; it is the same test [`Radio`](/components/radio)
 and the [`Spinner`](/components/spinner) ring apply.
 
@@ -124,7 +124,7 @@ box — the glyphs occupy roughly the cap height and the rest is leading, split
 half above and half below. A stack of full-line-box bars is therefore both too
 heavy to read as prose and the wrong total height.
 
-So a line paints only `--pui-skeleton-ink`, the leading becomes the flex `gap`,
+So a line paints only `--forte-skeleton-ink`, the leading becomes the flex `gap`,
 and the container carries half a leading on each side. The sum is exact:
 
 ```
@@ -178,7 +178,7 @@ swap and let `Skeleton.Group` carry the flag.
 `pulse` is the default: a shallow opacity breathe, quiet enough to put fifty of
 on one screen. `shimmer` sends a band of light across the fill — faster-reading,
 and better when a whole page is loading at once. It follows the reading
-direction, multiplying its travel by `--pui-direction`, so it sweeps
+direction, multiplying its travel by `--forte-direction`, so it sweeps
 right-to-left in RTL. `none` is a static fill, for a screenshot test or a page
 where something else already owns the movement.
 
@@ -198,20 +198,20 @@ moving entirely reads as content that **failed** — a dead grey box is a worse
 message than the one it replaced. So both reduce instead:
 
 - **`pulse`** gets shallower. The dip is
-  `calc(0.55 + 0.25 * var(--pui-motion-off))`, so a 45% swing becomes a 20%
+  `calc(0.55 + 0.25 * var(--forte-motion-off))`, so a 45% swing becomes a 20%
   one. There was never any geometry to collapse: it is opacity from end to end.
 - **`shimmer`** degrades into `pulse`. The band's travel is gated on
-  `--pui-motion-ok` and the band itself is faded out by `--pui-motion-off` — a
+  `--forte-motion-ok` and the band itself is faded out by `--forte-motion-off` — a
   highlight frozen mid-sweep on every placeholder reads as a rendering defect,
   not as restraint. A second animation on the root, always running and a no-op
   at full motion, takes over as the visible cue — and it bottoms out at the
-  same `--pui-skeleton-dim` the pulse uses, so the two animations reach one
+  same `--forte-skeleton-dim` the pulse uses, so the two animations reach one
   depth under reduced motion instead of shimmer swinging deeper than anything
   the page shows at full motion.
 
 <Callout kind="a11y">
-  Neither loop duration is ever shortened. `--pui-duration-loop-sweep` is
-  1400ms in every motion state, including `data-pui-motion="off"`. The rest of
+  Neither loop duration is ever shortened. `--forte-duration-loop-sweep` is
+  1400ms in every motion state, including `data-forte-motion="off"`. The rest of
   the system collapses durations toward `1ms`, but a *repeating* animation
   driven to 1ms flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which
   is the opposite of an accessibility win.
@@ -250,7 +250,7 @@ wrapper covers the rest.
 Under forced colours a placeholder is painted `Canvas` with a `GrayText`
 outline. Left alone, the fill is remapped to a system colour that is not ours
 to choose — either invisible against the page or a solid black brick — and
-neither is a placeholder. `.pui-hc-decorative` is the wrong tool even though a
+neither is a placeholder. `.forte-hc-decorative` is the wrong tool even though a
 skeleton *is* decorative: it is `display: none`, and a placeholder that stops
 occupying space has abandoned its only job. The shimmer band is dropped there
 too, because forced colours does not remap `background-image` and it would keep
@@ -274,18 +274,18 @@ re-point the global tokens in the Default column to move every skeleton at once.
 
 <ThemingTable component="Skeleton" part="group" />
 
-`--pui-skeleton-highlight` is the one token here that is not a plain semantic
+`--forte-skeleton-highlight` is the one token here that is not a plain semantic
 reference, and the reason is worth knowing: "brighter" is not a direction on
-this scale. `--pui-gray-4` is a light grey in light mode and a dark one in
+this scale. `--forte-gray-4` is a light grey in light mode and a dark one in
 dark, so a single ramp step would shimmer *darker* in one of the two — which
 looks broken rather than subtle. It is a `light-dark()` pair instead, each
 branch a step of lightness away from the fill in its own mode, resolved against
 the `color-scheme` that `tokens.css` sets on `:root` and on every `data-theme`
 scope.
 
-`Skeleton.Text` re-declares `--pui-skeleton-ink` and `--pui-skeleton-line-height`
+`Skeleton.Text` re-declares `--forte-skeleton-ink` and `--forte-skeleton-line-height`
 on the container, because that is where the gap and the padding are measured
-from, and passes the ink down to its lines with `--pui-skeleton-ink: inherit`.
+from, and passes the ink down to its lines with `--forte-skeleton-ink: inherit`.
 Without that the lines would use their own declared default — an element's own
 declaration beats an inherited one — and retuning the ink on a `Skeleton.Text`
 would move the gaps while leaving the bars where they were.

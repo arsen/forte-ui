@@ -22,23 +22,23 @@ const PALETTE = [
  * while the border is a plain colour change. One shared duration would truncate
  * the spring mid-bounce.
  *
- * The hover scale is gated on `--pui-motion-ok` by hand, which is the rule for
+ * The hover scale is gated on `--forte-motion-ok` by hand, which is the rule for
  * literal geometry — the token is 1 normally and 0 under reduced motion, so
  * this collapses to `scale(1)` with no media query. */
 const SWATCH = [
-  "h-[1.75rem] w-(--pui-target-comfortable) cursor-pointer p-0",
+  "h-[1.75rem] w-(--forte-target-comfortable) cursor-pointer p-0",
   "rounded-pill border border-border bg-[linear-gradient(110deg,var(--a)_55%,var(--b)_55%)]",
   "[forced-color-adjust:none]",
-  "[transition:scale_var(--pui-duration-spring-snappy)_var(--pui-ease-spring-snappy),border-color_var(--pui-duration-fast)_var(--pui-ease-standard)]",
-  "hover:scale-[calc(1_+_0.08_*_var(--pui-motion-ok))]",
+  "[transition:scale_var(--forte-duration-spring-snappy)_var(--forte-ease-spring-snappy),border-color_var(--forte-duration-fast)_var(--forte-ease-standard)]",
+  "hover:scale-[calc(1_+_0.08_*_var(--forte-motion-ok))]",
   "aria-checked:border-2 aria-checked:border-foreground",
-  "pui-focus-ring",
+  "forte-focus-ring",
 ].join(" ");
 
 /**
  * Re-themes the entire page from a row of swatches.
  *
- * The transition is the point. `--pui-accent-seed` is registered with
+ * The transition is the point. `--forte-accent-seed` is registered with
  * `@property` as a `<color>`, which makes it animatable — so the browser
  * interpolates the seed and every one of the twelve derived ramp steps
  * recomputes from it each frame. The whole site cross-fades between palettes
@@ -50,8 +50,8 @@ export function HeroThemer() {
   function apply(index: number) {
     const p = PALETTE[index]!;
     const root = document.documentElement;
-    root.style.setProperty("--pui-accent-seed", p.seed);
-    root.style.setProperty("--pui-secondary-seed", p.secondary);
+    root.style.setProperty("--forte-accent-seed", p.seed);
+    root.style.setProperty("--forte-secondary-seed", p.secondary);
     root.classList.add("themeTransition");
     setActive(index);
   }
@@ -70,7 +70,7 @@ export function HeroThemer() {
             style={{ "--a": p.seed, "--b": p.secondary } as React.CSSProperties}
             onClick={() => apply(i)}
           >
-            <span className="pui-visually-hidden">{p.name}</span>
+            <span className="forte-visually-hidden">{p.name}</span>
           </button>
         ))}
       </div>

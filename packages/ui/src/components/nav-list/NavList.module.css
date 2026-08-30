@@ -19,7 +19,7 @@
  * No prefers-reduced-motion block, here or in any component file: the travel
  * token collapses to 0px and the durations shorten on their own.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on NavList.Root itself, so an
      * ancestor's value is only ever inherited and never wins. Everything a
@@ -27,132 +27,132 @@
      * below re-point a handful of them instead of restating rules. */
 
     /** Space between sections */
-    --pui-nav-list-gap: var(--pui-space-5);
+    --forte-nav-list-gap: var(--forte-space-5);
 
-    /* Rows. `--pui-list-item-py` rather than a space token so the rows follow
-     * `data-pui-density` the way every other list in the library does. */
+    /* Rows. `--forte-list-item-py` rather than a space token so the rows follow
+     * `data-forte-density` the way every other list in the library does. */
     /** Inline padding of a row */
-    --pui-nav-list-item-px: var(--pui-space-2);
-    /** Block padding of a row. Follows `data-pui-density` */
-    --pui-nav-list-item-py: var(--pui-list-item-py);
+    --forte-nav-list-item-px: var(--forte-space-2);
+    /** Block padding of a row. Follows `data-forte-density` */
+    --forte-nav-list-item-py: var(--forte-list-item-py);
     /** Space between an icon and the row's text */
-    --pui-nav-list-item-gap: var(--pui-control-gap);
-    /* `-control`, not a numbered step: the `data-pui-radius` presets rewrite
+    --forte-nav-list-item-gap: var(--forte-control-gap);
+    /* `-control`, not a numbered step: the `data-forte-radius` presets rewrite
      * only the semantic tokens, so a numbered default here would sit out
      * `pill` and `none` while every other row in the library follows them. */
     /** Corner radius of a row's fill */
-    --pui-nav-list-item-radius: var(--pui-radius-control);
-    /* Not `--pui-control-gap`: that is the icon-to-text measure inside a
+    --forte-nav-list-item-radius: var(--forte-radius-control);
+    /* Not `--forte-control-gap`: that is the icon-to-text measure inside a
      * control, 8px at default density — twice what a run of forty sidebar
      * rows can carry. Density still reaches the rows through their own
      * block padding. */
     /** Space between rows */
-    --pui-nav-list-row-gap: var(--pui-space-1);
+    --forte-nav-list-row-gap: var(--forte-space-1);
 
     /* Derived, not a knob. Text sitting at the knob's 8px hard against a
      * fully-rounded end reads as clipped by the curve, so the padding a row
      * actually gets tracks the radius: min() caps the pill preset's 9999px
      * at space-4, max() keeps the knob the floor everywhere else — so the
      * default and `none` presets are byte-identical to before, and a
-     * consumer override of `--pui-nav-list-item-px` still works (it IS the
+     * consumer override of `--forte-nav-list-item-px` still works (it IS the
      * floor). The section label consumes the same value: its alignment
      * promise is to the row TEXT, not the row box. */
-    --pui-nav-list-item-px-resolved: max(
-      var(--pui-nav-list-item-px),
-      min(var(--pui-nav-list-item-radius), var(--pui-space-4))
+    --forte-nav-list-item-px-resolved: max(
+      var(--forte-nav-list-item-px),
+      min(var(--forte-nav-list-item-radius), var(--forte-space-4))
     );
     /** Row text size */
-    --pui-nav-list-item-font-size: var(--pui-font-size-2);
+    --forte-nav-list-item-font-size: var(--forte-font-size-2);
     /** Row text weight at rest */
-    --pui-nav-list-item-font-weight: var(--pui-font-weight-normal);
+    --forte-nav-list-item-font-weight: var(--forte-font-weight-normal);
     /** Row text weight on the active row */
-    --pui-nav-list-item-font-weight-active: var(--pui-font-weight-medium);
+    --forte-nav-list-item-font-weight-active: var(--forte-font-weight-medium);
     /** Row text colour at rest */
-    --pui-nav-list-item-color: var(--pui-color-foreground-muted);
+    --forte-nav-list-item-color: var(--forte-color-foreground-muted);
     /** Row text colour on hover */
-    --pui-nav-list-item-color-hover: var(--pui-color-foreground);
+    --forte-nav-list-item-color-hover: var(--forte-color-foreground);
     /** Row text colour on the active row */
-    --pui-nav-list-item-color-active: var(--pui-color-primary-text);
+    --forte-nav-list-item-color-active: var(--forte-color-primary-text);
     /** Row fill at rest */
-    --pui-nav-list-item-bg: transparent;
+    --forte-nav-list-item-bg: transparent;
     /** Row fill on hover */
-    --pui-nav-list-item-bg-hover: var(--pui-color-panel-hover);
+    --forte-nav-list-item-bg-hover: var(--forte-color-panel-hover);
     /** Row fill on the active row */
-    --pui-nav-list-item-bg-active: var(--pui-color-primary-soft);
+    --forte-nav-list-item-bg-active: var(--forte-color-primary-soft);
 
     /* Section labels. */
     /** Label text size */
-    --pui-nav-list-label-font-size: var(--pui-font-size-1);
+    --forte-nav-list-label-font-size: var(--forte-font-size-1);
     /** Label colour */
-    --pui-nav-list-label-color: var(--pui-color-foreground-subtle);
+    --forte-nav-list-label-color: var(--forte-color-foreground-subtle);
     /** Label letter-spacing. Tracking has to come back at this size or a
      * short uppercase phrase closes up and reads as one word */
-    --pui-nav-list-label-tracking: 0.06em;
+    --forte-nav-list-label-tracking: 0.06em;
     /** Space under the label */
-    --pui-nav-list-label-mb: var(--pui-space-2);
+    --forte-nav-list-label-mb: var(--forte-space-2);
 
     /* Nesting. The indent is split in two so the guide line lands between
      * the levels instead of flush against either one. */
     /** How far a nested list steps in before its guide line */
-    --pui-nav-list-indent: var(--pui-space-3);
+    --forte-nav-list-indent: var(--forte-space-3);
     /** Space between the guide line and the nested rows */
-    --pui-nav-list-indent-gap: var(--pui-space-2);
+    --forte-nav-list-indent-gap: var(--forte-space-2);
     /** Width of the guide line along a nested list. `0px` removes it */
-    --pui-nav-list-guide-width: 1px;
+    --forte-nav-list-guide-width: 1px;
     /** Colour of the guide line */
-    --pui-nav-list-guide-color: var(--pui-color-border-muted);
+    --forte-nav-list-guide-color: var(--forte-color-border-muted);
 
     /* The rail — only painted under data-marker="rail". */
     /** Width of the active-row rail */
-    --pui-nav-list-rail-width: 2px;
+    --forte-nav-list-rail-width: 2px;
     /** Colour of the active-row rail */
-    --pui-nav-list-rail-color: var(--pui-color-primary);
+    --forte-nav-list-rail-color: var(--forte-color-primary);
     /** How far the rail stops short of the row's top and bottom edges */
-    --pui-nav-list-rail-inset: 18%;
+    --forte-nav-list-rail-inset: 18%;
 
     /* The group chevron. `-subtle` is below the text floor and fine for a
      * non-text indicator (SC 1.4.11) — and it is never the only cue:
      * `aria-expanded` and the panel itself say the same thing. */
     /** Chevron colour while the group is closed */
-    --pui-nav-list-icon-color: var(--pui-color-foreground-subtle);
+    --forte-nav-list-icon-color: var(--forte-color-foreground-subtle);
     /** Chevron colour while the group is open */
-    --pui-nav-list-icon-color-open: var(--pui-color-foreground);
+    --forte-nav-list-icon-color-open: var(--forte-color-foreground);
     /** How far the chevron turns as the panel opens */
-    --pui-nav-list-icon-rotate: 180deg;
+    --forte-nav-list-icon-rotate: 180deg;
 
     /* Badge. Secondary on purpose: the active row's fill is accent-soft, and
      * a badge drawn from the same ramp would dissolve into it. */
     /** Badge fill */
-    --pui-nav-list-badge-bg: var(--pui-color-secondary-soft);
+    --forte-nav-list-badge-bg: var(--forte-color-secondary-soft);
     /** Badge text colour */
-    --pui-nav-list-badge-color: var(--pui-color-secondary-text);
+    --forte-nav-list-badge-color: var(--forte-color-secondary-text);
 
     /* One duration and one curve for the panel's height and its content's
      * settle, so the two cannot drift apart. Not a spring: overshooting
      * `height` flashes a band of empty background under the last row. */
     /** Length of a group's open/close */
-    --pui-nav-list-duration: var(--pui-duration-normal);
+    --forte-nav-list-duration: var(--forte-duration-normal);
     /** Curve of a group's open/close */
-    --pui-nav-list-ease: var(--pui-ease-standard);
+    --forte-nav-list-ease: var(--forte-ease-standard);
 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-nav-list-gap);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    gap: var(--forte-nav-list-gap);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Size presets re-point the knobs and nothing else. No `md` block: the
    * defaults above ARE `md`. */
   .root[data-size="sm"] {
-    --pui-nav-list-item-py: var(--pui-space-1);
-    --pui-nav-list-item-font-size: var(--pui-font-size-1);
+    --forte-nav-list-item-py: var(--forte-space-1);
+    --forte-nav-list-item-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="lg"] {
-    --pui-nav-list-item-py: var(--pui-space-3);
-    --pui-nav-list-item-font-size: var(--pui-font-size-3);
+    --forte-nav-list-item-py: var(--forte-space-3);
+    --forte-nav-list-item-font-size: var(--forte-font-size-3);
   }
 
   /* Section ---------------------------------------------------------------- */
@@ -163,13 +163,13 @@
 
   .sectionLabel {
     /* Aligned with the row TEXT, not the row box: same inline padding. */
-    margin: 0 0 var(--pui-nav-list-label-mb);
-    padding-inline: var(--pui-nav-list-item-px-resolved);
-    color: var(--pui-nav-list-label-color);
-    font-size: var(--pui-nav-list-label-font-size);
-    font-weight: var(--pui-font-weight-semibold);
-    letter-spacing: var(--pui-nav-list-label-tracking);
-    line-height: var(--pui-line-height-normal);
+    margin: 0 0 var(--forte-nav-list-label-mb);
+    padding-inline: var(--forte-nav-list-item-px-resolved);
+    color: var(--forte-nav-list-label-color);
+    font-size: var(--forte-nav-list-label-font-size);
+    font-weight: var(--forte-font-weight-semibold);
+    letter-spacing: var(--forte-nav-list-label-tracking);
+    line-height: var(--forte-line-height-normal);
     text-transform: uppercase;
     /* Chrome, not a control: an idle click should not start a text
      * selection that then looks like a failed interaction. */
@@ -183,7 +183,7 @@
   .list {
     display: flex;
     flex-direction: column;
-    gap: var(--pui-nav-list-row-gap);
+    gap: var(--forte-nav-list-row-gap);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -201,11 +201,11 @@
    * UI measures it into `--collapsible-panel-height` and it animates with
    * the height instead of snapping in at the end. */
   .list .list {
-    margin-block-start: var(--pui-nav-list-row-gap);
-    margin-inline-start: var(--pui-nav-list-indent);
-    padding-inline-start: var(--pui-nav-list-indent-gap);
-    border-inline-start: var(--pui-nav-list-guide-width) solid
-      var(--pui-nav-list-guide-color);
+    margin-block-start: var(--forte-nav-list-row-gap);
+    margin-inline-start: var(--forte-nav-list-indent);
+    padding-inline-start: var(--forte-nav-list-indent-gap);
+    border-inline-start: var(--forte-nav-list-guide-width) solid
+      var(--forte-nav-list-guide-color);
   }
 
   .item {
@@ -224,22 +224,22 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--pui-nav-list-item-gap);
+    gap: var(--forte-nav-list-item-gap);
     /* SC 2.5.8. The block floor is the one that bites at data-size="sm". */
-    min-height: var(--pui-target-min);
-    padding: var(--pui-nav-list-item-py) var(--pui-nav-list-item-px-resolved);
-    border-radius: var(--pui-nav-list-item-radius);
-    background-color: var(--pui-nav-list-item-bg);
-    color: var(--pui-nav-list-item-color);
+    min-height: var(--forte-target-min);
+    padding: var(--forte-nav-list-item-py) var(--forte-nav-list-item-px-resolved);
+    border-radius: var(--forte-nav-list-item-radius);
+    background-color: var(--forte-nav-list-item-bg);
+    color: var(--forte-nav-list-item-color);
     font-family: inherit;
-    font-size: var(--pui-nav-list-item-font-size);
-    font-weight: var(--pui-nav-list-item-font-weight);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-nav-list-item-font-size);
+    font-weight: var(--forte-nav-list-item-font-weight);
+    line-height: var(--forte-line-height-normal);
     text-decoration: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* An svg placed straight into a row is an icon: it must not squash when
@@ -257,20 +257,20 @@
   @media (hover: hover) {
     .link:hover:not([data-active], [data-disabled]),
     .groupTrigger:hover:not([data-disabled]) {
-      background-color: var(--pui-nav-list-item-bg-hover);
-      color: var(--pui-nav-list-item-color-hover);
+      background-color: var(--forte-nav-list-item-bg-hover);
+      color: var(--forte-nav-list-item-color-hover);
     }
   }
 
   .link[data-active],
   .groupTrigger[data-active] {
-    background-color: var(--pui-nav-list-item-bg-active);
-    color: var(--pui-nav-list-item-color-active);
-    font-weight: var(--pui-nav-list-item-font-weight-active);
+    background-color: var(--forte-nav-list-item-bg-active);
+    color: var(--forte-nav-list-item-color-active);
+    font-weight: var(--forte-nav-list-item-font-weight-active);
   }
 
   /* `opacity` is the non-forced-colors treatment only — the generic
-   * `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y, ordered
+   * `[data-disabled]` rule in patterns.css (layer forte.a11y, ordered
    * after this one) restores `opacity: 1` and paints GrayText, so the 55%
    * cannot survive into HCM and read as enabled. */
   .link[data-disabled],
@@ -288,10 +288,10 @@
     content: "";
     position: absolute;
     inset-inline-start: 0;
-    inset-block: var(--pui-nav-list-rail-inset);
-    width: var(--pui-nav-list-rail-width);
-    border-radius: var(--pui-radius-pill);
-    background-color: var(--pui-nav-list-rail-color);
+    inset-block: var(--forte-nav-list-rail-inset);
+    width: var(--forte-nav-list-rail-width);
+    border-radius: var(--forte-radius-pill);
+    background-color: var(--forte-nav-list-rail-color);
   }
 
   /* Group ------------------------------------------------------------------ */
@@ -316,13 +316,13 @@
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-    gap: var(--pui-nav-list-item-gap);
+    gap: var(--forte-nav-list-item-gap);
     min-width: 0;
   }
 
   /* `rotate` as its own property, not through `transform`, so nothing the
    * consumer puts on this box shares a slot with it. The angle is NOT gated
-   * on --pui-motion-ok: pointing the other way is the state, and only the
+   * on --forte-motion-ok: pointing the other way is the state, and only the
    * trip between the two states is motion — the duration collapses on its
    * own. Spring easing paired with its own duration token; a shorter one
    * truncates the curve mid-bounce. */
@@ -331,16 +331,16 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    color: var(--pui-nav-list-icon-color);
+    color: var(--forte-nav-list-icon-color);
     rotate: 0deg;
     transition:
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      rotate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      rotate var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   .groupTrigger[data-panel-open] .groupIcon {
-    color: var(--pui-nav-list-icon-color-open);
-    rotate: var(--pui-nav-list-icon-rotate);
+    color: var(--forte-nav-list-icon-color-open);
+    rotate: var(--forte-nav-list-icon-rotate);
   }
 
   /* Panel ------------------------------------------------------------------
@@ -354,7 +354,7 @@
     box-sizing: border-box;
     height: var(--collapsible-panel-height);
     overflow: hidden;
-    transition: height var(--pui-nav-list-duration) var(--pui-nav-list-ease);
+    transition: height var(--forte-nav-list-duration) var(--forte-nav-list-ease);
   }
 
   .groupPanel[data-starting-style],
@@ -364,20 +364,20 @@
 
   /* The rows settle while the panel is still growing. They start slightly
    * high and drop back: the panel clips from below, so travelling downward
-   * is the direction that reads as being uncovered. --pui-travel-sm is 0px
+   * is the direction that reads as being uncovered. --forte-travel-sm is 0px
    * under reduced motion, leaving the fade — the part that helps there. */
   .groupContent {
     opacity: 1;
     translate: 0 0;
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-nav-list-duration) var(--pui-nav-list-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-nav-list-duration) var(--forte-nav-list-ease);
   }
 
   .groupPanel[data-starting-style] .groupContent,
   .groupPanel[data-ending-style] .groupContent {
     opacity: 0;
-    translate: 0 calc(-1 * var(--pui-travel-sm));
+    translate: 0 calc(-1 * var(--forte-travel-sm));
   }
 
   /* Badge ------------------------------------------------------------------ */
@@ -389,18 +389,18 @@
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
-    padding-inline: var(--pui-space-2);
-    border-radius: var(--pui-radius-pill);
-    background-color: var(--pui-nav-list-badge-bg);
-    color: var(--pui-nav-list-badge-color);
-    font-size: var(--pui-font-size-1);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-normal);
+    padding-inline: var(--forte-space-2);
+    border-radius: var(--forte-radius-pill);
+    background-color: var(--forte-nav-list-badge-bg);
+    color: var(--forte-nav-list-badge-color);
+    font-size: var(--forte-font-size-1);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-normal);
   }
 }
 
 /* Forced colors --------------------------------------------------------------
- * In `pretty-ui.a11y`, ordered after `pretty-ui.components`, so it wins by
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by
  * layer alone.
  *
  * patterns.css already handles `[data-disabled]` (opacity restored, GrayText)
@@ -412,9 +412,9 @@
  *     rail needs nothing: redundant with the fill it sits on.
  *   - The badge's fill goes the same way, leaving its text floating in the
  *     row; a border keeps it a chip. `transparent` is replaced with a system
- *     colour in HCM, which is exactly the trick .pui-hc-surface uses.
+ *     colour in HCM, which is exactly the trick .forte-hc-surface uses.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .link[data-active]:not([data-disabled]),
     .groupTrigger[data-active]:not([data-disabled]) {

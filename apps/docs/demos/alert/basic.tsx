@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert } from "@dofortech/pretty-ui";
+import { Alert } from "@dofortech/forte-ui";
 
 export default function AlertBasic() {
   return (

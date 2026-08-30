@@ -41,11 +41,11 @@
  *    badge, which needs a stacking context on the root to stay contained, and
  *    the root deliberately does not open one — see `.root`.
  *
- * Everything inside is a fraction of `--pui-avatar-size`, so a consumer who
+ * Everything inside is a fraction of `--forte-avatar-size`, so a consumer who
  * wants a 96px avatar sets one property and the initials, the icon and the
  * `rounded` corner all follow.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the avatar itself, so a value set on
      * an ancestor is only INHERITED and loses to these — which is also why
@@ -56,50 +56,50 @@
      * on the right-hand side. */
     /** Both dimensions of the box. `size` re-points it; everything else here
      * is a fraction of it. */
-    --pui-avatar-size: 2.5rem;
+    --forte-avatar-size: 2.5rem;
     /** Corner radius. `shape` re-points it. */
-    --pui-avatar-radius: 50%;
-    /** Size of the initials. Proportional so one `--pui-avatar-size` override
-     * is enough; re-point it at a `--pui-font-size-*` token to put the type
+    --forte-avatar-radius: 50%;
+    /** Size of the initials. Proportional so one `--forte-avatar-size` override
+     * is enough; re-point it at a `--forte-font-size-*` token to put the type
      * scale back in charge. */
-    --pui-avatar-font-size: calc(var(--pui-avatar-size) * 0.4);
+    --forte-avatar-font-size: calc(var(--forte-avatar-size) * 0.4);
     /** Weight of the initials. */
-    --pui-avatar-font-weight: var(--pui-font-weight-medium);
+    --forte-avatar-font-weight: var(--forte-font-weight-medium);
     /** Size of an `svg` inside the fallback. */
-    --pui-avatar-icon-size: calc(var(--pui-avatar-size) * 0.55);
+    --forte-avatar-icon-size: calc(var(--forte-avatar-size) * 0.55);
     /** How long the image takes to fade in once it has loaded. */
-    --pui-avatar-duration: var(--pui-duration-fast);
+    --forte-avatar-duration: var(--forte-duration-fast);
 
     /* The ring is off by default: it is a separation device, and a lone avatar
      * has nothing to be separated from. `Avatar.Group` switches it on. */
     /** Width of the ring drawn OUTSIDE the box. `0px`, not `0` — it is negated
      * in a `calc()` below, which needs a unit to keep the length valid. */
-    --pui-avatar-ring-width: 0px;
+    --forte-avatar-ring-width: 0px;
     /** Colour of that ring. It should match whatever the avatar sits on, so
      * the gap it punches reads as background rather than as a stroke. */
-    --pui-avatar-ring-color: var(--pui-color-background);
+    --forte-avatar-ring-color: var(--forte-color-background);
 
     /* Per-tone palette. Overridden by [data-tone]; neutral is the default. */
     /** Tone's solid fill */
-    --pui-avatar-tone-solid: var(--pui-gray-12);
+    --forte-avatar-tone-solid: var(--forte-gray-12);
     /** Text colour on the solid fill */
-    --pui-avatar-tone-on-solid: var(--pui-gray-1);
+    --forte-avatar-tone-on-solid: var(--forte-gray-1);
     /** Tone's tinted fill */
-    --pui-avatar-tone-soft: var(--pui-gray-3);
+    --forte-avatar-tone-soft: var(--forte-gray-3);
     /** Text colour on the tinted fill, and for `outline` */
-    --pui-avatar-tone-text: var(--pui-color-foreground);
+    --forte-avatar-tone-text: var(--forte-color-foreground);
     /** Edge colour for `outline` */
-    --pui-avatar-tone-border: var(--pui-color-border);
+    --forte-avatar-tone-border: var(--forte-color-border);
 
     /* Filled in per variant below; this is the `soft` set. */
     /** Fill behind the fallback. Set by `variant` from the tone. */
-    --pui-avatar-bg: var(--pui-avatar-tone-soft);
+    --forte-avatar-bg: var(--forte-avatar-tone-soft);
     /** Colour of the initials or icon. Set by `variant` from the tone. */
-    --pui-avatar-fg: var(--pui-avatar-tone-text);
+    --forte-avatar-fg: var(--forte-avatar-tone-text);
     /** Border width. `1px` for `variant="outline"`, `0px` otherwise. */
-    --pui-avatar-border-width: 0px;
+    --forte-avatar-border-width: 0px;
     /** Border colour. The tone's border for `variant="outline"`. */
-    --pui-avatar-border-color: transparent;
+    --forte-avatar-border-color: transparent;
 
     box-sizing: border-box;
     /* The containing block for the ring, for `.badge`, and for whatever a
@@ -112,16 +112,16 @@
     position: relative;
     /* One cell, and both parts sit in it — see note 1 in the header. */
     display: inline-grid;
-    inline-size: var(--pui-avatar-size);
-    block-size: var(--pui-avatar-size);
+    inline-size: var(--forte-avatar-size);
+    block-size: var(--forte-avatar-size);
     /* Avatars usually live in a flex row of names and metadata, and a squashed
      * circle reads as a rendering fault rather than as a tight layout. */
     flex-shrink: 0;
 
-    border: var(--pui-avatar-border-width) solid var(--pui-avatar-border-color);
-    border-radius: var(--pui-avatar-radius);
-    background-color: var(--pui-avatar-bg);
-    color: var(--pui-avatar-fg);
+    border: var(--forte-avatar-border-width) solid var(--forte-avatar-border-color);
+    border-radius: var(--forte-avatar-radius);
+    background-color: var(--forte-avatar-bg);
+    color: var(--forte-avatar-fg);
 
     /* Sits the avatar on the line box when it is used inline beside text. */
     vertical-align: middle;
@@ -147,13 +147,13 @@
      * border has to be added back to land the ring exactly `ring-width`
      * outside the border box — otherwise `variant="outline"` in a group draws
      * the ring on top of its own edge. */
-    inset: calc(-1 * (var(--pui-avatar-ring-width) + var(--pui-avatar-border-width)));
-    border: var(--pui-avatar-ring-width) solid var(--pui-avatar-ring-color);
+    inset: calc(-1 * (var(--forte-avatar-ring-width) + var(--forte-avatar-border-width)));
+    border: var(--forte-avatar-ring-width) solid var(--forte-avatar-ring-color);
     /* The ring's box is wider than the avatar's by twice the ring, so its
      * radius has to grow by the ring to stay concentric. For a circle the sum
      * exceeds 50% and the UA scales every corner back to exactly half the box,
      * which is a circle again — so one expression covers all three shapes. */
-    border-radius: calc(var(--pui-avatar-radius) + var(--pui-avatar-ring-width));
+    border-radius: calc(var(--forte-avatar-radius) + var(--forte-avatar-ring-width));
     /* Decorative, and it sits over the avatar's own edge. */
     pointer-events: none;
   }
@@ -161,7 +161,7 @@
   .image {
     grid-area: 1 / 1;
     /* An `<img>` is inline by default, and the descender space under an inline
-     * box would show as a sliver of `--pui-avatar-bg` along the bottom. */
+     * box would show as a sliver of `--forte-avatar-bg` along the bottom. */
     display: block;
     inline-size: 100%;
     block-size: 100%;
@@ -175,7 +175,7 @@
      * fade got to instead of restarting. Base UI also waits on this to finish
      * before unmounting the outgoing image, which is safe because no duration
      * token ever reaches 0s. */
-    transition: opacity var(--pui-avatar-duration) var(--pui-ease-standard);
+    transition: opacity var(--forte-avatar-duration) var(--forte-ease-standard);
   }
 
   /* Opacity only — no scale, no travel. There is nothing here that collapses
@@ -199,10 +199,10 @@
      * shove the layout around. */
     overflow: hidden;
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-avatar-font-size);
-    font-weight: var(--pui-avatar-font-weight);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-avatar-font-size);
+    font-weight: var(--forte-avatar-font-weight);
+    line-height: var(--forte-line-height-tight);
   }
 
   .content {
@@ -214,53 +214,53 @@
     min-inline-size: 0;
   }
 
-  /* Targeted as an element rather than through `.pui-icon`, which is local
+  /* Targeted as an element rather than through `.forte-icon`, which is local
    * inside a CSS module and would match nothing — and which sets
    * `fill: currentColor`, turning a stroked outline icon into a blob. */
   .content svg {
-    inline-size: var(--pui-avatar-icon-size);
-    block-size: var(--pui-avatar-icon-size);
+    inline-size: var(--forte-avatar-icon-size);
+    block-size: var(--forte-avatar-icon-size);
   }
 
   /* Sizes ------------------------------------------------------------------
    * One property each. The type, the icon and the `rounded` corner are all
    * fractions of it and follow on their own. */
   .root[data-size="xs"] {
-    --pui-avatar-size: 1.5rem;
+    --forte-avatar-size: 1.5rem;
   }
 
   .root[data-size="sm"] {
-    --pui-avatar-size: 2rem;
+    --forte-avatar-size: 2rem;
   }
 
   .root[data-size="md"] {
-    --pui-avatar-size: 2.5rem;
+    --forte-avatar-size: 2.5rem;
   }
 
   .root[data-size="lg"] {
-    --pui-avatar-size: 3rem;
+    --forte-avatar-size: 3rem;
   }
 
   .root[data-size="xl"] {
-    --pui-avatar-size: 4rem;
+    --forte-avatar-size: 4rem;
   }
 
   /* Shapes ----------------------------------------------------------------- */
 
-  /* `50%`, not `--pui-radius-full`: under `data-pui-radius="none"` that token
+  /* `50%`, not `--forte-radius-full`: under `data-forte-radius="none"` that token
    * is 0, and a caller who asked for `shape="circle"` did not ask for a
-   * square. Same test as `--pui-radio-radius` and the Spinner's ring —
+   * square. Same test as `--forte-radio-radius` and the Spinner's ring —
    * roundness here is the meaning, not the styling. */
   .root[data-shape="circle"] {
-    --pui-avatar-radius: 50%;
+    --forte-avatar-radius: 50%;
   }
 
   /* `rounded` IS styling, so it does follow the radius preset — and `min()`
-   * collapses it to 0 under `data-pui-radius="none"` with no extra rule. The
+   * collapses it to 0 under `data-forte-radius="none"` with no extra rule. The
    * second term is what keeps a 24px avatar from coming out almost circular:
    * a flat 12px corner on a 24px box is nearly half of it. */
   .root[data-shape="rounded"] {
-    --pui-avatar-radius: min(var(--pui-radius-surface), calc(var(--pui-avatar-size) / 4));
+    --forte-avatar-radius: min(var(--forte-radius-surface), calc(var(--forte-avatar-size) / 4));
   }
 
   /* `0px`, not `0`: the badge multiplies this radius to find the corner, and a
@@ -269,7 +269,7 @@
    * top-inline-start corner. Identical on `border-radius` itself, which is why
    * it only broke one derivation away. */
   .root[data-shape="square"] {
-    --pui-avatar-radius: 0px;
+    --forte-avatar-radius: 0px;
   }
 
   /* Tones ------------------------------------------------------------------
@@ -278,55 +278,55 @@
    * guarantees: `-11 on -3` and `-11 on -1` for soft and outline, `on-primary`
    * on `-9` for solid — so initials clear AA in every combination. */
   .root[data-tone="neutral"] {
-    --pui-avatar-tone-solid: var(--pui-gray-12);
-    --pui-avatar-tone-on-solid: var(--pui-gray-1);
-    --pui-avatar-tone-soft: var(--pui-gray-3);
-    --pui-avatar-tone-text: var(--pui-color-foreground);
-    --pui-avatar-tone-border: var(--pui-color-border);
+    --forte-avatar-tone-solid: var(--forte-gray-12);
+    --forte-avatar-tone-on-solid: var(--forte-gray-1);
+    --forte-avatar-tone-soft: var(--forte-gray-3);
+    --forte-avatar-tone-text: var(--forte-color-foreground);
+    --forte-avatar-tone-border: var(--forte-color-border);
   }
 
   .root[data-tone="primary"] {
-    --pui-avatar-tone-solid: var(--pui-color-primary);
-    --pui-avatar-tone-on-solid: var(--pui-color-on-primary);
-    --pui-avatar-tone-soft: var(--pui-color-primary-soft);
-    --pui-avatar-tone-text: var(--pui-color-primary-text);
-    --pui-avatar-tone-border: var(--pui-color-primary-border);
+    --forte-avatar-tone-solid: var(--forte-color-primary);
+    --forte-avatar-tone-on-solid: var(--forte-color-on-primary);
+    --forte-avatar-tone-soft: var(--forte-color-primary-soft);
+    --forte-avatar-tone-text: var(--forte-color-primary-text);
+    --forte-avatar-tone-border: var(--forte-color-primary-border);
   }
 
   .root[data-tone="secondary"] {
-    --pui-avatar-tone-solid: var(--pui-color-secondary);
-    --pui-avatar-tone-on-solid: var(--pui-color-on-secondary);
-    --pui-avatar-tone-soft: var(--pui-color-secondary-soft);
-    --pui-avatar-tone-text: var(--pui-color-secondary-text);
-    --pui-avatar-tone-border: var(--pui-color-secondary-border);
+    --forte-avatar-tone-solid: var(--forte-color-secondary);
+    --forte-avatar-tone-on-solid: var(--forte-color-on-secondary);
+    --forte-avatar-tone-soft: var(--forte-color-secondary-soft);
+    --forte-avatar-tone-text: var(--forte-color-secondary-text);
+    --forte-avatar-tone-border: var(--forte-color-secondary-border);
   }
 
   .root[data-tone="danger"] {
-    --pui-avatar-tone-solid: var(--pui-color-danger);
-    --pui-avatar-tone-on-solid: var(--pui-color-on-danger);
-    --pui-avatar-tone-soft: var(--pui-color-danger-soft);
-    --pui-avatar-tone-text: var(--pui-color-danger-text);
-    --pui-avatar-tone-border: var(--pui-color-danger-border);
+    --forte-avatar-tone-solid: var(--forte-color-danger);
+    --forte-avatar-tone-on-solid: var(--forte-color-on-danger);
+    --forte-avatar-tone-soft: var(--forte-color-danger-soft);
+    --forte-avatar-tone-text: var(--forte-color-danger-text);
+    --forte-avatar-tone-border: var(--forte-color-danger-border);
   }
 
   /* Variants --------------------------------------------------------------- */
   .root[data-variant="soft"] {
-    --pui-avatar-bg: var(--pui-avatar-tone-soft);
-    --pui-avatar-fg: var(--pui-avatar-tone-text);
+    --forte-avatar-bg: var(--forte-avatar-tone-soft);
+    --forte-avatar-fg: var(--forte-avatar-tone-text);
   }
 
   .root[data-variant="solid"] {
-    --pui-avatar-bg: var(--pui-avatar-tone-solid);
-    --pui-avatar-fg: var(--pui-avatar-tone-on-solid);
+    --forte-avatar-bg: var(--forte-avatar-tone-solid);
+    --forte-avatar-fg: var(--forte-avatar-tone-on-solid);
   }
 
   /* The only variant that survives the image loading, because its edge is the
    * one part of the treatment the picture does not cover. */
   .root[data-variant="outline"] {
-    --pui-avatar-bg: transparent;
-    --pui-avatar-fg: var(--pui-avatar-tone-text);
-    --pui-avatar-border-width: 1px;
-    --pui-avatar-border-color: var(--pui-avatar-tone-border);
+    --forte-avatar-bg: transparent;
+    --forte-avatar-fg: var(--forte-avatar-tone-text);
+    --forte-avatar-border-width: 1px;
+    --forte-avatar-border-color: var(--forte-avatar-tone-border);
   }
 
   /* Badge -----------------------------------------------------------------
@@ -340,9 +340,9 @@
    * diagonal crosses the outline, and for a corner of radius `r` that point is
    * `r - r/√2 ≈ 0.2929r` in from the box corner. For a circle `r` is `50%` and
    * the expression yields `14.645%`; for `square` it yields `0`; for `rounded`
-   * it tracks whatever `data-pui-radius` currently makes the corner. One
+   * it tracks whatever `data-forte-radius` currently makes the corner. One
    * expression, all three shapes, and it stays right when a consumer overrides
-   * `--pui-avatar-radius` by hand.
+   * `--forte-avatar-radius` by hand.
    *
    * Sizing it as a fraction of the avatar is the other half. The hand-rolled
    * version of this is always a fixed length, which looks correct at exactly
@@ -352,52 +352,52 @@
    */
   .badge {
     /** Diameter of the badge, and its minimum width once it has content. A
-     * fraction of the avatar, so `size` and any `--pui-avatar-size` override
+     * fraction of the avatar, so `size` and any `--forte-avatar-size` override
      * carry the badge with them. */
-    --pui-avatar-badge-size: calc(var(--pui-avatar-size) * 0.3);
+    --forte-avatar-badge-size: calc(var(--forte-avatar-size) * 0.3);
     /** How far the badge's CENTRE sits in from the corner of the box. The
      * default puts it on the avatar's own outline, whatever `shape` is; `0`
      * hangs it on the box corner, and a larger value pulls it inside. */
-    --pui-avatar-badge-inset: calc(0.2929 * var(--pui-avatar-radius));
+    --forte-avatar-badge-inset: calc(0.2929 * var(--forte-avatar-radius));
     /** Width of the ring that separates the badge from the picture under it.
      * A border, not a shadow, for the reason in note 3. */
-    --pui-avatar-badge-ring-width: 2px;
+    --forte-avatar-badge-ring-width: 2px;
     /** Colour of that ring. Follows the avatar's own ring by default, so a
      * badge inside a group picks up the group's ring colour for free and a
      * lone avatar falls back to the page background. */
-    --pui-avatar-badge-ring-color: var(--pui-avatar-ring-color);
+    --forte-avatar-badge-ring-color: var(--forte-avatar-ring-color);
     /** Corner radius. Half the badge's own height, which is a disc while the
      * badge is square and a true pill once content widens it — `50%` would
      * bend that pill into an ellipse. Derived rather than pointed at
-     * `--pui-radius-pill` for the reason `shape="circle"` avoids the radius
+     * `--forte-radius-pill` for the reason `shape="circle"` avoids the radius
      * scale too: a round presence dot is the meaning, not the styling, so it
-     * must survive `data-pui-radius="none"`. */
-    --pui-avatar-badge-radius: calc(var(--pui-avatar-badge-size) / 2);
+     * must survive `data-forte-radius="none"`. */
+    --forte-avatar-badge-radius: calc(var(--forte-avatar-badge-size) / 2);
     /** Size of any text inside. */
-    --pui-avatar-badge-font-size: calc(var(--pui-avatar-size) * 0.18);
+    --forte-avatar-badge-font-size: calc(var(--forte-avatar-size) * 0.18);
     /** Weight of that text. */
-    --pui-avatar-badge-font-weight: var(--pui-font-weight-medium);
+    --forte-avatar-badge-font-weight: var(--forte-font-weight-medium);
 
     /* Filled in per tone below; this is the `neutral` set. */
     /** Fill. Set by `tone`. */
-    --pui-avatar-badge-bg: var(--pui-gray-12);
+    --forte-avatar-badge-bg: var(--forte-gray-12);
     /** Colour of the content. Set by `tone`, and paired with the fill so a
      * count or a tick clears AA on every one of them. */
-    --pui-avatar-badge-fg: var(--pui-gray-1);
+    --forte-avatar-badge-fg: var(--forte-gray-1);
 
     /* The offset from the box corner to the badge's near EDGE. The border is
      * added back because an absolutely positioned child is placed against the
      * padding box, so `variant="outline"` would otherwise pull the badge a
      * pixel inwards on two sides. Same correction the ring makes. */
-    --pui-avatar-badge-offset: calc(
-      var(--pui-avatar-badge-inset) - var(--pui-avatar-badge-size) / 2 -
-        var(--pui-avatar-border-width)
+    --forte-avatar-badge-offset: calc(
+      var(--forte-avatar-badge-inset) - var(--forte-avatar-badge-size) / 2 -
+        var(--forte-avatar-border-width)
     );
 
     box-sizing: border-box;
     position: absolute;
-    inset-block-end: var(--pui-avatar-badge-offset);
-    inset-inline-end: var(--pui-avatar-badge-offset);
+    inset-block-end: var(--forte-avatar-badge-offset);
+    inset-inline-end: var(--forte-avatar-badge-offset);
 
     display: flex;
     align-items: center;
@@ -405,22 +405,22 @@
     /* `min-inline-size`, so a bare dot is a circle and a `12` grows into a
      * pill. It grows toward the avatar's centre, since the inline-end edge is
      * the one that is pinned. */
-    min-inline-size: var(--pui-avatar-badge-size);
-    block-size: var(--pui-avatar-badge-size);
+    min-inline-size: var(--forte-avatar-badge-size);
+    block-size: var(--forte-avatar-badge-size);
     /* Tuned against `min-inline-size`, not chosen for looks. Content plus this
      * padding plus the two borders has to stay UNDER the min for a single
      * glyph, or a tick and a one-digit count come out as ellipses instead of
      * discs; it only has to show up once there are two digits. */
-    padding-inline: calc(var(--pui-avatar-badge-size) * 0.1);
+    padding-inline: calc(var(--forte-avatar-badge-size) * 0.1);
 
-    border: var(--pui-avatar-badge-ring-width) solid var(--pui-avatar-badge-ring-color);
-    border-radius: var(--pui-avatar-badge-radius);
-    background-color: var(--pui-avatar-badge-bg);
-    color: var(--pui-avatar-badge-fg);
+    border: var(--forte-avatar-badge-ring-width) solid var(--forte-avatar-badge-ring-color);
+    border-radius: var(--forte-avatar-badge-radius);
+    background-color: var(--forte-avatar-badge-bg);
+    color: var(--forte-avatar-badge-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-avatar-badge-font-size);
-    font-weight: var(--pui-avatar-badge-font-weight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-avatar-badge-font-size);
+    font-weight: var(--forte-avatar-badge-font-weight);
     line-height: 1;
     /* Digits in a count should not shift the pill's width as they change. */
     font-variant-numeric: tabular-nums;
@@ -437,12 +437,12 @@
    * axes, which is what the name already does. The opposite inset has to be
    * reset to `auto`, or both would apply and the badge would stretch. */
   .badge[data-placement^="top"] {
-    inset-block-start: var(--pui-avatar-badge-offset);
+    inset-block-start: var(--forte-avatar-badge-offset);
     inset-block-end: auto;
   }
 
   .badge[data-placement$="start"] {
-    inset-inline-start: var(--pui-avatar-badge-offset);
+    inset-inline-start: var(--forte-avatar-badge-offset);
     inset-inline-end: auto;
   }
 
@@ -453,51 +453,51 @@
     min-inline-size: 0;
   }
 
-  /* Element selector, not `.pui-icon` — that is local inside a CSS module and
+  /* Element selector, not `.forte-icon` — that is local inside a CSS module and
    * would match nothing, and it sets `fill: currentColor`, which turns a
    * stroked tick into a blob. */
   .badgeContent svg {
     /* Off the badge token, not a percentage: a percentage would resolve
      * against `.badgeContent`, which is sized by its content — the svg. */
-    inline-size: calc(var(--pui-avatar-badge-size) * 0.5);
-    block-size: calc(var(--pui-avatar-badge-size) * 0.5);
+    inline-size: calc(var(--forte-avatar-badge-size) * 0.5);
+    block-size: calc(var(--forte-avatar-badge-size) * 0.5);
   }
 
   /* Badge tones -----------------------------------------------------------
    * Two slots each, and both are always set together: the fill and the text
    * that has to stay legible on it. `success` and `warning` are the reason
-   * `--pui-color-on-success` / `--pui-color-on-warning` exist — warning-9 is a
+   * `--forte-color-on-success` / `--forte-color-on-warning` exist — warning-9 is a
    * light amber and takes near-BLACK, so a badge that assumed "solid means
    * white" would ship a 1.8:1 count. The pairs are asserted in
    * check-contrast.mjs. */
   .badge[data-tone="neutral"] {
-    --pui-avatar-badge-bg: var(--pui-gray-12);
-    --pui-avatar-badge-fg: var(--pui-gray-1);
+    --forte-avatar-badge-bg: var(--forte-gray-12);
+    --forte-avatar-badge-fg: var(--forte-gray-1);
   }
 
   .badge[data-tone="primary"] {
-    --pui-avatar-badge-bg: var(--pui-color-primary);
-    --pui-avatar-badge-fg: var(--pui-color-on-primary);
+    --forte-avatar-badge-bg: var(--forte-color-primary);
+    --forte-avatar-badge-fg: var(--forte-color-on-primary);
   }
 
   .badge[data-tone="secondary"] {
-    --pui-avatar-badge-bg: var(--pui-color-secondary);
-    --pui-avatar-badge-fg: var(--pui-color-on-secondary);
+    --forte-avatar-badge-bg: var(--forte-color-secondary);
+    --forte-avatar-badge-fg: var(--forte-color-on-secondary);
   }
 
   .badge[data-tone="success"] {
-    --pui-avatar-badge-bg: var(--pui-color-success);
-    --pui-avatar-badge-fg: var(--pui-color-on-success);
+    --forte-avatar-badge-bg: var(--forte-color-success);
+    --forte-avatar-badge-fg: var(--forte-color-on-success);
   }
 
   .badge[data-tone="warning"] {
-    --pui-avatar-badge-bg: var(--pui-color-warning);
-    --pui-avatar-badge-fg: var(--pui-color-on-warning);
+    --forte-avatar-badge-bg: var(--forte-color-warning);
+    --forte-avatar-badge-fg: var(--forte-color-on-warning);
   }
 
   .badge[data-tone="danger"] {
-    --pui-avatar-badge-bg: var(--pui-color-danger);
-    --pui-avatar-badge-fg: var(--pui-color-on-danger);
+    --forte-avatar-badge-bg: var(--forte-color-danger);
+    --forte-avatar-badge-fg: var(--forte-color-on-danger);
   }
 
   /* Group ------------------------------------------------------------------
@@ -508,26 +508,26 @@
    * The margin is on `> * + *` rather than on `.root` so that a wrapper — a
    * tooltip trigger, a link, a list item — can sit between the group and the
    * avatar without the overlap silently disappearing. That is also why the
-   * overlap is a LENGTH and not a fraction of `--pui-avatar-size`: the size
+   * overlap is a LENGTH and not a fraction of `--forte-avatar-size`: the size
    * is declared on the avatar's own root, and a wrapper in between would have
    * no value to multiply. */
   .group {
     /** How far each avatar slides under the one before it. A length, so it is
      * independent of what the children are; tuned for `size="md"`, so raise it
      * for a group of larger avatars. */
-    --pui-avatar-group-overlap: var(--pui-space-3);
+    --forte-avatar-group-overlap: var(--forte-space-3);
     /** Width of the ring the group draws around every avatar inside it. */
-    --pui-avatar-group-ring-width: 2px;
+    --forte-avatar-group-ring-width: 2px;
     /** Colour of that ring. Change it to the surface the group sits on — the
      * default assumes the page background. */
-    --pui-avatar-group-ring-color: var(--pui-color-background);
+    --forte-avatar-group-ring-color: var(--forte-color-background);
 
     display: inline-flex;
     align-items: center;
   }
 
   .group > * + * {
-    margin-inline-start: calc(-1 * var(--pui-avatar-group-overlap));
+    margin-inline-start: calc(-1 * var(--forte-avatar-group-overlap));
   }
 
   /* Declared ON the avatar, not on the group. `.root` declares these itself,
@@ -536,8 +536,8 @@
    * avatar in it. `.group .root` is (0,2,0) and outranks `.root`'s (0,1,0),
    * which is what lets the group re-skin children it does not own. */
   .group .root {
-    --pui-avatar-ring-width: var(--pui-avatar-group-ring-width);
-    --pui-avatar-ring-color: var(--pui-avatar-group-ring-color);
+    --forte-avatar-ring-width: var(--forte-avatar-group-ring-width);
+    --forte-avatar-ring-color: var(--forte-avatar-group-ring-color);
   }
 }
 
@@ -545,7 +545,7 @@
  * Accessibility overrides — see layers.css for why these cannot live in the
  * components layer.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Backgrounds are replaced with system colours here, so every variant's
      * fill collapses to `Canvas` and a fallback avatar dissolves into the page

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { NavList } from "@dofortech/pretty-ui";
+import { NavList } from "@dofortech/forte-ui";
 
 export default function NavListGroups() {
   const [active, setActive] = React.useState("/settings/members");

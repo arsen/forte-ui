@@ -17,12 +17,12 @@
  * Movement is a transition on `translate` + size rather than a keyframe
  * animation: a transition can be interrupted, so clicking a third tab while
  * the indicator is still travelling to the second retargets smoothly instead
- * of snapping. --pui-duration-move exists for exactly this kind of positional
+ * of snapping. --forte-duration-move exists for exactly this kind of positional
  * move that has no travel-token equivalent; it collapses to 1ms (never 0s)
  * under reduced motion, so there is deliberately no prefers-reduced-motion
  * block in this file.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. They are declared here, on Tabs.Root itself, so an
      * ancestor's value is only inherited and never wins. Re-skin one tab set
@@ -31,15 +31,15 @@
      * re-pointing the global tokens they resolve to. */
     /** Corner radius of a tab, and of the panel. A `line` tab applies it only to
      * the two corners away from the rail, capped by the row below */
-    --pui-tabs-radius: var(--pui-radius-control);
+    --forte-tabs-radius: var(--forte-radius-control);
     /* Same radius, capped at half the tab's height, for the two corners a line
      * tab actually rounds. Its other two are square (see the Tab section), and
      * CSS only shrinks an oversized radius to fit the corners SHARING its edge
      * — with the opposite corner at 0 the rounded one is free to eat the whole
      * height rather than half of it, so an uncapped pill preset
-     * (--pui-radius-control: 9999px) turned every line tab into a tombstone:
+     * (--forte-radius-control: 9999px) turned every line tab into a tombstone:
      * a semicircular focus ring (and hover fill, for a consumer who has set
-     * --pui-tabs-tab-bg-hover back on). The cap is the largest radius
+     * --forte-tabs-tab-bg-hover back on). The cap is the largest radius
      * that still leaves a flat edge between the pair, and it holds for both
      * orientations — the pair straddles the block-start edge horizontally and
      * the inline-start edge vertically, but the height is what constrains it
@@ -49,19 +49,19 @@
      * CSS only shrinks an oversized radius to fit the corners sharing its edge
      * — so without a cap a full-round radius rounds one all the way across the
      * tab's height and leaves a tombstone rather than a tab */
-    --pui-tabs-radius-line: min(var(--pui-tabs-radius), calc(var(--pui-tabs-height) / 2));
+    --forte-tabs-radius-line: min(var(--forte-tabs-radius), calc(var(--forte-tabs-height) / 2));
     /** Space between adjacent tabs in the strip */
-    --pui-tabs-gap: var(--pui-space-1);
+    --forte-tabs-gap: var(--forte-space-1);
     /** Space between the strip and the panel */
-    --pui-tabs-content-gap: var(--pui-space-4);
+    --forte-tabs-content-gap: var(--forte-space-4);
     /** Height of a tab */
-    --pui-tabs-height: var(--pui-control-h-md);
+    --forte-tabs-height: var(--forte-control-h-md);
     /** Inline padding inside a tab */
-    --pui-tabs-padding-x: var(--pui-control-px-md);
+    --forte-tabs-padding-x: var(--forte-control-px-md);
     /** Tab label size */
-    --pui-tabs-font-size: var(--pui-font-size-2);
+    --forte-tabs-font-size: var(--forte-font-size-2);
     /** Tab label weight */
-    --pui-tabs-font-weight: var(--pui-font-weight-medium);
+    --forte-tabs-font-weight: var(--forte-font-weight-medium);
     /* How far past the viewport edge a tab is parked when the strip scrolls to
      * it — carried as the tab's own `scroll-margin` below, so it applies to the
      * browser's focus scrolling as much as to ours.
@@ -80,27 +80,27 @@
      * a tab off the edge. At or below the ScrollArea's fade size the tab lands
      * flush against the fade with nothing past it, which reads as the end of
      * the strip rather than as more tabs */
-    --pui-tabs-scroll-peek: var(--pui-space-8);
+    --forte-tabs-scroll-peek: var(--forte-space-8);
 
     /* Strip */
     /** Background of the strip */
-    --pui-tabs-list-bg: transparent;
+    --forte-tabs-list-bg: transparent;
     /** Padding inside the strip */
-    --pui-tabs-list-padding: 0px;
+    --forte-tabs-list-padding: 0px;
     /** Corner radius of the strip */
-    --pui-tabs-list-radius: 0px;
+    --forte-tabs-list-radius: 0px;
     /** Thickness of the rail (line variant only) */
-    --pui-tabs-rail-width: 1px;
+    --forte-tabs-rail-width: 1px;
     /** Colour of the rail (line variant only) */
-    --pui-tabs-rail-color: var(--pui-color-border-muted);
+    --forte-tabs-rail-color: var(--forte-color-border-muted);
 
     /* Tab label */
     /** Label colour of an inactive tab */
-    --pui-tabs-tab-color: var(--pui-color-foreground-muted);
+    --forte-tabs-tab-color: var(--forte-color-foreground-muted);
     /** Label colour on hover */
-    --pui-tabs-tab-color-hover: var(--pui-color-foreground);
+    --forte-tabs-tab-color-hover: var(--forte-color-foreground);
     /** Label colour of the active tab */
-    --pui-tabs-tab-color-active: var(--pui-color-primary-text);
+    --forte-tabs-tab-color-active: var(--forte-color-primary-text);
     /* Hover is a colour change on the label and its icon, in BOTH variants:
      * the tabs are the only interactive thing in the strip, so a fill adds no
      * information the text colour has not already given — and in the line
@@ -109,19 +109,19 @@
      * dropped so a consumer who does want a fill can set it back. */
     /** Tab background on hover — `transparent` in both variants, since hover is
      * carried by the label colour alone; set it to opt a fill back in */
-    --pui-tabs-tab-bg-hover: transparent;
+    --forte-tabs-tab-bg-hover: transparent;
 
     /* Indicator */
     /** Fill of the sliding indicator */
-    --pui-tabs-indicator-color: var(--pui-color-primary);
+    --forte-tabs-indicator-color: var(--forte-color-primary);
     /** Thickness of the indicator bar (line variant only) */
-    --pui-tabs-indicator-size: 2px;
+    --forte-tabs-indicator-size: 2px;
     /** Corner radius of the indicator */
-    --pui-tabs-indicator-radius: var(--pui-radius-pill);
+    --forte-tabs-indicator-radius: var(--forte-radius-pill);
 
     /* Panel */
     /** Padding inside the panel */
-    --pui-tabs-panel-padding: 0px;
+    --forte-tabs-panel-padding: 0px;
 
     box-sizing: border-box;
     /* Grid, not flex, and `position: relative`, because every panel is placed
@@ -149,9 +149,9 @@
      * consumer gives the root a height the panel fills it — which is what
      * `flex: 1 1 auto` used to do here. */
     grid-template-rows: auto minmax(0, 1fr);
-    gap: var(--pui-tabs-content-gap);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    gap: var(--forte-tabs-content-gap);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Vertical turns the same two cells 90°: strip in column 1, panels in column
@@ -195,11 +195,11 @@
    * disappears, the strip itself gets the surface, and the indicator grows
    * from a bar into a filled block behind the label. */
   .root[data-variant="pill"] {
-    --pui-tabs-list-bg: var(--pui-color-panel);
-    --pui-tabs-list-padding: var(--pui-space-1);
-    --pui-tabs-list-radius: var(--pui-radius-4);
-    --pui-tabs-indicator-color: var(--pui-color-primary-soft);
-    --pui-tabs-indicator-radius: var(--pui-radius-control);
+    --forte-tabs-list-bg: var(--forte-color-panel);
+    --forte-tabs-list-padding: var(--forte-space-1);
+    --forte-tabs-list-radius: var(--forte-radius-4);
+    --forte-tabs-indicator-color: var(--forte-color-primary-soft);
+    --forte-tabs-indicator-radius: var(--forte-radius-control);
   }
 
   /* Scroller ----------------------------------------------------------------
@@ -267,10 +267,10 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    gap: var(--pui-tabs-gap);
-    padding: var(--pui-tabs-list-padding);
-    border-radius: var(--pui-tabs-list-radius);
-    background-color: var(--pui-tabs-list-bg);
+    gap: var(--forte-tabs-gap);
+    padding: var(--forte-tabs-list-padding);
+    border-radius: var(--forte-tabs-list-radius);
+    background-color: var(--forte-tabs-list-bg);
   }
 
   .list[data-orientation="vertical"] {
@@ -283,12 +283,12 @@
    * strip ends. The indicator sits inside the padding box, so it rides on top
    * of this line instead of being pushed off by it. */
   .list[data-variant="line"] {
-    border-block-end: var(--pui-tabs-rail-width) solid var(--pui-tabs-rail-color);
+    border-block-end: var(--forte-tabs-rail-width) solid var(--forte-tabs-rail-color);
   }
 
   .list[data-variant="line"][data-orientation="vertical"] {
     border-block-end: 0;
-    border-inline-end: var(--pui-tabs-rail-width) solid var(--pui-tabs-rail-color);
+    border-inline-end: var(--forte-tabs-rail-width) solid var(--forte-tabs-rail-color);
   }
 
   /* Tab --------------------------------------------------------------------- */
@@ -301,36 +301,36 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-control-gap);
-    height: var(--pui-tabs-height);
-    min-height: var(--pui-target-min);
-    padding-inline: var(--pui-tabs-padding-x);
+    gap: var(--forte-control-gap);
+    height: var(--forte-tabs-height);
+    min-height: var(--forte-target-min);
+    padding-inline: var(--forte-tabs-padding-x);
     margin: 0;
     border: 0;
-    border-radius: var(--pui-tabs-radius);
+    border-radius: var(--forte-tabs-radius);
 
     background-color: transparent;
-    color: var(--pui-tabs-tab-color);
+    color: var(--forte-tabs-tab-color);
 
     font-family: inherit;
-    font-size: var(--pui-tabs-font-size);
-    font-weight: var(--pui-tabs-font-weight);
-    line-height: var(--pui-line-height-tight);
+    font-size: var(--forte-tabs-font-size);
+    font-weight: var(--forte-tabs-font-weight);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     /* On the inline axis, which is the one a horizontal strip scrolls on. This
-     * overrides the flat 1.5rem patterns.css puts on every `.pui-focus-ring`
-     * for SC 2.4.11 — by layer, not specificity, since `pretty-ui.patterns` is
-     * ordered before `pretty-ui.components`. Both the JS that scrolls an
+     * overrides the flat 1.5rem patterns.css puts on every `.forte-focus-ring`
+     * for SC 2.4.11 — by layer, not specificity, since `forte.patterns` is
+     * ordered before `forte.components`. Both the JS that scrolls an
      * activated tab into view and the browser scrolling a focused one read this
      * same property, so arrow-keying along the strip leaves the same peek. */
-    scroll-margin-inline: var(--pui-tabs-scroll-peek);
+    scroll-margin-inline: var(--forte-tabs-scroll-peek);
     transition:
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Vertical scrolls on the block axis instead, so the peek moves with it. The
@@ -340,7 +340,7 @@
   .tab[data-orientation="vertical"] {
     justify-content: flex-start;
     width: 100%;
-    scroll-margin-block: var(--pui-tabs-scroll-peek);
+    scroll-margin-block: var(--forte-tabs-scroll-peek);
   }
 
   /* A line tab sits flush on the rail, so its rail-side corners are square:
@@ -349,12 +349,12 @@
    * unstuck rather than a tab attached to the strip. The other two corners
    * keep the radius — capped at half the tab's height, because the square pair
    * is what lets an uncapped one round away the whole edge (see
-   * --pui-tabs-radius-line) — which is also the shape the indicator's
+   * --forte-tabs-radius-line) — which is also the shape the indicator's
    * underline meets. A pill tab is a free floating shape inside a padded strip
    * and stays rounded all round. */
   .tab[data-variant="line"] {
-    border-start-start-radius: var(--pui-tabs-radius-line);
-    border-start-end-radius: var(--pui-tabs-radius-line);
+    border-start-start-radius: var(--forte-tabs-radius-line);
+    border-start-end-radius: var(--forte-tabs-radius-line);
     border-end-start-radius: 0;
     border-end-end-radius: 0;
   }
@@ -362,24 +362,24 @@
   /* Vertical moves the rail to the inline-end edge, so the square pair moves
    * with it — and the block-end-start corner rounds back off. */
   .tab[data-variant="line"][data-orientation="vertical"] {
-    border-end-start-radius: var(--pui-tabs-radius-line);
+    border-end-start-radius: var(--forte-tabs-radius-line);
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
 
   @media (hover: hover) {
     .tab:hover:not([data-disabled]):not([data-active]) {
-      color: var(--pui-tabs-tab-color-hover);
-      background-color: var(--pui-tabs-tab-bg-hover);
+      color: var(--forte-tabs-tab-color-hover);
+      background-color: var(--forte-tabs-tab-bg-hover);
     }
   }
 
   .tab[data-active] {
-    color: var(--pui-tabs-tab-color-active);
+    color: var(--forte-tabs-tab-color-active);
   }
 
   /* `opacity` is only the non-forced-colors treatment. Under forced colors the
-   * generic `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y, which
+   * generic `[data-disabled]` rule in patterns.css (layer forte.a11y, which
    * is ordered after this one) restores `opacity: 1` and paints GrayText, so
    * the 55% alpha here cannot survive into HCM and read as enabled. Nothing
    * tab-specific is needed for it below. */
@@ -412,16 +412,16 @@
     right: auto;
     translate: var(--active-tab-left);
     width: var(--active-tab-width);
-    height: var(--pui-tabs-indicator-size);
-    border-radius: var(--pui-tabs-indicator-radius);
-    background-color: var(--pui-tabs-indicator-color);
+    height: var(--forte-tabs-indicator-size);
+    border-radius: var(--forte-tabs-indicator-radius);
+    background-color: var(--forte-tabs-indicator-color);
     /* Purely decorative — clicks belong to the tab underneath it. */
     pointer-events: none;
     /* width and height are both listed so one rule covers both orientations;
      * only one of them actually changes in either. */
     transition-property: translate, width, height;
-    transition-duration: var(--pui-duration-move);
-    transition-timing-function: var(--pui-ease-spring-snappy);
+    transition-duration: var(--forte-duration-move);
+    transition-timing-function: var(--forte-ease-spring-snappy);
   }
 
   /* Vertical line: the bar rides the inline-end edge, against the rail, and
@@ -440,7 +440,7 @@
     right: auto;
     inset-inline-end: 0;
     translate: 0 var(--active-tab-top);
-    width: var(--pui-tabs-indicator-size);
+    width: var(--forte-tabs-indicator-size);
     height: var(--active-tab-height);
   }
 
@@ -484,15 +484,15 @@
     position: relative;
     z-index: 1;
     min-width: 0;
-    padding: var(--pui-tabs-panel-padding);
-    border-radius: var(--pui-tabs-radius);
-    color: var(--pui-color-foreground);
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
+    padding: var(--forte-tabs-panel-padding);
+    border-radius: var(--forte-tabs-radius);
+    color: var(--forte-color-foreground);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
     translate: 0 0;
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-duration-normal) var(--pui-ease-spring-snappy);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-duration-normal) var(--forte-ease-spring-snappy);
   }
 
   .panel[data-starting-style],
@@ -505,19 +505,19 @@
    * rest. The travel tokens collapse to 0px under reduced motion, leaving the
    * opacity fade — which is the part reduced-motion users benefit from. */
   .panel[data-starting-style][data-activation-direction="right"] {
-    translate: var(--pui-travel-md) 0;
+    translate: var(--forte-travel-md) 0;
   }
 
   .panel[data-starting-style][data-activation-direction="left"] {
-    translate: calc(-1 * var(--pui-travel-md)) 0;
+    translate: calc(-1 * var(--forte-travel-md)) 0;
   }
 
   .panel[data-starting-style][data-activation-direction="down"] {
-    translate: 0 var(--pui-travel-md);
+    translate: 0 var(--forte-travel-md);
   }
 
   .panel[data-starting-style][data-activation-direction="up"] {
-    translate: 0 calc(-1 * var(--pui-travel-md));
+    translate: 0 calc(-1 * var(--forte-travel-md));
   }
 
   /* The outgoing panel leaves the flow for the length of its exit transition.
@@ -540,11 +540,11 @@
    * two never blend into one surface the way a card or a popover would. Losing
    * it instantly costs nothing visually (the incoming panel is still at
    * opacity 0 at that moment) and leaves exactly one panel readable at any
-   * time. `--pui-duration-instant` is 1ms rather than 0s so the transition
+   * time. `--forte-duration-instant` is 1ms rather than 0s so the transition
    * still fires and Base UI unmounts the panel on its transitionend. */
   .panel[data-ending-style] {
-    transition-duration: var(--pui-duration-instant);
-    transition-timing-function: var(--pui-ease-exit);
+    transition-duration: var(--forte-duration-instant);
+    transition-timing-function: var(--forte-ease-exit);
   }
 
   /* Required whenever keepMounted is set: Base UI keeps the element in the
@@ -556,7 +556,7 @@
 }
 
 /* Forced colors --------------------------------------------------------------
- * This block is in `pretty-ui.a11y`, ordered after `pretty-ui.components`, so
+ * This block is in `forte.a11y`, ordered after `forte.components`, so
  * it beats every rule above by layer alone — no `!important`, no specificity
  * inflation.
  *
@@ -566,7 +566,7 @@
  *     label is HighlightText over Highlight rather than CanvasText over it.
  *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is the
  *     only reliable disabled cue since `opacity` is not forced.
- *   - `.pui-focus-ring:focus-visible` becomes a Highlight outline.
+ *   - `.forte-focus-ring:focus-visible` becomes a Highlight outline.
  *
  * What is tab-specific:
  *   - The indicator's background would be replaced with a system colour and
@@ -575,9 +575,9 @@
  *     even though the tab (z-index: 1) paints over the indicator (z-index: 0).
  *   - The global svg rule covers `[data-checked]` / `[data-highlighted]` but
  *     not `aria-selected`, so an icon inside the active tab needs pairing. Bare
- *     `svg` rather than `.pui-icon`: this is a CSS Module, so a global pattern
+ *     `svg` rather than `.forte-icon`: this is a CSS Module, so a global pattern
  *     class written here would be hashed into a local one and match nothing —
- *     and `.pui-icon` already paints `currentColor`, which is the paired colour
+ *     and `.forte-icon` already paints `currentColor`, which is the paired colour
  *     the tab itself carries. The rule exists for icons that declare their own
  *     fill/stroke, which forced-colors would otherwise push to CanvasText.
  *   - variant="line" must NOT become a filled Highlight block: the underline is
@@ -588,7 +588,7 @@
  *     HighlightText is wrong there: with no Highlight behind it, it collapses
  *     into Canvas in High Contrast Black.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .indicator {
       forced-color-adjust: none;

@@ -6,15 +6,15 @@
  * things a utility class provably cannot express, and every block below says
  * why it is still here.
  *
- * Built entirely on the pretty-ui token system, so the documentation is itself
- * a live test of the library: change --pui-accent-seed and the site, not just
+ * Built entirely on the forte-ui token system, so the documentation is itself
+ * a live test of the library: change --forte-accent-seed and the site, not just
  * the components, re-themes. Anything that looks wrong here is a token bug.
  */
 
 /* ---------------------------------------------------------------------------
  * Layer order.
  *
- * The library declares `pretty-ui.*` first (theme.css is imported ahead of
+ * The library declares `forte.*` first (theme.css is imported ahead of
  * this file), so those layers already sit at the bottom of the stack. This
  * statement places the rest: the docs' own chrome, then Tailwind.
  *
@@ -24,7 +24,7 @@
  * site is written. Layer order outranks specificity completely, so `docs`
  * before `utilities` settles it without a single `!important`.
  *
- * The `pretty-ui` name is not restated with its six sub-layers on purpose:
+ * The `forte-ui` name is not restated with its six sub-layers on purpose:
  * naming a parent layer here would be a second, drifting copy of an order the
  * library already owns.
  * ------------------------------------------------------------------------ */
@@ -50,28 +50,28 @@
   /* Without these two a link is UA blue and underlined wherever it appears,
    * which includes a Button rendered as an <a> and every link inside a demo.
    *
-   * The underline half skips `.pui-link`, and the exclusion is not cosmetic.
-   * This layer sits after every `pretty-ui.*` layer and layer order outranks
+   * The underline half skips `.forte-link`, and the exclusion is not cosmetic.
+   * This layer sits after every `forte.*` layer and layer order outranks
    * specificity completely, so a flat `a { text-decoration: none }` beats the
    * `text-decoration: underline` that `Toolbar.Link` and
-   * `PreviewCard.Trigger` declare in `pretty-ui.components` — and the
+   * `PreviewCard.Trigger` declare in `forte.components` — and the
    * underline is the only cue separating those two from the buttons and prose
-   * around them once the colour is gone, which is SC 1.4.1. `.pui-link` is
+   * around them once the colour is gone, which is SC 1.4.1. `.forte-link` is
    * the library's marker for exactly the parts that mean to look like links,
    * so a Button rendered as an <a> and a `Menu.LinkItem` — neither of which
    * carries it — still get the reset. */
-  a:not(.pui-link) {
+  a:not(.forte-link) {
     text-decoration: none;
   }
 
   /* The colour half has to skip the library's own parts. This layer sits after
-   * every `pretty-ui.*` layer and layer order outranks specificity completely,
-   * so a flat `a { color: inherit }` beats `.root { color: var(--pui-button-fg) }`
-   * in `pretty-ui.components` — a solid Button handed `render={<Link/>}` paints
-   * its label in the page foreground instead of `--pui-color-on-primary`, which
-   * is the one pairing the contrast harness guarantees. `.pui-focus-ring` is on
+   * every `forte.*` layer and layer order outranks specificity completely,
+   * so a flat `a { color: inherit }` beats `.root { color: var(--forte-button-fg) }`
+   * in `forte.components` — a solid Button handed `render={<Link/>}` paints
+   * its label in the page foreground instead of `--forte-color-on-primary`, which
+   * is the one pairing the contrast harness guarantees. `.forte-focus-ring` is on
    * every interactive part the library styles, so it is the marker to exclude. */
-  a:not(.pui-focus-ring) {
+  a:not(.forte-focus-ring) {
     color: inherit;
   }
 
@@ -80,17 +80,17 @@
    * drift apart.
    *
    * The `:not()` is load-bearing, and it is narrower than it looks. This layer
-   * is declared AFTER every `pretty-ui` layer, so this rule does not merely
-   * fill a gap — it overrides `.pui-focus-ring` itself, and with it any
+   * is declared AFTER every `forte-ui` layer, so this rule does not merely
+   * fill a gap — it overrides `.forte-focus-ring` itself, and with it any
    * component that deliberately rings something other than the element holding
-   * focus. `.pui-focus-ring-within` is exactly that case: the ring goes on a
+   * focus. `.forte-focus-ring-within` is exactly that case: the ring goes on a
    * wrapper and the focus lands on a control inside it, so the wrapper and the
    * control both drew one and the component wore two rings at once. NumberField
    * found it (the group rings, the input inside it holds focus) and Slider has
    * the same shape, its visually-hidden range input having hidden the bug.
    *
    * Excluding only descendants of a ringing wrapper, rather than every
-   * `[data-pui]` element, keeps this rule as the backstop it is meant to be for
+   * `[data-forte]` element, keeps this rule as the backstop it is meant to be for
    * anything the library leaves unringed. `:where()` keeps the specificity at
    * (0,1,0).
    *
@@ -111,20 +111,20 @@
    * lifetime, and the popup is `overflow: clip` with the row flush to its
    * edges — so this rule's outset ring survives only along the hairline, as a
    * bright bar that reads as a rendering fault. The library's own rule says
-   * `outline: none`; this layer is declared after every `pretty-ui` layer, so
+   * `outline: none`; this layer is declared after every `forte-ui` layer, so
    * without the exclusion it wins and reintroduces the bar. It is listed by
-   * `data-pui` because that marker is public API and the CSS Modules class
+   * `data-forte` because that marker is public API and the CSS Modules class
    * beside it is not. */
   :focus-visible:not(
       :where(
-        .pui-focus-ring-within *,
+        .forte-focus-ring-within *,
         [data-focus-inset],
-        [data-pui="combobox-input"]
+        [data-forte="combobox-input"]
       )
     ) {
-    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
-    outline-offset: var(--pui-focus-ring-offset);
-    box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+    outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
+    outline-offset: var(--forte-focus-ring-offset);
+    box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
   }
 
   /* -------------------------------------------------------------------------
@@ -138,9 +138,9 @@
    * ---------------------------------------------------------------------- */
   pre.shiki {
     margin: 0;
-    padding: var(--pui-space-4) var(--pui-space-5);
-    font-family: var(--pui-font-mono);
-    font-size: var(--pui-font-size-2);
+    padding: var(--forte-space-4) var(--forte-space-5);
+    font-family: var(--forte-font-mono);
+    font-size: var(--forte-font-size-2);
     line-height: 1.65;
     /* Shiki may inline a theme background on the <pre>; an inline style loses
      * to `!important` and to nothing else. The panel colour underneath is the
@@ -159,43 +159,43 @@
    * re-highlight and no flash. */
   .shiki,
   .shiki span {
-    color: var(--pui-shiki-light);
+    color: var(--forte-shiki-light);
     background-color: transparent;
   }
 
   [data-theme="dark"] .shiki,
   [data-theme="dark"] .shiki span {
-    color: var(--pui-shiki-dark);
+    color: var(--forte-shiki-dark);
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .shiki,
     :root:not([data-theme="light"]) .shiki span {
-      color: var(--pui-shiki-dark);
+      color: var(--forte-shiki-dark);
     }
   }
 
   /* Line-level decorations from @shikijs/transformers. */
   .shiki .line.highlighted {
-    background-color: var(--pui-color-primary-soft);
-    box-shadow: inset 2px 0 0 var(--pui-color-primary);
-    margin-inline: calc(-1 * var(--pui-space-5));
-    padding-inline: var(--pui-space-5);
+    background-color: var(--forte-color-primary-soft);
+    box-shadow: inset 2px 0 0 var(--forte-color-primary);
+    margin-inline: calc(-1 * var(--forte-space-5));
+    padding-inline: var(--forte-space-5);
   }
 
   .shiki .line.diff.add {
-    background-color: color-mix(in oklab, var(--pui-color-success) 14%, transparent);
+    background-color: color-mix(in oklab, var(--forte-color-success) 14%, transparent);
   }
 
   .shiki .line.diff.remove {
-    background-color: color-mix(in oklab, var(--pui-color-danger) 14%, transparent);
+    background-color: color-mix(in oklab, var(--forte-color-danger) 14%, transparent);
     opacity: 0.7;
   }
 
   /* -------------------------------------------------------------------------
    * Palette cross-fade.
    *
-   * `--pui-accent-seed` is registered via @property as a <color>, which is what
+   * `--forte-accent-seed` is registered via @property as a <color>, which is what
    * makes it animatable at all — an unregistered custom property would snap.
    * Because every ramp step derives from the seed with relative colour syntax,
    * interpolating this ONE variable re-derives all twelve steps per frame and
@@ -213,11 +213,11 @@
     .themeTransition,
     .themeTransition * {
       transition:
-        --pui-accent-seed var(--pui-duration-slow) var(--pui-ease-standard),
-        --pui-secondary-seed var(--pui-duration-slow) var(--pui-ease-standard),
-        background-color var(--pui-duration-slow) var(--pui-ease-standard),
-        border-color var(--pui-duration-slow) var(--pui-ease-standard),
-        color var(--pui-duration-slow) var(--pui-ease-standard);
+        --forte-accent-seed var(--forte-duration-slow) var(--forte-ease-standard),
+        --forte-secondary-seed var(--forte-duration-slow) var(--forte-ease-standard),
+        background-color var(--forte-duration-slow) var(--forte-ease-standard),
+        border-color var(--forte-duration-slow) var(--forte-ease-standard),
+        color var(--forte-duration-slow) var(--forte-ease-standard);
     }
   }
 }

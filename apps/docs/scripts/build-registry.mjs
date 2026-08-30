@@ -9,7 +9,7 @@
  * Generating the file also means demos can be added in parallel without anyone
  * editing a shared barrel.
  *
- *   pnpm --filter @dofortech/pretty-ui-docs registry
+ *   pnpm --filter @dofortech/forte-ui-docs registry
  */
 import { readdirSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -33,7 +33,7 @@ const ident = (id) => "d_" + id.replace(/[^a-zA-Z0-9]/g, "_");
 
 const out = `/**
  * GENERATED FILE — do not edit by hand.
- * Regenerate with:  pnpm --filter @dofortech/pretty-ui-docs registry
+ * Regenerate with:  pnpm --filter @dofortech/forte-ui-docs registry
  *
  * Each demo is imported TWICE from the same path: once as a component (which
  * renders, and is type-checked) and once through the ?raw loader (the exact

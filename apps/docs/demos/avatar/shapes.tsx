@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/pretty-ui";
+import { Avatar } from "@dofortech/forte-ui";
 
 const SHAPES = [
   { shape: "circle", note: "People" },

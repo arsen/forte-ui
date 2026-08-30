@@ -1,15 +1,15 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Field, Slider } from "@dofortech/pretty-ui";
+import { Field, Slider } from "@dofortech/forte-ui";
 
 const column = "grid gap-5";
 
 // The documented escape hatch for a slider that fills its container: the root
-// is `inline-size: var(--pui-slider-length)` capped at 100%, so pointing the
+// is `inline-size: var(--forte-slider-length)` capped at 100%, so pointing the
 // token at 100% makes the cap and the width agree. The cast is only because
 // React's CSSProperties has no index signature for custom properties.
-const fullWidth = { "--pui-slider-length": "100%" } as CSSProperties;
+const fullWidth = { "--forte-slider-length": "100%" } as CSSProperties;
 
 export default function SliderDisabled() {
   return (

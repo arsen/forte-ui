@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb, type BreadcrumbVariant } from "@dofortech/pretty-ui";
+import { Breadcrumb, type BreadcrumbVariant } from "@dofortech/forte-ui";
 
 const VARIANTS: BreadcrumbVariant[] = ["plain", "chip"];
 

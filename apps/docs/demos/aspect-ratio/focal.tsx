@@ -1,8 +1,8 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/pretty-ui";
+import { AspectRatio } from "@dofortech/forte-ui";
 
-/* `cover` has to throw something away; `--pui-aspect-position` is how you say
+/* `cover` has to throw something away; `--forte-aspect-position` is how you say
  * WHICH something. The default centres the crop, which is the one choice
  * guaranteed to behead a portrait. */
 const CROPS = [
@@ -21,7 +21,7 @@ export default function AspectRatioFocal() {
           <AspectRatio
             ratio="square"
             variant="outlined"
-            style={{ "--pui-aspect-position": position } as React.CSSProperties}
+            style={{ "--forte-aspect-position": position } as React.CSSProperties}
           >
             <img src="/media/tower.svg" alt="" />
           </AspectRatio>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Calendar } from "@dofortech/pretty-ui";
+import { Calendar } from "@dofortech/forte-ui";
 
 const AUGUST = new Date(2026, 7, 1);
 

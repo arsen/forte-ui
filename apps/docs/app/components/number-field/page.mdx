@@ -27,7 +27,7 @@ people, and it is faster than any stepper for roughing a value in.
 ## Import
 
 ```tsx
-import { NumberField } from "@dofortech/pretty-ui";
+import { NumberField } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -59,7 +59,7 @@ control whose best interaction nobody finds may as well not have it — so
 <DemoBlock id="number-field/scrubbing" />
 
 **At rest — the grip.** A double-headed arrow after the label, at
-`--pui-number-field-scrub-grip-opacity` (0.7), so it reads as an affordance
+`--forte-number-field-scrub-grip-opacity` (0.7), so it reads as an affordance
 without competing with the words next to it. This is the only cue present before
 the user has done anything, and the only one a touch user ever sees, which is
 why it is on by default. Turn it off with `grip={false}` when the surrounding
@@ -118,8 +118,8 @@ hovered** — so an ordinary page scroll can never change a number in passing.
 ### Sizes
 
 `size` moves height, inline padding and glyph size together, from the same
-`--pui-control-*` tokens `Input` and `Select.Trigger` read — so all three line up
-on one row at every `data-pui-density` setting. The steppers stay square because
+`--forte-control-*` tokens `Input` and `Select.Trigger` read — so all three line up
+on one row at every `data-forte-density` setting. The steppers stay square because
 they take their height from the group rather than declaring one.
 
 <DemoBlock id="number-field/sizes" />
@@ -231,14 +231,14 @@ in the order with `tabIndex={0}`. Without the suppression that app would get two
 rings at once, because `:has(:focus-visible)` on the group is true for a focused
 stepper as well.
 
-The steppers also carry `.pui-target`, because at `sm` under
-`data-pui-density="compact"` the button inside the group's border is 22px —
+The steppers also carry `.forte-target`, because at `sm` under
+`data-forte-density="compact"` the button inside the group's border is 22px —
 under the 24×24 floor of SC 2.5.8 — and the expander fixes the hit area without
 repainting anything.
 
 <Callout kind="warn">
   A **global** `:focus-visible` rule in your app will draw a second ring here.
-  Everything the library ships lives in `@layer pretty-ui.*`, which an app's own
+  Everything the library ships lives in `@layer forte.*`, which an app's own
   CSS outranks by design — so an unscoped `:focus-visible { outline: … }`
   re-rings the input this component deliberately leaves unringed, and the
   control ends up wearing a rounded ring around the group and a square-cornered
@@ -246,10 +246,10 @@ repainting anything.
   parts a component already rings for itself:
 
 ```css
-:focus-visible:not(:where(.pui-focus-ring-within *)) {
-  outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
-  outline-offset: var(--pui-focus-ring-offset);
-  box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+:focus-visible:not(:where(.forte-focus-ring-within *)) {
+  outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
+  outline-offset: var(--forte-focus-ring-offset);
+  box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
 }
 ```
 
@@ -276,18 +276,18 @@ disabled chrome.
 Every property below is declared on the part that paints it — the group, the
 input, a stepper, the scrub area — and an element's own declaration beats an
 inherited one, so setting these on an ancestor does nothing. Set them on the
-part, through `className` (an unlayered rule beats `@layer pretty-ui.components`
+part, through `className` (an unlayered rule beats `@layer forte.components`
 whatever its specificity) or an inline `style`.
 
-The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*` — are the exception: this component only reads those, so
+The global tokens they resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*` — are the exception: this component only reads those, so
 re-pointing them from `:root` or a theme scope moves every number field at once.
 
 <ThemingTable component="NumberField" />
 
 <Callout kind="note">
-  `--pui-number-field-scrub-cursor-*` is set on an element that is portalled to
-  `<body>`, which means it does **not** inherit a `.pui-theme` scope — the same
+  `--forte-number-field-scrub-cursor-*` is set on an element that is portalled to
+  `<body>`, which means it does **not** inherit a `.forte-theme` scope — the same
   trade every portalled surface in this library makes. It also means Base UI
   writes `transform` on that element on every pointer move, so nothing there may
   set or animate that property.

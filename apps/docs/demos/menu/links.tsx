@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "@dofortech/pretty-ui";
+import { Menu } from "@dofortech/forte-ui";
 
 export default function MenuLinks() {
   return (

@@ -16,7 +16,7 @@ export type ProgressTone =
 
 /**
  * `size` and `tone` are chosen on `Progress.Root`, and the parts below paint
- * themselves from `--pui-progress-*` properties the root declares — so
+ * themselves from `--forte-progress-*` properties the root declares — so
  * inheritance alone is enough to make them *look* right. This context exists
  * for the other half of the contract: every part republishes them as
  * `data-size` / `data-tone` so a consumer can write `data-[tone=danger]:…` on
@@ -39,7 +39,7 @@ export interface ProgressRootProps extends Omit<BaseRootProps, "className"> {
   /**
    * Thickness of the bar and the size of the label row — `4px`, `6px` or
    * `10px` of track. The bar's *length* is not a size: it fills its container
-   * by default, and `--pui-progress-length` is the knob for anything else.
+   * by default, and `--forte-progress-length` is the knob for anything else.
    * @default "md"
    */
   size?: ProgressSize;
@@ -85,7 +85,7 @@ export const ProgressRoot = React.forwardRef<HTMLDivElement, ProgressRootProps>(
         <BaseProgress.Root
           ref={ref}
           className={clsx(styles.root, className)}
-          data-pui="progress"
+          data-forte="progress"
           data-size={size}
           data-tone={tone}
           {...props}
@@ -115,7 +115,7 @@ export interface ProgressLabelProps extends Omit<BaseLabelProps, "className"> {
  * without one announces a bare percentage and leaves the listener to guess
  * what it is a percentage of.
  *
- * Wrap it in `.pui-visually-hidden` when the surrounding page already says it
+ * Wrap it in `.forte-visually-hidden` when the surrounding page already says it
  * in words; that keeps the name in the accessibility tree without repeating it
  * on screen.
  */
@@ -127,7 +127,7 @@ export const ProgressLabel = React.forwardRef<HTMLSpanElement, ProgressLabelProp
       <BaseProgress.Label
         ref={ref}
         className={clsx(styles.label, className)}
-        data-pui="progress-label"
+        data-forte="progress-label"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -177,7 +177,7 @@ export const ProgressValue = React.forwardRef<HTMLSpanElement, ProgressValueProp
       <BaseProgress.Value
         ref={ref}
         className={clsx(styles.value, className)}
-        data-pui="progress-value"
+        data-forte="progress-value"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -217,7 +217,7 @@ export const ProgressTrack = React.forwardRef<HTMLDivElement, ProgressTrackProps
       <BaseProgress.Track
         ref={ref}
         className={clsx(styles.track, className)}
-        data-pui="progress-track"
+        data-forte="progress-track"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -254,7 +254,7 @@ export const ProgressIndicator = React.forwardRef<HTMLDivElement, ProgressIndica
       <BaseProgress.Indicator
         ref={ref}
         className={clsx(styles.indicator, className)}
-        data-pui="progress-indicator"
+        data-forte="progress-indicator"
         data-size={size}
         data-tone={tone}
         {...props}

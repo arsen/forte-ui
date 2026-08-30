@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, PreviewCard, Switch } from "@dofortech/pretty-ui";
+import { Button, PreviewCard, Switch } from "@dofortech/forte-ui";
 
 const RELEASES = [
   {

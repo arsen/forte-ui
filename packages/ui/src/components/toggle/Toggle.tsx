@@ -108,7 +108,7 @@ export interface ToggleProps<Value extends string = string>
  * toggle button has neither.
  *
  * State is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)
- * and every visual decision is a `--pui-toggle-*` custom property, so it can
+ * and every visual decision is a `--forte-toggle-*` custom property, so it can
  * be re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[pressed]:...`) without wrapping.
  */
@@ -124,8 +124,8 @@ export function Toggle<Value extends string = string>({
 
   return (
     <BaseToggle
-      className={clsx(styles.root, "pui-focus-ring", className)}
-      data-pui="toggle"
+      className={clsx(styles.root, "forte-focus-ring", className)}
+      data-forte="toggle"
       data-variant={variant ?? group?.variant ?? "soft"}
       data-tone={tone ?? group?.tone ?? "primary"}
       data-size={size ?? group?.size ?? "md"}
@@ -255,7 +255,7 @@ export function ToggleGroup<Value extends string = string>({
     <ToggleAppearanceContext.Provider value={appearance}>
       <BaseToggleGroup
         className={clsx(styles.group, className)}
-        data-pui="toggle-group"
+        data-forte="toggle-group"
         data-segmented={segmented || undefined}
         data-full-width={fullWidth || undefined}
         {...props}

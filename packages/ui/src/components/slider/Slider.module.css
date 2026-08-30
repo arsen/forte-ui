@@ -24,7 +24,7 @@
  *
  * Motion. The thumb and the indicator have NO positional transition, and that
  * is a fix rather than an omission. They used to glide on
- * `--pui-duration-move`, suppressed during a drag by `.control:active` and
+ * `--forte-duration-move`, suppressed during a drag by `.control:active` and
  * `[data-dragging]`. Both triggers are unreliable, and measuring the shipped
  * build showed the suppression never firing at all:
  *
@@ -51,62 +51,62 @@
  * halo: state changes with discrete start and end points, which is the kind of
  * thing a transition is actually for.
  *
- * Contrast. The thumb's ring is `--pui-color-primary`, the same reliance the
- * Switch's checked track makes, and the rail is `--pui-color-border-muted`.
+ * Contrast. The thumb's ring is `--forte-color-primary`, the same reliance the
+ * Switch's checked track makes, and the rail is `--forte-color-border-muted`.
  * The value is legible from three independent places — the indicator's length
  * against the rail, the thumb's position, and the `Slider.Value` text — so no
  * single pair is load-bearing on its own. A consumer whose accent seed lands
- * pale against their page can re-point `--pui-slider-thumb-border` at
- * `--pui-color-foreground-subtle`, which tokens.css measures at 3.73:1.
+ * pale against their page can re-point `--forte-slider-thumb-border` at
+ * `--forte-color-foreground-subtle`, which tokens.css measures at 3.73:1.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on Slider.Root, so an ancestor's value
      * is only INHERITED and never wins over this declaration. Re-skin one
      * slider by setting them on the root through `className` (an unlayered
-     * consumer rule beats `@layer pretty-ui.components` at any specificity) or
+     * consumer rule beats `@layer forte.components` at any specificity) or
      * an inline `style`; re-skin every slider by re-pointing the global tokens
      * on the right-hand side, which this file only reads. The parts below are
      * descendants and consume these by inheritance. */
     /** Control length: `inline-size` when horizontal, `block-size` when
      * vertical. Capped at `100%` of the container; `10rem` when vertical. */
-    --pui-slider-length: 16rem;
+    --forte-slider-length: 16rem;
     /** Rail thickness, and one of the two inputs the control padding derives
      * from. `size` retunes it: `3px` for `sm`, `6px` for `lg`. */
-    --pui-slider-track-thickness: 4px;
+    --forte-slider-track-thickness: 4px;
     /** Thumb width and height. `size` retunes it: `0.875rem` for `sm`, `1.25rem`
      * for `lg`. */
-    --pui-slider-thumb-size: 1rem;
+    --forte-slider-thumb-size: 1rem;
     /** Thickness of the thumb's ring. */
-    --pui-slider-thumb-border-width: 2px;
+    --forte-slider-thumb-border-width: 2px;
     /** Rail and indicator corner radius. */
-    --pui-slider-radius: var(--pui-radius-pill);
+    --forte-slider-radius: var(--forte-radius-pill);
     /** Gap between the label/value row and the control. */
-    --pui-slider-gap: var(--pui-space-2);
+    --forte-slider-gap: var(--forte-space-2);
 
     /* Colour slots, swapped wholesale by [data-tone] below. */
     /** Rail fill — the empty part of the range. */
-    --pui-slider-track-bg: var(--pui-color-border-muted);
+    --forte-slider-track-bg: var(--forte-color-border-muted);
     /** Fill of the selected part. Swapped per `tone`. */
-    --pui-slider-indicator-bg: var(--pui-color-primary);
+    --forte-slider-indicator-bg: var(--forte-color-primary);
     /** Thumb fill. */
-    --pui-slider-thumb-bg: var(--pui-color-background);
+    --forte-slider-thumb-bg: var(--forte-color-background);
     /** Thumb ring colour. Swapped per `tone`, and
-     * `var(--pui-color-danger-border)` when invalid inside a field. */
-    --pui-slider-thumb-border: var(--pui-color-primary);
+     * `var(--forte-color-danger-border)` when invalid inside a field. */
+    --forte-slider-thumb-border: var(--forte-color-primary);
     /** Thumb shadow. */
-    --pui-slider-thumb-shadow: var(--pui-shadow-1);
+    --forte-slider-thumb-shadow: var(--forte-shadow-1);
     /** Base colour the halo is mixed from. Swapped per `tone`. */
-    --pui-slider-thumb-halo-color: var(--pui-color-primary);
+    --forte-slider-thumb-halo-color: var(--forte-color-primary);
     /** How much of that colour survives the mix toward `transparent`. `30%` for
      * `tone="neutral"`. */
-    --pui-slider-thumb-halo-strength: 48%;
+    --forte-slider-thumb-halo-strength: 48%;
     /* The halo is a soft ring that fades in around the handle on hover and
      * while dragging. It is a box-shadow on the thumb's ::before rather than a
      * sized element, so it adds no box and cannot move the hit target (motion
      * principle 7) — and because it is a colour cue rather than a
      * displacement, it survives reduced motion intact. */
-    /* Translucent accent, NOT the `-soft` step. `--pui-color-primary-soft` is
+    /* Translucent accent, NOT the `-soft` step. `--forte-color-primary-soft` is
      * accent-3, which is built to sit *on* the page — 12% of the seed mixed
      * into white in light mode, 22% into near-black in dark. Against the page
      * it is therefore almost exactly the page, and the halo disappeared in
@@ -121,18 +121,18 @@
      * only the colour and get the mix recomputed for free. */
     /** The resolved halo colour. Derived from the two above; set it directly to
      * bypass them. */
-    --pui-slider-thumb-halo: color-mix(
+    --forte-slider-thumb-halo: color-mix(
       in oklab,
-      var(--pui-slider-thumb-halo-color) var(--pui-slider-thumb-halo-strength),
+      var(--forte-slider-thumb-halo-color) var(--forte-slider-thumb-halo-strength),
       transparent
     );
     /** Current halo radius. Set by hover and drag; set it yourself for a halo
      * that is always on. */
-    --pui-slider-thumb-halo-size: 0px;
+    --forte-slider-thumb-halo-size: 0px;
     /** Halo radius in those states. It stands down while the focus ring is up,
      * so the ring's outer tone is not covered. `size` retunes it: `4px` for
      * `sm`, `6px` for `lg`. */
-    --pui-slider-thumb-halo-size-active: 5px;
+    --forte-slider-thumb-halo-size-active: 5px;
 
     /* Two floors, whichever is larger — the 24x24 minimum target of SC 2.5.8,
      * and enough room for the thumb (which is wider than the rail) plus a
@@ -143,11 +143,11 @@
      * correctly for every [data-size] block below, which only rewrite the
      * inputs. */
     /** How far the control is padded past the rail — the SC 2.5.8 target. */
-    --pui-slider-control-padding: max(
-      calc((var(--pui-target-min) - var(--pui-slider-track-thickness)) / 2),
+    --forte-slider-control-padding: max(
+      calc((var(--forte-target-min) - var(--forte-slider-track-thickness)) / 2),
       calc(
-        (var(--pui-slider-thumb-size) - var(--pui-slider-track-thickness)) / 2 +
-          var(--pui-space-1)
+        (var(--forte-slider-thumb-size) - var(--forte-slider-track-thickness)) / 2 +
+          var(--forte-space-1)
       )
     );
 
@@ -158,21 +158,21 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: var(--pui-slider-gap);
-    inline-size: var(--pui-slider-length);
+    gap: var(--forte-slider-gap);
+    inline-size: var(--forte-slider-length);
     /* So a 16rem slider inside a narrower column shrinks instead of
-     * overflowing it. Set `--pui-slider-length: 100%` for a slider that always
+     * overflowing it. Set `--forte-slider-length: 100%` for a slider that always
      * fills its container. */
     max-inline-size: 100%;
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Vertical is the same parts turned 90°: one centred column, and the length
    * token now describes the block axis. `inline-size: auto` undoes the
    * horizontal width so the slider is only as wide as its widest part. */
   .root[data-orientation="vertical"] {
-    --pui-slider-length: 10rem;
+    --forte-slider-length: 10rem;
 
     display: inline-grid;
     grid-template-columns: minmax(0, auto);
@@ -181,52 +181,52 @@
   }
 
   /* Sizes ----------------------------------------------------------------- */
-  /* Only the inputs are restated; --pui-slider-control-padding re-derives from
+  /* Only the inputs are restated; --forte-slider-control-padding re-derives from
    * them on this same element. */
   .root[data-size="sm"] {
-    --pui-slider-track-thickness: 3px;
-    --pui-slider-thumb-size: 0.875rem;
-    --pui-slider-thumb-halo-size-active: 4px;
+    --forte-slider-track-thickness: 3px;
+    --forte-slider-thumb-size: 0.875rem;
+    --forte-slider-thumb-halo-size-active: 4px;
   }
 
   .root[data-size="md"] {
-    --pui-slider-track-thickness: 4px;
-    --pui-slider-thumb-size: 1rem;
-    --pui-slider-thumb-halo-size-active: 5px;
+    --forte-slider-track-thickness: 4px;
+    --forte-slider-thumb-size: 1rem;
+    --forte-slider-thumb-halo-size-active: 5px;
   }
 
   .root[data-size="lg"] {
-    --pui-slider-track-thickness: 6px;
-    --pui-slider-thumb-size: 1.25rem;
-    --pui-slider-thumb-halo-size-active: 6px;
+    --forte-slider-track-thickness: 6px;
+    --forte-slider-thumb-size: 1.25rem;
+    --forte-slider-thumb-halo-size-active: 6px;
   }
 
   /* Tones ----------------------------------------------------------------- */
   .root[data-tone="secondary"] {
-    --pui-slider-indicator-bg: var(--pui-color-secondary);
-    --pui-slider-thumb-border: var(--pui-color-secondary);
-    --pui-slider-thumb-halo-color: var(--pui-color-secondary);
+    --forte-slider-indicator-bg: var(--forte-color-secondary);
+    --forte-slider-thumb-border: var(--forte-color-secondary);
+    --forte-slider-thumb-halo-color: var(--forte-color-secondary);
   }
 
   .root[data-tone="danger"] {
-    --pui-slider-indicator-bg: var(--pui-color-danger);
-    --pui-slider-thumb-border: var(--pui-color-danger);
-    --pui-slider-thumb-halo-color: var(--pui-color-danger);
+    --forte-slider-indicator-bg: var(--forte-color-danger);
+    --forte-slider-thumb-border: var(--forte-color-danger);
+    --forte-slider-thumb-halo-color: var(--forte-color-danger);
   }
 
   .root[data-tone="neutral"] {
-    --pui-slider-indicator-bg: var(--pui-color-foreground);
-    --pui-slider-thumb-border: var(--pui-color-foreground);
-    --pui-slider-thumb-halo-color: var(--pui-color-foreground);
+    --forte-slider-indicator-bg: var(--forte-color-foreground);
+    --forte-slider-thumb-border: var(--forte-color-foreground);
+    --forte-slider-thumb-halo-color: var(--forte-color-foreground);
     /* The neutral halo is a grey, and grey at the accent's strength reads as a
      * smudge rather than a glow, so it is pulled back. */
-    --pui-slider-thumb-halo-strength: 30%;
+    --forte-slider-thumb-halo-strength: 30%;
   }
 
   /* Inside a Field.Root, an invalid slider borrows the danger ring. The
    * indicator keeps its tone so the value stays readable at a glance. */
   .root[data-invalid] {
-    --pui-slider-thumb-border: var(--pui-color-danger-border);
+    --forte-slider-thumb-border: var(--forte-color-danger-border);
   }
 
   .root[data-disabled] {
@@ -239,10 +239,10 @@
    * the default arrow (see the cursor table in CONTRIBUTING.md). */
   .label {
     grid-column: 1;
-    font-size: var(--pui-font-size-2);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-normal);
-    color: var(--pui-color-foreground);
+    font-size: var(--forte-font-size-2);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-normal);
+    color: var(--forte-color-foreground);
     cursor: default;
     -webkit-user-select: none;
     user-select: none;
@@ -251,9 +251,9 @@
   .value {
     grid-column: 2;
     justify-self: end;
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
-    color: var(--pui-color-foreground-muted);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
+    color: var(--forte-color-foreground-muted);
     /* Without tabular figures the readout changes width as the digits change,
      * which makes it jitter while a thumb is being dragged. */
     font-variant-numeric: tabular-nums;
@@ -279,7 +279,7 @@
      * 24px minimum target lives. `thumbAlignment="edge"` measures this padding
      * to work out where an inset thumb rests, which is the other reason it is
      * derived rather than eyeballed. */
-    padding-block: var(--pui-slider-control-padding);
+    padding-block: var(--forte-slider-control-padding);
     /* Base UI's thumbs carry an inline z-index so the active handle is drawn
      * over its neighbour. Without a stacking context here those values are
      * promoted into the nearest ancestor that has one — usually the page —
@@ -297,10 +297,10 @@
   }
 
   .control[data-orientation="vertical"] {
-    block-size: var(--pui-slider-length);
+    block-size: var(--forte-slider-length);
     inline-size: auto;
     padding-block: 0;
-    padding-inline: var(--pui-slider-control-padding);
+    padding-inline: var(--forte-slider-control-padding);
   }
 
   .control[data-disabled] {
@@ -313,13 +313,13 @@
     inline-size: 100%;
     /* Explicit, never `auto` — the indicator sizes its cross axis with
      * `height: inherit`. */
-    block-size: var(--pui-slider-track-thickness);
-    border-radius: var(--pui-slider-radius);
-    background-color: var(--pui-slider-track-bg);
+    block-size: var(--forte-slider-track-thickness);
+    border-radius: var(--forte-slider-radius);
+    background-color: var(--forte-slider-track-bg);
   }
 
   .track[data-orientation="vertical"] {
-    inline-size: var(--pui-slider-track-thickness);
+    inline-size: var(--forte-slider-track-thickness);
     block-size: 100%;
   }
 
@@ -328,31 +328,31 @@
    * `overflow: hidden` track — the thumb is wider than the rail and lives
    * inside the track too, so a clip there would slice the handle in half. */
   .indicator {
-    border-radius: var(--pui-slider-radius);
-    background-color: var(--pui-slider-indicator-bg);
+    border-radius: var(--forte-slider-radius);
+    background-color: var(--forte-slider-indicator-bg);
     /* `width` / `height` / `inset-inline-start` / `bottom` are deliberately
      * NOT transitioned — see the note at the top of this file. Base UI
      * rewrites them on every pointermove, and animating them made the fill
      * chase the pointer instead of following it. */
-    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Thumb ----------------------------------------------------------------- */
   .thumb {
     box-sizing: border-box;
-    inline-size: var(--pui-slider-thumb-size);
-    block-size: var(--pui-slider-thumb-size);
-    border: var(--pui-slider-thumb-border-width) solid var(--pui-slider-thumb-border);
-    border-radius: var(--pui-radius-full);
-    background-color: var(--pui-slider-thumb-bg);
+    inline-size: var(--forte-slider-thumb-size);
+    block-size: var(--forte-slider-thumb-size);
+    border: var(--forte-slider-thumb-border-width) solid var(--forte-slider-thumb-border);
+    border-radius: var(--forte-radius-full);
+    background-color: var(--forte-slider-thumb-bg);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
     /* `box-shadow` is deliberately absent from this rule — the elevation and
      * the halo are painted by ::before below instead. The focus ring's second
-     * tone is itself a box-shadow, declared by `.pui-focus-ring-within` in
-     * `@layer pretty-ui.patterns`, which is ordered BEFORE
-     * `pretty-ui.components`. Layer order outranks specificity completely, so
+     * tone is itself a box-shadow, declared by `.forte-focus-ring-within` in
+     * `@layer forte.patterns`, which is ordered BEFORE
+     * `forte.components`. Layer order outranks specificity completely, so
      * any box-shadow declared here wins unconditionally and silently deletes
      * half of a ring whose whole promise is that its two tones contrast with
      * EACH OTHER rather than with the page.
@@ -362,8 +362,8 @@
      * every pointermove, so animating them makes the handle trail the pointer.
      * Only colour is transitioned here, and the halo on ::before. */
     transition:
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Elevation and halo, kept off the thumb itself for the reason above.
@@ -374,17 +374,17 @@
    * active thumb only, so whether the thumb opens a stacking context varies
    * from one handle to the next. The negative inset lines the pseudo up with
    * the thumb's border box rather than its padding box. ::after is taken:
-   * `.pui-target` uses it for the hit-area expander. */
+   * `.forte-target` uses it for the hit-area expander. */
   .thumb::before {
     content: "";
     position: absolute;
-    inset: calc(-1 * var(--pui-slider-thumb-border-width));
+    inset: calc(-1 * var(--forte-slider-thumb-border-width));
     border-radius: inherit;
     box-shadow:
-      var(--pui-slider-thumb-shadow),
-      0 0 0 var(--pui-slider-thumb-halo-size) var(--pui-slider-thumb-halo);
+      var(--forte-slider-thumb-shadow),
+      0 0 0 var(--forte-slider-thumb-halo-size) var(--forte-slider-thumb-halo);
     pointer-events: none;
-    transition: box-shadow var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* The halo, on the states that mean "this handle is the one in play" — but
@@ -395,12 +395,12 @@
    * that actually takes focus is the hidden <input> inside. */
   @media (hover: hover) {
     .control:not([data-disabled]) .thumb:hover:not(:has(:focus-visible)) {
-      --pui-slider-thumb-halo-size: var(--pui-slider-thumb-halo-size-active);
+      --forte-slider-thumb-halo-size: var(--forte-slider-thumb-halo-size-active);
     }
   }
 
   .root[data-dragging] .thumb:not(:has(:focus-visible)) {
-    --pui-slider-thumb-halo-size: var(--pui-slider-thumb-halo-size-active);
+    --forte-slider-thumb-halo-size: var(--forte-slider-thumb-halo-size-active);
   }
 
   /* There is deliberately no press-squash on `scale` here. It would have to be
@@ -417,7 +417,7 @@
 /**
  * Accessibility overrides.
  *
- * `pretty-ui.a11y` is ordered AFTER `pretty-ui.components`, so these win by
+ * `forte.a11y` is ordered AFTER `forte.components`, so these win by
  * layer alone.
  *
  * Under forced colours the rail, the fill and the handle have to be separated
@@ -428,7 +428,7 @@
  * would change the box and throw the indicator's `height: inherit` off by its
  * width in exactly this one mode.
  */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .track {
       background-color: Canvas;

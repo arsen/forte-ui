@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Popover, Switch } from "@dofortech/pretty-ui";
+import { Button, Popover, Switch } from "@dofortech/forte-ui";
 
 const STEPS = [
   {

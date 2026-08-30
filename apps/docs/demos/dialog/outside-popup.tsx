@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog } from "@dofortech/pretty-ui";
+import { Button, Dialog } from "@dofortech/forte-ui";
 
 const ASSETS = [
   { name: "hero-wide.png", size: "2400 × 1260", weight: "812 KB" },
@@ -32,7 +32,7 @@ function Icon({ children }: { children: React.ReactNode }) {
 // so this row — which spans the full width of the popup — would otherwise
 // swallow every press in the empty space either side of the buttons, and
 // outside-press dismissal would stop working in a band across the screen.
-const pager = "pointer-events-none flex justify-center gap-(--pui-control-gap)";
+const pager = "pointer-events-none flex justify-center gap-(--forte-control-gap)";
 
 const preview =
   "grid h-[10rem] place-items-center rounded-3 bg-panel font-mono text-1 text-foreground-muted";

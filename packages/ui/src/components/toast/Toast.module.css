@@ -22,15 +22,15 @@
  *   --toast-height            this toast's own measured height
  *   --toast-frontmost-height  the front toast's height, set on the viewport
  *
- * Collapsed, each card steps back by `--pui-toast-peek` and shrinks by
- * `--pui-toast-stack-scale`. Expanded, it moves by the real height of
+ * Collapsed, each card steps back by `--forte-toast-peek` and shrinks by
+ * `--forte-toast-stack-scale`. Expanded, it moves by the real height of
  * everything in front of it plus one gap per step, and returns to full size.
  * The two states are the same three properties with different values, so the
  * transition between them is a plain interpolation.
  *
  * `--toast-offset-y` accumulates in DOM order, and the newest toast is first,
  * so it is always "how far back does this card sit" regardless of which edge
- * the stack is pinned to. `--pui-toast-stack-direction` is the sign that turns
+ * the stack is pinned to. `--forte-toast-stack-direction` is the sign that turns
  * that into a physical direction: -1 for a bottom stack (cards recede upwards)
  * and 1 for a top one.
  *
@@ -52,7 +52,7 @@
  * Motion notes
  * ---------------------------------------------------------------------------
  *  - No `prefers-reduced-motion` block. The one literal geometry here is the
- *    enter/exit travel, and it is gated on `--pui-motion-ok`; the durations
+ *    enter/exit travel, and it is gated on `--forte-motion-ok`; the durations
  *    shorten on their own. The collapsed stack's peek and scale are
  *    deliberately NOT gated — they are a static arrangement rather than an
  *    animation, and flattening them would remove the only sign that more than
@@ -66,11 +66,11 @@
  *    would stay in the DOM for the life of the page. The `loading` spinner is
  *    therefore a DESCENDANT of the root; `getAnimations()` is not called with
  *    `subtree: true`.
- *  - The expand/collapse runs on `--pui-duration-move`, the token for
+ *  - The expand/collapse runs on `--forte-duration-move`, the token for
  *    positional moves whose distance is measured at runtime — which is
  *    literally what `--toast-offset-y` is.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   /* Viewport ---------------------------------------------------------------
    * A fixed box the size of the FRONT toast, pinned to one corner or edge.
    *
@@ -83,32 +83,32 @@
    * ---------------------------------------------------------------------- */
   .viewport {
     /** Gap between the stack and the edge of the screen */
-    --pui-toast-viewport-inset: var(--pui-space-4);
+    --forte-toast-viewport-inset: var(--forte-space-4);
     /** Width of a toast. Shrinks on its own on a screen narrower than this. */
-    --pui-toast-width: 22rem;
+    --forte-toast-width: 22rem;
     /** Gap between toasts once the stack is expanded */
-    --pui-toast-gap: var(--pui-space-3);
+    --forte-toast-gap: var(--forte-space-3);
     /** How much of each card behind the front one shows */
-    --pui-toast-peek: var(--pui-space-3);
+    --forte-toast-peek: var(--forte-space-3);
     /** How much each card behind the front one shrinks, per step */
-    --pui-toast-stack-scale: 0.05;
+    --forte-toast-stack-scale: 0.05;
     /* Above the dialog band (40) and the anchored-popup band (50), because a
      * toast raised by an action taken INSIDE a dialog has to be visible over
      * it — that is most of what toasts are for. Re-point it to slot the stack
      * into an app's own scale. */
     /** Stacking order of the whole stack */
-    --pui-toast-z-index: 60;
+    --forte-toast-z-index: 60;
 
     box-sizing: border-box;
     position: fixed;
-    z-index: var(--pui-toast-z-index);
+    z-index: var(--forte-toast-z-index);
     /* `100%` is the containing block: the screen for a fixed viewport, the
      * container for a contained one. So the same expression keeps the stack
      * off both edges in either mode, with no viewport units and no scrollbar
      * arithmetic. */
     inline-size: min(
-      var(--pui-toast-width),
-      calc(100% - 2 * var(--pui-toast-viewport-inset))
+      var(--forte-toast-width),
+      calc(100% - 2 * var(--forte-toast-viewport-inset))
     );
     block-size: var(--toast-frontmost-height, 0px);
 
@@ -131,24 +131,24 @@
   }
 
   .viewport[data-position^="top"] {
-    inset-block-start: var(--pui-toast-viewport-inset);
+    inset-block-start: var(--forte-toast-viewport-inset);
   }
 
   .viewport[data-position^="bottom"] {
-    inset-block-end: var(--pui-toast-viewport-inset);
+    inset-block-end: var(--forte-toast-viewport-inset);
   }
 
   .viewport[data-position$="-start"] {
-    inset-inline-start: var(--pui-toast-viewport-inset);
+    inset-inline-start: var(--forte-toast-viewport-inset);
   }
 
   .viewport[data-position$="-end"] {
-    inset-inline-end: var(--pui-toast-viewport-inset);
+    inset-inline-end: var(--forte-toast-viewport-inset);
   }
 
   /* Centred, via auto margins against a definite inline size rather than a
    * 50% offset and a translate — `translate` is physical and would need
-   * `--pui-direction`, while auto margins are direction-agnostic and leave
+   * `--forte-direction`, while auto margins are direction-agnostic and leave
    * `translate` free for the stack. */
   .viewport[data-position="top"],
   .viewport[data-position="bottom"] {
@@ -165,59 +165,59 @@
      * unlayered rule beats this layer whatever its specificity) or re-point
      * the global tokens below, which this file only ever reads. */
     /** Card background */
-    --pui-toast-bg: var(--pui-color-overlay);
+    --forte-toast-bg: var(--forte-color-overlay);
     /** Card text colour */
-    --pui-toast-fg: var(--pui-color-foreground);
+    --forte-toast-fg: var(--forte-color-foreground);
     /** Corner radius */
-    --pui-toast-radius: var(--pui-radius-surface);
+    --forte-toast-radius: var(--forte-radius-surface);
     /** Padding inside the card */
-    --pui-toast-padding: var(--pui-space-4);
+    --forte-toast-padding: var(--forte-space-4);
     /** Gap between the icon, the text and the buttons */
-    --pui-toast-content-gap: var(--pui-space-3);
+    --forte-toast-content-gap: var(--forte-space-3);
     /** Card shadow */
-    --pui-toast-shadow: var(--pui-shadow-3);
+    --forte-toast-shadow: var(--forte-shadow-3);
     /* A toast is the one floating surface in the library with nothing behind
      * it: a dialog has a scrim, a select popup has a trigger it visibly grew
      * out of, and both are looked at because the user just opened them. A
      * toast arrives unannounced over whatever the page happens to be showing,
-     * and `--pui-color-overlay` is `--pui-gray-1` — the same value as
-     * `--pui-color-background`, so on a plain page the card is its own
+     * and `--forte-color-overlay` is `--forte-gray-1` — the same value as
+     * `--forte-color-background`, so on a plain page the card is its own
      * background plus a shadow, and shadows are the first thing to disappear
      * on a low-contrast display or under forced colors.
      *
      * It matters twice over for the deck: the cards behind the front one show
      * as ~12px strips of that same colour, so without an edge the stack reads
-     * as one card rather than three. `.pui-hc-surface` already puts a 1px
+     * as one card rather than three. `.forte-hc-surface` already puts a 1px
      * transparent border on the box, so this only colours it — the box model
      * does not change, and the forced-colors rule in the a11y layer still
      * repaints it CanvasText. */
     /** Hairline around the card */
-    --pui-toast-border: var(--pui-color-border);
+    --forte-toast-border: var(--forte-color-border);
     /** Icon colour. `data-type` re-points it per status. */
-    --pui-toast-accent: var(--pui-color-foreground-muted);
+    --forte-toast-accent: var(--forte-color-foreground-muted);
     /** Which way the stack recedes: `-1` for a bottom stack, `1` for a top one */
-    --pui-toast-stack-direction: -1;
+    --forte-toast-stack-direction: -1;
     /* A percentage of the card's own height, so it is the same gesture for a
-     * one-line toast and a four-line one. Gated on `--pui-motion-ok` because
-     * it is a literal rather than a `--pui-travel-*` token — under reduced
+     * one-line toast and a four-line one. Gated on `--forte-motion-ok` because
+     * it is a literal rather than a `--forte-travel-*` token — under reduced
      * motion it lands on `0%` and the fade is left to carry the arrival. */
     /** How far the card slides in from, as a share of its own height */
-    --pui-toast-enter-travel: 100%;
+    --forte-toast-enter-travel: 100%;
     /** Length of the arriving gesture */
-    --pui-toast-enter-duration: var(--pui-duration-normal);
-    /* Spring over `normal` rather than over `--pui-duration-spring-snappy`:
+    --forte-toast-enter-duration: var(--forte-duration-normal);
+    /* Spring over `normal` rather than over `--forte-duration-spring-snappy`:
      * the whole curve still plays, overshoot included, just compressed. This
      * is the pairing `Dialog` already uses, and matching it is the point — a
      * toast that took 400ms to arrive read as heavier than the dialog it was
      * reporting on. */
     /** Curve of the arriving gesture */
-    --pui-toast-enter-ease: var(--pui-ease-spring-snappy);
+    --forte-toast-enter-ease: var(--forte-ease-spring-snappy);
     /* Shorter than the arrival: a dismissal is something the user has already
      * decided on and only needs confirming. */
     /** Length of the leaving gesture */
-    --pui-toast-exit-duration: var(--pui-duration-fast);
+    --forte-toast-exit-duration: var(--forte-duration-fast);
     /** Curve of the leaving gesture */
-    --pui-toast-exit-ease: var(--pui-ease-exit);
+    --forte-toast-exit-ease: var(--forte-ease-exit);
 
     box-sizing: border-box;
     position: absolute;
@@ -232,14 +232,14 @@
      * own), and the viewport paints no background for them to fall behind. */
     z-index: calc(-1 * var(--toast-index, 0));
 
-    border: 1px solid var(--pui-toast-border);
-    border-radius: var(--pui-toast-radius);
-    background-color: var(--pui-toast-bg);
-    color: var(--pui-toast-fg);
-    box-shadow: var(--pui-toast-shadow);
+    border: 1px solid var(--forte-toast-border);
+    border-radius: var(--forte-toast-radius);
+    background-color: var(--forte-toast-bg);
+    color: var(--forte-toast-fg);
+    box-shadow: var(--forte-toast-shadow);
 
-    font-family: var(--pui-font-sans);
-    line-height: var(--pui-line-height-normal);
+    font-family: var(--forte-font-sans);
+    line-height: var(--forte-line-height-normal);
 
     /* Handed back from the viewport, which is `pointer-events: none` so the
      * empty box around the cards does not eat clicks meant for the page. */
@@ -262,23 +262,23 @@
     height: var(--toast-frontmost-height, auto);
     translate: 0
       calc(
-        var(--pui-toast-stack-direction) * var(--toast-index, 0) *
-          var(--pui-toast-peek)
+        var(--forte-toast-stack-direction) * var(--toast-index, 0) *
+          var(--forte-toast-peek)
       );
-    scale: calc(1 - var(--toast-index, 0) * var(--pui-toast-stack-scale));
+    scale: calc(1 - var(--toast-index, 0) * var(--forte-toast-stack-scale));
 
     transition:
-      opacity var(--pui-toast-enter-duration) var(--pui-ease-standard),
-      transform var(--pui-toast-enter-duration) var(--pui-toast-enter-ease),
-      height var(--pui-duration-move) var(--pui-ease-standard),
-      translate var(--pui-duration-move) var(--pui-ease-standard),
-      scale var(--pui-duration-move) var(--pui-ease-standard);
+      opacity var(--forte-toast-enter-duration) var(--forte-ease-standard),
+      transform var(--forte-toast-enter-duration) var(--forte-toast-enter-ease),
+      height var(--forte-duration-move) var(--forte-ease-standard),
+      translate var(--forte-duration-move) var(--forte-ease-standard),
+      scale var(--forte-duration-move) var(--forte-ease-standard);
   }
 
   /* A top stack grows downwards, and its cards shrink toward the top edge. */
   .viewport[data-position^="top"] .root {
-    --pui-toast-stack-direction: 1;
-    --pui-toast-enter-travel: -100%;
+    --forte-toast-stack-direction: 1;
+    --forte-toast-enter-travel: -100%;
 
     inset-block-start: 0;
     inset-block-end: auto;
@@ -293,17 +293,17 @@
     height: var(--toast-height, auto);
     translate: 0
       calc(
-        var(--pui-toast-stack-direction) *
+        var(--forte-toast-stack-direction) *
           (
             var(--toast-offset-y, 0px) + var(--toast-index, 0) *
-              var(--pui-toast-gap)
+              var(--forte-toast-gap)
           )
       );
     scale: 1;
   }
 
   /* The hover bridge -------------------------------------------------------
-   * Fanned out, the cards are separated by `--pui-toast-gap` of empty space,
+   * Fanned out, the cards are separated by `--forte-toast-gap` of empty space,
    * and the viewport underneath is `pointer-events: none` so it cannot eat
    * clicks meant for the page. Between two cards that leaves a dead strip: the
    * pointer moving from one toast to the next passes through it, the viewport
@@ -328,7 +328,7 @@
     content: "";
     position: absolute;
     inset-inline: 0;
-    inset-block: calc(-0.5 * var(--pui-toast-gap) - 1px);
+    inset-block: calc(-0.5 * var(--forte-toast-gap) - 1px);
     z-index: -1;
   }
 
@@ -347,17 +347,17 @@
   .root[data-ending-style] {
     opacity: 0;
     transform: translateY(
-      calc(var(--pui-toast-enter-travel) * var(--pui-motion-ok))
+      calc(var(--forte-toast-enter-travel) * var(--forte-motion-ok))
     );
   }
 
   .root[data-ending-style] {
     transition:
-      opacity var(--pui-toast-exit-duration) var(--pui-toast-exit-ease),
-      transform var(--pui-toast-exit-duration) var(--pui-toast-exit-ease),
-      height var(--pui-duration-move) var(--pui-ease-standard),
-      translate var(--pui-duration-move) var(--pui-ease-standard),
-      scale var(--pui-duration-move) var(--pui-ease-standard);
+      opacity var(--forte-toast-exit-duration) var(--forte-toast-exit-ease),
+      transform var(--forte-toast-exit-duration) var(--forte-toast-exit-ease),
+      height var(--forte-duration-move) var(--forte-ease-standard),
+      translate var(--forte-duration-move) var(--forte-ease-standard),
+      scale var(--forte-duration-move) var(--forte-ease-standard);
   }
 
   /* A swiped toast leaves the way it was pushed, continuing from wherever the
@@ -394,23 +394,23 @@
    * icon set in Toast.tsx (WCAG SC 1.4.1).
    * ---------------------------------------------------------------------- */
   .root[data-type="success"] {
-    --pui-toast-accent: var(--pui-color-success-text);
+    --forte-toast-accent: var(--forte-color-success-text);
   }
 
   .root[data-type="error"] {
-    --pui-toast-accent: var(--pui-color-danger-text);
+    --forte-toast-accent: var(--forte-color-danger-text);
   }
 
   .root[data-type="warning"] {
-    --pui-toast-accent: var(--pui-color-warning-text);
+    --forte-toast-accent: var(--forte-color-warning-text);
   }
 
   .root[data-type="info"] {
-    --pui-toast-accent: var(--pui-color-info-text);
+    --forte-toast-accent: var(--forte-color-info-text);
   }
 
   .root[data-type="loading"] {
-    --pui-toast-accent: var(--pui-color-primary-text);
+    --forte-toast-accent: var(--forte-color-primary-text);
   }
 
   /* Content ----------------------------------------------------------------
@@ -429,11 +429,11 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    gap: var(--pui-toast-content-gap);
-    padding: var(--pui-toast-padding);
-    font-size: var(--pui-font-size-2);
+    gap: var(--forte-toast-content-gap);
+    padding: var(--forte-toast-padding);
+    font-size: var(--forte-font-size-2);
 
-    transition: opacity var(--pui-duration-move) var(--pui-ease-standard);
+    transition: opacity var(--forte-duration-move) var(--forte-ease-standard);
   }
 
   /* A card behind the front one shows as a blank edge, not as two overlapping
@@ -452,24 +452,24 @@
     min-inline-size: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-space-1);
+    gap: var(--forte-space-1);
   }
 
   .title {
     margin: 0;
-    font-size: var(--pui-font-size-2);
-    font-weight: var(--pui-font-weight-semibold);
-    line-height: var(--pui-line-height-tight);
-    color: var(--pui-toast-fg);
+    font-size: var(--forte-font-size-2);
+    font-weight: var(--forte-font-weight-semibold);
+    line-height: var(--forte-line-height-tight);
+    color: var(--forte-toast-fg);
   }
 
   .description {
     margin: 0;
-    font-size: var(--pui-font-size-2);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
     /* -muted, not -subtle: -subtle is 3.73:1 and fails SC 1.4.3 for body
      * copy. */
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
   }
 
   /* Icon -------------------------------------------------------------------
@@ -483,14 +483,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--pui-toast-accent);
+    color: var(--forte-toast-accent);
     pointer-events: none;
   }
 
   .glyph {
     display: block;
-    inline-size: var(--pui-space-4);
-    block-size: var(--pui-space-4);
+    inline-size: var(--forte-space-4);
+    block-size: var(--forte-space-4);
   }
 
   /* Action ----------------------------------------------------------------
@@ -504,38 +504,38 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-block-size: max(var(--pui-control-h-sm), var(--pui-target-min));
-    padding-inline: var(--pui-control-px-sm);
+    min-block-size: max(var(--forte-control-h-sm), var(--forte-target-min));
+    padding-inline: var(--forte-control-px-sm);
     margin: 0;
-    border: 1px solid var(--pui-color-border);
-    border-radius: var(--pui-radius-control);
+    border: 1px solid var(--forte-color-border);
+    border-radius: var(--forte-radius-control);
 
-    background-color: var(--pui-color-panel);
-    color: var(--pui-color-foreground);
+    background-color: var(--forte-color-panel);
+    color: var(--forte-color-foreground);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-font-size-2);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-2);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .action:hover:not([data-disabled]) {
-      background-color: var(--pui-color-panel-hover);
+      background-color: var(--forte-color-panel-hover);
     }
   }
 
   .action:active:not([data-disabled]) {
-    background-color: var(--pui-color-panel-active);
+    background-color: var(--forte-color-panel-active);
   }
 
   .action[data-disabled] {
@@ -556,42 +556,42 @@
     align-items: center;
     justify-content: center;
     align-self: flex-start;
-    inline-size: var(--pui-target-min);
-    block-size: var(--pui-target-min);
+    inline-size: var(--forte-target-min);
+    block-size: var(--forte-target-min);
     padding: 0;
     margin: 0;
     border: 0;
-    border-radius: var(--pui-radius-control);
+    border-radius: var(--forte-radius-control);
 
     background-color: transparent;
-    color: var(--pui-color-foreground-muted);
+    color: var(--forte-color-foreground-muted);
 
     cursor: pointer;
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   @media (hover: hover) {
     .close:hover {
-      background-color: var(--pui-color-panel-hover);
-      color: var(--pui-color-foreground);
+      background-color: var(--forte-color-panel-hover);
+      color: var(--forte-color-foreground);
     }
   }
 
   .close:active {
-    background-color: var(--pui-color-panel-active);
+    background-color: var(--forte-color-panel-active);
   }
 }
 
 /* Forced colors ------------------------------------------------------------
- * Ordered after `pretty-ui.components`, so these win on layer order alone —
+ * Ordered after `forte.components`, so these win on layer order alone —
  * specificity is not what decides it. See CONTRIBUTING.md.
  * ------------------------------------------------------------------------ */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* Every shadow is stripped, so the deck loses the one thing separating the
-     * cards from each other. `.pui-hc-surface` already repaints each root as
+     * cards from each other. `.forte-hc-surface` already repaints each root as
      * an opaque Canvas box with a CanvasText outline, which is exactly the
      * separation that is needed — this only makes sure the cards behind stay
      * opaque, since a see-through card would show the one below it straight

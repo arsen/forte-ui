@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
-import { Button, ButtonGroup, Menu } from "@dofortech/pretty-ui";
+import { Button, ButtonGroup, Menu } from "@dofortech/forte-ui";
 
 const ICON = "size-4 shrink-0";
 
@@ -16,8 +16,8 @@ export default function ButtonGroupSplit() {
       // class cannot set an arbitrary custom property.
       style={
         {
-          "--pui-button-group-separator-color":
-            "color-mix(in oklab, var(--pui-color-on-primary) 40%, transparent)",
+          "--forte-button-group-separator-color":
+            "color-mix(in oklab, var(--forte-color-on-primary) 40%, transparent)",
         } as React.CSSProperties
       }
     >

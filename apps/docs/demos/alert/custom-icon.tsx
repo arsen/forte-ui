@@ -1,9 +1,9 @@
 "use client";
 
-import { Alert } from "@dofortech/pretty-ui";
+import { Alert } from "@dofortech/forte-ui";
 import { PartyPopper, Rocket } from "lucide-react";
 
-/* `size-4` is `--pui-space-4`, so the glyph follows the space scale like every
+/* `size-4` is `--forte-space-4`, so the glyph follows the space scale like every
  * other measure on the page. `Alert.Icon` sizes a bare `svg` child for you —
  * this is here because lucide takes a class rather than inheriting one. */
 const ICON = "size-4 shrink-0";

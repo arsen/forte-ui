@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 
 export default function ButtonSizes() {
   return (

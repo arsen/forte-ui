@@ -18,7 +18,7 @@ An avatar is mostly a promise about the *absence* of a picture. The photo is the
 ## Import
 
 ```tsx
-import { Avatar } from "@dofortech/pretty-ui";
+import { Avatar } from "@dofortech/forte-ui";
 ```
 
 `Avatar` is a namespace of five parts. `Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` are Base UI's anatomy; `Avatar.Badge` and `Avatar.Group` are added here, and neither has state of its own.
@@ -37,7 +37,7 @@ Both children are optional and neither is ever rendered speculatively: exactly o
 
 ### Sizes
 
-Five presets, `xs` through `xl`, spanning `1.5rem` to `4rem`. Only one property changes between them: the initials, the icon and the `rounded` corner are all fractions of `--pui-avatar-size`, so a size the presets do not cover is one custom property rather than four.
+Five presets, `xs` through `xl`, spanning `1.5rem` to `4rem`. Only one property changes between them: the initials, the icon and the `rounded` corner are all fractions of `--forte-avatar-size`, so a size the presets do not cover is one custom property rather than four.
 
 <DemoBlock id="avatar/sizes" />
 
@@ -47,7 +47,7 @@ Five presets, `xs` through `xl`, spanning `1.5rem` to `4rem`. Only one property 
 
 <DemoBlock id="avatar/shapes" />
 
-`circle` stays a circle under `data-pui-radius="none"`. That preset squares off the library's corners, and a caller who wrote `shape="circle"` was describing the thing, not decorating it. `rounded` does follow the preset, because there roundness is the styling.
+`circle` stays a circle under `data-forte-radius="none"`. That preset squares off the library's corners, and a caller who wrote `shape="circle"` was describing the thing, not decorating it. `rounded` does follow the preset, because there roundness is the styling.
 
 ### Variants and tones
 
@@ -77,7 +77,7 @@ The middle avatar's `src` points at a file that does not exist. Nothing torn eve
 
 <DemoBlock id="avatar/group" />
 
-It is layout and nothing else — no state, no context, no props. Every avatar keeps its own `size`, `shape`, `variant` and `tone`; the group only pulls each child back by `--pui-avatar-group-overlap` and pushes a ring onto every descendant `Avatar.Root`. That ring is a real border on a pseudo-element rather than a `box-shadow`, so it is still there under forced colours, where shadows are stripped and a stack of avatars would otherwise fuse into one blob.
+It is layout and nothing else — no state, no context, no props. Every avatar keeps its own `size`, `shape`, `variant` and `tone`; the group only pulls each child back by `--forte-avatar-group-overlap` and pushes a ring onto every descendant `Avatar.Root`. That ring is a real border on a pseudo-element rather than a `box-shadow`, so it is still there under forced colours, where shadows are stripped and a stack of avatars would otherwise fuse into one blob.
 
 Children paint in DOM order, so the last one is on top. Put an overflow counter there — it is where the eye finishes, and it is the element most likely to be a link.
 
@@ -89,13 +89,13 @@ The overlap is a **length**, not a fraction of the avatar's size. The avatar's s
 
 <DemoBlock id="avatar/presence" />
 
-The part earns its place on the arithmetic, which is the half a hand-rolled `<span>` gets wrong. A dot at `inset: 0` sits on the corner of the **box**, and the corner of the box is not on the avatar's outline unless the avatar is a square. The point where the 45° diagonal crosses a corner of radius `r` is `0.2929r` in from the box corner — `14.645%` for a circle, `0` for `square`, and whatever `data-pui-radius` currently makes the corner for `rounded`. One expression covers all three shapes, and it stays right when you override `--pui-avatar-radius` by hand.
+The part earns its place on the arithmetic, which is the half a hand-rolled `<span>` gets wrong. A dot at `inset: 0` sits on the corner of the **box**, and the corner of the box is not on the avatar's outline unless the avatar is a square. The point where the 45° diagonal crosses a corner of radius `r` is `0.2929r` in from the box corner — `14.645%` for a circle, `0` for `square`, and whatever `data-forte-radius` currently makes the corner for `rounded`. One expression covers all three shapes, and it stays right when you override `--forte-avatar-radius` by hand.
 
-Sizing is the other half, and the two are the same bug. `--pui-avatar-badge-size` is a fraction of `--pui-avatar-size`, so the offset that centres the dot on the outline moves with the avatar. A fixed length looks correct at exactly one `size`: at `xl` the dot floats off the disc, and at `xs` it is half the avatar.
+Sizing is the other half, and the two are the same bug. `--forte-avatar-badge-size` is a fraction of `--forte-avatar-size`, so the offset that centres the dot on the outline moves with the avatar. A fixed length looks correct at exactly one `size`: at `xl` the dot floats off the disc, and at `xs` it is half the avatar.
 
 <DemoBlock id="avatar/badge" />
 
-Content widens the badge into a pill, growing inward from the pinned edge — `--pui-avatar-badge-size` becomes its `min-inline-size` rather than its width, so `4` stays a disc and `12` does not become an ellipse. `--pui-avatar-badge-ring-color` follows `--pui-avatar-ring-color` by default, so a badge inside a group picks up the group's ring colour without being told and a lone avatar falls back to the page background.
+Content widens the badge into a pill, growing inward from the pinned edge — `--forte-avatar-badge-size` becomes its `min-inline-size` rather than its width, so `4` stays a disc and `12` does not become an ellipse. `--forte-avatar-badge-ring-color` follows `--forte-avatar-ring-color` by default, so a badge inside a group picks up the group's ring colour without being told and a lone avatar falls back to the page background.
 
 `placement` matters most in a group. Avatars overlap toward the inline-start, so every avatar but the last has its inline-end corner painted over by the next one — put the dots on `bottom-start` there, or badge only the last avatar.
 
@@ -127,7 +127,7 @@ Under forced colours the fallback gains a `CanvasText` border. Backgrounds are r
 
 ### Motion
 
-One transition, on one property. The image fades in over `--pui-duration-fast` once it has loaded, and fades out again if a later `src` fails.
+One transition, on one property. The image fades in over `--forte-duration-fast` once it has loaded, and fades out again if a later `src` fails.
 
 It is a transition rather than a keyframe animation for the usual reason: a `src` that changes twice in quick succession reverses from wherever the fade got to instead of snapping back and restarting. There is no scale and no travel, so there is nothing for reduced motion to collapse — and nothing that needs collapsing. The duration token shortens itself, and a fade is the one enter effect that stays legible when it does. There is no `prefers-reduced-motion` block in this stylesheet.
 
@@ -139,11 +139,11 @@ Everything below is declared on `Avatar.Root` itself, which is also why an ances
 
 <ThemingTable component="Avatar" part="root" />
 
-`Avatar.Group` has three of its own. They are declared on the group and reach the avatars through a descendant selector rather than by inheritance, for the same reason: an avatar's own `--pui-avatar-ring-width` would beat anything the group merely passed down.
+`Avatar.Group` has three of its own. They are declared on the group and reach the avatars through a descendant selector rather than by inheritance, for the same reason: an avatar's own `--forte-avatar-ring-width` would beat anything the group merely passed down.
 
 <ThemingTable component="Avatar" part="group" />
 
-`Avatar.Badge` declares its own, and they are set on the **badge**, not on the root: an element's own declaration beats an inherited one, so `--pui-avatar-badge-size` on `Avatar.Root` would be ignored.
+`Avatar.Badge` declares its own, and they are set on the **badge**, not on the root: an element's own declaration beats an inherited one, so `--forte-avatar-badge-size` on `Avatar.Root` would be ignored.
 
 <ThemingTable component="Avatar" part="badge" />
 

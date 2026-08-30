@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/pretty-ui";
+import { Resizable } from "@dofortech/forte-ui";
 
 /* The three-pane editor shape: one horizontal group, with a vertical group
  * living inside its middle panel. Nothing coordinates the two — the inner

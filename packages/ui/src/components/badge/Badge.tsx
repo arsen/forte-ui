@@ -43,18 +43,18 @@ export interface BadgeProps
   tone?: BadgeTone;
   /**
    * Size of the badge. The three differ mostly in how much air surrounds the
-   * label: the type scale bottoms out at `--pui-font-size-1`, so `sm` and
+   * label: the type scale bottoms out at `--forte-font-size-1`, so `sm` and
    * `md` share it and `lg` steps up.
    *
-   * Unlike a control, a badge is not resized by `data-pui-density` — its
+   * Unlike a control, a badge is not resized by `data-forte-density` — its
    * height comes from the text it sits beside, which is the thing it should
    * track.
    * @default "md"
    */
   size?: BadgeSize;
   /**
-   * Corner treatment. `rounded` follows `--pui-radius-control`, so it moves
-   * with a `data-pui-radius` preset like everything else; `pill` is fully
+   * Corner treatment. `rounded` follows `--forte-radius-control`, so it moves
+   * with a `data-forte-radius` preset like everything else; `pill` is fully
    * round, which is the conventional shape for a count.
    * @default "rounded"
    */
@@ -125,7 +125,7 @@ export interface BadgeProps
  * <Badge tone="neutral" variant="outline" render={<a href="/tags/css" />}>css</Badge>
  * ```
  *
- * Styling is driven by `data-*` attributes and `--pui-badge-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-badge-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[tone=success]:...`) without wrapping.
  */
@@ -156,8 +156,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
     ref,
     defaultTagName: "span",
     props: {
-      className: clsx(styles.root, "pui-focus-ring", className),
-      "data-pui": "badge",
+      className: clsx(styles.root, "forte-focus-ring", className),
+      "data-forte": "badge",
       "data-variant": variant,
       "data-tone": tone,
       "data-size": size,
@@ -173,7 +173,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badg
       children: (
         <>
           {dot ? (
-            <span className={styles.dot} data-pui="badge-dot" aria-hidden="true" />
+            <span className={styles.dot} data-forte="badge-dot" aria-hidden="true" />
           ) : null}
           {children ?? printed}
         </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, InputGroup } from "@dofortech/pretty-ui";
+import { Field, InputGroup } from "@dofortech/forte-ui";
 
 export default function InputGroupStates() {
   return (
@@ -23,7 +23,7 @@ export default function InputGroupStates() {
           <InputGroup.Addon>
             <InputGroup.Text>https://</InputGroup.Text>
           </InputGroup.Addon>
-          <InputGroup.Input readOnly defaultValue="pretty-ui.dev" />
+          <InputGroup.Input readOnly defaultValue="forte-ui.dev" />
         </InputGroup.Root>
       </Field.Root>
 

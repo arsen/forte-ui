@@ -29,7 +29,7 @@ Every Base UI form control works inside a field with no adapter:
 ## Import
 
 ```tsx
-import { Field } from "@dofortech/pretty-ui";
+import { Field } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -148,14 +148,14 @@ which forced-colors does preserve.
 
 ## Theming
 
-`--pui-field-gap` and `--pui-field-indent` are declared on `Field.Root` and read
+`--forte-field-gap` and `--forte-field-indent` are declared on `Field.Root` and read
 by the parts below it, so one value on the root moves the whole field. The
 colour and font knobs stay on the part that paints them, so recolouring the
 error does not reach the description.
 
 <ThemingTable component="Field" declaredOn />
 
-`--pui-field-indent` defaults to an `md` Checkbox's width plus the label gap.
+`--forte-field-indent` defaults to an `md` Checkbox's width plus the label gap.
 It has to be a value rather than a measurement — the control declares its own
 size on itself, and a custom property set on a descendant cannot be read from an
 ancestor — so a field built on `sm` or `lg` controls wants it set explicitly.

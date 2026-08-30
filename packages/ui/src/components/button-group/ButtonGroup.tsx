@@ -77,7 +77,7 @@ export const ButtonGroupRoot = React.forwardRef<HTMLDivElement, ButtonGroupRootP
       defaultTagName: "div",
       props: {
         className: clsx(styles.root, className),
-        "data-pui": "button-group",
+        "data-forte": "button-group",
         "data-orientation": orientation,
         // Before the spread, so a consumer who nests groups can demote the
         // inner ones to `role="presentation"` and keep the announced tree to
@@ -135,7 +135,7 @@ export const ButtonGroupSeparator = React.forwardRef<
         orientation ?? (groupOrientation === "horizontal" ? "vertical" : "horizontal")
       }
       className={clsx(styles.separator, className)}
-      data-pui="button-group-separator"
+      data-forte="button-group-separator"
       {...props}
     />
   );
@@ -175,7 +175,7 @@ export const ButtonGroupText = React.forwardRef<HTMLDivElement, ButtonGroupTextP
       defaultTagName: "div",
       props: {
         className: clsx(styles.text, className),
-        "data-pui": "button-group-text",
+        "data-forte": "button-group-text",
         ...props,
       },
     });
@@ -200,7 +200,7 @@ export const ButtonGroupText = React.forwardRef<HTMLDivElement, ButtonGroupTextP
  * set should cost one Tab press instead, reach for
  * [`Toolbar`](/components/toolbar).
  *
- * Styling is driven by `data-*` attributes and `--pui-button-group-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-button-group-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[orientation=vertical]:...`) without
  * wrapping.

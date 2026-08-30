@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Slider } from "@dofortech/pretty-ui";
+import { Slider } from "@dofortech/forte-ui";
 
 const column = "grid gap-5";
 
@@ -12,8 +12,8 @@ const column = "grid gap-5";
 // a class string nobody can read, and none of it is layout or typography.
 const guides: CSSProperties = {
   backgroundImage:
-    "linear-gradient(var(--pui-color-danger-border), var(--pui-color-danger-border))," +
-    "linear-gradient(var(--pui-color-danger-border), var(--pui-color-danger-border))",
+    "linear-gradient(var(--forte-color-danger-border), var(--forte-color-danger-border))," +
+    "linear-gradient(var(--forte-color-danger-border), var(--forte-color-danger-border))",
   backgroundSize: "1px 100%, 1px 100%",
   backgroundPosition: "left center, right center",
   backgroundRepeat: "no-repeat",

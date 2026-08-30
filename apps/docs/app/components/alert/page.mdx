@@ -20,7 +20,7 @@ There is no Base UI primitive underneath, because there is almost no state to mo
 ## Import
 
 ```tsx
-import { Alert } from "@dofortech/pretty-ui";
+import { Alert } from "@dofortech/forte-ui";
 ```
 
 `Alert` is a namespace of six parts, and every one of them is optional.
@@ -83,7 +83,7 @@ It sits against the inline-end edge, centred on the whole message rather than on
 
 <DemoBlock id="alert/dismissible" />
 
-`Alert.Close` dismisses the card on its own, so the common case needs no state and no handler at all. The card does not disappear on the click — it collapses out of the flow over `--pui-alert-exit-duration`, and the content below rises into the space rather than jumping up once the element is gone.
+`Alert.Close` dismisses the card on its own, so the common case needs no state and no handler at all. The card does not disappear on the click — it collapses out of the flow over `--forte-alert-exit-duration`, and the content below rises into the space rather than jumping up once the element is gone.
 
 Pass `open` and `onOpenChange` to take that over. The important half is that setting `open` to `false` **starts** the exit rather than ending it: the card is still on screen for the length of the transition and removes itself when it finishes. If the alert lives in a list, splice it out in `onExitComplete`, which fires at the other end.
 
@@ -97,7 +97,7 @@ Pass `open` and `onOpenChange` to take that over. The important half is that set
 
 <DemoBlock id="alert/custom-icon" />
 
-Children of `Alert.Icon` replace the tone's standard glyph rather than sitting beside it, and an `svg` is sized to `--pui-alert-icon-size` without a width of its own. Keep it `aria-hidden` — the alert's text already says what happened.
+Children of `Alert.Icon` replace the tone's standard glyph rather than sitting beside it, and an `svg` is sized to `--forte-alert-icon-size` without a width of its own. Keep it `aria-hidden` — the alert's text already says what happened.
 
 ## Accessibility
 
@@ -117,7 +117,7 @@ Every text pair the component can produce clears AA, and the harness now asserts
 
 `Alert.Title` renders a `<div>`, not a heading. An alert is a message about the state of the page rather than a section of it, and an `<h3>` here lands in the document outline between two real sections — which is what someone navigating by heading has to wade through. If the alert genuinely opens a region, name the region instead.
 
-`Alert.Close` is a 24×24 button (SC 2.5.8) with an `aria-label` of "Dismiss", a `.pui-focus-ring`, and `type="button"` — the last because the HTML default is `submit`, and an alert inside a form is exactly where that bites.
+`Alert.Close` is a 24×24 button (SC 2.5.8) with an `aria-label` of "Dismiss", a `.forte-focus-ring`, and `type="button"` — the last because the HTML default is `submit`, and an alert inside a form is exactly where that bites.
 
 Dismissing it does leave focus on `<body>`, because the element holding focus is the one that goes away. The exit transition delays that by 160ms rather than fixing it, and the component does not guess where focus should land — only the page knows whether the right answer is the control that raised the alert, the next alert in a stack, or the heading above it. If the alert was reached by keyboard, move focus somewhere deliberate in `onExitComplete`.
 
@@ -129,11 +129,11 @@ There is an exit and deliberately no enter, and the asymmetry is the point. An a
 
 The exit collapses rather than only fading. `block-size`, `padding-block` and `border-block-width` all go to zero alongside the opacity and a short slide toward the inline-end, so the content below rises into the gap over the same 160ms. A dismissal that only faded would end with everything under the card jumping up its full height, which reads as a second, unexplained event.
 
-`block-size: auto` is not interpolable, so the collapse needs a from-value: the component measures the card at the moment it is asked to leave and hands the number over as `--pui-alert-exit-from`, then forces one style recalculation before applying `[data-ending-style]`. Without that recalculation React's next render folds into the same one, the browser only ever sees `auto → 0`, and the card blinks out instead of closing. The measured height is the only value in the stylesheet that is not a token, because it is not a design decision.
+`block-size: auto` is not interpolable, so the collapse needs a from-value: the component measures the card at the moment it is asked to leave and hands the number over as `--forte-alert-exit-from`, then forces one style recalculation before applying `[data-ending-style]`. Without that recalculation React's next render folds into the same one, the browser only ever sees `auto → 0`, and the card blinks out instead of closing. The measured height is the only value in the stylesheet that is not a token, because it is not a design decision.
 
 It is a transition rather than a keyframe animation, for the reason the rest of the library gives: an alert reopened while it is still leaving reverses from wherever it got to instead of snapping back and restarting. The unmount waits on `Promise.all(root.getAnimations().map(a => a.finished))` — the same wait Base UI does before removing a popup, with the same trap attached, so never put an `infinite` animation on `Alert.Root` itself. `getAnimations()` is not called with `subtree: true`, so a spinner on a child is safe.
 
-Nothing here needs a `prefers-reduced-motion` block, and there is none. `--pui-alert-exit-travel` is a `--pui-travel-*` token, so the slide collapses to `0px` on its own and the fade is left to carry the dismissal; the duration shortens itself and never reaches `0s`, which matters more than usual here — at exactly zero no transition object is created, `finished` never resolves, and the card waiting on it would stay in the DOM for good.
+Nothing here needs a `prefers-reduced-motion` block, and there is none. `--forte-alert-exit-travel` is a `--forte-travel-*` token, so the slide collapses to `0px` on its own and the fade is left to carry the dismissal; the duration shortens itself and never reaches `0s`, which matters more than usual here — at exactly zero no transition object is created, `finished` never resolves, and the card waiting on it would stay in the DOM for good.
 
 The one other transition in the file is the close button's hover, on colour alone.
 
@@ -143,12 +143,12 @@ Everything below is declared on `Alert.Root` itself, which is also why an ancest
 
 <ThemingTable component="Alert" part="root" />
 
-The five `--pui-alert-tone-*` slots are the whole colour system: `tone` fills them in, and `variant` decides which of them reach the surface. A one-off tone is those five properties on one element, with no new variant and no wrapper.
+The five `--forte-alert-tone-*` slots are the whole colour system: `tone` fills them in, and `variant` decides which of them reach the surface. A one-off tone is those five properties on one element, with no new variant and no wrapper.
 
 State is on `data-variant` and `data-tone`, both reachable from plain CSS or a Tailwind arbitrary variant — `data-[tone=danger]:...` — without a wrapper element.
 
 <Callout>
-  The status families gained `--pui-color-success-soft`, `--pui-color-success-border` and their `warning` and `info` counterparts for this component, so all four status tones now offer the same set `danger` always did. They are ordinary tokens: anything can use them.
+  The status families gained `--forte-color-success-soft`, `--forte-color-success-border` and their `warning` and `info` counterparts for this component, so all four status tones now offer the same set `danger` always did. They are ordinary tokens: anything can use them.
 </Callout>
 
 ## API reference

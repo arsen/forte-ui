@@ -1,6 +1,6 @@
 "use client";
 
-import { Select } from "@dofortech/pretty-ui";
+import { Select } from "@dofortech/forte-ui";
 
 const formats = [
   { value: "csv", label: "CSV", available: true },

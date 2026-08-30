@@ -1,6 +1,6 @@
 "use client";
 
-import { Toggle, ToggleGroup } from "@dofortech/pretty-ui";
+import { Toggle, ToggleGroup } from "@dofortech/forte-ui";
 
 export default function ToggleGroupOrientation() {
   return (

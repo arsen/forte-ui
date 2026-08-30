@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Tooltip } from "@dofortech/pretty-ui";
+import { Button, Tooltip } from "@dofortech/forte-ui";
 
 export default function TooltipBasic() {
   return (

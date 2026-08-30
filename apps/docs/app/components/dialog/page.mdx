@@ -25,7 +25,7 @@ A dialog puts a surface on top of the page and keeps focus inside it until it cl
 ## Import
 
 ```tsx
-import { Dialog, AlertDialog } from "@dofortech/pretty-ui";
+import { Dialog, AlertDialog } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -38,7 +38,7 @@ import { Dialog, AlertDialog } from "@dofortech/pretty-ui";
 
 Three details there are load-bearing.
 
-**The heading column has to carry the popup's own gap.** The stylesheet tightens `Dialog.Description` under `Dialog.Title` with a *negative* top margin — `calc(var(--pui-space-1) - var(--pui-dialog-gap))` — which cancels the popup's gap and leaves a single step between the two. Wrap them in a plain `<div>` and the gap goes away while the margin stays, so the description rides up onto the title. Give the wrapper `gap: var(--pui-dialog-gap)` and the pair spaces itself exactly as it does when both are direct children of the popup.
+**The heading column has to carry the popup's own gap.** The stylesheet tightens `Dialog.Description` under `Dialog.Title` with a *negative* top margin — `calc(var(--forte-space-1) - var(--forte-dialog-gap))` — which cancels the popup's gap and leaves a single step between the two. Wrap them in a plain `<div>` and the gap goes away while the margin stays, so the description rides up onto the title. Give the wrapper `gap: var(--forte-dialog-gap)` and the pair spaces itself exactly as it does when both are direct children of the popup.
 
 **`iconOnly` needs an `aria-label`.** There is no text in the button to announce, so without one it is read out as "button". The styling already holds the 24px minimum hit target from WCAG SC 2.5.8, and pulls the button back into the popup's padding with a negative margin so the × sits in the corner rather than indented from it.
 
@@ -96,11 +96,11 @@ A form inside a dialog raises one question the dialog itself cannot answer: what
 
 Wrap `Dialog.Footer` in the `<Form>` along with the fields, as the demo does, and the submit button is the form's own submit button with no `form={id}` attribute to keep in sync. `Dialog.Footer` is a plain `<div>`, so it nests inside a form without complaint.
 
-An anchored popup opened *inside* a dialog — the `Select` here — needs nothing either. Both portal to `<body>`, and the dialog viewport sits at `--pui-dialog-z-index: 40`, one band under the 50 the anchored popups use, so the select's list is above the dialog whichever order the two portals happen to land in.
+An anchored popup opened *inside* a dialog — the `Select` here — needs nothing either. Both portal to `<body>`, and the dialog viewport sits at `--forte-dialog-z-index: 40`, one band under the 50 the anchored popups use, so the select's list is above the dialog whichever order the two portals happen to land in.
 
 ### Nested dialogs
 
-A dialog opened from inside another one stacks: the parent slides down by `--pui-dialog-nested-offset` per level, shrinks by `--pui-dialog-nested-scale-step`, and dims itself. Base UI drives this through the `--nested-dialogs` counter and the `[data-nested-dialog-open]` attribute, and suppresses the child's backdrop so the parent stays visible behind it rather than being scrimmed twice. Pass `forceBackdrop` to a nested `Dialog.Popup` if it genuinely needs its own scrim.
+A dialog opened from inside another one stacks: the parent slides down by `--forte-dialog-nested-offset` per level, shrinks by `--forte-dialog-nested-scale-step`, and dims itself. Base UI drives this through the `--nested-dialogs` counter and the `[data-nested-dialog-open]` attribute, and suppresses the child's backdrop so the parent stays visible behind it rather than being scrimmed twice. Pass `forceBackdrop` to a nested `Dialog.Popup` if it genuinely needs its own scrim.
 
 Escape closes the topmost dialog only, so a nested dialog steps back to its parent rather than dismissing the whole stack.
 
@@ -136,13 +136,13 @@ Some chrome belongs beside the panel rather than in it — a close button floati
 
 `Dialog.Surface` takes over the paint — background, radius, padding, gap, shadow — and `Dialog.Popup` becomes a transparent container that keeps everything else it was already doing: the width from `size`, the focus trap, the enter and exit gesture, the nested-stacking offsets. There is no prop to pair it with. The stylesheet asks `:has(> .surface)`, so the popup switches on the presence of the element and the two cannot be set to disagree. Keep it a *direct* child.
 
-The knobs do not move. `--pui-dialog-bg`, `--pui-dialog-padding`, `--pui-dialog-radius`, `--pui-dialog-gap` and `--pui-dialog-shadow` are still declared on the popup and still set on the popup — custom properties inherit, so the surface reads them from there.
+The knobs do not move. `--forte-dialog-bg`, `--forte-dialog-padding`, `--forte-dialog-radius`, `--forte-dialog-gap` and `--forte-dialog-shadow` are still declared on the popup and still set on the popup — custom properties inherit, so the surface reads them from there.
 
 Two things to know:
 
 **Pointer events are handed back one level.** The container spans the popup's full width, so it is given `pointer-events: none` and its *direct children* get `pointer-events: auto` — otherwise a press in the empty space beside the close button would land on the container rather than the backdrop, and outside-press dismissal would stop working in a band across the screen. Wrap several controls in a row and that row is the direct child, so repeat the handoff on it: `pointer-events: none` on the wrapper, `auto` on the controls. The demo above does exactly this for its pager.
 
-**The viewport still clips.** It is `overflow-y: auto`, which makes `overflow-x` compute to `auto` as well, so anything pushed outside the container with a negative offset can be cut off or add a scrollbar. Laying the outside elements out *in* the container — as flex children, the way the demo does — keeps them inside it and avoids the question. If you do need to escape the box, widen `--pui-dialog-viewport-padding` through `viewportClassName` to make room.
+**The viewport still clips.** It is `overflow-y: auto`, which makes `overflow-x` compute to `auto` as well, so anything pushed outside the container with a negative offset can be cut off or add a scrollbar. Laying the outside elements out *in* the container — as flex children, the way the demo does — keeps them inside it and avoids the question. If you do need to escape the box, widen `--forte-dialog-viewport-padding` through `viewportClassName` to make room.
 
 <Callout kind="a11y">
 This is the whole reason `Dialog.Surface` exists. While a modal dialog is open everything outside `Dialog.Popup` is inert, so a close button genuinely moved out of the popup is not merely unstyled — it is not in the tab order, and a touch screen-reader user cannot land on it at all. Keeping the element inside the popup and moving the *paint* to an inner element is what lets the design put it outside without taking it away.
@@ -169,7 +169,7 @@ Two pieces make one, exactly as with `Toast`: `Dialog.Provider` near the root of
 ### Setup
 
 ```tsx
-import { Dialog } from "@dofortech/pretty-ui";
+import { Dialog } from "@dofortech/forte-ui";
 
 export default function App({ children }) {
   return <Dialog.Provider>{children}</Dialog.Provider>;
@@ -291,7 +291,7 @@ Plenty of the code that needs to ask a question is not a component: a fetch wrap
 
 ```ts
 // dialogs.ts
-import { Dialog } from "@dofortech/pretty-ui";
+import { Dialog } from "@dofortech/forte-ui";
 export const dialogs = Dialog.createManager();
 
 // api.ts — no React anywhere
@@ -361,36 +361,36 @@ A dialog opened by `useDialog()` has no trigger, so there is nothing for focus t
 
 ## Theming
 
-Every property below is declared on the element it styles — all but the first on the popup, `--pui-dialog-viewport-padding` on the scroll container around it. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect. The popup is portalled to `<body>` as well, so an ancestor of the trigger could not reach it in any case.
+Every property below is declared on the element it styles — all but the first on the popup, `--forte-dialog-viewport-padding` on the scroll container around it. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect. The popup is portalled to `<body>` as well, so an ancestor of the trigger could not reach it in any case.
 
-Set the popup's knobs on the popup itself, through `className` on `Dialog.Popup` (an unlayered rule beats the library's `@layer pretty-ui.components`, whatever its specificity) or an inline `style`. `--pui-dialog-viewport-padding` goes through `viewportClassName`.
+Set the popup's knobs on the popup itself, through `className` on `Dialog.Popup` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. `--forte-dialog-viewport-padding` goes through `viewportClassName`.
 
-A `Dialog.Surface` changes none of this. It reads `--pui-dialog-bg`, `--pui-dialog-fg`, `--pui-dialog-radius`, `--pui-dialog-padding`, `--pui-dialog-gap` and `--pui-dialog-shadow` off the popup by inheritance, so the knobs stay where you already set them.
+A `Dialog.Surface` changes none of this. It reads `--forte-dialog-bg`, `--forte-dialog-fg`, `--forte-dialog-radius`, `--forte-dialog-padding`, `--forte-dialog-gap` and `--forte-dialog-shadow` off the popup by inheritance, so the knobs stay where you already set them.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every dialog.
+The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every dialog.
 
 <ThemingTable component="Dialog" />
 
 ### Motion
 
-The dialog opens and closes with the *same* gesture in opposite directions — it rises 8px and grows from `0.95` on the way in, sinks 8px and shrinks to `0.95` on the way out — so an open that gets interrupted halfway simply runs back down the path it came up. Opening rides a spring over `--pui-duration-normal` — the same 240ms the anchored popups take — because the dialog should not feel heavier to open than the `Select` sitting next to it. Closing runs shorter still, on `--pui-duration-fast`: an arrival has to read as a surface settling into place, while a dismissal the user already decided on only needs confirming.
+The dialog opens and closes with the *same* gesture in opposite directions — it rises 8px and grows from `0.95` on the way in, sinks 8px and shrinks to `0.95` on the way out — so an open that gets interrupted halfway simply runs back down the path it came up. Opening rides a spring over `--forte-duration-normal` — the same 240ms the anchored popups take — because the dialog should not feel heavier to open than the `Select` sitting next to it. Closing runs shorter still, on `--forte-duration-fast`: an arrival has to read as a surface settling into place, while a dismissal the user already decided on only needs confirming.
 
 Closing is where the curves stop being interchangeable, and the exit geometry is `linear` on purpose — the one place in the library that wants it. Two rules are in tension, and easing curves can only satisfy one at a time:
 
-1. **Movement is only visible while the thing moving is still opaque.** So the fade takes `--pui-ease-exit`, which holds around `0.75` opacity through the midpoint rather than dropping away immediately.
+1. **Movement is only visible while the thing moving is still opaque.** So the fade takes `--forte-ease-exit`, which holds around `0.75` opacity through the midpoint rather than dropping away immediately.
 2. **The movement must not finish before the element does.** An exit does not arrive anywhere — it is cut short when the popup unmounts — and an easing curve is a statement about arriving.
 
 Break rule 1 (put an accelerating curve on the geometry, the obvious reading of "ease out of the way") and the popup travels about one pixel while it is still opaque, spending the rest after it has faded. Break rule 2 (put a decelerating curve on it) and the popup covers 88% of its travel in the first half, then crawls 0.08px through the final 40ms while still fading down from 68% opacity — it appears to freeze mid-flight and then get yanked out of the DOM. Both read as "there is no exit animation", for opposite reasons.
 
 `linear` satisfies both: a uniform 1.33px per 40ms, still moving on the frame it disappears.
 
-The scrim is part of the same gesture: it holds for the popup's full exit rather than `--pui-duration-fast`, because a page snapping back to full brightness underneath a still-leaving dialog is a much larger visual event than the dialog itself, and the eye follows it instead.
+The scrim is part of the same gesture: it holds for the popup's full exit rather than `--forte-duration-fast`, because a page snapping back to full brightness underneath a still-leaving dialog is a much larger visual event than the dialog itself, and the eye follows it instead.
 
 A `size="fullscreen"` sheet has no visible edges for a scale to work against, so it drops the scale entirely and travels further instead.
 
 A dialog raised by `useDialog()` gets the same entrance as one opened by a trigger, and that takes one deliberate step. Base UI seeds its transition state from `open` on a root's first render, so a `Dialog.Root` that mounts *already* open is treated as having always been open — no `[data-starting-style]`, no enter transition, the popup simply appears. It is the same reason a `defaultOpen` dialog does not animate in. The provider therefore mounts each dialog closed and opens it in a layout effect, which gives Base UI the false→true edge it watches for and costs no frame: the effect runs before paint, so the popup is painted once, already carrying its starting style.
 
-Reduced motion needs no work from you: the travel tokens collapse to `0px`, `--pui-scale-enter` to `1`, `--pui-dialog-exit-scale` resolves to exactly `1` through `--pui-motion-ok`, and the durations shorten — leaving the fade, which is the part reduced-motion users still want. There is no component-level `prefers-reduced-motion` override to fight.
+Reduced motion needs no work from you: the travel tokens collapse to `0px`, `--forte-scale-enter` to `1`, `--forte-dialog-exit-scale` resolves to exactly `1` through `--forte-motion-ok`, and the durations shorten — leaving the fade, which is the part reduced-motion users still want. There is no component-level `prefers-reduced-motion` override to fight.
 
 ## API reference
 
@@ -467,7 +467,7 @@ Returns one object. It and every method on it keep the same identity for the lif
 | `description` | `ReactNode` | — | A second line under it, and its accessible description. |
 | `size` | `DialogSize` | `"sm"` | Maximum width of the popup. |
 | `tone` | `ButtonTone` | `"primary"` | Tone of the answering button. `confirmWithInput()` defaults to `"danger"`. |
-| `className` | `string` | — | Class name(s) for the popup — where a one-off `--pui-dialog-*` knob goes. |
+| `className` | `string` | — | Class name(s) for the popup — where a one-off `--forte-dialog-*` knob goes. |
 | `okLabel` | `ReactNode` | `labels.ok` | `alert()` only. Label of the single button. |
 | `confirmLabel` | `ReactNode` | `labels.confirm` | Label of the button that resolves `true`. |
 | `cancelLabel` | `ReactNode` | `labels.cancel` | Label of the button that resolves `false`. |

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@dofortech/pretty-ui";
+import { Button, Input } from "@dofortech/forte-ui";
 
 const PRESETS = [undefined, "none", "soft", "pill"] as const;
 
@@ -10,7 +10,7 @@ export default function RadiusPresets() {
       {PRESETS.map((preset) => (
         <div
           key={preset ?? "default"}
-          data-pui-radius={preset}
+          data-forte-radius={preset}
           className="grid justify-items-center gap-2"
         >
           <Input placeholder="Search" aria-label={`Search, ${preset ?? "default"} radius`} className="w-[8.5rem]" />

@@ -39,11 +39,11 @@ export const TABLE_HEAD = `${TABLE_CELL} bg-panel font-semibold`;
  *
  * The size is a class rather than the icon library's own `size` prop for the
  * reason every other measure on this site is a class: `size-4` is
- * `--pui-space-4`, and a `size={16}` would be a number nothing can re-theme.
+ * `--forte-space-4`, and a `size={16}` would be a number nothing can re-theme.
  * `shrink-0` because these all sit in flex rows that are tight on a phone,
  * and a squashed icon reads as a rendering bug.
  *
- * `.pui-icon` is deliberately NOT part of this and must not be added: it sets
+ * `.forte-icon` is deliberately NOT part of this and must not be added: it sets
  * `fill: currentColor`, which is right for the solid glyphs the library's own
  * components draw and fatal for the stroked outlines lucide and react-icons
  * ship — a declaration beats their `fill="none"` attribute and the icon fills

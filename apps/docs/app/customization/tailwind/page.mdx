@@ -4,46 +4,46 @@ import { Callout } from "@/components/callout";
 export const metadata = {
   title: "Tailwind",
   description:
-    "The token bridge teaches Tailwind v4 the pretty-ui vocabulary — bg-primary, gap-5, rounded-control — so utilities and components respond to the same theme.",
+    "The token bridge teaches Tailwind v4 the forte-ui vocabulary — bg-primary, gap-5, rounded-control — so utilities and components respond to the same theme.",
 };
 
 # Tailwind
 
-pretty-ui works without Tailwind. If you do use Tailwind v4, the package ships a bridge stylesheet that re-points Tailwind's theme at the pretty-ui tokens — so `bg-primary` *is* `--pui-color-primary`, `gap-5` *is* `--pui-space-5`, and every utility responds to the seed, dark mode, theme scopes and presets exactly like the components do. Utilities and components stop being two design systems in one page.
+forte-ui works without Tailwind. If you do use Tailwind v4, the package ships a bridge stylesheet that re-points Tailwind's theme at the forte-ui tokens — so `bg-primary` *is* `--forte-color-primary`, `gap-5` *is* `--forte-space-5`, and every utility responds to the seed, dark mode, theme scopes and presets exactly like the components do. Utilities and components stop being two design systems in one page.
 
 ## Setup
 
 Import the bridge in the stylesheet that imports Tailwind, **before** Tailwind itself:
 
 ```css
-@import "@dofortech/pretty-ui/tailwind.css";
+@import "@dofortech/forte-ui/tailwind.css";
 @import "tailwindcss";
 ```
 
 `theme.css` is still required once anywhere in your app — the bridge only teaches Tailwind the token names, it does not define the tokens.
 
-The order is load-bearing. The bridge's first line pins the cascade-layer order to `theme, base, pretty-ui, components, utilities`, and a layer order is fixed at its first appearance. That statement is what keeps Tailwind's Preflight (in `base`) from blanking the components, and what keeps `utilities` able to beat them — `p-4` on a Button wins because of it. Import Tailwind first and its own layer statement wins the race instead, putting `pretty-ui` after `utilities` and silently breaking that second half.
+The order is load-bearing. The bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, and a layer order is fixed at its first appearance. That statement is what keeps Tailwind's Preflight (in `base`) from blanking the components, and what keeps `utilities` able to beat them — `p-4` on a Button wins because of it. Import Tailwind first and its own layer statement wins the race instead, putting `forte-ui` after `utilities` and silently breaking that second half.
 
 ## What the bridge changes
 
 Tailwind's stock scales are **deleted and rebuilt** from the tokens — not extended. `bg-slate-800`, `p-13` and `text-white` do not compile:
 
 ```
-bg-primary        background-color: var(--pui-color-primary)
-text-foreground   color: var(--pui-color-foreground)
-gap-5             gap: var(--pui-space-5)          /* eight steps, 1:1 */
-p-surface         padding: var(--pui-surface-p)    /* follows density  */
-text-2            font-size: var(--pui-font-size-2)
-rounded-control   border-radius: var(--pui-radius-control)  /* follows the radius preset */
-shadow-2          box-shadow: var(--pui-shadow-2)
-duration-fast     transition-duration: var(--pui-duration-fast)
+bg-primary        background-color: var(--forte-color-primary)
+text-foreground   color: var(--forte-color-foreground)
+gap-5             gap: var(--forte-space-5)          /* eight steps, 1:1 */
+p-surface         padding: var(--forte-surface-p)    /* follows density  */
+text-2            font-size: var(--forte-font-size-2)
+rounded-control   border-radius: var(--forte-radius-control)  /* follows the radius preset */
+shadow-2          box-shadow: var(--forte-shadow-2)
+duration-fast     transition-duration: var(--forte-duration-fast)
 ```
 
-Deleting rather than extending is deliberate, with teeth: a hardcoded `bg-slate-800` would compile, survive review, and then ignore the seed, dark mode and every theme scope. As a deleted namespace it is a build-time "unknown utility" instead of a shipped bug. Any other token is reachable with v4's variable shorthand — `h-(--pui-control-h-md)` — and the `--container-*` scale is untouched, so `max-w-lg` still works. To opt a stock scale back in, re-declare it in your own `@theme` after the bridge; later definitions win.
+Deleting rather than extending is deliberate, with teeth: a hardcoded `bg-slate-800` would compile, survive review, and then ignore the seed, dark mode and every theme scope. As a deleted namespace it is a build-time "unknown utility" instead of a shipped bug. Any other token is reachable with v4's variable shorthand — `h-(--forte-control-h-md)` — and the `--container-*` scale is untouched, so `max-w-lg` still works. To opt a stock scale back in, re-declare it in your own `@theme` after the bridge; later definitions win.
 
 <DemoBlock id="tailwind/utilities" />
 
-The bridge's theme is declared `@theme inline`, which is why utilities work inside theme scopes: the token reference is substituted into the utility itself and resolves at the element, instead of freezing to whatever `:root` resolved. `bg-panel` inside a dark `data-pui-theme` island paints the island's panel colour, not the page's.
+The bridge's theme is declared `@theme inline`, which is why utilities work inside theme scopes: the token reference is substituted into the utility itself and resolves at the element, instead of freezing to whatever `:root` resolved. `bg-panel` inside a dark `data-forte-theme` island paints the island's panel colour, not the page's.
 
 ## Targeting component state
 
@@ -54,14 +54,14 @@ Component state rides on `data-*` attributes, so Tailwind's arbitrary variants c
 <Dialog.Popup className="data-[open]:shadow-4" />
 ```
 
-The part markers work the same way from a parent — `[&_[data-pui=select-trigger]]:w-full` — though at that point a plain CSS rule is usually easier to read. Both selector families are stable public API; see [Styling components](/customization/styling#parts-and-states).
+The part markers work the same way from a parent — `[&_[data-forte=select-trigger]]:w-full` — though at that point a plain CSS rule is usually easier to read. Both selector families are stable public API; see [Styling components](/customization/styling#parts-and-states).
 
 ## Merging classes: `cn`
 
 If you compose class lists conditionally, use the pre-configured merger the package ships:
 
 ```ts
-import { cn } from "@dofortech/pretty-ui/cn";
+import { cn } from "@dofortech/forte-ui/cn";
 
 cn("p-4", isWide && "p-6"); // -> "p-6" when isWide holds
 ```
@@ -71,7 +71,7 @@ A stock `twMerge` mishandles the bridge's renamed scales — it does not know `p
 If your app adds its own `@theme` keys, extend rather than rebuild — `createCn` appends your names beside the library's instead of replacing them:
 
 ```ts
-import { createCn } from "@dofortech/pretty-ui/cn";
+import { createCn } from "@dofortech/forte-ui/cn";
 
 export const cn = createCn({
   extend: { theme: { spacing: ["header"], animate: ["reveal"] } },

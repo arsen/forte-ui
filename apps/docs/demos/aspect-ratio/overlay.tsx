@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/pretty-ui";
+import { AspectRatio } from "@dofortech/forte-ui";
 
 /**
  * Two layers, no `position: absolute`.

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ColorPicker } from "@dofortech/pretty-ui";
+import { ColorPicker } from "@dofortech/forte-ui";
 
 export default function ColorPickerAlpha() {
   const [opaque, setOpaque] = React.useState("#7c3aed");

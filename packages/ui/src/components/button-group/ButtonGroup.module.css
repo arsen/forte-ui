@@ -6,7 +6,7 @@
  * itself draws nothing — every visible pixel belongs to the children, which
  * keep their own variants, tones and sizes.
  *
- * The fuse works by SUBTRACTION, not overlap. Every pretty-ui control draws a
+ * The fuse works by SUBTRACTION, not overlap. Every forte-ui control draws a
  * 1px border of its own (transparent in the fill variants — the width is
  * always reserved), so a joined pair would double the seam to 2px. The group
  * removes the shared edge's border from the SECOND of the pair and lets the
@@ -25,11 +25,11 @@
  * seam in a fused group is somebody's real border, and border colours are
  * forced to `CanvasText` rather than discarded.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /** Gap between nested groups. Applies only when the group's direct
      * children are themselves groups — a fused group has no gaps. */
-    --pui-button-group-gap: var(--pui-space-2);
+    --forte-button-group-gap: var(--forte-space-2);
 
     box-sizing: border-box;
     display: inline-flex;
@@ -57,12 +57,12 @@
    * `:not(:has(> .root))` guard on every fusing rule below is the other half
    * of this — it keeps the parent's hands off the nested groups' corners. */
   .root:has(> .root) {
-    gap: var(--pui-button-group-gap);
+    gap: var(--forte-button-group-gap);
   }
 
   /* Fusing ------------------------------------------------------------------
    * Logical properties throughout, so RTL flips the squared corners and the
-   * stripped edge together without a `--pui-direction` in sight. The radius
+   * stripped edge together without a `--forte-direction` in sight. The radius
    * longhands out-rank each child's own `border-radius` shorthand inside this
    * layer on specificity, which is the point: the child keeps its radius knob
    * for the group's outer corners, and the group owns the inner ones.
@@ -136,11 +136,11 @@
   .separator {
     /** Line thickness. Matches the 1px border every control draws, so a
      * separated seam and a fused one carry the same weight. */
-    --pui-button-group-separator-thickness: 1px;
+    --forte-button-group-separator-thickness: 1px;
     /** Line colour. Re-point it when the separator sits between `solid`
-     * fills — `--pui-color-border` is tuned against the page background, not
+     * fills — `--forte-color-border` is tuned against the page background, not
      * against a colour fill. */
-    --pui-button-group-separator-color: var(--pui-color-border);
+    --forte-button-group-separator-color: var(--forte-color-border);
 
     box-sizing: border-box;
     /* Zeroed before one edge is set per orientation below, so
@@ -172,8 +172,8 @@
      * zero wide". */
     inline-size: 0;
     border-inline-start:
-      var(--pui-button-group-separator-thickness) solid
-      var(--pui-button-group-separator-color);
+      var(--forte-button-group-separator-thickness) solid
+      var(--forte-button-group-separator-color);
   }
 
   /* …and the seam in a VERTICAL one. The mirror of the above: pins the block
@@ -181,8 +181,8 @@
   .separator[data-orientation="horizontal"] {
     block-size: 0;
     border-block-start:
-      var(--pui-button-group-separator-thickness) solid
-      var(--pui-button-group-separator-color);
+      var(--forte-button-group-separator-thickness) solid
+      var(--forte-button-group-separator-color);
   }
 
   /* Text --------------------------------------------------------------------
@@ -197,33 +197,33 @@
    */
   .text {
     /** Fill behind the text. */
-    --pui-button-group-text-bg: var(--pui-color-panel);
+    --forte-button-group-text-bg: var(--forte-color-panel);
     /** Text colour. Muted on purpose — the cell is context for the action
      * beside it, not the action. */
-    --pui-button-group-text-color: var(--pui-color-foreground-muted);
+    --forte-button-group-text-color: var(--forte-color-foreground-muted);
     /** Border colour. */
-    --pui-button-group-text-border-color: var(--pui-color-border);
+    --forte-button-group-text-border-color: var(--forte-color-border);
     /** Corner radius. The group squares off whichever corners are fused. */
-    --pui-button-group-text-radius: var(--pui-radius-control);
+    --forte-button-group-text-radius: var(--forte-radius-control);
     /** Horizontal padding. */
-    --pui-button-group-text-padding-x: var(--pui-control-px-md);
+    --forte-button-group-text-padding-x: var(--forte-control-px-md);
     /** Label size. */
-    --pui-button-group-text-font-size: var(--pui-font-size-2);
+    --forte-button-group-text-font-size: var(--forte-font-size-2);
 
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
-    gap: var(--pui-control-gap);
-    padding-inline: var(--pui-button-group-text-padding-x);
-    border: 1px solid var(--pui-button-group-text-border-color);
-    border-radius: var(--pui-button-group-text-radius);
-    background-color: var(--pui-button-group-text-bg);
-    color: var(--pui-button-group-text-color);
+    gap: var(--forte-control-gap);
+    padding-inline: var(--forte-button-group-text-padding-x);
+    border: 1px solid var(--forte-button-group-text-border-color);
+    border-radius: var(--forte-button-group-text-radius);
+    background-color: var(--forte-button-group-text-bg);
+    color: var(--forte-button-group-text-color);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-button-group-text-font-size);
-    font-weight: var(--pui-font-weight-medium);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-button-group-text-font-size);
+    font-weight: var(--forte-font-weight-medium);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     /* Chrome, not a control, per the cursor table in AGENTS.md — even when

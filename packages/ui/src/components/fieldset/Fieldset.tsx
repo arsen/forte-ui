@@ -40,7 +40,7 @@ export const FieldsetRoot = React.forwardRef<HTMLFieldSetElement, FieldsetRootPr
       <BaseFieldset.Root
         ref={ref}
         className={clsx(styles.root, className)}
-        data-pui="fieldset"
+        data-forte="fieldset"
         {...props}
       />
     );
@@ -80,7 +80,7 @@ export const FieldsetLegend = React.forwardRef<
     <BaseFieldset.Legend
       ref={ref}
       className={clsx(styles.legend, className)}
-      data-pui="fieldset-legend"
+      data-forte="fieldset-legend"
       {...props}
     />
   );

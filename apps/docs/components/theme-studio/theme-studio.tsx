@@ -9,7 +9,7 @@ import {
   Toggle,
   ToggleGroup,
   type Rgba,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 import {
   hexToOklch,
   oklchToHex,
@@ -41,7 +41,7 @@ const PRESET_SEEDS = PRESETS.map((p) => p.seed);
 const PRESET_SECONDARIES = PRESETS.map((p) => p.secondary);
 
 /* Deliberately NOT part of `ThemeConfig` below, and it is worth saying why:
- * light/dark is a reader preference, stored under its own `pui-theme` key and
+ * light/dark is a reader preference, stored under its own `forte-theme` key and
  * shared with the header toggle, while everything in ThemeConfig is part of the
  * theme the studio EXPORTS. Both modes are already built from the same seed, so
  * there is nothing here to put in the copied CSS — this strip only decides
@@ -69,7 +69,7 @@ const HINT = "m-0 text-1 text-foreground-muted";
  * plain brackets: `CanvasText` is a bare keyword, and Tailwind would otherwise
  * have to guess whether it is a colour or a width. */
 const PRESET_SWATCH = [
-  "size-[1.1rem] flex-none rounded-(--pui-radius-full)",
+  "size-[1.1rem] flex-none rounded-(--forte-radius-full)",
   "bg-[linear-gradient(135deg,var(--swatch)_50%,var(--swatch2)_50%)]",
   "border border-[color:CanvasText] [forced-color-adjust:none]",
 ].join(" ");
@@ -81,14 +81,14 @@ const PRESET_SWATCH = [
  * is set inline on Tabs.Root, the element that declares them: they are custom
  * properties, and a utility class cannot set one.
  *
- * `--pui-tabs-content-gap` is the load-bearing one. Tabs.Root is a two-row grid
+ * `--forte-tabs-content-gap` is the load-bearing one. Tabs.Root is a two-row grid
  * whose second row holds the panels, and a gutter is drawn between two explicit
  * tracks whether or not the second one has anything in it — so a panelless
  * strip would sit on top of a rem of dead space.
  *
  * The two surfaces have to move together, and the reason is the surface ramp.
- * The `pill` defaults are a `--pui-color-panel` strip (gray-2) with a
- * `--pui-color-primary-soft` thumb (accent-3), and they are tuned for a strip
+ * The `pill` defaults are a `--forte-color-panel` strip (gray-2) with a
+ * `--forte-color-primary-soft` thumb (accent-3), and they are tuned for a strip
  * sitting on the page: gray-1 page, gray-2 strip, tinted thumb, each step
  * lifting off the one under it. This panel is ALREADY gray-2, so that stack
  * starts one rung too low — the strip disappears into the panel, and moving
@@ -98,8 +98,8 @@ const PRESET_SWATCH = [
  * So the strip recesses to gray-4 and the thumb comes back out to gray-1 — the
  * far end of the scale in both modes, near-white on light and near-black on
  * dark, which is the one pairing that reads the same way in each. The accent
- * is not lost with it: `--pui-tabs-tab-color-active` already puts the active
- * label in `--pui-color-primary-text`, so the colour lands on the word instead
+ * is not lost with it: `--forte-tabs-tab-color-active` already puts the active
+ * label in `--forte-color-primary-text`, so the colour lands on the word instead
  * of the box behind it. Under forced colours none of this applies — the a11y
  * block paints the indicator `Highlight` outright.
  *
@@ -108,16 +108,16 @@ const PRESET_SWATCH = [
  * ------------------------------------------------------------------------ */
 
 const TAB_VARS = {
-  "--pui-tabs-content-gap": "0px",
-  "--pui-tabs-list-bg": "var(--pui-color-panel-active)",
-  "--pui-tabs-indicator-color": "var(--pui-color-background)",
-  "--pui-tabs-height": "var(--pui-control-h-sm)",
-  "--pui-tabs-font-size": "var(--pui-font-size-1)",
-  "--pui-tabs-padding-x": "var(--pui-space-1)",
+  "--forte-tabs-content-gap": "0px",
+  "--forte-tabs-list-bg": "var(--forte-color-panel-active)",
+  "--forte-tabs-indicator-color": "var(--forte-color-background)",
+  "--forte-tabs-height": "var(--forte-control-h-sm)",
+  "--forte-tabs-font-size": "var(--forte-font-size-1)",
+  "--forte-tabs-padding-x": "var(--forte-space-1)",
 } as React.CSSProperties;
 
 /* The lift. A neutral thumb needs an edge the tinted default did not, and
- * there is no `--pui-tabs-indicator-shadow` knob to set — but the Indicator
+ * there is no `--forte-tabs-indicator-shadow` knob to set — but the Indicator
  * takes a `className`, and the utilities layer beats the component's own.
  * Dropped under forced colours anyway, where box-shadow is forced to `none`. */
 const TAB_INDICATOR = "shadow-1";
@@ -156,7 +156,7 @@ type StoredStudio = {
   root: { vars: Record<string, string>; data: Record<string, string> };
 };
 
-const STORAGE_KEY = "pui-studio";
+const STORAGE_KEY = "forte-studio";
 
 /** Storage is user-editable and survives across deploys, so nothing read back
  *  is trusted: every field falls back to its default. */
@@ -206,19 +206,19 @@ function configToAttrs(cfg: ThemeConfig) {
 
   return {
     style: {
-      "--pui-accent-seed": cfg.seed,
-      "--pui-secondary-seed": cfg.secondary,
-      "--pui-neutral-tint": String(cfg.tint),
+      "--forte-accent-seed": cfg.seed,
+      "--forte-secondary-seed": cfg.secondary,
+      "--forte-neutral-tint": String(cfg.tint),
       // Emitted as an exact literal rather than left to the CSS derivation.
       // The pure-CSS fallback uses a fitted lightness threshold that is very
       // good but not perfect; this is measured, so it is right everywhere —
       // including browsers without contrast-color().
-      ...(on ? { "--pui-color-on-primary": on.color } : {}),
-      ...(onSec ? { "--pui-color-on-secondary": onSec.color } : {}),
+      ...(on ? { "--forte-color-on-primary": on.color } : {}),
+      ...(onSec ? { "--forte-color-on-secondary": onSec.color } : {}),
     } as React.CSSProperties,
-    "data-pui-radius": cfg.radius === "default" ? undefined : cfg.radius,
-    "data-pui-density": cfg.density === "default" ? undefined : cfg.density,
-    "data-pui-motion": cfg.motion === "default" ? undefined : cfg.motion,
+    "data-forte-radius": cfg.radius === "default" ? undefined : cfg.radius,
+    "data-forte-density": cfg.density === "default" ? undefined : cfg.density,
+    "data-forte-motion": cfg.motion === "default" ? undefined : cfg.motion,
   };
 }
 
@@ -229,20 +229,20 @@ function toCss(cfg: ThemeConfig) {
   const onSec = secO ? bestOnColor(secO) : null;
 
   const attrs = [
-    cfg.radius !== "default" && `data-pui-radius="${cfg.radius}"`,
-    cfg.density !== "default" && `data-pui-density="${cfg.density}"`,
-    cfg.motion !== "default" && `data-pui-motion="${cfg.motion}"`,
+    cfg.radius !== "default" && `data-forte-radius="${cfg.radius}"`,
+    cfg.density !== "default" && `data-forte-density="${cfg.density}"`,
+    cfg.motion !== "default" && `data-forte-motion="${cfg.motion}"`,
   ].filter(Boolean);
 
   const lines = [
     `:root {`,
-    `  --pui-accent-seed: ${cfg.seed};`,
-    `  --pui-secondary-seed: ${cfg.secondary};`,
-    cfg.tint !== 1 ? `  --pui-neutral-tint: ${cfg.tint};` : null,
+    `  --forte-accent-seed: ${cfg.seed};`,
+    `  --forte-secondary-seed: ${cfg.secondary};`,
+    cfg.tint !== 1 ? `  --forte-neutral-tint: ${cfg.tint};` : null,
     ``,
     `  /* Measured rather than derived, so it is exact in every browser. */`,
-    on ? `  --pui-color-on-primary: ${on.color};` : null,
-    onSec ? `  --pui-color-on-secondary: ${onSec.color};` : null,
+    on ? `  --forte-color-on-primary: ${on.color};` : null,
+    onSec ? `  --forte-color-on-secondary: ${onSec.color};` : null,
     `}`,
   ].filter((l) => l !== null);
 
@@ -322,9 +322,9 @@ export function ThemeStudio() {
       root: {
         vars: attrs.style as Record<string, string>,
         data: {
-          ...(attrs["data-pui-radius"] ? { radius: attrs["data-pui-radius"] } : {}),
-          ...(attrs["data-pui-density"] ? { density: attrs["data-pui-density"] } : {}),
-          ...(attrs["data-pui-motion"] ? { motion: attrs["data-pui-motion"] } : {}),
+          ...(attrs["data-forte-radius"] ? { radius: attrs["data-forte-radius"] } : {}),
+          ...(attrs["data-forte-density"] ? { density: attrs["data-forte-density"] } : {}),
+          ...(attrs["data-forte-motion"] ? { motion: attrs["data-forte-motion"] } : {}),
         },
       },
     };
@@ -342,12 +342,12 @@ export function ThemeStudio() {
     // flash the defaults over it.
     if (!restored) return;
     const root = document.documentElement;
-    const dataKeys = ["puiRadius", "puiDensity", "puiMotion"] as const;
+    const dataKeys = ["forteRadius", "forteDensity", "forteMotion"] as const;
 
     Object.entries(attrs.style as Record<string, string>).forEach(([k, v]) => root.style.setProperty(k, v));
-    root.dataset.puiRadius = attrs["data-pui-radius"] ?? "";
-    root.dataset.puiDensity = attrs["data-pui-density"] ?? "";
-    root.dataset.puiMotion = attrs["data-pui-motion"] ?? "";
+    root.dataset.forteRadius = attrs["data-forte-radius"] ?? "";
+    root.dataset.forteDensity = attrs["data-forte-density"] ?? "";
+    root.dataset.forteMotion = attrs["data-forte-motion"] ?? "";
     dataKeys.forEach((k) => { if (!root.dataset[k]) delete root.dataset[k]; });
   }, [restored, attrs]);
 
@@ -437,7 +437,7 @@ export function ThemeStudio() {
             format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
             // The default 16rem would stop short of the panel's edge. This is
             // the knob the component documents for exactly that.
-            style={{ "--pui-slider-length": "100%" } as React.CSSProperties}
+            style={{ "--forte-slider-length": "100%" } as React.CSSProperties}
           >
             {/* Slider.Label renders a <div>, so `render` puts the panel's own
               * heading element back. It stays wired to the thumb's hidden input
@@ -493,11 +493,11 @@ export function ThemeStudio() {
 
       <div className="grid gap-4">
         <div
-          className="grid gap-4 rounded-surface border border-border-muted bg-background p-surface text-foreground pui-theme"
+          className="grid gap-4 rounded-surface border border-border-muted bg-background p-surface text-foreground forte-theme"
           style={attrs.style}
-          data-pui-radius={attrs["data-pui-radius"]}
-          data-pui-density={attrs["data-pui-density"]}
-          data-pui-motion={attrs["data-pui-motion"]}
+          data-forte-radius={attrs["data-forte-radius"]}
+          data-forte-density={attrs["data-forte-density"]}
+          data-forte-motion={attrs["data-forte-motion"]}
         >
           <Ramp name="accent" />
           <Ramp name="secondary" />
@@ -559,7 +559,7 @@ function Ramp({ name }: { name: string }) {
         <span
           key={i}
           className="block [forced-color-adjust:none]"
-          style={{ background: `var(--pui-${name}-${i + 1})` }}
+          style={{ background: `var(--forte-${name}-${i + 1})` }}
         />
       ))}
     </div>

@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import type { CSSProperties } from "react";
-import { Button, Field, Fieldset, Form, Slider } from "@dofortech/pretty-ui";
+import { Button, Field, Fieldset, Form, Slider } from "@dofortech/forte-ui";
 
 // The sliders fill the form column rather than sitting at their natural 16rem.
 // The cast is only because React's CSSProperties has no index signature for
 // custom properties.
-const fullWidth = { "--pui-slider-length": "100%" } as CSSProperties;
+const fullWidth = { "--forte-slider-length": "100%" } as CSSProperties;
 
 export default function SliderForm() {
   const [submitted, setSubmitted] = React.useState<Record<

@@ -9,7 +9,7 @@ import {
   Input,
   Select,
   Switch,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 
 const PLANS = { hobby: "Hobby", team: "Team", enterprise: "Enterprise" };
 

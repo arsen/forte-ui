@@ -29,7 +29,7 @@ offers; buttons inside keep their clicks to themselves.
 ## Import
 
 ```tsx
-import { InputGroup } from "@dofortech/pretty-ui";
+import { InputGroup } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -65,7 +65,7 @@ label or `aria-describedby`.
 
 `<InputGroup.Button>` is `Button` preset for life inside a field: `ghost` +
 `neutral` so it reads as part of the control, sized to the field's inner
-height, and wearing `.pui-target` so the hit area stays 24×24 even where the
+height, and wearing `.forte-target` so the hit area stays 24×24 even where the
 visual box dips under it. Every `Button` prop passes through — turn the end
 addon into a primary action with `variant="solid"` when the design calls for
 one.
@@ -98,7 +98,7 @@ a counter and a send button below.
 ### Sizes
 
 `size` moves the group's height, inline padding and font size together — for
-the control and every addon at once — on the same `--pui-control-*` scale the
+the control and every addon at once — on the same `--forte-control-*` scale the
 rest of the set reads, so a group and a select on one row line up at every
 density.
 
@@ -164,12 +164,12 @@ forced-colors does not override, and the generic remedy keys on a
 
 ## Theming
 
-Every `--pui-input-group-*` property is declared on the group element itself,
+Every `--forte-input-group-*` property is declared on the group element itself,
 and an element's own declaration beats an inherited one — so set them on the
 group, through `className` (an unlayered rule beats
-`@layer pretty-ui.components` at any specificity) or an inline `style`. The
-global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*` — are what to re-point from `:root` or a theme scope to move
+`@layer forte.components` at any specificity) or an inline `style`. The
+global tokens they resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*` — are what to re-point from `:root` or a theme scope to move
 every group at once.
 
 <ThemingTable component="InputGroup" />

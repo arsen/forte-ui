@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress, ProgressCircle } from "@dofortech/pretty-ui";
+import { Progress, ProgressCircle } from "@dofortech/forte-ui";
 
 export default function ProgressIndeterminate() {
   return (

@@ -176,7 +176,7 @@ export function NavigationMenuRoot<Value = any>({
     <OrientationContext.Provider value={orientation}>
       <BaseNavigationMenu.Root<Value>
         className={clsx(styles.root, className)}
-        data-pui="navigation-menu"
+        data-forte="navigation-menu"
         data-orientation={orientation}
         orientation={orientation}
         {...props}
@@ -222,7 +222,7 @@ export const NavigationMenuList = React.forwardRef<
     <BaseNavigationMenu.List
       ref={ref}
       className={clsx(styles.list, className)}
-      data-pui="navigation-menu-list"
+      data-forte="navigation-menu-list"
       data-orientation={orientation}
       {...props}
     >
@@ -266,7 +266,7 @@ export const NavigationMenuItem = React.forwardRef<
     <BaseNavigationMenu.Item
       ref={ref}
       className={clsx(styles.item, className)}
-      data-pui="navigation-menu-item"
+      data-forte="navigation-menu-item"
       {...props}
     >
       {children}
@@ -306,7 +306,7 @@ export const NavigationMenuIcon = React.forwardRef<
     <BaseNavigationMenu.Icon
       ref={ref}
       className={clsx(styles.icon, className)}
-      data-pui="navigation-menu-icon"
+      data-forte="navigation-menu-icon"
       {...props}
     >
       {children}
@@ -375,8 +375,8 @@ export const NavigationMenuTrigger = React.forwardRef<
   return (
     <BaseNavigationMenu.Trigger
       ref={ref}
-      className={clsx(styles.trigger, "pui-focus-ring", className)}
-      data-pui="navigation-menu-trigger"
+      className={clsx(styles.trigger, "forte-focus-ring", className)}
+      data-forte="navigation-menu-trigger"
       data-variant={variant}
       {...props}
     >
@@ -404,7 +404,7 @@ export interface NavigationMenuContentProps
   /**
    * How many columns the children are laid out in. The grid collapses to
    * fewer on its own when the panel is narrower than
-   * `--pui-navigation-menu-column-width`, so a three-column panel becomes one
+   * `--forte-navigation-menu-column-width`, so a three-column panel becomes one
    * column on a phone without a media query.
    * @default 1
    */
@@ -429,7 +429,7 @@ export interface NavigationMenuContentProps
  * It is a grid rather than a bare box because that is what every panel turns
  * out to be, and `columns` is the only part of it that changes. Pass a
  * `className` of your own for anything else — the layout rules here are all
- * inside `@layer pretty-ui.components` and lose to unlayered author CSS.
+ * inside `@layer forte.components` and lose to unlayered author CSS.
  */
 export const NavigationMenuContent = React.forwardRef<
   HTMLDivElement,
@@ -442,7 +442,7 @@ export const NavigationMenuContent = React.forwardRef<
     <BaseNavigationMenu.Content
       ref={ref}
       className={clsx(styles.content, className)}
-      data-pui="navigation-menu-content"
+      data-forte="navigation-menu-content"
       data-columns={columns}
       {...props}
     >
@@ -517,8 +517,8 @@ export const NavigationMenuLink = React.forwardRef<
   return (
     <BaseNavigationMenu.Link
       ref={ref}
-      className={clsx(styles.link, "pui-focus-ring", className)}
-      data-pui="navigation-menu-link"
+      className={clsx(styles.link, "forte-focus-ring", className)}
+      data-forte="navigation-menu-link"
       data-variant={variant}
       data-focus-inset=""
       {...props}
@@ -565,7 +565,7 @@ export const NavigationMenuLinkTitle = React.forwardRef<
     <span
       ref={ref}
       className={clsx(styles.linkTitle, className)}
-      data-pui="navigation-menu-link-title"
+      data-forte="navigation-menu-link-title"
       {...props}
     />
   );
@@ -601,7 +601,7 @@ export const NavigationMenuLinkDescription = React.forwardRef<
     <span
       ref={ref}
       className={clsx(styles.linkDescription, className)}
-      data-pui="navigation-menu-link-description"
+      data-forte="navigation-menu-link-description"
       {...props}
     />
   );
@@ -639,7 +639,7 @@ export interface NavigationMenuPopupProps
   /**
    * Gap in pixels between the bar and the panel. The stylesheet bridges this
    * gap so the pointer can cross it without the panel closing — change
-   * `--pui-navigation-menu-bridge` to match if you change this.
+   * `--forte-navigation-menu-bridge` to match if you change this.
    * @default 8
    */
   sideOffset?: PositionerProps["sideOffset"];
@@ -697,7 +697,7 @@ export interface NavigationMenuPopupProps
    * Additional class name(s) for the positioner — the absolutely positioned
    * wrapper around the popup, and the element that carries the travel between
    * triggers. This is the only way to reach the four properties declared
-   * there: `--pui-navigation-menu-z-index`, `--pui-navigation-menu-bridge`,
+   * there: `--forte-navigation-menu-z-index`, `--forte-navigation-menu-bridge`,
    * and the `-move-duration` / `-move-ease` pair the popup inherits for its
    * own resize.
    */
@@ -744,13 +744,13 @@ export const NavigationMenuPopup = React.forwardRef<
     <BaseNavigationMenu.Portal container={container} keepMounted={keepMounted}>
       {backdrop ? (
         <BaseNavigationMenu.Backdrop
-          className={clsx(styles.backdrop, "pui-scrim")}
-          data-pui="navigation-menu-backdrop"
+          className={clsx(styles.backdrop, "forte-scrim")}
+          data-forte="navigation-menu-backdrop"
         />
       ) : null}
       <BaseNavigationMenu.Positioner
         className={clsx(styles.positioner, positionerClassName)}
-        data-pui="navigation-menu-positioner"
+        data-forte="navigation-menu-positioner"
         side={side}
         align={align}
         sideOffset={sideOffset}
@@ -759,14 +759,14 @@ export const NavigationMenuPopup = React.forwardRef<
         collisionAvoidance={collisionAvoidance}
         anchor={anchor}
       >
-        {/* `pui-hc-surface` carries a transparent border that becomes a
+        {/* `forte-hc-surface` carries a transparent border that becomes a
           * system-coloured boundary in forced-colors mode, where the box-shadow
           * is stripped and the panel would otherwise dissolve into the page
           * behind it. */}
         <BaseNavigationMenu.Popup
           ref={ref}
-          className={clsx(styles.popup, "pui-hc-surface", className)}
-          data-pui="navigation-menu-popup"
+          className={clsx(styles.popup, "forte-hc-surface", className)}
+          data-forte="navigation-menu-popup"
           {...props}
         >
           {/* Outside the viewport, as a direct sibling: the viewport clips, and
@@ -774,14 +774,14 @@ export const NavigationMenuPopup = React.forwardRef<
           {arrow ? (
             <BaseNavigationMenu.Arrow
               className={styles.arrow}
-              data-pui="navigation-menu-arrow"
+              data-forte="navigation-menu-arrow"
             >
               <ArrowSvg />
             </BaseNavigationMenu.Arrow>
           ) : null}
           <BaseNavigationMenu.Viewport
             className={styles.viewport}
-            data-pui="navigation-menu-viewport"
+            data-forte="navigation-menu-viewport"
           />
         </BaseNavigationMenu.Popup>
       </BaseNavigationMenu.Positioner>
@@ -859,7 +859,7 @@ function ArrowSvg() {
  * behaviour of the component, and it is why `Content` lives up in the list
  * while `Popup` is a single sibling of the `List`.
  *
- * Styling is driven by `data-*` attributes and `--pui-navigation-menu-*`
+ * Styling is driven by `data-*` attributes and `--forte-navigation-menu-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[popup-open]:...`) without wrapping. Each
  * part declares its own knobs, so an ancestor's value is only inherited and

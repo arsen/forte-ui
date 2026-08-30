@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs } from "@dofortech/pretty-ui";
+import { Tabs } from "@dofortech/forte-ui";
 
 export default function TabsVertical() {
   return (

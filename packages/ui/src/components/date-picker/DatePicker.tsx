@@ -52,7 +52,7 @@ const DatePickerContext = React.createContext<DatePickerContextValue | null>(nul
 function useDatePicker(part: string): DatePickerContextValue {
   const context = React.useContext(DatePickerContext);
   if (!context) {
-    throw new Error(`[pretty-ui] <DatePicker.${part}> must be rendered inside <DatePicker.Root>.`);
+    throw new Error(`[forte-ui] <DatePicker.${part}> must be rendered inside <DatePicker.Root>.`);
   }
   return context;
 }
@@ -336,7 +336,7 @@ export interface DatePickerTriggerProps extends Omit<BaseTriggerProps, "classNam
   variant?: DatePickerVariant;
   /**
    * Size of the field. Actual dimensions also follow the ambient
-   * `data-pui-density` setting.
+   * `data-forte-density` setting.
    * @default "md"
    */
   size?: DatePickerSize;
@@ -405,7 +405,7 @@ export const DatePickerTrigger = React.forwardRef<HTMLButtonElement, DatePickerT
           warnedRef.current = true;
           // eslint-disable-next-line no-console
           console.warn(
-            "[pretty-ui] <DatePicker.Trigger> has no accessible name. Render a " +
+            "[forte-ui] <DatePicker.Trigger> has no accessible name. Render a " +
               "<Field.Label nativeLabel={false}> in the same <Field.Root>, or pass " +
               "aria-label to the trigger.",
           );
@@ -417,8 +417,8 @@ export const DatePickerTrigger = React.forwardRef<HTMLButtonElement, DatePickerT
     return (
       <Popover.Trigger
         ref={handleRef}
-        className={clsx(styles.trigger, "pui-focus-ring", className)}
-        data-pui="date-picker-trigger"
+        className={clsx(styles.trigger, "forte-focus-ring", className)}
+        data-forte="date-picker-trigger"
         data-variant={variant}
         data-size={size}
         data-full-width={fullWidth || undefined}
@@ -475,7 +475,7 @@ export const DatePickerValue = React.forwardRef<HTMLSpanElement, DatePickerValue
       <span
         ref={ref}
         className={clsx(styles.value, className)}
-        data-pui="date-picker-value"
+        data-forte="date-picker-value"
         data-placeholder={text === null || undefined}
         {...props}
       >
@@ -515,7 +515,7 @@ export const DatePickerIcon = React.forwardRef<HTMLSpanElement, DatePickerIconPr
         ref={ref}
         aria-hidden="true"
         className={clsx(styles.icon, className)}
-        data-pui="date-picker-icon"
+        data-forte="date-picker-icon"
         {...props}
       >
         {children ?? <CalendarGlyph />}
@@ -544,7 +544,7 @@ export interface DatePickerPopupProps extends Omit<BasePopupProps, "className" |
  * over an optional `DatePicker.Footer`.
  *
  * The surface itself is a `Popover.Popup` and keeps that component's own
- * marker and `--pui-popover-*` knobs — it is a popover surface, and there is
+ * marker and `--forte-popover-*` knobs — it is a popover surface, and there is
  * nothing date-shaped about it. The panel it wraps is this component's part,
  * which is what a consumer targets to reach the picker's own popup and not
  * every popover on the page.
@@ -557,7 +557,7 @@ export const DatePickerPopup = React.forwardRef<HTMLDivElement, DatePickerPopupP
   function DatePickerPopup({ className, children, ...props }, ref) {
     return (
       <Popover.Popup ref={ref} className={styles.popup} {...props}>
-        <div className={clsx(styles.panel, className)} data-pui="date-picker-panel">
+        <div className={clsx(styles.panel, className)} data-forte="date-picker-panel">
           {children}
         </div>
       </Popover.Popup>
@@ -636,7 +636,7 @@ export const DatePickerFooter = React.forwardRef<HTMLDivElement, DatePickerFoote
       <div
         ref={ref}
         className={clsx(styles.footer, className)}
-        data-pui="date-picker-footer"
+        data-forte="date-picker-footer"
         {...props}
       />
     );
@@ -659,7 +659,7 @@ export interface DatePickerClearProps extends Omit<ButtonProps, "onClick"> {
 
 /**
  * Empties the selection. A `Button`, so it answers to `variant`, `tone` and
- * `size` — and tags itself `data-pui="button"` rather than being handed a
+ * `size` — and tags itself `data-forte="button"` rather than being handed a
  * marker, the way every composed component in the library does.
  *
  * It disables itself when there is nothing to clear, and when the root is

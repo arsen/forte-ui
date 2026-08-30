@@ -1,6 +1,6 @@
 "use client";
 
-import { PreviewCard } from "@dofortech/pretty-ui";
+import { PreviewCard } from "@dofortech/forte-ui";
 
 const LINKS = [
   {

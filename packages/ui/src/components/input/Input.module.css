@@ -6,7 +6,7 @@
  *   data-size      height, inline padding and font size (sm/md/lg)
  *   data-variant   how much weight the control carries (outline/soft/ghost)
  *
- * The numbers come from the same `--pui-control-*` tokens the trigger reads,
+ * The numbers come from the same `--forte-control-*` tokens the trigger reads,
  * so an Input and a Select.Trigger sitting on one row are the same height at
  * every density — that alignment is the reason not to invent a private scale
  * here.
@@ -18,44 +18,44 @@
  * others describe where the user is in the interaction, and recolouring a
  * control the moment it is merely *touched* is noise.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the input itself, so a value set on
      * an ancestor is only INHERITED and loses to this declaration. To re-skin
      * one input set them via `className` (an unlayered consumer rule beats
-     * `@layer pretty-ui.components` at any specificity) or an inline `style`;
+     * `@layer forte.components` at any specificity) or an inline `style`;
      * to move every input at once, re-point the global tokens on the
      * right-hand side, which this file only reads and never re-declares. */
     /** Control height (reset per `size`) */
-    --pui-input-height: var(--pui-control-h-md);
+    --forte-input-height: var(--forte-control-h-md);
     /** Inline padding (reset per `size`) */
-    --pui-input-padding-x: var(--pui-control-px-md);
+    --forte-input-padding-x: var(--forte-control-px-md);
     /** Font size (reset per `size`) */
-    --pui-input-font-size: var(--pui-font-size-2);
+    --forte-input-font-size: var(--forte-font-size-2);
     /** Corner radius */
-    --pui-input-radius: var(--pui-radius-control);
+    --forte-input-radius: var(--forte-radius-control);
     /** Border width */
-    --pui-input-border-width: 1px;
+    --forte-input-border-width: 1px;
 
     /* Colour slots, filled in per variant below. */
     /** Background (reset per `variant`) */
-    --pui-input-bg: var(--pui-color-background);
+    --forte-input-bg: var(--forte-color-background);
     /** Background on hover */
-    --pui-input-bg-hover: var(--pui-color-panel-hover);
+    --forte-input-bg-hover: var(--forte-color-panel-hover);
     /** Text colour */
-    --pui-input-fg: var(--pui-color-foreground);
+    --forte-input-fg: var(--forte-color-foreground);
     /** Placeholder colour */
-    --pui-input-placeholder-fg: var(--pui-color-foreground-muted);
+    --forte-input-placeholder-fg: var(--forte-color-foreground-muted);
     /** Border colour (reset per `variant`, and by `data-invalid`) */
-    --pui-input-border-color: var(--pui-color-border);
+    --forte-input-border-color: var(--forte-color-border);
     /** Border colour on hover */
-    --pui-input-border-color-hover: var(--pui-color-border-strong);
+    --forte-input-border-color-hover: var(--forte-color-border-strong);
     /** Caret colour */
-    --pui-input-caret-color: var(--pui-color-primary);
+    --forte-input-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --pui-input-selection-bg: var(--pui-color-primary-soft);
+    --forte-input-selection-bg: var(--forte-color-primary-soft);
     /** Selection text colour */
-    --pui-input-selection-fg: var(--pui-color-primary-text);
+    --forte-input-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
     display: block;
@@ -64,55 +64,55 @@
      * of roughly 20 characters, which makes it refuse to shrink inside a flex
      * or grid column and pushes its container wider than the page. */
     min-inline-size: 0;
-    block-size: var(--pui-input-height);
+    block-size: var(--forte-input-height);
     padding-block: 0;
-    padding-inline: var(--pui-input-padding-x);
+    padding-inline: var(--forte-input-padding-x);
     margin: 0;
-    border: var(--pui-input-border-width) solid var(--pui-input-border-color);
-    border-radius: var(--pui-input-radius);
+    border: var(--forte-input-border-width) solid var(--forte-input-border-color);
+    border-radius: var(--forte-input-radius);
 
-    background-color: var(--pui-input-bg);
-    color: var(--pui-input-fg);
-    caret-color: var(--pui-input-caret-color);
+    background-color: var(--forte-input-bg);
+    color: var(--forte-input-fg);
+    caret-color: var(--forte-input-caret-color);
 
     /* A UA stylesheet gives form controls their own font, not the page's, so
      * an input left alone is the one control in the set that does not match
      * the others. */
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-input-font-size);
-    font-weight: var(--pui-font-weight-normal);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-input-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-tight);
     text-align: start;
 
     /* The UA `text` cursor is correct here and is left alone — see the cursor
      * table in AGENTS.md. A text field is not "an element that performs an
      * action on click"; it is a region you place a caret in. */
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3 applies
    * with no exemption, and it is often the only thing naming the control. So
    * `-muted` (5.82:1), not `-subtle` (3.73:1, non-text only). */
   .root::placeholder {
-    color: var(--pui-input-placeholder-fg);
+    color: var(--forte-input-placeholder-fg);
     /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
      * measured 5.82:1 back under AA. */
     opacity: 1;
   }
 
   .root::selection {
-    background-color: var(--pui-input-selection-bg);
-    color: var(--pui-input-selection-fg);
+    background-color: var(--forte-input-selection-bg);
+    color: var(--forte-input-selection-fg);
   }
 
   /* States ---------------------------------------------------------------- */
   @media (hover: hover) {
     .root:hover:not([data-disabled], [readonly]) {
-      background-color: var(--pui-input-bg-hover);
-      border-color: var(--pui-input-border-color-hover);
+      background-color: var(--forte-input-bg-hover);
+      border-color: var(--forte-input-border-color-hover);
     }
   }
 
@@ -125,7 +125,7 @@
    * must not look disabled — only inert. The UA `text` cursor stays, because
    * selecting and copying the value is the whole point of the state. */
   .root[readonly] {
-    --pui-input-bg: var(--pui-color-panel);
+    --forte-input-bg: var(--forte-color-panel);
   }
 
   .root[data-full-width] {
@@ -134,39 +134,39 @@
 
   /* Sizes ----------------------------------------------------------------- */
   .root[data-size="sm"] {
-    --pui-input-height: var(--pui-control-h-sm);
-    --pui-input-padding-x: var(--pui-control-px-sm);
-    --pui-input-font-size: var(--pui-font-size-1);
+    --forte-input-height: var(--forte-control-h-sm);
+    --forte-input-padding-x: var(--forte-control-px-sm);
+    --forte-input-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-input-height: var(--pui-control-h-md);
-    --pui-input-padding-x: var(--pui-control-px-md);
-    --pui-input-font-size: var(--pui-font-size-2);
+    --forte-input-height: var(--forte-control-h-md);
+    --forte-input-padding-x: var(--forte-control-px-md);
+    --forte-input-font-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-input-height: var(--pui-control-h-lg);
-    --pui-input-padding-x: var(--pui-control-px-lg);
-    --pui-input-font-size: var(--pui-font-size-3);
+    --forte-input-height: var(--forte-control-h-lg);
+    --forte-input-padding-x: var(--forte-control-px-lg);
+    --forte-input-font-size: var(--forte-font-size-3);
   }
 
   /* Variants -------------------------------------------------------------- */
   .root[data-variant="outline"] {
-    --pui-input-bg: var(--pui-color-background);
-    --pui-input-border-color: var(--pui-color-border);
+    --forte-input-bg: var(--forte-color-background);
+    --forte-input-border-color: var(--forte-color-border);
   }
 
   .root[data-variant="soft"] {
-    --pui-input-bg: var(--pui-color-panel);
+    --forte-input-bg: var(--forte-color-panel);
     /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
      * keeps the field outlined there while staying invisible normally. */
-    --pui-input-border-color: transparent;
+    --forte-input-border-color: transparent;
   }
 
   .root[data-variant="ghost"] {
-    --pui-input-bg: transparent;
-    --pui-input-border-color: transparent;
+    --forte-input-bg: transparent;
+    --forte-input-border-color: transparent;
   }
 
   /* Validity -------------------------------------------------------------- */
@@ -178,14 +178,14 @@
    * only thing deciding whether a failed `soft` field gets the danger boundary
    * or the transparent one it inherits from its variant. */
   .root[data-invalid] {
-    --pui-input-border-color: var(--pui-color-danger-border);
-    --pui-input-border-color-hover: var(--pui-color-danger);
-    --pui-input-caret-color: var(--pui-color-danger);
+    --forte-input-border-color: var(--forte-color-danger-border);
+    --forte-input-border-color-hover: var(--forte-color-danger);
+    --forte-input-caret-color: var(--forte-color-danger);
   }
 }
 
 /* Forced colours ---------------------------------------------------------- */
-/* Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+/* Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * Unlike Checkbox and Switch, this really is a native <input>, so the UA does
@@ -193,7 +193,7 @@
  * variants' `transparent` border, which forced-colors resolves to a system
  * colour of its own choosing rather than to the field boundary. Restating the
  * pair here keeps every variant looking like the same control. */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .root {
       background-color: Field;

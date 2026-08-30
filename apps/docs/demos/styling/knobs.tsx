@@ -1,13 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 
 // Knobs are custom properties, and they belong on the component's own
 // element — in an app you would set them in a class; a demo has only `style`.
 const LIFTED = {
-  "--pui-button-radius": "var(--pui-radius-2)",
-  "--pui-button-hover-lift": "2px",
+  "--forte-button-radius": "var(--forte-radius-2)",
+  "--forte-button-hover-lift": "2px",
 } as React.CSSProperties;
 
 export default function ComponentKnobs() {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Button, Tooltip } from "@dofortech/pretty-ui";
+import { Button, Tooltip } from "@dofortech/forte-ui";
 
 export default function TooltipWithProvider() {
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@dofortech/pretty-ui";
+import { Progress } from "@dofortech/forte-ui";
 
 export default function ProgressBasic() {
   return (

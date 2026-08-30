@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb, type BreadcrumbOverflow } from "@dofortech/pretty-ui";
+import { Breadcrumb, type BreadcrumbOverflow } from "@dofortech/forte-ui";
 
 const TRAIL = [
   "Workspace",

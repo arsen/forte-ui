@@ -19,9 +19,9 @@ type TextareaElementProps = Omit<
 export interface TextareaProps extends TextareaElementProps {
   /**
    * Size of the control. Inline padding, block padding and font size move
-   * together, and the numbers come from the same `--pui-control-*` tokens
+   * together, and the numbers come from the same `--forte-control-*` tokens
    * `Input` and `Select.Trigger` read — so a textarea stacked under an input
-   * shares its optical inset at every `data-pui-density` setting.
+   * shares its optical inset at every `data-forte-density` setting.
    *
    * A `<textarea>` has no native `size` attribute, so unlike `Input` this
    * shadows nothing.
@@ -188,7 +188,7 @@ export function useAutoSize(enabled: boolean) {
  *
  * State is exposed on `data-*` (`data-disabled`, `data-invalid`, `data-valid`,
  * `data-dirty`, `data-touched`, `data-filled`, `data-focused`) and every visual
- * decision is a `--pui-textarea-*` custom property, so it can be re-skinned
+ * decision is a `--forte-textarea-*` custom property, so it can be re-skinned
  * from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[invalid]:...`) without wrapping.
  */
@@ -226,11 +226,11 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const controlProps = {
       ref: setRef,
       render: render ?? <textarea />,
-      // No `pui-target`: the SC 2.5.8 floor is about pointer targets under
+      // No `forte-target`: the SC 2.5.8 floor is about pointer targets under
       // 24px, and the shortest textarea this component can produce is three
       // rows tall.
-      className: clsx(styles.root, "pui-focus-ring", className),
-      "data-pui": "textarea",
+      className: clsx(styles.root, "forte-focus-ring", className),
+      "data-forte": "textarea",
       "data-size": size,
       "data-variant": variant,
       // A drag handle whose height the next keystroke overwrites is broken, so
@@ -246,8 +246,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         // stylesheet knows the other terms of. The native `rows` attribute
         // above still sets the same height on its own; this is what keeps the
         // floor in place once `field-sizing: content` starts ignoring it.
-        "--pui-textarea-rows": String(rows),
-        ...(maxRows != null ? { "--pui-textarea-max-rows": String(maxRows) } : null),
+        "--forte-textarea-rows": String(rows),
+        ...(maxRows != null ? { "--forte-textarea-max-rows": String(maxRows) } : null),
         // Consumer last, per the same rule that puts `className` last.
         ...style,
       } as React.CSSProperties,

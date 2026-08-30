@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, ButtonGroup } from "@dofortech/pretty-ui";
+import { Button, ButtonGroup } from "@dofortech/forte-ui";
 
 export default function ButtonGroupSeparator() {
   return (

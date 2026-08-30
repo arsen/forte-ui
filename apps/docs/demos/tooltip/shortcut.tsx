@@ -1,7 +1,7 @@
 "use client";
 
 import { Bold, Italic, Link, Underline } from "lucide-react";
-import { Button, Tooltip } from "@dofortech/pretty-ui";
+import { Button, Tooltip } from "@dofortech/forte-ui";
 
 const ACTIONS = [
   { label: "Bold", keys: "⌘B", ariaKeys: "Meta+B", Icon: Bold },

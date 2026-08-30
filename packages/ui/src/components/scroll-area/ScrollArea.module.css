@@ -40,9 +40,9 @@
  *     available))`, which is both answers at once — see `.content`.
  *
  * 4 — There is no `prefers-reduced-motion` block. The only motion here is the
- *     scrollbars fading in, which already runs on --pui-duration-fast.
+ *     scrollbars fading in, which already runs on --forte-duration-fast.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens, declared here on ScrollArea.Root — every other part is
      * a descendant, so they inherit down, and the root's own declaration beats
@@ -53,7 +53,7 @@
     /* How far the fade reaches in from an edge, at most. The actual size is
      * this or the remaining scroll distance, whichever is smaller. */
     /** How far the fade reaches in from an edge, at most */
-    --pui-scroll-area-fade-size: var(--pui-space-5);
+    --forte-scroll-area-fade-size: var(--forte-space-5);
 
     /* Track thickness, on both axes. SC 2.5.8 asks for 24x24 targets and this
      * is half of one: it passes on the *spacing* exception instead, since a
@@ -62,26 +62,26 @@
      * being true if you put anything else against that edge — raise this for a
      * coarse-pointer layout, or if you crowd the track. */
     /** Track thickness on both axes */
-    --pui-scroll-area-scrollbar-size: var(--pui-space-3);
+    --forte-scroll-area-scrollbar-size: var(--forte-space-3);
     /* Inset between track edge and thumb. Base UI measures the track's padding
      * when it sizes the thumb, so this stays a real padding rather than a
      * margin on the thumb. */
     /** Inset between the track's edge and its thumb */
-    --pui-scroll-area-track-padding: 2px;
+    --forte-scroll-area-track-padding: 2px;
     /** Track fill */
-    --pui-scroll-area-track-bg: transparent;
+    --forte-scroll-area-track-bg: transparent;
     /** Track fill while the pointer is over it */
-    --pui-scroll-area-track-bg-hover: var(--pui-color-panel);
+    --forte-scroll-area-track-bg-hover: var(--forte-color-panel);
     /** Thumb fill */
-    --pui-scroll-area-thumb-bg: var(--pui-color-border-strong);
+    --forte-scroll-area-thumb-bg: var(--forte-color-border-strong);
     /** Thumb fill on hover */
-    --pui-scroll-area-thumb-bg-hover: var(--pui-color-foreground-subtle);
+    --forte-scroll-area-thumb-bg-hover: var(--forte-color-foreground-subtle);
     /** Thumb fill while being dragged */
-    --pui-scroll-area-thumb-bg-active: var(--pui-color-foreground-muted);
+    --forte-scroll-area-thumb-bg-active: var(--forte-color-foreground-muted);
     /** Corner radius of the track and thumb */
-    --pui-scroll-area-thumb-radius: var(--pui-radius-pill);
+    --forte-scroll-area-thumb-radius: var(--forte-radius-pill);
     /** Fill of the square between the two scrollbars */
-    --pui-scroll-area-corner-bg: transparent;
+    --forte-scroll-area-corner-bg: transparent;
 
     box-sizing: border-box;
     /* `position: relative` arrives from Base UI as an inline style — it is
@@ -98,8 +98,8 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Viewport ---------------------------------------------------------------
@@ -141,23 +141,23 @@
    * makes the whole mask-image declaration invalid at computed-value time.
    * The fallback makes that state mean "no fade" instead of "no mask". */
   .viewport[data-fade] {
-    --pui-scroll-area-fade-y-start: min(
-      var(--pui-scroll-area-fade-size),
+    --forte-scroll-area-fade-y-start: min(
+      var(--forte-scroll-area-fade-size),
       var(--scroll-area-overflow-y-start, 0px),
       50%
     );
-    --pui-scroll-area-fade-y-end: min(
-      var(--pui-scroll-area-fade-size),
+    --forte-scroll-area-fade-y-end: min(
+      var(--forte-scroll-area-fade-size),
       var(--scroll-area-overflow-y-end, 0px),
       50%
     );
-    --pui-scroll-area-fade-x-start: min(
-      var(--pui-scroll-area-fade-size),
+    --forte-scroll-area-fade-x-start: min(
+      var(--forte-scroll-area-fade-size),
       var(--scroll-area-overflow-x-start, 0px),
       50%
     );
-    --pui-scroll-area-fade-x-end: min(
-      var(--pui-scroll-area-fade-size),
+    --forte-scroll-area-fade-x-end: min(
+      var(--forte-scroll-area-fade-size),
       var(--scroll-area-overflow-x-end, 0px),
       50%
     );
@@ -176,26 +176,26 @@
    * The vertical layer is written physically (`to bottom`) because the block
    * axis has no direction to answer for. The horizontal one cannot be: a
    * gradient's direction is physical, so the ANGLE carries the sign —
-   * `calc(90deg * var(--pui-direction))` is 90deg (to right) in LTR and -90deg
+   * `calc(90deg * var(--forte-direction))` is 90deg (to right) in LTR and -90deg
    * (to left) in RTL, which makes the gradient's first stop the inline-START
    * edge either way, matching the axis Base UI already normalised the overflow
    * distances onto. Writing `to right` and swapping the two variables in an
    * `[dir="rtl"]` descendant rule would break an LTR island inside an RTL
-   * page, which is the whole reason --pui-direction is inherited. */
+   * page, which is the whole reason --forte-direction is inherited. */
   .viewport[data-fade]:is([data-has-overflow-x], [data-has-overflow-y]) {
     mask-image:
       linear-gradient(
         to bottom,
         transparent 0,
-        black var(--pui-scroll-area-fade-y-start),
-        black calc(100% - var(--pui-scroll-area-fade-y-end)),
+        black var(--forte-scroll-area-fade-y-start),
+        black calc(100% - var(--forte-scroll-area-fade-y-end)),
         transparent 100%
       ),
       linear-gradient(
-        calc(90deg * var(--pui-direction)),
+        calc(90deg * var(--forte-direction)),
         transparent 0,
-        black var(--pui-scroll-area-fade-x-start),
-        black calc(100% - var(--pui-scroll-area-fade-x-end)),
+        black var(--forte-scroll-area-fade-x-start),
+        black calc(100% - var(--forte-scroll-area-fade-x-end)),
         transparent 100%
       );
     /* Both axes at once: a pixel is visible only where BOTH layers say so, so
@@ -215,20 +215,20 @@
    * scrollbars sit in — so ringing it outlines the scroll region as a whole,
    * which is what has focus.
    *
-   * `:has(> .viewport:focus-visible)` rather than the `.pui-focus-ring-within`
+   * `:has(> .viewport:focus-visible)` rather than the `.forte-focus-ring-within`
    * pattern class, which fires for ANY focused descendant: a button — or a
    * tab — inside the content would then paint its own ring and the whole
    * region's at the same time. The child combinator also keeps a nested scroll
    * area from ringing its parent.
    *
-   * The declarations mirror `.pui-focus-ring` in patterns.css. Its
+   * The declarations mirror `.forte-focus-ring` in patterns.css. Its
    * forced-colors counterpart is mirrored too, in the a11y layer at the foot
    * of this file — a ring that only exists here would be the one that
    * disappears in high contrast. */
   .root:has(> .viewport:focus-visible) {
-    outline: var(--pui-focus-ring-width) solid var(--pui-focus-ring-inner);
-    outline-offset: var(--pui-focus-ring-offset);
-    box-shadow: 0 0 0 var(--pui-focus-ring-offset) var(--pui-focus-ring-outer);
+    outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
+    outline-offset: var(--forte-focus-ring-offset);
+    box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
   }
 
   .viewport:focus-visible {
@@ -270,25 +270,25 @@
   .scrollbar {
     box-sizing: border-box;
     display: block;
-    padding: var(--pui-scroll-area-track-padding);
-    border-radius: var(--pui-scroll-area-thumb-radius);
-    background-color: var(--pui-scroll-area-track-bg);
+    padding: var(--forte-scroll-area-track-padding);
+    border-radius: var(--forte-scroll-area-thumb-radius);
+    background-color: var(--forte-scroll-area-track-bg);
     /* It drags and it pages on click, so it is a control (see the pointer rule
      * in AGENTS.md). We do not follow the native scrollbar's `default` here
      * for the same reason we do not follow the native select's arrow. */
     cursor: pointer;
     opacity: 0;
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      background-color var(--pui-duration-fast) var(--pui-ease-standard);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .scrollbar[data-orientation="vertical"] {
-    width: var(--pui-scroll-area-scrollbar-size);
+    width: var(--forte-scroll-area-scrollbar-size);
   }
 
   .scrollbar[data-orientation="horizontal"] {
-    height: var(--pui-scroll-area-scrollbar-size);
+    height: var(--forte-scroll-area-scrollbar-size);
   }
 
   /* `data-hovering` is set from the ROOT's pointer events, not the track's, so
@@ -319,7 +319,7 @@
 
   @media (hover: hover) {
     .scrollbar:hover {
-      background-color: var(--pui-scroll-area-track-bg-hover);
+      background-color: var(--forte-scroll-area-track-bg-hover);
     }
   }
 
@@ -330,10 +330,10 @@
    * rather than a margin here. Only the cross axis is ours to set. */
   .thumb {
     box-sizing: border-box;
-    border-radius: var(--pui-scroll-area-thumb-radius);
-    background-color: var(--pui-scroll-area-thumb-bg);
+    border-radius: var(--forte-scroll-area-thumb-radius);
+    background-color: var(--forte-scroll-area-thumb-bg);
     cursor: pointer;
-    transition: background-color var(--pui-duration-fast) var(--pui-ease-standard);
+    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .thumb[data-orientation="vertical"] {
@@ -346,12 +346,12 @@
 
   @media (hover: hover) {
     .thumb:hover {
-      background-color: var(--pui-scroll-area-thumb-bg-hover);
+      background-color: var(--forte-scroll-area-thumb-bg-hover);
     }
   }
 
   .thumb:active {
-    background-color: var(--pui-scroll-area-thumb-bg-active);
+    background-color: var(--forte-scroll-area-thumb-bg-active);
   }
 
   /* Corner -----------------------------------------------------------------
@@ -359,11 +359,11 @@
    * their measured thickness, so it is exactly the square the two would
    * otherwise fight over. */
   .corner {
-    background-color: var(--pui-scroll-area-corner-bg);
+    background-color: var(--forte-scroll-area-corner-bg);
   }
 }
 
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   /*
    * The fade is, by construction, a loss of contrast at the edges of the
    * content, achieved by making text translucent. All three of these users
@@ -412,7 +412,7 @@
       background-color: Canvas;
     }
 
-    /* The counterpart of the `.pui-focus-ring` rule in a11y.css, which cannot
+    /* The counterpart of the `.forte-focus-ring` rule in a11y.css, which cannot
      * reach this ring because the ring is not carried by that class — the
      * element that takes focus is not the element that can paint it. Keeping
      * the two in step is the price of that; the alternative is a scroll region

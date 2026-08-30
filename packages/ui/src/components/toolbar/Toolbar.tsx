@@ -122,7 +122,7 @@ export const ToolbarRoot = React.forwardRef<HTMLDivElement, ToolbarRootProps>(
           ref={ref}
           orientation={orientation}
           className={clsx(styles.root, className)}
-          data-pui="toolbar"
+          data-forte="toolbar"
           data-variant={variant}
           data-size={size}
           data-wrap={wrap || undefined}
@@ -169,7 +169,7 @@ export const ToolbarGroup = React.forwardRef<HTMLDivElement, ToolbarGroupProps>(
       <BaseToolbar.Group
         ref={ref}
         className={clsx(styles.group, className)}
-        data-pui="toolbar-group"
+        data-forte="toolbar-group"
         {...props}
       />
     );
@@ -292,9 +292,9 @@ export const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonPr
         ref={ref}
         className={className}
         focusableWhenDisabled={focusableWhenDisabled}
-        // No `data-pui` here, per the composed-component rule: whatever ends up
+        // No `data-forte` here, per the composed-component rule: whatever ends up
         // rendered tags its own root, and a consumer scopes with a descendant
-        // selector (`[data-pui="toolbar"] [data-pui="button"]`).
+        // selector (`[data-forte="toolbar"] [data-forte="button"]`).
         render={
           render ?? (
             <Button
@@ -355,8 +355,8 @@ export const ToolbarLink = React.forwardRef<HTMLAnchorElement, ToolbarLinkProps>
     return (
       <BaseToolbar.Link
         ref={ref}
-        className={clsx(styles.link, "pui-focus-ring", "pui-link", className)}
-        data-pui="toolbar-link"
+        className={clsx(styles.link, "forte-focus-ring", "forte-link", className)}
+        data-forte="toolbar-link"
         data-size={size ?? toolbarSize ?? "md"}
         {...props}
       />
@@ -483,7 +483,7 @@ export const ToolbarSeparator = React.forwardRef<HTMLDivElement, ToolbarSeparato
       <BaseToolbar.Separator
         ref={ref}
         className={clsx(styles.separator, className)}
-        data-pui="toolbar-separator"
+        data-forte="toolbar-separator"
         {...props}
       />
     );
@@ -507,7 +507,7 @@ export const ToolbarSeparator = React.forwardRef<HTMLDivElement, ToolbarSeparato
  * ```
  *
  * Tab moves past the whole bar in one press; the arrow keys move between its
- * controls. Styling is driven by `data-*` attributes and `--pui-toolbar-*`
+ * controls. Styling is driven by `data-*` attributes and `--forte-toolbar-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=outline]:...`) without wrapping.
  */

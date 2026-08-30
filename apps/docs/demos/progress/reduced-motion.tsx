@@ -1,8 +1,8 @@
 "use client";
 
-import { Progress, ProgressCircle } from "@dofortech/pretty-ui";
+import { Progress, ProgressCircle } from "@dofortech/forte-ui";
 
-/* `data-pui-motion` is the same switch the demo frame's reduced-motion toggle
+/* `data-forte-motion` is the same switch the demo frame's reduced-motion toggle
  * flips, and it works on any element — so the right-hand column is genuinely
  * running under reduced motion while the left-hand one is not, on the same
  * page at the same time. `full` on the left pins that column to base behaviour
@@ -16,7 +16,7 @@ export default function ProgressReducedMotion() {
   return (
     <div className="flex flex-wrap gap-7">
       {COLUMNS.map(({ motion, title }) => (
-        <div key={motion} data-pui-motion={motion} className="grid w-3xs gap-4">
+        <div key={motion} data-forte-motion={motion} className="grid w-3xs gap-4">
           <span className="text-1 font-medium text-foreground-muted">{title}</span>
           {/* The segment does not merely stop travelling on the right — it
             * grows to the full rail, and the ring's arc closes into a complete
@@ -25,7 +25,7 @@ export default function ProgressReducedMotion() {
             * thing an indeterminate indicator must never look like. What is
             * left moving in both is a slow opacity breathe. */}
           <Progress.Root value={null}>
-            <Progress.Label className="pui-visually-hidden">Working</Progress.Label>
+            <Progress.Label className="forte-visually-hidden">Working</Progress.Label>
             <Progress.Track>
               <Progress.Indicator />
             </Progress.Track>
@@ -34,7 +34,7 @@ export default function ProgressReducedMotion() {
             <ProgressCircle.Track>
               <ProgressCircle.Indicator />
             </ProgressCircle.Track>
-            <ProgressCircle.Label className="pui-visually-hidden">Working</ProgressCircle.Label>
+            <ProgressCircle.Label className="forte-visually-hidden">Working</ProgressCircle.Label>
           </ProgressCircle.Root>
         </div>
       ))}

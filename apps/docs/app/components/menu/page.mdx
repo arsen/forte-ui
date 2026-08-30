@@ -23,7 +23,7 @@ field. For picking a value out of a fixed set, use [Select](/components/select).
 ## Import
 
 ```tsx
-import { Menu } from "@dofortech/pretty-ui";
+import { Menu } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -40,7 +40,7 @@ never fight over the cascade.
 ### Icons and shortcuts
 
 `<Menu.Shortcut>` prints the keys at the end of a row. A direct `<svg>` child of
-a row is sized to `--pui-menu-item-icon-size` and never squeezed by a long
+a row is sized to `--forte-menu-item-icon-size` and never squeezed by a long
 label, so an icon set's own default (lucide draws at 24px) does not decide the
 row's height.
 
@@ -193,34 +193,34 @@ lands inside the row's own box, where `overflow` cannot shave it off.
 
 ## Theming
 
-Every `--pui-menu-*` property below is declared on the surface that owns it, and
+Every `--forte-menu-*` property below is declared on the surface that owns it, and
 an element's own declaration beats an inherited value — so setting one on
 `:root`, on a theme scope or on any ancestor has no effect. The popup is
 portalled to `<body>` as well, so an ancestor of the *trigger* is not even in
 its tree. Set each property on the part that declares it, through that part's
-`className` (an unlayered rule beats the library's `@layer pretty-ui.components`,
+`className` (an unlayered rule beats the library's `@layer forte.components`,
 whatever its specificity) or an inline `style`:
 
 - `Menu.Popup` declares the surface properties — `bg`, `fg`, `radius`, `shadow`,
   the two `border-*`, `padding-y`, `min-width`, `max-width` — plus
-  `--pui-menu-item-px`, `--pui-menu-item-gap`,
-  `--pui-menu-item-indicator-size` and `--pui-menu-item-icon-size`. Those four
+  `--forte-menu-item-px`, `--forte-menu-item-gap`,
+  `--forte-menu-item-indicator-size` and `--forte-menu-item-icon-size`. Those four
   are the layout knobs the rows, the group labels and the separators read but
   never redeclare, so the popup is the right place to set them.
 - `Menu.Popup` also declares the motion knobs: `travel`, `enter-scale`, and the
   `enter-`/`exit-` duration and easing pairs.
-- `Menu.Item` and the other row parts declare `--pui-menu-item-fg`,
-  `--pui-menu-item-bg-highlighted`, `--pui-menu-item-fg-highlighted` and
-  `--pui-menu-item-font-size`. `tone="danger"` is those first three re-pointed
+- `Menu.Item` and the other row parts declare `--forte-menu-item-fg`,
+  `--forte-menu-item-bg-highlighted`, `--forte-menu-item-fg-highlighted` and
+  `--forte-menu-item-font-size`. `tone="danger"` is those first three re-pointed
   at the danger set.
-- `positionerClassName` reaches `--pui-menu-z-index`, and nothing else: it is
+- `positionerClassName` reaches `--forte-menu-z-index`, and nothing else: it is
   the only property declared on the positioner.
-- `--pui-menu-backdrop-z-index` is declared on the backdrop, an element
+- `--forte-menu-backdrop-z-index` is declared on the backdrop, an element
   `Menu.Popup` renders internally and exposes no class name for, so it cannot be
   retargeted from outside.
 
-The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*`, `--pui-space-*` — are the exception: the component only reads
+The global tokens these resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*`, `--forte-space-*` — are the exception: the component only reads
 those and never redeclares them, so re-pointing them on `:root` or on a theme
 scope does re-skin every menu.
 

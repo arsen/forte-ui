@@ -15,7 +15,7 @@ The entire palette is derived from one variable. Set a brand colour and the libr
 
 ```css
 :root {
-  --pui-accent-seed: #7c3aed;
+  --forte-accent-seed: #7c3aed;
 }
 ```
 
@@ -23,13 +23,13 @@ That is a complete theme. Everything colour-shaped that is not a status colour f
 
 ```css
 :root {
-  --pui-accent-seed: #7c3aed;
-  --pui-secondary-seed: #0e7490; /* a second brand colour, same treatment */
-  --pui-neutral-tint: 0.5;       /* 0 = pure grey … 1 = brand-tinted greys */
+  --forte-accent-seed: #7c3aed;
+  --forte-secondary-seed: #0e7490; /* a second brand colour, same treatment */
+  --forte-neutral-tint: 0.5;       /* 0 = pure grey … 1 = brand-tinted greys */
 }
 ```
 
-`--pui-secondary-seed` drives everything a component renders with `tone="secondary"`. `--pui-neutral-tint` controls how much of the accent hue bleeds into the grey ramp — at `1` the neutrals carry a recognisable sliver of the brand, at `0` they are achromatic.
+`--forte-secondary-seed` drives everything a component renders with `tone="secondary"`. `--forte-neutral-tint` controls how much of the accent hue bleeds into the grey ramp — at `1` the neutrals carry a recognisable sliver of the brand, at `0` they are achromatic.
 
 The seeds are registered custom properties with a typed `<color>` syntax. That buys two things: a malformed value falls back to the registered default instead of silently invalidating every derived token, and the properties are animatable — which is how a theme switch can cross-fade instead of snapping.
 
@@ -39,25 +39,25 @@ The seeds are registered custom properties with a typed `<color>` syntax. That b
 
 ## What the seed derives
 
-Each seed becomes a twelve-step ramp — `--pui-accent-1` through `--pui-accent-12`, and the same for `secondary` and the `gray` ramp the neutrals come from. Components never read ramp steps directly; they read semantic aliases, which is what you should override too if you need finer control than the seed gives:
+Each seed becomes a twelve-step ramp — `--forte-accent-1` through `--forte-accent-12`, and the same for `secondary` and the `gray` ramp the neutrals come from. Components never read ramp steps directly; they read semantic aliases, which is what you should override too if you need finer control than the seed gives:
 
 ```css
---pui-color-background   /* the page       — gray-1  */
---pui-color-panel        /* raised surface — gray-2  */
---pui-color-primary      /* solid fill     — accent-9 */
---pui-color-primary-soft /* tinted fill    — accent-3 */
---pui-color-primary-text /* accent text    — accent-11 */
+--forte-color-background   /* the page       — gray-1  */
+--forte-color-panel        /* raised surface — gray-2  */
+--forte-color-primary      /* solid fill     — accent-9 */
+--forte-color-primary-soft /* tinted fill    — accent-3 */
+--forte-color-primary-text /* accent text    — accent-11 */
 ```
 
 The full list is on the [Design tokens](/customization/tokens) page. The status colours — danger, success, warning, info — are deliberately **not** derived from the seed: a brand colour must not be able to make an error message look reassuring.
 
 ## Text on your brand colour
 
-`--pui-color-on-primary` and `--pui-color-on-secondary` — the text on solid fills — pick white or black automatically. In browsers with `contrast-color()` the browser decides from the painted colour; elsewhere a fitted OKLCH threshold decides, and it clears AA on its own across the entire supported envelope. If you want the decision to be exact in every browser, the [Theme Studio](/theme) measures it for your seed and includes the literal in its exported CSS:
+`--forte-color-on-primary` and `--forte-color-on-secondary` — the text on solid fills — pick white or black automatically. In browsers with `contrast-color()` the browser decides from the painted colour; elsewhere a fitted OKLCH threshold decides, and it clears AA on its own across the entire supported envelope. If you want the decision to be exact in every browser, the [Theme Studio](/theme) measures it for your seed and includes the literal in its exported CSS:
 
 ```css
 :root {
-  --pui-color-on-primary: oklch(0.995 0 0); /* measured for your seed */
+  --forte-color-on-primary: oklch(0.995 0 0); /* measured for your seed */
 }
 ```
 
@@ -73,14 +73,14 @@ Both modes are built from the same seed — dark mode is not a second theme, it 
 
 ## Scoped themes
 
-Re-theming does not have to be global. Add the `pui-theme` class or a `data-pui-theme` attribute to any element and set seeds there — that subtree re-derives its entire palette while the rest of the page keeps yours:
+Re-theming does not have to be global. Add the `forte-theme` class or a `data-forte-theme` attribute to any element and set seeds there — that subtree re-derives its entire palette while the rest of the page keeps yours:
 
 <DemoBlock id="theming/scoped" />
 
 Scopes nest, and each level can override just the inputs it cares about. `data-theme` works on a scope too, so a permanently-dark sidebar inside a light app is one attribute.
 
 <Callout kind="warn">
-  The scope marker is load-bearing. Setting `--pui-accent-seed` on a plain element does nothing: a custom property containing `var()` is substituted where it is *declared*, and the ramp is declared on `:root`, `.pui-theme` and `[data-pui-theme]` — so only those elements re-derive it. If a seed override ever "doesn't work", the missing scope class is almost always why.
+  The scope marker is load-bearing. Setting `--forte-accent-seed` on a plain element does nothing: a custom property containing `var()` is substituted where it is *declared*, and the ramp is declared on `:root`, `.forte-theme` and `[data-forte-theme]` — so only those elements re-derive it. If a seed override ever "doesn't work", the missing scope class is almost always why.
 </Callout>
 
 ## Where to go next

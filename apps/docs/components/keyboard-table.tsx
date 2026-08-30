@@ -19,7 +19,7 @@ export function KeyboardTable({ rows }: { rows: KeyRow[] }) {
   return (
     <div className={TABLE_WRAP}>
       <table className={TABLE}>
-        <caption className="pui-visually-hidden">Keyboard interactions</caption>
+        <caption className="forte-visually-hidden">Keyboard interactions</caption>
         <thead>
           <tr>
             <th scope="col" className={TABLE_HEAD}>Key</th>

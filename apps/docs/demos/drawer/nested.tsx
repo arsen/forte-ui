@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Drawer } from "@dofortech/pretty-ui";
+import { Button, Drawer } from "@dofortech/forte-ui";
 
 type Plan = { id: string; name: string; price: string; seats: string };
 

@@ -28,7 +28,7 @@ stop. When the set should cost one Tab press instead, reach for
 ## Import
 
 ```tsx
-import { ButtonGroup } from "@dofortech/pretty-ui";
+import { ButtonGroup } from "@dofortech/forte-ui";
 ```
 
 ```tsx
@@ -57,7 +57,7 @@ practice you want them to.
 ### Separators
 
 A fused pair shares one hairline, and where does it come from? From the
-children: every pretty-ui control draws a 1px border of its own — transparent
+children: every forte-ui control draws a 1px border of its own — transparent
 in the fill variants — and the group strips the shared edge from the second of
 the pair so the first one's border is the seam. With `outline` children that
 seam is visible and separators are unnecessary. With `solid` or `soft`
@@ -70,7 +70,7 @@ children the seam is transparent, the group reads as one unbroken slab, and
 
 The commonest fused pair: the action, and a menu of its variations. The
 separator's default colour is tuned against the page background, so between two
-`solid` fills re-point `--pui-button-group-separator-color` towards the fill's
+`solid` fills re-point `--forte-button-group-separator-color` towards the fill's
 own text colour, as the demo does.
 
 <DemoBlock id="button-group/split" />
@@ -105,7 +105,7 @@ the prefix drops the caret into the input:
 A group whose direct children are themselves groups switches from fusing to
 spacing: each inner group fuses its own controls, and the outer one lays them
 out with a gap — one object per decision, one gap between decisions. The gap is
-`--pui-button-group-gap`.
+`--forte-button-group-gap`.
 
 <DemoBlock id="button-group/nested" />
 
@@ -139,8 +139,8 @@ seam so its ring is never clipped by the neighbour painted after it.
 
 <ThemingTable component="ButtonGroup" part="root" />
 
-The controls inside keep their own properties — `--pui-button-*` on
-[`Button`](/components/button), `--pui-input-*` on
+The controls inside keep their own properties — `--forte-button-*` on
+[`Button`](/components/button), `--forte-input-*` on
 [`Input`](/components/input). The group's own surface is nothing: every visible
 pixel belongs to a child.
 

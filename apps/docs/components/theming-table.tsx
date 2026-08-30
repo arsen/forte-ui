@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import theming from "@dofortech/pretty-ui/docs-data/theming.json";
+import theming from "@dofortech/forte-ui/docs-data/theming.json";
 import { cn } from "@/lib/cn";
 import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";
 
@@ -63,7 +63,7 @@ export function ThemingTable({
   return (
     <div className={TABLE_WRAP}>
       <table className={TABLE}>
-        <caption className="pui-visually-hidden">Theming tokens for {component}</caption>
+        <caption className="forte-visually-hidden">Theming tokens for {component}</caption>
         <thead>
           <tr>
             <th scope="col" className={cn(TABLE_HEAD, "whitespace-nowrap")}>Property</th>

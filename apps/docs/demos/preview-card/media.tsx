@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { PreviewCard } from "@dofortech/pretty-ui";
+import { PreviewCard } from "@dofortech/forte-ui";
 
 export default function PreviewCardMedia() {
   return (
@@ -21,7 +21,7 @@ export default function PreviewCardMedia() {
           * placed outside its box, so clipping would eat the wedge. The
           * banner rounds its own two corners instead. */}
         <PreviewCard.Popup className="gap-0 p-0" size="lg">
-          {/* No Arrow. The wedge is filled with --pui-preview-card-bg, and the
+          {/* No Arrow. The wedge is filled with --forte-preview-card-bg, and the
             * top edge of this card is the banner rather than the surface — so
             * the arrow would read as a dark notch bitten out of the gradient.
             * A card that opens with media drops the arrow. */}
@@ -31,14 +31,14 @@ export default function PreviewCardMedia() {
             style={
               {
                 background:
-                  "linear-gradient(120deg, var(--pui-color-primary), var(--pui-color-secondary))",
+                  "linear-gradient(120deg, var(--forte-color-primary), var(--forte-color-secondary))",
                 // One border-width smaller than the card's own radius: this
                 // element sits inside the border, and matching the outer
                 // radius would leave a sliver of background in each corner.
                 borderStartStartRadius:
-                  "calc(var(--pui-preview-card-radius) - var(--pui-preview-card-border-width))",
+                  "calc(var(--forte-preview-card-radius) - var(--forte-preview-card-border-width))",
                 borderStartEndRadius:
-                  "calc(var(--pui-preview-card-radius) - var(--pui-preview-card-border-width))",
+                  "calc(var(--forte-preview-card-radius) - var(--forte-preview-card-border-width))",
               } as React.CSSProperties
             }
           />

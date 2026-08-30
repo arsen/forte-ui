@@ -1,12 +1,12 @@
 "use client";
 
-import { Skeleton } from "@dofortech/pretty-ui";
+import { Skeleton } from "@dofortech/forte-ui";
 
 /* Explicit newlines rather than natural wrapping, so this is provably three
  * lines at every viewport width — which is what makes the overlay below a
  * measurement rather than a coincidence. */
 const COPY = `Base UI ships the behaviour.
-pretty-ui ships the pixels.
+forte-ui ships the pixels.
 Nothing here is hardcoded.`;
 
 export default function SkeletonText() {

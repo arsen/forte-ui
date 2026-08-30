@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { DatePicker, type CalendarRange } from "@dofortech/pretty-ui";
+import { DatePicker, type CalendarRange } from "@dofortech/forte-ui";
 
 export default function DatePickerRange() {
   const [range, setRange] = React.useState<CalendarRange | null>(null);

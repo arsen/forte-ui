@@ -19,7 +19,7 @@ Tabs put several views of the same subject in one place and show one at a time. 
 ## Import
 
 ```tsx
-import { Tabs } from "@dofortech/pretty-ui";
+import { Tabs } from "@dofortech/forte-ui";
 ```
 
 `Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list. `Tabs.List` renders a [`ScrollArea`](/components/scroll-area) around itself unless `overflow="visible"` is set on the root — its own `className`, `ref` and props still land on the `tablist` element, but it is no longer the outermost box of the strip.
@@ -56,7 +56,7 @@ A strip with more tabs than room scrolls rather than spilling out of its contain
 
 <DemoBlock id="tabs/overflow" />
 
-Activating a tab that is off the edge scrolls it into view, whether it was reached with the pointer or with the arrow keys and Enter — and the strip arrives already scrolled to the active tab, with no animation on that first frame. It deliberately overshoots: `--pui-tabs-scroll-peek` parks the tab 3rem in from the edge rather than flush against it, which leaves the neighbouring tab half painted and half fading out under the mask. Land the tab on the fade's inner edge instead and the gap beyond it is empty — the strip reads as having ended there, which is the one thing a scrolling strip must not do.
+Activating a tab that is off the edge scrolls it into view, whether it was reached with the pointer or with the arrow keys and Enter — and the strip arrives already scrolled to the active tab, with no animation on that first frame. It deliberately overshoots: `--forte-tabs-scroll-peek` parks the tab 3rem in from the edge rather than flush against it, which leaves the neighbouring tab half painted and half fading out under the mask. Land the tab on the fade's inner edge instead and the gap beyond it is empty — the strip reads as having ended there, which is the one thing a scrolling strip must not do.
 
 That clearance is the tab's own `scroll-margin`, overriding the flat 1.5rem patterns.css puts on every focusable part for [SC 2.4.11](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html). Carrying it as a real CSS property rather than a number in the script is what makes the browser's own focus scrolling agree with ours, so arrow-keying along the strip leaves the same peek as clicking does.
 
@@ -70,7 +70,7 @@ A vertical strip needs a height to scroll against. The scroller is capped at the
 
 ### With icons
 
-A tab lays out its children in a row with `--pui-control-gap` between them, so an icon needs no wrapper or extra class.
+A tab lays out its children in a row with `--forte-control-gap` between them, so an icon needs no wrapper or extra class.
 
 <DemoBlock id="tabs/with-icons" />
 
@@ -119,8 +119,8 @@ The indicator slides without a single frame of JavaScript. Base UI measures the 
   translate: var(--active-tab-left);
   width: var(--active-tab-width);
   transition-property: translate, width, height;
-  transition-duration: var(--pui-duration-move);
-  transition-timing-function: var(--pui-ease-spring-snappy);
+  transition-duration: var(--forte-duration-move);
+  transition-timing-function: var(--forte-ease-spring-snappy);
 }
 ```
 
@@ -128,27 +128,27 @@ The measurement runs once per change (and on resize, via a `ResizeObserver`); th
 
 It is a `transition` rather than a keyframe animation on purpose. A transition can be interrupted: clicking a third tab while the indicator is still travelling to the second retargets smoothly from wherever it is, instead of snapping back and restarting.
 
-Scrolling the active tab into view is the one movement that is not a CSS transition — a scroll position cannot be one. It runs on the browser's own `scrollBy({ behavior: "smooth" })`, and is switched to an instant jump by reading `--pui-motion-ok` off the viewport rather than by asking `matchMedia`, so the in-page reduced-motion toggle and a subtree `data-pui-motion="reduce"` turn it off along with everything else. Alignment forced by a container resize is always instant: it fires on every frame of a drag, and animating each one would leave the strip chasing the pointer.
+Scrolling the active tab into view is the one movement that is not a CSS transition — a scroll position cannot be one. It runs on the browser's own `scrollBy({ behavior: "smooth" })`, and is switched to an instant jump by reading `--forte-motion-ok` off the viewport rather than by asking `matchMedia`, so the in-page reduced-motion toggle and a subtree `data-forte-motion="reduce"` turn it off along with everything else. Alignment forced by a container resize is always instant: it fires on every frame of a drag, and animating each one would leave the strip chasing the pointer.
 
-Panels move too. `Tabs.Root` publishes `data-activation-direction` naming where the new tab sits relative to the old one, and the incoming panel starts offset by `--pui-travel-md` on that side and slides back to rest as it fades in.
+Panels move too. `Tabs.Root` publishes `data-activation-direction` naming where the new tab sits relative to the old one, and the incoming panel starts offset by `--forte-travel-md` on that side and slides back to rest as it fades in.
 
 Only ever one panel is readable. `Tabs.Root` is a grid and every `Tabs.Panel` is placed in the same cell, so the outgoing panel — which Base UI keeps mounted until its exit transition ends — overlaps the incoming one instead of being laid out beneath it, and the component never grows to fit both and snaps back. The outgoing panel is also taken out of flow for those frames, so the cell is sized by the incoming panel alone. Its exit is a cut rather than a fade: a panel has no background of its own, so two panels fading past each other would leave both sets of text legible at once.
 
-Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--pui-duration-move` collapses to `1ms` and `--pui-travel-md` to `0px`, so the indicator jumps to the new tab and the panel fades in place without travelling. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
+Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--forte-duration-move` collapses to `1ms` and `--forte-travel-md` to `0px`, so the indicator jumps to the new tab and the panel fades in place without travelling. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
 
 ## Theming
 
-Every property below is declared on `Tabs.Root`, which is also why an ancestor is the wrong place to set one: the root element's own declaration wins over the inherited value. Override them on `Tabs.Root` itself, through its `className` or an inline `style`. To move every tab set at once, re-point the global tokens in the Default column instead — `--pui-color-*`, `--pui-radius-*`, `--pui-space-*`, `--pui-control-*` and `--pui-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
+Every property below is declared on `Tabs.Root`, which is also why an ancestor is the wrong place to set one: the root element's own declaration wins over the inherited value. Override them on `Tabs.Root` itself, through its `className` or an inline `style`. To move every tab set at once, re-point the global tokens in the Default column instead — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-control-*` and `--forte-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope.
 
 <ThemingTable component="Tabs" />
 
-`variant="pill"` is itself implemented by overriding five of these on the root — `--pui-tabs-list-bg`, `--pui-tabs-list-padding`, `--pui-tabs-list-radius`, `--pui-tabs-indicator-color` and `--pui-tabs-indicator-radius`. Setting them yourself on a pill tab set still works: the library's rules live in the `pretty-ui.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
+`variant="pill"` is itself implemented by overriding five of these on the root — `--forte-tabs-list-bg`, `--forte-tabs-list-padding`, `--forte-tabs-list-radius`, `--forte-tabs-indicator-color` and `--forte-tabs-indicator-radius`. Setting them yourself on a pill tab set still works: the library's rules live in the `forte.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 
 The parts also expose their state as data attributes — `data-variant`, `data-overflow`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction` — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
 
 ## API reference
 
-Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what pretty-ui adds or changes the default of. `Tabs.Root` also takes `value`, `defaultValue`, `onValueChange` and `orientation`; `Tabs.Tab` takes `value` (required) and `disabled`; `Tabs.Panel` takes `value` (required). All five parts take `render` for changing the underlying element.
+Each part forwards every prop it does not consume to its Base UI counterpart, so the tables below list what forte-ui adds or changes the default of. `Tabs.Root` also takes `value`, `defaultValue`, `onValueChange` and `orientation`; `Tabs.Tab` takes `value` (required) and `disabled`; `Tabs.Panel` takes `value` (required). All five parts take `render` for changing the underlying element.
 
 ### Tabs.Root
 

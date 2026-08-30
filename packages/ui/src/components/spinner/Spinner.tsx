@@ -11,11 +11,11 @@ export type SpinnerLabelPlacement = "hidden" | "end" | "bottom";
 
 /**
  * How many animated children each variant needs, and therefore the value of
- * `--pui-spinner-count`.
+ * `--forte-spinner-count`.
  *
  * The count lives HERE rather than in the stylesheet because the DOM is what
  * actually decides it. Every piece of per-child geometry — a bar's angle, a
- * dot's stagger — is derived in CSS from `--pui-spinner-i` and this count, so
+ * dot's stagger — is derived in CSS from `--forte-spinner-i` and this count, so
  * the two can never disagree: change the number and the ring re-divides
  * itself. `ring` needs no children at all; it is drawn entirely by the
  * indicator's own background.
@@ -110,7 +110,7 @@ export interface SpinnerProps extends Omit<React.ComponentPropsWithoutRef<"span"
  * <Spinner decorative variant="dots" tone="current" />
  * ```
  *
- * Styling is driven by `data-*` attributes and `--pui-spinner-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-spinner-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[variant=dots]:...`) without wrapping.
  */
@@ -135,7 +135,7 @@ export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
       <span
         ref={ref}
         className={clsx(styles.root, className)}
-        data-pui="spinner"
+        data-forte="spinner"
         data-variant={variant}
         data-size={size}
         data-tone={tone}
@@ -153,29 +153,29 @@ export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
         // root-level `aria-hidden` would also swallow a label the caller
         // asked to display, taking visible text out of the tree.
         role={decorative ? undefined : "status"}
-        style={{ "--pui-spinner-count": count, ...style } as React.CSSProperties}
+        style={{ "--forte-spinner-count": count, ...style } as React.CSSProperties}
         {...props}
       >
-        <span className={styles.indicator} data-pui="spinner-indicator" aria-hidden="true">
+        <span className={styles.indicator} data-forte="spinner-indicator" aria-hidden="true">
           {Array.from({ length: count }, (_, i) => (
             <span
               key={i}
               className={styles.part}
-              data-pui="spinner-part"
+              data-forte="spinner-part"
               // The child's index, handed to CSS. Everything per-child is
               // derived from it — the bar's angle, the dot's stagger, the
               // ripple's phase — so the stylesheet needs no `nth-child` chain
               // and adding a bar is a one-character change above.
-              style={{ "--pui-spinner-i": i } as React.CSSProperties}
+              style={{ "--forte-spinner-i": i } as React.CSSProperties}
             />
           ))}
         </span>
         {decorative && labelPlacement === "hidden" ? null : (
           <span
             className={clsx(
-              labelPlacement === "hidden" ? "pui-visually-hidden" : styles.label,
+              labelPlacement === "hidden" ? "forte-visually-hidden" : styles.label,
             )}
-            data-pui="spinner-label"
+            data-forte="spinner-label"
           >
             {label}
           </span>

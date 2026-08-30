@@ -1,6 +1,6 @@
 "use client";
 
-import { ContextMenu } from "@dofortech/pretty-ui";
+import { ContextMenu } from "@dofortech/forte-ui";
 
 export default function ContextMenuDisabled() {
   return (

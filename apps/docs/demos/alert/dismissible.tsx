@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Alert, Button } from "@dofortech/pretty-ui";
+import { Alert, Button } from "@dofortech/forte-ui";
 
 export default function AlertDismissible() {
   const [open, setOpen] = React.useState(true);

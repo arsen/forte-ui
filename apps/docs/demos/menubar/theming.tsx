@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu, Menubar } from "@dofortech/pretty-ui";
+import { Menu, Menubar } from "@dofortech/forte-ui";
 
 export default function MenubarTheming() {
   return (
@@ -13,14 +13,14 @@ export default function MenubarTheming() {
       variant="contained"
       style={
         {
-          "--pui-menubar-gap": "var(--pui-space-2)",
-          "--pui-menubar-padding": "var(--pui-space-2)",
-          "--pui-menubar-radius": "var(--pui-radius-pill)",
-          "--pui-menubar-trigger-radius": "var(--pui-radius-pill)",
-          "--pui-menubar-trigger-px": "var(--pui-control-px-md)",
-          "--pui-menubar-trigger-font-weight": "var(--pui-font-weight-semibold)",
-          "--pui-menubar-trigger-bg-open": "var(--pui-color-secondary-soft)",
-          "--pui-menubar-trigger-fg-open": "var(--pui-color-secondary-text)",
+          "--forte-menubar-gap": "var(--forte-space-2)",
+          "--forte-menubar-padding": "var(--forte-space-2)",
+          "--forte-menubar-radius": "var(--forte-radius-pill)",
+          "--forte-menubar-trigger-radius": "var(--forte-radius-pill)",
+          "--forte-menubar-trigger-px": "var(--forte-control-px-md)",
+          "--forte-menubar-trigger-font-weight": "var(--forte-font-weight-semibold)",
+          "--forte-menubar-trigger-bg-open": "var(--forte-color-secondary-soft)",
+          "--forte-menubar-trigger-fg-open": "var(--forte-color-secondary-text)",
         } as React.CSSProperties
       }
     >
@@ -46,8 +46,8 @@ export default function MenubarTheming() {
         <Menu.Trigger
           style={
             {
-              "--pui-menubar-trigger-bg-open": "var(--pui-color-danger-soft)",
-              "--pui-menubar-trigger-fg-open": "var(--pui-color-danger-text)",
+              "--forte-menubar-trigger-bg-open": "var(--forte-color-danger-soft)",
+              "--forte-menubar-trigger-fg-open": "var(--forte-color-danger-text)",
             } as React.CSSProperties
           }
         >

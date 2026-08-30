@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog, Input } from "@dofortech/pretty-ui";
+import { Button, Dialog, Input } from "@dofortech/forte-ui";
 
 const LINK = "https://orbit.example.com/p/8fa21c";
 
@@ -31,10 +31,10 @@ const header = "flex items-start justify-between gap-4";
 // tightens the pair with a NEGATIVE top margin that cancels that gap — so in a
 // wrapper with no gap of its own the description would ride up onto the title.
 // Reading the knob rather than hardcoding `gap-4` keeps the two in step if an
-// app retunes `--pui-dialog-gap`.
-const heading = "flex min-w-0 flex-col gap-(--pui-dialog-gap)";
+// app retunes `--forte-dialog-gap`.
+const heading = "flex min-w-0 flex-col gap-(--forte-dialog-gap)";
 
-const linkRow = "flex gap-(--pui-control-gap)";
+const linkRow = "flex gap-(--forte-control-gap)";
 
 export default function DialogHeader() {
   const [copied, setCopied] = React.useState(false);

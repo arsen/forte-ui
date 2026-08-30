@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { DatePicker } from "@dofortech/pretty-ui";
+import { DatePicker } from "@dofortech/forte-ui";
 
 export default function DatePickerBasic() {
   const [date, setDate] = React.useState<Date | null>(null);

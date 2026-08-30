@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Field, Form, NumberField } from "@dofortech/pretty-ui";
+import { Button, Field, Form, NumberField } from "@dofortech/forte-ui";
 
 export default function NumberFieldForm() {
   const [submitted, setSubmitted] = React.useState<Record<

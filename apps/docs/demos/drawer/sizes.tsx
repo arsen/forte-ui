@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, type DrawerSize } from "@dofortech/pretty-ui";
+import { Button, Drawer, type DrawerSize } from "@dofortech/forte-ui";
 
 const SIZES: { size: DrawerSize; label: string; extent: string }[] = [
   { size: "sm", label: "Small", extent: "18rem" },

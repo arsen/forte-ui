@@ -1,6 +1,6 @@
 "use client";
 
-import { DatePicker, type DatePickerSize, type DatePickerVariant } from "@dofortech/pretty-ui";
+import { DatePicker, type DatePickerSize, type DatePickerVariant } from "@dofortech/forte-ui";
 
 const SIZES: DatePickerSize[] = ["sm", "md", "lg"];
 const VARIANTS: DatePickerVariant[] = ["outline", "soft", "ghost"];

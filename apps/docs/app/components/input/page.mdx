@@ -28,7 +28,7 @@ attributes.
 ## Import
 
 ```tsx
-import { Input } from "@dofortech/pretty-ui";
+import { Input } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -36,8 +36,8 @@ import { Input } from "@dofortech/pretty-ui";
 ### Sizes
 
 `size` moves height, inline padding and font size together, and the numbers come
-from the same `--pui-control-*` tokens `Select.Trigger` reads — so an input and
-a select on one row are the same height at every `data-pui-density` setting.
+from the same `--forte-control-*` tokens `Select.Trigger` reads — so an input and
+a select on one row are the same height at every `data-forte-density` setting.
 
 <DemoBlock id="input/sizes" />
 
@@ -88,8 +88,8 @@ the design has no visible label, `aria-label` on the input is the fallback.
   is not reliably announced.
 </Callout>
 
-Placeholder text is coloured `--pui-color-foreground-muted` (5.82:1) rather
-than `--pui-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
+Placeholder text is coloured `--forte-color-foreground-muted` (5.82:1) rather
+than `--forte-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
 placeholders in an enabled control, and Firefox's own 0.54 `::placeholder`
 opacity is reset for the same reason.
 
@@ -101,14 +101,14 @@ three variants would stop looking like the same control.
 
 ## Theming
 
-Every `--pui-input-*` property is declared on the input element itself, and an
+Every `--forte-input-*` property is declared on the input element itself, and an
 element's own declaration beats an inherited one — so setting these on `:root`,
 on a theme scope or on any ancestor does nothing. Set them on the input, through
-`className` (an unlayered rule beats `@layer pretty-ui.components` whatever its
+`className` (an unlayered rule beats `@layer forte.components` whatever its
 specificity) or an inline `style`.
 
-The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*` — are the exception: this component only reads those, so
+The global tokens they resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*` — are the exception: this component only reads those, so
 re-pointing them from `:root` or a theme scope moves every input at once.
 
 <ThemingTable component="Input" />

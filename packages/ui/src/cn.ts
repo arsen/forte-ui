@@ -1,7 +1,7 @@
 /**
  * `cn` — merge class lists, last writer wins, pre-configured for the bridge.
  * ---------------------------------------------------------------------------
- *   import { cn } from "@dofortech/pretty-ui/cn";
+ *   import { cn } from "@dofortech/forte-ui/cn";
  *
  *   cn("p-4", condition && "p-6")   // -> "p-6" when condition holds
  *

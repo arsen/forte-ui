@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, NavigationMenu } from "@dofortech/pretty-ui";
+import { Button, NavigationMenu } from "@dofortech/forte-ui";
 
 const PANELS = {
   product: ["Overview", "Integrations", "Changelog"],

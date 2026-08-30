@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { NavigationMenu } from "@dofortech/pretty-ui";
+import { NavigationMenu } from "@dofortech/forte-ui";
 
 const links = ["Overview", "Integrations", "Changelog"];
 
@@ -14,10 +14,10 @@ export default function NavigationMenuTheming() {
       aria-label="Themed"
       style={
         {
-          "--pui-navigation-menu-row-radius": "var(--pui-radius-pill)",
-          "--pui-navigation-menu-row-bg-open": "var(--pui-color-secondary-soft)",
-          "--pui-navigation-menu-row-fg-open": "var(--pui-color-secondary-text)",
-          "--pui-navigation-menu-gap": "var(--pui-space-2)",
+          "--forte-navigation-menu-row-radius": "var(--forte-radius-pill)",
+          "--forte-navigation-menu-row-bg-open": "var(--forte-color-secondary-soft)",
+          "--forte-navigation-menu-row-fg-open": "var(--forte-color-secondary-text)",
+          "--forte-navigation-menu-gap": "var(--forte-space-2)",
         } as React.CSSProperties
       }
     >
@@ -52,12 +52,12 @@ export default function NavigationMenuTheming() {
         arrow
         style={
           {
-            "--pui-navigation-menu-radius": "var(--pui-radius-5)",
-            "--pui-navigation-menu-border-color": "var(--pui-color-secondary-border)",
-            "--pui-navigation-menu-column-width": "13rem",
-            "--pui-navigation-menu-content-p": "var(--pui-space-3)",
-            "--pui-navigation-menu-card-radius": "var(--pui-radius-4)",
-            "--pui-navigation-menu-card-bg-hover": "var(--pui-color-secondary-soft)",
+            "--forte-navigation-menu-radius": "var(--forte-radius-5)",
+            "--forte-navigation-menu-border-color": "var(--forte-color-secondary-border)",
+            "--forte-navigation-menu-column-width": "13rem",
+            "--forte-navigation-menu-content-p": "var(--forte-space-3)",
+            "--forte-navigation-menu-card-radius": "var(--forte-radius-4)",
+            "--forte-navigation-menu-card-bg-hover": "var(--forte-color-secondary-soft)",
           } as React.CSSProperties
         }
       />

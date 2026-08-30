@@ -8,7 +8,7 @@ import {
   Field,
   Fieldset,
   Form,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 
 const PROTOCOLS = [
   { value: "http", label: "HTTP" },

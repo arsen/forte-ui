@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Menubar, Separator } from "@dofortech/pretty-ui";
+import { Menu, Menubar, Separator } from "@dofortech/forte-ui";
 
 export default function MenubarOrientation() {
   return (

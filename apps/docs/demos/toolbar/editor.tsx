@@ -12,7 +12,7 @@ import {
   Redo2,
   Undo2,
 } from "lucide-react";
-import { Menu, Select, Textarea, Toggle, ToggleGroup, Toolbar } from "@dofortech/pretty-ui";
+import { Menu, Select, Textarea, Toggle, ToggleGroup, Toolbar } from "@dofortech/forte-ui";
 
 const ICON = "size-4 shrink-0";
 

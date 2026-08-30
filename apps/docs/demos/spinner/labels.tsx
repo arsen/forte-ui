@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@dofortech/pretty-ui";
+import { Spinner } from "@dofortech/forte-ui";
 
 export default function SpinnerLabels() {
   return (

@@ -19,7 +19,7 @@ A splitter: two or more panels laid out along one axis, with a draggable divider
 ## Import
 
 ```tsx
-import { Resizable } from "@dofortech/pretty-ui";
+import { Resizable } from "@dofortech/forte-ui";
 ```
 
 Three parts, and they nest in the order they appear on screen:
@@ -106,7 +106,7 @@ Each handle is a real `role="separator"` with the [window splitter](https://www.
   ]}
 />
 
-The divider is a hairline, and a hairline is a 1px target. `.pui-target` widens the hit area to the 24px minimum (SC 2.5.8) without widening the line, so it can be grabbed with a thumb or a shaky hand while still looking like a divider rather than a gutter.
+The divider is a hairline, and a hairline is a 1px target. `.forte-target` widens the hit area to the 24px minimum (SC 2.5.8) without widening the line, so it can be grabbed with a thumb or a shaky hand while still looking like a divider rather than a gutter.
 
 Under forced colors the line is repainted with `CanvasText`, its active state with `Highlight`, and a disabled handle with `GrayText` — the fills that carry those states everywhere else in the library are stripped in that mode, so the divider would otherwise vanish entirely.
 
@@ -116,7 +116,7 @@ Every property below is declared on `Resizable.Group`, so override them there �
 
 <ThemingTable component="Resizable" />
 
-Note the two thicknesses. `--pui-resizable-handle-size` is what the divider costs the LAYOUT; `--pui-resizable-line-size` is what you see. They are separate because a line that thickened on hover in flow would reflow both panels every time the pointer crossed it — and shift the very edge the pointer was aiming at out from under it.
+Note the two thicknesses. `--forte-resizable-handle-size` is what the divider costs the LAYOUT; `--forte-resizable-line-size` is what you see. They are separate because a line that thickened on hover in flow would reflow both panels every time the pointer crossed it — and shift the very edge the pointer was aiming at out from under it.
 
 The parts publish their state as data attributes — `data-orientation`, `data-resizing` and `data-ready` on the group, `data-collapsed` on a panel, `data-dragging`, `data-disabled` and `data-collapsed` on a handle — so a Tailwind arbitrary variant such as `data-[dragging]:...` targets them without a wrapper.
 

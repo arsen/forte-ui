@@ -9,13 +9,13 @@
  * slots; the variants decide which slots become background, text and border.
  *
  * There is deliberately no `prefers-reduced-motion` block here. The motion
- * tokens already collapse their own geometry — `--pui-scale-press` becomes
+ * tokens already collapse their own geometry — `--forte-scale-press` becomes
  * exactly 1 — and the two consumer-facing motion slots are multiplied by
- * `--pui-motion-ok` where they are used, so even a hard-coded override
+ * `--forte-motion-ok` where they are used, so even a hard-coded override
  * collapses. This file gets correct reduced-motion behaviour without knowing
  * that reduced motion exists.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. They are declared here, on the button element itself,
      * so an ancestor's value is only inherited and never wins. Re-skin one
@@ -23,102 +23,102 @@
      * this layer whatever its specificity); re-skin every button by
      * re-pointing the global tokens they resolve to. */
     /** Corner radius */
-    --pui-button-radius: var(--pui-radius-control);
+    --forte-button-radius: var(--forte-radius-control);
     /** Label weight */
-    --pui-button-font-weight: var(--pui-font-weight-medium);
+    --forte-button-font-weight: var(--forte-font-weight-medium);
     /** Space between icon and label */
-    --pui-button-gap: var(--pui-control-gap);
+    --forte-button-gap: var(--forte-control-gap);
     /** Border thickness (only `outline` gives it a colour) */
-    --pui-button-border-width: 1px;
+    --forte-button-border-width: 1px;
     /** Button height; reassigned by `size` */
-    --pui-button-height: var(--pui-control-h-md);
+    --forte-button-height: var(--forte-control-h-md);
     /** Horizontal padding; reassigned by `size`. `iconOnly` replaces it with
-     * `--pui-button-icon-padding` on all four sides. */
-    --pui-button-padding-x: var(--pui-control-px-md);
+     * `--forte-button-icon-padding` on all four sides. */
+    --forte-button-padding-x: var(--forte-control-px-md);
     /** Label size; reassigned by `size` */
-    --pui-button-font-size: var(--pui-font-size-2);
-    /* `1em`, so it tracks `--pui-button-font-size` and needs no per-size rule
+    --forte-button-font-size: var(--forte-font-size-2);
+    /* `1em`, so it tracks `--forte-button-font-size` and needs no per-size rule
      * of its own — and so it stays in proportion if a consumer re-points the
      * font size. Spinner's own `size` prop is not used here for the same
      * reason: its `sm` is a flat 1rem, which is wider than the label beside it
      * on a small button. */
     /** Diameter of the loading spinner */
-    --pui-button-spinner-size: 1em;
+    --forte-button-spinner-size: 1em;
 
     /* Motion slots. Hover geometry is identity by default: a button's hover
      * cue is colour, which is the one channel that cannot move the hit box or
      * knock the button out of line with the controls beside it.
      *
-     * Opt back into geometry on one button by setting `--pui-button-*`, or on
-     * every button by setting the `--pui-control-hover-*` escape hatch on a
+     * Opt back into geometry on one button by setting `--forte-button-*`, or on
+     * every button by setting the `--forte-control-hover-*` escape hatch on a
      * root/theme scope — those are deliberately left undefined so the fallback
      * below is what normally applies:
-     *   :root { --pui-control-hover-lift: var(--pui-travel-xs); }
-     *   :root { --pui-control-hover-scale: 1.02; }
+     *   :root { --forte-control-hover-lift: var(--forte-travel-xs); }
+     *   :root { --forte-control-hover-scale: 1.02; }
      *
      * Literal values are safe in either slot: both are multiplied by
-     * `--pui-motion-ok` at the point of use, so they collapse to identity
+     * `--forte-motion-ok` at the point of use, so they collapse to identity
      * under reduced motion without the consumer having to know that. */
-    /** How far the button rises on hover. Multiplied by `--pui-motion-ok`, so a
+    /** How far the button rises on hover. Multiplied by `--forte-motion-ok`, so a
      * literal value still collapses under reduced motion. */
-    --pui-button-hover-lift: var(--pui-control-hover-lift, 0px);
-    /** How far the button grows on hover; also multiplied by `--pui-motion-ok`.
+    --forte-button-hover-lift: var(--forte-control-hover-lift, 0px);
+    /** How far the button grows on hover; also multiplied by `--forte-motion-ok`.
  */
-    --pui-button-hover-scale: var(--pui-control-hover-scale, 1);
+    --forte-button-hover-scale: var(--forte-control-hover-scale, 1);
     /** How far the button squashes while held. */
-    --pui-button-press-scale: var(--pui-scale-press);
+    --forte-button-press-scale: var(--forte-scale-press);
 
     /* Colour slots, filled in per tone + variant below. */
     /** Resting background; filled in by `variant` */
-    --pui-button-bg: transparent;
+    --forte-button-bg: transparent;
     /** Hover background */
-    --pui-button-bg-hover: transparent;
+    --forte-button-bg-hover: transparent;
     /** Pressed background */
-    --pui-button-bg-active: transparent;
+    --forte-button-bg-active: transparent;
     /** Label and icon colour */
-    --pui-button-fg: var(--pui-color-foreground);
+    --forte-button-fg: var(--forte-color-foreground);
     /** Border colour */
-    --pui-button-border-color: transparent;
+    --forte-button-border-color: transparent;
 
     /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
     /** Tone's solid fill */
-    --pui-button-tone-solid: var(--pui-color-primary);
+    --forte-button-tone-solid: var(--forte-color-primary);
     /** Tone's solid fill on hover */
-    --pui-button-tone-solid-hover: var(--pui-color-primary-hover);
+    --forte-button-tone-solid-hover: var(--forte-color-primary-hover);
     /** Tone's solid fill when pressed */
-    --pui-button-tone-solid-active: var(--pui-color-primary-active);
+    --forte-button-tone-solid-active: var(--forte-color-primary-active);
     /** Text colour on the solid fill */
-    --pui-button-tone-on-solid: var(--pui-color-on-primary);
+    --forte-button-tone-on-solid: var(--forte-color-on-primary);
     /** Tone's tinted fill, and the hover wash for `outline` and `ghost` */
-    --pui-button-tone-soft: var(--pui-color-primary-soft);
+    --forte-button-tone-soft: var(--forte-color-primary-soft);
     /** Tinted fill on hover */
-    --pui-button-tone-soft-hover: var(--pui-color-primary-soft-hover);
+    --forte-button-tone-soft-hover: var(--forte-color-primary-soft-hover);
     /** Tinted fill when pressed */
-    --pui-button-tone-soft-active: var(--pui-color-primary-soft-active);
+    --forte-button-tone-soft-active: var(--forte-color-primary-soft-active);
     /** Label colour for `soft`, `outline` and `ghost` */
-    --pui-button-tone-text: var(--pui-color-primary-text);
+    --forte-button-tone-text: var(--forte-color-primary-text);
     /** Border colour for `outline` */
-    --pui-button-tone-border: var(--pui-color-primary-border);
+    --forte-button-tone-border: var(--forte-color-primary-border);
 
     box-sizing: border-box;
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-button-gap);
-    height: var(--pui-button-height);
-    padding-inline: var(--pui-button-padding-x);
+    gap: var(--forte-button-gap);
+    height: var(--forte-button-height);
+    padding-inline: var(--forte-button-padding-x);
     margin: 0;
-    border: var(--pui-button-border-width) solid var(--pui-button-border-color);
-    border-radius: var(--pui-button-radius);
+    border: var(--forte-button-border-width) solid var(--forte-button-border-color);
+    border-radius: var(--forte-button-radius);
 
-    background-color: var(--pui-button-bg);
-    color: var(--pui-button-fg);
+    background-color: var(--forte-button-bg);
+    color: var(--forte-button-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-button-font-size);
-    font-weight: var(--pui-button-font-weight);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-button-font-size);
+    font-weight: var(--forte-button-font-weight);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
     text-decoration: none;
 
@@ -135,34 +135,34 @@
      * animating only half of it makes the ring assemble itself in two stages
      * on every Tab press. Both halves now land on the same frame. */
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-duration-fast) var(--pui-ease-standard),
-      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   /* States ---------------------------------------------------------------- */
   @media (hover: hover) {
     .root:hover:not([data-disabled]) {
-      background-color: var(--pui-button-bg-hover);
-      /* `--pui-motion-ok` is 1 normally and 0 under reduced motion, so both
+      background-color: var(--forte-button-bg-hover);
+      /* `--forte-motion-ok` is 1 normally and 0 under reduced motion, so both
        * of these fall back to identity without a media query in this file.
        * Note the lift moves the hit box: at rest against the pointer's edge a
        * non-zero lift can hover-off the button and oscillate, which is why the
        * shipped default is 0. */
       translate: 0
-        calc(-1 * var(--pui-button-hover-lift) * var(--pui-motion-ok));
-      scale: calc(1 + (var(--pui-button-hover-scale) - 1) * var(--pui-motion-ok));
+        calc(-1 * var(--forte-button-hover-lift) * var(--forte-motion-ok));
+      scale: calc(1 + (var(--forte-button-hover-scale) - 1) * var(--forte-motion-ok));
     }
   }
 
   .root:active:not([data-disabled]) {
-    background-color: var(--pui-button-bg-active);
+    background-color: var(--forte-button-bg-active);
     translate: 0 0;
-    scale: var(--pui-button-press-scale);
+    scale: var(--forte-button-press-scale);
     /* Snap in, spring out: pressing should feel immediate. */
-    transition-duration: var(--pui-duration-instant);
+    transition-duration: var(--forte-duration-instant);
   }
 
   .root[data-disabled] {
@@ -178,21 +178,21 @@
 
   /* Sizes ----------------------------------------------------------------- */
   .root[data-size="sm"] {
-    --pui-button-height: var(--pui-control-h-sm);
-    --pui-button-padding-x: var(--pui-control-px-sm);
-    --pui-button-font-size: var(--pui-font-size-1);
+    --forte-button-height: var(--forte-control-h-sm);
+    --forte-button-padding-x: var(--forte-control-px-sm);
+    --forte-button-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-button-height: var(--pui-control-h-md);
-    --pui-button-padding-x: var(--pui-control-px-md);
-    --pui-button-font-size: var(--pui-font-size-2);
+    --forte-button-height: var(--forte-control-h-md);
+    --forte-button-padding-x: var(--forte-control-px-md);
+    --forte-button-font-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-button-height: var(--pui-control-h-lg);
-    --pui-button-padding-x: var(--pui-control-px-lg);
-    --pui-button-font-size: var(--pui-font-size-3);
+    --forte-button-height: var(--forte-control-h-lg);
+    --forte-button-padding-x: var(--forte-control-px-lg);
+    --forte-button-font-size: var(--forte-font-size-3);
   }
 
   /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width.
@@ -206,86 +206,86 @@
    * the control height beside it or the 24px hit target. */
   .root[data-icon-only] {
     /** Minimum space between the icon and the button's edge (`iconOnly` only) */
-    --pui-button-icon-padding: var(--pui-space-2);
-    --pui-button-padding-x: var(--pui-button-icon-padding);
-    padding-block: var(--pui-button-icon-padding);
+    --forte-button-icon-padding: var(--forte-space-2);
+    --forte-button-padding-x: var(--forte-button-icon-padding);
+    padding-block: var(--forte-button-icon-padding);
     block-size: auto;
     aspect-ratio: 1;
-    min-block-size: max(var(--pui-button-height), var(--pui-target-min));
-    min-inline-size: max(var(--pui-button-height), var(--pui-target-min));
+    min-block-size: max(var(--forte-button-height), var(--forte-target-min));
+    min-inline-size: max(var(--forte-button-height), var(--forte-target-min));
   }
 
   /* Tones ----------------------------------------------------------------- */
   .root[data-tone="secondary"] {
-    --pui-button-tone-solid: var(--pui-color-secondary);
-    --pui-button-tone-solid-hover: var(--pui-color-secondary-hover);
-    --pui-button-tone-solid-active: var(--pui-color-secondary-active);
-    --pui-button-tone-on-solid: var(--pui-color-on-secondary);
-    --pui-button-tone-soft: var(--pui-color-secondary-soft);
-    --pui-button-tone-soft-hover: var(--pui-color-secondary-soft-hover);
-    --pui-button-tone-soft-active: var(--pui-color-secondary-soft-active);
-    --pui-button-tone-text: var(--pui-color-secondary-text);
-    --pui-button-tone-border: var(--pui-color-secondary-border);
+    --forte-button-tone-solid: var(--forte-color-secondary);
+    --forte-button-tone-solid-hover: var(--forte-color-secondary-hover);
+    --forte-button-tone-solid-active: var(--forte-color-secondary-active);
+    --forte-button-tone-on-solid: var(--forte-color-on-secondary);
+    --forte-button-tone-soft: var(--forte-color-secondary-soft);
+    --forte-button-tone-soft-hover: var(--forte-color-secondary-soft-hover);
+    --forte-button-tone-soft-active: var(--forte-color-secondary-soft-active);
+    --forte-button-tone-text: var(--forte-color-secondary-text);
+    --forte-button-tone-border: var(--forte-color-secondary-border);
   }
 
   .root[data-tone="danger"] {
-    --pui-button-tone-solid: var(--pui-color-danger);
-    --pui-button-tone-solid-hover: var(--pui-color-danger-hover);
-    --pui-button-tone-solid-active: var(--pui-color-danger-hover);
-    --pui-button-tone-on-solid: var(--pui-color-on-danger);
-    --pui-button-tone-soft: var(--pui-danger-3);
-    --pui-button-tone-soft-hover: var(--pui-danger-3);
-    --pui-button-tone-soft-active: var(--pui-danger-7);
-    --pui-button-tone-text: var(--pui-color-danger-text);
-    --pui-button-tone-border: var(--pui-color-danger-border);
+    --forte-button-tone-solid: var(--forte-color-danger);
+    --forte-button-tone-solid-hover: var(--forte-color-danger-hover);
+    --forte-button-tone-solid-active: var(--forte-color-danger-hover);
+    --forte-button-tone-on-solid: var(--forte-color-on-danger);
+    --forte-button-tone-soft: var(--forte-danger-3);
+    --forte-button-tone-soft-hover: var(--forte-danger-3);
+    --forte-button-tone-soft-active: var(--forte-danger-7);
+    --forte-button-tone-text: var(--forte-color-danger-text);
+    --forte-button-tone-border: var(--forte-color-danger-border);
   }
 
   .root[data-tone="neutral"] {
-    --pui-button-tone-solid: var(--pui-gray-12);
-    --pui-button-tone-solid-hover: var(--pui-gray-11);
-    --pui-button-tone-solid-active: var(--pui-gray-10);
-    --pui-button-tone-on-solid: var(--pui-gray-1);
-    --pui-button-tone-soft: var(--pui-gray-3);
-    --pui-button-tone-soft-hover: var(--pui-gray-4);
-    --pui-button-tone-soft-active: var(--pui-gray-5);
-    --pui-button-tone-text: var(--pui-color-foreground);
-    --pui-button-tone-border: var(--pui-color-border);
+    --forte-button-tone-solid: var(--forte-gray-12);
+    --forte-button-tone-solid-hover: var(--forte-gray-11);
+    --forte-button-tone-solid-active: var(--forte-gray-10);
+    --forte-button-tone-on-solid: var(--forte-gray-1);
+    --forte-button-tone-soft: var(--forte-gray-3);
+    --forte-button-tone-soft-hover: var(--forte-gray-4);
+    --forte-button-tone-soft-active: var(--forte-gray-5);
+    --forte-button-tone-text: var(--forte-color-foreground);
+    --forte-button-tone-border: var(--forte-color-border);
   }
 
   /* Variants -------------------------------------------------------------- */
   .root[data-variant="solid"] {
-    --pui-button-bg: var(--pui-button-tone-solid);
-    --pui-button-bg-hover: var(--pui-button-tone-solid-hover);
-    --pui-button-bg-active: var(--pui-button-tone-solid-active);
-    --pui-button-fg: var(--pui-button-tone-on-solid);
+    --forte-button-bg: var(--forte-button-tone-solid);
+    --forte-button-bg-hover: var(--forte-button-tone-solid-hover);
+    --forte-button-bg-active: var(--forte-button-tone-solid-active);
+    --forte-button-fg: var(--forte-button-tone-on-solid);
   }
 
   .root[data-variant="soft"] {
-    --pui-button-bg: var(--pui-button-tone-soft);
-    --pui-button-bg-hover: var(--pui-button-tone-soft-hover);
-    --pui-button-bg-active: var(--pui-button-tone-soft-active);
-    --pui-button-fg: var(--pui-button-tone-text);
+    --forte-button-bg: var(--forte-button-tone-soft);
+    --forte-button-bg-hover: var(--forte-button-tone-soft-hover);
+    --forte-button-bg-active: var(--forte-button-tone-soft-active);
+    --forte-button-fg: var(--forte-button-tone-text);
   }
 
   .root[data-variant="outline"] {
-    --pui-button-bg: transparent;
-    --pui-button-bg-hover: var(--pui-button-tone-soft);
-    --pui-button-bg-active: var(--pui-button-tone-soft-hover);
-    --pui-button-fg: var(--pui-button-tone-text);
-    --pui-button-border-color: var(--pui-button-tone-border);
+    --forte-button-bg: transparent;
+    --forte-button-bg-hover: var(--forte-button-tone-soft);
+    --forte-button-bg-active: var(--forte-button-tone-soft-hover);
+    --forte-button-fg: var(--forte-button-tone-text);
+    --forte-button-border-color: var(--forte-button-tone-border);
   }
 
   .root[data-variant="ghost"] {
-    --pui-button-bg: transparent;
-    --pui-button-bg-hover: var(--pui-button-tone-soft);
-    --pui-button-bg-active: var(--pui-button-tone-soft-hover);
-    --pui-button-fg: var(--pui-button-tone-text);
+    --forte-button-bg: transparent;
+    --forte-button-bg-hover: var(--forte-button-tone-soft);
+    --forte-button-bg-active: var(--forte-button-tone-soft-hover);
+    --forte-button-fg: var(--forte-button-tone-text);
   }
 
   .root[data-tone="neutral"][data-variant="ghost"],
   .root[data-tone="neutral"][data-variant="outline"] {
-    --pui-button-bg-hover: var(--pui-color-panel-hover);
-    --pui-button-bg-active: var(--pui-color-panel-active);
+    --forte-button-bg-hover: var(--forte-color-panel-hover);
+    --forte-button-bg-active: var(--forte-color-panel-active);
   }
 
   /* Loading --------------------------------------------------------------- */
@@ -295,8 +295,8 @@
   .content {
     display: inline-flex;
     align-items: center;
-    gap: var(--pui-button-gap);
-    transition: opacity var(--pui-duration-fast) var(--pui-ease-standard);
+    gap: var(--forte-button-gap);
+    transition: opacity var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   .root[data-loading] .content {

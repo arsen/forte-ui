@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Tooltip } from "@dofortech/pretty-ui";
+import { Tooltip } from "@dofortech/forte-ui";
 
 /**
  * A real client component wrapping Tooltip.Provider.

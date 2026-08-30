@@ -26,7 +26,7 @@ not uniform, which in practice means one thing: a separator between groups.
 ## Import
 
 ```tsx
-import { OTPField } from "@dofortech/pretty-ui";
+import { OTPField } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -34,9 +34,9 @@ import { OTPField } from "@dofortech/pretty-ui";
 ### Sizes
 
 `size` sets the slots' square side and the character's font size together, and
-the side comes from the same `--pui-control-*` tokens `Input` and
+the side comes from the same `--forte-control-*` tokens `Input` and
 `Select.Trigger` read — so a code field and the rest of a form stay on one
-scale at every `data-pui-density` setting.
+scale at every `data-forte-density` setting.
 
 <DemoBlock id="otp-field/sizes" />
 
@@ -199,19 +199,19 @@ boundary on hover, on completion, and on failure.
 
 ## Theming
 
-Every `--pui-otp-field-*` property is declared on the field's root and reaches
+Every `--forte-otp-field-*` property is declared on the field's root and reaches
 the slots by inheritance — a slot is not something you address one at a time.
 Set them on the root, through `className` (an unlayered rule beats
-`@layer pretty-ui.components` whatever its specificity) or an inline `style`.
+`@layer forte.components` whatever its specificity) or an inline `style`.
 
-The global tokens they resolve to — `--pui-color-*`, `--pui-control-*`,
-`--pui-radius-*` — are the exception: this component only reads those, so
+The global tokens they resolve to — `--forte-color-*`, `--forte-control-*`,
+`--forte-radius-*` — are the exception: this component only reads those, so
 re-pointing them from `:root` or a theme scope moves every field at once.
 
 <ThemingTable component="OTPField" />
 
-`--pui-otp-field-gap` is deliberately not `--pui-control-gap`. That token drops
-to 4px under `data-pui-density="compact"`, and 4px is less than a focus ring
+`--forte-otp-field-gap` is deliberately not `--forte-control-gap`. That token drops
+to 4px under `data-forte-density="compact"`, and 4px is less than a focus ring
 needs to clear its slot (2px offset plus 2px width), so a focused slot's ring
 would sit on top of its neighbour's border.
 
@@ -240,5 +240,5 @@ props and Base UI's `render` pass through.
 <PropTable component="OTPFieldSeparator" />
 
 It renders the library's [`Separator`](/components/separator) and takes all of
-its props, so it carries `data-pui="separator"` rather than a marker of its own —
-scope to it with `[data-pui="otp-field"] [data-pui="separator"]`.
+its props, so it carries `data-forte="separator"` rather than a marker of its own —
+scope to it with `[data-forte="otp-field"] [data-forte="separator"]`.

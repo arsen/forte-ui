@@ -28,7 +28,7 @@ to both.
 ## Import
 
 ```tsx
-import { Progress, ProgressCircle } from "@dofortech/pretty-ui";
+import { Progress, ProgressCircle } from "@dofortech/forte-ui";
 ```
 
 ## Which one
@@ -82,7 +82,7 @@ function child to put words there instead.
 
 `size` is **thickness, not length**. The bar fills its container in every size,
 because a bar's length belongs to the layout it sits in rather than to the
-component; `--pui-progress-length` is the knob for the cases where it does not.
+component; `--forte-progress-length` is the knob for the cases where it does not.
 The label row scales with it.
 
 <DemoBlock id="progress/circle-sizes" />
@@ -131,9 +131,9 @@ because they have different audiences:
 <DemoBlock id="progress/reduced-motion" />
 
 Under `prefers-reduced-motion: reduce` the indeterminate sweep stops travelling
-and the ring stops rotating — the travel is gated on `--pui-motion-ok`, and the
-rotation is `--pui-spin-turn`, which collapses to `0turn`. A second animation
-that is always running, and is a no-op at full motion because `--pui-pulse-dip`
+and the ring stops rotating — the travel is gated on `--forte-motion-ok`, and the
+rotation is `--forte-spin-turn`, which collapses to `0turn`. A second animation
+that is always running, and is a no-op at full motion because `--forte-pulse-dip`
 is `1` there, becomes the visible cue as a slow opacity breathe. That is the
 same arrangement `Spinner`'s ring uses.
 
@@ -144,8 +144,8 @@ determinate bar stuck at 35%, and looking determinate is the one thing an
 indeterminate indicator must never do.
 
 <Callout kind="a11y">
-  No loop duration is ever shortened. `--pui-duration-loop-sweep` is 1400ms in
-  every motion state, including `data-pui-motion="off"`. The rest of the system
+  No loop duration is ever shortened. `--forte-duration-loop-sweep` is 1400ms in
+  every motion state, including `data-forte-motion="off"`. The rest of the system
   collapses durations toward `1ms`, but a *repeating* animation driven to 1ms
   flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which is the opposite
   of an accessibility win.
@@ -174,7 +174,7 @@ percentage of. Where the surrounding page already says it in words, keep the
 label and hide it:
 
 ```tsx
-<Progress.Label className="pui-visually-hidden">Uploading render.mov</Progress.Label>
+<Progress.Label className="forte-visually-hidden">Uploading render.mov</Progress.Label>
 ```
 
 `Value` is `aria-hidden`, because the root already publishes the same number
@@ -220,9 +220,9 @@ element's own declaration beats an inherited value.
 <ThemingTable component="ProgressCircle" />
 
 <Callout kind="note">
-  `--pui-progress-circle-thickness` is in **viewBox units** — 8 of the 100 the
+  `--forte-progress-circle-thickness` is in **viewBox units** — 8 of the 100 the
   ring is across, not 8 device pixels. That is what makes the stroke scale with
-  `--pui-progress-circle-size`. The radius is re-derived from it in CSS so a
+  `--forte-progress-circle-size`. The radius is re-derived from it in CSS so a
   heavy stroke stays inside the ring rather than spilling past it, which is why
   the `r` attribute in the markup is only a fallback value.
 </Callout>

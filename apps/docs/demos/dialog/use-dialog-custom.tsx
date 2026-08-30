@@ -6,7 +6,7 @@ import {
   Dialog,
   useDialog,
   type CustomDialogProps,
-} from "@dofortech/pretty-ui";
+} from "@dofortech/forte-ui";
 
 const ENVIRONMENTS = [
   { id: "production", label: "Production", detail: "orbit.example.com" },

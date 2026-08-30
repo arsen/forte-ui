@@ -19,7 +19,7 @@ Use a switch for a setting that takes effect the moment it is flipped — notifi
 ## Import
 
 ```tsx
-import { Switch } from "@dofortech/pretty-ui";
+import { Switch } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -125,7 +125,7 @@ value out, it just cannot be flipped. Use it for a value the user is allowed to 
 change. `disabled` takes the control out of the tab order instead — as `aria-disabled` plus
 `tabindex="-1"` on the default span, or the native `disabled` attribute when you set `nativeButton`.
 
-The unchecked track border and thumb are drawn with `--pui-color-foreground-subtle`, measured at
+The unchecked track border and thumb are drawn with `--forte-color-foreground-subtle`, measured at
 3.73:1 against the page — above the 3:1 that SC 1.4.11 asks of non-text controls. In forced-colours
 mode the two states are separated on three axes at once (track fill, track border, and the thumb's
 own fill plus its checkmark), all from system keywords, because a `<span role="switch">` gets no
@@ -139,7 +139,7 @@ The thumb still moves when reduced motion is requested, and that is deliberate. 
 this library a positional animation is decoration and collapses to zero distance under the motion
 tokens. Here the thumb's position **is** the state — a switch whose thumb never moves is a switch
 with no visible on/off difference except colour. So the travel is never multiplied by
-`--pui-motion-ok`. What changes is the feel: the transition rides `--pui-duration-spring-snappy`,
+`--forte-motion-ok`. What changes is the feel: the transition rides `--forte-duration-spring-snappy`,
 which drops from 400ms to 120ms, flattening the spring's overshoot into what reads as an instant
 jump rather than a glide.
 
@@ -156,11 +156,11 @@ control under any demo above to see the difference.
 Every property below is declared on the switch's own root element. That means setting one on an
 ancestor has no effect — the element's own declaration wins over an inherited value. Override them
 on the switch itself, through the `className` prop (an unlayered rule beats the library's
-`@layer pretty-ui.components`, whatever its specificity) or an inline `style`.
+`@layer forte.components`, whatever its specificity) or an inline `style`.
 
 <ThemingTable component="Switch" />
 
-`--pui-switch-travel` is derived from the four size properties above it, so resizing the track is
+`--forte-switch-travel` is derived from the four size properties above it, so resizing the track is
 enough to keep the thumb landing flush against the far end — you rarely want to set it by hand.
 
 ## API reference

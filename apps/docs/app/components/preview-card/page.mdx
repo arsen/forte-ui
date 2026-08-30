@@ -46,7 +46,7 @@ all. Whatever the card shows, the destination has to show too.
 ## Import
 
 ```tsx
-import { PreviewCard } from "@dofortech/pretty-ui";
+import { PreviewCard } from "@dofortech/forte-ui";
 ```
 
 ## Anatomy
@@ -254,15 +254,15 @@ In forced-colors mode the card's shadow is stripped by the browser, so the
 component carries a transparent border that becomes the visible system-coloured
 boundary, and the arrow is drawn as two SVG paths rather than the traditional
 CSS-border triangle, which would degrade into a filled rectangle. The trigger
-carries `.pui-link`, so it repaints as `LinkText` with an underline. Reduced
+carries `.forte-link`, so it repaints as `LinkText` with an underline. Reduced
 motion is handled by the motion tokens: the travel collapses to `0px` and the
 scale to exactly `1`, leaving a plain opacity fade.
 
 ## Theming
 
 Every value below is a custom property you can override.
-`--pui-preview-card-z-index` is declared on the positioner, the three
-`--pui-preview-card-trigger-*` values on the trigger, the viewport pair on the
+`--forte-preview-card-z-index` is declared on the positioner, the three
+`--forte-preview-card-trigger-*` values on the trigger, the viewport pair on the
 viewport, and everything else on the popup.
 
 <ThemingTable component="PreviewCard" />
@@ -277,23 +277,23 @@ useless: the popup renders on `document.body`, so nothing above the *link* is an
 ancestor of it in the first place.
 
 To re-skin every card at once, re-point the global tokens the defaults resolve
-to — `--pui-color-overlay`, `--pui-color-border`, `--pui-color-primary-text`,
-`--pui-radius-surface`, `--pui-surface-p`, `--pui-shadow-4`, `--pui-space-*`,
-`--pui-font-*`, `--pui-travel-sm`. The card only reads those and never
+to — `--forte-color-overlay`, `--forte-color-border`, `--forte-color-primary-text`,
+`--forte-radius-surface`, `--forte-surface-p`, `--forte-shadow-4`, `--forte-space-*`,
+`--forte-font-*`, `--forte-travel-sm`. The card only reads those and never
 re-declares them, so a value set on `:root` or a theme scope does reach it.
 
 Two defaults differ from `Popover`'s deliberately, and both are about a surface
-nobody asked for. The entrance runs on `--pui-ease-emphasized` rather than a
+nobody asked for. The entrance runs on `--forte-ease-emphasized` rather than a
 spring: a popover answers a press and can afford some snap, while an overshoot
 on something that appeared because the reader held still reads as the page
 twitching. And the trigger's underline is a muted `color-mix` of its own text
 colour, so a paragraph with six mentions in it does not turn into six rules of
 solid accent.
 
-The stylesheet also computes `--pui-preview-card-enter-x` /
-`--pui-preview-card-enter-y` from `--pui-preview-card-travel` and the resolved
-`data-side`, and `--pui-preview-card-viewport-x` from
-`--pui-preview-card-viewport-travel` and `data-activation-direction`. They are
+The stylesheet also computes `--forte-preview-card-enter-x` /
+`--forte-preview-card-enter-y` from `--forte-preview-card-travel` and the resolved
+`data-side`, and `--forte-preview-card-viewport-x` from
+`--forte-preview-card-viewport-travel` and `data-activation-direction`. They are
 internal; change the travel tokens instead.
 
 ## API reference

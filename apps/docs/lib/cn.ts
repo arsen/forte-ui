@@ -1,10 +1,10 @@
-import { createCn } from "@dofortech/pretty-ui/cn";
+import { createCn } from "@dofortech/forte-ui/cn";
 
 /**
  * `cn` — merge class lists, last writer wins.
  * ---------------------------------------------------------------------------
  * The package's `createCn` already knows every scale the Tailwind bridge
- * renames — see the header of `@dofortech/pretty-ui/cn` for why tailwind-merge
+ * renames — see the header of `@dofortech/forte-ui/cn` for why tailwind-merge
  * needs configuring at all (short version: the bridge renamed most of the
  * theme, and an unrecognised class is silently never merged; `text-2` even
  * parses as a COLOUR without it). Listed here is only what the DOCS added to

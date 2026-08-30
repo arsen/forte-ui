@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, OTPField } from "@dofortech/pretty-ui";
+import { Field, OTPField } from "@dofortech/forte-ui";
 
 export default function OTPFieldMasked() {
   return (

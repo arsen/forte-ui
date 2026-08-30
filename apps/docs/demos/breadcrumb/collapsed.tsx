@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb, Menu } from "@dofortech/pretty-ui";
+import { Breadcrumb, Menu } from "@dofortech/forte-ui";
 
 /* A deep trail keeps its first and last crumbs and folds the middle into a
  * menu. `Breadcrumb.Ellipsis` is a <span> on its own — inert, and a trail is

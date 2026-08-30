@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Field, OTPField } from "@dofortech/pretty-ui";
+import { Button, Field, OTPField } from "@dofortech/forte-ui";
 
 export default function OTPFieldControlled() {
   const [code, setCode] = React.useState("");

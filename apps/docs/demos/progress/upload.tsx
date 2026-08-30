@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Progress, ProgressCircle } from "@dofortech/pretty-ui";
+import { Button, Progress, ProgressCircle } from "@dofortech/forte-ui";
 
 /* The realistic shape of a real upload, and the reason `value` accepts `null`
  * rather than there being an `indeterminate` prop: the same bar is
@@ -82,7 +82,7 @@ export default function ProgressUpload() {
             <ProgressCircle.Indicator />
           </ProgressCircle.Track>
           <ProgressCircle.Value />
-          <ProgressCircle.Label className="pui-visually-hidden">
+          <ProgressCircle.Label className="forte-visually-hidden">
             Uploading render.mov
           </ProgressCircle.Label>
         </ProgressCircle.Root>

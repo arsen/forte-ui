@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Calendar } from "@dofortech/pretty-ui";
+import { Calendar } from "@dofortech/forte-ui";
 
 /* No initial date: `new Date()` in a state initialiser runs once on the
  * server and again in the browser, and a demo that hydrates with a different

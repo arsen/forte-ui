@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, CheckboxGroup, Field } from "@dofortech/pretty-ui";
+import { Checkbox, CheckboxGroup, Field } from "@dofortech/forte-ui";
 
 const DAYS = [
   { value: "mon", label: "Monday" },

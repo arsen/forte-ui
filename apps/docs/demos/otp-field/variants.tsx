@@ -1,6 +1,6 @@
 "use client";
 
-import { OTPField } from "@dofortech/pretty-ui";
+import { OTPField } from "@dofortech/forte-ui";
 
 const VARIANTS = ["outline", "soft", "underline"] as const;
 

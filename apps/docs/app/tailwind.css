@@ -4,10 +4,10 @@
  * Demos are documentation: the class list a reader copies out of one is the
  * example they will paste into their own app. So this file does not bolt a
  * second design system onto the page — it uses the same bridge a consumer
- * would: `@dofortech/pretty-ui/tailwind.css` re-points Tailwind's theme at
- * the pretty-ui tokens and deletes the stock scales that would let a demo
+ * would: `@dofortech/forte-ui/tailwind.css` re-points Tailwind's theme at
+ * the forte-ui tokens and deletes the stock scales that would let a demo
  * hardcode a value the token system is supposed to own. `gap-5` therefore
- * means `--pui-space-5`, `bg-primary` means `--pui-color-primary`, and
+ * means `--forte-space-5`, `bg-primary` means `--forte-color-primary`, and
  * `bg-red-500` does not exist. The bridge's own header explains the two
  * mechanisms that make it work (`@theme inline`, and the layer-order
  * statement); everything left in THIS file is docs-only — the site's chrome
@@ -26,7 +26,7 @@
  * builds on, and which it does not restate. Importing `theme.css` and
  * `utilities.css` on their own is the documented way to opt out.
  */
-@import "@dofortech/pretty-ui/tailwind.css";
+@import "@dofortech/forte-ui/tailwind.css";
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities) source(none);
 
@@ -142,14 +142,14 @@
    * simply appears. Content must never be gated behind an animation that may
    * not run.
    *
-   * `--pui-travel-lg` collapses to 0px under reduced motion on its own; the
+   * `--forte-travel-lg` collapses to 0px under reduced motion on its own; the
    * `motion-safe:` variant at the call site drops the animation entirely. */
-  --animate-reveal: pui-reveal linear both;
+  --animate-reveal: forte-reveal linear both;
 
-  @keyframes pui-reveal {
+  @keyframes forte-reveal {
     from {
       opacity: 0;
-      translate: 0 var(--pui-travel-lg);
+      translate: 0 var(--forte-travel-lg);
     }
   }
 }

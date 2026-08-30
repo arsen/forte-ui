@@ -18,9 +18,9 @@
  * global rule in patterns.css covers).
  *
  * There is deliberately no `prefers-reduced-motion` block here — the only
- * geometry is `--pui-scale-press`, which collapses to exactly 1 on its own.
+ * geometry is `--forte-scale-press`, which collapses to exactly 1 on its own.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. They are declared here, on the button element itself,
      * so an ancestor's value is only inherited and never wins — which is also
@@ -30,85 +30,85 @@
      * layer whatever its specificity); re-skin every toggle by re-pointing the
      * global tokens they resolve to. */
     /** Corner radius. */
-    --pui-toggle-radius: var(--pui-radius-control);
+    --forte-toggle-radius: var(--forte-radius-control);
     /** Height. `size` re-points it. */
-    --pui-toggle-height: var(--pui-control-h-md);
+    --forte-toggle-height: var(--forte-control-h-md);
     /** Inline padding. `iconOnly` replaces it with
-     * `--pui-toggle-icon-padding` on all four sides. */
-    --pui-toggle-padding-x: var(--pui-control-px-md);
+     * `--forte-toggle-icon-padding` on all four sides. */
+    --forte-toggle-padding-x: var(--forte-control-px-md);
     /** Label size. */
-    --pui-toggle-font-size: var(--pui-font-size-2);
+    --forte-toggle-font-size: var(--forte-font-size-2);
     /** Label weight. */
-    --pui-toggle-font-weight: var(--pui-font-weight-medium);
+    --forte-toggle-font-weight: var(--forte-font-weight-medium);
     /** Gap between an icon and its label. */
-    --pui-toggle-gap: var(--pui-control-gap);
+    --forte-toggle-gap: var(--forte-control-gap);
     /** Border width, drawn in every variant — `outline` is the only one that
      * gives it a colour. */
-    --pui-toggle-border-width: 1px;
+    --forte-toggle-border-width: 1px;
     /** Colour transitions between states. */
-    --pui-toggle-duration: var(--pui-duration-fast);
+    --forte-toggle-duration: var(--forte-duration-fast);
     /* Press feedback only. There is no hover lift or hover scale slot on a
      * toggle the way there is on Button: a toggle is normally one of several
      * in a strip, and a single item growing under the pointer breaks the
      * shared edge that makes the strip read as one control. A literal value is
-     * safe anyway — it is multiplied by `--pui-motion-ok` at the point of use. */
-    /** How far the button squashes while held. Multiplied by `--pui-motion-ok`,
+     * safe anyway — it is multiplied by `--forte-motion-ok` at the point of use. */
+    /** How far the button squashes while held. Multiplied by `--forte-motion-ok`,
      * so a literal value still collapses under reduced motion. */
-    --pui-toggle-press-scale: var(--pui-scale-press);
+    --forte-toggle-press-scale: var(--forte-scale-press);
 
     /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
-    --pui-toggle-tone-solid: var(--pui-color-primary);
-    --pui-toggle-tone-solid-hover: var(--pui-color-primary-hover);
-    --pui-toggle-tone-on-solid: var(--pui-color-on-primary);
-    --pui-toggle-tone-soft: var(--pui-color-primary-soft);
-    --pui-toggle-tone-soft-hover: var(--pui-color-primary-soft-hover);
-    --pui-toggle-tone-text: var(--pui-color-primary-text);
-    --pui-toggle-tone-border: var(--pui-color-primary-border);
+    --forte-toggle-tone-solid: var(--forte-color-primary);
+    --forte-toggle-tone-solid-hover: var(--forte-color-primary-hover);
+    --forte-toggle-tone-on-solid: var(--forte-color-on-primary);
+    --forte-toggle-tone-soft: var(--forte-color-primary-soft);
+    --forte-toggle-tone-soft-hover: var(--forte-color-primary-soft-hover);
+    --forte-toggle-tone-text: var(--forte-color-primary-text);
+    --forte-toggle-tone-border: var(--forte-color-primary-border);
 
     /* Off. Identical in all three variants apart from the border, so it is
      * stated once here rather than repeated per variant. */
     /** Fill while unpressed. */
-    --pui-toggle-bg: transparent;
+    --forte-toggle-bg: transparent;
     /** Fill on hover while unpressed. */
-    --pui-toggle-bg-hover: var(--pui-color-panel-hover);
+    --forte-toggle-bg-hover: var(--forte-color-panel-hover);
     /** Label colour while unpressed. */
-    --pui-toggle-fg: var(--pui-color-foreground-muted);
+    --forte-toggle-fg: var(--forte-color-foreground-muted);
     /** Label colour on hover while unpressed. */
-    --pui-toggle-fg-hover: var(--pui-color-foreground);
-    /** Border colour while unpressed. `var(--pui-color-border)` for
+    --forte-toggle-fg-hover: var(--forte-color-foreground);
+    /** Border colour while unpressed. `var(--forte-color-border)` for
      * `variant="outline"`. */
-    --pui-toggle-border-color: transparent;
+    --forte-toggle-border-color: transparent;
 
     /* On. Filled in per variant below; this is the `soft` set. */
     /** Fill while pressed. Set by `variant` from the tone. */
-    --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
     /** Fill on hover while pressed. Set by `variant` from the tone. */
-    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
     /** Label colour while pressed. Set by `variant` from the tone. */
-    --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
+    --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
     /** Border colour while pressed. The tone's border for `variant="outline"`.
  */
-    --pui-toggle-border-color-pressed: transparent;
+    --forte-toggle-border-color-pressed: transparent;
 
     box-sizing: border-box;
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--pui-toggle-gap);
-    height: var(--pui-toggle-height);
-    padding-inline: var(--pui-toggle-padding-x);
+    gap: var(--forte-toggle-gap);
+    height: var(--forte-toggle-height);
+    padding-inline: var(--forte-toggle-padding-x);
     margin: 0;
-    border: var(--pui-toggle-border-width) solid var(--pui-toggle-border-color);
-    border-radius: var(--pui-toggle-radius);
+    border: var(--forte-toggle-border-width) solid var(--forte-toggle-border-color);
+    border-radius: var(--forte-toggle-radius);
 
-    background-color: var(--pui-toggle-bg);
-    color: var(--pui-toggle-fg);
+    background-color: var(--forte-toggle-bg);
+    color: var(--forte-toggle-fg);
 
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-toggle-font-size);
-    font-weight: var(--pui-toggle-font-weight);
-    line-height: var(--pui-line-height-tight);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-toggle-font-size);
+    font-weight: var(--forte-toggle-font-weight);
+    line-height: var(--forte-line-height-tight);
     white-space: nowrap;
 
     -webkit-user-select: none;
@@ -125,17 +125,17 @@
      * a `box-shadow` halo, and `outline` cannot be transitioned — animating
      * only half of it makes the ring assemble in two stages on every Tab. */
     transition:
-      background-color var(--pui-toggle-duration) var(--pui-ease-standard),
-      border-color var(--pui-toggle-duration) var(--pui-ease-standard),
-      color var(--pui-toggle-duration) var(--pui-ease-standard),
-      scale var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      background-color var(--forte-toggle-duration) var(--forte-ease-standard),
+      border-color var(--forte-toggle-duration) var(--forte-ease-standard),
+      color var(--forte-toggle-duration) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   /* States ---------------------------------------------------------------- */
   .root[data-pressed] {
-    background-color: var(--pui-toggle-bg-pressed);
-    color: var(--pui-toggle-fg-pressed);
-    border-color: var(--pui-toggle-border-color-pressed);
+    background-color: var(--forte-toggle-bg-pressed);
+    color: var(--forte-toggle-fg-pressed);
+    border-color: var(--forte-toggle-border-color-pressed);
   }
 
   /* Hover comes after the pressed rule so the pressed hover can win at equal
@@ -143,21 +143,21 @@
    * stick in a hover colour after a tap. */
   @media (hover: hover) {
     .root:hover:not([data-disabled]) {
-      background-color: var(--pui-toggle-bg-hover);
-      color: var(--pui-toggle-fg-hover);
+      background-color: var(--forte-toggle-bg-hover);
+      color: var(--forte-toggle-fg-hover);
     }
 
     .root[data-pressed]:hover:not([data-disabled]) {
-      background-color: var(--pui-toggle-bg-pressed-hover);
-      color: var(--pui-toggle-fg-pressed);
+      background-color: var(--forte-toggle-bg-pressed-hover);
+      color: var(--forte-toggle-fg-pressed);
     }
   }
 
   .root:active:not([data-disabled]) {
-    scale: calc(1 + (var(--pui-toggle-press-scale) - 1) * var(--pui-motion-ok));
+    scale: calc(1 + (var(--forte-toggle-press-scale) - 1) * var(--forte-motion-ok));
     /* Snap in, spring out: activation has to feel immediate, and the spring in
      * the base rule is what carries the release. */
-    transition-duration: var(--pui-duration-instant);
+    transition-duration: var(--forte-duration-instant);
   }
 
   .root[data-disabled] {
@@ -170,21 +170,21 @@
   /* The same three steps as Button, so a toggle dropped into a row of buttons
    * lines up rather than sitting a pixel proud. */
   .root[data-size="sm"] {
-    --pui-toggle-height: var(--pui-control-h-sm);
-    --pui-toggle-padding-x: var(--pui-control-px-sm);
-    --pui-toggle-font-size: var(--pui-font-size-1);
+    --forte-toggle-height: var(--forte-control-h-sm);
+    --forte-toggle-padding-x: var(--forte-control-px-sm);
+    --forte-toggle-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-toggle-height: var(--pui-control-h-md);
-    --pui-toggle-padding-x: var(--pui-control-px-md);
-    --pui-toggle-font-size: var(--pui-font-size-2);
+    --forte-toggle-height: var(--forte-control-h-md);
+    --forte-toggle-padding-x: var(--forte-control-px-md);
+    --forte-toggle-font-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-toggle-height: var(--pui-control-h-lg);
-    --pui-toggle-padding-x: var(--pui-control-px-lg);
-    --pui-toggle-font-size: var(--pui-font-size-3);
+    --forte-toggle-height: var(--forte-control-h-lg);
+    --forte-toggle-padding-x: var(--forte-control-px-lg);
+    --forte-toggle-font-size: var(--forte-font-size-3);
   }
 
   /* Every size clears the 24px SC 2.5.8 floor on height (`sm` is 28px), but an
@@ -200,50 +200,50 @@
    * needs the room. */
   .root[data-icon-only] {
     /** Minimum space between the icon and the toggle's edge (`iconOnly` only) */
-    --pui-toggle-icon-padding: var(--pui-space-2);
-    --pui-toggle-padding-x: var(--pui-toggle-icon-padding);
-    padding-block: var(--pui-toggle-icon-padding);
+    --forte-toggle-icon-padding: var(--forte-space-2);
+    --forte-toggle-padding-x: var(--forte-toggle-icon-padding);
+    padding-block: var(--forte-toggle-icon-padding);
     block-size: auto;
     aspect-ratio: 1;
-    min-block-size: max(var(--pui-toggle-height), var(--pui-target-min));
-    min-inline-size: max(var(--pui-toggle-height), var(--pui-target-min));
+    min-block-size: max(var(--forte-toggle-height), var(--forte-target-min));
+    min-inline-size: max(var(--forte-toggle-height), var(--forte-target-min));
   }
 
   /* Tones ----------------------------------------------------------------- */
   .root[data-tone="secondary"] {
-    --pui-toggle-tone-solid: var(--pui-color-secondary);
-    --pui-toggle-tone-solid-hover: var(--pui-color-secondary-hover);
-    --pui-toggle-tone-on-solid: var(--pui-color-on-secondary);
-    --pui-toggle-tone-soft: var(--pui-color-secondary-soft);
-    --pui-toggle-tone-soft-hover: var(--pui-color-secondary-soft-hover);
-    --pui-toggle-tone-text: var(--pui-color-secondary-text);
-    --pui-toggle-tone-border: var(--pui-color-secondary-border);
+    --forte-toggle-tone-solid: var(--forte-color-secondary);
+    --forte-toggle-tone-solid-hover: var(--forte-color-secondary-hover);
+    --forte-toggle-tone-on-solid: var(--forte-color-on-secondary);
+    --forte-toggle-tone-soft: var(--forte-color-secondary-soft);
+    --forte-toggle-tone-soft-hover: var(--forte-color-secondary-soft-hover);
+    --forte-toggle-tone-text: var(--forte-color-secondary-text);
+    --forte-toggle-tone-border: var(--forte-color-secondary-border);
   }
 
   .root[data-tone="danger"] {
-    --pui-toggle-tone-solid: var(--pui-color-danger);
-    --pui-toggle-tone-solid-hover: var(--pui-color-danger-hover);
-    --pui-toggle-tone-on-solid: var(--pui-color-on-danger);
-    --pui-toggle-tone-soft: var(--pui-danger-3);
+    --forte-toggle-tone-solid: var(--forte-color-danger);
+    --forte-toggle-tone-solid-hover: var(--forte-color-danger-hover);
+    --forte-toggle-tone-on-solid: var(--forte-color-on-danger);
+    --forte-toggle-tone-soft: var(--forte-danger-3);
     /* Deliberately the same value as the resting fill, which is what Button
      * does for the same reason: the danger ramp in tokens.css is a sparse
      * hand-written set (2, 3, 7, 9, 10, 11) with no step 4 to step up to, and
-     * `--pui-danger-7` is far too saturated to carry `--pui-color-danger-text`
+     * `--forte-danger-7` is far too saturated to carry `--forte-color-danger-text`
      * at AA. A pressed danger toggle therefore does not brighten on hover; it
      * still has the cursor, the focus ring and the press scale. */
-    --pui-toggle-tone-soft-hover: var(--pui-danger-3);
-    --pui-toggle-tone-text: var(--pui-color-danger-text);
-    --pui-toggle-tone-border: var(--pui-color-danger-border);
+    --forte-toggle-tone-soft-hover: var(--forte-danger-3);
+    --forte-toggle-tone-text: var(--forte-color-danger-text);
+    --forte-toggle-tone-border: var(--forte-color-danger-border);
   }
 
   .root[data-tone="neutral"] {
-    --pui-toggle-tone-solid: var(--pui-gray-12);
-    --pui-toggle-tone-solid-hover: var(--pui-gray-11);
-    --pui-toggle-tone-on-solid: var(--pui-gray-1);
-    --pui-toggle-tone-soft: var(--pui-gray-4);
-    --pui-toggle-tone-soft-hover: var(--pui-gray-5);
-    --pui-toggle-tone-text: var(--pui-color-foreground);
-    --pui-toggle-tone-border: var(--pui-color-border);
+    --forte-toggle-tone-solid: var(--forte-gray-12);
+    --forte-toggle-tone-solid-hover: var(--forte-gray-11);
+    --forte-toggle-tone-on-solid: var(--forte-gray-1);
+    --forte-toggle-tone-soft: var(--forte-gray-4);
+    --forte-toggle-tone-soft-hover: var(--forte-gray-5);
+    --forte-toggle-tone-text: var(--forte-color-foreground);
+    --forte-toggle-tone-border: var(--forte-color-border);
   }
 
   /* Variants ---------------------------------------------------------------
@@ -251,25 +251,25 @@
    * paints while unpressed, because its border is what marks out where the
    * button is when nothing is on. */
   .root[data-variant="solid"] {
-    --pui-toggle-bg-pressed: var(--pui-toggle-tone-solid);
-    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-solid-hover);
-    --pui-toggle-fg-pressed: var(--pui-toggle-tone-on-solid);
-    --pui-toggle-border-color-pressed: transparent;
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-solid);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-solid-hover);
+    --forte-toggle-fg-pressed: var(--forte-toggle-tone-on-solid);
+    --forte-toggle-border-color-pressed: transparent;
   }
 
   .root[data-variant="soft"] {
-    --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
-    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
-    --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
-    --pui-toggle-border-color-pressed: transparent;
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
+    --forte-toggle-border-color-pressed: transparent;
   }
 
   .root[data-variant="outline"] {
-    --pui-toggle-border-color: var(--pui-color-border);
-    --pui-toggle-bg-pressed: var(--pui-toggle-tone-soft);
-    --pui-toggle-bg-pressed-hover: var(--pui-toggle-tone-soft-hover);
-    --pui-toggle-fg-pressed: var(--pui-toggle-tone-text);
-    --pui-toggle-border-color-pressed: var(--pui-toggle-tone-border);
+    --forte-toggle-border-color: var(--forte-color-border);
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
+    --forte-toggle-border-color-pressed: var(--forte-toggle-tone-border);
   }
 
   /* Group ------------------------------------------------------------------
@@ -277,23 +277,23 @@
    * its own state, so neither is set in the TSX and neither may be assumed
    * absent. `data-segmented` and `data-full-width` are ours. */
   .group {
-    /** Gap between toggles. `var(--pui-space-1)` when `segmented`. */
-    --pui-toggle-group-gap: var(--pui-space-2);
-    /** Padding inside the strip. `var(--pui-space-1)` when `segmented`. */
-    --pui-toggle-group-padding: 0px;
-    /** Corner radius of the strip. `var(--pui-radius-4)` when `segmented`. */
-    --pui-toggle-group-radius: 0px;
-    /** Fill behind the strip. `var(--pui-color-panel)` when `segmented`. */
-    --pui-toggle-group-bg: transparent;
+    /** Gap between toggles. `var(--forte-space-1)` when `segmented`. */
+    --forte-toggle-group-gap: var(--forte-space-2);
+    /** Padding inside the strip. `var(--forte-space-1)` when `segmented`. */
+    --forte-toggle-group-padding: 0px;
+    /** Corner radius of the strip. `var(--forte-radius-4)` when `segmented`. */
+    --forte-toggle-group-radius: 0px;
+    /** Fill behind the strip. `var(--forte-color-panel)` when `segmented`. */
+    --forte-toggle-group-bg: transparent;
     /* Transparent rather than absent even when there is nothing to draw:
      * `transparent` is NOT preserved under forced colours — it is replaced
      * with a system colour — so declaring the border here is what lets the
      * segmented strip keep a visible boundary in high contrast without the
      * a11y block having to add a border and shift the layout by 2px. */
     /** Border width of the strip. */
-    --pui-toggle-group-border-width: 1px;
+    --forte-toggle-group-border-width: 1px;
     /** Border colour of the strip. */
-    --pui-toggle-group-border-color: transparent;
+    --forte-toggle-group-border-color: transparent;
 
     box-sizing: border-box;
     display: inline-flex;
@@ -302,12 +302,12 @@
      * the strip's full width or the shorter labels leave ragged edges down the
      * side of the panel. */
     align-items: stretch;
-    gap: var(--pui-toggle-group-gap);
-    padding: var(--pui-toggle-group-padding);
-    border: var(--pui-toggle-group-border-width) solid
-      var(--pui-toggle-group-border-color);
-    border-radius: var(--pui-toggle-group-radius);
-    background-color: var(--pui-toggle-group-bg);
+    gap: var(--forte-toggle-group-gap);
+    padding: var(--forte-toggle-group-padding);
+    border: var(--forte-toggle-group-border-width) solid
+      var(--forte-toggle-group-border-color);
+    border-radius: var(--forte-toggle-group-radius);
+    background-color: var(--forte-toggle-group-bg);
   }
 
   .group[data-orientation="vertical"] {
@@ -325,10 +325,10 @@
    * may be several pressed at once, or none. Each toggle paints its own fill
    * instead. */
   .group[data-segmented] {
-    --pui-toggle-group-gap: var(--pui-space-1);
-    --pui-toggle-group-padding: var(--pui-space-1);
-    --pui-toggle-group-radius: var(--pui-radius-4);
-    --pui-toggle-group-bg: var(--pui-color-panel);
+    --forte-toggle-group-gap: var(--forte-space-1);
+    --forte-toggle-group-padding: var(--forte-space-1);
+    --forte-toggle-group-radius: var(--forte-radius-4);
+    --forte-toggle-group-bg: var(--forte-color-panel);
   }
 
   /* Scoped to direct children on purpose: a consumer who wraps the toggles in
@@ -351,7 +351,7 @@
 }
 
 /* Forced colours -------------------------------------------------------------
- * Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so
+ * Top-level `forte.a11y`, ordered after `forte.components`, so
  * everything here beats the rules above by layer alone. Specificity still
  * decides between the rules *inside* this block, which is why their order
  * matters below.
@@ -369,7 +369,7 @@
  * toggle would keep CanvasText and read as enabled. `opacity: 1` is left to
  * the global rule, which nothing here competes with.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     /* The UA derives system colours from native element semantics, and this IS
      * a native <button> — but its background is `transparent`, which forced
@@ -393,7 +393,7 @@
     /* `currentColor` icons are already covered by the rule above. This is for
      * icons that declare their own fill or stroke, which forced colours would
      * otherwise push to CanvasText — invisible on Highlight. A bare `svg`
-     * rather than `.pui-icon`: inside a CSS Module that global class name
+     * rather than `.forte-icon`: inside a CSS Module that global class name
      * would be hashed into a local one and match nothing. */
     .root[data-pressed]:not([data-disabled]) :where(svg) {
       fill: HighlightText;

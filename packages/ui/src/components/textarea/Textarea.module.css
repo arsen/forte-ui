@@ -6,7 +6,7 @@
  *   data-variant   how much weight the control carries (outline/soft/ghost)
  *
  * The colour slots and the metrics are Input's, read from the same
- * `--pui-control-*` tokens, so a textarea stacked under an input in a form
+ * `--forte-control-*` tokens, so a textarea stacked under an input in a form
  * shares its boundary, its optical inset and its invalid state at every
  * density. That alignment is the reason not to invent a private scale here.
  *
@@ -26,17 +26,17 @@
  * user is in the interaction, and recolouring a control the moment it is
  * merely *touched* is noise.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared HERE, on the textarea itself, so a value set
      * on an ancestor is only INHERITED and loses to this declaration. To
      * re-skin one textarea set them via `className` (an unlayered consumer
-     * rule beats `@layer pretty-ui.components` at any specificity) or an
+     * rule beats `@layer forte.components` at any specificity) or an
      * inline `style`; to move every textarea at once, re-point the global
      * tokens on the right-hand side, which this file only reads and never
      * re-declares. */
     /** Shortest the control can be, in rows (the `rows` prop writes this) */
-    --pui-textarea-rows: 3;
+    --forte-textarea-rows: 3;
     /**
      * Tallest the control may grow to, in rows, before it scrolls instead
      * (the `maxRows` prop writes this)
@@ -46,22 +46,22 @@
      * engine supports, so the knob is a complete statement on its own and a
      * consumer can set a ceiling from plain CSS without the component having
      * been told about one in JSX. */
-    --pui-textarea-max-rows: infinity;
+    --forte-textarea-max-rows: infinity;
     /** Inline padding (reset per `size`) */
-    --pui-textarea-padding-x: var(--pui-control-px-md);
+    --forte-textarea-padding-x: var(--forte-control-px-md);
     /* Half the inline padding, which is the same optical inset once the text
      * is set on a 1.5 line-height. Derived rather than declared per size, so
      * one override moves both axes together. */
     /** Block padding */
-    --pui-textarea-padding-y: calc(var(--pui-textarea-padding-x) / 2);
+    --forte-textarea-padding-y: calc(var(--forte-textarea-padding-x) / 2);
     /** Font size (reset per `size`) */
-    --pui-textarea-font-size: var(--pui-font-size-2);
+    --forte-textarea-font-size: var(--forte-font-size-2);
     /** Line height — also the unit the row counts above are measured in */
-    --pui-textarea-line-height: var(--pui-line-height-normal);
+    --forte-textarea-line-height: var(--forte-line-height-normal);
     /* Capped, and the cap is the reason this is not just the token. A control
      * radius is drawn to a box whose text sits on ONE line, in the middle,
      * where the corner arc is at its widest and clips nothing — so
-     * `data-pui-radius="pill"` asks for `9999px` and an Input is fine. A
+     * `data-forte-radius="pill"` asks for `9999px` and an Input is fine. A
      * textarea's first and last lines sit AT the corners instead, and a
      * capsule arc eats them: the reported bug is a pill-radius textarea with
      * its top and bottom rows sliced off mid-glyph.
@@ -72,42 +72,42 @@
      * round as it can be without losing a row, and derives itself at every
      * size and density from the same `1lh` the row bounds use.
      *
-     * `min()` also collapses this to 0 under `data-pui-radius="none"` for
+     * `min()` also collapses this to 0 under `data-forte-radius="none"` for
      * free, and every term carries a unit — a bare `0` would make the whole
      * function invalid at computed-value time (see the note in tokens.css). */
     /** Corner radius, capped at half a row so the first line is never clipped */
-    --pui-textarea-radius: min(
-      var(--pui-radius-control),
+    --forte-textarea-radius: min(
+      var(--forte-radius-control),
       calc(
         (
-            1lh + 2 * var(--pui-textarea-padding-y) + 2 *
-              var(--pui-textarea-border-width)
+            1lh + 2 * var(--forte-textarea-padding-y) + 2 *
+              var(--forte-textarea-border-width)
           ) /
           2
       )
     );
     /** Border width */
-    --pui-textarea-border-width: 1px;
+    --forte-textarea-border-width: 1px;
 
     /* Colour slots, filled in per variant below. */
     /** Background (reset per `variant`) */
-    --pui-textarea-bg: var(--pui-color-background);
+    --forte-textarea-bg: var(--forte-color-background);
     /** Background on hover */
-    --pui-textarea-bg-hover: var(--pui-color-panel-hover);
+    --forte-textarea-bg-hover: var(--forte-color-panel-hover);
     /** Text colour */
-    --pui-textarea-fg: var(--pui-color-foreground);
+    --forte-textarea-fg: var(--forte-color-foreground);
     /** Placeholder colour */
-    --pui-textarea-placeholder-fg: var(--pui-color-foreground-muted);
+    --forte-textarea-placeholder-fg: var(--forte-color-foreground-muted);
     /** Border colour (reset per `variant`, and by `data-invalid`) */
-    --pui-textarea-border-color: var(--pui-color-border);
+    --forte-textarea-border-color: var(--forte-color-border);
     /** Border colour on hover */
-    --pui-textarea-border-color-hover: var(--pui-color-border-strong);
+    --forte-textarea-border-color-hover: var(--forte-color-border-strong);
     /** Caret colour */
-    --pui-textarea-caret-color: var(--pui-color-primary);
+    --forte-textarea-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --pui-textarea-selection-bg: var(--pui-color-primary-soft);
+    --forte-textarea-selection-bg: var(--forte-color-primary-soft);
     /** Selection text colour */
-    --pui-textarea-selection-fg: var(--pui-color-primary-text);
+    --forte-textarea-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
     display: block;
@@ -117,63 +117,63 @@
     min-inline-size: 0;
 
     /* Height, in rows. `1lh` is this element's own line-height, so both bounds
-     * follow `--pui-textarea-font-size` and the density preset without
+     * follow `--forte-textarea-font-size` and the density preset without
      * restating a number. The border term is what keeps the floor honest under
      * `box-sizing: border-box`. */
     min-block-size: calc(
-      var(--pui-textarea-rows) * 1lh + 2 * var(--pui-textarea-padding-y) + 2 *
-        var(--pui-textarea-border-width)
+      var(--forte-textarea-rows) * 1lh + 2 * var(--forte-textarea-padding-y) + 2 *
+        var(--forte-textarea-border-width)
     );
     max-block-size: calc(
-      var(--pui-textarea-max-rows) * 1lh + 2 * var(--pui-textarea-padding-y) +
-        2 * var(--pui-textarea-border-width)
+      var(--forte-textarea-max-rows) * 1lh + 2 * var(--forte-textarea-padding-y) +
+        2 * var(--forte-textarea-border-width)
     );
 
-    padding-block: var(--pui-textarea-padding-y);
-    padding-inline: var(--pui-textarea-padding-x);
+    padding-block: var(--forte-textarea-padding-y);
+    padding-inline: var(--forte-textarea-padding-x);
     margin: 0;
-    border: var(--pui-textarea-border-width) solid
-      var(--pui-textarea-border-color);
-    border-radius: var(--pui-textarea-radius);
+    border: var(--forte-textarea-border-width) solid
+      var(--forte-textarea-border-color);
+    border-radius: var(--forte-textarea-radius);
 
-    background-color: var(--pui-textarea-bg);
-    color: var(--pui-textarea-fg);
-    caret-color: var(--pui-textarea-caret-color);
+    background-color: var(--forte-textarea-bg);
+    color: var(--forte-textarea-fg);
+    caret-color: var(--forte-textarea-caret-color);
 
     /* A UA stylesheet gives form controls their own font, not the page's, so a
      * textarea left alone is the one control in the set that does not match
      * the others — and on a textarea it is the difference between the page's
      * text and a monospace-ish fallback across a whole paragraph. */
-    font-family: var(--pui-font-sans);
-    font-size: var(--pui-textarea-font-size);
-    font-weight: var(--pui-font-weight-normal);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-textarea-font-size);
+    font-weight: var(--forte-font-weight-normal);
     /* `normal`, not Input's `tight`: this is the only control in the set with
      * more than one line, so the leading is prose leading. */
-    line-height: var(--pui-textarea-line-height);
+    line-height: var(--forte-textarea-line-height);
     text-align: start;
 
     /* The UA `text` cursor is correct here and is left alone — see the cursor
      * table in AGENTS.md. A text field is not "an element that performs an
      * action on click"; it is a region you place a caret in. */
     transition:
-      background-color var(--pui-duration-fast) var(--pui-ease-standard),
-      border-color var(--pui-duration-fast) var(--pui-ease-standard),
-      color var(--pui-duration-fast) var(--pui-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Placeholder text in an ENABLED control is ordinary text — SC 1.4.3 applies
    * with no exemption, and it is often the only thing naming the control. So
    * `-muted` (5.82:1), not `-subtle` (3.73:1, non-text only). */
   .root::placeholder {
-    color: var(--pui-textarea-placeholder-fg);
+    color: var(--forte-textarea-placeholder-fg);
     /* Firefox ships a 0.54 opacity on ::placeholder, which would knock the
      * measured 5.82:1 back under AA. */
     opacity: 1;
   }
 
   .root::selection {
-    background-color: var(--pui-textarea-selection-bg);
-    color: var(--pui-textarea-selection-fg);
+    background-color: var(--forte-textarea-selection-bg);
+    color: var(--forte-textarea-selection-fg);
   }
 
   /* Resize ---------------------------------------------------------------- */
@@ -207,8 +207,8 @@
   /* States ---------------------------------------------------------------- */
   @media (hover: hover) {
     .root:hover:not([data-disabled], [readonly]) {
-      background-color: var(--pui-textarea-bg-hover);
-      border-color: var(--pui-textarea-border-color-hover);
+      background-color: var(--forte-textarea-bg-hover);
+      border-color: var(--forte-textarea-border-color-hover);
     }
   }
 
@@ -224,7 +224,7 @@
    * selecting and copying the value is the whole point of the state, and so
    * does the resize handle: reading a long value is easier in a taller box. */
   .root[readonly] {
-    --pui-textarea-bg: var(--pui-color-panel);
+    --forte-textarea-bg: var(--forte-color-panel);
   }
 
   .root[data-full-width] {
@@ -233,36 +233,36 @@
 
   /* Sizes ----------------------------------------------------------------- */
   .root[data-size="sm"] {
-    --pui-textarea-padding-x: var(--pui-control-px-sm);
-    --pui-textarea-font-size: var(--pui-font-size-1);
+    --forte-textarea-padding-x: var(--forte-control-px-sm);
+    --forte-textarea-font-size: var(--forte-font-size-1);
   }
 
   .root[data-size="md"] {
-    --pui-textarea-padding-x: var(--pui-control-px-md);
-    --pui-textarea-font-size: var(--pui-font-size-2);
+    --forte-textarea-padding-x: var(--forte-control-px-md);
+    --forte-textarea-font-size: var(--forte-font-size-2);
   }
 
   .root[data-size="lg"] {
-    --pui-textarea-padding-x: var(--pui-control-px-lg);
-    --pui-textarea-font-size: var(--pui-font-size-3);
+    --forte-textarea-padding-x: var(--forte-control-px-lg);
+    --forte-textarea-font-size: var(--forte-font-size-3);
   }
 
   /* Variants -------------------------------------------------------------- */
   .root[data-variant="outline"] {
-    --pui-textarea-bg: var(--pui-color-background);
-    --pui-textarea-border-color: var(--pui-color-border);
+    --forte-textarea-bg: var(--forte-color-background);
+    --forte-textarea-border-color: var(--forte-color-border);
   }
 
   .root[data-variant="soft"] {
-    --pui-textarea-bg: var(--pui-color-panel);
+    --forte-textarea-bg: var(--forte-color-panel);
     /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
      * keeps the field outlined there while staying invisible normally. */
-    --pui-textarea-border-color: transparent;
+    --forte-textarea-border-color: transparent;
   }
 
   .root[data-variant="ghost"] {
-    --pui-textarea-bg: transparent;
-    --pui-textarea-border-color: transparent;
+    --forte-textarea-bg: transparent;
+    --forte-textarea-border-color: transparent;
   }
 
   /* Validity -------------------------------------------------------------- */
@@ -275,14 +275,14 @@
    * only thing deciding whether a failed `soft` field gets the danger boundary
    * or the transparent one it inherits from its variant. */
   .root[data-invalid] {
-    --pui-textarea-border-color: var(--pui-color-danger-border);
-    --pui-textarea-border-color-hover: var(--pui-color-danger);
-    --pui-textarea-caret-color: var(--pui-color-danger);
+    --forte-textarea-border-color: var(--forte-color-danger-border);
+    --forte-textarea-border-color-hover: var(--forte-color-danger);
+    --forte-textarea-caret-color: var(--forte-color-danger);
   }
 }
 
 /* Forced colours ---------------------------------------------------------- */
-/* Top-level `pretty-ui.a11y`, ordered after `pretty-ui.components`, so these
+/* Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * This really is a native <textarea>, so the UA does assign it system colours.
@@ -290,7 +290,7 @@
  * border, which forced-colors resolves to a system colour of its own choosing
  * rather than to the field boundary. Restating the pair here keeps every
  * variant looking like the same control. */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .root {
       background-color: Field;

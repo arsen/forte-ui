@@ -34,7 +34,7 @@
  * No prefers-reduced-motion block, here or anywhere else in a component file:
  * the travel token collapses to 0px and the durations shorten on their own.
  */
-@layer pretty-ui.components {
+@layer forte.components {
   .root {
     /* Component tokens. Declared here, on Accordion.Root itself, so an
      * ancestor's value is only ever inherited and never wins. Re-skin one
@@ -44,73 +44,73 @@
 
     /* Item */
     /** Space between items */
-    --pui-accordion-gap: 0px;
+    --forte-accordion-gap: 0px;
     /** Corner radius of an item. The trigger takes the same radius, so its focus
      * ring follows the card rather than being shaved by the card's own clip —
      * squaring off its bottom two corners while the panel is open */
-    --pui-accordion-item-radius: 0px;
+    --forte-accordion-item-radius: 0px;
     /** Background of an item */
-    --pui-accordion-item-bg: transparent;
+    --forte-accordion-item-bg: transparent;
     /** Border around an item (the `contained` card) */
-    --pui-accordion-item-border-width: 0px;
+    --forte-accordion-item-border-width: 0px;
     /** Colour of that border */
-    --pui-accordion-item-border-color: var(--pui-color-border-muted);
+    --forte-accordion-item-border-color: var(--forte-color-border-muted);
     /* The hairline BETWEEN rows, which is a different line from the card
      * outline above — `divided` has only the first, `contained` only the
      * second, and they are never both visible at once. */
     /** Thickness of the hairline between rows (`divided` only) */
-    --pui-accordion-divider-width: 1px;
+    --forte-accordion-divider-width: 1px;
     /** Colour of that hairline */
-    --pui-accordion-divider-color: var(--pui-color-border-muted);
+    --forte-accordion-divider-color: var(--forte-color-border-muted);
 
     /* Trigger */
     /** Inline padding of a row */
-    --pui-accordion-trigger-px: var(--pui-space-3);
+    --forte-accordion-trigger-px: var(--forte-space-3);
     /** Block padding of a row */
-    --pui-accordion-trigger-py: var(--pui-space-3);
+    --forte-accordion-trigger-py: var(--forte-space-3);
     /** Minimum space between the label and the icon, so a label long enough
      * to fill the row still cannot run into it */
-    --pui-accordion-trigger-gap: var(--pui-space-4);
+    --forte-accordion-trigger-gap: var(--forte-space-4);
     /** Row background at rest */
-    --pui-accordion-trigger-bg: transparent;
+    --forte-accordion-trigger-bg: transparent;
     /* One step up from whatever the row sits on: the page (gray-1) in
      * `divided`, the card (gray-2) in `contained` — see the variant block.
      * Unlike Tabs, the fill is not optional here. A row is a click target the
      * width of the container, and a colour change confined to the label would
      * claim only the label is pressable. */
     /** Row background on hover — one step up from whatever the row sits on */
-    --pui-accordion-trigger-bg-hover: var(--pui-color-panel);
+    --forte-accordion-trigger-bg-hover: var(--forte-color-panel);
     /** Heading colour */
-    --pui-accordion-trigger-color: var(--pui-color-foreground);
+    --forte-accordion-trigger-color: var(--forte-color-foreground);
     /** Heading size */
-    --pui-accordion-trigger-font-size: var(--pui-font-size-2);
+    --forte-accordion-trigger-font-size: var(--forte-font-size-2);
     /** Heading weight */
-    --pui-accordion-trigger-font-weight: var(--pui-font-weight-medium);
+    --forte-accordion-trigger-font-weight: var(--forte-font-weight-medium);
 
     /* Icon. `-subtle` is 3.73:1 — below the floor for text, fine for a
      * non-text indicator (SC 1.4.11), and `prefers-contrast: more` promotes
      * it anyway. It is never the only cue: `aria-expanded` and the panel
      * itself say the same thing. */
     /** Chevron colour when closed */
-    --pui-accordion-icon-color: var(--pui-color-foreground-subtle);
+    --forte-accordion-icon-color: var(--forte-color-foreground-subtle);
     /** Chevron colour when open */
-    --pui-accordion-icon-color-open: var(--pui-color-foreground);
+    --forte-accordion-icon-color-open: var(--forte-color-foreground);
     /** How far the chevron turns when the panel opens */
-    --pui-accordion-icon-rotate: 180deg;
+    --forte-accordion-icon-rotate: 180deg;
 
     /* Panel. No block-start padding knob: the trigger's own bottom padding
      * already separates the two, and adding one on top of it double-spaces
      * every open row. Set `padding-block-start` through `contentClassName` if
      * the panel is given a background of its own. */
     /** Inline padding of the panel content */
-    --pui-accordion-panel-px: var(--pui-accordion-trigger-px);
+    --forte-accordion-panel-px: var(--forte-accordion-trigger-px);
     /** Block-end padding of the panel content. There is no block-start knob —
      * the trigger's own bottom padding already separates the two */
-    --pui-accordion-panel-pb: var(--pui-space-4);
+    --forte-accordion-panel-pb: var(--forte-space-4);
     /** Body text colour */
-    --pui-accordion-panel-color: var(--pui-color-foreground-muted);
+    --forte-accordion-panel-color: var(--forte-color-foreground-muted);
     /** Body text size */
-    --pui-accordion-panel-font-size: var(--pui-font-size-2);
+    --forte-accordion-panel-font-size: var(--forte-font-size-2);
 
     /* One duration and one curve for the height and the content's slide, so
      * the two cannot drift apart. Deliberately NOT a spring: an overshooting
@@ -118,28 +118,28 @@
      * band of empty background under the last line before settling back, and
      * the springs that do not overshoot are only slower ease-outs. */
     /** Length of the height change, and of the content's slide */
-    --pui-accordion-duration: var(--pui-duration-normal);
+    --forte-accordion-duration: var(--forte-duration-normal);
     /** Curve for both. Deliberately not a spring: overshooting `height` flashes
      * a band of empty background under the last line before settling */
-    --pui-accordion-ease: var(--pui-ease-standard);
+    --forte-accordion-ease: var(--forte-ease-standard);
 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: var(--pui-accordion-gap);
-    font-family: var(--pui-font-sans);
-    color: var(--pui-color-foreground);
+    gap: var(--forte-accordion-gap);
+    font-family: var(--forte-font-sans);
+    color: var(--forte-color-foreground);
   }
 
   /* Contained: the rows separate into cards. Everything below is a knob the
    * defaults above already declared — no rule in this file knows the variant
    * exists except this block and the divider. */
   .root[data-variant="contained"] {
-    --pui-accordion-gap: var(--pui-space-2);
-    --pui-accordion-item-radius: var(--pui-radius-surface);
-    --pui-accordion-item-bg: var(--pui-color-panel);
-    --pui-accordion-item-border-width: 1px;
-    --pui-accordion-trigger-bg-hover: var(--pui-color-panel-hover);
+    --forte-accordion-gap: var(--forte-space-2);
+    --forte-accordion-item-radius: var(--forte-radius-surface);
+    --forte-accordion-item-bg: var(--forte-color-panel);
+    --forte-accordion-item-border-width: 1px;
+    --forte-accordion-trigger-bg-hover: var(--forte-color-panel-hover);
   }
 
   /* Item ------------------------------------------------------------------- */
@@ -150,10 +150,10 @@
      * the radius, and it is why the trigger's focus ring is inset — an outset
      * ring inside a clipping box gets cropped. */
     overflow: hidden;
-    border: var(--pui-accordion-item-border-width) solid
-      var(--pui-accordion-item-border-color);
-    border-radius: var(--pui-accordion-item-radius);
-    background-color: var(--pui-accordion-item-bg);
+    border: var(--forte-accordion-item-border-width) solid
+      var(--forte-accordion-item-border-color);
+    border-radius: var(--forte-accordion-item-radius);
+    background-color: var(--forte-accordion-item-bg);
   }
 
   /* Between rows only, never around the set: a rule above the first row and
@@ -165,14 +165,14 @@
    * The second `.item` is deliberately unqualified — the pair is what matters,
    * and both carry the same variant. */
   .item[data-variant="divided"] + .item {
-    border-block-start: var(--pui-accordion-divider-width) solid
-      var(--pui-accordion-divider-color);
+    border-block-start: var(--forte-accordion-divider-width) solid
+      var(--forte-accordion-divider-color);
   }
 
   /* Applied to the whole item, not just the trigger: a disabled item that
    * happens to be open would otherwise show fully-enabled body text under a
    * greyed-out header. `opacity` is the non-forced-colors treatment only —
-   * the generic `[data-disabled]` rule in patterns.css (layer pretty-ui.a11y,
+   * the generic `[data-disabled]` rule in patterns.css (layer forte.a11y,
    * ordered after this one) restores `opacity: 1` and paints GrayText, so the
    * 55% cannot survive into HCM and read as enabled. */
   .item[data-disabled] {
@@ -196,32 +196,32 @@
     flex: 1 1 auto;
     align-items: center;
     justify-content: space-between;
-    gap: var(--pui-accordion-trigger-gap);
+    gap: var(--forte-accordion-trigger-gap);
     width: 100%;
-    min-height: var(--pui-target-min);
-    padding: var(--pui-accordion-trigger-py) var(--pui-accordion-trigger-px);
+    min-height: var(--forte-target-min);
+    padding: var(--forte-accordion-trigger-py) var(--forte-accordion-trigger-px);
     margin: 0;
     border: 0;
     /* The item's clip already gives the hover fill the card's shape, so this
      * radius exists for the focus ring: an inset ring follows the element's
      * OWN corners, and a square ring inside a rounded card has its corners
      * shaved off by that same clip. Matching the card fixes it. */
-    border-radius: var(--pui-accordion-item-radius);
+    border-radius: var(--forte-accordion-item-radius);
 
-    background-color: var(--pui-accordion-trigger-bg);
-    color: var(--pui-accordion-trigger-color);
+    background-color: var(--forte-accordion-trigger-bg);
+    color: var(--forte-accordion-trigger-color);
 
     font-family: inherit;
-    font-size: var(--pui-accordion-trigger-font-size);
-    font-weight: var(--pui-accordion-trigger-font-weight);
-    line-height: var(--pui-line-height-normal);
+    font-size: var(--forte-accordion-trigger-font-size);
+    font-weight: var(--forte-accordion-trigger-font-weight);
+    line-height: var(--forte-line-height-normal);
     text-align: start;
 
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
-    transition: background-color var(--pui-duration-fast)
-      var(--pui-ease-standard);
+    transition: background-color var(--forte-duration-fast)
+      var(--forte-ease-standard);
   }
 
   /* Open, the row's bottom edge is the seam with the panel rather than the
@@ -237,7 +237,7 @@
 
   @media (hover: hover) {
     .trigger:hover:not([data-disabled]) {
-      background-color: var(--pui-accordion-trigger-bg-hover);
+      background-color: var(--forte-accordion-trigger-bg-hover);
     }
   }
 
@@ -247,13 +247,13 @@
 
   /* Owns the flexible column, so a long label wraps inside the row instead of
    * pushing the icon out of it. A flex row rather than a plain box: an icon
-   * passed alongside the text lines up on `--pui-control-gap` without a
+   * passed alongside the text lines up on `--forte-control-gap` without a
    * wrapper, exactly as it does inside a Tab. */
   .label {
     display: flex;
     flex: 1 1 auto;
     align-items: center;
-    gap: var(--pui-control-gap);
+    gap: var(--forte-control-gap);
     min-width: 0;
   }
 
@@ -261,7 +261,7 @@
    * `rotate` as its own property, not through the `transform` shorthand, so
    * nothing else the consumer puts on this box has to share one slot with it.
    *
-   * The angle is NOT multiplied by --pui-motion-ok. Under reduced motion the
+   * The angle is NOT multiplied by --forte-motion-ok. Under reduced motion the
    * chevron still has to end up pointing the other way — it is the state, and
    * only the trip between the two states is motion. The duration collapses on
    * its own, so the flip becomes instantaneous rather than absent. */
@@ -270,18 +270,18 @@
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    color: var(--pui-accordion-icon-color);
+    color: var(--forte-accordion-icon-color);
     rotate: 0deg;
     /* Spring easing paired with its own duration token — a shorter one
      * truncates the curve mid-bounce and reads as a stutter. */
     transition:
-      color var(--pui-duration-fast) var(--pui-ease-standard),
-      rotate var(--pui-duration-spring-snappy) var(--pui-ease-spring-snappy);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      rotate var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
   }
 
   .trigger[data-panel-open] .icon {
-    color: var(--pui-accordion-icon-color-open);
-    rotate: var(--pui-accordion-icon-rotate);
+    color: var(--forte-accordion-icon-color-open);
+    rotate: var(--forte-accordion-icon-rotate);
   }
 
   /* Panel ------------------------------------------------------------------
@@ -292,11 +292,11 @@
     box-sizing: border-box;
     height: var(--accordion-panel-height);
     overflow: hidden;
-    color: var(--pui-accordion-panel-color);
-    font-size: var(--pui-accordion-panel-font-size);
-    line-height: var(--pui-line-height-normal);
-    transition: height var(--pui-accordion-duration)
-      var(--pui-accordion-ease);
+    color: var(--forte-accordion-panel-color);
+    font-size: var(--forte-accordion-panel-font-size);
+    line-height: var(--forte-line-height-normal);
+    transition: height var(--forte-accordion-duration)
+      var(--forte-accordion-ease);
   }
 
   .panel[data-starting-style],
@@ -308,33 +308,33 @@
    * what stops the text from looking pasted in at full opacity behind a
    * moving edge. It starts slightly high and drops back: the panel clips it
    * from below, so travelling downward is the direction that reads as being
-   * uncovered. --pui-travel-sm is 0px under reduced motion, leaving the fade
+   * uncovered. --forte-travel-sm is 0px under reduced motion, leaving the fade
    * — which is the part that helps there. */
   .content {
-    padding: 0 var(--pui-accordion-panel-px) var(--pui-accordion-panel-pb);
+    padding: 0 var(--forte-accordion-panel-px) var(--forte-accordion-panel-pb);
     opacity: 1;
     translate: 0 0;
     transition:
-      opacity var(--pui-duration-fast) var(--pui-ease-standard),
-      translate var(--pui-accordion-duration) var(--pui-accordion-ease);
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-accordion-duration) var(--forte-accordion-ease);
   }
 
   .panel[data-starting-style] .content,
   .panel[data-ending-style] .content {
     opacity: 0;
-    translate: 0 calc(-1 * var(--pui-travel-sm));
+    translate: 0 calc(-1 * var(--forte-travel-sm));
   }
 }
 
 /* Forced colors --------------------------------------------------------------
- * In `pretty-ui.a11y`, which is ordered after `pretty-ui.components`, so it
+ * In `forte.a11y`, which is ordered after `forte.components`, so it
  * beats everything above by layer alone — no `!important`, no specificity
  * inflation.
  *
  * What patterns.css already handles, and must not be restated here:
  *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is
  *     the only reliable disabled cue once opacity stops being honoured.
- *   - `.pui-focus-ring:focus-visible` becomes a Highlight outline.
+ *   - `.forte-focus-ring:focus-visible` becomes a Highlight outline.
  *
  * What is accordion-specific: both of the lines that separate rows. Their
  * colour comes from a token, and a token resolves to a colour forced-colors
@@ -347,7 +347,7 @@
  * rotation is geometry, so it survives forced colors untouched and goes on
  * saying which rows are open.
  * ------------------------------------------------------------------------- */
-@layer pretty-ui.a11y {
+@layer forte.a11y {
   @media (forced-colors: active) {
     .item {
       border-color: CanvasText;

@@ -29,7 +29,7 @@ none of that appears in the demo code.
 ## Import
 
 ```tsx
-import { Checkbox } from "@dofortech/pretty-ui";
+import { Checkbox } from "@dofortech/forte-ui";
 ```
 
 ## Examples
@@ -135,12 +135,12 @@ and `form` behave as they would on a native checkbox.
 
 **Motion.** The mark is drawn on rather than faded in: both paths carry
 `pathLength="1"`, and the stylesheet animates `stroke-dashoffset` from `1` to
-`0` over `--pui-checkbox-draw-duration`. That choice matters for reduced
+`0` over `--forte-checkbox-draw-duration`. That choice matters for reduced
 motion. The tick is information — for anyone who cannot rely on the fill colour
 it is the only thing separating on from off — so it must never be animated with
 a travel or scale token that collapses to zero. Under
 `prefers-reduced-motion: reduce` the library only shortens the durations
-(`--pui-duration-normal` drops from 240ms to 120ms), so the mark still appears;
+(`--forte-duration-normal` drops from 240ms to 120ms), so the mark still appears;
 it just draws faster.
 
 Under forced colours, the box paints with `Canvas`/`CanvasText`, a checked or
@@ -159,8 +159,8 @@ element, and an element's own declaration beats an inherited value.
 The three `-hover` values only ever apply on devices that report hover support,
 so a touch device never sticks in a hover colour after a tap.
 
-`tone` reassigns `--pui-checkbox-fill`, `--pui-checkbox-fill-hover` and
-`--pui-checkbox-mark-color`. Inside a `Field.Root`, an invalid field overrides
+`tone` reassigns `--forte-checkbox-fill`, `--forte-checkbox-fill-hover` and
+`--forte-checkbox-mark-color`. Inside a `Field.Root`, an invalid field overrides
 those and the border colours with the danger palette, so a validation failure
 never renders in a brand colour.
 

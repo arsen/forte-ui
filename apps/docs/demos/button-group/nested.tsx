@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, ButtonGroup } from "@dofortech/pretty-ui";
+import { Button, ButtonGroup } from "@dofortech/forte-ui";
 
 const ICON = "size-4 shrink-0";
 

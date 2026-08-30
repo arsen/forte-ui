@@ -21,7 +21,7 @@ already there instead of shoving the rest of the page down.
 ## Import
 
 ```tsx
-import { AspectRatio } from "@dofortech/pretty-ui";
+import { AspectRatio } from "@dofortech/forte-ui";
 ```
 
 ## Built on the property, not the trick
@@ -75,7 +75,7 @@ white.
 
 ### Choosing what survives the crop
 
-`cover` has to throw something away. `--pui-aspect-position` is how you say
+`cover` has to throw something away. `--forte-aspect-position` is how you say
 which something — it is an `object-position` value, and its `50% 50%` default
 is the one choice guaranteed to behead a portrait.
 
@@ -121,9 +121,9 @@ usual reason to want it.
 
 ### A ratio that changes with the layout
 
-`ratio` does not set `--pui-aspect-ratio`. It seeds it: the prop writes
-`--pui-aspect-ratio-seed` as an inline style, and the stylesheet reads that into
-the knob from inside `@layer pretty-ui.components`.
+`ratio` does not set `--forte-aspect-ratio`. It seeds it: the prop writes
+`--forte-aspect-ratio-seed` as an inline style, and the stylesheet reads that into
+the knob from inside `@layer forte.components`.
 
 The indirection exists because a ratio cannot be enumerated the way `fit` or
 `variant` can — there is no `[data-ratio="…"]` rule to write — so the value has
@@ -134,12 +134,12 @@ class beats it:
 
 ```css
 .hero {
-  --pui-aspect-ratio: 3 / 4;
+  --forte-aspect-ratio: 3 / 4;
 }
 
 @media (width >= 48rem) {
   .hero {
-    --pui-aspect-ratio: 16 / 9;
+    --forte-aspect-ratio: 16 / 9;
   }
 }
 ```
@@ -171,7 +171,7 @@ around a caption, or the `<a>` that wraps a whole thumbnail.
 
 <DemoBlock id="aspect-ratio/link" />
 
-A focusable box rings: `AspectRatio` carries `.pui-focus-ring`, which costs a
+A focusable box rings: `AspectRatio` carries `.forte-focus-ring`, which costs a
 plain `<div>` nothing — the class only paints on `:focus-visible`, which a
 non-focusable element never matches. And the component declares no `cursor` at
 all, precisely so that a linked frame keeps the pointer the anchor already
@@ -208,7 +208,7 @@ Two things are still yours:
 
 ## Theming
 
-Every visual decision is a `--pui-aspect-*` custom property.
+Every visual decision is a `--forte-aspect-*` custom property.
 
 <ThemingTable component="AspectRatio" />
 

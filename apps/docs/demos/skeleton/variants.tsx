@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@dofortech/pretty-ui";
+import { Skeleton } from "@dofortech/forte-ui";
 
 const VARIANTS = [
   { variant: "rect", note: "Blocks and thumbnails", className: "h-16 w-28" },

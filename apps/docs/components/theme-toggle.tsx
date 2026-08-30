@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/pretty-ui";
+import { Button } from "@dofortech/forte-ui";
 import { Moon, Sun } from "lucide-react";
 import { ICON } from "./styles";
 
-const STORAGE_KEY = "pui-theme";
+const STORAGE_KEY = "forte-theme";
 
 export type DocTheme = "light" | "dark";
 
@@ -48,7 +48,7 @@ export function getDocumentTheme(): DocTheme {
  * palette reads, so the server output is already right.
  *
  * Icon only, like the two controls either side of it. That moves the whole
- * accessible name into `.pui-visually-hidden` text: with no visible label there
+ * accessible name into `.forte-visually-hidden` text: with no visible label there
  * is nothing for SC 2.5.3 to require a match with, so the name is free to
  * describe the ACTION — which is the useful thing for a control whose glyph
  * shows the current state rather than what pressing it does. `title` carries
@@ -82,14 +82,14 @@ export function ThemeToggle() {
         title="Switch to dark theme"
       >
         <Sun className={ICON} aria-hidden="true" />
-        <span className="pui-visually-hidden">Switch to dark theme</span>
+        <span className="forte-visually-hidden">Switch to dark theme</span>
       </span>
       <span
         className="hidden in-data-[theme=dark]:inline-flex"
         title="Switch to light theme"
       >
         <Moon className={ICON} aria-hidden="true" />
-        <span className="pui-visually-hidden">Switch to light theme</span>
+        <span className="forte-visually-hidden">Switch to light theme</span>
       </span>
     </Button>
   );

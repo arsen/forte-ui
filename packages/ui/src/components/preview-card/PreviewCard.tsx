@@ -169,11 +169,11 @@ const PreviewCardTrigger = React.forwardRef(function PreviewCardTrigger<
       render={render}
       className={clsx(
         render === undefined && styles.trigger,
-        "pui-focus-ring",
-        "pui-link",
+        "forte-focus-ring",
+        "forte-link",
         className,
       )}
-      data-pui="preview-card-trigger"
+      data-forte="preview-card-trigger"
       {...props}
     />
   );
@@ -284,7 +284,7 @@ export interface PreviewCardPopupProps
   /**
    * Additional class name(s) for the positioner element, which owns placement
    * and `z-index`. Use it to re-stack a single card through
-   * `--pui-preview-card-z-index`.
+   * `--forte-preview-card-z-index`.
    */
   positionerClassName?: string;
   /**
@@ -342,7 +342,7 @@ const PreviewCardPopup = React.forwardRef<
     <BasePreviewCard.Portal keepMounted={keepMounted} container={container}>
       <BasePreviewCard.Positioner
         className={clsx(styles.positioner, positionerClassName)}
-        data-pui="preview-card-positioner"
+        data-forte="preview-card-positioner"
         side={side}
         align={align}
         sideOffset={sideOffset}
@@ -356,15 +356,15 @@ const PreviewCardPopup = React.forwardRef<
         positionMethod={positionMethod}
         disableAnchorTracking={disableAnchorTracking}
       >
-        {/* No `.pui-focus-ring` here, unlike `Popover.Popup`: nothing ever
+        {/* No `.forte-focus-ring` here, unlike `Popover.Popup`: nothing ever
           * focuses this element, so a ring on it could only be a lie.
-          * `.pui-hc-surface` carries a transparent border, and `transparent`
+          * `.forte-hc-surface` carries a transparent border, and `transparent`
           * is not preserved in forced-colors mode, so it becomes the visible
           * system-coloured boundary that replaces the stripped shadow. */}
         <BasePreviewCard.Popup
           ref={ref}
-          className={clsx(styles.popup, "pui-hc-surface", className)}
-          data-pui="preview-card-popup"
+          className={clsx(styles.popup, "forte-hc-surface", className)}
+          data-forte="preview-card-popup"
           data-size={size}
           {...props}
         >
@@ -383,7 +383,7 @@ export interface PreviewCardArrowProps
   extends Omit<BasePreviewCard.Arrow.Props, "className"> {
   /**
    * Replaces the built-in wedge. The default SVG inherits the card's colours
-   * through `--pui-preview-card-bg`, so a custom skin usually needs nothing
+   * through `--forte-preview-card-bg`, so a custom skin usually needs nothing
    * here.
    */
   children?: React.ReactNode;
@@ -415,7 +415,7 @@ const PreviewCardArrow = React.forwardRef<
     <BasePreviewCard.Arrow
       ref={ref}
       className={clsx(styles.arrow, className)}
-      data-pui="preview-card-arrow"
+      data-forte="preview-card-arrow"
       {...props}
     >
       {children ?? <ArrowSvg />}
@@ -487,7 +487,7 @@ const PreviewCardViewport = React.forwardRef<
     <BasePreviewCard.Viewport
       ref={ref}
       className={clsx(styles.viewport, className)}
-      data-pui="preview-card-viewport"
+      data-forte="preview-card-viewport"
       {...props}
     />
   );
@@ -526,7 +526,7 @@ const PreviewCardViewport = React.forwardRef<
  * The test is what happens if the surface never appears. A preview card that
  * would be missed is a popover in the wrong component.
  *
- * Styling is driven by `data-*` attributes and `--pui-preview-card-*` custom
+ * Styling is driven by `data-*` attributes and `--forte-preview-card-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[side=top]:...`) without wrapping.
  */

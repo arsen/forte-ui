@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/pretty-ui";
+import { Avatar } from "@dofortech/forte-ui";
 
 const PEOPLE = [
   { name: "Ada Lovelace", src: "/avatars/ada.svg", initials: "AL", status: "Online", tone: "success" },

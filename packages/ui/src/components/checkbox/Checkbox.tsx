@@ -90,7 +90,7 @@ export interface CheckboxProps
  * State is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,
  * `data-indeterminate`, `data-disabled`, `data-readonly`, and the `Field`
  * validity attributes) on both the root and the indicator, and every visual
- * decision is a `--pui-checkbox-*` custom property, so it can be re-skinned
+ * decision is a `--forte-checkbox-*` custom property, so it can be re-skinned
  * from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[indeterminate]:...`) without wrapping.
  */
@@ -108,12 +108,12 @@ export const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
     return (
       <BaseCheckbox.Root
         ref={ref}
-        // `.pui-target` grows the hit area to the 24px SC 2.5.8 floor with an
+        // `.forte-target` grows the hit area to the 24px SC 2.5.8 floor with an
         // absolutely positioned pseudo-element, leaving the painted box at its
         // designed size. The root is not inside a clipping container, so the
         // focus ring stays outset.
-        className={clsx(styles.root, "pui-target", "pui-focus-ring", className)}
-        data-pui="checkbox"
+        className={clsx(styles.root, "forte-target", "forte-focus-ring", className)}
+        data-forte="checkbox"
         data-size={size}
         data-tone={tone}
         {...props}
@@ -126,13 +126,13 @@ export const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
           // transition starts from a rendered box.
           keepMounted
           className={clsx(styles.indicator, indicatorClassName)}
-          data-pui="checkbox-indicator"
+          data-forte="checkbox-indicator"
         >
           {/* Decorative: the state is already carried by the hidden input's
             * `checked` and by `aria-checked` on the root. */}
           <svg
             className={styles.svg}
-            data-pui="checkbox-svg"
+            data-forte="checkbox-svg"
             viewBox="0 0 16 16"
             aria-hidden="true"
             focusable="false"
@@ -218,7 +218,7 @@ export const CheckboxGroup = React.forwardRef<
       // <fieldset> is already a group) can override it.
       role="group"
       className={clsx(styles.group, className)}
-      data-pui="checkbox-group"
+      data-forte="checkbox-group"
       data-orientation={orientation}
       {...props}
     />
