@@ -58,8 +58,34 @@
     --pui-textarea-font-size: var(--pui-font-size-2);
     /** Line height — also the unit the row counts above are measured in */
     --pui-textarea-line-height: var(--pui-line-height-normal);
-    /** Corner radius */
-    --pui-textarea-radius: var(--pui-radius-control);
+    /* Capped, and the cap is the reason this is not just the token. A control
+     * radius is drawn to a box whose text sits on ONE line, in the middle,
+     * where the corner arc is at its widest and clips nothing — so
+     * `data-pui-radius="pill"` asks for `9999px` and an Input is fine. A
+     * textarea's first and last lines sit AT the corners instead, and a
+     * capsule arc eats them: the reported bug is a pill-radius textarea with
+     * its top and bottom rows sliced off mid-glyph.
+     *
+     * The cap is half the height of a ONE-ROW box — the tallest corner that
+     * still puts the first line's centre on the widest part of the arc, which
+     * is exactly where an Input's text sits. So a pill textarea comes out as
+     * round as it can be without losing a row, and derives itself at every
+     * size and density from the same `1lh` the row bounds use.
+     *
+     * `min()` also collapses this to 0 under `data-pui-radius="none"` for
+     * free, and every term carries a unit — a bare `0` would make the whole
+     * function invalid at computed-value time (see the note in tokens.css). */
+    /** Corner radius, capped at half a row so the first line is never clipped */
+    --pui-textarea-radius: min(
+      var(--pui-radius-control),
+      calc(
+        (
+            1lh + 2 * var(--pui-textarea-padding-y) + 2 *
+              var(--pui-textarea-border-width)
+          ) /
+          2
+      )
+    );
     /** Border width */
     --pui-textarea-border-width: 1px;
 
@@ -99,8 +125,8 @@
         var(--pui-textarea-border-width)
     );
     max-block-size: calc(
-      var(--pui-textarea-max-rows) * 1lh + 2 * var(--pui-textarea-padding-y) + 2
-        * var(--pui-textarea-border-width)
+      var(--pui-textarea-max-rows) * 1lh + 2 * var(--pui-textarea-padding-y) +
+        2 * var(--pui-textarea-border-width)
     );
 
     padding-block: var(--pui-textarea-padding-y);

@@ -8325,8 +8325,8 @@
       },
       {
         "name": "--pui-textarea-radius",
-        "value": "var(--pui-radius-control)",
-        "description": "Corner radius",
+        "value": "min( var(--pui-radius-control), calc( ( 1lh + 2 * var(--pui-textarea-padding-y) + 2 * var(--pui-textarea-border-width) ) / 2 ) )",
+        "description": "Corner radius, capped at half a row so the first line is never clipped",
         "part": "root",
         "overrides": []
       },
