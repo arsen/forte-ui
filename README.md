@@ -17,6 +17,70 @@ export function Example() {
 }
 ```
 
+## Getting started
+
+The quick version, for a fresh Next.js (App Router) project. The docs site has
+the [full step-by-step walkthrough](apps/docs/app/getting-started/nextjs/page.mdx)
+at `/getting-started/nextjs`, including why each line is where it is.
+
+### Next.js
+
+```bash
+npx create-next-app@latest my-app --typescript --app --no-tailwind
+cd my-app
+npm install @forte-ui/react
+```
+
+Import the one stylesheet at the root — `app/layout.tsx`:
+
+```tsx
+import "@forte-ui/react/theme.css";
+import "./globals.css";
+```
+
+Set your brand colour in `app/globals.css`:
+
+```css
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+```
+
+Then use components anywhere. They ship with `"use client"` already in place,
+so pages stay server components:
+
+```tsx
+import { Button } from "@forte-ui/react";
+
+export default function Home() {
+  return <Button>It works</Button>;
+}
+```
+
+### Next.js + Tailwind v4
+
+Same install, but keep Tailwind in `create-next-app`, and replace
+`app/globals.css` with:
+
+```css
+@import "@forte-ui/react/tailwind.css";
+@import "tailwindcss";
+@import "@forte-ui/react/theme.css";
+
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+```
+
+The order is load-bearing: the bridge's first line pins the cascade-layer
+order, so it must come before `tailwindcss` (or utilities lose to component
+CSS) *and* before `theme.css` (or Tailwind's Preflight blanks the components).
+The bridge re-points Tailwind's theme at the forte-ui tokens — `bg-primary`,
+`gap-5`, `rounded-control` — and deletes the stock scales, so `bg-slate-800`
+fails at build time instead of shipping a colour that ignores your theme.
+
+A walkthrough for Vite-based React apps is planned.
+
 ## Theming
 
 One variable re-skins everything:

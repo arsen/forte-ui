@@ -28,6 +28,7 @@ const NAV: NavGroup[] = [
     title: "Getting started",
     items: [
       { title: "Introduction", href: "/" },
+      { title: "Next.js", href: "/getting-started/nextjs" },
       { title: "Theme Studio", href: "/theme" },
     ],
   },

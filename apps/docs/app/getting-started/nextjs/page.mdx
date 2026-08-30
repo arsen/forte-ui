@@ -1,0 +1,276 @@
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Next.js",
+  description:
+    "Step-by-step setup of @forte-ui/react in a brand-new Next.js App Router project — with and without Tailwind.",
+};
+
+# Getting started with Next.js
+
+This page walks a brand-new Next.js project (App Router) from `create-next-app` to a themed, rendering component — first without Tailwind, then with it. The two paths differ only in how the CSS is wired up; the components, the theming, and the TypeScript story are identical.
+
+Every component ships with `"use client"` already in place, so your pages and layouts stay server components and just import from `@forte-ui/react` — no provider, no registry, no configuration file.
+
+## Without Tailwind
+
+### 1. Create the project
+
+```bash
+npx create-next-app@latest my-app --typescript --app --no-tailwind
+cd my-app
+```
+
+Any package manager works — `pnpm create next-app` and `yarn create next-app` take the same flags.
+
+### 2. Install the library
+
+```bash
+npm install @forte-ui/react
+```
+
+React 18 or 19 and the matching `react-dom` are the only required peer dependencies. [Base UI](https://base-ui.com) comes with the package.
+
+### 3. Import the stylesheet
+
+One stylesheet, imported once at the root. In `app/layout.tsx`:
+
+```tsx
+import "@forte-ui/react/theme.css";
+import "./globals.css";
+```
+
+`theme.css` carries the whole system — the tokens, the colour ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
+
+### 4. Seed the theme
+
+Replace `app/globals.css`. The scaffold's `--background` / `--foreground` pair hardcodes exactly the two colours the theme should own:
+
+```css
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+
+body {
+  margin: 0;
+  background: var(--forte-color-background);
+  color: var(--forte-color-foreground);
+  font-family: var(--forte-font-sans);
+}
+```
+
+The seed is the theme: all twelve accent steps, the brand-tinted neutrals, and a readable text colour for solid fills derive from it — in both light and dark mode, with no JavaScript and no build step. The `body` rule is yours to keep or change; the library styles its components, never your page.
+
+### 5. Render a component
+
+`app/page.tsx` — still a server component:
+
+```tsx
+import { Button } from "@forte-ui/react";
+
+export default function Home() {
+  return (
+    <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}>
+      <Button>It works</Button>
+    </main>
+  );
+}
+```
+
+```bash
+npm run dev
+```
+
+That is the whole integration: one install, one CSS import, one variable.
+
+### 6. Light and dark
+
+Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, or to drive a toggle, set `data-theme` on the root element:
+
+```tsx
+<html lang="en" data-theme="dark">
+```
+
+Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming). If you would rather not write the toggle plumbing yourself, [next-themes drives this attribute directly](#dark-mode-with-next-themes).
+
+## With Tailwind
+
+The package ships a bridge stylesheet for **Tailwind v4** that re-points Tailwind's theme at the forte-ui tokens, so `bg-primary` *is* `--forte-color-primary` and every utility follows the seed, dark mode and theme scopes exactly like the components do.
+
+### 1. Create the project and install
+
+```bash
+npx create-next-app@latest my-app --typescript --app --tailwind
+cd my-app
+npm install @forte-ui/react
+```
+
+`create-next-app` scaffolds Tailwind v4, which is the version the bridge targets.
+
+### 2. Wire the three stylesheets
+
+Replace `app/globals.css` entirely:
+
+```css
+@import "@forte-ui/react/tailwind.css";
+@import "tailwindcss";
+@import "@forte-ui/react/theme.css";
+
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+```
+
+Everything the scaffold put there goes — its `@theme inline` block and `--background` / `--foreground` pair are precisely the hardcoded colours the seed replaces.
+
+Two orderings in that file are load-bearing:
+
+- **The bridge before `tailwindcss`.** The bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, and a layer order is fixed at its first appearance. That statement is what keeps Tailwind's Preflight (in `base`) from blanking the components, and what keeps `utilities` able to beat them — `p-4` on a `Button` wins because of it. Import Tailwind first and its own layer statement wins the race instead.
+- **`theme.css` after the bridge — here, not in `layout.tsx`.** `theme.css` also declares the `forte` layer. Import it in `layout.tsx` above `globals.css` and `forte` gets pinned before `base`, at which point Preflight's `button { background: transparent }` and friends beat every component by layer order alone.
+
+`app/layout.tsx` keeps importing only `./globals.css`.
+
+### 3. Style with token utilities
+
+Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. That is deliberate: a hardcoded colour would survive review and then ignore the seed, dark mode and every theme scope. Every utility that does compile responds to all of them:
+
+```tsx
+import { Button } from "@forte-ui/react";
+
+export default function Home() {
+  return (
+    <main className="grid min-h-dvh place-items-center bg-background text-foreground">
+      <div className="flex flex-col items-start gap-5 rounded-surface border border-border bg-panel p-surface shadow-2">
+        <h1 className="text-5 font-semibold">forte-ui + Tailwind</h1>
+        <p className="text-2 text-foreground-muted">
+          Utilities and components, one theme.
+        </p>
+        <Button>It works</Button>
+      </div>
+    </main>
+  );
+}
+```
+
+The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind) page.
+
+### 4. Merge class lists with `cn`
+
+Optional, for when you compose class lists conditionally. The package ships a pre-configured merger; it needs `tailwind-merge` installed (an optional peer dependency — apps that skip this subpath never pay for it):
+
+```bash
+npm install tailwind-merge
+```
+
+```ts
+import { cn } from "@forte-ui/react/cn";
+
+cn("p-4", isWide && "p-6"); // -> "p-6" when isWide holds
+```
+
+A stock `twMerge` does not know the bridge's renamed scales — it parses `text-2` as a text *colour* and silently drops sizes. The shipped `cn` (and `createCn`, for apps that add their own theme keys) is covered on the [Tailwind](/customization/tailwind#merging-classes-cn) page.
+
+## Dark mode with next-themes
+
+forte-ui needs no theming library — but if you already reach for [next-themes](https://github.com/pacocoursey/next-themes) for the persistence and the no-flash script, the two compose directly, because next-themes' whole job is writing an attribute on `<html>` and `data-theme` is the attribute forte-ui reads. This works identically on both paths above.
+
+```bash
+npm install next-themes
+```
+
+The provider is a client component, so give it its own file — `app/providers.tsx`:
+
+```tsx
+"use client";
+
+import { ThemeProvider } from "next-themes";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider attribute="data-theme" disableTransitionOnChange>
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+`attribute="data-theme"` is the one setting that matters: next-themes' default is a `class="dark"` on the root element, which forte-ui does not read. The defaults you are *not* overriding already match — `defaultTheme="system"` mirrors what forte-ui does with no attribute at all, so adding the provider changes nothing until someone actually toggles. `disableTransitionOnChange` is optional but worth keeping: without it, every colour transition in the page fires at once on switch.
+
+Wrap the app in `app/layout.tsx`, and put `suppressHydrationWarning` on `<html>` — next-themes sets the attribute from its pre-hydration script, so the server HTML legitimately differs on that one element:
+
+```tsx
+<html lang="en" suppressHydrationWarning>
+  <body>
+    <Providers>{children}</Providers>
+  </body>
+</html>
+```
+
+A toggle is then `useTheme` in any client component:
+
+```tsx
+"use client";
+
+import { useTheme } from "next-themes";
+import { Button } from "@forte-ui/react";
+
+export function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+
+  return (
+    <Button
+      variant="ghost"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+    >
+      Toggle theme
+    </Button>
+  );
+}
+```
+
+<Callout kind="note">
+  `resolvedTheme` is `undefined` until the component mounts — the server cannot
+  know the visitor's stored choice. A label or icon that *names* the current
+  theme has to wait for mount (next-themes' README shows the `mounted` gate);
+  a theme-neutral label like the one above sidesteps the problem.
+</Callout>
+
+On the Tailwind path, nothing more is needed for colours: every token utility resolves through `light-dark()`, so `bg-panel` follows the toggle by itself and you will rarely write a `dark:` variant at all. If you do want one — for a non-colour tweak that differs per theme — note that Tailwind v4's stock `dark` variant keys on `prefers-color-scheme`, which ignores the toggle. Re-key it on the attribute, after the bridge import:
+
+```css
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+```
+
+## Loading a font
+
+If you load a font with `next/font`, expose it as a variable and point `--forte-font-sans` at it:
+
+```tsx
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+// on the root element:
+<html lang="en" className={inter.variable}>
+```
+
+```css
+:root {
+  --forte-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+Components inherit your page's font wherever inheritance reaches; the token is how portalled surfaces — tooltips, menus, dialogs — get the same font without trusting whatever `body` happens to declare.
+
+## Where next
+
+- [Theming](/customization/theming) — the seed envelope, the secondary seed, neutral tint, and scoped themes.
+- [Presets](/customization/presets) — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
+- [Styling components](/customization/styling) — parts, states, and per-component knobs.
+- [Theme Studio](/theme) — pick a seed visually and copy the CSS out.
+
+<Callout kind="note">
+  Nothing above is Next.js-specific beyond the file names — the same two (or
+  three) CSS imports work in any bundler that handles CSS imports. A dedicated
+  Vite walkthrough is planned.
+</Callout>
