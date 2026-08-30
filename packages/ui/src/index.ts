@@ -271,6 +271,19 @@ export type { FormProps, FormValidationMode } from "./components/form";
 export { Input } from "./components/input";
 export type { InputProps, InputSize, InputVariant } from "./components/input";
 
+export { InputGroup } from "./components/input-group";
+export type {
+  InputGroupSize,
+  InputGroupVariant,
+  InputGroupAddonAlign,
+  InputGroupRootProps,
+  InputGroupInputProps,
+  InputGroupTextareaProps,
+  InputGroupAddonProps,
+  InputGroupTextProps,
+  InputGroupButtonProps,
+} from "./components/input-group";
+
 export { Menu } from "./components/menu";
 export type {
   MenuItemTone,
