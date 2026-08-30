@@ -1,6 +1,6 @@
 "use client";
 
-import { ProgressCircle } from "@dofortech/forte-ui";
+import { ProgressCircle } from "@forte-ui/react";
 
 const RINGS = [
   { value: 24, tone: "primary", label: "Downloading" },

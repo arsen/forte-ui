@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Field, Slider } from "@dofortech/forte-ui";
+import { Field, Slider } from "@forte-ui/react";
 
 const column = "grid gap-5";
 

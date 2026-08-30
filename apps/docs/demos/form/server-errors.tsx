@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Field, Form, Input } from "@dofortech/forte-ui";
+import { Button, Field, Form, Input } from "@forte-ui/react";
 
 /** Stands in for the request. Anything but "free@example.com" is accepted. */
 async function signUp(

@@ -1,7 +1,7 @@
 /**
  * forte-ui — the one stylesheet a consumer needs.
  *
- *   import "@dofortech/forte-ui/theme.css";
+ *   import "@forte-ui/react/theme.css";
  *
  * Import it ONCE, at the root of your app, before any component. It brings in
  * the cascade-layer declaration, the registered custom properties, the colour

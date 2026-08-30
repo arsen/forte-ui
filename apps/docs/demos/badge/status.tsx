@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@dofortech/forte-ui";
+import { Badge } from "@forte-ui/react";
 
 const STATES = [
   { tone: "success", label: "Operational" },

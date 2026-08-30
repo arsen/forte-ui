@@ -1,6 +1,6 @@
 "use client";
 
-import { PreviewCard } from "@dofortech/forte-ui";
+import { PreviewCard } from "@forte-ui/react";
 
 /**
  * A link long enough to wrap. Narrow the frame until it breaks across two

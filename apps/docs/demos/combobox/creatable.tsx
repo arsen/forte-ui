@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Combobox, Dialog, Field, Input } from "@dofortech/forte-ui";
+import { Button, Combobox, Dialog, Field, Input } from "@forte-ui/react";
 
 interface LabelItem {
   /** Set on the synthetic "Create …" row only; holds the pending name. */

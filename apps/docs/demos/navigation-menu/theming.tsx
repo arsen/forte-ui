@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { NavigationMenu } from "@dofortech/forte-ui";
+import { NavigationMenu } from "@forte-ui/react";
 
 const links = ["Overview", "Integrations", "Changelog"];
 

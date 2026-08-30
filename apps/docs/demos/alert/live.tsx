@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Alert, Button } from "@dofortech/forte-ui";
+import { Alert, Button } from "@forte-ui/react";
 
 export default function AlertLive() {
   const [result, setResult] = React.useState<"none" | "saved" | "failed">("none");

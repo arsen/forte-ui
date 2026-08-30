@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs } from "@dofortech/forte-ui";
+import { Tabs } from "@forte-ui/react";
 
 export default function TabsVertical() {
   return (

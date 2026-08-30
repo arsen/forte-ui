@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@dofortech/forte-ui";
+import { ScrollArea } from "@forte-ui/react";
 
 const REGIONS = [
   ["us-east-1", "N. Virginia"],

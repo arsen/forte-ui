@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Separator } from "@dofortech/forte-ui";
+import { Separator } from "@forte-ui/react";
 
 const panel =
   "w-full max-w-[30rem] rounded-surface border border-border bg-panel p-4";

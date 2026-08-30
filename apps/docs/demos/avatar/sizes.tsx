@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 const SIZES = ["xs", "sm", "md", "lg", "xl"] as const;
 

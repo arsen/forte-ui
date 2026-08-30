@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/forte-ui";
+import { AspectRatio } from "@forte-ui/react";
 
 /* `cover` has to throw something away; `--forte-aspect-position` is how you say
  * WHICH something. The default centres the crop, which is the one choice

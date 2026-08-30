@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, DatePicker, Popover } from "@dofortech/forte-ui";
+import { Button, DatePicker, Popover } from "@forte-ui/react";
 
 export default function DatePickerFooterDemo() {
   return (

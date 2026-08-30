@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Field, Input, Popover } from "@dofortech/forte-ui";
+import { Button, Field, Input, Popover } from "@forte-ui/react";
 
 export default function PopoverForm() {
   const [name, setName] = React.useState("Weekly digest");

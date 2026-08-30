@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { DatePicker } from "@dofortech/forte-ui";
+import { DatePicker } from "@forte-ui/react";
 
 const TODAY = new Date();
 const HORIZON = new Date(TODAY.getFullYear(), TODAY.getMonth() + 3, 0);

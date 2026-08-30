@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Toggle, ToggleGroup } from "@dofortech/forte-ui";
+import { Toggle, ToggleGroup } from "@forte-ui/react";
 
 const COLUMNS = [
   { value: "status", label: "Status" },

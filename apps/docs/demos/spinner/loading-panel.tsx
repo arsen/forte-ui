@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Spinner } from "@dofortech/forte-ui";
+import { Button, Spinner } from "@forte-ui/react";
 
 const ROWS = ["INV-2043 — £1,200.00", "INV-2044 — £340.00", "INV-2045 — £2,780.00"];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Select } from "@dofortech/forte-ui";
+import { Field, Select } from "@forte-ui/react";
 
 const REGIONS = {
   "eu-west-1": "Europe (Ireland)",

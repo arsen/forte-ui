@@ -16,7 +16,7 @@ forte-ui works without Tailwind. If you do use Tailwind v4, the package ships a 
 Import the bridge in the stylesheet that imports Tailwind, **before** Tailwind itself:
 
 ```css
-@import "@dofortech/forte-ui/tailwind.css";
+@import "@forte-ui/react/tailwind.css";
 @import "tailwindcss";
 ```
 
@@ -61,7 +61,7 @@ The part markers work the same way from a parent — `[&_[data-forte=select-trig
 If you compose class lists conditionally, use the pre-configured merger the package ships:
 
 ```ts
-import { cn } from "@dofortech/forte-ui/cn";
+import { cn } from "@forte-ui/react/cn";
 
 cn("p-4", isWide && "p-6"); // -> "p-6" when isWide holds
 ```
@@ -71,7 +71,7 @@ A stock `twMerge` mishandles the bridge's renamed scales — it does not know `p
 If your app adds its own `@theme` keys, extend rather than rebuild — `createCn` appends your names beside the library's instead of replacing them:
 
 ```ts
-import { createCn } from "@dofortech/forte-ui/cn";
+import { createCn } from "@forte-ui/react/cn";
 
 export const cn = createCn({
   extend: { theme: { spacing: ["header"], animate: ["reveal"] } },

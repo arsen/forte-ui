@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Breadcrumb } from "@dofortech/forte-ui";
+import { Breadcrumb } from "@forte-ui/react";
 import { ChevronsRight } from "lucide-react";
 
 const CRUMBS = ["Home", "Docs", "Breadcrumb"];

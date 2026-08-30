@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Calendar } from "@dofortech/forte-ui";
+import { Calendar } from "@forte-ui/react";
 
 export default function CalendarMultiple() {
   const [days, setDays] = React.useState<Date[]>([]);

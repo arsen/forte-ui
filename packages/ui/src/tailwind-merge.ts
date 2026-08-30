@@ -2,7 +2,7 @@
  * forte-ui × tailwind-merge — the config the Tailwind bridge makes necessary.
  * ---------------------------------------------------------------------------
  * tailwind-merge ships knowing Tailwind's DEFAULT theme, and
- * `@dofortech/forte-ui/tailwind.css` replaced most of it. A class it does not
+ * `@forte-ui/react/tailwind.css` replaced most of it. A class it does not
  * recognise is not an error — it is simply never merged, so two competing
  * values both survive and the cascade decides. Its stock validators expect
  * t-shirt sizes (`rounded-md`) or bare numbers (`p-4`), and the bridge says
@@ -21,7 +21,7 @@
  * Usage:
  *
  *   import { extendTailwindMerge } from "tailwind-merge";
- *   import { tailwindMergeConfig } from "@dofortech/forte-ui/tailwind-merge";
+ *   import { tailwindMergeConfig } from "@forte-ui/react/tailwind-merge";
  *
  *   export const twMerge = extendTailwindMerge(tailwindMergeConfig);
  *

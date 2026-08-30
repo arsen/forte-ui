@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio, type AspectRatioPreset } from "@dofortech/forte-ui";
+import { AspectRatio, type AspectRatioPreset } from "@forte-ui/react";
 
 /* The seven names, with the shape each one stands for. Written out rather than
  * imported so the demo shows what a reader gets from the prop. */

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { NavList } from "@dofortech/forte-ui";
+import { NavList } from "@forte-ui/react";
 
 /* In an app, `active` comes from the router (see the routing example on this
  * page). The demo keeps it in state so the rows are clickable without

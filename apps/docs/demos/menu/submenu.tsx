@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "@dofortech/forte-ui";
+import { Menu } from "@forte-ui/react";
 
 export default function MenuSubmenu() {
   return (

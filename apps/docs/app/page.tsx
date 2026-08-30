@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 import { HeroThemer } from "@/components/home/hero-themer";
 import { CodeBlock } from "@/components/demo/code-block";
 import { Showcase } from "@/components/home/showcase";
@@ -10,8 +10,8 @@ const THEME_SNIPPET = `:root {
   --forte-accent-seed: #6d43d4;
 }`;
 
-const USAGE_SNIPPET = `import "@dofortech/forte-ui/theme.css";
-import { Button, Dialog } from "@dofortech/forte-ui";
+const USAGE_SNIPPET = `import "@forte-ui/react/theme.css";
+import { Button, Dialog } from "@forte-ui/react";
 
 export function Example() {
   return <Button tone="danger">Delete</Button>;
@@ -145,7 +145,7 @@ export default function HomePage() {
 
       <section className={cn(SECTION, REVEAL)}>
         <h2 className={H2}>Get started</h2>
-        <CodeBlock code="npm install @dofortech/forte-ui" lang="bash" />
+        <CodeBlock code="npm install @forte-ui/react" lang="bash" />
         <CodeBlock code={USAGE_SNIPPET} lang="tsx" />
       </section>
     </div>

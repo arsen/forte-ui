@@ -125,9 +125,9 @@ to assistive technology goes in a `.forte-visually-hidden` span.
 ## Verifying
 
 ```bash
-pnpm --filter @dofortech/forte-ui tokens          # regenerate generated CSS
-pnpm --filter @dofortech/forte-ui check:contrast  # WCAG harness over the ramps
-pnpm --filter @dofortech/forte-ui typecheck
+pnpm --filter @forte-ui/react tokens          # regenerate generated CSS
+pnpm --filter @forte-ui/react check:contrast  # WCAG harness over the ramps
+pnpm --filter @forte-ui/react typecheck
 ```
 
 `check:contrast` sweeps ~119k in-gamut seeds and enforces AA on every pair the
@@ -144,7 +144,7 @@ This list is hand-maintained prose and can drift. The generated, authoritative
 inventory is [`docs-data/tokens.json`](docs-data/tokens.json) — every `--forte-*`
 declaration in `src/styles/*.css` with its default, every overriding selector
 (presets, dark mode, forced colours), and its `@property` registration where
-one exists. `pnpm --filter @dofortech/forte-ui docgen` rebuilds it. When this
+one exists. `pnpm --filter @forte-ui/react docgen` rebuilds it. When this
 list and that file disagree, the file is right; fix the list.
 
 **accent** (13)

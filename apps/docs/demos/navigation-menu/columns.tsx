@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/forte-ui";
+import { NavigationMenu } from "@forte-ui/react";
 
 const links = [
   { title: "Quick start", description: "Install the package and render a button." },

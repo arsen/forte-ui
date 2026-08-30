@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Menu, Menubar } from "@dofortech/forte-ui";
+import { Menu, Menubar } from "@forte-ui/react";
 
 export default function MenubarTheming() {
   return (

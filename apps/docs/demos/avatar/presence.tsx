@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 const PEOPLE = [
   { name: "Ada Lovelace", src: "/avatars/ada.svg", initials: "AL", status: "Online", tone: "success" },

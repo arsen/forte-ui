@@ -1,6 +1,6 @@
 /**
  * GENERATED FILE — do not edit by hand.
- * Regenerate with:  pnpm --filter @dofortech/forte-ui-docs toc
+ * Regenerate with:  pnpm --filter @forte-ui/docs toc
  *
  * The h2/h3 headings of every MDX page, keyed by route, so the "On this page"
  * rail can be server-rendered from a layout that cannot see the page. It is a

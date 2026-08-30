@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import theming from "@dofortech/forte-ui/docs-data/theming.json";
+import theming from "@forte-ui/react/docs-data/theming.json";
 import { cn } from "@/lib/cn";
 import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Switch } from "@dofortech/forte-ui";
+import { Button, Switch } from "@forte-ui/react";
 
 // The seed only works on an element carrying `data-forte-theme` (or the
 // `.forte-theme` class) — the library re-derives its ramps on that selector.

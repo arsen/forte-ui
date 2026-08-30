@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { PreviewCard } from "@dofortech/forte-ui";
+import { PreviewCard } from "@forte-ui/react";
 
 export default function PreviewCardMedia() {
   return (

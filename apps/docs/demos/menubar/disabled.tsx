@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Menubar } from "@dofortech/forte-ui";
+import { Menu, Menubar } from "@forte-ui/react";
 
 export default function MenubarDisabled() {
   return (

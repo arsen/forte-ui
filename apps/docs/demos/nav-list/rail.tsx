@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { NavList } from "@dofortech/forte-ui";
+import { NavList } from "@forte-ui/react";
 
 const ITEMS = [
   { title: "Overview", href: "/project" },

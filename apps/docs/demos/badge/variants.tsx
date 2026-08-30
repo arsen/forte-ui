@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@dofortech/forte-ui";
+import { Badge } from "@forte-ui/react";
 
 const VARIANTS = ["soft", "solid", "outline", "ghost"] as const;
 const TONES = [

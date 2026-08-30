@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea, Tabs } from "@dofortech/forte-ui";
+import { ScrollArea, Tabs } from "@forte-ui/react";
 
 const SECTIONS = [
   ["overview", "Overview", "Deployed 4 minutes ago from main."],

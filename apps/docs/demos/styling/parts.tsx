@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 // Plain, unlayered CSS: it beats the library's `@layer forte.components`
 // regardless of specificity. `data-forte` and the `data-*` state attributes are

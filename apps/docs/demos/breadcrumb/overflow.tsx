@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb, type BreadcrumbOverflow } from "@dofortech/forte-ui";
+import { Breadcrumb, type BreadcrumbOverflow } from "@forte-ui/react";
 
 const TRAIL = [
   "Workspace",

@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio, type AspectRatioFit } from "@dofortech/forte-ui";
+import { AspectRatio, type AspectRatioFit } from "@forte-ui/react";
 
 /* A tall image in a wide box: the mismatch is the point, because with matching
  * ratios every value of `fit` looks identical. */

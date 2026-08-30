@@ -1,7 +1,7 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
-import { Button, ButtonGroup } from "@dofortech/forte-ui";
+import { Button, ButtonGroup } from "@forte-ui/react";
 
 const ICON = "size-4 shrink-0";
 

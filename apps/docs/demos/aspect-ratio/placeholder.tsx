@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AspectRatio, Button } from "@dofortech/forte-ui";
+import { AspectRatio, Button } from "@forte-ui/react";
 
 /**
  * What the box is actually for.

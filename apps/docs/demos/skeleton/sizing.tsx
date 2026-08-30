@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Skeleton } from "@dofortech/forte-ui";
+import { Button, Skeleton } from "@forte-ui/react";
 
 const NAME = "Adaobi Okonkwo";
 

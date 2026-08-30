@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, Switch } from "@dofortech/forte-ui";
+import { Button, Dialog, Switch } from "@forte-ui/react";
 
 const row = "flex items-center gap-3";
 

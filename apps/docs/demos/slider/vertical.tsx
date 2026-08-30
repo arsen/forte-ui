@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Slider } from "@dofortech/forte-ui";
+import { Slider } from "@forte-ui/react";
 
 const row = "flex items-start gap-6";
 

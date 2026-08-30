@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio } from "@dofortech/forte-ui";
+import { AspectRatio } from "@forte-ui/react";
 
 /**
  * The case the padding-bottom technique cannot express at all.

@@ -1,6 +1,6 @@
 "use client";
 
-import { Breadcrumb } from "@dofortech/forte-ui";
+import { Breadcrumb } from "@forte-ui/react";
 
 /* The shape a real app writes: one array, one map. `React.Children.toArray`
  * flattens what a `.map()` returns, so the generated crumbs get their

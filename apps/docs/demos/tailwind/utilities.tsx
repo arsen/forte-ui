@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Field, Input } from "@dofortech/forte-ui";
+import { Button, Field, Input } from "@forte-ui/react";
 
 // Every class below resolves to a forte-ui token through the bridge:
 // gap-4 is --forte-space-4, p-surface is --forte-surface-p, bg-panel is

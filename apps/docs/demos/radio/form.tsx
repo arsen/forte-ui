@@ -8,7 +8,7 @@ import {
   Form,
   Radio,
   RadioGroup,
-} from "@dofortech/forte-ui";
+} from "@forte-ui/react";
 
 const SEATS = [
   { value: "1", label: "Just me" },

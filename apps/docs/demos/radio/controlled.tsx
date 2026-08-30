@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Field, Radio, RadioGroup } from "@dofortech/forte-ui";
+import { Field, Radio, RadioGroup } from "@forte-ui/react";
 
 const CADENCES = [
   { value: "realtime", label: "As it happens", note: "Roughly 40 emails a day." },

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Combobox, Spinner } from "@dofortech/forte-ui";
+import { Combobox, Spinner } from "@forte-ui/react";
 
 interface Person {
   id: string;

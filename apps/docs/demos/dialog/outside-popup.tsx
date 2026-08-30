@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog } from "@dofortech/forte-ui";
+import { Button, Dialog } from "@forte-ui/react";
 
 const ASSETS = [
   { name: "hero-wide.png", size: "2400 × 1260", weight: "812 KB" },

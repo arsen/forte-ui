@@ -21,7 +21,7 @@ Two pieces make one: `Toast.Provider` near the root of the app, and `useToast()`
 ## Import
 
 ```tsx
-import { Toast, useToast } from "@dofortech/forte-ui";
+import { Toast, useToast } from "@forte-ui/react";
 ```
 
 ## Setup
@@ -29,7 +29,7 @@ import { Toast, useToast } from "@dofortech/forte-ui";
 Mount the provider once, above everything that might raise a toast:
 
 ```tsx
-import { Toast } from "@dofortech/forte-ui";
+import { Toast } from "@forte-ui/react";
 
 export default function App({ children }) {
   return (
@@ -177,7 +177,7 @@ Plenty of the things worth reporting do not happen inside a component: a fetch w
 
 ```ts
 // toaster.ts
-import { Toast } from "@dofortech/forte-ui";
+import { Toast } from "@forte-ui/react";
 export const toaster = Toast.createManager();
 
 // api.ts — no React anywhere

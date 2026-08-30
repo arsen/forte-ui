@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 // Knobs are custom properties, and they belong on the component's own
 // element — in an app you would set them in a class; a demo has only `style`.

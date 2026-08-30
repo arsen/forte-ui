@@ -9,7 +9,7 @@ import {
   Toggle,
   ToggleGroup,
   type Rgba,
-} from "@dofortech/forte-ui";
+} from "@forte-ui/react";
 import {
   hexToOklch,
   oklchToHex,

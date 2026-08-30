@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   // The library ships compiled ESM + CSS, but transpiling keeps Next's CSS
   // handling consistent for its side-effect stylesheet imports.
-  transpilePackages: ["@dofortech/forte-ui"],
+  transpilePackages: ["@forte-ui/react"],
   turbopack: {
     // Stated, not inferred.
     //

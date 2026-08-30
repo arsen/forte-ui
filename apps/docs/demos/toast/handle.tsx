@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Toast, useToast, type ToastHandle } from "@dofortech/forte-ui";
+import { Button, Toast, useToast, type ToastHandle } from "@forte-ui/react";
 
 function Upload() {
   const toast = useToast();

@@ -1,7 +1,7 @@
 "use client";
 
 import { Circle, Minus, MousePointer2, Square, Type } from "lucide-react";
-import { Toggle, ToggleGroup, Toolbar } from "@dofortech/forte-ui";
+import { Toggle, ToggleGroup, Toolbar } from "@forte-ui/react";
 
 const ICON = "size-4 shrink-0";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@dofortech/forte-ui";
+import { Progress } from "@forte-ui/react";
 
 const SIZES = [
   { size: "sm", thickness: "4px" },

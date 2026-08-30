@@ -1,6 +1,6 @@
 "use client";
 
-import { Resizable } from "@dofortech/forte-ui";
+import { Resizable } from "@forte-ui/react";
 
 /* `autoSaveId` writes the layout to localStorage and reads it back on the next
  * mount. Drag the divider, reload the page, and the split is where you left

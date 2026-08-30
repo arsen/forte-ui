@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 const SIZES = ["sm", "md", "lg", "xl"] as const;
 const SHAPES = ["circle", "rounded", "square"] as const;

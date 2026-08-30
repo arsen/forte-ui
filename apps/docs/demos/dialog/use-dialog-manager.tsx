@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog } from "@dofortech/forte-ui";
+import { Button, Dialog } from "@forte-ui/react";
 
 // Created at module scope, outside React. In an app this lives in its own file
 // — `export const dialogs = Dialog.createManager()` — and anything that is not

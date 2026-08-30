@@ -1,6 +1,6 @@
 "use client";
 
-import { ProgressCircle } from "@dofortech/forte-ui";
+import { ProgressCircle } from "@forte-ui/react";
 
 const SIZES = [
   { size: "sm", note: "2.5rem" },

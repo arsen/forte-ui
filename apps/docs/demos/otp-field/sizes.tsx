@@ -1,6 +1,6 @@
 "use client";
 
-import { OTPField } from "@dofortech/forte-ui";
+import { OTPField } from "@forte-ui/react";
 
 const SIZES = ["sm", "md", "lg"] as const;
 

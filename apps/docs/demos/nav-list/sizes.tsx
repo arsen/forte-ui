@@ -1,6 +1,6 @@
 "use client";
 
-import { NavList, type NavListSize } from "@dofortech/forte-ui";
+import { NavList, type NavListSize } from "@forte-ui/react";
 
 const SIZES: NavListSize[] = ["sm", "md", "lg"];
 

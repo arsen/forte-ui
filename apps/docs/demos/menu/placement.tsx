@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "@dofortech/forte-ui";
+import { Menu } from "@forte-ui/react";
 
 /* Every side Base UI accepts. The last two are the LOGICAL spellings of the two
  * above them — but they mirror only when the app mounts Base UI's

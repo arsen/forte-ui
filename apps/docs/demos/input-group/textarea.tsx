@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ArrowUp } from "lucide-react";
-import { InputGroup } from "@dofortech/forte-ui";
+import { InputGroup } from "@forte-ui/react";
 
 const LIMIT = 280;
 

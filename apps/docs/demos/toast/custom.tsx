@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Toast, useToast } from "@dofortech/forte-ui";
+import { Button, Toast, useToast } from "@forte-ui/react";
 
 const PEOPLE = [
   { initials: "MO", name: "Maya Okonkwo", message: "Can you take a look at the migration?" },

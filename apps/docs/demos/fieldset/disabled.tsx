@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, Field, Fieldset, Input, Switch } from "@dofortech/forte-ui";
+import { Checkbox, Field, Fieldset, Input, Switch } from "@forte-ui/react";
 
 export default function FieldsetDisabled() {
   return (

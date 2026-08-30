@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Toggle } from "@dofortech/forte-ui";
+import { Toggle } from "@forte-ui/react";
 
 function Icon({ children }: { children: ReactNode }) {
   return (

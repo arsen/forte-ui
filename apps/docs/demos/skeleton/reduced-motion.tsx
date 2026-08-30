@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@dofortech/forte-ui";
+import { Skeleton } from "@forte-ui/react";
 
 /* `data-forte-motion` is the same switch the demo frame's reduced-motion toggle
  * flips, and it works on any element — so the right-hand column below is

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 function Icon({ children }: { children: ReactNode }) {
   return (

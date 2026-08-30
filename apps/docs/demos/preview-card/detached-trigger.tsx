@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, PreviewCard } from "@dofortech/forte-ui";
+import { Button, PreviewCard } from "@forte-ui/react";
 
 type Doc = { id: string; title: string; note: string };
 

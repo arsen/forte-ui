@@ -1,6 +1,6 @@
 "use client";
 
-import { Collapsible } from "@dofortech/forte-ui";
+import { Collapsible } from "@forte-ui/react";
 
 const width = "w-full max-w-lg";
 

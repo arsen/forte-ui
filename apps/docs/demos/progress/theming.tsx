@@ -1,7 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { Progress, ProgressCircle } from "@dofortech/forte-ui";
+import { Progress, ProgressCircle } from "@forte-ui/react";
 
 /* Every visual decision is a custom property on the component's own root, so a
  * restyle is a `style` object rather than a new variant. They stay a `style`

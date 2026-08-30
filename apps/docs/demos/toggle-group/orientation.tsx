@@ -1,6 +1,6 @@
 "use client";
 
-import { Toggle, ToggleGroup } from "@dofortech/forte-ui";
+import { Toggle, ToggleGroup } from "@forte-ui/react";
 
 export default function ToggleGroupOrientation() {
   return (

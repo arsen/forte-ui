@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 export default function AvatarBasic() {
   return (

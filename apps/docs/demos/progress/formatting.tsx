@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress, ProgressCircle } from "@dofortech/forte-ui";
+import { Progress, ProgressCircle } from "@forte-ui/react";
 
 export default function ProgressFormatting() {
   return (

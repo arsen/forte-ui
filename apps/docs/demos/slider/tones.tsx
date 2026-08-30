@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@dofortech/forte-ui";
+import { Slider } from "@forte-ui/react";
 
 const tones = [
   { tone: "primary", label: "Primary", value: 40 },

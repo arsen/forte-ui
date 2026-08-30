@@ -1,6 +1,6 @@
 "use client";
 
-import { DatePicker, Field } from "@dofortech/forte-ui";
+import { DatePicker, Field } from "@forte-ui/react";
 
 export default function DatePickerWithField() {
   return (

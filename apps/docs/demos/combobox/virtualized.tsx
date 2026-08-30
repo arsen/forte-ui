@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Combobox } from "@dofortech/forte-ui";
+import { Combobox } from "@forte-ui/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface Item {

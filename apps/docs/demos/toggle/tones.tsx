@@ -1,6 +1,6 @@
 "use client";
 
-import { Toggle } from "@dofortech/forte-ui";
+import { Toggle } from "@forte-ui/react";
 
 const TONES = ["primary", "secondary", "danger", "neutral"] as const;
 

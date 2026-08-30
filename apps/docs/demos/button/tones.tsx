@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@dofortech/forte-ui";
+import { Button } from "@forte-ui/react";
 
 const variants = ["solid", "soft", "outline", "ghost"] as const;
 const tones = ["primary", "secondary", "danger", "neutral"] as const;

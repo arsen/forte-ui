@@ -1,7 +1,7 @@
 /**
  * GENERATED FILE — do not edit by hand.
  * Source of truth: packages/ui/scripts/motion.mjs
- * Regenerate with:  pnpm --filter @dofortech/forte-ui tokens
+ * Regenerate with:  pnpm --filter @forte-ui/react tokens
  *
  * This is the ONLY prefers-reduced-motion block in the library. Component
  * stylesheets must never write their own — they consume the tokens below and

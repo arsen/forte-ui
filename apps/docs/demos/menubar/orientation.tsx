@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Menubar, Separator } from "@dofortech/forte-ui";
+import { Menu, Menubar, Separator } from "@forte-ui/react";
 
 export default function MenubarOrientation() {
   return (

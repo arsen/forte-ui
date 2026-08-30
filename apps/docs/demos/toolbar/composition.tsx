@@ -1,7 +1,7 @@
 "use client";
 
 import { EllipsisVertical, Star } from "lucide-react";
-import { Menu, Select, Toggle, Toolbar } from "@dofortech/forte-ui";
+import { Menu, Select, Toggle, Toolbar } from "@forte-ui/react";
 
 const ICON = "size-4 shrink-0";
 

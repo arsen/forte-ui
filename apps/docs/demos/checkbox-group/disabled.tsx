@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox, CheckboxGroup, Field } from "@dofortech/forte-ui";
+import { Checkbox, CheckboxGroup, Field } from "@forte-ui/react";
 
 const REGIONS = [
   { value: "us-east", label: "US East" },

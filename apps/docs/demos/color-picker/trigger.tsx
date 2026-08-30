@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ColorPicker } from "@dofortech/forte-ui";
+import { ColorPicker } from "@forte-ui/react";
 
 function Picker({ children, ...props }: React.ComponentProps<typeof ColorPicker.Trigger>) {
   return (

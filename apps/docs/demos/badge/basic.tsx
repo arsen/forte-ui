@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@dofortech/forte-ui";
+import { Badge } from "@forte-ui/react";
 
 export default function BadgeBasic() {
   return (

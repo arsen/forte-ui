@@ -5,12 +5,12 @@ styled with CSS Modules and a design system that rebuilds itself around a single
 colour.
 
 ```bash
-npm install @dofortech/forte-ui
+npm install @forte-ui/react
 ```
 
 ```tsx
-import "@dofortech/forte-ui/theme.css";
-import { Button } from "@dofortech/forte-ui";
+import "@forte-ui/react/theme.css";
+import { Button } from "@forte-ui/react";
 
 export function Example() {
   return <Button tone="danger">Delete</Button>;
@@ -47,7 +47,7 @@ property is *declared*.
 
 ## Contrast is measured, not asserted
 
-`pnpm --filter @dofortech/forte-ui test` sweeps **119,108 in-gamut seeds** and
+`pnpm --filter @forte-ui/react test` sweeps **119,108 in-gamut seeds** and
 asserts every pair the ramp promises. Current floors:
 
 | Pair | Minimum | Requirement |
@@ -131,7 +131,7 @@ apps/docs       the documentation site — Next.js 16, MDX, Shiki
 pnpm dev         # docs site at :3000
 pnpm build       # everything
 pnpm typecheck
-pnpm --filter @dofortech/forte-ui test   # the contrast harness
+pnpm --filter @forte-ui/react test   # the contrast harness
 ```
 
 Conventions for adding a component are in

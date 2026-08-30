@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Radio, RadioGroup } from "@dofortech/forte-ui";
+import { Radio, RadioGroup } from "@forte-ui/react";
 
 // `cursor-pointer` is not decoration: a plain <label> is not one of ours, so it
 // carries none of Field.Label's styling — including the pointer cursor it gets

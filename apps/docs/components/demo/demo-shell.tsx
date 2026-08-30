@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Tabs } from "@dofortech/forte-ui";
+import { Tabs } from "@forte-ui/react";
 import { DemoFrame, DemoControls, type DemoScope } from "./demo-frame";
 
 const INITIAL: DemoScope = { theme: "inherit", dir: "ltr", motion: "inherit" };

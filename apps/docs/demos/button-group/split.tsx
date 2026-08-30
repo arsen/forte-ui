@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
-import { Button, ButtonGroup, Menu } from "@dofortech/forte-ui";
+import { Button, ButtonGroup, Menu } from "@forte-ui/react";
 
 const ICON = "size-4 shrink-0";
 

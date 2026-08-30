@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Dialog } from "@dofortech/forte-ui";
+import { Button, Dialog } from "@forte-ui/react";
 
 type Job = {
   id: string;

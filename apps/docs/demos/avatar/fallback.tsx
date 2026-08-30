@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar } from "@dofortech/forte-ui";
+import { Avatar } from "@forte-ui/react";
 
 /* `/avatars/gone.png` does not exist. Base UI loads the image off-screen first
  * and only mounts the <img> once it succeeds, so a 404 never paints a torn

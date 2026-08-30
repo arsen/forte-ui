@@ -1,7 +1,7 @@
 "use client";
 
 import { EllipsisVertical } from "lucide-react";
-import { Button, ContextMenu, Menu } from "@dofortech/forte-ui";
+import { Button, ContextMenu, Menu } from "@forte-ui/react";
 
 /**
  * The commands, written once. `ContextMenu.Item` and `Menu.Item` are the same

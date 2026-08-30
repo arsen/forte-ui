@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Switch } from "@dofortech/forte-ui";
+import { Field, Switch } from "@forte-ui/react";
 
 const SETTINGS = [
   {

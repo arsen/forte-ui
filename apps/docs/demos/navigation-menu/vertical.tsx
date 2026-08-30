@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/forte-ui";
+import { NavigationMenu } from "@forte-ui/react";
 
 const sections = {
   Account: ["Profile", "Sessions", "Connected apps"],

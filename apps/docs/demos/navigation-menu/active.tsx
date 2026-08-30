@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/forte-ui";
+import { NavigationMenu } from "@forte-ui/react";
 
 const guides = [
   { href: "/customization/theming", title: "Theming" },

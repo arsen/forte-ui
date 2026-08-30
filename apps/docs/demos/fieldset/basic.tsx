@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, Fieldset, Input } from "@dofortech/forte-ui";
+import { Field, Fieldset, Input } from "@forte-ui/react";
 
 export default function FieldsetBasic() {
   return (

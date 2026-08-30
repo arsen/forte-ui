@@ -3,7 +3,7 @@
  * ---------------------------------------------------------------------------
  * Import it in the stylesheet that imports Tailwind, BEFORE Tailwind itself:
  *
- *   @import "@dofortech/forte-ui/tailwind.css";
+ *   @import "@forte-ui/react/tailwind.css";
  *   @import "tailwindcss";
  *
  * (`theme.css` is still required, once, anywhere in the app — this file only

@@ -1,6 +1,6 @@
 "use client";
 
-import { AspectRatio, type AspectRatioVariant } from "@dofortech/forte-ui";
+import { AspectRatio, type AspectRatioVariant } from "@forte-ui/react";
 
 /* Shown EMPTY, because the chrome is the subject and an image would cover all
  * three the same way. Empty is also the state that matters most: `filled` is

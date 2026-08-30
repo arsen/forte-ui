@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer } from "@dofortech/forte-ui";
+import { Button, Drawer } from "@forte-ui/react";
 
 const hint = "m-0 max-w-[22rem] text-center text-1 text-foreground-muted";
 

@@ -18,7 +18,7 @@ A breadcrumb is the line above a page that says where the page sits: `Home › S
 ## Import
 
 ```tsx
-import { Breadcrumb } from "@dofortech/forte-ui";
+import { Breadcrumb } from "@forte-ui/react";
 ```
 
 `Breadcrumb` is a namespace of seven parts. The full anatomy, with every optional layer present:
@@ -110,7 +110,7 @@ Framework links go in through `render`, which replaces the rendered `<a>` withou
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Breadcrumb } from "@dofortech/forte-ui";
+import { Breadcrumb } from "@forte-ui/react";
 
 export function Trail() {
   const segments = usePathname().split("/").filter(Boolean);

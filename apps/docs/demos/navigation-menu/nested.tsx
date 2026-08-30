@@ -1,6 +1,6 @@
 "use client";
 
-import { NavigationMenu } from "@dofortech/forte-ui";
+import { NavigationMenu } from "@forte-ui/react";
 
 const primitives = [
   { title: "Accordion", description: "Sections that expand one at a time." },

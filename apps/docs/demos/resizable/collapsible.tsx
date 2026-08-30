@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Resizable } from "@dofortech/forte-ui";
+import { Button, Resizable } from "@forte-ui/react";
 
 /* `collapsed` + `onCollapsedChange` is an ordinary controlled pair, so the
  * toggle button is an ordinary button holding ordinary state. Drag the sidebar
