@@ -331,6 +331,15 @@
     --pui-select-popup-radius: var(--pui-radius-surface);
     /** Popup shadow */
     --pui-select-popup-shadow: var(--pui-shadow-4);
+    /* A hairline, not redundancy next to the shadow: the popup floats over
+     * undimmed content, and in dark mode the shadow is nearly the only thing
+     * separating overlay from background — the border is what survives a
+     * bright page behind it. `.pui-hc-surface` already reserves the 1px, so
+     * painting it costs no layout. */
+    /** Width of the hairline that separates the popup from the page */
+    --pui-select-popup-border-width: 1px;
+    /** Colour of that hairline */
+    --pui-select-popup-border-color: var(--pui-color-border);
     /* Extra width claimed in alignItemWithTrigger mode, so the item text can
      * sit over the trigger's value text while the check indicator and the
      * end padding still have room outside the trigger's box. */
@@ -393,6 +402,11 @@
     /* Required: the popup may never grow past the space Base UI measured
      * between the anchor and the viewport edge. */
     max-height: var(--available-height);
+    /* Beats the transparent border `.pui-hc-surface` sets, on layer order
+     * alone — patterns is ordered before components. Forced colors then wins
+     * it back from the a11y layer, which is ordered after both. */
+    border: var(--pui-select-popup-border-width) solid
+      var(--pui-select-popup-border-color);
     border-radius: var(--pui-select-popup-radius);
     background-color: var(--pui-select-popup-bg);
     /* With a transparent 1px border from `.pui-hc-surface`, padding-box
