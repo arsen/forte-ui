@@ -121,6 +121,18 @@ import d_button_tones from "./button/tones";
 import d_button_tones_src from "./button/tones?raw";
 import d_button_variants from "./button/variants";
 import d_button_variants_src from "./button/variants?raw";
+import d_button_group_basic from "./button-group/basic";
+import d_button_group_basic_src from "./button-group/basic?raw";
+import d_button_group_input from "./button-group/input";
+import d_button_group_input_src from "./button-group/input?raw";
+import d_button_group_nested from "./button-group/nested";
+import d_button_group_nested_src from "./button-group/nested?raw";
+import d_button_group_orientation from "./button-group/orientation";
+import d_button_group_orientation_src from "./button-group/orientation?raw";
+import d_button_group_separator from "./button-group/separator";
+import d_button_group_separator_src from "./button-group/separator?raw";
+import d_button_group_split from "./button-group/split";
+import d_button_group_split_src from "./button-group/split?raw";
 import d_calendar_basic from "./calendar/basic";
 import d_calendar_basic_src from "./calendar/basic?raw";
 import d_calendar_disabled_dates from "./calendar/disabled-dates";
@@ -791,6 +803,12 @@ export type DemoId =
   | "button/sizes"
   | "button/tones"
   | "button/variants"
+  | "button-group/basic"
+  | "button-group/input"
+  | "button-group/nested"
+  | "button-group/orientation"
+  | "button-group/separator"
+  | "button-group/split"
   | "calendar/basic"
   | "calendar/disabled-dates"
   | "calendar/dropdown"
@@ -1157,6 +1175,12 @@ const REGISTRY: Record<DemoId, Demo> = {
   "button/sizes": { Component: d_button_sizes, source: d_button_sizes_src, file: "button/sizes.tsx" },
   "button/tones": { Component: d_button_tones, source: d_button_tones_src, file: "button/tones.tsx" },
   "button/variants": { Component: d_button_variants, source: d_button_variants_src, file: "button/variants.tsx" },
+  "button-group/basic": { Component: d_button_group_basic, source: d_button_group_basic_src, file: "button-group/basic.tsx" },
+  "button-group/input": { Component: d_button_group_input, source: d_button_group_input_src, file: "button-group/input.tsx" },
+  "button-group/nested": { Component: d_button_group_nested, source: d_button_group_nested_src, file: "button-group/nested.tsx" },
+  "button-group/orientation": { Component: d_button_group_orientation, source: d_button_group_orientation_src, file: "button-group/orientation.tsx" },
+  "button-group/separator": { Component: d_button_group_separator, source: d_button_group_separator_src, file: "button-group/separator.tsx" },
+  "button-group/split": { Component: d_button_group_split, source: d_button_group_split_src, file: "button-group/split.tsx" },
   "calendar/basic": { Component: d_calendar_basic, source: d_calendar_basic_src, file: "calendar/basic.tsx" },
   "calendar/disabled-dates": { Component: d_calendar_disabled_dates, source: d_calendar_disabled_dates_src, file: "calendar/disabled-dates.tsx" },
   "calendar/dropdown": { Component: d_calendar_dropdown, source: d_calendar_dropdown_src, file: "calendar/dropdown.tsx" },

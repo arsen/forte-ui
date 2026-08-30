@@ -1,0 +1,235 @@
+/*
+ * ButtonGroup
+ *
+ * A row (or column) of controls fused into one visual object: inner corners
+ * squared off, one hairline between neighbours, outer corners kept. The group
+ * itself draws nothing — every visible pixel belongs to the children, which
+ * keep their own variants, tones and sizes.
+ *
+ * The fuse works by SUBTRACTION, not overlap. Every pretty-ui control draws a
+ * 1px border of its own (transparent in the fill variants — the width is
+ * always reserved), so a joined pair would double the seam to 2px. The group
+ * removes the shared edge's border from the SECOND of the pair and lets the
+ * first one's border be the seam. The alternative — negative margins pulling
+ * the pair together — was rejected because it makes the seam's colour depend
+ * on paint order: the later sibling wins the overlapped pixel, so the seam
+ * flips colour depending on which side of it is hovered.
+ *
+ * Children are matched with `>` and `*` rather than by part marker, so
+ * anything dropped in — a Button, an Input, a Select trigger, a consumer's
+ * own control — fuses the same way. Two exceptions, each guarded below: the
+ * group's own separator (its line IS a border, so stripping it would delete
+ * it), and a nested group (fused by its own rules, spaced by its parent).
+ *
+ * There is no forced-colors block in this file, and none is needed: every
+ * seam in a fused group is somebody's real border, and border colours are
+ * forced to `CanvasText` rather than discarded.
+ */
+@layer pretty-ui.components {
+  .root {
+    /** Gap between nested groups. Applies only when the group's direct
+     * children are themselves groups — a fused group has no gaps. */
+    --pui-button-group-gap: var(--pui-space-2);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    /* `stretch` is what squares a borderless cell (the Text part, an input)
+     * up with the tallest control beside it. Controls that set their own
+     * height — every Button does — are unaffected: `stretch` only applies to
+     * an `auto` cross size. */
+    align-items: stretch;
+    /* The focused child is promoted to `z-index: 1` below; isolating here
+     * keeps that promotion INSIDE the group, so a focused button cannot climb
+     * over an unrelated overlay that happens to share its stacking context. */
+    isolation: isolate;
+  }
+
+  .root[data-orientation="vertical"] {
+    flex-direction: column;
+    /* Sized to the widest control, not to the container — `stretch` then
+     * squares the narrower ones up with it. A column stretched across the
+     * page would fuse three buttons into a metre-wide slab. */
+    inline-size: fit-content;
+  }
+
+  /* A group of groups is a SPACED row, not a fused one: the nested groups do
+   * their own fusing and the parent only lays them out. The
+   * `:not(:has(> .root))` guard on every fusing rule below is the other half
+   * of this — it keeps the parent's hands off the nested groups' corners. */
+  .root:has(> .root) {
+    gap: var(--pui-button-group-gap);
+  }
+
+  /* Fusing ------------------------------------------------------------------
+   * Logical properties throughout, so RTL flips the squared corners and the
+   * stripped edge together without a `--pui-direction` in sight. The radius
+   * longhands out-rank each child's own `border-radius` shorthand inside this
+   * layer on specificity, which is the point: the child keeps its radius knob
+   * for the group's outer corners, and the group owns the inner ones.
+   *
+   * "First" and "last" are computed over PARTICIPANTS — `:nth-child(1 of …)`
+   * with an exclusion list — never over raw children, because Base UI plants
+   * visually hidden bookkeeping elements between the real ones: focus-guard
+   * spans and an `aria-owns` portal-owner span appear around a popup trigger
+   * WHILE ITS POPUP IS OPEN, and a hidden `<input>` form mirror always sits
+   * after a Select trigger. Plain `:last-child` counts those, so the moment a
+   * split button's menu opened its trigger stopped being last and lost its
+   * end corners — a button that changes shape while its own menu is up. The
+   * list below is "paints no box in the row" in selector form; extend it if a
+   * future primitive plants a new kind of phantom sibling. */
+  .root[data-orientation="horizontal"]:not(:has(> .root))
+    > :not(:nth-last-child(1 of :not([hidden], [data-base-ui-focus-guard], span[aria-owns], input[type="hidden"], input[aria-hidden="true"]))) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .root[data-orientation="horizontal"]:not(:has(> .root))
+    > :not(:nth-child(1 of :not([hidden], [data-base-ui-focus-guard], span[aria-owns], input[type="hidden"], input[aria-hidden="true"]))) {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  .root[data-orientation="horizontal"]:not(:has(> .root))
+    > :not(:nth-child(1 of :not([hidden], [data-base-ui-focus-guard], span[aria-owns], input[type="hidden"], input[aria-hidden="true"])), .separator) {
+    border-inline-start-width: 0;
+  }
+
+  .root[data-orientation="vertical"]:not(:has(> .root))
+    > :not(:nth-last-child(1 of :not([hidden], [data-base-ui-focus-guard], span[aria-owns], input[type="hidden"], input[aria-hidden="true"]))) {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .root[data-orientation="vertical"]:not(:has(> .root))
+    > :not(:nth-child(1 of :not([hidden], [data-base-ui-focus-guard], span[aria-owns], input[type="hidden"], input[aria-hidden="true"]))) {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+  }
+
+  .root[data-orientation="vertical"]:not(:has(> .root))
+    > :not(:nth-child(1 of :not([hidden], [data-base-ui-focus-guard], span[aria-owns], input[type="hidden"], input[aria-hidden="true"])), .separator) {
+    border-block-start-width: 0;
+  }
+
+  /* The focus ring is an `outline` drawn OUTSIDE the border box, so on a
+   * fused edge it reaches over the neighbour — and the neighbour, painting
+   * later, covers that stretch of ring. Promoting the focused child restores
+   * the full rectangle whichever side of the seam it sits on. `position` is
+   * set too because `z-index` does nothing on a static element, and not every
+   * child positions itself the way Button happens to. */
+  .root > :focus-visible {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Separator ---------------------------------------------------------------
+   * The seam for neighbours with no visible border of their own — `solid` and
+   * `soft` buttons fused bare are one unbroken slab of colour. `outline`
+   * neighbours need none: their own borders already draw the seam, and adding
+   * a separator doubles the line.
+   *
+   * The line is a BORDER, never a `background-color`. A background is
+   * replaced with a system colour under forced colours — for a plain box that
+   * is `Canvas`, the page's own backdrop — so a hairline drawn that way
+   * vanishes for exactly the users who most need the boundary.
+   */
+  .separator {
+    /** Line thickness. Matches the 1px border every control draws, so a
+     * separated seam and a fused one carry the same weight. */
+    --pui-button-group-separator-thickness: 1px;
+    /** Line colour. Re-point it when the separator sits between `solid`
+     * fills — `--pui-color-border` is tuned against the page background, not
+     * against a colour fill. */
+    --pui-button-group-separator-color: var(--pui-color-border);
+
+    box-sizing: border-box;
+    /* Zeroed before one edge is set per orientation below, so
+     * `render={<hr />}` works: the UA gives <hr> an inset border on all four
+     * sides and a `0.5em auto` margin, neither reachable through the
+     * single-edge longhands. */
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    /* Full bleed on the cross axis — unlike Toolbar's inset rule, this line
+     * stands in for a shared border, and a border runs edge to edge. */
+    align-self: stretch;
+    /* Its 1px is the cheapest thing in the row for flexbox to reclaim. */
+    flex-shrink: 0;
+
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* The seam in a HORIZONTAL group. Base UI writes `data-orientation` from
+   * the `orientation` prop, which the TSX defaults to the perpendicular of
+   * the group's own. */
+  .separator[data-orientation="vertical"] {
+    /* Pins the inline axis so `stretch` cannot widen the line. With
+     * `border-box` a size below the border width is floored at the border, so
+     * it still paints at full thickness — this says "do not stretch", not "be
+     * zero wide". */
+    inline-size: 0;
+    border-inline-start:
+      var(--pui-button-group-separator-thickness) solid
+      var(--pui-button-group-separator-color);
+  }
+
+  /* …and the seam in a VERTICAL one. The mirror of the above: pins the block
+   * axis instead. */
+  .separator[data-orientation="horizontal"] {
+    block-size: 0;
+    border-block-start:
+      var(--pui-button-group-separator-thickness) solid
+      var(--pui-button-group-separator-color);
+  }
+
+  /* Text --------------------------------------------------------------------
+   * A non-interactive cell fused in with the controls: a unit, a prefix, a
+   * count. It draws the same 1px border a control does, so the fusing rules
+   * treat it identically — and the border is a REAL colour, not transparent,
+   * which is what keeps the cell's edge visible under forced colours when its
+   * fill is discarded.
+   *
+   * No height of its own, deliberately: `stretch` on the group squares it up
+   * with whatever control it sits beside, so one cell serves every size.
+   */
+  .text {
+    /** Fill behind the text. */
+    --pui-button-group-text-bg: var(--pui-color-panel);
+    /** Text colour. Muted on purpose — the cell is context for the action
+     * beside it, not the action. */
+    --pui-button-group-text-color: var(--pui-color-foreground-muted);
+    /** Border colour. */
+    --pui-button-group-text-border-color: var(--pui-color-border);
+    /** Corner radius. The group squares off whichever corners are fused. */
+    --pui-button-group-text-radius: var(--pui-radius-control);
+    /** Horizontal padding. */
+    --pui-button-group-text-padding-x: var(--pui-control-px-md);
+    /** Label size. */
+    --pui-button-group-text-font-size: var(--pui-font-size-2);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--pui-control-gap);
+    padding-inline: var(--pui-button-group-text-padding-x);
+    border: 1px solid var(--pui-button-group-text-border-color);
+    border-radius: var(--pui-button-group-text-radius);
+    background-color: var(--pui-button-group-text-bg);
+    color: var(--pui-button-group-text-color);
+
+    font-family: var(--pui-font-sans);
+    font-size: var(--pui-button-group-text-font-size);
+    font-weight: var(--pui-font-weight-medium);
+    line-height: var(--pui-line-height-tight);
+    white-space: nowrap;
+
+    /* Chrome, not a control, per the cursor table in AGENTS.md — even when
+     * rendered as a <label>, clicking it only moves focus. */
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}

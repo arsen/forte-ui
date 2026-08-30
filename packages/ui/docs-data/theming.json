@@ -2090,6 +2090,74 @@
       }
     ]
   },
+  "ButtonGroup": {
+    "name": "ButtonGroup",
+    "tokens": [
+      {
+        "name": "--pui-button-group-gap",
+        "value": "var(--pui-space-2)",
+        "description": "Gap between nested groups. Applies only when the group's direct children are themselves groups — a fused group has no gaps.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-separator-thickness",
+        "value": "1px",
+        "description": "Line thickness. Matches the 1px border every control draws, so a separated seam and a fused one carry the same weight.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-separator-color",
+        "value": "var(--pui-color-border)",
+        "description": "Line colour. Re-point it when the separator sits between `solid` fills — `--pui-color-border` is tuned against the page background, not against a colour fill.",
+        "part": "separator",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-text-bg",
+        "value": "var(--pui-color-panel)",
+        "description": "Fill behind the text.",
+        "part": "text",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-text-color",
+        "value": "var(--pui-color-foreground-muted)",
+        "description": "Text colour. Muted on purpose — the cell is context for the action beside it, not the action.",
+        "part": "text",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-text-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Border colour.",
+        "part": "text",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-text-radius",
+        "value": "var(--pui-radius-control)",
+        "description": "Corner radius. The group squares off whichever corners are fused.",
+        "part": "text",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-text-padding-x",
+        "value": "var(--pui-control-px-md)",
+        "description": "Horizontal padding.",
+        "part": "text",
+        "overrides": []
+      },
+      {
+        "name": "--pui-button-group-text-font-size",
+        "value": "var(--pui-font-size-2)",
+        "description": "Label size.",
+        "part": "text",
+        "overrides": []
+      }
+    ]
+  },
   "Calendar": {
     "name": "Calendar",
     "tokens": [
