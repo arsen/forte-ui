@@ -195,6 +195,14 @@ The global tokens these resolve to — `--pui-color-*`, `--pui-control-*`,
 `--pui-radius-*` — are the exception: this component only reads those, so
 re-pointing them from `:root` or a theme scope moves every textarea at once.
 
+`--pui-textarea-radius` is the one that does not read its token straight: it is
+`min(var(--pui-radius-control), <half a row>)`. A control radius is drawn for a
+box whose text sits on one line, in the middle, where the corner is at its
+widest — so `data-pui-radius="pill"` asks for a capsule and an input is fine.
+A textarea's first and last lines sit *at* the corners, and a capsule arc
+slices them. The cap is the roundest corner that still leaves every row
+readable; `soft` and the default are below it and pass through untouched.
+
 <ThemingTable component="Textarea" />
 
 ## API reference
