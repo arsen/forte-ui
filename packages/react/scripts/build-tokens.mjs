@@ -61,7 +61,7 @@ function grayRamp() {
 const gray = grayRamp();
 const banner = `/**
  * GENERATED FILE — do not edit by hand.
- * Source of truth: packages/ui/scripts/ramp.mjs
+ * Source of truth: packages/react/scripts/ramp.mjs
  * Regenerate with:  pnpm --filter @forte-ui/react tokens
  */\n`;
 

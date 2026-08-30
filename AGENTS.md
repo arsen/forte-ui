@@ -27,7 +27,7 @@ decision in the repo follows from them:
 ### Layout
 
 ```
-packages/ui             the library
+packages/react             the library
   src/components/<name>/  <Name>.tsx · <Name>.module.css · index.ts
   src/styles/             layers · properties · tokens · motion · a11y · patterns
   scripts/                ramp.mjs · motion.mjs (source of truth) + generators
@@ -91,11 +91,11 @@ task name to collide does not repeat this.
 
 | File | Source of truth | Regenerate with |
 | :-- | :-- | :-- |
-| `packages/ui/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `tokens` |
-| `packages/ui/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
-| `packages/ui/docs-data/props.json` | component TSX doc comments | `docgen` |
-| `packages/ui/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
-| `packages/ui/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
+| `packages/react/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `tokens` |
+| `packages/react/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
+| `packages/react/docs-data/props.json` | component TSX doc comments | `docgen` |
+| `packages/react/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
+| `packages/react/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
 | `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `toc` |
 
@@ -197,7 +197,7 @@ it — or when it must animate, or needs a guaranteed fallback if no rule matche
 (that is `--forte-direction`).
 
 Then run `docgen` — `tokens-docgen.mjs` rebuilds
-`packages/ui/docs-data/tokens.json`, the generated inventory of every global
+`packages/react/docs-data/tokens.json`, the generated inventory of every global
 token — and add the name to the readable list in `CONTRIBUTING.md` by hand.
 Nothing regenerates that prose list, which is exactly how `--forte-direction`
 went missing from it; when the two disagree, `tokens.json` is the one that is
@@ -211,7 +211,7 @@ disagree, the generated file is right and the doc is stale. Fix the doc; never
 the authority of a written inventory, check it against the source:
 
 ```bash
-grep -ho -- '--forte-[a-z0-9-]*\s*:' packages/ui/src/styles/*.css | sed 's/[[:space:]]*:$//' | sort -u
+grep -ho -- '--forte-[a-z0-9-]*\s*:' packages/react/src/styles/*.css | sed 's/[[:space:]]*:$//' | sort -u
 ```
 
 If you do find drift, update the prose in the same change — a stale list that
@@ -224,8 +224,8 @@ claims to be exhaustive is worse than no list.
 **Tokens are the API.** Consume them; never invent a value. A typo in a `var()`
 fails *silently* — the declaration becomes invalid at computed-value time and
 the element inherits instead — so check the name against
-`packages/ui/src/styles/*.css`, which is what actually ships. The inventory in
-[`packages/ui/CONTRIBUTING.md`](packages/ui/CONTRIBUTING.md) is a readable
+`packages/react/src/styles/*.css`, which is what actually ships. The inventory in
+[`packages/react/CONTRIBUTING.md`](packages/react/CONTRIBUTING.md) is a readable
 index of the same names, but it is hand-maintained and nothing regenerates it —
 read it for orientation, not as proof a token does or does not exist. It is
 currently missing `--forte-direction`, which `Switch` relies on for RTL.
@@ -438,7 +438,7 @@ layout or typography.
 
 The token mapping itself is no longer a docs file: it ships from the library
 as the **`@forte-ui/react/tailwind.css` bridge** (source:
-[`packages/ui/src/styles/tailwind.css`](packages/ui/src/styles/tailwind.css)),
+[`packages/react/src/styles/tailwind.css`](packages/react/src/styles/tailwind.css)),
 which is the same file a consumer imports. It re-points Tailwind's theme at
 the forte-ui tokens, deletes the stock scales, and pins the cascade-layer
 order `theme, base, forte, components, utilities` — for a consumer that
@@ -539,11 +539,11 @@ neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
 are Tailwind's own.
 
 Like the bridge, the library half of this config ships with the package, in
-two tiers. [`packages/ui/src/tailwind-merge.ts`](packages/ui/src/tailwind-merge.ts)
+two tiers. [`packages/react/src/tailwind-merge.ts`](packages/react/src/tailwind-merge.ts)
 exports `tailwindMergeConfig` (plain data — the package does not depend on
 tailwind-merge) covering `spacing: surface`, `text`, `shadow`, `radius`,
 `ease` and the `duration` group. On top of it,
-[`packages/ui/src/cn.ts`](packages/ui/src/cn.ts) ships `cn` (pre-configured)
+[`packages/react/src/cn.ts`](packages/react/src/cn.ts) ships `cn` (pre-configured)
 and `createCn(extension)` — the extension routes through tailwind-merge's
 `mergeConfigs`, whose `extend` APPENDS to a scale, so app keys land beside
 the library's instead of replacing them. That subpath is why tailwind-merge
@@ -554,7 +554,7 @@ example of the extend path. `cn.ts` spreads it and adds only what the
 DOCS added to the theme: `spacing: header/anchor`, `animate: reveal`, and the
 `container` measures. **A key added to a scale still gets added in two files —
 they are just paired by owner now**: a library token goes in the bridge and
-`packages/ui/src/tailwind-merge.ts`; a docs measure goes in
+`packages/react/src/tailwind-merge.ts`; a docs measure goes in
 `apps/docs/app/tailwind.css` and `cn.ts`. A name missed on the merge side does
 not error, it just stops overriding its own family.
 
@@ -600,7 +600,7 @@ base rules without a single `!important`.
 
 ## Adding or changing a component
 
-1. Read [`packages/ui/CONTRIBUTING.md`](packages/ui/CONTRIBUTING.md) first — it
+1. Read [`packages/react/CONTRIBUTING.md`](packages/react/CONTRIBUTING.md) first — it
    holds the full rule list and the token inventory. Every rule there exists
    because breaking it causes a specific, usually silent, bug.
 2. Files: `<Name>.tsx` (`"use client"`), `<Name>.module.css` (inside

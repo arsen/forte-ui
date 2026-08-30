@@ -18,7 +18,7 @@ const DATA = props as PropData;
  * Renders the prop table for a component straight from the library's
  * TypeScript source.
  *
- * Nothing here is hand-maintained: `packages/ui/scripts/docgen.mjs` reads the
+ * Nothing here is hand-maintained: `packages/react/scripts/docgen.mjs` reads the
  * real types and JSDoc at build time, so a renamed prop or a changed default
  * updates the docs automatically instead of silently going stale.
  */

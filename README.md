@@ -123,7 +123,7 @@ re-pointed from `:root` or a theme scope.
 ## Repository
 
 ```
-packages/ui     the library — Vite build, CSS Modules, generated token CSS
+packages/react     the library — Vite build, CSS Modules, generated token CSS
 apps/docs       the documentation site — Next.js 16, MDX, Shiki
 ```
 
@@ -135,7 +135,7 @@ pnpm --filter @forte-ui/react test   # the contrast harness
 ```
 
 Conventions for adding a component are in
-[packages/ui/CONTRIBUTING.md](packages/ui/CONTRIBUTING.md), including the
+[packages/react/CONTRIBUTING.md](packages/react/CONTRIBUTING.md), including the
 complete token inventory. Each rule there exists because breaking it causes a
 specific, usually silent, bug.
 
