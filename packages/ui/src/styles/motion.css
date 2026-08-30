@@ -1,7 +1,7 @@
 /**
  * GENERATED FILE — do not edit by hand.
  * Source of truth: packages/ui/scripts/motion.mjs
- * Regenerate with:  pnpm --filter @dofortech/pretty-ui tokens
+ * Regenerate with:  pnpm --filter @dofortech/forte-ui tokens
  *
  * This is the ONLY prefers-reduced-motion block in the library. Component
  * stylesheets must never write their own — they consume the tokens below and
@@ -20,175 +20,175 @@
  *    an inner child instead.
  *
  * The defaults below sit on ':root' alone, unlike the colour ramps, which are
- * restated on '.pui-theme' / '[data-pui-theme]'. A ramp must be restated
+ * restated on '.forte-theme' / '[data-forte-theme]'. A ramp must be restated
  * because it is DERIVED from a seed a scope can override; these are literals,
  * so a scope has nothing to re-derive — and restating them would let every
- * theme scope re-declare the defaults on top of a 'data-pui-motion' inherited
+ * theme scope re-declare the defaults on top of a 'data-forte-motion' inherited
  * from an ancestor. Inheritance carries the setting into a scope; a scope that
- * wants its own motion sets 'data-pui-motion' and wins on the blocks below.
+ * wants its own motion sets 'data-forte-motion' and wins on the blocks below.
  */
-@layer pretty-ui.tokens {
+@layer forte.tokens {
   :root {
-    --pui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-    --pui-ease-in-out: cubic-bezier(0.4, 0, 0.6, 1);
-    --pui-ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
-    --pui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
-    --pui-ease-spring-gentle: linear(0, 0.066, 0.203, 0.3552, 0.4964, 0.6164, 0.7132, 0.7887, 0.8461, 0.889, 0.9206, 0.9436, 0.9601, 0.972, 0.9804, 0.9864, 0.9905, 0.9934, 0.9955, 0.9969, 0.9979, 0.9985, 0.999);
-    --pui-ease-spring-snappy: linear(0, 0.055, 0.1821, 0.3382, 0.4954, 0.6374, 0.7563, 0.8497, 0.919, 0.9673, 0.9987, 1.0169, 1.0258, 1.0284, 1.027, 1.0235, 1.0191, 1.0146, 1.0105, 1.0071, 1.0044, 1.0024, 1.001);
-    --pui-ease-spring-bouncy: linear(0, 0.1344, 0.4195, 0.7176, 0.9501, 1.0898, 1.1445, 1.1392, 1.1023, 1.0571, 1.0184, 0.9926, 0.9803, 0.9784, 0.9826, 0.9891, 0.9954, 1, 1.0025, 1.0032, 1.0029, 1.002, 1.001);
-    --pui-ease-spring-precise: linear(0, 0.0669, 0.2055, 0.3587, 0.5002, 0.6201, 0.7165, 0.7915, 0.8483, 0.8907, 0.9219, 0.9445, 0.9608, 0.9725, 0.9807, 0.9866, 0.9907, 0.9935, 0.9955, 0.9969, 0.9979, 0.9985, 0.999);
+    --forte-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --forte-ease-in-out: cubic-bezier(0.4, 0, 0.6, 1);
+    --forte-ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+    --forte-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    --forte-ease-spring-gentle: linear(0, 0.066, 0.203, 0.3552, 0.4964, 0.6164, 0.7132, 0.7887, 0.8461, 0.889, 0.9206, 0.9436, 0.9601, 0.972, 0.9804, 0.9864, 0.9905, 0.9934, 0.9955, 0.9969, 0.9979, 0.9985, 0.999);
+    --forte-ease-spring-snappy: linear(0, 0.055, 0.1821, 0.3382, 0.4954, 0.6374, 0.7563, 0.8497, 0.919, 0.9673, 0.9987, 1.0169, 1.0258, 1.0284, 1.027, 1.0235, 1.0191, 1.0146, 1.0105, 1.0071, 1.0044, 1.0024, 1.001);
+    --forte-ease-spring-bouncy: linear(0, 0.1344, 0.4195, 0.7176, 0.9501, 1.0898, 1.1445, 1.1392, 1.1023, 1.0571, 1.0184, 0.9926, 0.9803, 0.9784, 0.9826, 0.9891, 0.9954, 1, 1.0025, 1.0032, 1.0029, 1.002, 1.001);
+    --forte-ease-spring-precise: linear(0, 0.0669, 0.2055, 0.3587, 0.5002, 0.6201, 0.7165, 0.7915, 0.8483, 0.8907, 0.9219, 0.9445, 0.9608, 0.9725, 0.9807, 0.9866, 0.9907, 0.9935, 0.9955, 0.9969, 0.9979, 0.9985, 0.999);
   }
 
   :root {
-    --pui-motion-ok: 1;
-    --pui-motion-off: 0;
+    --forte-motion-ok: 1;
+    --forte-motion-off: 0;
 
-    --pui-duration-instant: 1ms;
-    --pui-duration-fast: 160ms;
-    --pui-duration-normal: 240ms;
-    --pui-duration-slow: 400ms;
-    --pui-duration-move: 220ms;
-    --pui-duration-loop-spin: 800ms;
-    --pui-duration-loop-pulse: 1600ms;
-    --pui-duration-loop-sweep: 1400ms;
-    --pui-duration-spring-gentle: 700ms;
-    --pui-duration-spring-snappy: 400ms;
-    --pui-duration-spring-bouncy: 730ms;
-    --pui-duration-spring-precise: 410ms;
+    --forte-duration-instant: 1ms;
+    --forte-duration-fast: 160ms;
+    --forte-duration-normal: 240ms;
+    --forte-duration-slow: 400ms;
+    --forte-duration-move: 220ms;
+    --forte-duration-loop-spin: 800ms;
+    --forte-duration-loop-pulse: 1600ms;
+    --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-spring-gentle: 700ms;
+    --forte-duration-spring-snappy: 400ms;
+    --forte-duration-spring-bouncy: 730ms;
+    --forte-duration-spring-precise: 410ms;
 
-    --pui-travel-xs: 2px;
-    --pui-travel-sm: 4px;
-    --pui-travel-md: 8px;
-    --pui-travel-lg: 16px;
-    --pui-travel-page: 32px;
-    --pui-scale-enter: 0.95;
-    --pui-scale-exit: 1.02;
-    --pui-scale-press: 0.97;
-    --pui-spin-turn: 1turn;
-    --pui-pulse-dip: 1;
+    --forte-travel-xs: 2px;
+    --forte-travel-sm: 4px;
+    --forte-travel-md: 8px;
+    --forte-travel-lg: 16px;
+    --forte-travel-page: 32px;
+    --forte-scale-enter: 0.95;
+    --forte-scale-exit: 1.02;
+    --forte-scale-press: 0.97;
+    --forte-spin-turn: 1turn;
+    --forte-pulse-dip: 1;
   }
 
   /* The OS preference. Geometry off, durations shortened rather than removed. */
   @media (prefers-reduced-motion: reduce) {
     :root {
-      --pui-motion-ok: 0;
-      --pui-motion-off: 1;
+      --forte-motion-ok: 0;
+      --forte-motion-off: 1;
 
-      --pui-duration-instant: 1ms;
-      --pui-duration-fast: 100ms;
-      --pui-duration-normal: 120ms;
-      --pui-duration-slow: 150ms;
-      --pui-duration-move: 1ms;
-      --pui-duration-loop-spin: 800ms;
-      --pui-duration-loop-pulse: 1600ms;
-      --pui-duration-loop-sweep: 1400ms;
-      --pui-duration-spring-gentle: 150ms;
-      --pui-duration-spring-snappy: 120ms;
-      --pui-duration-spring-bouncy: 150ms;
-      --pui-duration-spring-precise: 120ms;
+      --forte-duration-instant: 1ms;
+      --forte-duration-fast: 100ms;
+      --forte-duration-normal: 120ms;
+      --forte-duration-slow: 150ms;
+      --forte-duration-move: 1ms;
+      --forte-duration-loop-spin: 800ms;
+      --forte-duration-loop-pulse: 1600ms;
+      --forte-duration-loop-sweep: 1400ms;
+      --forte-duration-spring-gentle: 150ms;
+      --forte-duration-spring-snappy: 120ms;
+      --forte-duration-spring-bouncy: 150ms;
+      --forte-duration-spring-precise: 120ms;
 
-      --pui-travel-xs: 0px;
-      --pui-travel-sm: 0px;
-      --pui-travel-md: 0px;
-      --pui-travel-lg: 0px;
-      --pui-travel-page: 0px;
-      --pui-scale-enter: 1;
-      --pui-scale-exit: 1;
-      --pui-scale-press: 1;
-      --pui-spin-turn: 0turn;
-      --pui-pulse-dip: 0.45;
+      --forte-travel-xs: 0px;
+      --forte-travel-sm: 0px;
+      --forte-travel-md: 0px;
+      --forte-travel-lg: 0px;
+      --forte-travel-page: 0px;
+      --forte-scale-enter: 1;
+      --forte-scale-exit: 1;
+      --forte-scale-press: 1;
+      --forte-spin-turn: 0turn;
+      --forte-pulse-dip: 0.45;
     }
   }
 
   /* In-page control (SC 2.3.3), and per-subtree scoping for docs demos. */
-  :root[data-pui-motion="reduce"],
-  [data-pui-motion="reduce"] {
-    --pui-motion-ok: 0;
-    --pui-motion-off: 1;
+  :root[data-forte-motion="reduce"],
+  [data-forte-motion="reduce"] {
+    --forte-motion-ok: 0;
+    --forte-motion-off: 1;
 
-    --pui-duration-instant: 1ms;
-    --pui-duration-fast: 100ms;
-    --pui-duration-normal: 120ms;
-    --pui-duration-slow: 150ms;
-    --pui-duration-move: 1ms;
-    --pui-duration-loop-spin: 800ms;
-    --pui-duration-loop-pulse: 1600ms;
-    --pui-duration-loop-sweep: 1400ms;
-    --pui-duration-spring-gentle: 150ms;
-    --pui-duration-spring-snappy: 120ms;
-    --pui-duration-spring-bouncy: 150ms;
-    --pui-duration-spring-precise: 120ms;
+    --forte-duration-instant: 1ms;
+    --forte-duration-fast: 100ms;
+    --forte-duration-normal: 120ms;
+    --forte-duration-slow: 150ms;
+    --forte-duration-move: 1ms;
+    --forte-duration-loop-spin: 800ms;
+    --forte-duration-loop-pulse: 1600ms;
+    --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-spring-gentle: 150ms;
+    --forte-duration-spring-snappy: 120ms;
+    --forte-duration-spring-bouncy: 150ms;
+    --forte-duration-spring-precise: 120ms;
 
-    --pui-travel-xs: 0px;
-    --pui-travel-sm: 0px;
-    --pui-travel-md: 0px;
-    --pui-travel-lg: 0px;
-    --pui-travel-page: 0px;
-    --pui-scale-enter: 1;
-    --pui-scale-exit: 1;
-    --pui-scale-press: 1;
-    --pui-spin-turn: 0turn;
-    --pui-pulse-dip: 0.45;
+    --forte-travel-xs: 0px;
+    --forte-travel-sm: 0px;
+    --forte-travel-md: 0px;
+    --forte-travel-lg: 0px;
+    --forte-travel-page: 0px;
+    --forte-scale-enter: 1;
+    --forte-scale-exit: 1;
+    --forte-scale-press: 1;
+    --forte-spin-turn: 0turn;
+    --forte-pulse-dip: 0.45;
   }
 
-  :root[data-pui-motion="off"],
-  [data-pui-motion="off"] {
-    --pui-motion-ok: 0;
-    --pui-motion-off: 1;
+  :root[data-forte-motion="off"],
+  [data-forte-motion="off"] {
+    --forte-motion-ok: 0;
+    --forte-motion-off: 1;
 
-    --pui-duration-instant: 1ms;
-    --pui-duration-fast: 1ms;
-    --pui-duration-normal: 1ms;
-    --pui-duration-slow: 1ms;
-    --pui-duration-move: 1ms;
-    --pui-duration-loop-spin: 800ms;
-    --pui-duration-loop-pulse: 1600ms;
-    --pui-duration-loop-sweep: 1400ms;
-    --pui-duration-spring-gentle: 1ms;
-    --pui-duration-spring-snappy: 1ms;
-    --pui-duration-spring-bouncy: 1ms;
-    --pui-duration-spring-precise: 1ms;
+    --forte-duration-instant: 1ms;
+    --forte-duration-fast: 1ms;
+    --forte-duration-normal: 1ms;
+    --forte-duration-slow: 1ms;
+    --forte-duration-move: 1ms;
+    --forte-duration-loop-spin: 800ms;
+    --forte-duration-loop-pulse: 1600ms;
+    --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-spring-gentle: 1ms;
+    --forte-duration-spring-snappy: 1ms;
+    --forte-duration-spring-bouncy: 1ms;
+    --forte-duration-spring-precise: 1ms;
 
-    --pui-travel-xs: 0px;
-    --pui-travel-sm: 0px;
-    --pui-travel-md: 0px;
-    --pui-travel-lg: 0px;
-    --pui-travel-page: 0px;
-    --pui-scale-enter: 1;
-    --pui-scale-exit: 1;
-    --pui-scale-press: 1;
-    --pui-spin-turn: 0turn;
-    --pui-pulse-dip: 0.45;
+    --forte-travel-xs: 0px;
+    --forte-travel-sm: 0px;
+    --forte-travel-md: 0px;
+    --forte-travel-lg: 0px;
+    --forte-travel-page: 0px;
+    --forte-scale-enter: 1;
+    --forte-scale-exit: 1;
+    --forte-scale-press: 1;
+    --forte-spin-turn: 0turn;
+    --forte-pulse-dip: 0.45;
   }
 
   /* Explicit opt-in — deliberately overrides the OS preference. */
-  :root[data-pui-motion="full"],
-  [data-pui-motion="full"] {
-    --pui-motion-ok: 1;
-    --pui-motion-off: 0;
+  :root[data-forte-motion="full"],
+  [data-forte-motion="full"] {
+    --forte-motion-ok: 1;
+    --forte-motion-off: 0;
 
-    --pui-duration-instant: 1ms;
-    --pui-duration-fast: 160ms;
-    --pui-duration-normal: 240ms;
-    --pui-duration-slow: 400ms;
-    --pui-duration-move: 220ms;
-    --pui-duration-loop-spin: 800ms;
-    --pui-duration-loop-pulse: 1600ms;
-    --pui-duration-loop-sweep: 1400ms;
-    --pui-duration-spring-gentle: 700ms;
-    --pui-duration-spring-snappy: 400ms;
-    --pui-duration-spring-bouncy: 730ms;
-    --pui-duration-spring-precise: 410ms;
+    --forte-duration-instant: 1ms;
+    --forte-duration-fast: 160ms;
+    --forte-duration-normal: 240ms;
+    --forte-duration-slow: 400ms;
+    --forte-duration-move: 220ms;
+    --forte-duration-loop-spin: 800ms;
+    --forte-duration-loop-pulse: 1600ms;
+    --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-spring-gentle: 700ms;
+    --forte-duration-spring-snappy: 400ms;
+    --forte-duration-spring-bouncy: 730ms;
+    --forte-duration-spring-precise: 410ms;
 
-    --pui-travel-xs: 2px;
-    --pui-travel-sm: 4px;
-    --pui-travel-md: 8px;
-    --pui-travel-lg: 16px;
-    --pui-travel-page: 32px;
-    --pui-scale-enter: 0.95;
-    --pui-scale-exit: 1.02;
-    --pui-scale-press: 0.97;
-    --pui-spin-turn: 1turn;
-    --pui-pulse-dip: 1;
+    --forte-travel-xs: 2px;
+    --forte-travel-sm: 4px;
+    --forte-travel-md: 8px;
+    --forte-travel-lg: 16px;
+    --forte-travel-page: 32px;
+    --forte-scale-enter: 0.95;
+    --forte-scale-exit: 1.02;
+    --forte-scale-press: 0.97;
+    --forte-spin-turn: 1turn;
+    --forte-pulse-dip: 1;
   }
 }

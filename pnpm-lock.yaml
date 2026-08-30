@@ -17,7 +17,7 @@ importers:
 
   apps/docs:
     dependencies:
-      '@dofortech/pretty-ui':
+      '@dofortech/forte-ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@mdx-js/loader':
