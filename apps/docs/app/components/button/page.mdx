@@ -54,7 +54,7 @@ The indicator is [`Spinner`](/components/spinner)'s `ring`, rendered `decorative
 
 ### Icon-only
 
-`iconOnly` drops the horizontal padding, makes the button square with `aspect-ratio: 1`, and floors its width at `--pui-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
+`iconOnly` makes the button square, guarantees the icon `--pui-button-icon-padding` of space on every side, and floors the square at the control height and at `--pui-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. When icon plus padding outgrows that floor the button grows with it, so the icon never crowds the corners — which matters most under `data-pui-radius="pill"`, where the corner is the nearest point of the curve. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
 
 <DemoBlock id="button/icon-only" />
 

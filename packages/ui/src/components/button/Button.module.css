@@ -32,7 +32,8 @@
     --pui-button-border-width: 1px;
     /** Button height; reassigned by `size` */
     --pui-button-height: var(--pui-control-h-md);
-    /** Horizontal padding; reassigned by `size`, and `0` when `iconOnly` */
+    /** Horizontal padding; reassigned by `size`. `iconOnly` replaces it with
+     * `--pui-button-icon-padding` on all four sides. */
     --pui-button-padding-x: var(--pui-control-px-md);
     /** Label size; reassigned by `size` */
     --pui-button-font-size: var(--pui-font-size-2);
@@ -194,10 +195,23 @@
     --pui-button-font-size: var(--pui-font-size-3);
   }
 
-  /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width. */
+  /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width.
+   * The control height is a floor, not the size: with zero padding a 16px
+   * icon sits 2–3px off a pill's curve at the corners (the diagonal is where
+   * a circle is nearest), so the icon gets a guaranteed padding and the
+   * button grows past the floor — square, because the padding wraps all four
+   * sides and `aspect-ratio` squares off non-square icons — whenever the
+   * icon needs the room. `block-size: auto` is what lets it grow; the two
+   * `min-*` floors keep an undersized icon from shrinking the button below
+   * the control height beside it or the 24px hit target. */
   .root[data-icon-only] {
-    --pui-button-padding-x: 0;
+    /** Minimum space between the icon and the button's edge (`iconOnly` only) */
+    --pui-button-icon-padding: var(--pui-space-2);
+    --pui-button-padding-x: var(--pui-button-icon-padding);
+    padding-block: var(--pui-button-icon-padding);
+    block-size: auto;
     aspect-ratio: 1;
+    min-block-size: max(var(--pui-button-height), var(--pui-target-min));
     min-inline-size: max(var(--pui-button-height), var(--pui-target-min));
   }
 
