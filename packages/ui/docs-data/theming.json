@@ -7271,6 +7271,20 @@
         "overrides": []
       },
       {
+        "name": "--pui-select-popup-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the popup from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--pui-select-popup-border-color",
+        "value": "var(--pui-color-border)",
+        "description": "Colour of that hairline",
+        "part": "popup",
+        "overrides": []
+      },
+      {
         "name": "--pui-select-popup-overhang",
         "value": "var(--pui-space-5)",
         "description": "Extra width the popup claims past the trigger in `alignItemWithTrigger` mode",
