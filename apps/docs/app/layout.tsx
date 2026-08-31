@@ -18,7 +18,7 @@ import { Toc } from "@/components/toc";
 import { NavDrawer, TocDrawer } from "@/components/shell-drawers";
 
 export const metadata: Metadata = {
-  title: { default: "forte-ui", template: "%s · forte-ui" },
+  title: { default: "Forte UI", template: "%s · Forte UI" },
   description:
     "An accessible React component library built on Base UI. One CSS variable re-themes the entire system, motion respects every user preference, and nothing ships a runtime.",
 };
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     className="size-5 rounded-3 bg-[linear-gradient(135deg,var(--forte-accent-9),var(--forte-secondary-9))] forte-hc-decorative"
                     aria-hidden="true"
                   />
-                  forte-ui
+                  Forte UI
                 </a>
               </div>
               <div className="inline-flex items-center gap-2">
