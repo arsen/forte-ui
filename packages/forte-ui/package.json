@@ -1,0 +1,41 @@
+{
+  "name": "forte-ui",
+  "version": "1.0.0-alpha.1",
+  "description": "Alias for @forte-ui/react — the canonical package of the forte-ui component library.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "cn.js",
+    "cn.d.ts",
+    "tailwind-merge.js",
+    "tailwind-merge.d.ts",
+    "theme.css",
+    "tailwind.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./theme.css": "./theme.css",
+    "./tailwind.css": "./tailwind.css",
+    "./tailwind-merge": {
+      "types": "./tailwind-merge.d.ts",
+      "import": "./tailwind-merge.js"
+    },
+    "./cn": {
+      "types": "./cn.d.ts",
+      "import": "./cn.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "homepage": "https://forte-ui.com",
+  "dependencies": {
+    "@forte-ui/react": "workspace:^"
+  }
+}
