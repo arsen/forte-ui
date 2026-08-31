@@ -406,7 +406,11 @@ export interface SelectPopupProps extends Omit<BasePopupProps, "className"> {
   /**
    * How the popup aligns along the chosen side. Ignored while
    * `alignItemWithTrigger` is in effect.
-   * @default "center"
+   *
+   * Defaults to `"start"` rather than Base UI's `"center"`, matching Menu: a
+   * popup wider than its trigger should drop from the trigger's start edge,
+   * not hang off both of them.
+   * @default "start"
    */
   align?: BasePositionerProps["align"];
   /**
@@ -481,7 +485,7 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
       children,
       alignItemWithTrigger = true,
       side,
-      align,
+      align = "start",
       sideOffset = 4,
       alignOffset,
       collisionPadding,
