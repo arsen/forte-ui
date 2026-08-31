@@ -35,7 +35,11 @@ export const metadata: Metadata = {
 // header toggle reads to label itself and what it flips, so an unset attribute
 // would mean neither the button nor the first click knows which way round the
 // page currently is.
-const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('forte-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}r.setAttribute('data-theme',t);var s=JSON.parse(localStorage.getItem('forte-studio')||'null');if(s&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-forte-'+d,s.root.data[d]);}}}catch(e){}})();`;
+// The font links are replayed here too — a stored `--forte-font-sans` without
+// its stylesheet would silently fall back to the system stack on every page
+// except the studio's. Unlike a var value, a link can fetch from anywhere, and
+// storage is user-editable, so only Google Fonts URLs are honoured.
+const noFlashScript = `(function(){try{var r=document.documentElement;var t=localStorage.getItem('forte-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}r.setAttribute('data-theme',t);var s=JSON.parse(localStorage.getItem('forte-studio')||'null');if(s&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-forte-'+d,s.root.data[d]);}var f=s.root.fonts;if(f&&f.length){for(var i=0;i<f.length;i++){if(typeof f[i]==='string'&&f[i].indexOf('https://fonts.googleapis.com/')===0){var l=document.createElement('link');l.rel='stylesheet';l.href=f[i];document.head.appendChild(l);}}}}}catch(e){}})();`;
 
 // Visible only on focus. WCAG SC 2.4.1 Bypass Blocks — without it a keyboard
 // user tabs through the entire sidebar on every page load.
