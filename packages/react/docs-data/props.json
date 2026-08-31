@@ -757,7 +757,7 @@
         "name": "orientation",
         "type": "ButtonGroupOrientation",
         "required": false,
-        "defaultValue": "horizontal",
+        "defaultValue": null,
         "description": "Which way the line runs. Defaults to the *opposite* of the group's\norientation — a row gets vertical seams — which is almost always what you\nwant, so leave it unset."
       }
     ]
@@ -797,7 +797,7 @@
         "name": "captionLayout",
         "type": "CalendarCaptionLayout",
         "required": false,
-        "defaultValue": "\"label\"",
+        "defaultValue": "label",
         "description": "What sits between the arrows: a static month and year, or dropdowns for\none or both. Dropdowns turn a birthday twenty years back into two clicks\ninstead of two hundred and forty."
       },
       {
@@ -853,7 +853,7 @@
         "name": "locale",
         "type": "string",
         "required": false,
-        "defaultValue": "\"en-US\"",
+        "defaultValue": "en-US",
         "description": "BCP 47 tag used for every month, weekday and day name.\n\nPinned rather than left to the runtime on purpose: `undefined` resolves\nto the server's locale during SSR and the browser's on the client, and\n\"August\" hydrating over \"août\" is a mismatch React can only fix by\nthrowing the markup away."
       },
       {
@@ -874,7 +874,7 @@
         "name": "mode",
         "type": "CalendarMode",
         "required": false,
-        "defaultValue": "\"single\"",
+        "defaultValue": "single",
         "description": "How many days can be picked at once. `\"single\"` selects one `Date`,\n`\"multiple\"` a `Date[]`, `\"range\"` a `{ from, to }` object."
       },
       {
@@ -888,7 +888,7 @@
         "name": "navVariant",
         "type": "ButtonVariant",
         "required": false,
-        "defaultValue": "\"ghost\"",
+        "defaultValue": "ghost",
         "description": "Visual weight of the two navigation arrows — any `Button` variant."
       },
       {
@@ -951,7 +951,7 @@
         "name": "size",
         "type": "CalendarSize",
         "required": false,
-        "defaultValue": "\"md\"",
+        "defaultValue": "md",
         "description": "Cell size and text size. Follows the ambient `data-forte-density` too."
       },
       {
@@ -1273,7 +1273,7 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": "Hue",
         "description": "Accessible name for the rail."
       }
     ]
@@ -1293,7 +1293,7 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": "Opacity",
         "description": "Accessible name for the rail."
       }
     ]
@@ -1313,7 +1313,7 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": "Colour format",
         "description": "Accessible name for the control."
       }
     ]
@@ -1353,7 +1353,7 @@
         "name": "align",
         "type": "Align",
         "required": false,
-        "defaultValue": "\"center\"",
+        "defaultValue": "center",
         "description": "How the popup lines up with the trigger along the chosen side."
       },
       {
@@ -1423,7 +1423,7 @@
         "name": "collisionBoundary",
         "type": "Boundary",
         "required": false,
-        "defaultValue": "\"clipping-ancestors\"",
+        "defaultValue": "clipping-ancestors",
         "description": "The boundary the popup tries to stay inside of."
       },
       {
@@ -1472,14 +1472,14 @@
         "name": "positionMethod",
         "type": "\"absolute\" | \"fixed\"",
         "required": false,
-        "defaultValue": "\"absolute\"",
+        "defaultValue": "absolute",
         "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
       },
       {
         "name": "side",
         "type": "Side",
         "required": false,
-        "defaultValue": "\"bottom\"",
+        "defaultValue": "bottom",
         "description": "Which side of the trigger to place the popup on. Flips automatically to\navoid collisions. `\"inline-start\"` / `\"inline-end\"` follow writing\ndirection."
       },
       {
@@ -1493,7 +1493,7 @@
         "name": "size",
         "type": "PopoverSize",
         "required": false,
-        "defaultValue": "\"md\"",
+        "defaultValue": "md",
         "description": "Width cap for the popup. The popup shrinks to fit its content and only\ngrows to this width when the content asks for it, so this is a ceiling\nrather than a fixed measure. Further clamped to the space the positioner\nreports as available."
       },
       {
@@ -1614,7 +1614,7 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": "Colour swatches",
         "description": "Accessible name for the group."
       }
     ]
@@ -1641,7 +1641,7 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": null,
         "description": "Accessible name. Defaults to the colour string, which is the only thing\nthat is reliably true about it — a name of your own (\"Brand primary\") is\nbetter wherever you have one."
       }
     ]
@@ -1687,7 +1687,7 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": "Colour value",
         "description": "Accessible name for the field."
       }
     ]
@@ -1976,7 +1976,7 @@
         "name": "side",
         "type": "Side",
         "required": false,
-        "defaultValue": "\"bottom\"",
+        "defaultValue": "bottom",
         "description": "Which side of the anchor the popup opens on."
       },
       {
@@ -2116,7 +2116,7 @@
         "name": "orientation",
         "type": "Orientation",
         "required": false,
-        "defaultValue": "\"horizontal\"",
+        "defaultValue": "horizontal",
         "description": "Orientation of the rule. A combobox list is vertical, so the separator\nbetween two groups runs horizontally."
       }
     ]
@@ -2545,7 +2545,7 @@
         "name": "orientation",
         "type": "Orientation",
         "required": false,
-        "defaultValue": "\"horizontal\"",
+        "defaultValue": "horizontal",
         "description": "Orientation of the rule. A menu is a vertical list, so the divider\nbetween two runs of items is horizontal."
       }
     ]
@@ -2660,7 +2660,7 @@
         "name": "locale",
         "type": "string",
         "required": false,
-        "defaultValue": "\"en-US\"",
+        "defaultValue": "en-US",
         "description": "BCP 47 tag for the calendar and for the trigger's own text. Pinned rather\nthan left to the runtime for the same reason as on `Calendar`: an\nunpinned locale differs between the server render and the browser."
       },
       {
@@ -2674,7 +2674,7 @@
         "name": "mode",
         "type": "CalendarMode",
         "required": false,
-        "defaultValue": "\"single\"",
+        "defaultValue": "single",
         "description": "How many days can be picked. Decides what `selected` holds and, unless\n`closeOnSelect` says otherwise, when the popup closes."
       },
       {
@@ -2832,7 +2832,7 @@
         "name": "children",
         "type": "ReactNode",
         "required": false,
-        "defaultValue": "Clear",
+        "defaultValue": "<CalendarGlyph />",
         "description": "Contents of the slot. Defaults to a calendar glyph."
       },
       {
@@ -2852,7 +2852,7 @@
         "name": "align",
         "type": "Align",
         "required": false,
-        "defaultValue": "\"center\"",
+        "defaultValue": "center",
         "description": "How the popup lines up with the trigger along the chosen side."
       },
       {
@@ -2908,7 +2908,7 @@
         "name": "collisionBoundary",
         "type": "Boundary",
         "required": false,
-        "defaultValue": "\"clipping-ancestors\"",
+        "defaultValue": "clipping-ancestors",
         "description": "The boundary the popup tries to stay inside of."
       },
       {
@@ -2950,14 +2950,14 @@
         "name": "positionMethod",
         "type": "\"absolute\" | \"fixed\"",
         "required": false,
-        "defaultValue": "\"absolute\"",
+        "defaultValue": "absolute",
         "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
       },
       {
         "name": "side",
         "type": "Side",
         "required": false,
-        "defaultValue": "\"bottom\"",
+        "defaultValue": "bottom",
         "description": "Which side of the trigger to place the popup on. Flips automatically to\navoid collisions. `\"inline-start\"` / `\"inline-end\"` follow writing\ndirection."
       },
       {
@@ -2991,7 +2991,7 @@
         "name": "captionLayout",
         "type": "CalendarCaptionLayout",
         "required": false,
-        "defaultValue": "\"label\"",
+        "defaultValue": "label",
         "description": "What sits between the arrows: a static month and year, or dropdowns for\none or both. Dropdowns turn a birthday twenty years back into two clicks\ninstead of two hundred and forty."
       },
       {
@@ -3061,7 +3061,7 @@
         "name": "navVariant",
         "type": "ButtonVariant",
         "required": false,
-        "defaultValue": "\"ghost\"",
+        "defaultValue": "ghost",
         "description": "Visual weight of the two navigation arrows — any `Button` variant."
       },
       {
@@ -3185,7 +3185,7 @@
         "name": "loadingLabel",
         "type": "string",
         "required": false,
-        "defaultValue": "\"Loading\"",
+        "defaultValue": "Loading",
         "description": "Announced to assistive technology while `loading` is true. Without it, a\nscreen reader user gets no signal that anything is happening."
       },
       {
@@ -3199,14 +3199,14 @@
         "name": "tone",
         "type": "ButtonTone",
         "required": false,
-        "defaultValue": "\"primary\"",
+        "defaultValue": "primary",
         "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
       },
       {
         "name": "variant",
         "type": "ButtonVariant",
         "required": false,
-        "defaultValue": "outline",
+        "defaultValue": "solid",
         "description": "How much visual weight the button carries."
       }
     ]
@@ -3788,7 +3788,7 @@
         "name": "validationMode",
         "type": "FormValidationMode",
         "required": false,
-        "defaultValue": "\"onSubmit\"",
+        "defaultValue": "onSubmit",
         "description": "When the fields inside are validated. `validationMode` on an individual\n`Field.Root` takes precedence over this.\n\n- `onSubmit` — validate on submit, then re-validate on change. The default,\n  and the right one for most forms: it does not tell someone their email\n  is invalid while they are still on the third character of it.\n- `onBlur` — validate a field when it loses focus.\n- `onChange` — validate on every keystroke. Pair it with\n  `validationDebounceTime` on the field if `validate` is expensive."
       }
     ]
@@ -3849,14 +3849,14 @@
         "name": "size",
         "type": "InputGroupSize",
         "required": false,
-        "defaultValue": "sm",
+        "defaultValue": "md",
         "description": "Size of the group. Height, inline padding and font size move together for\nthe control and every addon at once, and the numbers come from the same\n`--forte-control-*` tokens `Input` and `Select.Trigger` read — so a group\nand a plain input on one row are the same height at every\n`data-forte-density` setting."
       },
       {
         "name": "variant",
         "type": "InputGroupVariant",
         "required": false,
-        "defaultValue": "ghost",
+        "defaultValue": "outline",
         "description": "How much visual weight the group carries. `outline` reads as a form\ncontrol, `soft` as a filled field, `ghost` as an inline affordance — the\nsame three `Input` has, because to a reader the group *is* the input."
       }
     ]
@@ -3998,7 +3998,7 @@
         "name": "loadingLabel",
         "type": "string",
         "required": false,
-        "defaultValue": "\"Loading\"",
+        "defaultValue": "Loading",
         "description": "Announced to assistive technology while `loading` is true. Without it, a\nscreen reader user gets no signal that anything is happening."
       },
       {
@@ -4534,7 +4534,7 @@
         "name": "variant",
         "type": "NavigationMenuVariant",
         "required": false,
-        "defaultValue": "card",
+        "defaultValue": "plain",
         "description": "How loud the row is. `plain` is the bar row; `card` is the block shape a\nnested menu's trigger takes inside a panel, where it has to sit level with\nthe `Link`s around it."
       }
     ]
@@ -4969,7 +4969,7 @@
         "name": "validationType",
         "type": "OTPFieldValidationType",
         "required": false,
-        "defaultValue": "\"numeric\"",
+        "defaultValue": "numeric",
         "description": "Which characters the field accepts. Anything else is dropped as it is\ntyped or pasted and reported through `onValueInvalid`, so a code copied\nwith a stray space or a dash still lands correctly.\n\nIt also picks the virtual keyboard: `numeric` asks for the digit pad,\nwhich is most of why a phone is bearable to type a code on. Override\n`inputMode` if you need a different one."
       },
       {
@@ -5016,14 +5016,14 @@
         "name": "orientation",
         "type": "SeparatorOrientation",
         "required": false,
-        "defaultValue": "\"horizontal\"",
+        "defaultValue": "horizontal",
         "description": "Which way the rule runs — and therefore which axis it separates. A\n`horizontal` rule is a line across the inline axis dividing stacked\ncontent; a `vertical` one is a line down the block axis dividing content\nin a row.\n\nIt is also what Base UI reports as `aria-orientation`, so it is a\nsemantic choice, not only a visual one."
       },
       {
         "name": "variant",
         "type": "SeparatorVariant",
         "required": false,
-        "defaultValue": "outline",
+        "defaultValue": "solid",
         "description": "The line style. A rule has exactly one visual dimension, so this is the\nwhole of it: `solid` for structural divisions, `dashed` or `dotted` for\nsofter, more provisional ones (a drop zone's edge, an optional section)."
       }
     ]
@@ -5181,7 +5181,7 @@
         "name": "align",
         "type": "Align",
         "required": false,
-        "defaultValue": "end",
+        "defaultValue": "center",
         "description": "How the popup lines up with the trigger along the chosen side."
       },
       {
@@ -5237,7 +5237,7 @@
         "name": "collisionBoundary",
         "type": "Boundary",
         "required": false,
-        "defaultValue": "\"clipping-ancestors\"",
+        "defaultValue": "clipping-ancestors",
         "description": "The boundary the popup tries to stay inside of."
       },
       {
@@ -5279,7 +5279,7 @@
         "name": "positionMethod",
         "type": "\"absolute\" | \"fixed\"",
         "required": false,
-        "defaultValue": "\"absolute\"",
+        "defaultValue": "absolute",
         "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
       },
       {
@@ -5606,7 +5606,7 @@
         "name": "collisionBoundary",
         "type": "Boundary",
         "required": false,
-        "defaultValue": "\"clipping-ancestors\"",
+        "defaultValue": "clipping-ancestors",
         "description": "The boundary the card tries to stay inside of."
       },
       {
@@ -5648,7 +5648,7 @@
         "name": "positionMethod",
         "type": "\"absolute\" | \"fixed\"",
         "required": false,
-        "defaultValue": "\"absolute\"",
+        "defaultValue": "absolute",
         "description": "Whether the card is positioned with `position: absolute` or\n`position: fixed`."
       },
       {
@@ -6197,7 +6197,7 @@
         "name": "orientation",
         "type": "ScrollAreaOrientation",
         "required": false,
-        "defaultValue": "vertical",
+        "defaultValue": "both",
         "description": "The axis — or axes — this area scrolls on. Declare it whenever only one\naxis can ever overflow: under `\"both\"` the viewport is a scroll container\non both axes regardless, so a wheel or trackpad gesture along the axis\nwith nothing to scroll is still claimed by the viewport — the content\ndoes not move, the page behind does not scroll either, and macOS paints\nits rubber-band bounce on a box that has nowhere to go. Naming the axis\nturns the other one off entirely, so that gesture falls through to the\npage — which is what a vertical scroll over a horizontal tab strip is\nalmost always asking for."
       },
       {
@@ -6369,7 +6369,7 @@
         "name": "align",
         "type": "Align",
         "required": false,
-        "defaultValue": "\"center\"",
+        "defaultValue": "center",
         "description": "How the popup aligns along the chosen side. Ignored while\n`alignItemWithTrigger` is in effect."
       },
       {
@@ -6446,7 +6446,7 @@
         "name": "side",
         "type": "Side",
         "required": false,
-        "defaultValue": "\"bottom\"",
+        "defaultValue": "bottom",
         "description": "Which side of the trigger the popup opens on. Ignored while\n`alignItemWithTrigger` is in effect."
       },
       {
@@ -6547,7 +6547,7 @@
         "name": "orientation",
         "type": "Orientation",
         "required": false,
-        "defaultValue": "\"horizontal\"",
+        "defaultValue": "horizontal",
         "description": "Orientation of the rule. A select list is vertical, so the separator\nbetween two groups runs horizontally."
       }
     ]
@@ -7373,14 +7373,14 @@
         "name": "size",
         "type": "ToggleSize",
         "required": false,
-        "defaultValue": "\"md\"",
+        "defaultValue": "md",
         "description": "Size of the button. Matches `Button` step for step so the two line up in\none toolbar. Inherited from an enclosing `ToggleGroup` when left unset."
       },
       {
         "name": "tone",
         "type": "ToggleTone",
         "required": false,
-        "defaultValue": "\"primary\"",
+        "defaultValue": "primary",
         "description": "Which semantic colour set the pressed state draws from. Combines freely\nwith `variant`. Inherited from an enclosing `ToggleGroup` when left unset."
       },
       {
@@ -7394,7 +7394,7 @@
         "name": "variant",
         "type": "ToggleVariant",
         "required": false,
-        "defaultValue": "\"soft\"",
+        "defaultValue": "soft",
         "description": "How loud the *pressed* state is. Unpressed is quiet in every variant —\nthat is what makes a toggle read as off — so the variant only decides what\n\"on\" looks like: `solid` fills with the tone, `soft` tints with it,\n`outline` tints and keeps a border that is also drawn while unpressed.\n\nThere is deliberately no `ghost`: every variant is already chromeless at\nrest, so a ghost toggle would differ from `soft` in nothing but its\npressed fill — and dropping that fill would leave hue as the only cue\nseparating on from off.\n\nInherited from an enclosing `ToggleGroup` when left unset."
       }
     ]
@@ -7442,7 +7442,7 @@
         "name": "orientation",
         "type": "ToggleGroupOrientation",
         "required": false,
-        "defaultValue": "\"horizontal\"",
+        "defaultValue": "horizontal",
         "description": "Direction the toggles are laid out in, and the axis the arrow keys move\nalong. Unlike `RadioGroup`'s, this is not layout-only: Base UI binds the\narrows to the named axis, so a vertical group answers to Up and Down and\nleaves Left and Right to the page."
       },
       {
@@ -7463,14 +7463,14 @@
         "name": "size",
         "type": "ToggleSize",
         "required": false,
-        "defaultValue": "\"md\"",
+        "defaultValue": "md",
         "description": "Default `size` for every `Toggle` inside the group. A toggle's own `size`\nstill wins."
       },
       {
         "name": "tone",
         "type": "ToggleTone",
         "required": false,
-        "defaultValue": "\"primary\"",
+        "defaultValue": "primary",
         "description": "Default `tone` for every `Toggle` inside the group. A toggle's own `tone`\nstill wins."
       },
       {
@@ -7484,7 +7484,7 @@
         "name": "variant",
         "type": "ToggleVariant",
         "required": false,
-        "defaultValue": "\"soft\"",
+        "defaultValue": "soft",
         "description": "Default `variant` for every `Toggle` inside the group. A toggle's own\n`variant` still wins."
       }
     ]
@@ -7525,7 +7525,7 @@
         "name": "variant",
         "type": "ToolbarVariant",
         "required": false,
-        "defaultValue": "outline",
+        "defaultValue": "panel",
         "description": "How much chrome the bar itself carries. `plain` is a bare row with no\nsurface — right when the toolbar sits on a panel that already has one.\n`panel` fills; `outline` draws a border on the page background.\n\nIt says nothing about the controls inside: a `plain` bar can still hold\nsolid buttons, and a `panel` bar quiet ones."
       },
       {
@@ -7593,7 +7593,7 @@
         "name": "loadingLabel",
         "type": "string",
         "required": false,
-        "defaultValue": "\"Loading\"",
+        "defaultValue": "Loading",
         "description": "Announced to assistive technology while `loading` is true.\n\nIgnored when `render` is set."
       },
       {
@@ -7607,7 +7607,7 @@
         "name": "size",
         "type": "ButtonSize",
         "required": false,
-        "defaultValue": "md",
+        "defaultValue": "the root's `size`",
         "description": "Size of the button. Inherited from `Toolbar.Root` when left unset.\n\nIgnored when `render` is set."
       },
       {
@@ -7621,7 +7621,7 @@
         "name": "variant",
         "type": "ButtonVariant",
         "required": false,
-        "defaultValue": "outline",
+        "defaultValue": "ghost",
         "description": "How much visual weight the button carries. Defaults to `ghost` rather than\n`Button`'s `solid`: a toolbar is a strip of peers, and a row of solid\nbuttons has no hierarchy left to spend on the one that matters. Give the\nprimary action `variant=\"solid\"` explicitly.\n\nIgnored when `render` is set — the rendered component brings its own\nstyling."
       }
     ]
@@ -7641,7 +7641,7 @@
         "name": "size",
         "type": "ToolbarSize",
         "required": false,
-        "defaultValue": "md",
+        "defaultValue": "the root's `size`",
         "description": "Size of the link, matching the controls beside it. Inherited from\n`Toolbar.Root` when left unset."
       }
     ]
@@ -7675,7 +7675,7 @@
         "name": "size",
         "type": "ToolbarSize",
         "required": false,
-        "defaultValue": "md",
+        "defaultValue": "the root's `size`",
         "description": "Size of the control. Inherited from `Toolbar.Root` when left unset.\n\nThis shadows the native `size` attribute, exactly as `Input`'s does.\n\nIgnored when `render` is set."
       },
       {
@@ -7702,7 +7702,7 @@
         "name": "orientation",
         "type": "ToolbarOrientation",
         "required": false,
-        "defaultValue": "horizontal",
+        "defaultValue": null,
         "description": "Which way the rule runs. Defaults to the *opposite* of the toolbar's\norientation — a horizontal bar gets vertical rules — which is almost\nalways what you want, so leave it unset."
       }
     ]
@@ -7819,7 +7819,7 @@
         "name": "trackCursorAxis",
         "type": "\"none\" | \"both\" | \"x\" | \"y\"",
         "required": false,
-        "defaultValue": "\"none\"",
+        "defaultValue": "none",
         "description": "Which axis the tooltip follows the cursor on. `'both'` turns it into a\ncursor-tracking label; combine with `side=\"bottom\"` for the usual feel."
       },
       {
@@ -7950,7 +7950,7 @@
         "name": "collisionBoundary",
         "type": "Boundary",
         "required": false,
-        "defaultValue": "\"clipping-ancestors\"",
+        "defaultValue": "clipping-ancestors",
         "description": "The boundary the tooltip tries to stay inside of."
       },
       {
@@ -7992,7 +7992,7 @@
         "name": "positionMethod",
         "type": "\"absolute\" | \"fixed\"",
         "required": false,
-        "defaultValue": "\"absolute\"",
+        "defaultValue": "absolute",
         "description": "Whether the tooltip is positioned with `position: absolute` or\n`position: fixed`."
       },
       {

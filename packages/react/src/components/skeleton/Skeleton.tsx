@@ -190,9 +190,15 @@ export interface SkeletonTextProps
    * @default "60%"
    */
   lastLineWidth?: SkeletonLength;
-  /** See `Skeleton.Root`. Falls back to the enclosing group, then `pulse`. */
+  /**
+   * See `Skeleton.Root`. Falls back to the enclosing group, then `pulse`.
+   * @default "pulse"
+   */
   animation?: SkeletonAnimation;
-  /** See `Skeleton.Root`. Falls back to the enclosing group, then `true`. */
+  /**
+   * See `Skeleton.Root`. Falls back to the enclosing group, then `true`.
+   * @default true
+   */
   loading?: boolean;
   /**
    * Additional class name(s). Applied after the internal styles so consumer
