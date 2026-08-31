@@ -24,17 +24,17 @@ export function Showcase() {
   return (
     <Tabs.Root
       defaultValue="forms"
-      variant="pill"
-      className="mt-4 overflow-hidden rounded-surface border border-border-muted bg-panel"
+      variant="line"
+      className="overflow-hidden rounded-surface border border-border-muted bg-panel gap-0"
     >
-      <Tabs.List className="border-b border-border-muted px-3 py-2">
+      <Tabs.List className="border-b rounded-none border-border-muted px-3 py-2">
         <Tabs.Tab value="forms">Form controls</Tabs.Tab>
         <Tabs.Tab value="overlays">Overlays</Tabs.Tab>
         <Tabs.Tab value="buttons">Buttons</Tabs.Tab>
         <Tabs.Indicator />
       </Tabs.List>
 
-      <Tabs.Panel value="forms" className="bg-background p-6">
+      <Tabs.Panel value="forms" className="bg-background p-6 rounded-none">
         <div className="grid max-w-[30rem] gap-4">
           <Row label="Email notifications" hint="Weekly digest and mentions">
             <Switch defaultChecked />
@@ -69,7 +69,7 @@ export function Showcase() {
         </div>
       </Tabs.Panel>
 
-      <Tabs.Panel value="overlays" className="bg-background p-6">
+      <Tabs.Panel value="overlays" className="bg-background p-6 rounded-none">
         <div className={ROW}>
           <Dialog.Root>
             <Dialog.Trigger render={<Button />}>Open dialog</Dialog.Trigger>
@@ -103,7 +103,7 @@ export function Showcase() {
         </p>
       </Tabs.Panel>
 
-      <Tabs.Panel value="buttons" className="bg-background p-6">
+      <Tabs.Panel value="buttons" className="bg-background p-6 rounded-none">
         {/* The gap between the two rows was a `.row + .row` margin; a grid says
           * the same thing without a sibling selector. */}
         <div className="grid gap-4">

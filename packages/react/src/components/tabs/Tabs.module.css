@@ -31,7 +31,7 @@
      * re-pointing the global tokens they resolve to. */
     /** Corner radius of a tab, and of the panel. A `line` tab applies it only to
      * the two corners away from the rail, capped by the row below */
-    --forte-tabs-radius: var(--forte-radius-control);
+    --forte-tabs-radius: var(--forte-radius-surface);
     /* Same radius, capped at half the tab's height, for the two corners a line
      * tab actually rounds. Its other two are square (see the Tab section), and
      * CSS only shrinks an oversized radius to fit the corners SHARING its edge
