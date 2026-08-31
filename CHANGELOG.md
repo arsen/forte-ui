@@ -13,22 +13,21 @@ and this project adheres to
 
 ## [Unreleased]
 
-### ScrollArea
+## [1.0.0-alpha.3] - 2026-08-31
 
-- New `orientation` prop on `ScrollArea.Root` (`"both"` (default) |
-  `"vertical"` | `"horizontal"`). Naming the axis turns the other one off —
-  its `overflow` becomes `hidden` on the viewport and its overscroll is no
-  longer contained — so a wheel or trackpad gesture along the axis with
-  nothing to scroll falls through to the page instead of being claimed (and,
-  on macOS, rubber-banded) by a viewport that cannot move. The resolved value
-  is exposed as `data-orientation` on the root and viewport.
+### Button
 
-### Tabs
+- Fixed `data-icon-only` being silently erased when `Button` is composed as
+  another forte-ui component's `render` target (for example
+  `<DialogClose render={<Button iconOnly />} />`); the button's own value now
+  survives Base UI's prop merge instead of being overwritten by the outer
+  part's unset attribute.
 
-- The scroll area `Tabs.List` wraps itself in now inherits the strip's
-  `orientation`, so scrolling across the strip — vertically over horizontal
-  tabs, horizontally over vertical ones — reaches the page instead of
-  bouncing a viewport with nothing to scroll on that axis.
+### Dialog
+
+- Fixed `DialogClose`'s `data-icon-only` attribute clobbering a composed
+  `render` target's own value — `<DialogClose render={<Button iconOnly />} />`
+  no longer un-squares the button.
 
 ### Drawer
 
@@ -45,6 +44,44 @@ and this project adheres to
   is now permanently `pointer-events: none` with the popup restoring its own
   events — modal behaviour (scrim, outside-press dismissal) and the
   click-through during the exit animation are unchanged.
+- Fixed `DrawerClose`'s `data-icon-only` attribute clobbering a composed
+  `render` target's own value, the same fix as `Dialog` and `Popover`'s close
+  buttons.
+
+### Popover
+
+- Fixed `PopoverClose`'s `data-icon-only` attribute clobbering a composed
+  `render` target's own value — `<PopoverClose render={<Button iconOnly />} />`
+  no longer un-squares the button.
+
+### ScrollArea
+
+- New `orientation` prop on `ScrollArea.Root` (`"both"` (default) |
+  `"vertical"` | `"horizontal"`). Naming the axis turns the other one off —
+  its `overflow` becomes `hidden` on the viewport and its overscroll is no
+  longer contained — so a wheel or trackpad gesture along the axis with
+  nothing to scroll falls through to the page instead of being claimed (and,
+  on macOS, rubber-banded) by a viewport that cannot move. The resolved value
+  is exposed as `data-orientation` on the root and viewport.
+
+### Tabs
+
+- The scroll area `Tabs.List` wraps itself in now inherits the strip's
+  `orientation`, so scrolling across the strip — vertically over horizontal
+  tabs, horizontally over vertical ones — reaches the page instead of
+  bouncing a viewport with nothing to scroll on that axis.
+- Fixed the `pill` variant's list radius being pinned to a fixed step instead
+  of concentric with its tabs, so under a rounder radius preset the strip's
+  corners no longer run a visibly tighter curve than the pills inside it.
+- The `line` variant's sliding indicator now squares off the two corners
+  against the rail — the same treatment the tab itself gets — instead of
+  rounding all four, so the bar reads as attached to the rail rather than
+  floating above it.
+
+### Toggle
+
+- Fixed `data-icon-only` on `Toggle` being erased when composed via `render`,
+  the same class of bug fixed on `Button`.
 
 ## [1.0.0-alpha.2] - 2026-08-30
 
@@ -103,6 +140,7 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...HEAD
+[1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
 [1.0.0-alpha.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2
 [1.0.0-alpha.1]: https://github.com/arsen/forte-ui/releases/tag/v1.0.0-alpha.1
