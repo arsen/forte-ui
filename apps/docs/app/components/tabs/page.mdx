@@ -52,7 +52,7 @@ The variant is set once on `Tabs.Root` and reaches the list, tabs and indicator 
 
 ### Overflow
 
-A strip with more tabs than room scrolls rather than spilling out of its container. `Tabs.List` wraps itself in a [`ScrollArea`](/components/scroll-area/), so the overflowing end fades out under a mask that opens and closes with the scroll position, a swipe or a drag brings it back, and `overscroll-behavior: contain` stops that swipe dragging the page sideways once the strip hits its end. It costs nothing while the tabs fit: a `ScrollArea` with no overflow shows no fade and takes no tab stop.
+A strip with more tabs than room scrolls rather than spilling out of its container. `Tabs.List` wraps itself in a [`ScrollArea`](/components/scroll-area/), so the overflowing end fades out under a mask that opens and closes with the scroll position, a swipe or a drag brings it back, and `overscroll-behavior: contain` stops that swipe dragging the page sideways once the strip hits its end. The scroll area also inherits the strip's `orientation`, which switches its other axis off entirely — so a vertical wheel or trackpad gesture over a horizontal strip scrolls the page, instead of being claimed (and, on macOS, rubber-banded) by a viewport with nothing to scroll that way. It costs nothing while the tabs fit: a `ScrollArea` with no overflow shows no fade and takes no tab stop.
 
 <DemoBlock id="tabs/overflow" />
 

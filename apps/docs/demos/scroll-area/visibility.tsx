@@ -9,6 +9,7 @@ export default function ScrollAreaVisibility() {
     <ScrollArea.Root
       fade={false}
       scrollbarVisibility="always"
+      orientation="vertical"
       className="max-h-[11rem] w-full max-w-[22rem]"
     >
       <ScrollArea.Viewport aria-label="Rows">

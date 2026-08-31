@@ -45,7 +45,7 @@ export default function DialogScrollInside() {
         {/* Name the region. A scrollable box is announced as a group with no
             name of its own, and Base UI makes it a real tab stop whenever it
             can scroll. */}
-        <ScrollArea.Root className={scroller}>
+        <ScrollArea.Root orientation="vertical" className={scroller}>
           <ScrollArea.Viewport aria-label="Terms of service">
             {/* `pe-4` keeps the text clear of the overlay scrollbar, so the
                 last words of a line are never sitting under the thumb. */}

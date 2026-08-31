@@ -19,18 +19,22 @@ type BaseIndicatorProps = React.ComponentPropsWithoutRef<typeof BaseTabs.Indicat
 type BasePanelProps = React.ComponentPropsWithoutRef<typeof BaseTabs.Panel>;
 
 /**
- * Two things chosen on `Tabs.Root` are acted on further down. `variant` has to
- * reach List, Tab and Indicator, which are the parts that actually paint it;
- * `overflow` decides whether `List` wraps itself in a `ScrollArea`. Passing
- * both through context keeps the consumer-facing API to two props on the root
- * instead of six spread across the parts that have to be kept in sync — and a
- * mismatched pair (pill list, line indicator) is not a state anyone wants to
- * be able to express.
+ * Three things chosen on `Tabs.Root` are acted on further down. `variant` has
+ * to reach List, Tab and Indicator, which are the parts that actually paint
+ * it; `overflow` decides whether `List` wraps itself in a `ScrollArea`; and
+ * `orientation` — Base UI's own prop, passed through untouched — is repeated
+ * here because that `ScrollArea` needs it too, to scroll on the strip's axis
+ * only. Passing them through context keeps the consumer-facing API to props
+ * on the root instead of copies spread across the parts that have to be kept
+ * in sync — and a mismatched pair (pill list, line indicator; a vertical
+ * strip scrolling sideways) is not a state anyone wants to be able to
+ * express.
  */
 const TabsContext = React.createContext<{
   variant: TabsVariant;
   overflow: TabsOverflow;
-}>({ variant: "line", overflow: "scroll" });
+  orientation: "horizontal" | "vertical";
+}>({ variant: "line", overflow: "scroll", orientation: "horizontal" });
 
 /* -------------------------------------------------------------------------
  * Root
@@ -80,9 +84,17 @@ const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(function TabsRo
   { variant = "line", overflow = "scroll", className, children, ...props },
   ref,
 ) {
-  // Stable across renders unless one of the two actually changes, so a root
-  // that sets neither never re-renders its subtree for this.
-  const context = React.useMemo(() => ({ variant, overflow }), [variant, overflow]);
+  // Base UI owns `orientation` and defaults it to "horizontal"; the default is
+  // restated here only because the context needs the resolved value before
+  // Base UI sees the prop.
+  const orientation = props.orientation ?? "horizontal";
+
+  // Stable across renders unless one of the three actually changes, so a root
+  // that sets none of them never re-renders its subtree for this.
+  const context = React.useMemo(
+    () => ({ variant, overflow, orientation }),
+    [variant, overflow, orientation],
+  );
 
   return (
     <TabsContext.Provider value={context}>
@@ -211,7 +223,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
   { activateOnFocus = false, loopFocus = true, className, children, ...props },
   ref,
 ) {
-  const { variant, overflow } = React.useContext(TabsContext);
+  const { variant, overflow, orientation } = React.useContext(TabsContext);
 
   // The box that scrolls is the ScrollArea's viewport, not the strip, so both
   // ends of the measurement need a ref. `viewportRef` is only ever attached on
@@ -314,9 +326,14 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(function TabsLi
    * out is all it takes.
    *
    * No `data-forte` on these parts: rule 9 — a composed forte-ui component tags
-   * its own root, and consumers scope with a descendant selector. */
+   * its own root, and consumers scope with a descendant selector.
+   *
+   * `orientation` is the strip's own axis: it turns the viewport's other axis
+   * off, so a wheel gesture across the strip — vertical, over horizontal
+   * tabs — scrolls the page instead of rubber-banding a viewport that has
+   * nothing to scroll that way. */
   return (
-    <ScrollArea.Root className={styles.scroller}>
+    <ScrollArea.Root className={styles.scroller} orientation={orientation}>
       <ScrollArea.Viewport ref={viewportRef}>
         {/* Content is sized to its content rather than stretched to the
           * viewport, which is what lets the nowrap row of `flex: 0 0 auto` tabs

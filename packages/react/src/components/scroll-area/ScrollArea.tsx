@@ -6,6 +6,7 @@ import { clsx } from "clsx";
 import styles from "./ScrollArea.module.css";
 
 export type ScrollAreaScrollbarVisibility = "auto" | "always";
+export type ScrollAreaOrientation = "both" | "vertical" | "horizontal";
 
 type BaseRootProps = React.ComponentPropsWithoutRef<typeof BaseScrollArea.Root>;
 type BaseViewportProps = React.ComponentPropsWithoutRef<typeof BaseScrollArea.Viewport>;
@@ -15,17 +16,19 @@ type BaseThumbProps = React.ComponentPropsWithoutRef<typeof BaseScrollArea.Thumb
 type BaseCornerProps = React.ComponentPropsWithoutRef<typeof BaseScrollArea.Corner>;
 
 /**
- * `fade` is chosen on `ScrollArea.Root` but applied on `ScrollArea.Viewport`,
- * and `scrollbarVisibility` is chosen on the root but applied on each
- * `ScrollArea.Scrollbar` — of which there are usually two. Context keeps the
- * consumer-facing API to one prop in the place a reader looks for it, instead
- * of three that have to be kept in agreement, and makes a scroll area whose
- * two scrollbars disagree about when to appear unexpressible.
+ * `fade` and `orientation` are chosen on `ScrollArea.Root` but applied on
+ * `ScrollArea.Viewport`, and `scrollbarVisibility` is chosen on the root but
+ * applied on each `ScrollArea.Scrollbar` — of which there are usually two.
+ * Context keeps the consumer-facing API to one prop in the place a reader
+ * looks for it, instead of several that have to be kept in agreement, and
+ * makes a scroll area whose two scrollbars disagree about when to appear
+ * unexpressible.
  */
 const ScrollAreaContext = React.createContext<{
   fade: boolean;
   scrollbarVisibility: ScrollAreaScrollbarVisibility;
-}>({ fade: true, scrollbarVisibility: "auto" });
+  orientation: ScrollAreaOrientation;
+}>({ fade: true, scrollbarVisibility: "auto", orientation: "both" });
 
 /* -------------------------------------------------------------------------
  * Root
@@ -53,6 +56,19 @@ export interface ScrollAreaRootProps extends Omit<BaseRootProps, "className"> {
    */
   scrollbarVisibility?: ScrollAreaScrollbarVisibility;
   /**
+   * The axis — or axes — this area scrolls on. Declare it whenever only one
+   * axis can ever overflow: under `"both"` the viewport is a scroll container
+   * on both axes regardless, so a wheel or trackpad gesture along the axis
+   * with nothing to scroll is still claimed by the viewport — the content
+   * does not move, the page behind does not scroll either, and macOS paints
+   * its rubber-band bounce on a box that has nowhere to go. Naming the axis
+   * turns the other one off entirely, so that gesture falls through to the
+   * page — which is what a vertical scroll over a horizontal tab strip is
+   * almost always asking for.
+   * @default "both"
+   */
+  orientation?: ScrollAreaOrientation;
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -70,17 +86,30 @@ export interface ScrollAreaRootProps extends Omit<BaseRootProps, "className"> {
  */
 const ScrollAreaRoot = React.forwardRef<HTMLDivElement, ScrollAreaRootProps>(
   function ScrollAreaRoot(
-    { fade = true, scrollbarVisibility = "auto", className, children, ...props },
+    {
+      fade = true,
+      scrollbarVisibility = "auto",
+      orientation = "both",
+      className,
+      children,
+      ...props
+    },
     ref,
   ) {
     const context = React.useMemo(
-      () => ({ fade, scrollbarVisibility }),
-      [fade, scrollbarVisibility],
+      () => ({ fade, scrollbarVisibility, orientation }),
+      [fade, scrollbarVisibility, orientation],
     );
 
     return (
       <ScrollAreaContext.Provider value={context}>
-        <BaseScrollArea.Root ref={ref} className={clsx(styles.root, className)} data-forte="scroll-area" {...props}>
+        <BaseScrollArea.Root
+          ref={ref}
+          className={clsx(styles.root, className)}
+          data-forte="scroll-area"
+          data-orientation={orientation}
+          {...props}
+        >
           {children}
         </BaseScrollArea.Root>
       </ScrollAreaContext.Provider>
@@ -112,8 +141,21 @@ export interface ScrollAreaViewportProps extends Omit<BaseViewportProps, "classN
  * obvious what is being scrolled.
  */
 const ScrollAreaViewport = React.forwardRef<HTMLDivElement, ScrollAreaViewportProps>(
-  function ScrollAreaViewport({ className, children, ...props }, ref) {
-    const { fade } = React.useContext(ScrollAreaContext);
+  function ScrollAreaViewport({ className, style, children, ...props }, ref) {
+    const { fade, orientation } = React.useContext(ScrollAreaContext);
+
+    // Base UI hardcodes `overflow: scroll` as an inline style on the viewport,
+    // so no stylesheet rule can switch an axis off — inline beats every layer,
+    // and `!important` is banned here. Its prop merging is rightmost-wins on
+    // `style`, which makes this the one sanctioned way through: the longhand
+    // lands after the primitive's shorthand, and the consumer's own `style`
+    // after both.
+    const axisStyle =
+      orientation === "horizontal"
+        ? ({ overflowY: "hidden" } as const)
+        : orientation === "vertical"
+          ? ({ overflowX: "hidden" } as const)
+          : undefined;
 
     return (
       <BaseScrollArea.Viewport
@@ -124,6 +166,8 @@ const ScrollAreaViewport = React.forwardRef<HTMLDivElement, ScrollAreaViewportPr
         // absent attribute is what turns the mask off. `data-fade="false"`
         // would still match.
         data-fade={fade ? "" : undefined}
+        data-orientation={orientation}
+        style={axisStyle ? { ...axisStyle, ...style } : style}
         {...props}
       >
         {children}

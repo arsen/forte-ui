@@ -65,6 +65,8 @@ Nothing changes but the axis. `ScrollArea.Content` is what makes it work — see
 
 Notice the fade switching sides as you scroll. Its direction is the *inline* axis, not the physical one, so in an RTL context the start fade appears on the right; the demo frame's direction toggle shows this.
 
+One prop matters here beyond the axis swap: `orientation="horizontal"`. Without it the viewport is a scroll container on both axes, so a vertical wheel or trackpad gesture over the row is claimed by a box that has nothing to scroll that way — the content stays put, the page behind does not scroll either, and macOS paints its rubber-band bounce on the trapped viewport. Naming the axis turns the other one off, and the gesture falls through to the page. Declare it whenever only one axis can ever overflow — the vertical demos on this page all carry `orientation="vertical"` for the mirrored reason.
+
 ### Both scrollbars
 
 When either axis might overflow, render both `Scrollbar`s and the `Corner`. Base UI measures the tracks and shortens each one by the corner's size, so they never overlap and the corner is exactly the square they would have fought over. It mounts only while both scrollbars are visible.
@@ -75,7 +77,7 @@ Both fades are live at once here, composited so that a corner fading on two edge
 
 ### Scrollable tabs
 
-A tab strip is the case that most wants this component: the tabs are fixed-width, they cannot wrap, and there is no room to show all of them. Wrap `Tabs.List` — not `Tabs.Root` — in a scroll area, so the strip scrolls and the panels below it stay put.
+A tab strip is the case that most wants this component: the tabs are fixed-width, they cannot wrap, and there is no room to show all of them. So much so that `Tabs.List` now does it for you — under `Tabs.Root`'s default `overflow="scroll"` the strip wraps itself in a scroll area, with the fade but deliberately without a scrollbar. This demo is for when you want the scrollbar back: `overflow="visible"` switches the built-in wrap off, and an explicit scroll area goes around `Tabs.List` — not `Tabs.Root` — so the strip scrolls and the panels below it stay put.
 
 <DemoBlock id="scroll-area/tabs" />
 
@@ -169,7 +171,7 @@ Every property below is declared on `ScrollArea.Root` and inherited by the parts
 
 A `border-radius` set on `ScrollArea.Root` is inherited by the viewport, which is the box that actually clips, so rounding the root rounds the scrolled content with it.
 
-The parts also expose their state as data attributes — `data-has-overflow-x`, `data-has-overflow-y`, `data-overflow-x-start`, `data-overflow-x-end`, `data-overflow-y-start`, `data-overflow-y-end`, `data-scrolling`, `data-hovering`, `data-orientation` — so a Tailwind arbitrary variant such as `data-[overflow-y-start]:...` can target them without a wrapper element. The four `data-overflow-*` attributes are the boolean form of the same measurements the fade uses; `overflowEdgeThreshold` on `ScrollArea.Root` sets how many pixels must be scrolled before they appear.
+The parts also expose their state as data attributes — `data-has-overflow-x`, `data-has-overflow-y`, `data-overflow-x-start`, `data-overflow-x-end`, `data-overflow-y-start`, `data-overflow-y-end`, `data-scrolling`, `data-hovering`, `data-orientation` (each scrollbar's axis, and on the root and viewport the `orientation` prop) — so a Tailwind arbitrary variant such as `data-[overflow-y-start]:...` can target them without a wrapper element. The four `data-overflow-*` attributes are the boolean form of the same measurements the fade uses; `overflowEdgeThreshold` on `ScrollArea.Root` sets how many pixels must be scrolled before they appear.
 
 ## API reference
 
