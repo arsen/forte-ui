@@ -1,0 +1,207 @@
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "Vite",
+  description:
+    "Step-by-step setup of @forte-ui/react in a brand-new Vite React project — with and without Tailwind.",
+};
+
+# Getting started with Vite
+
+This page walks a brand-new Vite React project from `create-vite` to a themed, rendering component — first without Tailwind, then with it. The two paths differ only in how the CSS is wired up.
+
+A Vite app is simpler than the [Next.js setup](/getting-started/nextjs) in one structural way: there are no server components, so the `"use client"` boundary does not exist. Every component — flat exports and compound ones alike — imports and renders from anywhere.
+
+## Without Tailwind
+
+### 1. Create the project
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+```
+
+Any package manager works — `pnpm create vite` and `yarn create vite` take the same template flag.
+
+### 2. Install the library
+
+```bash
+npm install @forte-ui/react
+```
+
+React 18 or 19 and the matching `react-dom` are the only required peer dependencies. [Base UI](https://base-ui.com) comes with the package.
+
+### 3. Import the stylesheet
+
+One stylesheet, imported once at the entry point. In `src/main.tsx`:
+
+```tsx
+import "@forte-ui/react/theme.css";
+import "./index.css";
+```
+
+`theme.css` carries the whole system — the tokens, the colour ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
+
+### 4. Replace the scaffold CSS
+
+Replace `src/index.css` entirely:
+
+```css
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+
+body {
+  margin: 0;
+  background: var(--forte-color-background);
+  color: var(--forte-color-foreground);
+  font-family: var(--forte-font-sans);
+}
+```
+
+The seed is the theme: all twelve accent steps, the brand-tinted neutrals, and a readable text colour for solid fills derive from it — in both light and dark mode, with no JavaScript and no build step.
+
+<Callout kind="warn">
+  Replace, don't merge. Vite's scaffold `index.css` styles `button` and `body`
+  directly — dark backgrounds, its own padding and border-radius, a flex-centred
+  page — and those rules are *unlayered*, so they beat everything in
+  `@layer forte.*` by design. Keep the scaffold's `button` rule and every
+  forte-ui Button on the page inherits its background and padding. The same goes
+  for `src/App.css` — delete its contents (or the import in `App.tsx`) rather
+  than working around them.
+</Callout>
+
+### 5. Render a component
+
+Replace `src/App.tsx`:
+
+```tsx
+import { Button } from "@forte-ui/react";
+
+export default function App() {
+  return (
+    <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}>
+      <Button>It works</Button>
+    </main>
+  );
+}
+```
+
+```bash
+npm run dev
+```
+
+That is the whole integration: one install, one CSS import, one variable. And since there is no server/client boundary, the compound components — `Tabs.Root`, `Dialog.Trigger`, `Menu.Item` — work here exactly like `Button` does.
+
+### 6. Light and dark
+
+Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, or to drive a toggle, set `data-theme` on the root element — either statically in `index.html`:
+
+```tsx
+<html lang="en" data-theme="dark">
+```
+
+or from a toggle:
+
+```tsx
+document.documentElement.dataset.theme = "dark"; // or "light"
+```
+
+Every derived colour re-resolves; there is no second stylesheet to load. Persisting the choice (localStorage plus an inline script in `index.html` so the first paint is right) is your app's call — the same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming).
+
+## With Tailwind
+
+The package ships a bridge stylesheet for **Tailwind v4** that re-points Tailwind's theme at the forte-ui tokens, so `bg-primary` *is* `--forte-color-primary` and every utility follows the seed, dark mode and theme scopes exactly like the components do.
+
+### 1. Create the project and install
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install @forte-ui/react tailwindcss @tailwindcss/vite
+```
+
+Tailwind v4 on Vite runs as a Vite plugin — no PostCSS config, no `tailwind.config.js`.
+
+### 2. Add the Vite plugin
+
+`vite.config.ts`:
+
+```tsx
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});
+```
+
+### 3. Wire the three stylesheets
+
+Replace `src/index.css` entirely (the scaffold-reset warning above applies here too, `App.css` included):
+
+```css
+@import "@forte-ui/react/tailwind.css";
+@import "tailwindcss";
+@import "@forte-ui/react/theme.css";
+
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+```
+
+`src/main.tsx` keeps importing only `./index.css`.
+
+Two orderings in that file are load-bearing, and they are the same two as on the [Next.js path](/getting-started/nextjs#2-wire-the-three-stylesheets): the bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, so it must come before `tailwindcss` (or `p-4` on a `Button` loses to the button's own padding) — and before `theme.css`, which also declares the `forte` layer (or Preflight's `button { background: transparent }` beats every component by layer order).
+
+### 4. Style with token utilities
+
+Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. Every utility that does compile responds to the seed, dark mode and theme scopes:
+
+```tsx
+import { Button } from "@forte-ui/react";
+
+export default function App() {
+  return (
+    <main className="grid min-h-dvh place-items-center bg-background text-foreground">
+      <div className="flex flex-col items-start gap-5 rounded-surface border border-border bg-panel p-surface shadow-2">
+        <h1 className="text-5 font-semibold">forte-ui + Tailwind</h1>
+        <p className="text-2 text-foreground-muted">
+          Utilities and components, one theme.
+        </p>
+        <Button>It works</Button>
+      </div>
+    </main>
+  );
+}
+```
+
+The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind) page — including the shipped [`cn`](/customization/tailwind#merging-classes-cn) merger for conditional class lists (install `tailwind-merge` if you use it).
+
+By default Tailwind v4's `dark:` variant keys on `prefers-color-scheme`. You will rarely need it — token utilities resolve through `light-dark()` and follow the theme by themselves — but if your toggle sets `data-theme`, re-key the variant after the bridge import:
+
+```css
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+```
+
+## Loading a font
+
+The library reads one token for its font: `--forte-font-sans`. Your `body` rule from step 4 reads it too. So the whole job is: get your font's name into that token.
+
+Load the font however you normally would — `@font-face`, Fontsource, a `<link>` tag — then, in `src/index.css`:
+
+```css
+:root {
+  --forte-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+Done. Your `body` rule reads `--forte-font-sans`, so the page text switches; the components read the same token, so tooltips, menus and dialogs switch with it. Don't set the font on `body` directly instead — some component parts declare `font-family: var(--forte-font-sans)` themselves and would stay on the system font. And keep the `ui-sans-serif, system-ui, sans-serif` tail: it is the fallback if the font fails to load.
+
+## Where next
+
+- [Theming](/customization/theming) — the seed envelope, the secondary seed, neutral tint, and scoped themes.
+- [Presets](/customization/presets) — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
+- [Styling components](/customization/styling) — parts, states, and per-component knobs.
+- [Theme Studio](/theme) — pick a seed visually and copy the CSS out.
