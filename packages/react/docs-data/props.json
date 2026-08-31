@@ -970,6 +970,124 @@
       }
     ]
   },
+  "CardRoot": {
+    "name": "CardRoot",
+    "description": "The surface. Holds a `Card.Header`, a `Card.Media`, a `Card.Content` and a\n`Card.Footer`, all optional, stacked with one gap between sections — but it\ndoes not require its own parts: any child is a section, so a card around a\nsingle paragraph or somebody else's markup is still a card.\n\nPadding lives here on the root rather than on the parts, which is what\n`Card.Media` undoes locally to reach the border.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "variant",
+        "type": "CardVariant",
+        "required": false,
+        "defaultValue": "outline",
+        "description": "How the card separates itself from the page. `outline` is a panel with a\nhairline; `soft` drops the edge and deepens the fill by one step instead;\n`elevated` adds a shadow on top of the hairline.\n\nAll three occupy identical space — the border is reserved even where it\nis painted transparent — so switching between them moves nothing."
+      }
+    ]
+  },
+  "CardHeader": {
+    "name": "CardHeader",
+    "description": "The card's opening row: a `Card.Title`, a `Card.Description` and a\n`Card.Action`, each optional and all flat siblings — the header is a grid\nand every part places itself in it. A header with no action has no action\ncolumn, so the text runs the full width instead of stopping short of an\nempty track.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CardTitle": {
+    "name": "CardTitle",
+    "description": "The card's name, one type step above the body.\n\nIt renders a `<div>` because the right heading level is the page's decision,\nnot the card's — the same card sits at `h2` depth on one screen and `h4` on\nanother. When the card genuinely opens a section of the document, nest the\nheading: `<Card.Title><h3>Invoices</h3></Card.Title>`. A heading placed\nthere takes the card's typography rather than the UA's, so the semantic\nversion looks identical to the plain one.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CardDescription": {
+    "name": "CardDescription",
+    "description": "The muted line under the title — what the card holds, not the holding\nitself. A `<div>` rather than a `<p>`, so it can carry a second sentence's\nmarkup without producing invalid HTML.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CardAction": {
+    "name": "CardAction",
+    "description": "The header's trailing slot — a badge, an icon button, a `Menu` trigger. It\nsits against the inline-end edge, pinned to the top corner when the header\nhas both a title and a description, centred on the title's line when the\ntitle is alone.\n\nA slot and not a control: whatever goes here is a real component with its\nown props, and wrapping one would mean re-exposing all of them. Compose\ninstead.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CardContent": {
+    "name": "CardContent",
+    "description": "The body. Paragraphs and lists placed directly in it lose their outer\nmargins, so the section closes evenly against the card's own gap whether it\nholds a sentence or a form.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CardFooter": {
+    "name": "CardFooter",
+    "description": "The closing row — actions, a caption, a link onward. A flex row with the\ncard's standard gap, aligned by the `align` prop rather than by utility\nclasses, so the common layouts stay one word.",
+    "props": [
+      {
+        "name": "align",
+        "type": "CardFooterAlign",
+        "required": false,
+        "defaultValue": "start",
+        "description": "Where the footer's children sit along the inline axis.\n\n`start` is the default — a card footer is as often a caption or a\ntimestamp as it is a pair of buttons, and captions read from the text\nedge. `between` is the two-party layout: metadata at the start, the\naction at the end."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CardMedia": {
+    "name": "CardMedia",
+    "description": "An edge-to-edge section — an image, a video, a chart, a map. It undoes the\nroot's padding with negative margins and, when it is the first or last\nsection, clips itself to the card's corner radius, so the image meets the\nborder instead of floating inside it.\n\nAn `<img>` or `<video>` placed directly inside is made block-level and\nstretched to the full bleed. Height is deliberately not managed here — wrap\nthe image in `AspectRatio` when the box has to hold its shape before the\nfile arrives.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "Checkbox": {
     "name": "Checkbox",
     "description": "A checkbox built on Base UI's unstyled `Checkbox` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Root`.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-indeterminate`, `data-disabled`, `data-readonly`, and the `Field`\nvalidity attributes) on both the root and the indicator, and every visual\ndecision is a `--forte-checkbox-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[indeterminate]:...`) without wrapping.",

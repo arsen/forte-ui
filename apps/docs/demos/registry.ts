@@ -149,6 +149,16 @@ import d_calendar_sizes from "./calendar/sizes";
 import d_calendar_sizes_src from "./calendar/sizes?raw";
 import d_calendar_week_numbers from "./calendar/week-numbers";
 import d_calendar_week_numbers_src from "./calendar/week-numbers?raw";
+import d_card_action from "./card/action";
+import d_card_action_src from "./card/action?raw";
+import d_card_basic from "./card/basic";
+import d_card_basic_src from "./card/basic?raw";
+import d_card_form from "./card/form";
+import d_card_form_src from "./card/form?raw";
+import d_card_media from "./card/media";
+import d_card_media_src from "./card/media?raw";
+import d_card_variants from "./card/variants";
+import d_card_variants_src from "./card/variants?raw";
 import d_checkbox_basic from "./checkbox/basic";
 import d_checkbox_basic_src from "./checkbox/basic?raw";
 import d_checkbox_disabled from "./checkbox/disabled";
@@ -819,6 +829,11 @@ export type DemoId =
   | "calendar/range"
   | "calendar/sizes"
   | "calendar/week-numbers"
+  | "card/action"
+  | "card/basic"
+  | "card/form"
+  | "card/media"
+  | "card/variants"
   | "checkbox/basic"
   | "checkbox/disabled"
   | "checkbox/indeterminate"
@@ -1192,6 +1207,11 @@ const REGISTRY: Record<DemoId, Demo> = {
   "calendar/range": { Component: d_calendar_range, source: d_calendar_range_src, file: "calendar/range.tsx" },
   "calendar/sizes": { Component: d_calendar_sizes, source: d_calendar_sizes_src, file: "calendar/sizes.tsx" },
   "calendar/week-numbers": { Component: d_calendar_week_numbers, source: d_calendar_week_numbers_src, file: "calendar/week-numbers.tsx" },
+  "card/action": { Component: d_card_action, source: d_card_action_src, file: "card/action.tsx" },
+  "card/basic": { Component: d_card_basic, source: d_card_basic_src, file: "card/basic.tsx" },
+  "card/form": { Component: d_card_form, source: d_card_form_src, file: "card/form.tsx" },
+  "card/media": { Component: d_card_media, source: d_card_media_src, file: "card/media.tsx" },
+  "card/variants": { Component: d_card_variants, source: d_card_variants_src, file: "card/variants.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },
   "checkbox/disabled": { Component: d_checkbox_disabled, source: d_checkbox_disabled_src, file: "checkbox/disabled.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },

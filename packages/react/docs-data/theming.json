@@ -2375,6 +2375,127 @@
       }
     ]
   },
+  "Card": {
+    "name": "Card",
+    "tokens": [
+      {
+        "name": "--forte-card-p",
+        "value": "var(--forte-surface-p)",
+        "description": "Padding between the border and the content. Follows `data-forte-density`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-gap",
+        "value": "var(--forte-space-4)",
+        "description": "Space between the sections — header, media, content, footer.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-header-gap",
+        "value": "var(--forte-space-1)",
+        "description": "Space between the title and the description inside the header.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-radius",
+        "value": "var(--forte-radius-surface)",
+        "description": "Corner radius. Follows `data-forte-radius`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-border-width",
+        "value": "1px",
+        "description": "Width of the card's edge. Reserved even when the variant paints it transparent — see the header.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-title-font-size",
+        "value": "var(--forte-font-size-3)",
+        "description": "Size of the title. One step above the body, which is what separates a card's name from its content at a glance.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-title-font-weight",
+        "value": "var(--forte-font-weight-semibold)",
+        "description": "Weight of the title.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Size of the description and the body copy.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-card-bg",
+        "value": "var(--forte-color-panel)",
+        "description": "Fill behind the card. Set by `variant`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--forte-color-panel)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--forte-gray-3)"
+          },
+          {
+            "selector": ".root[data-variant=\"elevated\"]",
+            "value": "var(--forte-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-card-border-color",
+        "value": "var(--forte-color-border-muted)",
+        "description": "Edge colour. Set by `variant`. `border-muted`, not `border` — a card is a grouping, not a control, and the louder hairline next to real inputs makes the box compete with the form inside it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--forte-color-border-muted)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"elevated\"]",
+            "value": "var(--forte-color-border-muted)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-card-shadow",
+        "value": "none",
+        "description": "Drop shadow. `none` except on `elevated` — a card is part of the page, not a surface floating over it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "none"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "none"
+          },
+          {
+            "selector": ".root[data-variant=\"elevated\"]",
+            "value": "var(--forte-shadow-2)"
+          }
+        ]
+      }
+    ]
+  },
   "Checkbox": {
     "name": "Checkbox",
     "tokens": [
@@ -8390,7 +8511,7 @@
     "tokens": [
       {
         "name": "--forte-tabs-radius",
-        "value": "var(--forte-radius-control)",
+        "value": "var(--forte-radius-surface)",
         "description": "Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail, capped by the row below",
         "part": "root",
         "overrides": []

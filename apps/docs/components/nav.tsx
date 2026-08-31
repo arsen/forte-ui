@@ -56,6 +56,7 @@ const NAV: NavGroup[] = [
       { title: "Button", href: "/components/button/" },
       { title: "Button Group", href: "/components/button-group/" },
       { title: "Calendar", href: "/components/calendar/" },
+      { title: "Card", href: "/components/card/" },
       { title: "Checkbox", href: "/components/checkbox/" },
       { title: "Checkbox Group", href: "/components/checkbox-group/" },
       { title: "Collapsible", href: "/components/collapsible/" },

@@ -156,22 +156,24 @@ Two orderings in that file are load-bearing:
 Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. That is deliberate: a hardcoded colour would survive review and then ignore the seed, dark mode and every theme scope. Every utility that does compile responds to all of them:
 
 ```tsx
-import { Button } from "@forte-ui/react";
+import { Button, Card } from "@forte-ui/react";
 
 export default function Home() {
   return (
     <main className="grid min-h-dvh place-items-center bg-background text-foreground">
-      <div className="flex flex-col items-start gap-5 rounded-surface border border-border bg-panel p-surface shadow-2">
+      <Card.Root variant="elevated" className="items-start gap-5">
         <h1 className="text-5 font-semibold">forte-ui + Tailwind</h1>
         <p className="text-2 text-foreground-muted">
           Utilities and components, one theme.
         </p>
         <Button>It works</Button>
-      </div>
+      </Card.Root>
     </main>
   );
 }
 ```
+
+Note where `items-start gap-5` lands: on a component. That is the layer order from step 2 doing its job — utilities beat the card's own layout without `!important`.
 
 The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind/) page.
 
