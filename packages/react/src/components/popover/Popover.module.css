@@ -35,33 +35,6 @@
  * the popup and cap it with `--available-height`, which the Positioner
  * publishes and this element inherits — see the docs page.
  */
-/*
- * `--available-width` is published by the Positioner as a pixel length — until
- * `usePopupAutoResize` temporarily sets it to `max-content` to measure the
- * popup at its natural size, which it does on every content swap under a
- * `Popover.Viewport`. A keyword inside `min()` is invalid at computed-value
- * time, and an unregistered property would carry that keyword straight into
- * `max-inline-size`, dropping the width cap for the length of the measurement
- * — so the popup would be measured unwrapped, its height would come back short
- * by however many lines the cap was going to add, and the size transition
- * would animate to that wrong height and then snap to the real one.
- *
- * Registering the property with a length syntax contains the failure: an
- * unparseable value falls back to the initial value below instead of poisoning
- * everything downstream, so the cap survives the measurement and the height
- * Base UI measures is the height the popup will actually have.
- *
- * `@property` must live at the top level — it cannot be nested inside `@layer`.
- * The initial value is a stand-in for "no limit"; it is a plain length rather
- * than `100vw` because a registered initial value has to be computationally
- * independent.
- */
-@property --forte-popover-available-width {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 100000px;
-}
-
 @layer forte.components {
   /* ------------------------------------------------------------------------
    * Trigger
@@ -265,6 +238,19 @@
     --forte-popover-enter-x: 0px;
     --forte-popover-enter-y: calc(-1 * var(--forte-popover-travel));
 
+    /* Wiring for the shared anchored-popup patterns (patterns.css). The
+     * pattern rules read these generic `--forte-popup-*` names; the knobs a
+     * consumer themes are the `--forte-popover-*` properties above, and this
+     * mapping is how a re-pointed knob reaches the shared geometry — the
+     * arrow and the viewport's children are descendants of this element and
+     * inherit the resolved values. Internal on purpose (plain comments):
+     * theming-docgen must publish the knobs, not the plumbing. */
+    --forte-popup-arrow-fill-color: var(--forte-popover-bg);
+    --forte-popup-arrow-border-color: var(--forte-popover-border-color);
+    --forte-popup-arrow-width: var(--forte-popover-arrow-width);
+    --forte-popup-arrow-height: var(--forte-popover-arrow-height);
+    --forte-popup-gap: var(--forte-popover-gap);
+
     box-sizing: border-box;
     /* The Arrow is absolutely positioned by the positioner (an inline style),
      * so this element has to be its containing block. */
@@ -278,12 +264,13 @@
      * first frame, hence the fallback — a bare min() with an unset var is
      * invalid at computed-value time and would drop the cap entirely. */
     inline-size: max-content;
-    /* Routed through the registered property above rather than read straight
-     * from --available-width; see the note on the @property block. */
-    --forte-popover-available-width: var(--available-width, 100000px);
+    /* Routed through the shared registered property rather than read straight
+     * from --available-width, so Base UI's `max-content` measurement pass
+     * cannot drop the cap — see the registration in properties.css. */
+    --forte-popup-available-width: var(--available-width, 100000px);
     max-inline-size: min(
       var(--forte-popover-max-width),
-      var(--forte-popover-available-width)
+      var(--forte-popup-available-width)
     );
     padding: var(--forte-popover-padding);
     /* Beats the transparent border `.forte-hc-surface` sets, on layer order
@@ -392,86 +379,12 @@
   /* ------------------------------------------------------------------------
    * Arrow
    *
-   * An SVG, never a CSS-border triangle. In forced-colors mode all four
-   * border colours are forced to CanvasText, so the classic
-   * `border: 6px solid transparent` triangle renders as a filled RECTANGLE.
-   * Two flat paths cannot fail that way, and they let the outline be given
-   * its own system colour below.
-   *
-   * Offsets follow from the geometry: the unrotated box is width x height, so
-   * pushing it out by `height` on the block axis, or by (width + height) / 2
-   * on the inline axis after a quarter turn, lands its base flush against the
-   * popup edge.
-   *
-   * None of them subtract the border, and that is not an oversight. An
-   * absolutely positioned element is offset from its containing block's
-   * PADDING box, which already starts one border-width inside the popup — so
-   * `-height` puts the wedge's base on the border's inner edge, where its fill
-   * covers exactly that one row. The popup's outline then runs up one slope
-   * and down the other as a single unbroken line, and it stays right at any
-   * border width. Subtracting it here would push the wedge a further border
-   * width into the surface for no gain.
+   * No rules here: geometry, SVG sizing, fills and the forced-colors repaint
+   * all come from the shared `.forte-popup-*` arrow pattern in patterns.css,
+   * which reads the `--forte-popup-arrow-*` mapping declared on `.popup`
+   * above. That is what keeps this wedge pixel-identical to PreviewCard's,
+   * Tooltip's and NavigationMenu's — fix the pattern, not a local copy.
    * --------------------------------------------------------------------- */
-  .arrow {
-    display: block;
-    width: var(--forte-popover-arrow-width);
-    height: var(--forte-popover-arrow-height);
-  }
-
-  .arrow[data-side="top"] {
-    bottom: calc(-1 * var(--forte-popover-arrow-height));
-    rotate: 180deg;
-  }
-
-  .arrow[data-side="bottom"] {
-    top: calc(-1 * var(--forte-popover-arrow-height));
-    rotate: 0deg;
-  }
-
-  .arrow:is(
-    [data-side="left"],
-    [data-side="inline-start"]:dir(ltr),
-    [data-side="inline-end"]:dir(rtl)
-  ) {
-    right: calc(
-      -0.5 *
-        (var(--forte-popover-arrow-width) + var(--forte-popover-arrow-height))
-    );
-    rotate: 90deg;
-  }
-
-  .arrow:is(
-    [data-side="right"],
-    [data-side="inline-end"]:dir(ltr),
-    [data-side="inline-start"]:dir(rtl)
-  ) {
-    left: calc(
-      -0.5 *
-        (var(--forte-popover-arrow-width) + var(--forte-popover-arrow-height))
-    );
-    rotate: -90deg;
-  }
-
-  .arrowSvg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
-  .arrowFill {
-    fill: var(--forte-popover-bg);
-  }
-
-  /* The larger triangle sitting under the fill, showing only as a hairline
-   * along the two slopes because the fill triangle is inset from it. That is
-   * what continues the popup's own border around the wedge — set
-   * `--forte-popover-border-color: transparent` and the arrow goes back to a
-   * flat wedge, in step with the popup. It is also the path forced-colors
-   * repaints below. */
-  .arrowBorder {
-    fill: var(--forte-popover-border-color);
-  }
 
   /* ------------------------------------------------------------------------
    * Title / Description
@@ -564,105 +477,19 @@
    * Viewport
    *
    * Only needed when ONE popup serves several triggers and the swap between
-   * their contents should animate. Base UI renders two children inside it:
-   * `[data-current]`, the incoming content, and — for the length of the
-   * transition — `[data-previous]`, a DOM clone of the outgoing content that
-   * it gives an inline `position: absolute`.
-   *
-   * The two are overlapped in a single grid cell rather than stacked in flow.
-   * Base UI keeps the outgoing clone mounted until its exit finishes, and in
-   * flow that clone would add its own height to the popup, which would then
-   * snap back the moment it unmounted.
+   * their contents should animate. The swap machinery itself — the grid-cell
+   * overlap of Base UI's incoming content and outgoing clone, the
+   * `data-activation-direction` slide, the frozen clone size, `data-instant`
+   * — is the shared `.forte-popup-viewport` pattern in patterns.css. All this
+   * rule owns is the component's knob and the mapping the pattern reads.
    * --------------------------------------------------------------------- */
   .viewport {
     /** How far the incoming and outgoing content slide during a swap */
     --forte-popover-viewport-travel: var(--forte-travel-sm);
-    /* Which way the swap slides, resolved from `data-activation-direction`
-     * below. Internal on purpose — a plain comment, so theming-docgen does
-     * not publish it: it is an intermediate, and the knob to turn is
-     * --forte-popover-viewport-travel. */
-    --forte-popover-viewport-x: 0px;
-
-    /* The clone's inline `position: absolute` needs this element as its
-     * containing block, or it would escape to the popup — or further. */
-    position: relative;
-    display: grid;
-    grid-template-areas: "content";
-    /* Cropping is what makes the swap read as one panel replacing another
-     * rather than two panels crossing in the open. Safe here, unlike on the
-     * popup: the Arrow is the viewport's sibling, not its child. */
-    overflow: clip;
-    /* With a zero clip margin the clip box ends exactly where the content
-     * does, and the focus ring on the first control inside would be shaved
-     * off. The ring's own reach is the smallest margin that saves it, and
-     * keeping the margin that tight is the point: what has to be cropped is
-     * the outgoing clone during a resize, which overflows by the difference
-     * between two panel heights. */
-    overflow-clip-margin: calc(
-      var(--forte-focus-ring-width) + var(--forte-focus-ring-offset)
-    );
-  }
-
-  .viewport > * {
-    grid-area: content;
-    /* The children are Base UI's own wrappers and carry no styles of their
-     * own, so the popup's column layout has to be restated one level down. */
-    display: flex;
-    flex-direction: column;
-    gap: var(--forte-popover-gap);
-    transition:
-      opacity var(--forte-duration-fast) var(--forte-ease-standard),
-      translate var(--forte-duration-normal) var(--forte-ease-emphasized);
-  }
-
-  /* The outgoing clone is frozen at the size it had when it was current —
-   * Base UI writes `--popup-width` / `--popup-height` onto it for exactly
-   * this — so it does not reflow to the incoming content's width halfway
-   * through leaving. */
-  .viewport > [data-previous] {
-    inline-size: var(--popup-width, auto);
-    block-size: var(--popup-height, auto);
-  }
-
-  /* `data-activation-direction` is two space-separated words — a horizontal
-   * one and a vertical one, either of which may be empty ("right down",
-   * "left ", " up"). Only the horizontal half is used: the popup is already
-   * resizing on the block axis, and adding a vertical slide on top of that
-   * reads as two things moving at once.
-   *
-   * `--forte-direction` is deliberately NOT applied here, and this is the one
-   * place in the library where leaving it out is correct. The usual rule —
-   * multiply any inline-axis distance by it, because `translate` is physical
-   * and the inline axis is not — assumes the INTENT is logical ("enter from
-   * the start edge"). This intent is already physical: Base UI derives these
-   * words from `getBoundingClientRect()`, so "right" means the new trigger is
-   * physically to the right of the old one, in RTL exactly as in LTR.
-   * Flipping it would send the content away from the trigger the user just
-   * pressed. */
-  .viewport[data-activation-direction~="right"] {
-    --forte-popover-viewport-x: var(--forte-popover-viewport-travel);
-  }
-
-  .viewport[data-activation-direction~="left"] {
-    --forte-popover-viewport-x: calc(-1 * var(--forte-popover-viewport-travel));
-  }
-
-  .viewport > [data-current][data-starting-style] {
-    opacity: 0;
-    translate: var(--forte-popover-viewport-x) 0;
-  }
-
-  /* The clone leaves the way the newcomer came in — opposite side, same
-   * distance — so the pair reads as one strip sliding across. */
-  .viewport > [data-previous][data-ending-style] {
-    opacity: 0;
-    translate: calc(-1 * var(--forte-popover-viewport-x)) 0;
-  }
-
-  /* A `data-instant` swap was not a considered navigation; see the note on
-   * the popup. */
-  .viewport[data-instant] > * {
-    transition: none;
+    /* The pattern's read side. Internal on purpose — a plain comment, so
+     * theming-docgen does not publish it: the knob to turn is the property
+     * above. Declared on this element, where the knob is in scope. */
+    --forte-popup-viewport-travel: var(--forte-popover-viewport-travel);
   }
 
   /* The popup follows its content between sizes instead of jumping. Gated on
@@ -685,25 +512,5 @@
     /* The viewport has taken over the column for its own two children, and
      * the popup's gap would add a phantom row beside its single child. */
     gap: 0;
-  }
-}
-
-/*
- * Accessibility overrides — see layers.css for why these must not live in the
- * components layer. Layer order outranks specificity completely, so a
- * forced-colors rule placed earlier could never win.
- */
-@layer forte.a11y {
-  @media (forced-colors: active) {
-    /* System colour keywords survive the forced-colors substitution, so this
-     * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
-     * matching the CanvasText border `.forte-hc-surface` puts on the popup. */
-    .arrowFill {
-      fill: Canvas;
-    }
-
-    .arrowBorder {
-      fill: CanvasText;
-    }
   }
 }

@@ -567,6 +567,18 @@
       -1 * var(--forte-navigation-menu-travel)
     );
 
+    /* Wiring for the shared anchored-popup arrow pattern (patterns.css). The
+     * pattern rules read these generic `--forte-popup-*` names; the knobs a
+     * consumer themes are the `--forte-navigation-menu-*` properties above,
+     * and this mapping is how a re-pointed knob reaches the shared geometry —
+     * the arrow is a child of this element and inherits the resolved values.
+     * Internal on purpose (plain comments): theming-docgen must publish the
+     * knobs, not the plumbing. */
+    --forte-popup-arrow-fill-color: var(--forte-navigation-menu-bg);
+    --forte-popup-arrow-border-color: var(--forte-navigation-menu-border-color);
+    --forte-popup-arrow-width: var(--forte-navigation-menu-arrow-width);
+    --forte-popup-arrow-height: var(--forte-navigation-menu-arrow-height);
+
     box-sizing: border-box;
     /* Containing block for the Arrow, which the positioner places with inline
      * styles. `overflow: visible` because the wedge lives beyond this edge —
@@ -675,11 +687,14 @@
 
   /* ------------------------------------------------------------------------
    * Arrow
+   *
+   * Geometry, SVG sizing, fills and the forced-colors repaint all come from
+   * the shared `.forte-popup-*` arrow pattern in patterns.css, which reads the
+   * `--forte-popup-arrow-*` mapping declared on `.popup` above — fix the
+   * pattern, not a local copy. The one thing this component adds is unique to
+   * it and stays local: the wedge SLIDES between triggers.
    * --------------------------------------------------------------------- */
   .arrow {
-    display: block;
-    inline-size: var(--forte-navigation-menu-arrow-width);
-    block-size: var(--forte-navigation-menu-arrow-height);
     /* Base UI re-writes the arrow's own offset every time the popup moves to
      * another trigger. On the positioner's timing, so the wedge and the panel
      * arrive together instead of the wedge chasing it. */
@@ -693,67 +708,6 @@
    * open the panel itself does not animate. */
   .positioner[data-instant] .arrow {
     transition: none;
-  }
-
-  .arrow[data-side="top"] {
-    bottom: calc(-1 * var(--forte-navigation-menu-arrow-height));
-    rotate: 180deg;
-  }
-
-  .arrow[data-side="bottom"] {
-    top: calc(-1 * var(--forte-navigation-menu-arrow-height));
-    rotate: 0deg;
-  }
-
-  .arrow:is(
-      [data-side="left"],
-      [data-side="inline-start"]:dir(ltr),
-      [data-side="inline-end"]:dir(rtl)
-    ) {
-    right: calc(
-      -0.5 *
-        (
-          var(--forte-navigation-menu-arrow-width) +
-            var(--forte-navigation-menu-arrow-height)
-        )
-    );
-    rotate: 90deg;
-  }
-
-  .arrow:is(
-      [data-side="right"],
-      [data-side="inline-end"]:dir(ltr),
-      [data-side="inline-start"]:dir(rtl)
-    ) {
-    left: calc(
-      -0.5 *
-        (
-          var(--forte-navigation-menu-arrow-width) +
-            var(--forte-navigation-menu-arrow-height)
-        )
-    );
-    rotate: -90deg;
-  }
-
-  .arrowSvg {
-    display: block;
-    inline-size: 100%;
-    block-size: 100%;
-  }
-
-  /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
-  .arrowFill {
-    fill: var(--forte-navigation-menu-bg);
-  }
-
-  /* The larger triangle sitting under the fill, showing only as a hairline
-   * along the two slopes because the fill triangle is inset from it. That is
-   * what continues the panel's own border around the wedge — set
-   * `--forte-navigation-menu-border-color: transparent` and the arrow goes back
-   * to a flat wedge, in step with the panel. It is also the path forced-colors
-   * repaints below. */
-  .arrowBorder {
-    fill: var(--forte-navigation-menu-border-color);
   }
 
   /* ------------------------------------------------------------------------
@@ -912,17 +866,6 @@
     .trigger[data-popup-open] .linkDescription,
     .link[data-active] .linkDescription {
       color: HighlightText;
-    }
-
-    /* System colour keywords survive the forced-colors substitution, so this
-     * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
-     * matching the CanvasText border `.forte-hc-surface` puts on the popup. */
-    .arrowFill {
-      fill: Canvas;
-    }
-
-    .arrowBorder {
-      fill: CanvasText;
     }
   }
 }

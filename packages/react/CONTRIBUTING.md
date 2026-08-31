@@ -120,19 +120,38 @@ to assistive technology goes in a `.forte-visually-hidden` span.
 
 `.forte-focus-ring` · `.forte-focus-ring-within` · `.forte-hc-surface` ·
 `.forte-visually-hidden` · `.forte-target` · `.forte-scrim` · `.forte-icon` ·
-`.forte-link` · `.forte-hc-decorative` · `.forte-preserve-color`
+`.forte-link` · `.forte-hc-decorative` · `.forte-preserve-color` ·
+`.forte-popup-arrow` (+ `-svg` / `-fill` / `-border`) · `.forte-popup-viewport`
+
+The two `forte-popup-*` families are the shared anchored-popup mechanics: the
+arrow geometry (Popover, PreviewCard, Tooltip, NavigationMenu) and the
+content-swap viewport (Popover, PreviewCard). They read generic
+`--forte-popup-*` custom properties that each component's popup maps its own
+published knobs onto — see the "Wiring for the shared anchored-popup
+patterns" block in any of those components' `.module.css`. A popup that
+applies the class without the mapping silently gets the pattern's fallbacks;
+`check:parity` fails the build for exactly that.
 
 ## Verifying
 
 ```bash
 pnpm --filter @forte-ui/react tokens          # regenerate generated CSS
 pnpm --filter @forte-ui/react check:contrast  # WCAG harness over the ramps
+pnpm --filter @forte-ui/react check:parity    # anchored-popup parity gate
 pnpm --filter @forte-ui/react typecheck
 ```
 
 `check:contrast` sweeps ~119k in-gamut seeds and enforces AA on every pair the
 ramp promises. Run it after any edit to `scripts/ramp.mjs`; the curve caps were
 tuned against it and a plausible-looking tweak can silently drop a hue below AA.
+
+`check:parity` holds the anchored popups' hand-kept twin blocks equal — the
+per-`data-side` displacement, enter/exit gesture, size scale and viewport
+resize rules must match across Menu, Popover, PreviewCard, Tooltip and
+NavigationMenu modulo each one's knob prefix, and every popup that uses a
+shared `.forte-popup-*` pattern must declare its wiring. Run it after editing
+any of those blocks; the header of `scripts/check-popup-parity.mjs` explains
+what to do when it fails.
 
 ## Token inventory
 
@@ -200,6 +219,13 @@ list and that file disagree, the file is right; fix the list.
 
 **on** (3)
 `--forte-on-hue-cos` · `--forte-on-hue-sin` · `--forte-on-threshold`
+
+**popup** (1)
+`--forte-popup-available-width` — registration only; each anchored popup
+declares it on its own element to route `--available-width` through a typed
+hop. Not a theming knob. (The other `--forte-popup-*` names are the
+per-component wiring the shared patterns read — declared in component
+modules, so they are deliberately not in this inventory.)
 
 **pulse** (1)
 `--forte-pulse-dip`
