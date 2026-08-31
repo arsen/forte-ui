@@ -4164,7 +4164,7 @@
         "type": "NavListMarker",
         "required": false,
         "defaultValue": "fill",
-        "description": "How the current item is marked. `\"fill\"` is a tinted row. `\"rail\"` adds a\nshort accent bar along the row's inline-start edge on top of the fill —\nthe classic sidebar treatment, and a second, non-colour-only cue."
+        "description": "How the current item is marked. `\"fill\"` is a tinted row. `\"edge\"` adds\nan accent border along the row's inline-start edge on top of the fill —\nit follows the row's corner radius, and is a second, non-colour-only cue."
       },
       {
         "name": "render",

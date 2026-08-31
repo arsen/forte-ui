@@ -7,7 +7,7 @@ import { clsx } from "clsx";
 import styles from "./NavList.module.css";
 
 export type NavListSize = "sm" | "md" | "lg";
-export type NavListMarker = "fill" | "rail";
+export type NavListMarker = "fill" | "edge";
 
 type BaseGroupProps = React.ComponentPropsWithoutRef<typeof BaseCollapsible.Root>;
 type BaseGroupTriggerProps = React.ComponentPropsWithoutRef<typeof BaseCollapsible.Trigger>;
@@ -82,9 +82,9 @@ export interface NavListRootProps
    */
   size?: NavListSize;
   /**
-   * How the current item is marked. `"fill"` is a tinted row. `"rail"` adds a
-   * short accent bar along the row's inline-start edge on top of the fill —
-   * the classic sidebar treatment, and a second, non-colour-only cue.
+   * How the current item is marked. `"fill"` is a tinted row. `"edge"` adds
+   * an accent border along the row's inline-start edge on top of the fill —
+   * it follows the row's corner radius, and is a second, non-colour-only cue.
    * @default "fill"
    */
   marker?: NavListMarker;

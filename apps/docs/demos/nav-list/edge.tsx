@@ -10,11 +10,11 @@ const ITEMS = [
   { title: "Exports", href: "/project/exports" },
 ];
 
-export default function NavListRail() {
+export default function NavListEdge() {
   const [active, setActive] = React.useState("/project/analytics");
 
   return (
-    <NavList.Root aria-label="Project" marker="rail" className="w-56">
+    <NavList.Root aria-label="Project" marker="edge" className="w-56">
       <NavList.List>
         {ITEMS.map((item) => (
           <NavList.Item key={item.href}>
