@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { usePathname } from "next/navigation";
 import { NavList } from "@forte-ui/react";
 import { cn } from "@/lib/cn";
@@ -450,7 +450,19 @@ export function TocList({
      * wraps this in a labelled <nav>, and the drawer is a dialog with its own
      * title — so the default <nav> here would put a second, unnamed one in
      * the tree. */
-    <NavList.Root render={<div />}>
+    <NavList.Root
+      render={<div />}
+      /* The active row is the SAME text at a heavier weight, and the rail is a
+       * fixed 14rem track: a heading that just fits on one line at 400 stops
+       * fitting at 500, so scrolling past it re-wraps that row to two lines and
+       * shunts every row under it down — the outline appears to twitch as you
+       * read. Weight is the only active declaration that takes part in layout,
+       * so equalising it is what makes the list a fixed height; the fill and
+       * the accent colour still carry the state. */
+      style={{
+        "--forte-nav-list-item-font-weight-active": "var(--forte-nav-list-item-font-weight)",
+      } as CSSProperties}
+    >
       <NavList.List>
         {toTree(headings).map((heading) => (
           <NavList.Item key={heading.id}>
