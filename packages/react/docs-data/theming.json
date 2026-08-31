@@ -5223,6 +5223,13 @@
         "overrides": []
       },
       {
+        "name": "--forte-nav-list-reveal-margin",
+        "value": "var(--forte-space-6)",
+        "description": "How far inside the scroll container's edge a revealed row lands",
+        "part": "root",
+        "overrides": []
+      },
+      {
         "name": "--forte-nav-list-label-font-size",
         "value": "var(--forte-font-size-1)",
         "description": "Label text size",
