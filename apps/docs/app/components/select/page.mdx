@@ -23,9 +23,8 @@ filtering — for lists long enough to need a search field, use Combobox instead
 Pass `items` to `<Select.Root>` so `<Select.Value>` renders the option's label
 instead of the raw value — without it the trigger above would read
 `Europe/London`. The popup opens over the trigger with the selected row's text
-sitting on the trigger's text; that is `alignItemWithTrigger`, on by default,
-and Base UI drops back to ordinary below-the-trigger placement for touch input
-or when the viewport is too tight.
+sitting on the trigger's text; that is `alignItemWithTrigger`, on by default —
+see [Placement](#placement) for the trade-off and how to turn it off.
 
 ## Import
 
@@ -51,6 +50,33 @@ with its members. The group label is indented past the check-mark column so its
 text lines up with the item text.
 
 <DemoBlock id="select/grouped" />
+
+### Placement
+
+By default the popup overlaps the trigger, with the selected row's text landing
+on the trigger's own text — `alignItemWithTrigger`, which is what a native
+`<select>` does on macOS. Pass `alignItemWithTrigger={false}` to drop the popup
+below the trigger instead, the way a `Menu` opens.
+
+<DemoBlock id="select/menu-placement" />
+
+Aligned placement puts the current value under the pointer at the moment the
+popup opens, so re-picking the same option is a click without a journey. It
+costs the trigger: the popup covers it, and it needs room above *and* below,
+which is why Base UI drops back to side placement for touch input and when the
+viewport is too tight — so it is the mode users see least consistently. Menu
+placement never covers the trigger and behaves identically everywhere, which is
+what you want for a select sitting in a dense toolbar or next to a value the
+user is comparing against.
+
+The two modes animate differently, and that is not a knob. Aligned mode has no
+side to rise from, so it unfurls out of the selected row with
+`--transform-origin` pinned there; side placement unfolds away from the trigger
+edge and adds a short slide when it lands on an inline side. `side`, `align`,
+`sideOffset` and `alignOffset` apply only to the second — Base UI ignores all
+four while the popup is aligned. `align` defaults to `"start"` here rather than
+Base UI's `"center"`, matching Menu: a popup wider than its trigger should drop
+from the trigger's start edge instead of hanging off both.
 
 ### Sizes
 

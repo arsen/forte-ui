@@ -581,6 +581,8 @@ import d_select_disabled_items from "./select/disabled-items";
 import d_select_disabled_items_src from "./select/disabled-items?raw";
 import d_select_grouped from "./select/grouped";
 import d_select_grouped_src from "./select/grouped?raw";
+import d_select_menu_placement from "./select/menu-placement";
+import d_select_menu_placement_src from "./select/menu-placement?raw";
 import d_select_sizes from "./select/sizes";
 import d_select_sizes_src from "./select/sizes?raw";
 import d_select_variants from "./select/variants";
@@ -1053,6 +1055,7 @@ export type DemoId =
   | "select/basic"
   | "select/disabled-items"
   | "select/grouped"
+  | "select/menu-placement"
   | "select/sizes"
   | "select/variants"
   | "select/with-label"
@@ -1435,6 +1438,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "select/basic": { Component: d_select_basic, source: d_select_basic_src, file: "select/basic.tsx" },
   "select/disabled-items": { Component: d_select_disabled_items, source: d_select_disabled_items_src, file: "select/disabled-items.tsx" },
   "select/grouped": { Component: d_select_grouped, source: d_select_grouped_src, file: "select/grouped.tsx" },
+  "select/menu-placement": { Component: d_select_menu_placement, source: d_select_menu_placement_src, file: "select/menu-placement.tsx" },
   "select/sizes": { Component: d_select_sizes, source: d_select_sizes_src, file: "select/sizes.tsx" },
   "select/variants": { Component: d_select_variants, source: d_select_variants_src, file: "select/variants.tsx" },
   "select/with-label": { Component: d_select_with_label, source: d_select_with_label_src, file: "select/with-label.tsx" },
