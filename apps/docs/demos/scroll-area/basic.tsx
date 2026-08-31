@@ -17,7 +17,7 @@ const RELEASES = [
 
 export default function ScrollAreaBasic() {
   return (
-    <ScrollArea.Root className="max-h-[13rem] w-full max-w-[30rem]">
+    <ScrollArea.Root orientation="vertical" className="max-h-[13rem] w-full max-w-[30rem]">
       <ScrollArea.Viewport aria-label="Release notes">
         <ScrollArea.Content className="pe-4">
           <div className="grid gap-3">

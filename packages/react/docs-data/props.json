@@ -6194,6 +6194,13 @@
         "description": "Whether the content fades out towards any edge it can still be scrolled\npast. The fade is a mask, so it works on any background, and its size\ntracks the remaining scroll distance — it opens as you scroll away from an\nedge and is absent while you are resting against one. Dropped\nautomatically under `forced-colors`, `prefers-contrast: more` and\n`prefers-reduced-transparency`, where the scrollbars carry the cue\ninstead."
       },
       {
+        "name": "orientation",
+        "type": "ScrollAreaOrientation",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "The axis — or axes — this area scrolls on. Declare it whenever only one\naxis can ever overflow: under `\"both\"` the viewport is a scroll container\non both axes regardless, so a wheel or trackpad gesture along the axis\nwith nothing to scroll is still claimed by the viewport — the content\ndoes not move, the page behind does not scroll either, and macOS paints\nits rubber-band bounce on a box that has nowhere to go. Naming the axis\nturns the other one off entirely, so that gesture falls through to the\npage — which is what a vertical scroll over a horizontal tab strip is\nalmost always asking for."
+      },
+      {
         "name": "scrollbarVisibility",
         "type": "ScrollAreaScrollbarVisibility",
         "required": false,

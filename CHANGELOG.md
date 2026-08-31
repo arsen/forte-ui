@@ -13,6 +13,23 @@ and this project adheres to
 
 ## [Unreleased]
 
+### ScrollArea
+
+- New `orientation` prop on `ScrollArea.Root` (`"both"` (default) |
+  `"vertical"` | `"horizontal"`). Naming the axis turns the other one off —
+  its `overflow` becomes `hidden` on the viewport and its overscroll is no
+  longer contained — so a wheel or trackpad gesture along the axis with
+  nothing to scroll falls through to the page instead of being claimed (and,
+  on macOS, rubber-banded) by a viewport that cannot move. The resolved value
+  is exposed as `data-orientation` on the root and viewport.
+
+### Tabs
+
+- The scroll area `Tabs.List` wraps itself in now inherits the strip's
+  `orientation`, so scrolling across the strip — vertically over horizontal
+  tabs, horizontally over vertical ones — reaches the page instead of
+  bouncing a viewport with nothing to scroll on that axis.
+
 ### Drawer
 
 - A drawer rendered without its scrim (`backdrop={false}`) now draws a

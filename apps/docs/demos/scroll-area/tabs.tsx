@@ -15,11 +15,14 @@ const SECTIONS = [
 
 export default function ScrollAreaTabs() {
   return (
-    <Tabs.Root defaultValue="overview" className="w-full max-w-[30rem]">
+    // overflow="visible" switches off the scroll area Tabs.List builds for
+    // itself — this demo supplies its own, to add the scrollbar the built-in
+    // one deliberately leaves out.
+    <Tabs.Root defaultValue="overview" overflow="visible" className="w-full max-w-[30rem]">
       {/* The padding gives the horizontal scrollbar a lane of its own below the
           rail. Without it the track overlays the rail and the sliding
           indicator, and the two read as one smudged line. */}
-      <ScrollArea.Root className="pb-3">
+      <ScrollArea.Root orientation="horizontal" className="pb-3">
         <ScrollArea.Viewport>
           <ScrollArea.Content>
             <Tabs.List aria-label="Project sections">

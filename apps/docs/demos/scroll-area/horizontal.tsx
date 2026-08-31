@@ -14,7 +14,7 @@ const REGIONS = [
 
 export default function ScrollAreaHorizontal() {
   return (
-    <ScrollArea.Root className="w-full max-w-[30rem]">
+    <ScrollArea.Root orientation="horizontal" className="w-full max-w-[30rem]">
       <ScrollArea.Viewport aria-label="Deployment regions">
         <ScrollArea.Content className="pb-4">
           <div className="flex gap-3">

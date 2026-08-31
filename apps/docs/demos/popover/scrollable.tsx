@@ -29,7 +29,7 @@ export default function PopoverScrollable() {
           * measured between the anchor and the viewport edge, and the popup
           * passes it down by inheritance. The subtraction is the popup's own
           * padding, its title, and its gaps. */}
-        <ScrollArea.Root className="max-h-[min(14rem,calc(var(--available-height)-8rem))]">
+        <ScrollArea.Root orientation="vertical" className="max-h-[min(14rem,calc(var(--available-height)-8rem))]">
           <ScrollArea.Viewport aria-label="Recent activity">
             <ScrollArea.Content className="pe-4">
               <div className="grid gap-2">

@@ -128,6 +128,21 @@
     border-radius: inherit;
   }
 
+  /* When `orientation` names one axis, the TSX sets the other axis's overflow
+   * to `hidden` (inline, because Base UI's `overflow: scroll` is inline too) —
+   * but a hidden-overflow box is still a scroll container, and the `contain`
+   * above still latches a gesture along that axis in Chromium. Releasing the
+   * dead axis is what actually lets a vertical wheel over a horizontal tab
+   * strip fall through and scroll the page, instead of rubber-banding a
+   * viewport with nowhere to go. */
+  .viewport[data-orientation="horizontal"] {
+    overscroll-behavior-y: auto;
+  }
+
+  .viewport[data-orientation="vertical"] {
+    overscroll-behavior-x: auto;
+  }
+
   /* The four fade sizes, derived once. `min()` takes the smaller of the
    * configured size and the distance still scrollable on that edge, so the
    * fade opens as the content moves under it and closes flush at the end. The
