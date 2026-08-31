@@ -652,6 +652,19 @@ in #8.
 
 ---
 
+## Releases and the changelog
+
+`CHANGELOG.md` at the repo root follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and is ordered
+**newest first**: `[Unreleased]` stays at the top, and a new version heading is
+inserted directly below it, above every existing version — never appended to
+the bottom. Day-to-day changes go under `[Unreleased]`; cutting a release
+renames that section to the new version with a date, re-creates an empty
+`[Unreleased]` above it, and updates the comparison links at the bottom of the
+file.
+
+---
+
 ## Things that will bite you
 
 - A `var()` inside an unregistered custom property is substituted **where the
