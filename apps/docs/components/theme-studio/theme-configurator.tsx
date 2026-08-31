@@ -46,9 +46,21 @@ const PRESETS: { name: string; seed: string; secondary: string }[] = [
   { name: "Slate", seed: "#475569", secondary: "#0e7490" },
   { name: "Gold", seed: "#a16207", secondary: "#4338ca" },
   { name: "Cyan", seed: "#0e7490", secondary: "#be123c" },
+  { name: "Indigo", seed: "#4f46e5", secondary: "#ca8a04" },
+  { name: "Grape", seed: "#9333ea", secondary: "#16a34a" },
+  { name: "Scarlet", seed: "#b91c1c", secondary: "#155e75" },
+  { name: "Lagoon", seed: "#0d9488", secondary: "#9d174d" },
+  { name: "Moss", seed: "#4d7c0f", secondary: "#6d28d9" },
+  { name: "Flamingo", seed: "#db2777", secondary: "#059669" },
+  { name: "Cobalt", seed: "#1d4ed8", secondary: "#ea580c" },
+  { name: "Orchid", seed: "#c026d3", secondary: "#0891b2" },
+  { name: "Lime", seed: "#65a30d", secondary: "#a21caf" },
+  { name: "Copper", seed: "#92400e", secondary: "#2a6f97" },
+  { name: "Plum", seed: "#86198f", secondary: "#5c7c0a" },
+  { name: "Coral", seed: "#e0533f", secondary: "#1f6f5c" },
 ];
 
-/* The same eight colours again, as the two flat lists `ColorPicker.Swatches`
+/* The same twenty colours again, as the two flat lists `ColorPicker.Swatches`
  * wants. Built from PRESETS rather than written out, so the picker's palette
  * cannot drift from the preset grid above it. */
 const PRESET_SEEDS = PRESETS.map((p) => p.seed);
@@ -385,7 +397,7 @@ function ColorField({
       <ColorPicker.Popup>
         <ColorPicker.Area />
         <ColorPicker.HueSlider />
-        {/* The preset palette again, so the eight themes are reachable one
+        {/* The preset palette again, so the preset themes are reachable one
           * colour at a time — which is the whole point of opening this popup
           * on a panel that already has a preset grid. */}
         <ColorPicker.Swatches colors={swatches} label={`${label} presets`} />
