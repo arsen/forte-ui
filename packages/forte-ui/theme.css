@@ -1,0 +1,5 @@
+/* Proxy to the canonical stylesheet. Bare package specifiers in @import are
+   resolved by every bundler that would be importing this file (Vite, Next,
+   PostCSS, Tailwind); browsers alone would not — same constraint as the CSS
+   Modules output this forwards to. */
+@import "@forte-ui/react/theme.css";

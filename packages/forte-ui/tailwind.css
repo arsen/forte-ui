@@ -1,0 +1,4 @@
+/* Proxy to the canonical Tailwind bridge. Like the original, it must be
+   imported BEFORE `tailwindcss` so its layer-order statement runs first —
+   the indirection does not change that. */
+@import "@forte-ui/react/tailwind.css";
