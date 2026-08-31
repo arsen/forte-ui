@@ -9,7 +9,7 @@
     "generate": "pnpm run registry && pnpm run toc",
     "dev": "pnpm run generate && next dev -p 3000",
     "build": "pnpm run generate && next build",
-    "start": "next start -p 3000",
+    "start": "npx --yes serve out -p 3000",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

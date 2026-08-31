@@ -8,6 +8,18 @@ const local = (p: string) => path.join(baseDir, p);
 
 const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
+  // Pre-rendered to plain HTML in `out/`, so the site can be served from any
+  // static host with no Node process. Every route here is a static page --
+  // there is no route handler, no middleware, no `next/image` and no dynamic
+  // segment -- so nothing is given up by dropping the server. Adding any of
+  // those later fails the BUILD rather than silently degrading, which is the
+  // behaviour we want.
+  output: "export",
+  // Emit `about/index.html` rather than `about.html`, so a static host serves
+  // the same URLs (`/components/button`, no extension, no redirect) that
+  // `next dev` does. Without it the two disagree and every in-page link works
+  // in dev and 404s in production.
+  trailingSlash: true,
   // The library ships compiled ESM + CSS, but transpiling keeps Next's CSS
   // handling consistent for its side-effect stylesheet imports.
   transpilePackages: ["@forte-ui/react"],
