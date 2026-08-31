@@ -129,7 +129,12 @@ export function Toggle<Value extends string = string>({
       data-variant={variant ?? group?.variant ?? "soft"}
       data-tone={tone ?? group?.tone ?? "primary"}
       data-size={size ?? group?.size ?? "md"}
-      data-icon-only={iconOnly || undefined}
+      {/* Spread-when-true, not `iconOnly || undefined`: JSX keeps an
+        * `undefined`-valued key in the props object and the render-prop
+        * merge copies it verbatim, so the plain attribute would erase the
+        * `data-icon-only` a composed `render={<Button iconOnly />}` sets
+        * for itself — silently un-squaring the button. */
+      ...(iconOnly && { "data-icon-only": true })}
       {...props}
     />
   );

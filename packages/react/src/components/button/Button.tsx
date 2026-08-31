@@ -105,7 +105,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-tone={tone}
         data-size={size}
         data-full-width={fullWidth || undefined}
-        data-icon-only={iconOnly || undefined}
+        {/* Spread-when-true, not `iconOnly || undefined`: JSX keeps an
+          * `undefined`-valued key in the props object and the render-prop
+          * merge copies it verbatim, so when this button is the outer half
+          * of a composition its plain attribute would erase the
+          * `data-icon-only` the inner element sets for itself. */
+        ...(iconOnly && { "data-icon-only": true })}
         data-loading={loading || undefined}
         // A loading button is not merely styled as busy — it must not be
         // activatable, or a double submit slips through.
