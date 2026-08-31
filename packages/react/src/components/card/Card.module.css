@@ -1,0 +1,289 @@
+/*
+ * Card
+ *
+ * A static grouping surface — the bordered panel the docs and every app were
+ * hand-rolling as `rounded-surface border border-border-muted bg-panel
+ * p-surface`. It sits IN the page, which is what separates it from the
+ * floating surfaces: no shadow by default, no z-index, no `.forte-hc-surface`,
+ * no enter/exit. A card that needs to float is a `Popover` or a `Dialog`.
+ *
+ * ---------------------------------------------------------------------------
+ * The layout
+ * ---------------------------------------------------------------------------
+ * The root is a flex column with one gap between sections. Padding lives on
+ * the ROOT, not on the parts, so a card with no `Card.Header` — a bare
+ * paragraph, a single `<img>`, somebody's own markup — is still a card and not
+ * an unpadded box. The cost of that choice is edge-to-edge content, and
+ * `Card.Media` pays it locally: negative margins the exact size of the padding
+ * knob pull it back to the border, so the padding stays a root-level fact
+ * instead of being restated on every section.
+ *
+ * The header is its own two-column grid:
+ *
+ *   ┌──────────────┬────────┐
+ *   │ title        │ action │
+ *   │ description  │        │
+ *   └──────────────┴────────┘
+ *
+ * The action column's gap is a margin on `.action` rather than a `column-gap`
+ * on the grid, for Alert's reason: a grid keeps its gaps whether or not the
+ * tracks have anything in them, and a header without an action would carry
+ * dead space hard against the padding. A margin only exists when its element
+ * does.
+ *
+ * ---------------------------------------------------------------------------
+ * The border is reserved on every variant
+ * ---------------------------------------------------------------------------
+ * `soft` has no visible edge, but its border-width stays 1px with a
+ * transparent colour (the Toolbar arrangement). Two bugs this prevents:
+ * switching variants at runtime would move every pixel of content by the
+ * border it gained or lost, and forced-colors mode — which strips backgrounds
+ * and shadows but REPLACES border colours rather than removing them — would
+ * leave a soft card with no boundary at all.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared HERE, on the card itself, so a value set on
+     * an ancestor is only INHERITED and loses to these. Re-skin one card by
+     * setting them via `className` or `style` (an unlayered consumer rule
+     * beats this layer at any specificity); re-skin every card by re-pointing
+     * the global tokens on the right-hand side. */
+    /** Padding between the border and the content. Follows
+     * `data-forte-density`. */
+    --forte-card-p: var(--forte-surface-p);
+    /** Space between the sections — header, media, content, footer. */
+    --forte-card-gap: var(--forte-space-4);
+    /** Space between the title and the description inside the header. */
+    --forte-card-header-gap: var(--forte-space-1);
+    /** Corner radius. Follows `data-forte-radius`. */
+    --forte-card-radius: var(--forte-radius-surface);
+    /** Width of the card's edge. Reserved even when the variant paints it
+     * transparent — see the header. */
+    --forte-card-border-width: 1px;
+    /** Size of the title. One step above the body, which is what separates
+     * a card's name from its content at a glance. */
+    --forte-card-title-font-size: var(--forte-font-size-3);
+    /** Weight of the title. */
+    --forte-card-title-font-weight: var(--forte-font-weight-semibold);
+    /** Size of the description and the body copy. */
+    --forte-card-font-size: var(--forte-font-size-2);
+
+    /* Filled in per variant below; this is the `outline` set. */
+    /** Fill behind the card. Set by `variant`. */
+    --forte-card-bg: var(--forte-color-panel);
+    /** Edge colour. Set by `variant`. `border-muted`, not `border` — a card
+     * is a grouping, not a control, and the louder hairline next to real
+     * inputs makes the box compete with the form inside it. */
+    --forte-card-border-color: var(--forte-color-border-muted);
+    /** Drop shadow. `none` except on `elevated` — a card is part of the
+     * page, not a surface floating over it. */
+    --forte-card-shadow: none;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--forte-card-gap);
+
+    padding: var(--forte-card-p);
+    border: var(--forte-card-border-width) solid var(--forte-card-border-color);
+    border-radius: var(--forte-card-radius);
+    background-color: var(--forte-card-bg);
+    box-shadow: var(--forte-card-shadow);
+
+    color: var(--forte-color-foreground);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-card-font-size);
+    line-height: var(--forte-line-height-normal);
+  }
+
+  /* Variants ---------------------------------------------------------------
+   * One axis and no tones: a card is the neutral ground other things sit ON,
+   * and a tinted grouping box is an `Alert`. The slots above are the whole
+   * surface; a one-off look is three custom properties on one element.
+   * ---------------------------------------------------------------------- */
+  .root[data-variant="outline"] {
+    --forte-card-bg: var(--forte-color-panel);
+    --forte-card-border-color: var(--forte-color-border-muted);
+    --forte-card-shadow: none;
+  }
+
+  .root[data-variant="soft"] {
+    /* One step past the panel, because the edge is gone and the fill is now
+     * the only thing separating the card from the page it sits on. */
+    --forte-card-bg: var(--forte-gray-3);
+    --forte-card-border-color: transparent;
+    --forte-card-shadow: none;
+  }
+
+  .root[data-variant="elevated"] {
+    --forte-card-bg: var(--forte-color-panel);
+    /* The hairline stays. A shadow this size all but disappears on a dark
+     * background, where light has nothing to occlude — without the border the
+     * card would dissolve into the page in exactly one theme. */
+    --forte-card-border-color: var(--forte-color-border-muted);
+    --forte-card-shadow: var(--forte-shadow-2);
+  }
+
+  /* Header ----------------------------------------------------------------- */
+  .header {
+    display: grid;
+    /* message · action. The action track is `auto`: empty, it is exactly
+     * zero wide, and the gap beside it is a margin on `.action` — see the
+     * header comment. */
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--forte-card-header-gap);
+  }
+
+  .title {
+    grid-column: 1;
+    grid-row: 1;
+
+    font-size: var(--forte-card-title-font-size);
+    font-weight: var(--forte-card-title-font-weight);
+    line-height: var(--forte-line-height-tight);
+    /* A short title should not be left hanging one word on its own line. */
+    text-wrap: balance;
+  }
+
+  /* `Card.Title` renders a `<div>` because the right heading LEVEL is the
+   * page's decision, not the card's. A consumer who nests their own heading
+   * gets the card's typography instead of the UA's h1–h6 sizes and margins —
+   * without this rule the semantic version of the same card would be the one
+   * that looks broken. */
+  .title > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+    font: inherit;
+  }
+
+  /* No `grid-row`: auto-flow puts it under a title when there is one, and on
+   * the first row when the header is a description on its own. */
+  .description {
+    grid-column: 1;
+
+    color: var(--forte-color-foreground-muted);
+    font-size: var(--forte-card-font-size);
+    line-height: var(--forte-line-height-normal);
+  }
+
+  /* Action ------------------------------------------------------------------
+   * Pinned to the corner when the header has both text rows — a badge or an
+   * icon button belongs beside the title, not floated between the lines. With
+   * a title alone it centres on that one line instead, so a 24px control does
+   * not sit visibly high against 20px of text. The `:has` guard is Alert's:
+   * an unconditional `span 2` would open an empty implicit row on a
+   * title-only header, and `row-gap` would then pad it with nothing in it.
+   * ---------------------------------------------------------------------- */
+  .action {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: var(--forte-space-2);
+    margin-inline-start: var(--forte-space-3);
+  }
+
+  .header:has(> .title):has(> .description) > .action {
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  /* Content ----------------------------------------------------------------- */
+  .content {
+    /* Prose and lists arrive with outer margins of their own; against the
+     * root's flex gap they would double the spacing between sections on
+     * exactly the cards that hold paragraphs. Inner spacing between siblings
+     * is left alone. */
+  }
+
+  .content > :first-child {
+    margin-block-start: 0;
+  }
+
+  .content > :last-child {
+    margin-block-end: 0;
+  }
+
+  /* Footer ------------------------------------------------------------------ */
+  .footer {
+    display: flex;
+    align-items: center;
+    gap: var(--forte-space-3);
+  }
+
+  .footer[data-align="center"] {
+    justify-content: center;
+  }
+
+  .footer[data-align="end"] {
+    justify-content: flex-end;
+  }
+
+  .footer[data-align="between"] {
+    justify-content: space-between;
+  }
+
+  /* Media -------------------------------------------------------------------
+   * Edge-to-edge content inside a padded root: negative margins the exact
+   * size of the padding knob pull the box back to the border, and the two
+   * position rules also collapse the padding above or below it when it sits
+   * at an end of the card. The corner radius is the root's minus the border
+   * width — the geometry of a box inscribed in a rounded border — and it is
+   * applied per corner with `overflow: hidden`, so an image only clips where
+   * there is actually a curve to clip against.
+   * ---------------------------------------------------------------------- */
+  .media {
+    margin-inline: calc(-1 * var(--forte-card-p));
+    overflow: hidden;
+  }
+
+  .media:first-child {
+    margin-block-start: calc(-1 * var(--forte-card-p));
+    border-start-start-radius: calc(var(--forte-card-radius) - var(--forte-card-border-width));
+    border-start-end-radius: calc(var(--forte-card-radius) - var(--forte-card-border-width));
+  }
+
+  .media:last-child {
+    margin-block-end: calc(-1 * var(--forte-card-p));
+    border-end-start-radius: calc(var(--forte-card-radius) - var(--forte-card-border-width));
+    border-end-end-radius: calc(var(--forte-card-radius) - var(--forte-card-border-width));
+  }
+
+  /* `display: block` kills the baseline gap under a lone image; the width
+   * fills the bleed. Height is left to the consumer — pair with `AspectRatio`
+   * when the box has to hold its shape before the image arrives. */
+  .media > img,
+  .media > video {
+    display: block;
+    inline-size: 100%;
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    /* Backgrounds and shadows are stripped here, so the border is the whole
+     * card: every variant keeps its reserved 1px and paints it in the system
+     * ink, including `soft`, whose transparent edge would otherwise leave the
+     * grouping invisible. Explicit rather than left to the UA so a future
+     * tint cannot quietly take the boundary with it. */
+    .root {
+      background-color: Canvas;
+      border-color: CanvasText;
+      box-shadow: none;
+    }
+
+    .title,
+    .content {
+      color: CanvasText;
+    }
+
+    .description {
+      color: CanvasText;
+    }
+  }
+}

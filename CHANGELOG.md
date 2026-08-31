@@ -13,6 +13,22 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Card
+
+- New component: a static grouping surface with eight parts — `Card.Root`,
+  `Card.Header`, `Card.Title`, `Card.Description`, `Card.Action`,
+  `Card.Content`, `Card.Footer` and `Card.Media` — replacing the hand-rolled
+  `rounded-surface border border-border-muted bg-panel p-surface` panel.
+  Three variants (`outline`, `soft`, `elevated`) share one footprint: the
+  border is reserved even where it is painted transparent, so switching
+  variants moves nothing and forced-colors mode keeps an edge on all three.
+  Padding is a single `--forte-card-p` knob driven by `data-forte-density`,
+  and `Card.Media` spends it locally to run edge to edge, clipping itself to
+  the card's corner radius when it opens or closes the card. The parts are
+  also exported flat (`CardRoot`, `CardHeader`, …) for React Server
+  Components, where the `Card.Root` spelling cannot cross the client
+  boundary.
+
 ### Kbd
 
 - New component: `Kbd`, a key cap rendering a real `<kbd>` element, and

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Field, Input } from "@forte-ui/react";
+import { Button, Card, Field, Input } from "@forte-ui/react";
 
 const PRESETS = ["compact", undefined, "spacious"] as const;
 
@@ -8,10 +8,14 @@ export default function DensityPresets() {
   return (
     <>
       {PRESETS.map((preset) => (
-        <div
+        /* The preset scope sits ON the card, and the card itself responds:
+          * `--forte-card-p` defaults to `--forte-surface-p`, which is exactly
+          * what `data-forte-density` re-points — so the padding you see
+          * changing is the component's own, not a utility's. */
+        <Card.Root
           key={preset ?? "default"}
           data-forte-density={preset}
-          className="grid w-[11rem] gap-2 rounded-surface border border-border-muted bg-panel p-surface"
+          className="w-[11rem] gap-2"
         >
           <Field.Root name={`email-${preset ?? "default"}`}>
             <Field.Label>Email</Field.Label>
@@ -19,7 +23,7 @@ export default function DensityPresets() {
           </Field.Root>
           <Button size="sm">Subscribe</Button>
           <span className="font-mono text-1 text-foreground-muted">{preset ?? "default"}</span>
-        </div>
+        </Card.Root>
       ))}
     </>
   );
