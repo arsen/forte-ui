@@ -4,12 +4,20 @@ import * as React from "react";
 import {
   Button,
   ColorPicker,
+  Select,
   Slider,
   Tabs,
   Toggle,
   ToggleGroup,
   type Rgba,
 } from "@forte-ui/react";
+import {
+  SANS_FONTS,
+  MONO_FONTS,
+  findFont,
+  ensureFontLink,
+  type FontOption,
+} from "./fonts";
 import {
   hexToOklch,
   oklchToHex,
@@ -137,6 +145,11 @@ export type ThemeConfig = {
   radius: (typeof RADIUS)[number];
   density: (typeof DENSITY)[number];
   motion: (typeof MOTION)[number];
+  /* Stored by NAME, not by stack: the name is what the picker shows and what
+   * readStored() can validate against the catalogue, while the stack and the
+   * stylesheet URL are derived from it in fonts.ts — one source of truth. */
+  fontSans: string;
+  fontMono: string;
 };
 
 const DEFAULTS: ThemeConfig = {
@@ -146,6 +159,8 @@ const DEFAULTS: ThemeConfig = {
   radius: "default",
   density: "default",
   motion: "default",
+  fontSans: "System",
+  fontMono: "System",
 };
 
 /** Shape written to localStorage. `root` duplicates what `configToAttrs`
@@ -153,7 +168,15 @@ const DEFAULTS: ThemeConfig = {
  *  without loading the colour maths — see `noFlashScript`. */
 type StoredStudio = {
   config: ThemeConfig;
-  root: { vars: Record<string, string>; data: Record<string, string> };
+  root: {
+    vars: Record<string, string>;
+    data: Record<string, string>;
+    /* Google Fonts stylesheet URLs for the chosen fonts, so the pre-paint
+     * script can `<link>` them without knowing the catalogue. The script
+     * still checks the origin before appending — storage is user-editable,
+     * and a var value cannot pull a foreign stylesheet but a link can. */
+    fonts: string[];
+  };
 };
 
 const STORAGE_KEY = "forte-studio";
@@ -185,6 +208,8 @@ function readStored(): ThemeConfig | null {
     typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v) ? v : fallback;
   const oneOf = <T extends string>(v: unknown, options: readonly T[], fallback: T) =>
     options.includes(v as T) ? (v as T) : fallback;
+  const fontIn = (v: unknown, list: readonly FontOption[], fallback: string) =>
+    typeof v === "string" && list.some((f) => f.name === v) ? v : fallback;
 
   return {
     seed: hex(c.seed, DEFAULTS.seed),
@@ -193,6 +218,8 @@ function readStored(): ThemeConfig | null {
     radius: oneOf(c.radius, RADIUS, DEFAULTS.radius),
     density: oneOf(c.density, DENSITY, DEFAULTS.density),
     motion: oneOf(c.motion, MOTION, DEFAULTS.motion),
+    fontSans: fontIn(c.fontSans, SANS_FONTS, DEFAULTS.fontSans),
+    fontMono: fontIn(c.fontMono, MONO_FONTS, DEFAULTS.fontMono),
   };
 }
 
@@ -203,6 +230,8 @@ function configToAttrs(cfg: ThemeConfig) {
   const on = seedO ? bestOnColor(seedO) : null;
   const secO = hexToOklch(cfg.secondary);
   const onSec = secO ? bestOnColor(secO) : null;
+  const sans = findFont(SANS_FONTS, cfg.fontSans);
+  const mono = findFont(MONO_FONTS, cfg.fontMono);
 
   return {
     style: {
@@ -215,6 +244,10 @@ function configToAttrs(cfg: ThemeConfig) {
       // including browsers without contrast-color().
       ...(on ? { "--forte-color-on-primary": on.color } : {}),
       ...(onSec ? { "--forte-color-on-secondary": onSec.color } : {}),
+      // "System" sets nothing at all, so the token keeps its shipped default
+      // instead of being pinned to a copy of it that could drift.
+      ...(sans.stack ? { "--forte-font-sans": sans.stack } : {}),
+      ...(mono.stack ? { "--forte-font-mono": mono.stack } : {}),
     } as React.CSSProperties,
     "data-forte-radius": cfg.radius === "default" ? undefined : cfg.radius,
     "data-forte-density": cfg.density === "default" ? undefined : cfg.density,
@@ -227,6 +260,8 @@ function toCss(cfg: ThemeConfig) {
   const secO = hexToOklch(cfg.secondary);
   const on = seedO ? bestOnColor(seedO) : null;
   const onSec = secO ? bestOnColor(secO) : null;
+  const sans = findFont(SANS_FONTS, cfg.fontSans);
+  const mono = findFont(MONO_FONTS, cfg.fontMono);
 
   const attrs = [
     cfg.radius !== "default" && `data-forte-radius="${cfg.radius}"`,
@@ -234,11 +269,22 @@ function toCss(cfg: ThemeConfig) {
     cfg.motion !== "default" && `data-forte-motion="${cfg.motion}"`,
   ].filter(Boolean);
 
+  /* @import must precede every other statement in a stylesheet, so the font
+   * loads lead the block. Google Fonts is the preview's host, not a
+   * requirement — the comment says so because the copied CSS is the one part
+   * of the studio that leaves the site. */
+  const imports = [sans, mono]
+    .filter((f) => f.css)
+    .map((f) => `@import url("${f.css}");`);
+
   const lines = [
+    ...(imports.length ? [`/* Or self-host these — any @font-face works. */`, ...imports, ``] : []),
     `:root {`,
     `  --forte-accent-seed: ${cfg.seed};`,
     `  --forte-secondary-seed: ${cfg.secondary};`,
     cfg.tint !== 1 ? `  --forte-neutral-tint: ${cfg.tint};` : null,
+    sans.stack ? `  --forte-font-sans: ${sans.stack};` : null,
+    mono.stack ? `  --forte-font-mono: ${mono.stack};` : null,
     ``,
     `  /* Measured rather than derived, so it is exact in every browser. */`,
     on ? `  --forte-color-on-primary: ${on.color};` : null,
@@ -326,6 +372,9 @@ export function ThemeStudio() {
           ...(attrs["data-forte-density"] ? { density: attrs["data-forte-density"] } : {}),
           ...(attrs["data-forte-motion"] ? { motion: attrs["data-forte-motion"] } : {}),
         },
+        fonts: [findFont(SANS_FONTS, cfg.fontSans), findFont(MONO_FONTS, cfg.fontMono)]
+          .map((f) => f.css)
+          .filter((href): href is string => href !== null),
       },
     };
     try {
@@ -350,6 +399,17 @@ export function ThemeStudio() {
     root.dataset.forteMotion = attrs["data-forte-motion"] ?? "";
     dataKeys.forEach((k) => { if (!root.dataset[k]) delete root.dataset[k]; });
   }, [restored, attrs]);
+
+  // Load the chosen fonts' full stylesheets. The vars land on the root either
+  // way; without the file the stack just falls through to the system tail, so
+  // this effect is what turns the selection from a declaration into pixels.
+  // On a fresh reload the pre-paint script has already appended these same
+  // links — ensureFontLink dedupes by href, so nothing double-loads.
+  React.useEffect(() => {
+    for (const f of [findFont(SANS_FONTS, cfg.fontSans), findFont(MONO_FONTS, cfg.fontMono)]) {
+      if (f.css) ensureFontLink(f.css);
+    }
+  }, [cfg.fontSans, cfg.fontMono]);
 
   React.useEffect(() => {
     if (!copied) return;
@@ -462,6 +522,23 @@ export function ThemeStudio() {
         <Choice label="Motion" options={MOTION} value={cfg.motion} onChange={(v) => set("motion", v)} />
 
         <section className={GROUP}>
+          <h3 className={GROUP_TITLE}>Typography</h3>
+          <FontField
+            label="Sans"
+            options={SANS_FONTS}
+            value={cfg.fontSans}
+            onChange={(v) => set("fontSans", v)}
+          />
+          <FontField
+            label="Mono"
+            options={MONO_FONTS}
+            value={cfg.fontMono}
+            onChange={(v) => set("fontMono", v)}
+          />
+          <p className={HINT}>Fonts load from Google Fonts; the copied CSS shows how.</p>
+        </section>
+
+        <section className={GROUP}>
           <h3 className={GROUP_TITLE}>Contrast</h3>
           <dl className="m-0 grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 gap-y-1 text-2">
             <dt className="text-foreground-muted">Text on solid fill</dt>
@@ -517,6 +594,19 @@ export function ThemeStudio() {
             <Button size="lg">Large</Button>
             <Button loading>Saving</Button>
             <Button disabled>Disabled</Button>
+          </div>
+
+          {/* Type specimen — where the two font pickers become visible. The
+            * buttons above set little text at one size; this runs both stacks
+            * through weights, sizes and figures so a swap actually shows. */}
+          <div className="grid gap-1">
+            <p className="m-0 text-4 font-semibold">Sphinx of black quartz, judge my vow.</p>
+            <p className="m-0 text-2 text-foreground-muted">
+              The quick brown fox jumps over the lazy dog — 0123456789
+            </p>
+            <code className="mt-1 w-fit rounded-3 bg-panel px-2 py-1 font-mono text-1">
+              npm install @forte-ui/react
+            </code>
           </div>
         </div>
 
@@ -616,6 +706,60 @@ function ColorField({
         </ColorPicker.Row>
       </ColorPicker.Popup>
     </ColorPicker.Root>
+  );
+}
+
+function FontField({
+  label, options, value, onChange,
+}: {
+  label: string;
+  options: readonly FontOption[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  /* `items` gives Select.Value its text without a render function; name is
+   * both key and label, which is also why the config stores names. */
+  const items = React.useMemo(
+    () => Object.fromEntries(options.map((f) => [f.name, f.name])),
+    [options],
+  );
+
+  return (
+    <Select.Root
+      items={items}
+      value={value}
+      onValueChange={(v) => onChange(v as string)}
+      /* Each item renders in its own face, but ten full families is megabytes
+       * — so opening the popup loads the `preview` stylesheets instead, each
+       * subsetted to exactly the glyphs of its family's name. A few KB, once;
+       * ensureFontLink dedupes reopenings. Until one arrives the item shows
+       * the fallback stack, which is what `display=swap` is for. */
+      onOpenChange={(open) => {
+        if (!open) return;
+        for (const f of options) if (f.preview) ensureFontLink(f.preview);
+      }}
+    >
+      <div className="grid grid-cols-[3rem_minmax(0,1fr)] items-center gap-2">
+        {/* mb-0: the label's own gap-below is for the stacked layout it
+          * usually sits in; this one shares a grid row with its trigger. */}
+        <Select.Label className="mb-0">{label}</Select.Label>
+        <Select.Trigger fullWidth>
+          <Select.Value />
+          <Select.Icon />
+        </Select.Trigger>
+      </div>
+      <Select.Popup>
+        {options.map((f) => (
+          <Select.Item
+            key={f.name}
+            value={f.name}
+            style={f.stack ? { fontFamily: f.stack } : undefined}
+          >
+            {f.name}
+          </Select.Item>
+        ))}
+      </Select.Popup>
+    </Select.Root>
   );
 }
 
