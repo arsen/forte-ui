@@ -12,7 +12,7 @@ import { Button } from "@forte-ui/react";
 import { SiGithub } from "react-icons/si";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { ICON } from "@/components/styles";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeDrawer } from "@/components/theme-drawer";
 import { Sidebar } from "@/components/sidebar";
 import { Toc } from "@/components/toc";
 import { NavDrawer, TocDrawer } from "@/components/shell-drawers";
@@ -131,7 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                   <SiGithub className={ICON} aria-hidden="true" />
                 </Button>
-                <ThemeToggle />
+                <ThemeDrawer />
                 {/* Trailing, on the same side as the column it replaces. */}
                 <TocDrawer />
               </div>

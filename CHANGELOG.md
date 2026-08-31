@@ -13,6 +13,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Drawer
+
+- Fixed a non-modal drawer (`modal={false}`) making the entire page
+  unclickable while open: the full-screen viewport that positions the popup
+  was silently absorbing every pointer event aimed at the page. The viewport
+  is now permanently `pointer-events: none` with the popup restoring its own
+  events — modal behaviour (scrim, outside-press dismissal) and the
+  click-through during the exit animation are unchanged.
+
 ## [1.0.0-alpha.2] - 2026-08-30
 
 ### NavList
