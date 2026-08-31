@@ -663,6 +663,13 @@ renames that section to the new version with a date, re-creates an empty
 `[Unreleased]` above it, and updates the comparison links at the bottom of the
 file.
 
+Within a release, entries are grouped by **component** — `### NavList`, plus
+`### Design tokens & motion` and `### General` for what belongs to no single
+one — rather than by Keep a Changelog's Added/Changed/Fixed buckets. A library
+this size changes one component at a time, and that is the axis a reader
+upgrades along. Breaking entries lead with `**Breaking:**`. `/release-prep`
+drafts a section in exactly this shape.
+
 ---
 
 ## Things that will bite you
