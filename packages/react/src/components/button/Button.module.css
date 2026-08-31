@@ -37,6 +37,16 @@
     --forte-button-padding-x: var(--forte-control-px-md);
     /** Label size; reassigned by `size` */
     --forte-button-font-size: var(--forte-font-size-2);
+    /* One step above the label on the same scale, which is the pairing every
+     * icon-and-label control in the library already draws (16px beside 14px
+     * text at `md`). It is a size token rather than `1em` because an icon is
+     * read as a shape, not as text: at `1em` a 12px glyph next to an `sm`
+     * label is legible only as a smudge, and the `iconOnly` square would then
+     * be driven below the control height by the label's size. */
+    /** Size of an `svg` a consumer drops in; reassigned by `size`. Applies to
+     * direct children of the content span only, so a composed forte-ui
+     * component keeps sizing its own glyphs. */
+    --forte-button-icon-size: var(--forte-font-size-3);
     /* `1em`, so it tracks `--forte-button-font-size` and needs no per-size rule
      * of its own — and so it stays in proportion if a consumer re-points the
      * font size. Spinner's own `size` prop is not used here for the same
@@ -181,18 +191,21 @@
     --forte-button-height: var(--forte-control-h-sm);
     --forte-button-padding-x: var(--forte-control-px-sm);
     --forte-button-font-size: var(--forte-font-size-1);
+    --forte-button-icon-size: var(--forte-font-size-2);
   }
 
   .root[data-size="md"] {
     --forte-button-height: var(--forte-control-h-md);
     --forte-button-padding-x: var(--forte-control-px-md);
     --forte-button-font-size: var(--forte-font-size-2);
+    --forte-button-icon-size: var(--forte-font-size-3);
   }
 
   .root[data-size="lg"] {
     --forte-button-height: var(--forte-control-h-lg);
     --forte-button-padding-x: var(--forte-control-px-lg);
     --forte-button-font-size: var(--forte-font-size-3);
+    --forte-button-icon-size: var(--forte-font-size-4);
   }
 
   /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width.
@@ -297,6 +310,29 @@
     align-items: center;
     gap: var(--forte-button-gap);
     transition: opacity var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  /* An icon a consumer drops in. Sized here rather than left to the caller
+   * because an icon set's own default is whatever that set picked — lucide
+   * draws at 24px — and that default does not just look large, it changes the
+   * button's geometry: `iconOnly` derives its square from the icon, so a bare
+   * lucide glyph makes a 36px `md` button 42px and it no longer lines up with
+   * the controls beside it. The library ships no icon catalogue, which is the
+   * reason to size whatever arrives rather than a reason not to.
+   *
+   * DIRECT children of the content span only. A composed forte-ui component
+   * sizes its own glyphs from its own knobs, and reaching into one would fight
+   * that — a Badge's icon inside a button label keeps the badge's size, and
+   * the loading Spinner is not in `.content` at all.
+   *
+   * `flex: none` stops a long label squeezing the glyph; a squashed icon reads
+   * as a rendering fault. Consumers who want a different size set
+   * `--forte-button-icon-size`, or win outright with an unlayered rule or a
+   * utility class on the icon itself. */
+  .content > svg {
+    flex: none;
+    inline-size: var(--forte-button-icon-size);
+    block-size: var(--forte-button-icon-size);
   }
 
   .root[data-loading] .content {

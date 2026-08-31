@@ -432,6 +432,11 @@
     /* A field-height button holding a word needs less air than a standalone
      * one, or "Search" alone eats a third of the group. */
     --forte-button-padding-x: var(--forte-space-2);
+    /* Button sizes an icon from its own label, which inside a field would
+     * leave an `sm` addon button's glyph smaller than the Search icon in the
+     * addon beside it. The group's icons are one size whatever the field is,
+     * so the button's join them. */
+    --forte-button-icon-size: var(--forte-input-group-icon-size);
     /* The nesting rule — an inner radius is its outer one less the gap
      * between them — with `--forte-radius-1` as the floor so
      * `data-forte-radius="none"` (painted radius 0, subtraction negative)
@@ -440,19 +445,6 @@
       var(--forte-radius-1),
       calc(var(--forte-input-group-radius-painted) - var(--forte-input-group-py))
     );
-  }
-
-  /* Icons inside an addon button. Button ships no icon sizing on purpose —
-   * the library has no icon catalogue, so callers size their own glyphs —
-   * but a bare lucide icon is 24px, only 2px shy of the button it sits in
-   * here, so the group closes the gap the same way it does for its own
-   * direct icons. Scoped through the content span (a public `data-forte`
-   * part), which is what keeps a composed Spinner — whose svg lives under
-   * its own root, sized by it — out of reach. */
-  .root .addon [data-forte="button"] [data-forte="button-content"] > svg {
-    flex: none;
-    inline-size: var(--forte-input-group-icon-size);
-    block-size: var(--forte-input-group-icon-size);
   }
 
   /* Button's own `iconOnly` floors `min-inline-size` at the 24px target,
