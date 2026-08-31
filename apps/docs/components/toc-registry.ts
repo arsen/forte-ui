@@ -523,7 +523,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sections", text: "Sections", depth: 3 },
     { id: "collapsible-groups", text: "Collapsible groups", depth: 3 },
-    { id: "the-rail-marker", text: "The rail marker", depth: 3 },
+    { id: "the-edge-marker", text: "The edge marker", depth: 3 },
     { id: "sizes", text: "Sizes", depth: 3 },
     { id: "icons-badges-disabled-rows", text: "Icons, badges, disabled rows", depth: 3 },
     { id: "routing", text: "Routing", depth: 3 },

@@ -5286,23 +5286,16 @@
         "overrides": []
       },
       {
-        "name": "--forte-nav-list-rail-width",
+        "name": "--forte-nav-list-edge-width",
         "value": "2px",
-        "description": "Width of the active-row rail",
+        "description": "Width of the active-row edge border",
         "part": "root",
         "overrides": []
       },
       {
-        "name": "--forte-nav-list-rail-color",
+        "name": "--forte-nav-list-edge-color",
         "value": "var(--forte-color-primary)",
-        "description": "Colour of the active-row rail",
-        "part": "root",
-        "overrides": []
-      },
-      {
-        "name": "--forte-nav-list-rail-inset",
-        "value": "18%",
-        "description": "How far the rail stops short of the row's top and bottom edges",
+        "description": "Colour of the active-row edge border",
         "part": "root",
         "overrides": []
       },

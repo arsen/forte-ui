@@ -68,11 +68,11 @@ State is Base UI's `Collapsible` contract: `defaultOpen` uncontrolled, `open` pl
 
 The panel keeps its links in the DOM while closed — `keepMounted` defaults to **on**, the opposite of Base UI's default, because these are navigation links: unmounted, they are invisible to crawlers and to find-in-page. The `hidden` attribute keeps the closed copy out of the accessibility tree and the tab order either way.
 
-### The rail marker
+### The edge marker
 
-`marker="rail"` on the root adds a short accent bar along the active row's inline-start edge, on top of the fill rather than instead of it — a second cue that is not colour-on-colour, and the classic sidebar treatment.
+`marker="edge"` on the root paints an accent border along the active row's inline-start edge, on top of the fill rather than instead of it — a second cue that is not colour-on-colour. Because it is the row's own border, it follows the row's corner radius: a straight bar at `data-forte-radius="none"`, a crescent hugging the cap at `pill`.
 
-<DemoBlock id="nav-list/rail" />
+<DemoBlock id="nav-list/edge" />
 
 ### Sizes
 
@@ -129,7 +129,7 @@ If the list sits inside a `<nav>` you already own, swap the root's element the s
 
 The keyboard story is deliberately the platform's: rows are real links and real buttons, so <kbd>Tab</kbd> walks them in order, <kbd>Enter</kbd> follows a link, and <kbd>Enter</kbd> or <kbd>Space</kbd> toggles a group — there is no roving focus to learn. A `GroupTrigger` carries `aria-expanded` and `aria-controls`; keep its text as the accessible name, since "expanded"/"collapsed" is already announced and needs no "show/hide" wording of its own.
 
-The active row is never colour alone: `active` also sets `aria-current="page"` and a weight change, `marker="rail"` adds geometry, and under forced colors the fill is repainted with the system `Highlight` pair. Focus rings are inset — the list's usual home is a scroll container hard against the viewport edge, where an outward ring would be clipped.
+The active row is never colour alone: `active` also sets `aria-current="page"` and a weight change, `marker="edge"` adds geometry, and under forced colors the fill is repainted with the system `Highlight` pair. Focus rings are inset — the list's usual home is a scroll container hard against the viewport edge, where an outward ring would be clipped.
 
 ## Theming
 

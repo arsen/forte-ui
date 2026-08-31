@@ -6,8 +6,9 @@
  * everything below through inherited custom properties:
  *
  *   data-size="sm|md|lg"       row padding and text size
- *   data-marker="fill|rail"    how the active row is drawn — `rail` ADDS an
- *                              accent bar to the fill, it does not replace it
+ *   data-marker="fill|edge"    how the active row is drawn — `edge` ADDS an
+ *                              accent start border to the fill, it does not
+ *                              replace it
  *
  * The collapse animation is Base UI's Collapsible wearing this component's
  * clothes: the panel transitions `--collapsible-panel-height` on
@@ -110,13 +111,11 @@
     /** Colour of the guide line */
     --forte-nav-list-guide-color: var(--forte-color-border-muted);
 
-    /* The rail — only painted under data-marker="rail". */
-    /** Width of the active-row rail */
-    --forte-nav-list-rail-width: 2px;
-    /** Colour of the active-row rail */
-    --forte-nav-list-rail-color: var(--forte-color-primary);
-    /** How far the rail stops short of the row's top and bottom edges */
-    --forte-nav-list-rail-inset: 18%;
+    /* The edge — only painted under data-marker="edge". */
+    /** Width of the active-row edge border */
+    --forte-nav-list-edge-width: 2px;
+    /** Colour of the active-row edge border */
+    --forte-nav-list-edge-color: var(--forte-color-primary);
 
     /* The group chevron. `-subtle` is below the text floor and fine for a
      * non-text indicator (SC 1.4.11) — and it is never the only cue:
@@ -248,6 +247,7 @@
     cursor: pointer;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
       color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
@@ -288,19 +288,25 @@
     opacity: 0.55;
   }
 
-  /* The rail: painted on top of the fill, not instead of it, so it is an
-   * addition a consumer can theme away by zeroing its width. Vertically
-   * inset rather than full-bleed — a bar spanning edge to edge reads as a
-   * border between rows, not a marker on one. */
-  .root[data-marker="rail"] .link[data-active]::before,
-  .root[data-marker="rail"] .groupTrigger[data-active]::before {
-    content: "";
-    position: absolute;
-    inset-inline-start: 0;
-    inset-block: var(--forte-nav-list-rail-inset);
-    width: var(--forte-nav-list-rail-width);
-    border-radius: var(--forte-radius-pill);
-    background-color: var(--forte-nav-list-rail-color);
+  /* The edge: the row's own start border, so the fill's border-radius
+   * shapes it for free — a straight bar under `none`, a bar with hooked
+   * corners at the default radius, a crescent hugging the cap under `pill`.
+   * Painted on top of the fill, not instead of it, and themed away by
+   * zeroing its width.
+   *
+   * Every row wears the border TRANSPARENT, not just the active one:
+   * activation changes only the colour, so the text never shifts by the
+   * border's width when a row lights up. That transparent carrier is also
+   * why the forced-colors block below zeroes the width — HCM repaints
+   * `transparent` with a real system colour. */
+  .root[data-marker="edge"] .link,
+  .root[data-marker="edge"] .groupTrigger {
+    border-inline-start: var(--forte-nav-list-edge-width) solid transparent;
+  }
+
+  .root[data-marker="edge"] .link[data-active],
+  .root[data-marker="edge"] .groupTrigger[data-active] {
+    border-inline-start-color: var(--forte-nav-list-edge-color);
   }
 
   /* Group ------------------------------------------------------------------ */
@@ -418,13 +424,22 @@
  *   - The active row's cue is a background fill, and forced colors strips
  *     author backgrounds. `aria-current` is not in patterns.css's selected
  *     list, so the Highlight pair is restated here for `data-active`. The
- *     rail needs nothing: redundant with the fill it sits on.
+ *     edge border is redundant with the fill it sits on — and worse than
+ *     redundant on the REST of the rows: they carry it `transparent`, HCM
+ *     repaints `transparent` with a real system colour, and every row grows
+ *     a start edge that reads as chrome. Width zero on all rows alike, so
+ *     nothing shifts relative to its neighbours.
  *   - The badge's fill goes the same way, leaving its text floating in the
  *     row; a border keeps it a chip. `transparent` is replaced with a system
  *     colour in HCM, which is exactly the trick .forte-hc-surface uses.
  * ------------------------------------------------------------------------- */
 @layer forte.a11y {
   @media (forced-colors: active) {
+    .root[data-marker="edge"] .link,
+    .root[data-marker="edge"] .groupTrigger {
+      border-inline-start-width: 0;
+    }
+
     .link[data-active]:not([data-disabled]),
     .groupTrigger[data-active]:not([data-disabled]) {
       background-color: Highlight;
