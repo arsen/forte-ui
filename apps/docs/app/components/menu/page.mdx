@@ -39,7 +39,10 @@ never fight over the cascade.
 
 ### Icons and shortcuts
 
-`<Menu.Shortcut>` prints the keys at the end of a row. A direct `<svg>` child of
+`<Menu.Shortcut>` prints the keys at the end of a row, drawn as a
+[`Kbd`](/components/kbd/) cap — the same cap `Tooltip.Shortcut` and running
+text use, dimmed and highlighted with the row because the cap derives its
+chrome from the text colour it inherits. A direct `<svg>` child of
 a row is sized to `--forte-menu-item-icon-size` and never squeezed by a long
 label, so an icon set's own default (lucide draws at 24px) does not decide the
 row's height.

@@ -4778,6 +4778,60 @@
       }
     ]
   },
+  "Kbd": {
+    "name": "Kbd",
+    "tokens": [
+      {
+        "name": "--forte-kbd-bg",
+        "value": "color-mix(in oklab, currentColor 7%, transparent)",
+        "description": "Cap fill. Translucent `currentColor` so it works on any surface.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-kbd-border-color",
+        "value": "color-mix(in oklab, currentColor 25%, transparent)",
+        "description": "Cap outline — the edge that survives forced colors.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-kbd-radius",
+        "value": "var(--forte-radius-2)",
+        "description": "Corner radius. A step softer than the `radius-1` hairline: at cap size, 2px corners read as a sharp box rather than a chip.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-kbd-padding-inline",
+        "value": "var(--forte-space-1)",
+        "description": "Left and right padding inside the cap.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-kbd-font-size",
+        "value": "0.85em",
+        "description": "Key label size, relative to the surrounding text.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-kbd-min-inline-size",
+        "value": "1.6em",
+        "description": "Smallest cap width — what squares up a lone letter instead of leaving a sliver the exact width of an `I`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-kbd-group-gap",
+        "value": "var(--forte-space-1)",
+        "description": "Gap between the caps of a sequence.",
+        "part": "group",
+        "overrides": []
+      }
+    ]
+  },
   "Menu": {
     "name": "Menu",
     "tokens": [

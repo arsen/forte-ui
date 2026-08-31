@@ -98,10 +98,12 @@
     /** Arrow height, and the distance it is pushed out from the popup */
     --forte-tooltip-arrow-height: 0.5em;
 
-    /* Shortcut knobs. Declared here rather than on .shortcut for the same
+    /* Shortcut knobs. Declared here rather than on the cap for the same
      * reason the arrow's are: one place to retune the surface and everything
-     * printed on it. .shortcut reads them with the same values as fallbacks,
-     * so it still stands alone if it is ever lifted out of this popup. */
+     * printed on it. The cap itself is a composed `Kbd`, and .shortcut below
+     * re-points its `--forte-kbd-*` knobs at these, with the same values as
+     * fallbacks, so the pair still stands alone if it is ever lifted out of
+     * this popup. */
     /** Gap between the label and the key cap */
     --forte-tooltip-shortcut-gap: var(--forte-space-3);
     /** Key cap fill */
@@ -121,8 +123,15 @@
     box-sizing: border-box;
     /* The Arrow is positioned against this box. */
     position: relative;
-    display: flex;
-    flex-direction: column;
+    /* `block`, deliberately not the flex column this used to be. A tooltip's
+     * content is prose first, and a flex container turns every inline child
+     * into its own flex item: `Press <Kbd>?</Kbd> to search` became three
+     * stacked items with the whitespace between them dropped, and the cap —
+     * stretched to the popup's width by the default cross-axis alignment —
+     * made the breakage visible. Block flow keeps mixed text inline; the
+     * one layout that needs flex is the label-plus-shortcut row, and
+     * `:has(.shortcut)` below opts into it. */
+    display: block;
     /* --available-width is published by the Positioner and inherited here. It
      * is absent for the first frame, hence the fallback: a bare min() with an
      * unset var is invalid at computed-value time and would drop the cap. */
@@ -231,44 +240,49 @@
    * relying on the fill alone.
    * --------------------------------------------------------------------- */
   .popup:has(.shortcut) {
+    /* The popup's base display is `block` (see the root rule for why), so
+     * the row opts into flex here rather than inheriting it. */
+    display: flex;
     flex-direction: row;
     align-items: baseline;
     gap: var(--forte-tooltip-shortcut-gap, var(--forte-space-3));
   }
 
-  /* Full-contrast text on a translucent cap, rather than the dimmed text Menu
-   * prints. The ramp's measured pairs are gray-11/gray-12 against gray-1; this
-   * surface is the inverse of that — gray-1 ON gray-12 — and no mid-gray on it
-   * is covered by the contrast harness, so dimming here would be a guess at
-   * SC 1.4.3. Deriving the cap from `currentColor` instead keeps the glyphs at
-   * the popup's own contrast and works unchanged in a re-skinned popup. */
-  .shortcut {
+  /* The cap is a composed `Kbd`, so the drawing — fill, edge, radius, the
+   * bidi pin — lives in Kbd.module.css; what stays here is the flex sizing
+   * and the re-pointing of Kbd's knobs at the tooltip's own. The values echo
+   * Kbd's rationale on this popup exactly: full-contrast text on a
+   * translucent `currentColor` cap, rather than the dimmed text Menu prints,
+   * because this surface is the inverse of the ramp's measured pairs —
+   * gray-1 ON gray-12 — and no mid-gray on it is covered by the contrast
+   * harness, so dimming here would be a guess at SC 1.4.3. The fill runs
+   * heavier than Kbd's default (16% against 7%) for the same reason: a
+   * translucent wash needs more of a light colour than of a dark one to read
+   * at all.
+   *
+   * `.popup .shortcut`, not `.shortcut`: Kbd declares the same knobs on its
+   * own root at (0,1,0), and which same-specificity declaration wins would
+   * come down to bundle order — the descendant selector outweighs it
+   * instead of racing it. */
+  .popup .shortcut {
     flex: none;
-    padding-inline: var(--forte-tooltip-shortcut-padding-inline, var(--forte-space-1));
-    border: 1px solid
-      var(
-        --forte-tooltip-shortcut-border-color,
-        color-mix(in oklab, currentColor 28%, transparent)
-      );
-    border-radius: var(--forte-tooltip-shortcut-radius, var(--forte-radius-1));
-    background-color: var(
+    --forte-kbd-bg: var(
       --forte-tooltip-shortcut-bg,
       color-mix(in oklab, currentColor 16%, transparent)
     );
-    /* Keys are read as a group of glyphs, not as prose: tabular figures stop
-     * a row of tooltips jittering, and normal tracking undoes any tightening
-     * a re-skinned popup applied to its label. */
-    font-variant-numeric: tabular-nums;
-    letter-spacing: var(--forte-letter-spacing-normal);
-    /* A chord is one token. Wrapping it puts ⌘ on one line and ⇧P on the
-     * next, inside a cap that then has to be drawn around both. */
-    white-space: nowrap;
-    /* Chord notation stays LTR whatever the UI's direction. ⌘, ⇧ and ⌫ are
-     * bidi-neutral, so in an RTL popup `⌘B` reorders to `B⌘` and the modifier
-     * ends up after the key it modifies. `isolate` scopes that to the cap, so
-     * forcing it does not drag the label's own bidi resolution with it. */
-    direction: ltr;
-    unicode-bidi: isolate;
+    --forte-kbd-border-color: var(
+      --forte-tooltip-shortcut-border-color,
+      color-mix(in oklab, currentColor 28%, transparent)
+    );
+    --forte-kbd-radius: var(--forte-tooltip-shortcut-radius, var(--forte-radius-1));
+    --forte-kbd-padding-inline: var(
+      --forte-tooltip-shortcut-padding-inline,
+      var(--forte-space-1)
+    );
+    /* Kbd's 0.85em is sized against running text. The popup's label is
+     * already at the bottom of the type scale, and a cap smaller than that
+     * stops being legible — the keys print at the label's own size here. */
+    --forte-kbd-font-size: 1em;
   }
 
   /* ------------------------------------------------------------------------

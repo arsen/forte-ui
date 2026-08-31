@@ -3,6 +3,7 @@ import { PropTable } from "@/components/prop-table";
 import { KeyboardTable } from "@/components/keyboard-table";
 import { Callout } from "@/components/callout";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Calendar",
@@ -72,7 +73,7 @@ Ranges are picked in two clicks, and the half-picked state is visible: with one 
 
 `disabled` takes a matcher — a `Date`, a `{ from, to }` range, `{ before }` or `{ after }`, `{ dayOfWeek }`, a predicate, or an array of any of those, in which case a day is blocked if any one of them claims it.
 
-Disabled days are marked with `aria-disabled` rather than the `disabled` attribute, and stay focusable. A disabled button cannot take focus, so a blocked-out week would trap arrow-key navigation on the day before it — the reader would press <kbd>→</kbd> five times and go nowhere with no way to know why.
+Disabled days are marked with `aria-disabled` rather than the `disabled` attribute, and stay focusable. A disabled button cannot take focus, so a blocked-out week would trap arrow-key navigation on the day before it — the reader would press <Kbd>→</Kbd> five times and go nowhere with no way to know why.
 
 ### Week numbers, and a height that does not move
 
@@ -120,7 +121,7 @@ One prop differs between the two: `autoFocus`. It is **off** on `Calendar`, beca
 
 ## Accessibility
 
-The grid is a real `<table role="grid">`, named by its month caption, with a **roving tabindex**: the whole calendar is one <kbd>Tab</kbd> stop and the arrows move within it. Tabbing through a month otherwise costs between twenty-eight and forty-two presses to get past.
+The grid is a real `<table role="grid">`, named by its month caption, with a **roving tabindex**: the whole calendar is one <Kbd>Tab</Kbd> stop and the arrows move within it. Tabbing through a month otherwise costs between twenty-eight and forty-two presses to get past.
 
 <KeyboardTable rows={[
   { keys: ["Tab"], description: "Enters the grid at the selected day, or today, or the first of the month — the first of those that is on screen. Leaves the grid entirely on the next press." },
@@ -132,7 +133,7 @@ The grid is a real `<table role="grid">`, named by its month caption, with a **r
   { keys: ["Enter", "Space"], description: "Picks the focused day." },
 ]} />
 
-Moving past the edge of the displayed months pages the calendar and keeps focus on the day you asked for, so a run of <kbd>→</kbd> walks straight from one month into the next.
+Moving past the edge of the displayed months pages the calendar and keeps focus on the day you asked for, so a run of <Kbd>→</Kbd> walks straight from one month into the next.
 
 What the grid says about itself:
 

@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Textarea",
@@ -114,8 +115,8 @@ scrolls instead of pushing Post out of reach, and a modifier shortcut to send.
 <DemoBlock id="textarea/composer" />
 
 <Callout kind="a11y">
-  The shortcut is <kbd>⌘</kbd> / <kbd>Ctrl</kbd> + <kbd>Enter</kbd>, never
-  <kbd>Enter</kbd> alone. This is a multi-line control: a bare Enter has to keep
+  The shortcut is <Kbd>⌘</Kbd> / <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd>, never
+  <Kbd>Enter</Kbd> alone. This is a multi-line control: a bare Enter has to keep
   inserting a newline, or the one thing the control exists for stops working.
 </Callout>
 

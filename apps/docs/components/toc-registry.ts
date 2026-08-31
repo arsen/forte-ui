@@ -476,6 +476,18 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "api-reference", text: "API reference", depth: 2 },
     { id: "input-1", text: "Input", depth: 3 },
   ],
+  "/components/kbd/": [
+    { id: "import", text: "Import", depth: 2 },
+    { id: "examples", text: "Examples", depth: 2 },
+    { id: "groups-and-sequences", text: "Groups and sequences", depth: 3 },
+    { id: "in-running-text", text: "In running text", depth: 3 },
+    { id: "inside-other-components", text: "Inside other components", depth: 3 },
+    { id: "accessibility", text: "Accessibility", depth: 2 },
+    { id: "theming", text: "Theming", depth: 2 },
+    { id: "api-reference", text: "API reference", depth: 2 },
+    { id: "kbd-1", text: "Kbd", depth: 3 },
+    { id: "kbdgroup", text: "KbdGroup", depth: 3 },
+  ],
   "/components/menu/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },

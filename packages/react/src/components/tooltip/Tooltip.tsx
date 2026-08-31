@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
 import { clsx } from "clsx";
+import { Kbd, type KbdProps } from "../kbd";
 import styles from "./Tooltip.module.css";
 
 /* -------------------------------------------------------------------------
@@ -461,25 +462,22 @@ function ArrowSvg() {
  * Shortcut
  * ---------------------------------------------------------------------- */
 
-export interface TooltipShortcutProps
-  extends Omit<React.ComponentPropsWithoutRef<"span">, "className"> {
+export interface TooltipShortcutProps extends KbdProps {
   /**
    * The keys, written the way they are printed — `⌘B`, `Ctrl+B`, `⇧⌘P`.
    */
   children?: React.ReactNode;
-  /**
-   * Additional class name(s). Applied after the internal styles so consumer
-   * utilities (e.g. Tailwind) win without needing `!important`.
-   */
-  className?: string;
 }
 
 /**
- * The keyboard shortcut printed beside the label, as a key cap. Renders a
- * `<span>`, and is not a Base UI part — it is the same convenience
- * `Menu.Shortcut` is, for the other half of the pattern: the command that
- * lives in a menu shows its keys there, and the toolbar button that runs the
- * same command shows them here.
+ * The keyboard shortcut printed beside the label, as a key cap. It IS a
+ * `Kbd` — the same cap you would drop into running text, re-tuned through
+ * the popup's `--forte-tooltip-shortcut-*` knobs — so it renders a `<kbd>`
+ * and carries `data-forte="kbd"`, scoped from outside as
+ * `[data-forte="tooltip-popup"] [data-forte="kbd"]`. It is not a Base UI
+ * part; it is the same convenience `Menu.Shortcut` is, for the other half of
+ * the pattern: the command that lives in a menu shows its keys there, and
+ * the toolbar button that runs the same command shows them here.
  *
  * Its presence turns the popup into a row, so a label and its keys sit on one
  * line without the consumer laying anything out.
@@ -505,16 +503,9 @@ export interface TooltipShortcutProps
  * </Tooltip.Popup>
  * ```
  */
-const TooltipShortcut = React.forwardRef<HTMLSpanElement, TooltipShortcutProps>(
+const TooltipShortcut = React.forwardRef<HTMLElement, TooltipShortcutProps>(
   function TooltipShortcut({ className, ...props }, ref) {
-    return (
-      <span
-        ref={ref}
-        className={clsx(styles.shortcut, className)}
-        data-forte="tooltip-shortcut"
-        {...props}
-      />
-    );
+    return <Kbd ref={ref} className={clsx(styles.shortcut, className)} {...props} />;
   },
 );
 

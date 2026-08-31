@@ -3,6 +3,7 @@ import { PropTable } from "@/components/prop-table";
 import { KeyboardTable } from "@/components/keyboard-table";
 import { Callout } from "@/components/callout";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Number Field",
@@ -149,8 +150,8 @@ printed, so a user can type `$1,250` into the first field below.
 
 ### Steps
 
-`step` is the ordinary increment, `smallStep` the <kbd>Alt</kbd> one and
-`largeStep` the <kbd>Shift</kbd> one, and all three apply to the arrow keys, the
+`step` is the ordinary increment, `smallStep` the <Kbd>Alt</Kbd> one and
+`largeStep` the <Kbd>Shift</Kbd> one, and all three apply to the arrow keys, the
 stepper buttons and the scrub alike.
 
 `snapOnStep` pulls the **result of a step** onto multiples of the step, so a

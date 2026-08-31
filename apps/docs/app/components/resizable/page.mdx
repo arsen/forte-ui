@@ -3,6 +3,7 @@ import { PropTable } from "@/components/prop-table";
 import { KeyboardTable } from "@/components/keyboard-table";
 import { Callout } from "@/components/callout";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Resizable",
@@ -70,7 +71,7 @@ Collapsed state is a controlled pair — `collapsed` and `onCollapsedChange` —
 
 <DemoBlock id="resizable/collapsible" />
 
-A panel collapsed to nothing is given `inert`. `overflow: hidden` hides pixels, not the accessibility tree — without it, <kbd>Tab</kbd> walks into a sidebar that is not on screen, which is the kind of trap that only shows up in an audit.
+A panel collapsed to nothing is given `inert`. `overflow: hidden` hides pixels, not the accessibility tree — without it, <Kbd>Tab</Kbd> walks into a sidebar that is not on screen, which is the kind of trap that only shows up in an audit.
 
 ### Collapsing to a rail
 

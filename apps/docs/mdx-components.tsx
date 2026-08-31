@@ -93,6 +93,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       />
     ),
 
+    /* No `kbd` mapping, and not for lack of trying: a key cap in prose is the
+     * library's own `<Kbd>`, but a lowercase element written as literal JSX —
+     * which is the only way MDX ever produces a `kbd`, there being no markdown
+     * syntax for one — is NOT routed through this mapping. The pages import
+     * the component and say what they mean instead. */
+
     /* Inline code, and then not.
      *
      * Shiki's highlighted output is hast too, so its `<code>` is mapped through

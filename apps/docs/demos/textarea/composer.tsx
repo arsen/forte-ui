@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Avatar, Button, Textarea } from "@forte-ui/react";
+import { Avatar, Button, Kbd, KbdGroup, Textarea } from "@forte-ui/react";
 
 export default function TextareaComposer() {
   const [draft, setDraft] = React.useState("");
@@ -61,8 +61,10 @@ export default function TextareaComposer() {
 
           <div className="flex items-center justify-between gap-3">
             <span className="text-1 text-foreground-muted">
-              <kbd className="font-mono">⌘</kbd> +{" "}
-              <kbd className="font-mono">Enter</kbd> to post
+              <KbdGroup>
+                <Kbd>⌘</Kbd>+<Kbd>Enter</Kbd>
+              </KbdGroup>{" "}
+              to post
             </span>
             <Button size="sm" onClick={post} disabled={!trimmed}>
               Post
