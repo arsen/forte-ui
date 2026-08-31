@@ -10,7 +10,31 @@
 import { mkdirSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { withCustomConfig } from "react-docgen-typescript";
+import { Parser, withCustomConfig } from "react-docgen-typescript";
+import ts from "typescript";
+
+/*
+ * react-docgen-typescript collects destructured prop defaults per FILE, not per
+ * component: its statement filter (`!!stmt.name`) drops every
+ * `const X = forwardRef(...)` — a variable statement has no `.name` — so it
+ * falls back to scanning ALL variable statements and merging their binding
+ * defaults into one name-keyed map, last one wins. Two parts in one file
+ * sharing a prop name then share a default: ScrollArea.Scrollbar's
+ * `orientation = "vertical"` overwrote Root's `"both"` in props.json — and a
+ * code-based default beats the prop's correct `@default` JSDoc tag, so the tag
+ * could not repair it. Scope the extraction to the statement that actually
+ * declares the component; anything this simpler walk cannot resolve (classes,
+ * `X.defaultProps = ...`) falls back to the library's own behaviour.
+ */
+const extractDefaults = Parser.prototype.extractDefaultPropsFromComponent;
+Parser.prototype.extractDefaultPropsFromComponent = function (symbol, source) {
+  let stmt = symbol.valueDeclaration ?? symbol.declarations?.[0];
+  while (stmt && stmt.parent && stmt.parent !== source) stmt = stmt.parent;
+  const fn = stmt && this.getFunctionStatement(stmt);
+  const param = fn?.parameters?.[0]?.name;
+  if (param && ts.isObjectBindingPattern(param)) return this.getPropMap(param.elements);
+  return extractDefaults.call(this, symbol, source);
+};
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const componentsDir = join(root, "src/components");
@@ -41,6 +65,8 @@ for (const dir of readdirSync(componentsDir).sort()) {
 
 const parsed = parser.parse(files);
 
+const stripQuotes = (v) => (typeof v === "string" ? v.replace(/^"(.*)"$/s, "$1") : v);
+
 /** @type {Record<string, {name:string, description:string, props:any[]}>} */
 const out = {};
 for (const c of parsed) {
@@ -49,7 +75,10 @@ for (const c of parsed) {
       name: p.name,
       type: p.type?.name ?? "unknown",
       required: Boolean(p.required),
-      defaultValue: p.defaultValue?.value ?? null,
+      // A destructured default arrives unquoted ('md'); a value read from an
+      // `@default "md"` tag arrives verbatim, quotes included. Strip the pair
+      // so the prop table renders one convention wherever the value came from.
+      defaultValue: stripQuotes(p.defaultValue?.value ?? null),
       description: (p.description ?? "").trim(),
     }))
     // Required props first, then alphabetical — the order a reader scans in.
