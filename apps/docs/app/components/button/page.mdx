@@ -54,7 +54,9 @@ The indicator is [`Spinner`](/components/spinner/)'s `ring`, rendered `decorativ
 
 ### Icon-only
 
-`iconOnly` makes the button square, guarantees the icon `--forte-button-icon-padding` of space on every side, and floors the square at the control height and at `--forte-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. When icon plus padding outgrows that floor the button grows with it, so the icon never crowds the corners — which matters most under `data-forte-radius="pill"`, where the corner is the nearest point of the curve. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
+`iconOnly` makes the button square, guarantees the icon `--forte-button-icon-padding` of space on every side, and floors the square at the control height and at `--forte-target-min` (24px) so a small icon button still meets WCAG SC 2.5.8. When icon plus padding outgrows that floor the button grows with it, so the icon never crowds the corners — which matters most under `data-forte-radius="pill"`, where the corner is the nearest point of the curve. It is a shape, not a fifth variant: every `variant`, `tone` and `size` works exactly as it does with a label. The icon itself should be `aria-hidden` — the button's name comes from `aria-label`.
+
+You do not have to size the glyph. Button sizes a direct `svg` child of its content from `--forte-button-icon-size`, which tracks `size` one step above the label on the same scale — 14px, 16px, 18px. That is there because an icon set's own default is whatever that set picked, and here it decides geometry rather than just weight: lucide draws at 24px, which turns a 36px `md` button into a 42px one that no longer lines up with the controls beside it. Set the knob, or put a size class on the icon, when you want something else — only a direct child is touched, so a composed forte-ui component keeps sizing its own glyphs.
 
 <DemoBlock id="button/icon-only" />
 
