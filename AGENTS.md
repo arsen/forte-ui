@@ -661,18 +661,39 @@ side by side while you work, but it is not a deliverable: delete it in the same
 PR that ships the decision, the way `motion-lab/` went out with the Dialog exit
 in #8.
 
+Do **not** add a `CHANGELOG.md` entry for it. That file belongs to release prep
+alone — see *Releases and the changelog* below.
+
 ---
 
 ## Releases and the changelog
+
+> **Never edit `CHANGELOG.md` as part of a feature, fix or refactor.** It is
+> written during release prep and nowhere else — by `/release-prep`, or by hand
+> when the user explicitly asks for a changelog entry. Shipping a change does
+> not mean logging it.
+
+The reason is that the changelog is drafted from the **diff over a commit
+range**, in one pass, by someone looking at the whole release. Entries added
+one commit at a time are written without that view: they duplicate what
+`/release-prep` will find anyway, they conflict on every merge because every
+branch appends to the same `[Unreleased]` block, and they describe a change as
+its author saw it mid-work rather than as a consumer will meet it. A missing
+entry is recovered from the diff in seconds; a wrong or duplicated one has to
+be spotted first.
+
+So: make the change, and stop. If a change genuinely needs a note the diff
+cannot carry — a migration step, a reason a breaking change was worth it — say
+it in the PR body or the commit message, which is where `/release-prep` reads
+from.
 
 `CHANGELOG.md` at the repo root follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and is ordered
 **newest first**: `[Unreleased]` stays at the top, and a new version heading is
 inserted directly below it, above every existing version — never appended to
-the bottom. Day-to-day changes go under `[Unreleased]`; cutting a release
-renames that section to the new version with a date, re-creates an empty
-`[Unreleased]` above it, and updates the comparison links at the bottom of the
-file.
+the bottom. Cutting a release renames that section to the new version with a
+date, re-creates an empty `[Unreleased]` above it, and updates the comparison
+links at the bottom of the file.
 
 Within a release, entries are grouped by **component** — `### NavList`, plus
 `### Design tokens & motion` and `### General` for what belongs to no single

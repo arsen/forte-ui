@@ -29,8 +29,10 @@
      * by setting these on the root element (an unlayered consumer rule beats
      * this layer whatever its specificity); re-skin every tab set by
      * re-pointing the global tokens they resolve to. */
-    /** Corner radius of a tab, and of the panel. A `line` tab applies it only to
-     * the two corners away from the rail, capped by the row below */
+    /** Corner radius of the panel, and of a tab in the `line` variant — where it
+     * applies only to the two corners away from the rail, capped by the row
+     * below. A `pill` tab takes --forte-tabs-indicator-radius instead, so the
+     * box carrying the focus ring traces the thumb sitting under it */
     --forte-tabs-radius: var(--forte-radius-surface);
     /* Same radius, capped at half the tab's height, for the two corners a line
      * tab actually rounds. Its other two are square (see the Tab section), and
@@ -199,18 +201,27 @@
   .root[data-variant="pill"] {
     --forte-tabs-list-bg: var(--forte-color-panel);
     --forte-tabs-list-padding: var(--forte-space-1);
+    --forte-tabs-indicator-color: var(--forte-color-primary-soft);
+    --forte-tabs-indicator-radius: var(--forte-radius-control);
     /* Concentric with the pills it contains, not a fixed step: outer radius =
      * inner radius + the padding between them, or the strip's corners run a
      * visibly tighter curve than the tabs — under the `pill` radius preset the
      * tabs go full-round while a fixed strip stays at 0.5rem. The addition is
-     * min()-capped by the tab radius itself so a square preset (`none`,
+     * min()-capped by the inner radius itself so a square preset (`none`,
      * radius 0) keeps a square strip instead of picking up the padding as a
-     * stray rounding. */
+     * stray rounding.
+     *
+     * The inner radius is the INDICATOR's, not --forte-tabs-radius: the thumb
+     * is the only shape drawn inside this strip, and the two are on different
+     * semantic tokens (control vs surface). Measuring the outer against the
+     * one that never paints left every preset where they differ non-concentric
+     * — at the default preset an 8px thumb sat inside a 16px strip, which
+     * reads as a squared-off thumb rattling around in a rounded track. Only
+     * `none` (0 both) and `pill` (full-round both) happened to agree. */
     --forte-tabs-list-radius: calc(
-      var(--forte-tabs-radius) + min(var(--forte-tabs-radius), var(--forte-tabs-list-padding))
+      var(--forte-tabs-indicator-radius) +
+        min(var(--forte-tabs-indicator-radius), var(--forte-tabs-list-padding))
     );
-    --forte-tabs-indicator-color: var(--forte-color-primary-soft);
-    --forte-tabs-indicator-radius: var(--forte-radius-control);
   }
 
   /* Scroller ----------------------------------------------------------------
@@ -376,6 +387,15 @@
     border-end-start-radius: var(--forte-tabs-radius-line);
     border-start-end-radius: 0;
     border-end-end-radius: 0;
+  }
+
+  /* A pill tab is exactly the box the indicator moves under, so it takes the
+   * indicator's radius rather than the panel's: the tab is what carries the
+   * focus ring and the hover fill, and on --forte-tabs-radius those traced a
+   * rounder outline than the thumb they sat on. Same value, so the ring, the
+   * fill and the thumb are one shape. */
+  .tab[data-variant="pill"] {
+    border-radius: var(--forte-tabs-indicator-radius);
   }
 
   @media (hover: hover) {

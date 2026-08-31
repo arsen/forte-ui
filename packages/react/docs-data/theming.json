@@ -8566,7 +8566,7 @@
       {
         "name": "--forte-tabs-radius",
         "value": "var(--forte-radius-surface)",
-        "description": "Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail, capped by the row below",
+        "description": "Corner radius of the panel, and of a tab in the `line` variant — where it applies only to the two corners away from the rail, capped by the row below. A `pill` tab takes --forte-tabs-indicator-radius instead, so the box carrying the focus ring traces the thumb sitting under it",
         "part": "root",
         "overrides": []
       },
@@ -8658,7 +8658,7 @@
         "overrides": [
           {
             "selector": ".root[data-variant=\"pill\"]",
-            "value": "calc( var(--forte-tabs-radius) + min(var(--forte-tabs-radius), var(--forte-tabs-list-padding)) )"
+            "value": "calc( var(--forte-tabs-indicator-radius) + min(var(--forte-tabs-indicator-radius), var(--forte-tabs-list-padding)) )"
           }
         ]
       },
