@@ -19,9 +19,11 @@ export function Example() {
 
 ## Getting started
 
-The quick version, for a fresh Next.js (App Router) project. The docs site has
-the [full step-by-step walkthrough](apps/docs/app/getting-started/nextjs/page.mdx)
-at `/getting-started/nextjs`, including why each line is where it is.
+The quick versions, for fresh projects. The docs site has the full step-by-step
+walkthroughs — [Next.js](apps/docs/app/getting-started/nextjs/page.mdx) at
+`/getting-started/nextjs` and
+[Vite](apps/docs/app/getting-started/vite/page.mdx) at `/getting-started/vite`
+— including why each line is where it is.
 
 ### Next.js
 
@@ -46,8 +48,10 @@ Set your brand colour in `app/globals.css`:
 }
 ```
 
-Then use components anywhere. They ship with `"use client"` already in place,
-so pages stay server components:
+Then use components. They ship with `"use client"` already in place; flat
+exports like `Button` render straight from server components, while the
+compound ones (`Tabs.*`, `Dialog.*`, `Menu.*`) must be rendered from a file of
+your own with `"use client"` at the top:
 
 ```tsx
 import { Button } from "@forte-ui/react";
@@ -79,7 +83,55 @@ The bridge re-points Tailwind's theme at the forte-ui tokens — `bg-primary`,
 `gap-5`, `rounded-control` — and deletes the stock scales, so `bg-slate-800`
 fails at build time instead of shipping a colour that ignores your theme.
 
-A walkthrough for Vite-based React apps is planned.
+### Vite
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install @forte-ui/react
+```
+
+Import the one stylesheet at the entry point — `src/main.tsx`:
+
+```tsx
+import "@forte-ui/react/theme.css";
+import "./index.css";
+```
+
+Then **replace** the scaffold's `src/index.css` (its unlayered `button` and
+`body` rules beat the library's layered CSS by design — that is the override
+contract working against you):
+
+```css
+:root {
+  --forte-accent-seed: #6d43d4;
+}
+```
+
+No server components in Vite, so every component — compound ones included —
+works from anywhere.
+
+### Vite + Tailwind v4
+
+Same install, plus the Tailwind Vite plugin:
+
+```bash
+npm install tailwindcss @tailwindcss/vite
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+});
+```
+
+Then `src/index.css` is the same three-import stylesheet as the Next.js +
+Tailwind setup above, order included.
 
 ## Theming
 
