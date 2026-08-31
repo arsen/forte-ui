@@ -8537,7 +8537,7 @@
       {
         "name": "--forte-tabs-indicator-radius",
         "value": "var(--forte-radius-pill)",
-        "description": "Corner radius of the indicator",
+        "description": "Corner radius of the indicator. A `line` indicator applies it only to the two corners away from the rail — its rail-side pair is square, like the tab's — while a `pill` indicator rounds all four",
         "part": "root",
         "overrides": [
           {
