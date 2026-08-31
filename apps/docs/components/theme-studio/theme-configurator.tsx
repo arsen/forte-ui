@@ -275,7 +275,14 @@ export function ThemeConfigurator({ className }: { className?: string }) {
             Neutral tint
           </Slider.Label>
           <Slider.Value className={HINT} />
-          <Slider.Control>
+          {/* `edge` above keeps the THUMB inside the control, but the hover
+            * halo is a box-shadow ringing 5px past it, and at either end that
+            * ring still crossed the control's edge into the drawer's clip.
+            * Inline padding of exactly the halo radius reserves the ring's
+            * room — and Base UI measures the control's inline padding as part
+            * of edge alignment, so the resting positions move inward with it
+            * rather than needing a second correction. */}
+          <Slider.Control className="px-(--forte-slider-thumb-halo-size-active)">
             <Slider.Track>
               <Slider.Indicator />
               <Slider.Thumb />
