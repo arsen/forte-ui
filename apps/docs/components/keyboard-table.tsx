@@ -1,12 +1,8 @@
+import { Kbd } from "@forte-ui/react";
 import { cn } from "@/lib/cn";
 import { TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "./styles";
 
 export type KeyRow = { keys: string[]; description: string };
-
-/* A key cap. The heavier bottom border is the whole illusion — without it this
- * reads as an inline code chip, which is what it is not. */
-const KBD =
-  "inline-block rounded-2 border border-border border-b-2 bg-panel px-[0.45em] py-[0.1em] font-mono text-[0.85em] leading-[1.6]";
 
 /**
  * Keyboard interaction reference.
@@ -35,7 +31,7 @@ export function KeyboardTable({ rows }: { rows: KeyRow[] }) {
                     {i > 0 ? (
                       <span className="text-[0.85em] text-foreground-muted"> then </span>
                     ) : null}
-                    <kbd className={KBD}>{k}</kbd>
+                    <Kbd>{k}</Kbd>
                   </span>
                 ))}
               </th>

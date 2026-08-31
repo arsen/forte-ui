@@ -97,7 +97,9 @@ tooltip immediately.
 
 `<Tooltip.Shortcut>` prints the keys as a cap beside the label — the same
 convenience `<Menu.Shortcut>` is on the [menu](/components/menu/) side, for the
-toolbar button that runs the same command. Write the keys the way they are
+toolbar button that runs the same command. The cap *is* a
+[`Kbd`](/components/kbd/), re-tuned through the tooltip's own knobs, so it
+renders a `<kbd>` carrying `data-forte="kbd"`. Write the keys the way they are
 printed (`⌘B`, `Ctrl+B`, `⇧⌘P`); nothing here maps them per platform. One
 shortcut anywhere in the popup turns it into a row, so the label and the cap
 share a line without laying anything out.

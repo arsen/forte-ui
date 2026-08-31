@@ -13,6 +13,37 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Kbd
+
+- New component: `Kbd`, a key cap rendering a real `<kbd>` element, and
+  `KbdGroup` for chords and sequences drawn as separate caps. The cap derives
+  its fill and edge from `currentColor`, so the same cap works in running
+  text, on `Tooltip`'s inverted popup, inside a solid `Button` and on a
+  highlighted menu row; its text is pinned LTR with `unicode-bidi: isolate`
+  so glyph chords (`⌘X`) do not reorder in RTL pages. Themeable through
+  `--forte-kbd-*` knobs.
+
+### Menu
+
+- `Menu.Shortcut` now draws its keys in a composed `Kbd` cap instead of bare
+  dimmed text; the wrapper `<span>` (and its `data-forte="menu-shortcut"`
+  marker, `aria-hidden` behaviour and row positioning) is unchanged, and the
+  cap inherits the row's muted/highlighted colour.
+
+### Tooltip
+
+- **Breaking:** `Tooltip.Shortcut` is now a composed `Kbd` — it renders a
+  `<kbd>` element carrying `data-forte="kbd"` instead of a `<span>` carrying
+  `data-forte="tooltip-shortcut"`. Scope it from outside as
+  `[data-forte="tooltip-popup"] [data-forte="kbd"]`. The
+  `--forte-tooltip-shortcut-*` knobs keep working — they now re-point the
+  cap's `--forte-kbd-*` set — and `TooltipShortcutProps` gains `Kbd`'s
+  `render` prop.
+- Fixed the popup breaking mixed inline content: it was a flex column, so
+  prose like `Press <Kbd>?</Kbd> to search` split into three stacked flex
+  items with the whitespace between them dropped. The popup is now block-flow
+  at rest and only becomes a flex row when a `Tooltip.Shortcut` is present.
+
 ## [1.0.0-alpha.3] - 2026-08-31
 
 ### Button

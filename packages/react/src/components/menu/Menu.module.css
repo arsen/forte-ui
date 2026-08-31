@@ -618,47 +618,27 @@
   /* Shortcut ---------------------------------------------------------------
    * Pushed to the end of the row the same way the chevron is, and never the
    * thing that gets truncated: it is short, fixed, and the label is what a
-   * reader is scanning. */
+   * reader is scanning.
+   *
+   * The element is a positioning WRAPPER; the keys inside it are drawn by a
+   * composed `Kbd`, so a menu's cap and a tooltip's are the same cap. The
+   * split is load-bearing twice over. The breathing room against a long
+   * label is padding, and padding on the cap itself would fall INSIDE its
+   * border; and the bidi pin a key sequence needs (`⌘X`, not `X⌘`, in an RTL
+   * row) lives on the cap, which keeps this wrapper's own logical properties
+   * resolving against the row's direction — the pinned single-element
+   * version needed a `[dir="rtl"]` rule restating the margin and padding on
+   * the other side, and this needs none. */
   .shortcut {
+    display: inline-flex;
     flex: none;
     margin-inline-start: auto;
     padding-inline-start: var(--forte-space-5);
     /* -muted, not -subtle: this is permanently visible text, so SC 1.4.3
-     * applies and -subtle is 3.73:1. */
+     * applies and -subtle is 3.73:1. The cap inherits it and derives its
+     * fill and edge from it, so the whole cap dims and highlights with the
+     * row — no colour of its own to fall out of step. */
     color: var(--forte-color-foreground-muted);
-    font-size: var(--forte-font-size-1);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: var(--forte-letter-spacing-normal);
-    /* The modifier glyphs — ⌘ ⇧ ⌥ ⌫ — are bidi-NEUTRAL, so in an RTL menu
-     * they take the row's direction and reorder around the key they modify:
-     * `⌘X` renders as `X⌘`, and an all-neutral `⌘⌫` reverses outright. A
-     * shortcut is a literal key sequence, read the same way in every locale,
-     * so it is pinned rather than mirrored. `isolate` is the half that keeps
-     * the pin from leaking: without it the run still resolves against the row
-     * and can carry the label's neutrals across with it. */
-    direction: ltr;
-    unicode-bidi: isolate;
-  }
-
-  /* Pinning `direction` also re-resolves this rule's OWN logical properties —
-   * they follow the element's own direction, not the row's — so both have to
-   * be restated. Under the pin `inline-start` is the left edge in BOTH
-   * directions, which in an RTL row drops the auto margin on the wrong side:
-   * the shortcut stops short of the row's trailing edge and its gap opens away
-   * from the label instead of between the two.
-   *
-   * Keyed on the `dir` ATTRIBUTE, and deliberately not on `:dir()`, for the
-   * reason spelled out in `tokens.css`: with this package's CSS targets
-   * `:dir()` is lowered at build time into a list of `:lang()` selectors, so
-   * the rule follows document LANGUAGE and quietly stops matching a bare
-   * `dir="rtl"` in the published stylesheet while still working in source.
-   * Matching an ancestor is enough here because the popup portals to the
-   * document root, so the `dir` it inherits is the app's own. */
-  :global([dir="rtl"]) .shortcut {
-    margin-inline-start: 0;
-    margin-inline-end: auto;
-    padding-inline-start: 0;
-    padding-inline-end: var(--forte-space-5);
   }
 
   .item[data-highlighted] .shortcut {
@@ -751,6 +731,18 @@
     .item[data-disabled] .shortcut,
     .item[data-disabled] .submenuIcon {
       color: GrayText;
+    }
+
+    /* The cap inside the shortcut pins itself Canvas-on-CanvasText (see
+     * Kbd.module.css) so a highlighted row cannot hand it an unreadable
+     * inherited pair — which also means the two rules above stop at the
+     * wrapper. Highlighted is fine that way: the cap reads as a miniature
+     * surface on the Highlight fill. Disabled is not — the pin would keep a
+     * disabled row's keys at full contrast, reading as enabled — so GrayText
+     * is put back on the cap directly, edge included. */
+    .item[data-disabled] .shortcut :global([data-forte="kbd"]) {
+      color: GrayText;
+      border-color: GrayText;
     }
 
     /* An open submenu's parent row is filled above with an author colour that

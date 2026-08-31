@@ -3,6 +3,7 @@ import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Slider",
@@ -87,7 +88,7 @@ On a range slider, `thumbCollisionBehavior` decides what happens when a dragged 
 
 <Callout kind="note">
 
-<kbd>↑</kbd> and <kbd>→</kbd> both increase the value in both orientations — that is the ARIA slider pattern, not an oversight. In RTL, <kbd>←</kbd> and <kbd>→</kbd> swap to follow the writing direction; the vertical keys never do.
+<Kbd>↑</Kbd> and <Kbd>→</Kbd> both increase the value in both orientations — that is the ARIA slider pattern, not an oversight. In RTL, <Kbd>←</Kbd> and <Kbd>→</Kbd> swap to follow the writing direction; the vertical keys never do.
 
 </Callout>
 
@@ -103,7 +104,7 @@ A range slider is two inputs sharing one name, so it needs a group label rather 
 
 ### Disabled
 
-`disabled` blocks interaction and drops the whole control to 55% opacity. Set it on the `Field.Root` rather than on the `Slider`: it takes precedence over the control's own prop and dims the description with it, so the reason the setting is unavailable does not stay at full contrast beside a greyed-out control. That reason has to be visible text — a disabled slider is skipped by <kbd>Tab</kbd> and cannot show a tooltip to a keyboard user.
+`disabled` blocks interaction and drops the whole control to 55% opacity. Set it on the `Field.Root` rather than on the `Slider`: it takes precedence over the control's own prop and dims the description with it, so the reason the setting is unavailable does not stay at full contrast beside a greyed-out control. That reason has to be visible text — a disabled slider is skipped by <Kbd>Tab</Kbd> and cannot show a tooltip to a keyboard user.
 
 <DemoBlock id="slider/disabled" />
 

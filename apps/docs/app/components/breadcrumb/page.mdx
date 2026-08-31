@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Breadcrumb",
@@ -152,7 +153,7 @@ If the trail sits inside a `<nav>` you already own, swap the root's element the 
 
 ## Accessibility
 
-The keyboard story is the platform's: the crumbs are real links, so <kbd>Tab</kbd> walks them and <kbd>Enter</kbd> follows one. There is no roving focus to learn.
+The keyboard story is the platform's: the crumbs are real links, so <Kbd>Tab</Kbd> walks them and <Kbd>Enter</Kbd> follows one. There is no roving focus to learn.
 
 Everything else the component does by default:
 
