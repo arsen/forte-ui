@@ -18,12 +18,12 @@ neighbours, outer corners kept. Renders a `<div role="group">`.
 
 <DemoBlock id="button-group/basic" />
 
-The children stay ordinary components. A [`Button`](/components/button) keeps
-every variant, tone and size; an [`Input`](/components/input) keeps its props;
+The children stay ordinary components. A [`Button`](/components/button/) keeps
+every variant, tone and size; an [`Input`](/components/input/) keeps its props;
 the group never reaches past their shared edge. And it is purely visual and
 semantic — there is no keyboard behaviour, so every control keeps its own tab
 stop. When the set should cost one Tab press instead, reach for
-[`Toolbar`](/components/toolbar).
+[`Toolbar`](/components/toolbar/).
 
 ## Import
 
@@ -131,8 +131,8 @@ seam so its ring is never clipped by the neighbour painted after it.
 <Callout kind="note">
   A group of buttons is not a toolbar and not a radio group. If the set should
   be one tab stop with arrow keys between the controls, use
-  [`Toolbar`](/components/toolbar); if exactly one option is selected, use
-  [`Toggle Group`](/components/toggle-group) or [`Radio`](/components/radio).
+  [`Toolbar`](/components/toolbar/); if exactly one option is selected, use
+  [`Toggle Group`](/components/toggle-group/) or [`Radio`](/components/radio/).
 </Callout>
 
 ## Theming
@@ -140,8 +140,8 @@ seam so its ring is never clipped by the neighbour painted after it.
 <ThemingTable component="ButtonGroup" part="root" />
 
 The controls inside keep their own properties — `--forte-button-*` on
-[`Button`](/components/button), `--forte-input-*` on
-[`Input`](/components/input). The group's own surface is nothing: every visible
+[`Button`](/components/button/), `--forte-input-*` on
+[`Input`](/components/input/). The group's own surface is nothing: every visible
 pixel belongs to a child.
 
 ### Separator

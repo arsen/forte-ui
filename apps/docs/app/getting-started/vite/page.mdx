@@ -10,7 +10,7 @@ export const metadata = {
 
 This page walks a brand-new Vite React project from `create-vite` to a themed, rendering component — first without Tailwind, then with it. The two paths differ only in how the CSS is wired up.
 
-A Vite app is simpler than the [Next.js setup](/getting-started/nextjs) in one structural way: there are no server components, so the `"use client"` boundary does not exist. Every component — flat exports and compound ones alike — imports and renders from anywhere.
+A Vite app is simpler than the [Next.js setup](/getting-started/nextjs/) in one structural way: there are no server components, so the `"use client"` boundary does not exist. Every component — flat exports and compound ones alike — imports and renders from anywhere.
 
 ## Without Tailwind
 
@@ -107,7 +107,7 @@ or from a toggle:
 document.documentElement.dataset.theme = "dark"; // or "light"
 ```
 
-Every derived colour re-resolves; there is no second stylesheet to load. Persisting the choice (localStorage plus an inline script in `index.html` so the first paint is right) is your app's call — the same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming).
+Every derived colour re-resolves; there is no second stylesheet to load. Persisting the choice (localStorage plus an inline script in `index.html` so the first paint is right) is your app's call — the same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming/).
 
 ## With Tailwind
 
@@ -153,7 +153,7 @@ Replace `src/index.css` entirely (the scaffold-reset warning above applies here 
 
 `src/main.tsx` keeps importing only `./index.css`.
 
-Two orderings in that file are load-bearing, and they are the same two as on the [Next.js path](/getting-started/nextjs#2-wire-the-three-stylesheets): the bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, so it must come before `tailwindcss` (or `p-4` on a `Button` loses to the button's own padding) — and before `theme.css`, which also declares the `forte` layer (or Preflight's `button { background: transparent }` beats every component by layer order).
+Two orderings in that file are load-bearing, and they are the same two as on the [Next.js path](/getting-started/nextjs/#2-wire-the-three-stylesheets): the bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, so it must come before `tailwindcss` (or `p-4` on a `Button` loses to the button's own padding) — and before `theme.css`, which also declares the `forte` layer (or Preflight's `button { background: transparent }` beats every component by layer order).
 
 ### 4. Style with token utilities
 
@@ -177,7 +177,7 @@ export default function App() {
 }
 ```
 
-The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind) page — including the shipped [`cn`](/customization/tailwind#merging-classes-cn) merger for conditional class lists (install `tailwind-merge` if you use it).
+The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind/) page — including the shipped [`cn`](/customization/tailwind/#merging-classes-cn) merger for conditional class lists (install `tailwind-merge` if you use it).
 
 By default Tailwind v4's `dark:` variant keys on `prefers-color-scheme`. You will rarely need it — token utilities resolve through `light-dark()` and follow the theme by themselves — but if your toggle sets `data-theme`, re-key the variant after the bridge import:
 
@@ -201,7 +201,7 @@ Done. Your `body` rule reads `--forte-font-sans`, so the page text switches; the
 
 ## Where next
 
-- [Theming](/customization/theming) — the seed envelope, the secondary seed, neutral tint, and scoped themes.
-- [Presets](/customization/presets) — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
-- [Styling components](/customization/styling) — parts, states, and per-component knobs.
-- [Theme Studio](/theme) — pick a seed visually and copy the CSS out.
+- [Theming](/customization/theming/) — the seed envelope, the secondary seed, neutral tint, and scoped themes.
+- [Presets](/customization/presets/) — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
+- [Styling components](/customization/styling/) — parts, states, and per-component knobs.
+- [Theme Studio](/theme/) — pick a seed visually and copy the CSS out.

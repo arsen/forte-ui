@@ -14,14 +14,14 @@ export const metadata = {
 
 Use a radio group when the choices are mutually exclusive and the user has to
 end up with exactly one of them. If they can pick several, use
-[`Checkbox`](/components/checkbox); if there are more than about seven options,
-or the list is data rather than a decision, use [`Select`](/components/select).
+[`Checkbox`](/components/checkbox/); if there are more than about seven options,
+or the list is data rather than a decision, use [`Select`](/components/select/).
 
 <DemoBlock id="radio/basic" />
 
 `Radio` renders a `<span>` with `role="radio"` and a hidden `<input>` next to
 it, so it carries no accessible name of its own — the
-[`Field.Label`](/components/field) wrapped around it is what gives it one, and
+[`Field.Label`](/components/field/) wrapped around it is what gives it one, and
 most examples on this page keep that pattern. A `Field` generates the ids,
 points each label at its own control and carries the `name` into form
 submission, so none of that appears in the demo code.
@@ -261,7 +261,7 @@ danger palette, so a validation failure never renders in a brand colour.
 <Callout kind="note">
   A shape opts out of the `data-forte-radius` presets when its roundness is
   meaning rather than style — the radio and
-  [`Spinner`](/components/spinner)'s circles both do.
+  [`Spinner`](/components/spinner/)'s circles both do.
   `--forte-radio-radius` defaults to `50%` rather than to
   `var(--forte-radius-full)`. Round is not a style choice on a radio — it is the
   only thing telling a reader "pick one of these" rather than "tick any of

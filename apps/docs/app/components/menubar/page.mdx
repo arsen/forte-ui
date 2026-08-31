@@ -18,7 +18,7 @@ rest open on hover. That is the application menu bar every desktop app has along
 its title bar, and it is the shape to reach for when a screen has more commands
 than a toolbar can hold.
 
-One menu on its own is a [Menu](/components/menu) — do not put a single
+One menu on its own is a [Menu](/components/menu/) — do not put a single
 `Menu.Root` in a bar to get the styling. A row of unrelated buttons that each
 open something is a row of menus, not a menubar, and wrapping it in one changes
 what the keyboard does.
@@ -73,7 +73,7 @@ restricts the popup.
 
 <Callout kind="note">
   For a rule between runs of menus, use the standalone
-  [`Separator`](/components/separator) rather than `Menu.Separator`.
+  [`Separator`](/components/separator/) rather than `Menu.Separator`.
   `Menu.Separator` is a part of the *popup*: it takes its inline margin from
   `--forte-menu-item-px`, a token only `Menu.Popup` declares, so outside one that
   margin silently resolves to zero. `role="separator"` is valid inside a
@@ -135,7 +135,7 @@ on its own `<Menu.Trigger>`.
 />
 
 Once a menu is open, the keys belong to the menu — the same set the
-[Menu](/components/menu#accessibility) page documents, including typeahead and
+[Menu](/components/menu/#accessibility) page documents, including typeahead and
 the submenu keys. Arrow Left and Arrow Right at the ends of a menu step to the
 neighbouring one, which is how a menubar is expected to behave.
 
@@ -179,7 +179,7 @@ beats the one it would inherit.
 
 The popups are not themed from here. They are portalled to `<body>`, so nothing
 declared on the bar is even in their tree — set `--forte-menu-*` on each
-`<Menu.Popup>`, as the [Menu theming](/components/menu#theming) section
+`<Menu.Popup>`, as the [Menu theming](/components/menu/#theming) section
 describes.
 
 <ThemingTable
@@ -194,4 +194,4 @@ describes.
 <PropTable component="Menubar" />
 
 Everything inside the bar is documented on the
-[Menu](/components/menu#api-reference) page.
+[Menu](/components/menu/#api-reference) page.

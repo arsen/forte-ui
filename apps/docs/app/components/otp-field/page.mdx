@@ -48,7 +48,7 @@ row of rules.
 <DemoBlock id="otp-field/variants" />
 
 <Callout kind="note">
-  There is no `ghost` here, unlike [`Input`](/components/input). A slot with no
+  There is no `ghost` here, unlike [`Input`](/components/input/). A slot with no
   boundary leaves nothing to count, and how many characters the code has is the
   one thing the field has to communicate before anything is typed. `underline`
   is the quiet end of the scale instead.
@@ -57,7 +57,7 @@ row of rules.
 ### Grouped
 
 `OTPField.Separator` is the dash in `482 – 913`. It renders the library's
-[`Separator`](/components/separator) with `decorative` on by default, because
+[`Separator`](/components/separator/) with `decorative` on by default, because
 the slots either side of it are one value and one control — announcing a
 boundary in the middle of a six-digit code describes the layout, not the field.
 
@@ -239,6 +239,6 @@ props and Base UI's `render` pass through.
 
 <PropTable component="OTPFieldSeparator" />
 
-It renders the library's [`Separator`](/components/separator) and takes all of
+It renders the library's [`Separator`](/components/separator/) and takes all of
 its props, so it carries `data-forte="separator"` rather than a marker of its own —
 scope to it with `[data-forte="otp-field"] [data-forte="separator"]`.

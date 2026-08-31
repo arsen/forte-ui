@@ -83,8 +83,8 @@ export default function HomePage() {
           found in our own code.
         </p>
         <div className="mb-6 flex flex-wrap gap-3">
-          <Button size="lg" nativeButton={false} render={<Link href="/components/button">Browse components</Link>} />
-          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/theme">Open Theme Studio</Link>} />
+          <Button size="lg" nativeButton={false} render={<Link href="/components/button/">Browse components</Link>} />
+          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/theme/">Open Theme Studio</Link>} />
         </div>
         <div className="border-t border-border-muted pt-5">
           <HeroThemer />

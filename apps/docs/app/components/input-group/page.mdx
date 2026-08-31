@@ -13,15 +13,15 @@ export const metadata = {
 
 A search icon, a `https://` prefix, a clear button, a character counter — the
 things that belong *inside* a text field but are not the value. `InputGroup`
-draws one control boundary around a bare [Input](/components/input) or
-[Textarea](/components/textarea) and any number of addons, and the whole
+draws one control boundary around a bare [Input](/components/input/) or
+[Textarea](/components/textarea/) and any number of addons, and the whole
 assembly focuses, hovers, disables and errors as a single control — because to
 the person using it, it is one.
 
 <DemoBlock id="input-group/basic" />
 
 Focus lives on the control and the group rings for it, exactly the way
-[Number Field](/components/number-field) and [Combobox](/components/combobox)
+[Number Field](/components/number-field/) and [Combobox](/components/combobox/)
 ring their shells. Clicking anywhere in the box — a prefix, an icon, the
 padding — places the caret, the same gesture the empty end of a plain input
 offers; buttons inside keep their clicks to themselves.
@@ -74,7 +74,7 @@ one.
 
 ### Loading
 
-A [Spinner](/components/spinner) in an addon announces itself — it is its own
+A [Spinner](/components/spinner/) in an addon announces itself — it is its own
 live region, so there is nothing to wire beyond its `label`.
 
 <DemoBlock id="input-group/loading" />
@@ -115,7 +115,7 @@ inline affordance.
 ### States
 
 The group has no `disabled`, `readOnly` or `invalid` props, and that is the
-point: every state lives on the control (or the [Field](/components/field)
+point: every state lives on the control (or the [Field](/components/field/)
 above it), and the shell watches it through `:has()` — one source of truth, no
 way for the box and the control to disagree. Disabled dims the whole group;
 read-only tints it; invalid recolours the boundary and the caret, and nothing
@@ -201,6 +201,6 @@ Base UI's `render`, `onValueChange` and `defaultValue`.
 
 ### InputGroup.Button
 
-Accepts every [Button](/components/button) prop; only the defaults differ.
+Accepts every [Button](/components/button/) prop; only the defaults differ.
 
 <PropTable component="InputGroupButton" />

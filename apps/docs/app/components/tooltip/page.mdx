@@ -38,7 +38,7 @@ somewhere else too — read the warning below before you reach for one.
 
 Deciding between a tooltip and a popover comes down to the **purpose of the
 trigger**. If the trigger's purpose *is* to open the popup — the little "i" info
-icon is the usual case — it is a [popover](/components/popover), not a tooltip,
+icon is the usual case — it is a [popover](/components/popover/), not a tooltip,
 and its content has to be reachable by touch and by assistive technology. Reach
 for `Popover` with `openOnHover` on its trigger: pointer users get the same
 hover-to-reveal feel, while the content stays announced and available on touch.
@@ -96,7 +96,7 @@ tooltip immediately.
 ### Keyboard shortcuts
 
 `<Tooltip.Shortcut>` prints the keys as a cap beside the label — the same
-convenience `<Menu.Shortcut>` is on the [menu](/components/menu) side, for the
+convenience `<Menu.Shortcut>` is on the [menu](/components/menu/) side, for the
 toolbar button that runs the same command. Write the keys the way they are
 printed (`⌘B`, `Ctrl+B`, `⇧⌘P`); nothing here maps them per platform. One
 shortcut anywhere in the popup turns it into a row, so the label and the cap

@@ -9,7 +9,7 @@ export const metadata = {
 
 # Theming
 
-The entire palette is derived from one variable. Set a brand colour and the library rebuilds twelve accent steps, a matching secondary ramp, brand-tinted neutrals, and a text colour that stays readable on top of your fill — in light mode and dark mode, with no JavaScript, no build step and no theming runtime. This page is the written version of what the [Theme Studio](/theme) lets you try live; the studio's **Copy CSS** button emits exactly the declarations described here.
+The entire palette is derived from one variable. Set a brand colour and the library rebuilds twelve accent steps, a matching secondary ramp, brand-tinted neutrals, and a text colour that stays readable on top of your fill — in light mode and dark mode, with no JavaScript, no build step and no theming runtime. This page is the written version of what the [Theme Studio](/theme/) lets you try live; the studio's **Copy CSS** button emits exactly the declarations described here.
 
 ## The seed
 
@@ -49,11 +49,11 @@ Each seed becomes a twelve-step ramp — `--forte-accent-1` through `--forte-acc
 --forte-color-primary-text /* accent text    — accent-11 */
 ```
 
-The full list is on the [Design tokens](/customization/tokens) page. The status colours — danger, success, warning, info — are deliberately **not** derived from the seed: a brand colour must not be able to make an error message look reassuring.
+The full list is on the [Design tokens](/customization/tokens/) page. The status colours — danger, success, warning, info — are deliberately **not** derived from the seed: a brand colour must not be able to make an error message look reassuring.
 
 ## Text on your brand colour
 
-`--forte-color-on-primary` and `--forte-color-on-secondary` — the text on solid fills — pick white or black automatically. In browsers with `contrast-color()` the browser decides from the painted colour; elsewhere a fitted OKLCH threshold decides, and it clears AA on its own across the entire supported envelope. If you want the decision to be exact in every browser, the [Theme Studio](/theme) measures it for your seed and includes the literal in its exported CSS:
+`--forte-color-on-primary` and `--forte-color-on-secondary` — the text on solid fills — pick white or black automatically. In browsers with `contrast-color()` the browser decides from the painted colour; elsewhere a fitted OKLCH threshold decides, and it clears AA on its own across the entire supported envelope. If you want the decision to be exact in every browser, the [Theme Studio](/theme/) measures it for your seed and includes the literal in its exported CSS:
 
 ```css
 :root {
@@ -85,4 +85,4 @@ Scopes nest, and each level can override just the inputs it cares about. `data-t
 
 ## Where to go next
 
-The geometry switches — radius, density, motion — are attributes rather than colours, and they have their own page: [Presets](/customization/presets). For overriding individual variables beyond the seeds, start with [Design tokens](/customization/tokens); for restyling one component, [Styling components](/customization/styling).
+The geometry switches — radius, density, motion — are attributes rather than colours, and they have their own page: [Presets](/customization/presets/). For overriding individual variables beyond the seeds, start with [Design tokens](/customization/tokens/); for restyling one component, [Styling components](/customization/styling/).

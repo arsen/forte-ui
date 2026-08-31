@@ -112,7 +112,7 @@ Both palettes are already there — with no attribute set, the page follows the 
 <html lang="en" data-theme="dark">
 ```
 
-Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming). If you would rather not write the toggle plumbing yourself, [next-themes drives this attribute directly](#dark-mode-with-next-themes).
+Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming/). If you would rather not write the toggle plumbing yourself, [next-themes drives this attribute directly](#dark-mode-with-next-themes).
 
 ## With Tailwind
 
@@ -173,7 +173,7 @@ export default function Home() {
 }
 ```
 
-The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind) page.
+The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind/) page.
 
 ### 4. Merge class lists with `cn`
 
@@ -189,7 +189,7 @@ import { cn } from "@forte-ui/react/cn";
 cn("p-4", isWide && "p-6"); // -> "p-6" when isWide holds
 ```
 
-A stock `twMerge` does not know the bridge's renamed scales — it parses `text-2` as a text *colour* and silently drops sizes. The shipped `cn` (and `createCn`, for apps that add their own theme keys) is covered on the [Tailwind](/customization/tailwind#merging-classes-cn) page.
+A stock `twMerge` does not know the bridge's renamed scales — it parses `text-2` as a text *colour* and silently drops sizes. The shipped `cn` (and `createCn`, for apps that add their own theme keys) is covered on the [Tailwind](/customization/tailwind/#merging-classes-cn) page.
 
 ## Dark mode with next-themes
 
@@ -298,14 +298,14 @@ On the Tailwind path, `font-sans` on `<body>` does the same job as the `body` ru
 
 ## Where next
 
-- [Theming](/customization/theming) — the seed envelope, the secondary seed, neutral tint, and scoped themes.
-- [Presets](/customization/presets) — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
-- [Styling components](/customization/styling) — parts, states, and per-component knobs.
-- [Theme Studio](/theme) — pick a seed visually and copy the CSS out.
+- [Theming](/customization/theming/) — the seed envelope, the secondary seed, neutral tint, and scoped themes.
+- [Presets](/customization/presets/) — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
+- [Styling components](/customization/styling/) — parts, states, and per-component knobs.
+- [Theme Studio](/theme/) — pick a seed visually and copy the CSS out.
 
 <Callout kind="note">
   Nothing above is Next.js-specific beyond the file names and the server/client
   boundary — the same two (or three) CSS imports work in any bundler that
-  handles CSS imports. The [Vite walkthrough](/getting-started/vite) covers the
+  handles CSS imports. The [Vite walkthrough](/getting-started/vite/) covers the
   differences.
 </Callout>

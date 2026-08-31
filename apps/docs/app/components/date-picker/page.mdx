@@ -12,7 +12,7 @@ export const metadata = {
 
 # Date Picker
 
-A field that opens a [Calendar](/components/calendar). It is that composition and two things the composition always needs anyway: **one place that owns the selection**, because the field's text and the grid sit on opposite sides of a portal, and **a rule for when picking a day closes the popup**, which the calendar cannot decide because it does not know it is in one.
+A field that opens a [Calendar](/components/calendar/). It is that composition and two things the composition always needs anyway: **one place that owns the selection**, because the field's text and the grid sit on opposite sides of a portal, and **a rule for when picking a day closes the popup**, which the calendar cannot decide because it does not know it is in one.
 
 <DemoBlock id="date-picker/basic" />
 
@@ -42,7 +42,7 @@ Eight parts. The full anatomy, with every optional layer present:
 Most pickers need less: the demo above is `Root → Trigger → Popup` and nothing else.
 
 <Callout kind="note">
-  Use [`Calendar`](/components/calendar) directly when the grid lives in the page — a booking view, a dashboard, a settings panel. Reach for `DatePicker` when it lives behind a field. Every `Calendar` prop is forwarded through `DatePicker.Calendar`, so nothing is given up by going through the wrapper.
+  Use [`Calendar`](/components/calendar/) directly when the grid lives in the page — a booking view, a dashboard, a settings panel. Reach for `DatePicker` when it lives behind a field. Every `Calendar` prop is forwarded through `DatePicker.Calendar`, so nothing is given up by going through the wrapper.
 </Callout>
 
 ## Selection
@@ -129,7 +129,7 @@ The trigger must have an accessible name — a `<Field.Label nativeLabel={false}
   { keys: ["Tab"], description: "Inside the popup, moves between the grid and the footer's buttons. The grid itself is one stop — the arrows move within it." },
 ]} />
 
-Everything else is the calendar's, which is documented [on its own page](/components/calendar#accessibility): a real `<table role="grid">`, a roving tabindex, and days that are `aria-disabled` rather than `disabled` so navigation can cross them.
+Everything else is the calendar's, which is documented [on its own page](/components/calendar/#accessibility): a real `<table role="grid">`, a roving tabindex, and days that are `aria-disabled` rather than `disabled` so navigation can cross them.
 
 `DatePicker.Calendar` turns `autoFocus` **on** by default, the opposite of `Calendar`'s own default. There is a press behind this calendar, so the first arrow key should move a day rather than do nothing; a calendar sitting in the page has no such press, which is why the base component leaves focus where it was.
 

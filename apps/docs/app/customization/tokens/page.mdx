@@ -9,11 +9,11 @@ export const metadata = {
 
 # Design tokens
 
-Everything visual in forte-ui resolves through a CSS custom property. Components never contain a hardcoded colour, size or duration — which is why re-pointing a token restyles every component at once, coherently. This page is the global token reference; the tables are generated from the shipped stylesheets at build time, so they cannot drift from what actually renders. Per-component knobs (`--forte-button-*`, `--forte-dialog-*`, …) are a separate mechanism documented on [Styling components](/customization/styling) and on each component's own page.
+Everything visual in forte-ui resolves through a CSS custom property. Components never contain a hardcoded colour, size or duration — which is why re-pointing a token restyles every component at once, coherently. This page is the global token reference; the tables are generated from the shipped stylesheets at build time, so they cannot drift from what actually renders. Per-component knobs (`--forte-button-*`, `--forte-dialog-*`, …) are a separate mechanism documented on [Styling components](/customization/styling/) and on each component's own page.
 
 ## How to override a token
 
-Set it on `:root`, or on a [theme scope](/customization/theming#scoped-themes) to affect one subtree:
+Set it on `:root`, or on a [theme scope](/customization/theming/#scoped-themes) to affect one subtree:
 
 ```css
 :root {
@@ -27,11 +27,11 @@ Your CSS always wins. The library ships every rule inside `@layer forte.*`, and 
 Two things to know before overriding:
 
 - **A typo fails silently.** `var(--forte-color-pannel)` is not an error — the declaration simply becomes invalid at computed-value time and the element inherits instead. Check names against these tables.
-- **Preset-owned tokens live on `:root` alone.** Tokens marked *rewritten by presets* below are what `data-forte-radius` and `data-forte-density` rewrite. Overriding one on `:root` moves the default, but any [preset](/customization/presets) attribute on an ancestor still wins for its subtree.
+- **Preset-owned tokens live on `:root` alone.** Tokens marked *rewritten by presets* below are what `data-forte-radius` and `data-forte-density` rewrite. Overriding one on `:root` moves the default, but any [preset](/customization/presets/) attribute on an ancestor still wins for its subtree.
 
 ## Colour
 
-The accent, secondary and gray ramps — `--forte-accent-1…12`, `--forte-secondary-1…12`, `--forte-gray-1…12` — are **derived** from the seeds described on the [Theming](/customization/theming) page, in both light and dark mode. Prefer changing the seed over overriding ramp steps: the derivation is what keeps the palette coherent and the contrast pairs certified.
+The accent, secondary and gray ramps — `--forte-accent-1…12`, `--forte-secondary-1…12`, `--forte-gray-1…12` — are **derived** from the seeds described on the [Theming](/customization/theming/) page, in both light and dark mode. Prefer changing the seed over overriding ramp steps: the derivation is what keeps the palette coherent and the contrast pairs certified.
 
 Components consume the ramps through semantic aliases, which are the right level for surgical overrides — they re-derive per scope and follow light/dark automatically when you assign them a ramp step:
 
@@ -103,13 +103,13 @@ An eight-step scale on a 4px base. Components use it for all internal padding an
 
 ## Radius
 
-The numbered scale plus the three semantic radii components actually read. Prefer overriding the semantic ones — or better, a [radius preset](/customization/presets#radius), which is the form that nests correctly.
+The numbered scale plus the three semantic radii components actually read. Prefer overriding the semantic ones — or better, a [radius preset](/customization/presets/#radius), which is the form that nests correctly.
 
 <TokenTable families={["radius"]} label="Radius tokens" />
 
 ## Controls and density
 
-Control heights, padding and the surface metrics — the group the [density presets](/customization/presets#density) rewrite.
+Control heights, padding and the surface metrics — the group the [density presets](/customization/presets/#density) rewrite.
 
 <TokenTable families={["control", "surface", "list", "target"]} label="Control and density tokens" />
 

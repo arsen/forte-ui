@@ -4,6 +4,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { usePathname } from "next/navigation";
 import { NavList } from "@forte-ui/react";
 import { cn } from "@/lib/cn";
+import { routeKey } from "@/lib/route";
 import { TOC, type TocHeading } from "./toc-registry";
 import { EYEBROW, STICKY_COLUMN } from "./styles";
 
@@ -243,7 +244,7 @@ export function goToHeading(target: HTMLElement, { focus = true } = {}) {
  */
 export function useTocHeadings(): TocHeading[] {
   const pathname = usePathname();
-  const seed = TOC[pathname] ?? NONE;
+  const seed = TOC[routeKey(pathname)] ?? NONE;
 
   const [headings, setHeadings] = useState<TocHeading[]>(seed);
 

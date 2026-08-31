@@ -26,7 +26,7 @@ The question is what the **trigger** is for, not how much text the popup holds.
 - If the trigger's purpose *is* to open the popup — the little "i" info icon is
   the usual case — it is a popover.
 - If the trigger does something else and the popup merely labels it, it is a
-  [tooltip](/components/tooltip).
+  [tooltip](/components/tooltip/).
 
 That distinction decides who can reach the content. A tooltip is never
 announced, never tabbable, and never opens on touch; a popover is all three. So
@@ -154,7 +154,7 @@ user — who has neither an Escape key nor an outside press available.
 The popup deliberately never scrolls. The `Arrow` is placed outside the popup's
 box by the positioner, so any `overflow` other than `visible` would crop the
 wedge off. Put the scroll on something inside instead — a
-[`ScrollArea`](/components/scroll-area) is the ready-made answer — and cap it
+[`ScrollArea`](/components/scroll-area/) is the ready-made answer — and cap it
 with `--available-height`, the room the positioner measured between the anchor
 and the viewport edge, which the popup passes down by inheritance.
 

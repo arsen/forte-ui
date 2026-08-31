@@ -40,7 +40,7 @@ import { Button } from "@forte-ui/react";
 
 `loading` shows a spinner, hides the label from paint while keeping its width so the button cannot resize under the pointer, sets `aria-busy`, and blocks activation. Use it for the span of one request, and pair it with a `loadingLabel` that names the operation.
 
-The indicator is [`Spinner`](/components/spinner)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text colour, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--forte-button-spinner-size`.
+The indicator is [`Spinner`](/components/spinner/)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text colour, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--forte-button-spinner-size`.
 
 <DemoBlock id="button/loading" />
 

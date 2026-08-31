@@ -21,7 +21,7 @@ flipped rather than when a form is submitted, a `Switch` reads better.
 
 `Checkbox` renders a `<span>` with `role="checkbox"` and a hidden `<input>` next
 to it. That means it carries no accessible name of its own — the
-[`Field.Label`](/components/field) wrapped around it above is what gives it one,
+[`Field.Label`](/components/field/) wrapped around it above is what gives it one,
 and every example on this page keeps that pattern. A `Field` generates the id,
 points the label at the control and carries the `name` into form submission, so
 none of that appears in the demo code.
@@ -64,7 +64,7 @@ while the hidden input still submits whatever `checked` says.
 
 <Callout kind="note">
   Deriving the mixed state by hand is worth it for a one-off. For a real set of
-  options, [`CheckboxGroup`](/components/checkbox-group) holds the ticked values
+  options, [`CheckboxGroup`](/components/checkbox-group/) holds the ticked values
   in one array and works the mixed state out for you — add `parent` to the
   summarising checkbox and the group drives it.
 </Callout>
@@ -73,7 +73,7 @@ while the hidden input still submits whatever `checked` says.
 
 `CheckboxGroup` collects a series of checkboxes into one array of values, names
 them together and can disable them together. It has a page of its own:
-[`CheckboxGroup`](/components/checkbox-group).
+[`CheckboxGroup`](/components/checkbox-group/).
 
 ### Disabled
 
@@ -176,5 +176,5 @@ Anything Base UI's `Checkbox.Root` accepts passes through as well — including
 
 ### CheckboxGroup
 
-See [`CheckboxGroup`](/components/checkbox-group) for the group's own prop
+See [`CheckboxGroup`](/components/checkbox-group/) for the group's own prop
 table, its theming property and the parent-checkbox rules.

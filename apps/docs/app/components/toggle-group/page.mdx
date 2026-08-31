@@ -12,7 +12,7 @@ export const metadata = {
 
 # Toggle Group
 
-Shared state for a series of [`Toggle`](/components/toggle)s. Renders a
+Shared state for a series of [`Toggle`](/components/toggle/)s. Renders a
 `<div role="group">`, makes the whole set one tab stop, and owns the list of
 pressed values.
 
@@ -21,7 +21,7 @@ pressed values.
 Like a radio group this is a keyboard mode as well as a state container. Unlike
 a radio group, moving does **not** select: arrowing past a toggle leaves it
 untouched, and Space or Enter is what presses it. That makes a toggle group safe
-for choices a [`RadioGroup`](/components/radio) is not, including ones that fire
+for choices a [`RadioGroup`](/components/radio/) is not, including ones that fire
 a request.
 
 ## Import
@@ -60,7 +60,7 @@ control for a required choice.
 ### Segmented
 
 `segmented` puts one padded panel behind the whole set. It is deliberately the
-same surface, padding and radius that [`Tabs`](/components/tabs) uses for its
+same surface, padding and radius that [`Tabs`](/components/tabs/) uses for its
 `pill` variant, so a segmented group and a pill tab strip on the same screen
 read as the same kind of object. Pair it with `variant="solid"` for the classic
 filled segmented control, and `fullWidth` to split the container equally between
@@ -162,14 +162,14 @@ order. Set `loopFocus={false}` to stop the arrows wrapping at the ends.
 </Callout>
 
 Each toggle still needs its own name too: text children, or an `aria-label` when
-it is icon-only. See [`Toggle`](/components/toggle) for the rest — the pressed
+it is icon-only. See [`Toggle`](/components/toggle/) for the rest — the pressed
 state, forced colours and motion all belong to the individual button.
 
 ## Theming
 
 The group declares its own properties on the group element; the toggles inside
 are themed through the `--forte-toggle-*` properties documented on
-[`Toggle`](/components/toggle).
+[`Toggle`](/components/toggle/).
 
 <ThemingTable component="Toggle" part="group" />
 
@@ -192,4 +192,4 @@ props pass through unchanged.
 
 ### Toggle
 
-See [`Toggle`](/components/toggle) for the full prop table.
+See [`Toggle`](/components/toggle/) for the full prop table.

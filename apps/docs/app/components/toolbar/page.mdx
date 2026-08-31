@@ -153,7 +153,7 @@ toolbar does not bind them — so they jump the caret as they would in any field
 <DemoBlock id="toolbar/input" />
 
 That handling is the reason to reach for it rather than dropping a bare
-[`Input`](/components/input) into the bar — a bare one is not in the roving
+[`Input`](/components/input/) into the bar — a bare one is not in the roving
 order at all, so Tab is the only way past it, and you have just paid for the
 tab stop the toolbar exists to save.
 
@@ -230,7 +230,7 @@ Set `loopFocus={false}` to stop the arrows wrapping at the ends.
   Home and End are deliberately absent from that list. Base UI leaves them
   unbound in a toolbar — they are optional in the ARIA authoring practice for
   one — which is a real difference from
-  [`Toggle Group`](/components/toggle-group) and [`Tabs`](/components/tabs),
+  [`Toggle Group`](/components/toggle-group/) and [`Tabs`](/components/tabs/),
   where both keys do move focus. It is also what keeps them free for the text
   input in the bar.
 </Callout>
@@ -275,8 +275,8 @@ colours are forced to `CanvasText` instead.
 <ThemingTable component="Toolbar" part="link" />
 
 The controls inside the bar are themed through their own properties —
-`--forte-button-*` on [`Button`](/components/button), `--forte-input-*` on
-[`Input`](/components/input), `--forte-toggle-*` on [`Toggle`](/components/toggle).
+`--forte-button-*` on [`Button`](/components/button/), `--forte-input-*` on
+[`Input`](/components/input/), `--forte-toggle-*` on [`Toggle`](/components/toggle/).
 
 ## API reference
 
@@ -292,7 +292,7 @@ The controls inside the bar are themed through their own properties —
 
 <PropTable component="ToolbarButton" />
 
-Every other [`Button`](/components/button) prop passes through unchanged, as do
+Every other [`Button`](/components/button/) prop passes through unchanged, as do
 Base UI's own `nativeButton` and `render`.
 
 ### Toolbar.Link

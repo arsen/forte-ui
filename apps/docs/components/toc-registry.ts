@@ -11,7 +11,7 @@
 export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
-  "/components/accordion": [
+  "/components/accordion/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "divided", text: "Divided", depth: 3 },
@@ -29,7 +29,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "accordiontrigger", text: "Accordion.Trigger", depth: 3 },
     { id: "accordionpanel", text: "Accordion.Panel", depth: 3 },
   ],
-  "/components/alert": [
+  "/components/alert/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "tones", text: "Tones", depth: 3 },
@@ -49,7 +49,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "alertaction", text: "Alert.Action", depth: 3 },
     { id: "alertclose", text: "Alert.Close", depth: 3 },
   ],
-  "/components/aspect-ratio": [
+  "/components/aspect-ratio/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "built-on-the-property-not-the-trick", text: "Built on the property, not the trick", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -66,7 +66,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "theming", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
   ],
-  "/components/avatar": [
+  "/components/avatar/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
@@ -85,7 +85,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "avatarbadge", text: "Avatar.Badge", depth: 3 },
     { id: "avatargroup", text: "Avatar.Group", depth: 3 },
   ],
-  "/components/badge": [
+  "/components/badge/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "variants-and-tones", text: "Variants and tones", depth: 3 },
@@ -100,7 +100,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "theming", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
   ],
-  "/components/breadcrumb": [
+  "/components/breadcrumb/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "from-an-array", text: "From an array", depth: 3 },
@@ -122,19 +122,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "breadcrumbseparator", text: "Breadcrumb.Separator", depth: 3 },
     { id: "breadcrumbellipsis", text: "Breadcrumb.Ellipsis", depth: 3 },
   ],
-  "/components/button": [
-    { id: "import", text: "Import", depth: 2 },
-    { id: "examples", text: "Examples", depth: 2 },
-    { id: "tones", text: "Tones", depth: 3 },
-    { id: "sizes", text: "Sizes", depth: 3 },
-    { id: "loading", text: "Loading", depth: 3 },
-    { id: "icon-only", text: "Icon-only", depth: 3 },
-    { id: "rendering-as-another-element", text: "Rendering as another element", depth: 3 },
-    { id: "accessibility", text: "Accessibility", depth: 2 },
-    { id: "theming", text: "Theming", depth: 2 },
-    { id: "api-reference", text: "API reference", depth: 2 },
-  ],
-  "/components/button-group": [
+  "/components/button-group/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "orientation", text: "Orientation", depth: 3 },
@@ -151,7 +139,19 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "buttongroupseparator", text: "ButtonGroup.Separator", depth: 3 },
     { id: "buttongrouptext", text: "ButtonGroup.Text", depth: 3 },
   ],
-  "/components/calendar": [
+  "/components/button/": [
+    { id: "import", text: "Import", depth: 2 },
+    { id: "examples", text: "Examples", depth: 2 },
+    { id: "tones", text: "Tones", depth: 3 },
+    { id: "sizes", text: "Sizes", depth: 3 },
+    { id: "loading", text: "Loading", depth: 3 },
+    { id: "icon-only", text: "Icon-only", depth: 3 },
+    { id: "rendering-as-another-element", text: "Rendering as another element", depth: 3 },
+    { id: "accessibility", text: "Accessibility", depth: 2 },
+    { id: "theming", text: "Theming", depth: 2 },
+    { id: "api-reference", text: "API reference", depth: 2 },
+  ],
+  "/components/calendar/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "selection", text: "Selection", depth: 2 },
     { id: "a-range", text: "A range", depth: 3 },
@@ -167,20 +167,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "theming", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
   ],
-  "/components/checkbox": [
-    { id: "import", text: "Import", depth: 2 },
-    { id: "examples", text: "Examples", depth: 2 },
-    { id: "sizes", text: "Sizes", depth: 3 },
-    { id: "indeterminate", text: "Indeterminate", depth: 3 },
-    { id: "groups", text: "Groups", depth: 3 },
-    { id: "disabled", text: "Disabled", depth: 3 },
-    { id: "accessibility", text: "Accessibility", depth: 2 },
-    { id: "theming", text: "Theming", depth: 2 },
-    { id: "api-reference", text: "API reference", depth: 2 },
-    { id: "checkbox-1", text: "Checkbox", depth: 3 },
-    { id: "checkboxgroup", text: "CheckboxGroup", depth: 3 },
-  ],
-  "/components/checkbox-group": [
+  "/components/checkbox-group/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "labelling", text: "Labelling", depth: 3 },
@@ -197,7 +184,20 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "checkboxgroup", text: "CheckboxGroup", depth: 3 },
     { id: "checkbox", text: "Checkbox", depth: 3 },
   ],
-  "/components/collapsible": [
+  "/components/checkbox/": [
+    { id: "import", text: "Import", depth: 2 },
+    { id: "examples", text: "Examples", depth: 2 },
+    { id: "sizes", text: "Sizes", depth: 3 },
+    { id: "indeterminate", text: "Indeterminate", depth: 3 },
+    { id: "groups", text: "Groups", depth: 3 },
+    { id: "disabled", text: "Disabled", depth: 3 },
+    { id: "accessibility", text: "Accessibility", depth: 2 },
+    { id: "theming", text: "Theming", depth: 2 },
+    { id: "api-reference", text: "API reference", depth: 2 },
+    { id: "checkbox-1", text: "Checkbox", depth: 3 },
+    { id: "checkboxgroup", text: "CheckboxGroup", depth: 3 },
+  ],
+  "/components/collapsible/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "plain", text: "Plain", depth: 3 },
@@ -213,7 +213,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "collapsibletrigger", text: "Collapsible.Trigger", depth: 3 },
     { id: "collapsiblepanel", text: "Collapsible.Panel", depth: 3 },
   ],
-  "/components/color-picker": [
+  "/components/color-picker/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "the-value", text: "The value", depth: 2 },
@@ -248,7 +248,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "colorpickerhiddeninput", text: "ColorPicker.HiddenInput", depth: 3 },
     { id: "default_swatches", text: "DEFAULT_SWATCHES", depth: 3 },
   ],
-  "/components/combobox": [
+  "/components/combobox/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
@@ -286,7 +286,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "comboboxusefilter", text: "Combobox.useFilter", depth: 3 },
     { id: "comboboxusefiltereditems", text: "Combobox.useFilteredItems", depth: 3 },
   ],
-  "/components/context-menu": [
+  "/components/context-menu/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -304,7 +304,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "contextmenupopup", text: "ContextMenu.Popup", depth: 3 },
     { id: "the-rest-of-the-namespace", text: "The rest of the namespace", depth: 3 },
   ],
-  "/components/date-picker": [
+  "/components/date-picker/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "selection", text: "Selection", depth: 2 },
     { id: "when-the-popup-closes", text: "When the popup closes", depth: 3 },
@@ -325,7 +325,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "datepickerfooter", text: "DatePicker.Footer", depth: 3 },
     { id: "datepickerclear", text: "DatePicker.Clear", depth: 3 },
   ],
-  "/components/dialog": [
+  "/components/dialog/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "a-close-button-in-the-corner", text: "A close button in the corner", depth: 3 },
@@ -365,7 +365,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "customdialogprops", text: "CustomDialogProps", depth: 3 },
     { id: "dialogcreatemanager", text: "Dialog.createManager()", depth: 3 },
   ],
-  "/components/drawer": [
+  "/components/drawer/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sides", text: "Sides", depth: 3 },
@@ -401,7 +401,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "drawervirtualkeyboardprovider", text: "Drawer.VirtualKeyboardProvider", depth: 3 },
     { id: "drawercreatehandle", text: "Drawer.createHandle", depth: 3 },
   ],
-  "/components/field": [
+  "/components/field/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -421,7 +421,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "fielditem", text: "Field.Item", depth: 3 },
     { id: "fieldvalidity", text: "Field.Validity", depth: 3 },
   ],
-  "/components/fieldset": [
+  "/components/fieldset/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "disabled", text: "Disabled", depth: 3 },
@@ -431,7 +431,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "fieldsetroot", text: "Fieldset.Root", depth: 3 },
     { id: "fieldsetlegend", text: "Fieldset.Legend", depth: 3 },
   ],
-  "/components/form": [
+  "/components/form/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "server-errors", text: "Server errors", depth: 3 },
@@ -441,19 +441,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "api-reference", text: "API reference", depth: 2 },
     { id: "form-1", text: "Form", depth: 3 },
   ],
-  "/components/input": [
-    { id: "import", text: "Import", depth: 2 },
-    { id: "examples", text: "Examples", depth: 2 },
-    { id: "sizes", text: "Sizes", depth: 3 },
-    { id: "variants", text: "Variants", depth: 3 },
-    { id: "states", text: "States", depth: 3 },
-    { id: "multi-line", text: "Multi-line", depth: 3 },
-    { id: "accessibility", text: "Accessibility", depth: 2 },
-    { id: "theming", text: "Theming", depth: 2 },
-    { id: "api-reference", text: "API reference", depth: 2 },
-    { id: "input-1", text: "Input", depth: 3 },
-  ],
-  "/components/input-group": [
+  "/components/input-group/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -475,7 +463,19 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "inputgrouptext", text: "InputGroup.Text", depth: 3 },
     { id: "inputgroupbutton", text: "InputGroup.Button", depth: 3 },
   ],
-  "/components/menu": [
+  "/components/input/": [
+    { id: "import", text: "Import", depth: 2 },
+    { id: "examples", text: "Examples", depth: 2 },
+    { id: "sizes", text: "Sizes", depth: 3 },
+    { id: "variants", text: "Variants", depth: 3 },
+    { id: "states", text: "States", depth: 3 },
+    { id: "multi-line", text: "Multi-line", depth: 3 },
+    { id: "accessibility", text: "Accessibility", depth: 2 },
+    { id: "theming", text: "Theming", depth: 2 },
+    { id: "api-reference", text: "API reference", depth: 2 },
+    { id: "input-1", text: "Input", depth: 3 },
+  ],
+  "/components/menu/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "triggers", text: "Triggers", depth: 3 },
@@ -504,7 +504,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "menusubmenutrigger", text: "Menu.SubmenuTrigger", depth: 3 },
     { id: "menushortcut", text: "Menu.Shortcut", depth: 3 },
   ],
-  "/components/menubar": [
+  "/components/menubar/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -518,7 +518,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "api-reference", text: "API reference", depth: 2 },
     { id: "menubar-1", text: "Menubar", depth: 3 },
   ],
-  "/components/nav-list": [
+  "/components/nav-list/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sections", text: "Sections", depth: 3 },
@@ -541,7 +541,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "navlistgrouppanel", text: "NavList.GroupPanel", depth: 3 },
     { id: "navlistbadge", text: "NavList.Badge", depth: 3 },
   ],
-  "/components/navigation-menu": [
+  "/components/navigation-menu/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -569,7 +569,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "navigationmenulinkdescription", text: "NavigationMenu.LinkDescription", depth: 3 },
     { id: "navigationmenupopup", text: "NavigationMenu.Popup", depth: 3 },
   ],
-  "/components/number-field": [
+  "/components/number-field/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "scrubbing", text: "Scrubbing", depth: 2 },
@@ -594,7 +594,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "numberfieldscrubarea", text: "NumberField.ScrubArea", depth: 3 },
     { id: "numberfieldscrubareacursor", text: "NumberField.ScrubAreaCursor", depth: 3 },
   ],
-  "/components/otp-field": [
+  "/components/otp-field/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
@@ -611,7 +611,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "otpfieldinput", text: "OTPField.Input", depth: 3 },
     { id: "otpfieldseparator", text: "OTPField.Separator", depth: 3 },
   ],
-  "/components/popover": [
+  "/components/popover/": [
     { id: "popover-or-tooltip", text: "Popover or tooltip?", depth: 2 },
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
@@ -641,7 +641,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "popoverviewport", text: "Popover.Viewport", depth: 3 },
     { id: "popovercreatehandle", text: "Popover.createHandle", depth: 3 },
   ],
-  "/components/preview-card": [
+  "/components/preview-card/": [
     { id: "preview-card-popover-or-tooltip", text: "Preview card, popover, or tooltip?", depth: 2 },
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
@@ -666,7 +666,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "previewcardviewport", text: "PreviewCard.Viewport", depth: 3 },
     { id: "previewcardcreatehandle", text: "PreviewCard.createHandle", depth: 3 },
   ],
-  "/components/progress": [
+  "/components/progress/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "which-one", text: "Which one", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -693,7 +693,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "progresscirclevalue", text: "ProgressCircle.Value", depth: 3 },
     { id: "progresscirclelabel", text: "ProgressCircle.Label", depth: 3 },
   ],
-  "/components/radio": [
+  "/components/radio/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
@@ -710,7 +710,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "radio-1", text: "Radio", depth: 3 },
     { id: "radiogroup", text: "RadioGroup", depth: 3 },
   ],
-  "/components/resizable": [
+  "/components/resizable/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "orientation", text: "Orientation", depth: 3 },
@@ -726,7 +726,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "resizablepanel", text: "Resizable.Panel", depth: 3 },
     { id: "resizablehandle", text: "Resizable.Handle", depth: 3 },
   ],
-  "/components/scroll-area": [
+  "/components/scroll-area/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "vertical", text: "Vertical", depth: 3 },
@@ -747,7 +747,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "scrollareathumb", text: "ScrollArea.Thumb", depth: 3 },
     { id: "scrollareacorner", text: "ScrollArea.Corner", depth: 3 },
   ],
-  "/components/select": [
+  "/components/select/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "labelling", text: "Labelling", depth: 3 },
@@ -769,7 +769,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "selectgrouplabel", text: "Select.GroupLabel", depth: 3 },
     { id: "selectseparator", text: "Select.Separator", depth: 3 },
   ],
-  "/components/separator": [
+  "/components/separator/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "vertical", text: "Vertical", depth: 3 },
@@ -780,7 +780,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "theming", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
   ],
-  "/components/skeleton": [
+  "/components/skeleton/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "what-the-group-is-for", text: "What the group is for", depth: 3 },
@@ -799,7 +799,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "skeletontext", text: "Skeleton.Text", depth: 3 },
     { id: "skeletongroup", text: "Skeleton.Group", depth: 3 },
   ],
-  "/components/slider": [
+  "/components/slider/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "anatomy", text: "Anatomy", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
@@ -824,7 +824,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "sliderindicator", text: "Slider.Indicator", depth: 3 },
     { id: "sliderthumb", text: "Slider.Thumb", depth: 3 },
   ],
-  "/components/spinner": [
+  "/components/spinner/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "variants", text: "Variants", depth: 3 },
@@ -838,7 +838,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "theming-1", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
   ],
-  "/components/switch": [
+  "/components/switch/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
@@ -849,7 +849,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "theming", text: "Theming", depth: 2 },
     { id: "api-reference", text: "API reference", depth: 2 },
   ],
-  "/components/tabs": [
+  "/components/tabs/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "line", text: "Line", depth: 3 },
@@ -868,7 +868,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "tabsindicator", text: "Tabs.Indicator", depth: 3 },
     { id: "tabspanel", text: "Tabs.Panel", depth: 3 },
   ],
-  "/components/textarea": [
+  "/components/textarea/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
@@ -883,7 +883,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "api-reference", text: "API reference", depth: 2 },
     { id: "textarea-1", text: "Textarea", depth: 3 },
   ],
-  "/components/toast": [
+  "/components/toast/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "setup", text: "Setup", depth: 2 },
     { id: "the-hook", text: "The hook", depth: 2 },
@@ -912,22 +912,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "toastaction", text: "Toast.Action", depth: 3 },
     { id: "toastclose", text: "Toast.Close", depth: 3 },
   ],
-  "/components/toggle": [
-    { id: "import", text: "Import", depth: 2 },
-    { id: "examples", text: "Examples", depth: 2 },
-    { id: "variants", text: "Variants", depth: 3 },
-    { id: "tones", text: "Tones", depth: 3 },
-    { id: "sizes", text: "Sizes", depth: 3 },
-    { id: "icon-only", text: "Icon only", depth: 3 },
-    { id: "swapping-the-icon-with-the-state", text: "Swapping the icon with the state", depth: 3 },
-    { id: "controlled", text: "Controlled", depth: 3 },
-    { id: "disabled", text: "Disabled", depth: 3 },
-    { id: "accessibility", text: "Accessibility", depth: 2 },
-    { id: "theming", text: "Theming", depth: 2 },
-    { id: "api-reference", text: "API reference", depth: 2 },
-    { id: "toggle-1", text: "Toggle", depth: 3 },
-  ],
-  "/components/toggle-group": [
+  "/components/toggle-group/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "multiple", text: "Multiple", depth: 3 },
@@ -942,7 +927,22 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "togglegroup", text: "ToggleGroup", depth: 3 },
     { id: "toggle", text: "Toggle", depth: 3 },
   ],
-  "/components/toolbar": [
+  "/components/toggle/": [
+    { id: "import", text: "Import", depth: 2 },
+    { id: "examples", text: "Examples", depth: 2 },
+    { id: "variants", text: "Variants", depth: 3 },
+    { id: "tones", text: "Tones", depth: 3 },
+    { id: "sizes", text: "Sizes", depth: 3 },
+    { id: "icon-only", text: "Icon only", depth: 3 },
+    { id: "swapping-the-icon-with-the-state", text: "Swapping the icon with the state", depth: 3 },
+    { id: "controlled", text: "Controlled", depth: 3 },
+    { id: "disabled", text: "Disabled", depth: 3 },
+    { id: "accessibility", text: "Accessibility", depth: 2 },
+    { id: "theming", text: "Theming", depth: 2 },
+    { id: "api-reference", text: "API reference", depth: 2 },
+    { id: "toggle-1", text: "Toggle", depth: 3 },
+  ],
+  "/components/toolbar/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "groups-and-separators", text: "Groups and separators", depth: 3 },
@@ -967,7 +967,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "toolbarinput", text: "Toolbar.Input", depth: 3 },
     { id: "toolbarseparator", text: "Toolbar.Separator", depth: 3 },
   ],
-  "/components/tooltip": [
+  "/components/tooltip/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sides", text: "Sides", depth: 3 },
@@ -984,25 +984,25 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "tooltiparrow", text: "Tooltip.Arrow", depth: 3 },
     { id: "tooltipshortcut", text: "Tooltip.Shortcut", depth: 3 },
   ],
-  "/customization/presets": [
+  "/customization/presets/": [
     { id: "radius", text: "Radius", depth: 2 },
     { id: "density", text: "Density", depth: 2 },
     { id: "motion", text: "Motion", depth: 2 },
     { id: "how-presets-and-scoped-themes-interact", text: "How presets and scoped themes interact", depth: 2 },
   ],
-  "/customization/styling": [
+  "/customization/styling/": [
     { id: "theming-knobs", text: "Theming knobs", depth: 2 },
     { id: "parts-and-states", text: "Parts and states", depth: 2 },
     { id: "what-you-take-on", text: "What you take on", depth: 2 },
     { id: "when-css-keeps-repeating-itself", text: "When CSS keeps repeating itself", depth: 2 },
   ],
-  "/customization/tailwind": [
+  "/customization/tailwind/": [
     { id: "setup", text: "Setup", depth: 2 },
     { id: "what-the-bridge-changes", text: "What the bridge changes", depth: 2 },
     { id: "targeting-component-state", text: "Targeting component state", depth: 2 },
     { id: "merging-classes-cn", text: "Merging classes: cn", depth: 2 },
   ],
-  "/customization/theming": [
+  "/customization/theming/": [
     { id: "the-seed", text: "The seed", depth: 2 },
     { id: "what-the-seed-derives", text: "What the seed derives", depth: 2 },
     { id: "text-on-your-brand-colour", text: "Text on your brand colour", depth: 2 },
@@ -1010,7 +1010,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "scoped-themes", text: "Scoped themes", depth: 2 },
     { id: "where-to-go-next", text: "Where to go next", depth: 2 },
   ],
-  "/customization/tokens": [
+  "/customization/tokens/": [
     { id: "how-to-override-a-token", text: "How to override a token", depth: 2 },
     { id: "colour", text: "Colour", depth: 2 },
     { id: "surfaces-text-and-borders", text: "Surfaces, text and borders", depth: 3 },
@@ -1025,7 +1025,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "motion", text: "Motion", depth: 2 },
     { id: "for-tooling", text: "For tooling", depth: 2 },
   ],
-  "/getting-started/nextjs": [
+  "/getting-started/nextjs/": [
     { id: "without-tailwind", text: "Without Tailwind", depth: 2 },
     { id: "1-create-the-project", text: "1. Create the project", depth: 3 },
     { id: "2-install-the-library", text: "2. Install the library", depth: 3 },
@@ -1042,7 +1042,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "loading-a-font", text: "Loading a font", depth: 2 },
     { id: "where-next", text: "Where next", depth: 2 },
   ],
-  "/getting-started/vite": [
+  "/getting-started/vite/": [
     { id: "without-tailwind", text: "Without Tailwind", depth: 2 },
     { id: "1-create-the-project", text: "1. Create the project", depth: 3 },
     { id: "2-install-the-library", text: "2. Install the library", depth: 3 },

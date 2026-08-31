@@ -14,7 +14,7 @@ export const metadata = {
 
 A menu that opens **at the pointer**, on right click or long press, over a
 region of the page rather than off a button. It is the same list of commands
-[Menu](/components/menu) renders — literally the same components below the
+[Menu](/components/menu/) renders — literally the same components below the
 trigger — anchored to where the user clicked instead of to a control.
 
 <DemoBlock id="context-menu/basic" />
@@ -142,7 +142,7 @@ real `contextmenu` event on whatever is focused, and that event **bubbles** — 
 a trigger wrapping a link, a button or any other focusable element is reachable
 from the keyboard through that element, with no extra work. A trigger wrapping
 inert content is not reachable at all. Once the menu *is* open it is an ordinary
-menu and behaves exactly like [Menu](/components/menu#accessibility), roving
+menu and behaves exactly like [Menu](/components/menu/#accessibility), roving
 tabindex and all.
 
 <Callout kind="a11y">
@@ -168,7 +168,7 @@ tabindex and all.
 
 The trigger declares three properties, all of them about the ring that marks the
 region while its menu is open. Everything else on screen belongs to
-[Menu](/components/menu#theming) — the popup surface, the rows, the separators,
+[Menu](/components/menu/#theming) — the popup surface, the rows, the separators,
 the motion — and is set through the `--forte-menu-*` knobs on the parts that
 declare them.
 
@@ -213,6 +213,6 @@ switched to pointer anchoring.
 `Item`, `LinkItem`, `CheckboxItem`, `RadioGroup`, `RadioItem`, `Group`,
 `GroupLabel`, `Separator`, `SubmenuRoot`, `SubmenuTrigger` and `Shortcut` are
 the `Menu` parts, unchanged. Their props are documented on the [Menu
-page](/components/menu#api-reference), and their types are exported under both
+page](/components/menu/#api-reference), and their types are exported under both
 names — `ContextMenuItemProps` is an alias of `MenuItemProps`, not a second
 interface.

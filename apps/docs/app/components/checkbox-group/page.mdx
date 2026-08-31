@@ -12,14 +12,14 @@ export const metadata = {
 
 # Checkbox Group
 
-Shared state for a series of [`Checkbox`](/components/checkbox)es. Renders a
+Shared state for a series of [`Checkbox`](/components/checkbox/)es. Renders a
 `<div role="group">` and owns the list of ticked values, so the answer to a
 multiple-choice question is one array instead of one boolean per option.
 
 <DemoBlock id="checkbox-group/basic" />
 
-Unlike a [`RadioGroup`](/components/radio) or a
-[`ToggleGroup`](/components/toggle-group), this is **not** a keyboard mode.
+Unlike a [`RadioGroup`](/components/radio/) or a
+[`ToggleGroup`](/components/toggle-group/), this is **not** a keyboard mode.
 Every checkbox in the group stays its own tab stop, exactly as a run of native
 checkboxes would — grouping here is about state and about naming, and the
 arrow keys are left to the page.
@@ -205,14 +205,14 @@ beside a greyed-out control. One row at a time is `disabled` on that row's
 
 Each checkbox still needs its own name too — an enclosing `<label>`, a
 `Field.Item` with a `Field.Label`, or a sibling `<label htmlFor>` paired with
-`nativeButton`. See [`Checkbox`](/components/checkbox) for the rest: the mark,
+`nativeButton`. See [`Checkbox`](/components/checkbox/) for the rest: the mark,
 the mixed state, forced colours and motion all belong to the individual control.
 
 ## Theming
 
 The group declares one property of its own; the checkboxes inside are themed
 through the `--forte-checkbox-*` properties documented on
-[`Checkbox`](/components/checkbox).
+[`Checkbox`](/components/checkbox/).
 
 <ThemingTable component="Checkbox" part="group" />
 
@@ -227,4 +227,4 @@ through unchanged.
 
 ### Checkbox
 
-See [`Checkbox`](/components/checkbox) for the full prop table.
+See [`Checkbox`](/components/checkbox/) for the full prop table.

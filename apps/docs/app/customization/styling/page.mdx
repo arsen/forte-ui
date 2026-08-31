@@ -9,7 +9,7 @@ export const metadata = {
 
 # Styling components
 
-The [global tokens](/customization/tokens) move every component at once. This page is about moving *one* — one component, one variant, one instance — using the three mechanisms every component exposes, in the order you should reach for them:
+The [global tokens](/customization/tokens/) move every component at once. This page is about moving *one* — one component, one variant, one instance — using the three mechanisms every component exposes, in the order you should reach for them:
 
 1. **Props** — `variant`, `tone`, `size`. If the look you want is a supported combination, it is already there.
 2. **Theming knobs** — per-component custom properties like `--forte-button-radius`, documented in the *Theming* table on each component's page.
@@ -21,7 +21,7 @@ Every component declares its knobs on its own root element, each defaulting to a
 
 <DemoBlock id="styling/knobs" />
 
-The full knob list for each component is generated from its stylesheet and rendered on its page — [Button's](/components/button#theming), for example.
+The full knob list for each component is generated from its stylesheet and rendered on its page — [Button's](/components/button/#theming), for example.
 
 <Callout kind="warn">
   Knobs are declared **on the component's root element**, and that placement is the mechanism: an element's own declaration beats anything it would inherit. So setting `--forte-button-radius` on `:root` or a wrapper does nothing — it has to land on the button itself, via `className` and a CSS rule, or an inline `style`. To move *all* buttons, re-point the global token in the knob's default instead: `--forte-radius-control` reaches every control at once.

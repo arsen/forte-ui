@@ -16,12 +16,12 @@ It is a real `<textarea>`, so `placeholder`, `required`, `minLength`,
 `maxLength`, `wrap` and the rest work exactly as they do on the platform —
 what the library adds is the design system's metrics, the two-tone focus ring,
 height expressed in rows, and the wiring that makes it participate in a
-[Field](/components/field) without a line of glue.
+[Field](/components/field/) without a line of glue.
 
 <DemoBlock id="textarea/basic" />
 
 Base UI has no textarea primitive. This one is built on `Field.Control` —
-literally the same component [Input](/components/input) is — rendered as a
+literally the same component [Input](/components/input/) is — rendered as a
 `<textarea>` instead of an `<input>`. That is why it needs no wiring either:
 inside a `<Field.Root>` it picks up the label, the description, the error
 message, the `name` used on submit, and the validity attributes.

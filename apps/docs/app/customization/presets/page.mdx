@@ -49,6 +49,6 @@ Omit the attribute for the default scale. `none` squares everything including th
 
 ## How presets and scoped themes interact
 
-Presets and [theme scopes](/customization/theming#scoped-themes) are independent axes. A `data-forte-*` attribute needs no scope class — it works on any element — and it carries **into** nested `.forte-theme` scopes: a demo frame with its own seed inside a `pill`-radius page still renders pill controls, until an element inside it sets its own `data-forte-radius`.
+Presets and [theme scopes](/customization/theming/#scoped-themes) are independent axes. A `data-forte-*` attribute needs no scope class — it works on any element — and it carries **into** nested `.forte-theme` scopes: a demo frame with its own seed inside a `pill`-radius page still renders pill controls, until an element inside it sets its own `data-forte-radius`.
 
-If you need geometry a preset does not offer, override the underlying tokens instead — `--forte-radius-control` and friends are listed on the [Design tokens](/customization/tokens) page. Set them on `:root` (where the defaults live), and prefer the presets where they fit: a preset is the only form that nests correctly under other presets, since each one restates its whole group.
+If you need geometry a preset does not offer, override the underlying tokens instead — `--forte-radius-control` and friends are listed on the [Design tokens](/customization/tokens/) page. Set them on `:root` (where the defaults live), and prefer the presets where they fit: a preset is the only form that nests correctly under other presets, since each one restates its whole group.

@@ -22,7 +22,7 @@ Tabs put several views of the same subject in one place and show one at a time. 
 import { Tabs } from "@forte-ui/react";
 ```
 
-`Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list. `Tabs.List` renders a [`ScrollArea`](/components/scroll-area) around itself unless `overflow="visible"` is set on the root — its own `className`, `ref` and props still land on the `tablist` element, but it is no longer the outermost box of the strip.
+`Tabs` is a namespace of five parts: `Tabs.Root`, `Tabs.List`, `Tabs.Tab`, `Tabs.Indicator` and `Tabs.Panel`. `Tabs.Indicator` renders inside `Tabs.List`; `Tabs.Panel` renders outside it, as a sibling of the list. `Tabs.List` renders a [`ScrollArea`](/components/scroll-area/) around itself unless `overflow="visible"` is set on the root — its own `className`, `ref` and props still land on the `tablist` element, but it is no longer the outermost box of the strip.
 
 Each `Tabs.Tab` is paired with the `Tabs.Panel` that carries the same `value`. That pairing is not cosmetic — it is what generates the `aria-controls` and `aria-labelledby` attributes linking the two, so every tab needs a panel with a matching value and every panel needs a tab. `value` can be any string or number; `Tabs.Root` takes `defaultValue` (uncontrolled) or `value` plus `onValueChange` (controlled).
 
@@ -52,7 +52,7 @@ The variant is set once on `Tabs.Root` and reaches the list, tabs and indicator 
 
 ### Overflow
 
-A strip with more tabs than room scrolls rather than spilling out of its container. `Tabs.List` wraps itself in a [`ScrollArea`](/components/scroll-area), so the overflowing end fades out under a mask that opens and closes with the scroll position, a swipe or a drag brings it back, and `overscroll-behavior: contain` stops that swipe dragging the page sideways once the strip hits its end. It costs nothing while the tabs fit: a `ScrollArea` with no overflow shows no fade and takes no tab stop.
+A strip with more tabs than room scrolls rather than spilling out of its container. `Tabs.List` wraps itself in a [`ScrollArea`](/components/scroll-area/), so the overflowing end fades out under a mask that opens and closes with the scroll position, a swipe or a drag brings it back, and `overscroll-behavior: contain` stops that swipe dragging the page sideways once the strip hits its end. It costs nothing while the tabs fit: a `ScrollArea` with no overflow shows no fade and takes no tab stop.
 
 <DemoBlock id="tabs/overflow" />
 

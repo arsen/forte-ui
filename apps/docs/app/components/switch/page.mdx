@@ -38,7 +38,7 @@ import { Switch } from "@forte-ui/react";
 
 ### Settings list
 
-A list of settings usually needs a description under each label, which is more text than belongs inside an accessible name. [`Field`](/components/field) is what this is for: `Field.Description` is registered into the control's `aria-describedby`, and `Field.Label` sits beside the switch rather than around it. There is no `nativeButton` here and no `htmlFor` to write — the label points at the switch's hidden `<input>`, which is a labelable element, so clicking the setting's name toggles it.
+A list of settings usually needs a description under each label, which is more text than belongs inside an accessible name. [`Field`](/components/field/) is what this is for: `Field.Description` is registered into the control's `aria-describedby`, and `Field.Label` sits beside the switch rather than around it. There is no `nativeButton` here and no `htmlFor` to write — the label points at the switch's hidden `<input>`, which is a labelable element, so clicking the setting's name toggles it.
 
 The one thing `Field` cannot guess is the layout. `Field.Root` is a column; the row here is three declarations of the demo's own.
 
@@ -67,7 +67,7 @@ Base UI renders the root with `role="switch"` and `aria-checked`, so the state r
 <Callout kind="a11y">
 
 A switch renders no text of its own, so you have to supply the name. Reach for
-[`Field`](/components/field) first — it generates the id, and gives you a description and a
+[`Field`](/components/field/) first — it generates the id, and gives you a description and a
 `name` in the same move. Either arrangement works, and which one you want is only a question of
 where the switch sits:
 
