@@ -73,8 +73,13 @@
     /* Days. */
     /** Day number text size */
     --forte-calendar-day-font-size: var(--forte-font-size-2);
+    /* The SEMANTIC control radius, not a raw step off the scale. A day is a
+     * control, and `data-forte-radius` only rewrites the semantic three —
+     * `--forte-radius-2` is byte-identical in the `soft` and `pill` presets, so
+     * a raw step made the grid the one thing on the page that ignored two of
+     * the three radius presets and answered only to `none`. */
     /** Corner radius of a day */
-    --forte-calendar-day-radius: var(--forte-radius-2);
+    --forte-calendar-day-radius: var(--forte-radius-control);
     /** Day number colour */
     --forte-calendar-day-color: var(--forte-color-foreground);
     /** Colour of days belonging to the neighbouring month */
@@ -379,8 +384,17 @@
   }
 
   .day[data-today] {
-    color: var(--forte-calendar-today-color);
     font-weight: var(--forte-font-weight-semibold);
+  }
+
+  /* Only when it is NOT the selected day. Both rules are (0,2,0) and this one
+   * is the later of the two, so an unqualified `[data-today]` won an outright
+   * tie against `[data-selected]` above and repainted today's number in the
+   * accent — accent text on the accent fill, which is the one pair the ramp
+   * never promises. Today already reads as selected through the fill; the dot
+   * below is what still says "today", and it rides `currentColor`. */
+  .day[data-today]:not([data-selected]) {
+    color: var(--forte-calendar-today-color);
   }
 
   /* Centred with `inset-inline: 0` and an auto margin rather than a

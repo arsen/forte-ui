@@ -2304,7 +2304,7 @@
       },
       {
         "name": "--forte-calendar-day-radius",
-        "value": "var(--forte-radius-2)",
+        "value": "var(--forte-radius-control)",
         "description": "Corner radius of a day",
         "part": "root",
         "overrides": []
