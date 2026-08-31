@@ -52,6 +52,20 @@ Floating also switches off the bleed, because it has nothing left to cover — s
 
 <DemoBlock id="drawer/floating" />
 
+### Non-modal
+
+`modal={false}` on `Drawer.Root` leaves the rest of the page running while the drawer is open: no focus trap, no scroll lock, no inert document. That is the shape of a panel the user works *alongside* — an inspector, a queue, a notes pad — rather than a task that interrupts them.
+
+It takes two more props to finish the thought. `backdrop={false}` on `Drawer.Popup` removes the scrim, because a dimmed page that still works reads as a page that is broken. And `disablePointerDismissal` on `Drawer.Root` keeps the panel up while the page is used — without it, the first click on that supposedly usable page dismisses the drawer, and in a non-modal drawer so does focus merely moving outside it. Escape, `Drawer.Close` and the swipe remain as the deliberate ways out.
+
+A scrimless drawer also draws a hairline border on its own. With a backdrop, the dimmed page is what tells the surface and the content behind it apart; take the scrim away and the shadow is all that is left, which in dark mode is nearly nothing. The hairline is keyed on `backdrop={false}` — the popup carries `data-no-backdrop` — and themed by `--forte-drawer-border-width` and `--forte-drawer-border-color`. On an `edge` drawer the side resting against the screen edge stays borderless, so an overdrag does not expose it as a seam across the surface.
+
+Both variants work non-modally, and they say different things: `edge` reads as a panel docked to the workspace, `floating` as a palette hovering over it.
+
+<DemoBlock id="drawer/non-modal" />
+
+`modal="trap-focus"` is the middle setting — focus stays inside the drawer, but page scroll and outside pointer interaction are left alone. Reach for it when the drawer holds a self-contained keyboard task (a form, a search) and Tab walking out into the page would only lose the user's place.
+
 ### Long content
 
 `Drawer.Content` is the scroll container — not the viewport around the popup, the way `Dialog` does it, and not the popup itself. Base UI walks up from wherever the finger landed and takes the first scrollable ancestor, so a drag only takes over once that scroll has bottomed out. A scrolled-down drawer therefore swipes only at the end of its list, which is what every native sheet does, and `overscroll-behavior: contain` keeps a scroll that reaches the end from chaining to the page behind it.

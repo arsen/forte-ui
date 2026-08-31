@@ -15,6 +15,13 @@ and this project adheres to
 
 ### Drawer
 
+- A drawer rendered without its scrim (`backdrop={false}`) now draws a
+  hairline border, marked on the popup as `data-no-backdrop` and themed by the
+  new `--forte-drawer-border-width` / `--forte-drawer-border-color` knobs.
+  Without the dim, the shadow was the only thing separating the surface from
+  the page, which in dark mode is nearly nothing. On an `edge` drawer the side
+  resting against the screen edge stays borderless, so an overdrag does not
+  expose the hairline as a seam across the skirt.
 - Fixed a non-modal drawer (`modal={false}`) making the entire page
   unclickable while open: the full-screen viewport that positions the popup
   was silently absorbing every pointer event aimed at the page. The viewport

@@ -4090,6 +4090,20 @@
         "overrides": []
       },
       {
+        "name": "--forte-drawer-border-width",
+        "value": "1px",
+        "description": "Width of the hairline drawn when `backdrop={false}`",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-border-color",
+        "value": "var(--forte-color-border)",
+        "description": "Colour of that hairline",
+        "part": "popup",
+        "overrides": []
+      },
+      {
         "name": "--forte-drawer-font-size",
         "value": "var(--forte-font-size-2)",
         "description": "Base font size inside the popup",

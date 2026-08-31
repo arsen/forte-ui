@@ -244,6 +244,16 @@
     --forte-drawer-gap: var(--forte-space-4);
     /** Popup shadow */
     --forte-drawer-shadow: var(--forte-shadow-4);
+    /* Painted only on a scrimless drawer — see the `data-no-backdrop` rule
+     * below. Without a dimmed page behind it the shadow is the only boundary,
+     * and overlay-on-background sits within a step on the grey ramp, so in
+     * dark mode the edge simply vanishes. `.forte-hc-surface` already
+     * reserves a 1px transparent border on this element, so painting it
+     * costs no layout. */
+    /** Width of the hairline drawn when `backdrop={false}` */
+    --forte-drawer-border-width: 1px;
+    /** Colour of that hairline */
+    --forte-drawer-border-color: var(--forte-color-border);
     /** Base font size inside the popup */
     --forte-drawer-font-size: var(--forte-font-size-2);
     /* No width token exists in the inventory (widths are layout, not theme),
@@ -422,6 +432,41 @@
      * surface instead. The base rule's `auto` is what makes this necessary —
      * see the note there. */
     pointer-events: none;
+  }
+
+  /* A scrimless drawer draws its own boundary. With a backdrop the dimmed
+   * page is what tells the surface and the content behind it apart; a drawer
+   * rendered with `backdrop={false}` sits directly on an undimmed page in
+   * its own surface colour, so it gets the hairline `.forte-hc-surface`
+   * reserved the space for. Keyed on the backdrop rather than on `modal`
+   * because the missing scrim IS the visibility problem — a non-modal drawer
+   * that keeps its backdrop still has the dim doing this job. */
+  .popup[data-no-backdrop] {
+    border: var(--forte-drawer-border-width) solid
+      var(--forte-drawer-border-color);
+  }
+
+  /* …except along the screen edge an `edge` drawer rests against. At rest
+   * that side lies on the bezel, where a line buys nothing, and during an
+   * overdrag the skirt — the drawer's own background painted past that edge —
+   * would expose it as a seam floating mid-surface. Transparent rather than
+   * zero-width, so the box does not shift and the background paints on under
+   * it, continuous with the skirt. The floating variant keeps all four: it
+   * has a visible gap on every side and no skirt to disagree with. */
+  .popup[data-no-backdrop][data-variant="edge"][data-side="left"] {
+    border-left-color: transparent;
+  }
+
+  .popup[data-no-backdrop][data-variant="edge"][data-side="right"] {
+    border-right-color: transparent;
+  }
+
+  .popup[data-no-backdrop][data-variant="edge"][data-side="top"] {
+    border-top-color: transparent;
+  }
+
+  .popup[data-no-backdrop][data-variant="edge"][data-side="bottom"] {
+    border-bottom-color: transparent;
   }
 
   /* Sides ------------------------------------------------------------------

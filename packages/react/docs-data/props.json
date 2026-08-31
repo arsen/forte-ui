@@ -3454,7 +3454,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Render the scrim behind the drawer. Turn it off for a non-modal drawer\nthat should leave the page visibly usable."
+        "description": "Render the scrim behind the drawer. Turn it off for a non-modal drawer\nthat should leave the page visibly usable. A drawer without one marks its\npopup `data-no-backdrop` and draws a hairline border in the scrim's\nplace, so the surface still ends somewhere visible."
       },
       {
         "name": "backdropClassName",
