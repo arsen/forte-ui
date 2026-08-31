@@ -8469,7 +8469,7 @@
         "overrides": [
           {
             "selector": ".root[data-variant=\"pill\"]",
-            "value": "var(--forte-radius-4)"
+            "value": "calc( var(--forte-tabs-radius) + min(var(--forte-tabs-radius), var(--forte-tabs-list-padding)) )"
           }
         ]
       },

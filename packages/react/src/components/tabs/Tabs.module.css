@@ -197,7 +197,16 @@
   .root[data-variant="pill"] {
     --forte-tabs-list-bg: var(--forte-color-panel);
     --forte-tabs-list-padding: var(--forte-space-1);
-    --forte-tabs-list-radius: var(--forte-radius-4);
+    /* Concentric with the pills it contains, not a fixed step: outer radius =
+     * inner radius + the padding between them, or the strip's corners run a
+     * visibly tighter curve than the tabs — under the `pill` radius preset the
+     * tabs go full-round while a fixed strip stays at 0.5rem. The addition is
+     * min()-capped by the tab radius itself so a square preset (`none`,
+     * radius 0) keeps a square strip instead of picking up the padding as a
+     * stray rounding. */
+    --forte-tabs-list-radius: calc(
+      var(--forte-tabs-radius) + min(var(--forte-tabs-radius), var(--forte-tabs-list-padding))
+    );
     --forte-tabs-indicator-color: var(--forte-color-primary-soft);
     --forte-tabs-indicator-radius: var(--forte-radius-control);
   }
