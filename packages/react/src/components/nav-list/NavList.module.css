@@ -80,6 +80,14 @@
     /** Row fill on the active row */
     --forte-nav-list-item-bg-active: var(--forte-color-primary-soft);
 
+    /* Two rows' worth: a `revealActive` reveal scrolls only as far as the
+     * row's box demands, and the bare box lands flush on the container's edge
+     * with the neighbouring rows — the ones the reader reaches for next —
+     * just below the fold. `scroll-margin` inflates the box the reveal (and
+     * any keyboard-focus scroll) aims for instead. */
+    /** How far inside the scroll container's edge a revealed row lands */
+    --forte-nav-list-reveal-margin: var(--forte-space-6);
+
     /* Section labels. */
     /** Label text size */
     --forte-nav-list-label-font-size: var(--forte-font-size-1);
@@ -236,6 +244,7 @@
     font-weight: var(--forte-nav-list-item-font-weight);
     line-height: var(--forte-line-height-normal);
     text-decoration: none;
+    scroll-margin-block: var(--forte-nav-list-reveal-margin);
     cursor: pointer;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),

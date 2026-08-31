@@ -30,6 +30,17 @@ const SectionLabelContext = React.createContext<
 >(null);
 
 /* -------------------------------------------------------------------------
+ * Reveal wiring
+ *
+ * `revealActive` is the root's promise, but the scroll is each link's job —
+ * the link is the one component that knows its own `active` flipped, so the
+ * flag travels down through context instead of the root watching its subtree
+ * for attribute changes.
+ * ---------------------------------------------------------------------- */
+
+const RevealActiveContext = React.createContext(false);
+
+/* -------------------------------------------------------------------------
  * Icon
  *
  * Decorative: the open state is already on `aria-expanded`. A chevron
@@ -78,6 +89,19 @@ export interface NavListRootProps
    */
   marker?: NavListMarker;
   /**
+   * Scroll the active row into view when it mounts or becomes active — for a
+   * list in its own scroll column, where a page load would otherwise start
+   * the reader back at the top with their place fifty rows below the fold.
+   * Scrolls each scrollable ancestor the minimum it needs and a row already
+   * in view not at all, so it never fights the browser's own restoration of
+   * the window scroll, and activating a visible row moves nothing. How far
+   * inside the container's edge the row lands is
+   * `--forte-nav-list-reveal-margin`. Off by default: the component does not
+   * move a scroll container it does not own unless asked.
+   * @default false
+   */
+  revealActive?: boolean;
+  /**
    * Replaces the rendered `<nav>` with another element or component — pass
    * `render={<div />}` when the list sits inside a `<nav>` landmark you
    * already own, so the page does not grow a second one.
@@ -118,10 +142,17 @@ export interface NavListRootProps
  */
 export const NavListRoot = React.forwardRef<HTMLElement, NavListRootProps>(
   function NavListRoot(
-    { size = "md", marker = "fill", render, className, ...props },
+    {
+      size = "md",
+      marker = "fill",
+      revealActive = false,
+      render,
+      className,
+      ...props
+    },
     ref,
   ) {
-    return useRender({
+    const element = useRender({
       render,
       ref,
       defaultTagName: "nav",
@@ -133,6 +164,12 @@ export const NavListRoot = React.forwardRef<HTMLElement, NavListRootProps>(
         ...props,
       },
     });
+
+    return (
+      <RevealActiveContext.Provider value={revealActive}>
+        {element}
+      </RevealActiveContext.Provider>
+    );
   },
 );
 
@@ -339,9 +376,26 @@ export const NavListLink = React.forwardRef<HTMLAnchorElement, NavListLinkProps>
     { active = false, disabled = false, render, className, href, onClick, ...props },
     ref,
   ) {
+    const revealActive = React.useContext(RevealActiveContext);
+    const ownRef = React.useRef<HTMLAnchorElement>(null);
+
+    /* The root's `revealActive`, delivered. Layout effect, not effect, so the
+     * reveal lands in the same paint as the first render instead of the list
+     * visibly starting at the top and jumping. `"nearest"` is the one block
+     * position that cannot move the window on a page load — any other also
+     * scrolls the VIEWPORT toward the row, fighting the browser's own
+     * restoration of the page scroll. The breathing room a flush edge landing
+     * would lack comes from the row's `scroll-margin` (a knob, in the
+     * stylesheet), not from arithmetic here. A link inside a closed group has
+     * no boxes, so the call is a safe no-op there. */
+    React.useLayoutEffect(() => {
+      if (!revealActive || !active) return;
+      ownRef.current?.scrollIntoView({ block: "nearest" });
+    }, [revealActive, active]);
+
     return useRender({
       render,
-      ref,
+      ref: [ref, ownRef],
       defaultTagName: "a",
       props: {
         className: clsx(styles.link, "forte-focus-ring", className),

@@ -4174,6 +4174,13 @@
         "description": "Replaces the rendered `<nav>` with another element or component — pass\n`render={<div />}` when the list sits inside a `<nav>` landmark you\nalready own, so the page does not grow a second one."
       },
       {
+        "name": "revealActive",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Scroll the active row into view when it mounts or becomes active — for a\nlist in its own scroll column, where a page load would otherwise start\nthe reader back at the top with their place fifty rows below the fold.\nScrolls each scrollable ancestor the minimum it needs and a row already\nin view not at all, so it never fights the browser's own restoration of\nthe window scroll, and activating a visible row moves nothing. How far\ninside the container's edge the row lands is\n`--forte-nav-list-reveal-margin`. Off by default: the component does not\nmove a scroll container it does not own unless asked."
+      },
+      {
         "name": "size",
         "type": "NavListSize",
         "required": false,

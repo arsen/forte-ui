@@ -105,8 +105,13 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   return (
     /* Which row is current is this component's call, not NavList's — the
      * library deliberately does not read a router. `render` swaps the row's
-     * <a> for the framework Link so client-side navigation is kept. */
-    <NavList.Root aria-label="Documentation">
+     * <a> for the framework Link so client-side navigation is kept.
+     *
+     * `revealActive` because both homes of this list scroll: the rail is its
+     * own `overflow-y: auto` column, so a page load would otherwise start it
+     * back at the top with the current page fifty rows below the fold, and
+     * the drawer re-earns the problem on every open by unmounting on close. */
+    <NavList.Root aria-label="Documentation" revealActive>
       {NAV.map((group) => (
         <NavList.Section key={group.title}>
           <NavList.SectionLabel>{group.title}</NavList.SectionLabel>
