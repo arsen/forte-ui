@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {
+  Button,
   ColorPicker,
   Select,
   Slider,
@@ -10,6 +11,7 @@ import {
   ToggleGroup,
   type Rgba,
 } from "@forte-ui/react";
+import { Moon, Sun } from "lucide-react";
 import { SANS_FONTS, MONO_FONTS, ensureFontLink, type FontOption } from "./fonts";
 import {
   hexToOklch,
@@ -19,8 +21,8 @@ import {
   contrast,
   type Oklch,
 } from "@/lib/color";
-import { EYEBROW } from "@/components/styles";
-import { getDocumentTheme, setDocumentTheme, type DocTheme } from "@/components/theme-mode";
+import { EYEBROW, ICON } from "@/components/styles";
+import { getDocumentTheme, setDocumentTheme } from "@/components/theme-mode";
 import { cn } from "@/lib/cn";
 import {
   DENSITY,
@@ -33,7 +35,7 @@ import {
 /* The theme controls — every knob, and nothing else. This is the column the
  * Theme Studio page shows beside its preview, and the same component the
  * header's theme drawer renders on every other page; the panel chrome
- * (border, stickiness, drawer surface) belongs to whoever mounts it. State
+ * (border, padding, drawer surface) belongs to whoever mounts it. State
  * lives in `theme-config.ts`, shared across mounts, so the two never
  * disagree about what the current theme is. */
 
@@ -65,14 +67,6 @@ const PRESETS: { name: string; seed: string; secondary: string }[] = [
  * cannot drift from the preset grid above it. */
 const PRESET_SEEDS = PRESETS.map((p) => p.seed);
 const PRESET_SECONDARIES = PRESETS.map((p) => p.secondary);
-
-/* Deliberately NOT part of `ThemeConfig`, and it is worth saying why:
- * light/dark is a reader preference, stored under its own `forte-theme` key
- * and shared with the pre-paint script, while everything in ThemeConfig is
- * part of the theme the studio EXPORTS. Both modes are already built from the
- * same seed, so there is nothing here to put in the copied CSS — this strip
- * only decides which of the two you are looking at. */
-const THEME: readonly DocTheme[] = ["light", "dark"];
 
 /* ---------------------------------------------------------------------------
  * Class strings, named where they are long enough to hide their own meaning.
@@ -469,33 +463,55 @@ function FontField({
  * are reading while you judge a seed, and the mode is the one thing about the
  * page you cannot change from the other controls.
  *
- * `data-theme` on <html> is the source of truth and it is written before first
- * paint, so the server has no way to know it and it cannot seed `useState`.
- * `null` until mount is the honest answer rather than a guess: Base UI keeps
- * the indicator hidden until it has something to measure, so the strip comes up
- * unselected for a frame instead of flashing the wrong mode.
+ * A button rather than a segmented strip, and not only because two segments is
+ * a thin excuse for one: this is the single control in the panel that is not
+ * part of the theme being exported. Light/dark is a reader preference, stored
+ * under its own `forte-theme` key and shared with the pre-paint script, while
+ * everything else here ends up in the copied CSS. Both modes are already built
+ * from the same seed, so there is nothing to export — this just decides which
+ * of the two you are looking at, and a button that acts is the honest shape for
+ * that.
  *
- * The attribute is also watched rather than mirrored, because other things
- * write it too: the pre-paint script, the OS listener that follows
- * `prefers-color-scheme` while no choice is stored, and any second mounted
- * copy of this strip. Observing what they all write is what keeps this strip
- * right whoever moved it.
+ * It renders NOTHING from state, which is the whole point. The mode lives in
+ * one place, `data-theme` on <html>, written before first paint by the inline
+ * script in `layout.tsx` and also moved by the OS listener and by any second
+ * mounted copy of this panel. State here would have to start at a guess on the
+ * server and correct itself a frame after hydration — the label showing one
+ * mode and then snapping. Both branches ship in the HTML instead and CSS picks
+ * one off the same attribute the palette reads, so the server output is already
+ * right and every writer of the attribute is followed for free.
+ *
+ * The label names the ACTION, not the current mode: with a visible label the
+ * accessible name has to match it (SC 2.5.3), and "Dark" beside a heading
+ * reading "Appearance" would read as a statement of where you are rather than
+ * as a button.
  */
 function Appearance() {
-  const [theme, setTheme] = React.useState<DocTheme | null>(null);
-
-  React.useEffect(() => {
-    const root = document.documentElement;
-    const read = () => setTheme(getDocumentTheme());
-    read();
-    const observer = new MutationObserver(read);
-    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => observer.disconnect();
-  }, []);
-
-  // No local write-back: `setDocumentTheme` moves the attribute and the
-  // observer above brings the value home, so there is one path in and out.
-  return <Choice label="Appearance" options={THEME} value={theme} onChange={setDocumentTheme} />;
+  return (
+    <section className={GROUP}>
+      <h3 className={GROUP_TITLE}>Appearance</h3>
+      <Button
+        variant="outline"
+        tone="neutral"
+        size="sm"
+        fullWidth
+        onClick={() => setDocumentTheme(getDocumentTheme() === "dark" ? "light" : "dark")}
+      >
+        {/* Light is the default branch so a reader with JS off — where no
+          * script ever writes `data-theme` — sees one label rather than both.
+          * The icons carry their own size: `.content > svg` in Button reaches
+          * DIRECT children only, and these sit inside the branch span. */}
+        <span className="inline-flex items-center gap-2 in-data-[theme=dark]:hidden">
+          <Moon className={ICON} aria-hidden="true" />
+          Switch to dark
+        </span>
+        <span className="hidden items-center gap-2 in-data-[theme=dark]:inline-flex">
+          <Sun className={ICON} aria-hidden="true" />
+          Switch to light
+        </span>
+      </Button>
+    </section>
+  );
 }
 
 function Choice<T extends string>({
@@ -503,9 +519,7 @@ function Choice<T extends string>({
 }: {
   label: string;
   options: readonly T[];
-  /* `null` is a legal Tabs value and is deliberately not normalised away — it
-   * is what `Appearance` renders until it has read the document. */
-  value: T | null;
+  value: T;
   onChange: (v: T) => void;
 }) {
   return (

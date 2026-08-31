@@ -77,16 +77,12 @@ export function ThemeStudio() {
 
   return (
     <div className="grid grid-cols-[19rem_minmax(0,1fr)] items-start gap-5 max-two-col:grid-cols-[minmax(0,1fr)]">
-      <ThemeConfigurator
-        className={cn(
-          "rounded-surface border border-border-muted bg-panel p-5",
-          // Sticky beside the preview on a wide screen; once the two columns
-          // stack there is nothing to stay level with, and a pinned panel would
-          // just eat the viewport.
-          "sticky top-[4.5rem] max-h-[calc(100dvh-6rem)] overflow-y-auto",
-          "max-two-col:static max-two-col:max-h-none",
-        )}
-      />
+      {/* One scroll, the page's own. The panel used to be sticky, which meant
+        * capping its height and giving it `overflow-y: auto` — and a column of
+        * controls that scrolls inside a page that also scrolls is a control
+        * surface you have to aim at before you can move it. Taller than the
+        * viewport is fine; it just scrolls with everything else. */}
+      <ThemeConfigurator className="rounded-surface border border-border-muted bg-panel p-5" />
 
       <div className="grid gap-4">
         {/* The preview carries the config on its own scope as well — redundant
