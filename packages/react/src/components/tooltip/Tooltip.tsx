@@ -425,7 +425,7 @@ const TooltipArrow = React.forwardRef<HTMLDivElement, TooltipArrowProps>(
     return (
       <BaseTooltip.Arrow
         ref={ref}
-        className={clsx(styles.arrow, className)}
+        className={clsx("forte-popup-arrow", className)}
         data-forte="tooltip-arrow"
         {...props}
       >
@@ -444,15 +444,15 @@ const TooltipArrow = React.forwardRef<HTMLDivElement, TooltipArrowProps>(
 function ArrowSvg() {
   return (
     <svg
-      className={styles.arrowSvg}
+      className="forte-popup-arrow-svg"
       data-forte="tooltip-arrow-svg"
       viewBox="0 0 20 10"
       preserveAspectRatio="none"
       aria-hidden="true"
       focusable="false"
     >
-      <path className={styles.arrowBorder} d="M0 10 L10 0 L20 10 Z" />
-      <path className={styles.arrowFill} d="M2.12 10 L10 2.12 L17.88 10 Z" />
+      <path className="forte-popup-arrow-border" d="M0 10 L10 0 L20 10 Z" />
+      <path className="forte-popup-arrow-fill" d="M2.12 10 L10 2.12 L17.88 10 Z" />
     </svg>
   );
 }

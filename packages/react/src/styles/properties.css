@@ -60,3 +60,31 @@
   inherits: true;
   initial-value: 1;
 }
+
+/* The typed hop an anchored popup routes `--available-width` through before
+ * `min()`-ing it into its own width cap. The Positioner publishes that
+ * property as a pixel length — until Base UI's auto-resize measurement
+ * temporarily sets it to `max-content`, which happens on every content swap
+ * under a Viewport. A keyword inside `min()` is invalid at computed-value
+ * time, and an unregistered property would carry it straight into
+ * `max-inline-size`, dropping the width cap for exactly the frame the popup
+ * is being measured — so it would be measured unwrapped, its height would
+ * come back short by however many lines the cap was going to add, and the
+ * size transition would animate to that wrong height and then snap.
+ *
+ * Registering with a length syntax contains the failure: an unparseable value
+ * falls back to the initial value, the cap survives the measurement, and the
+ * height Base UI measures is the height the popup will have. Registered once
+ * here rather than per component, because a registration in one component's
+ * stylesheet is a dependency another component silently loses when only it is
+ * imported.
+ *
+ * `inherits: false` — each popup declares and consumes it on its own element.
+ * The initial value is a stand-in for "no limit"; a plain length rather than
+ * `100vw` because a registered initial value must be computationally
+ * independent. */
+@property --forte-popup-available-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 100000px;
+}

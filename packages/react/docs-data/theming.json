@@ -8390,7 +8390,7 @@
     "tokens": [
       {
         "name": "--forte-tabs-radius",
-        "value": "var(--forte-radius-control)",
+        "value": "var(--forte-radius-surface)",
         "description": "Corner radius of a tab, and of the panel. A `line` tab applies it only to the two corners away from the rail, capped by the row below",
         "part": "root",
         "overrides": []

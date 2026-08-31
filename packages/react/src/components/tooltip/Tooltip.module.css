@@ -118,6 +118,19 @@
     --forte-tooltip-enter-x: 0px;
     --forte-tooltip-enter-y: var(--forte-tooltip-travel);
 
+    /* Wiring for the shared anchored-popup arrow pattern (patterns.css). The
+     * pattern rules read these generic `--forte-popup-*` names; the knobs a
+     * consumer themes are the `--forte-tooltip-*` properties above, and this
+     * mapping is how a re-pointed knob reaches the shared geometry — the
+     * arrow is a child of this element and inherits the resolved values.
+     * No border-colour mapping: the pattern's `transparent` fallback IS this
+     * component's outline-less wedge, and forced-colors paints its own.
+     * Internal on purpose (plain comments): theming-docgen must publish the
+     * knobs, not the plumbing. */
+    --forte-popup-arrow-fill-color: var(--forte-tooltip-bg);
+    --forte-popup-arrow-width: var(--forte-tooltip-arrow-width, 1em);
+    --forte-popup-arrow-height: var(--forte-tooltip-arrow-height, 0.5em);
+
     box-sizing: border-box;
     /* The Arrow is positioned against this box. */
     position: relative;
@@ -202,9 +215,9 @@
    * hover delay — an adjacent grouped tooltip taking over, a dismissal, a
    * focus jump. Animating those looks broken, so the transition is dropped
    * for exactly those cases. Without this, tooltips animate when they
-   * shouldn't. */
-  .popup[data-instant],
-  .arrow[data-instant] {
+   * shouldn't. The Arrow needs no companion rule: neither this file nor the
+   * shared arrow pattern puts a transition on it. */
+  .popup[data-instant] {
     transition: none;
   }
 
@@ -274,99 +287,10 @@
   /* ------------------------------------------------------------------------
    * Arrow
    *
-   * An SVG, never a CSS-border triangle. In forced-colors mode all four
-   * border colours are forced to CanvasText, so the classic
-   * `border: 6px solid transparent` triangle renders as a filled RECTANGLE.
-   * Two flat paths cannot fail that way, and they let the outline be given
-   * its own system colour below.
-   *
-   * Offsets follow from the geometry: the unrotated box is
-   * width x height, so pushing it out by `height` on the block axis, or by
-   * (width + height) / 2 on the inline axis after a quarter turn, lands its
-   * base flush against the popup edge.
+   * No rules here: geometry, SVG sizing, fills and the forced-colors repaint
+   * all come from the shared `.forte-popup-*` arrow pattern in patterns.css,
+   * which reads the `--forte-popup-arrow-*` mapping declared on `.popup`
+   * above. That is what keeps this wedge pixel-identical to Popover's,
+   * PreviewCard's and NavigationMenu's — fix the pattern, not a local copy.
    * --------------------------------------------------------------------- */
-  .arrow {
-    display: block;
-    position: relative;
-    width: var(--forte-tooltip-arrow-width, 1em);
-    height: var(--forte-tooltip-arrow-height, 0.5em);
-  }
-
-  .arrow[data-side="top"] {
-    bottom: calc(-1 * var(--forte-tooltip-arrow-height, 0.5em));
-    rotate: 180deg;
-  }
-
-  .arrow[data-side="bottom"] {
-    top: calc(-1 * var(--forte-tooltip-arrow-height, 0.5em));
-    rotate: 0deg;
-  }
-
-  .arrow:is(
-    [data-side="left"],
-    [data-side="inline-start"]:dir(ltr),
-    [data-side="inline-end"]:dir(rtl)
-  ) {
-    right: calc(
-      -0.5 *
-        (
-          var(--forte-tooltip-arrow-width, 1em) +
-            var(--forte-tooltip-arrow-height, 0.5em)
-        )
-    );
-    rotate: 90deg;
-  }
-
-  .arrow:is(
-    [data-side="right"],
-    [data-side="inline-end"]:dir(ltr),
-    [data-side="inline-start"]:dir(rtl)
-  ) {
-    left: calc(
-      -0.5 *
-        (
-          var(--forte-tooltip-arrow-width, 1em) +
-            var(--forte-tooltip-arrow-height, 0.5em)
-        )
-    );
-    rotate: -90deg;
-  }
-
-  .arrowSvg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Inherited from .popup, so re-skinning the surface re-skins the arrow. */
-  .arrowFill {
-    fill: var(--forte-tooltip-bg);
-  }
-
-  /* Invisible by default; it exists so forced-colors has an outline to paint
-   * and so a bordered custom skin can point it at a border colour. */
-  .arrowBorder {
-    fill: transparent;
-  }
-
-}
-
-/**
- * Accessibility overrides — see layers.css for why these must not live in the
- * components layer. Harmless where they sit today, but the next edit here
- * would silently start losing to the global rules.
- */
-@layer forte.a11y {
-  @media (forced-colors: active) {
-    /* System colour keywords survive the forced-colors substitution, so this
-     * keeps the arrow reading as a Canvas wedge with a CanvasText outline,
-     * matching the CanvasText border .forte-hc-surface puts on the popup. */
-    .arrowFill {
-      fill: Canvas;
-    }
-
-    .arrowBorder {
-      fill: CanvasText;
-    }
-  }
 }

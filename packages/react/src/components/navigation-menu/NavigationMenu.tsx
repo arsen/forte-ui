@@ -773,7 +773,7 @@ export const NavigationMenuPopup = React.forwardRef<
             * the wedge lives beyond the popup's edge. */}
           {arrow ? (
             <BaseNavigationMenu.Arrow
-              className={styles.arrow}
+              className={clsx(styles.arrow, "forte-popup-arrow")}
               data-forte="navigation-menu-arrow"
             >
               <ArrowSvg />
@@ -802,14 +802,14 @@ export const NavigationMenuPopup = React.forwardRef<
 function ArrowSvg() {
   return (
     <svg
-      className={styles.arrowSvg}
+      className="forte-popup-arrow-svg"
       viewBox="0 0 20 10"
       preserveAspectRatio="none"
       aria-hidden="true"
       focusable="false"
     >
-      <path className={styles.arrowBorder} d="M0 10 L10 0 L20 10 Z" />
-      <path className={styles.arrowFill} d="M2.12 10 L10 2.12 L17.88 10 Z" />
+      <path className="forte-popup-arrow-border" d="M0 10 L10 0 L20 10 Z" />
+      <path className="forte-popup-arrow-fill" d="M2.12 10 L10 2.12 L17.88 10 Z" />
     </svg>
   );
 }

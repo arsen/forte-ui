@@ -108,6 +108,233 @@
     border: 1px solid transparent;
   }
 
+  /* ------------------------------------------------------------------------
+   * Anchored-popup arrow
+   *
+   * The wedge pointing from a floating surface back at its anchor — one
+   * geometry shared by Popover, PreviewCard, Tooltip and NavigationMenu, which
+   * used to carry four hand-kept copies of it. The equality between those
+   * copies was load-bearing (a fix to the offset math in one file and not the
+   * others is exactly the drift nobody notices until forced-colors mode), so
+   * the geometry lives here once and the components only skin it.
+   *
+   * The wiring contract: these rules read generic `--forte-popup-arrow-*`
+   * properties, and each component's popup maps its own published knobs onto
+   * them (`--forte-popup-arrow-width: var(--forte-popover-arrow-width)` and so
+   * on) — the arrow is always a child of the popup and inherits the mapping.
+   * The knobs a consumer themes therefore stay per-component, in each
+   * component's own namespace and theming.json entry; the fallbacks here only
+   * catch a popup that maps nothing.
+   *
+   * An SVG, never a CSS-border triangle. In forced-colors mode all four border
+   * colours are forced to CanvasText, so the classic
+   * `border: 6px solid transparent` triangle renders as a filled RECTANGLE.
+   * Two flat paths cannot fail that way, and they let the outline be given its
+   * own system colour in the a11y layer below.
+   *
+   * Offsets follow from the geometry: the unrotated box is width x height, so
+   * pushing it out by `height` on the block axis, or by (width + height) / 2
+   * on the inline axis after a quarter turn, lands its base flush against the
+   * popup edge.
+   *
+   * None of them subtract the popup's border, and that is not an oversight. An
+   * absolutely positioned element is offset from its containing block's
+   * PADDING box, which already starts one border-width inside the popup — so
+   * `-height` puts the wedge's base on the border's inner edge, where its fill
+   * covers exactly that one row. The popup's outline then runs up one slope
+   * and down the other as a single unbroken line, and it stays right at any
+   * border width.
+   *
+   * `inline-start`/`inline-end` are legal `data-side` values as well as the
+   * physical ones, so both spellings are mapped. `:dir()` lives inside `:is()`,
+   * whose argument list is forgiving — an engine without `:dir()` support
+   * drops only that branch and the physical sides keep working.
+   * --------------------------------------------------------------------- */
+  .forte-popup-arrow {
+    display: block;
+    width: var(--forte-popup-arrow-width, 1em);
+    height: var(--forte-popup-arrow-height, 0.5em);
+  }
+
+  .forte-popup-arrow[data-side="top"] {
+    bottom: calc(-1 * var(--forte-popup-arrow-height, 0.5em));
+    rotate: 180deg;
+  }
+
+  .forte-popup-arrow[data-side="bottom"] {
+    top: calc(-1 * var(--forte-popup-arrow-height, 0.5em));
+    rotate: 0deg;
+  }
+
+  .forte-popup-arrow:is(
+    [data-side="left"],
+    [data-side="inline-start"]:dir(ltr),
+    [data-side="inline-end"]:dir(rtl)
+  ) {
+    right: calc(
+      -0.5 *
+        (
+          var(--forte-popup-arrow-width, 1em) +
+            var(--forte-popup-arrow-height, 0.5em)
+        )
+    );
+    rotate: 90deg;
+  }
+
+  .forte-popup-arrow:is(
+    [data-side="right"],
+    [data-side="inline-end"]:dir(ltr),
+    [data-side="inline-start"]:dir(rtl)
+  ) {
+    left: calc(
+      -0.5 *
+        (
+          var(--forte-popup-arrow-width, 1em) +
+            var(--forte-popup-arrow-height, 0.5em)
+        )
+    );
+    rotate: -90deg;
+  }
+
+  .forte-popup-arrow-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Read from the popup's mapping, so re-skinning the surface re-skins the
+   * arrow. The fallback matches the library's floating surfaces; Tooltip maps
+   * its own inverted fill over it. */
+  .forte-popup-arrow-fill {
+    fill: var(--forte-popup-arrow-fill-color, var(--forte-color-overlay));
+  }
+
+  /* The larger triangle sitting under the fill, showing only as a hairline
+   * along the two slopes because the fill triangle is inset from it. That is
+   * what continues a bordered popup's own border around the wedge — a popup
+   * that maps `transparent` (or maps nothing: the fallback) gets a flat wedge
+   * instead, in step with its surface. Either way it is the path forced-colors
+   * repaints below. */
+  .forte-popup-arrow-border {
+    fill: var(--forte-popup-arrow-border-color, transparent);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Anchored-popup viewport
+   *
+   * The content-swap machinery for one popup serving several triggers —
+   * Base UI's Popover-shaped Viewport, adopted by Popover and PreviewCard.
+   * (NavigationMenu's viewport is a different Base UI mechanism — panels moved
+   * into a clipping window — and deliberately does not use this class.)
+   *
+   * Base UI renders two children inside the viewport: `[data-current]`, the
+   * incoming content, and — for the length of the transition —
+   * `[data-previous]`, a DOM clone of the outgoing content that it gives an
+   * inline `position: absolute`.
+   *
+   * The two are overlapped in a single grid cell rather than stacked in flow.
+   * Base UI keeps the outgoing clone mounted until its exit finishes, and in
+   * flow that clone would add its own height to the popup, which would then
+   * snap back the moment it unmounted.
+   *
+   * Wiring contract, same shape as the arrow's: the component's viewport maps
+   * `--forte-popup-viewport-travel` (how far a swap slides) and its popup maps
+   * `--forte-popup-gap` (the column gap its content normally gets, restated on
+   * Base UI's bare wrappers below).
+   * --------------------------------------------------------------------- */
+  .forte-popup-viewport {
+    /* The clone's inline `position: absolute` needs this element as its
+     * containing block, or it would escape to the popup — or further. */
+    position: relative;
+    display: grid;
+    grid-template-areas: "content";
+    /* Cropping is what makes the swap read as one panel replacing another
+     * rather than two panels crossing in the open. Only safe because the
+     * components keep their Arrow OUTSIDE the viewport, as the popup's own
+     * child — an arrow inside would be cropped off. */
+    overflow: clip;
+    /* With a zero clip margin the clip box ends exactly where the content
+     * does, and the focus ring on a control inside would be shaved off. The
+     * ring's own reach is the smallest margin that saves it, and keeping the
+     * margin that tight is the point: what has to be cropped is the outgoing
+     * clone during a resize, which overflows by the difference between two
+     * panel heights. */
+    overflow-clip-margin: calc(
+      var(--forte-focus-ring-width) + var(--forte-focus-ring-offset)
+    );
+  }
+
+  .forte-popup-viewport > * {
+    grid-area: content;
+    /* The children are Base UI's own wrappers and carry no styles of their
+     * own, so the popup's column layout has to be restated one level down. */
+    display: flex;
+    flex-direction: column;
+    gap: var(--forte-popup-gap, 0);
+    transition:
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-duration-normal) var(--forte-ease-emphasized);
+  }
+
+  /* The outgoing clone is frozen at the size it had when it was current —
+   * Base UI writes `--popup-width` / `--popup-height` onto it for exactly
+   * this — so it does not reflow to the incoming content's width halfway
+   * through leaving. */
+  .forte-popup-viewport > [data-previous] {
+    inline-size: var(--popup-width, auto);
+    block-size: var(--popup-height, auto);
+  }
+
+  /* `data-activation-direction` is two space-separated words — a horizontal
+   * one and a vertical one, either of which may be empty ("right down",
+   * "left ", " up"). Only the horizontal half is used: the popup is already
+   * resizing on the block axis, and adding a vertical slide on top of that
+   * reads as two things moving at once. The base pair carries the fade for a
+   * swap with no horizontal word at all.
+   *
+   * The clone leaves the way the newcomer came in — opposite side, same
+   * distance — so each direction pairs a `[data-current]` entering FROM a side
+   * with a `[data-previous]` leaving TOWARDS the other, and the four rules
+   * read as one strip sliding across.
+   *
+   * `--forte-direction` is deliberately NOT applied here, and this is one of
+   * the few places in the library where leaving it out is correct. The usual
+   * rule — multiply any inline-axis distance by it, because `translate` is
+   * physical and the inline axis is not — assumes the INTENT is logical
+   * ("enter from the start edge"). This intent is already physical: Base UI
+   * derives these words from `getBoundingClientRect()`, so "right" means the
+   * new trigger is physically to the right of the old one, in RTL exactly as
+   * in LTR. Flipping it would send the content away from the trigger the user
+   * just reached for. */
+  .forte-popup-viewport > [data-current][data-starting-style],
+  .forte-popup-viewport > [data-previous][data-ending-style] {
+    opacity: 0;
+    translate: 0 0;
+  }
+
+  .forte-popup-viewport[data-activation-direction~="right"]
+    > [data-current][data-starting-style],
+  .forte-popup-viewport[data-activation-direction~="left"]
+    > [data-previous][data-ending-style] {
+    translate: var(--forte-popup-viewport-travel, var(--forte-travel-sm)) 0;
+  }
+
+  .forte-popup-viewport[data-activation-direction~="left"]
+    > [data-current][data-starting-style],
+  .forte-popup-viewport[data-activation-direction~="right"]
+    > [data-previous][data-ending-style] {
+    translate: calc(
+        -1 * var(--forte-popup-viewport-travel, var(--forte-travel-sm))
+      )
+      0;
+  }
+
+  /* A `data-instant` swap was not a considered navigation — Base UI sets it
+   * for dismissals and focus jumps — and animating one reads as a glitch. */
+  .forte-popup-viewport[data-instant] > * {
+    transition: none;
+  }
+
   .forte-icon {
     fill: currentColor;
     stroke: currentColor;
@@ -221,6 +448,19 @@
       background-color: Canvas;
       backdrop-filter: none;
       opacity: 1;
+    }
+
+    /* System colour keywords survive the forced-colors substitution, so this
+     * keeps every anchored popup's arrow reading as a Canvas wedge with a
+     * CanvasText outline, matching the CanvasText border `.forte-hc-surface`
+     * puts on the popup itself. Ordered after the generic svg fill/stroke
+     * rules above only for readability — the selectors are disjoint. */
+    .forte-popup-arrow-fill {
+      fill: Canvas;
+    }
+
+    .forte-popup-arrow-border {
+      fill: CanvasText;
     }
 
     .forte-link {
