@@ -205,16 +205,20 @@
     padding-block-end: calc(
       var(--forte-drawer-inset) + var(--drawer-keyboard-inset, 0px)
     );
+    /* The viewport is a positioning grid and nothing more, but it spans the
+     * whole screen — so it must never take the pointer. Left at `auto` it
+     * silently absorbs every click aimed at the page, which a modal drawer
+     * never notices (the page is inert anyway) and a NON-modal one turns
+     * into a broken promise: `modal={false}` says the rest of the document
+     * stays usable, and an invisible full-screen div was eating it. The
+     * popup switches its own events back on below; `pointer-events`
+     * inherits, so during exit — when the popup goes `none` again — clicks
+     * fall through the pair of them to the page. */
+    pointer-events: none;
   }
 
   .viewport[data-variant="floating"] {
     --forte-drawer-inset: var(--forte-space-3);
-  }
-
-  /* While the popup animates out it is still painted and still on top; without
-   * this a click aimed at the page underneath lands on the viewport instead. */
-  .viewport[data-ending-style] {
-    pointer-events: none;
   }
 
   /* Popup ------------------------------------------------------------------ */
@@ -303,6 +307,12 @@
 
     box-sizing: border-box;
     position: relative;
+    /* Back on, after the viewport turned the pointer off for the whole
+     * subtree — the popup is the one part of the overlay that IS a surface.
+     * Explicit `auto` beats the inherited `none`, which is also why the exit
+     * rule below has to say `none` again rather than relying on the
+     * viewport. */
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
     gap: var(--forte-drawer-gap);
@@ -407,6 +417,11 @@
       var(--drawer-swipe-strength, 1) * var(--forte-drawer-exit-duration)
     );
     transition-timing-function: var(--forte-drawer-exit-ease);
+    /* While the popup animates out it is still painted and still on top;
+     * without this a click aimed at the page underneath lands on the leaving
+     * surface instead. The base rule's `auto` is what makes this necessary —
+     * see the note there. */
+    pointer-events: none;
   }
 
   /* Sides ------------------------------------------------------------------
