@@ -72,7 +72,12 @@ contributes only its library half.
    - Otherwise semver: any `**Breaking:**` entry → major, any new
      component/prop/token → minor, only fixes → patch.
    - If the prompt hands you an explicit target version, propose that.
-7. **Return the report** (format below). Do not write any file.
+7. **Draft the section** with the heading `## [<version>] - <date>` and the
+   `###` component groups from step 4, matching what is already in
+   `CHANGELOG.md` — the draft the user approves should be what lands. Read the
+   current `[Unreleased]` section too, and fold any entries it holds into the
+   draft so nothing is stranded there.
+8. **Return the report** (format below). Do not write any file.
 
 ## Phase APPLY
 
@@ -80,15 +85,31 @@ The prompt gives you the confirmed version and any edits the user asked for on
 the draft. Then:
 
 1. `date +%Y-%m-%d` for the release date.
-2. **Root `CHANGELOG.md`** (repository root, not inside a package): prepend a
-   `## <version> — <date>` section under the top `# Changelog` heading,
-   keeping every existing section intact. If the file does not exist, create
-   it with the `# Changelog` heading and this first section.
+2. **Root `CHANGELOG.md`** (repository root, not inside a package). It follows
+   Keep a Changelog and is ordered **newest first** — see *Releases and the
+   changelog* in `AGENTS.md`. Never append to the bottom of the file:
+
+   - Insert the new `## [<version>] - <date>` section **directly below the
+     `## [Unreleased]` heading**, above every existing version section. The
+     placement is the whole point: a release written under the oldest entry
+     reads as the oldest release.
+   - Fold anything already sitting under `[Unreleased]` into the new section,
+     then leave `[Unreleased]` in place and empty.
+   - Update the link definitions at the foot of the file: repoint
+     `[Unreleased]` at `compare/v<version>...HEAD`, and add
+     `[<version>]: <repo>/compare/v<previous-version>...v<version>` directly
+     above the previous version's line. Take the repository URL from the
+     definitions already there rather than assuming one.
+   - Keep every existing section byte-identical. You are inserting, not
+     rewriting history.
+   - If the file does not exist, create it with the Keep a Changelog preamble,
+     an empty `[Unreleased]`, this first section, and the link definitions.
 3. **Bump `"version"`** in `packages/react/package.json` **and**
    `packages/forte-ui/package.json` — they move in lockstep. Leave the
    `workspace:^` dependency alone; pnpm rewrites it at publish.
-4. Verify: grep both package.json files for the new version, confirm the
-   changelog section landed.
+4. Verify: grep both package.json files for the new version, and confirm the
+   new changelog section sits between `## [Unreleased]` and the previous
+   version's heading — not at the bottom of the file.
 5. Do not run generators, tests, or git commands that mutate anything. The
    working tree diff is the deliverable — the user reviews and commits it.
 
