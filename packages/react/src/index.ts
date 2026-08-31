@@ -316,6 +316,9 @@ export type {
   InputGroupButtonProps,
 } from "./components/input-group";
 
+export { Kbd, KbdGroup } from "./components/kbd";
+export type { KbdProps, KbdGroupProps } from "./components/kbd";
+
 export { Menu } from "./components/menu";
 export type {
   MenuItemTone,

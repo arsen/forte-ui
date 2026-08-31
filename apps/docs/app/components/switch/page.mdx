@@ -3,6 +3,7 @@ import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { KeyboardTable } from "@/components/keyboard-table";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Switch",
@@ -32,7 +33,7 @@ import { Switch } from "@forte-ui/react";
 
 ### Disabled
 
-`disabled` blocks interaction and drops the whole control to 55% opacity. Both states stay distinguishable while disabled — put the reason in visible text next to the switch, because a disabled switch is skipped by <kbd>Tab</kbd> and cannot show a tooltip to a keyboard user. Set it on the `Field.Root` rather than on the `Switch`, as the demo does: it takes precedence over the control's own prop and dims the label with it, so that reason does not stay at full contrast beside a greyed-out control.
+`disabled` blocks interaction and drops the whole control to 55% opacity. Both states stay distinguishable while disabled — put the reason in visible text next to the switch, because a disabled switch is skipped by <Kbd>Tab</Kbd> and cannot show a tooltip to a keyboard user. Set it on the `Field.Root` rather than on the `Switch`, as the demo does: it takes precedence over the control's own prop and dims the label with it, so that reason does not stay at full contrast beside a greyed-out control.
 
 <DemoBlock id="switch/disabled" />
 

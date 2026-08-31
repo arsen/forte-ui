@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {
-  Button, Checkbox, Dialog, Select, Switch, Tabs, Tooltip,
+  Button, Checkbox, Dialog, Kbd, Select, Switch, Tabs, Tooltip,
 } from "@forte-ui/react";
 
 const TIMEZONES = [
@@ -13,12 +13,6 @@ const TIMEZONES = [
 ];
 
 const ROW = "flex flex-wrap items-center gap-3";
-
-/* A key cap inside running text. Lighter than the one in `KeyboardTable` — that
- * one is the subject of its own column and gets a raised edge; this one sits in
- * a sentence and should not shout. */
-const NOTE_KBD =
-  "[&_kbd]:rounded-2 [&_kbd]:border [&_kbd]:border-border [&_kbd]:bg-panel [&_kbd]:px-[0.4em] [&_kbd]:py-[0.1em] [&_kbd]:font-mono [&_kbd]:text-[0.85em]";
 
 export function Showcase() {
   return (
@@ -92,13 +86,13 @@ export function Showcase() {
               Hover me
             </Tooltip.Trigger>
             <Tooltip.Popup>
-              Press <kbd>?</kbd> anywhere for shortcuts
+              Press <Kbd>?</Kbd> anywhere for shortcuts
               <Tooltip.Arrow />
             </Tooltip.Popup>
           </Tooltip.Root>
         </div>
-        <p className={`mt-4 text-2 text-foreground-muted ${NOTE_KBD}`}>
-          Open the dialog and press <kbd>Esc</kbd>, or close it mid-animation —
+        <p className="mt-4 text-2 text-foreground-muted">
+          Open the dialog and press <Kbd>Esc</Kbd>, or close it mid-animation —
           the transition reverses instead of snapping.
         </p>
       </Tabs.Panel>

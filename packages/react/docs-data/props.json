@@ -2724,7 +2724,7 @@
   },
   "MenuShortcut": {
     "name": "MenuShortcut",
-    "description": "The keyboard shortcut printed at the end of a row. Renders a `<span>`, and\nis not a Base UI part — it is here for the same reason `Dialog.Footer` is:\nevery second menu grows one, and left to each consumer it is re-invented\nwith a different colour and a different gap each time.\n\nIt is `aria-hidden`, deliberately. The glyphs menus print are read out as\n\"place of interest sign K\" or \"up arrowhead command P\" — worse than silence.\nPut the shortcut on the item instead, where assistive technology expects to\nfind it and where it is spelled in words:\n\n```tsx\n<Menu.Item aria-keyshortcuts=\"Meta+K\">\n  Search\n  <Menu.Shortcut>⌘K</Menu.Shortcut>\n</Menu.Item>\n```",
+    "description": "The keyboard shortcut printed at the end of a row. Renders a `<span>` that\nowns the row position — pushed to the trailing edge, never truncated — and\ndraws the keys themselves in a composed `Kbd`, so a menu's caps and a\ntooltip's are the same cap. It is not a Base UI part; it is here for the\nsame reason `Dialog.Footer` is: every second menu grows one, and left to\neach consumer it is re-invented with a different colour and a different gap\neach time.\n\nIt is `aria-hidden`, deliberately. The glyphs menus print are read out as\n\"place of interest sign K\" or \"up arrowhead command P\" — worse than silence.\nPut the shortcut on the item instead, where assistive technology expects to\nfind it and where it is spelled in words:\n\n```tsx\n<Menu.Item aria-keyshortcuts=\"Meta+K\">\n  Search\n  <Menu.Shortcut>⌘K</Menu.Shortcut>\n</Menu.Item>\n```",
     "props": [
       {
         "name": "children",
@@ -4139,6 +4139,60 @@
         "required": false,
         "defaultValue": "ghost",
         "description": "How much visual weight the button carries."
+      }
+    ]
+  },
+  "Kbd": {
+    "name": "Kbd",
+    "description": "A key cap — the way the interface prints a key it wants pressed.\n\nRenders a real `<kbd>`, which is the element HTML has for exactly this, and\ndraws its fill and edge out of `currentColor`, so the same cap works in\nrunning text, on `Tooltip`'s inverted popup, inside a solid `Button` and on\na highlighted menu row without a colour prop. `Menu.Shortcut` and\n`Tooltip.Shortcut` are built on it; use it directly anywhere else keys\nappear.\n\n```tsx\nPress <Kbd>⌘K</Kbd> to search.\n<KbdGroup><Kbd>Ctrl</Kbd><Kbd>Alt</Kbd><Kbd>Del</Kbd></KbdGroup>\n```\n\nIt is deliberately NOT `aria-hidden`: a cap printing a word — `Ctrl`,\n`Esc`, `Enter` — reads out fine. The modifier glyphs do not (⌘B is\nannounced as \"place of interest sign B\"), so when you print glyphs, put\n`aria-keyshortcuts` on the control the shortcut triggers, spelled in words,\nand hide the caps — which is exactly what `Menu.Shortcut` does for you.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The key, written the way it is printed — `⌘`, `Ctrl`, `Esc`, `F2` — or a\nwhole chord as one cap, `⌘K`. For a chord drawn as separate caps, put\nseveral `Kbd`s in a `KbdGroup` instead."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<kbd>` with another element or component. The\ndefault tag is already the semantically right one, so reach for this only\nwhen a host component needs the cap to be one of its own parts."
+      }
+    ]
+  },
+  "KbdGroup": {
+    "name": "KbdGroup",
+    "description": "A chord or sequence drawn as separate caps.\n\n```tsx\n<KbdGroup><Kbd>⌘</Kbd><Kbd>⇧</Kbd><Kbd>P</Kbd></KbdGroup>\n```\n\nThe wrapper is a `<kbd>` too — nesting caps inside one is the HTML idiom\nfor \"these keys form one input\". It draws nothing itself; what it owns is\nthe spacing, and the left-to-right pin that keeps `⌘ K` from laying out as\n`K ⌘` in an RTL page while each cap stays individually correct.",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "The caps of the sequence — `Kbd` children, with any separator text\n(`then`, `+`) written between them as plain text."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<kbd>` wrapper with another element or component."
       }
     ]
   },
@@ -8158,7 +8212,7 @@
   },
   "TooltipShortcut": {
     "name": "TooltipShortcut",
-    "description": "The keyboard shortcut printed beside the label, as a key cap. Renders a\n`<span>`, and is not a Base UI part — it is the same convenience\n`Menu.Shortcut` is, for the other half of the pattern: the command that\nlives in a menu shows its keys there, and the toolbar button that runs the\nsame command shows them here.\n\nIts presence turns the popup into a row, so a label and its keys sit on one\nline without the consumer laying anything out.\n\nUnlike `Menu.Shortcut` this part is **not** `aria-hidden`, because there is\nnothing to hide it from: the popup carries no `role=\"tooltip\"` and the\ntrigger is not wired to it with `aria-describedby`, so no part of a tooltip\nis announced. The shortcut still has to reach assistive technology by\nanother route, and that route is `aria-keyshortcuts` on the control itself —\nthe same place a menu puts it, spelled in words rather than glyphs:\n\n```tsx\n<Tooltip.Trigger\n  aria-label=\"Bold\"\n  aria-keyshortcuts=\"Meta+B\"\n  render={<Button iconOnly />}\n>\n  <BoldIcon aria-hidden=\"true\" />\n</Tooltip.Trigger>\n<Tooltip.Popup>\n  Bold\n  <Tooltip.Shortcut>⌘B</Tooltip.Shortcut>\n</Tooltip.Popup>\n```",
+    "description": "The keyboard shortcut printed beside the label, as a key cap. It IS a\n`Kbd` — the same cap you would drop into running text, re-tuned through\nthe popup's `--forte-tooltip-shortcut-*` knobs — so it renders a `<kbd>`\nand carries `data-forte=\"kbd\"`, scoped from outside as\n`[data-forte=\"tooltip-popup\"] [data-forte=\"kbd\"]`. It is not a Base UI\npart; it is the same convenience `Menu.Shortcut` is, for the other half of\nthe pattern: the command that lives in a menu shows its keys there, and\nthe toolbar button that runs the same command shows them here.\n\nIts presence turns the popup into a row, so a label and its keys sit on one\nline without the consumer laying anything out.\n\nUnlike `Menu.Shortcut` this part is **not** `aria-hidden`, because there is\nnothing to hide it from: the popup carries no `role=\"tooltip\"` and the\ntrigger is not wired to it with `aria-describedby`, so no part of a tooltip\nis announced. The shortcut still has to reach assistive technology by\nanother route, and that route is `aria-keyshortcuts` on the control itself —\nthe same place a menu puts it, spelled in words rather than glyphs:\n\n```tsx\n<Tooltip.Trigger\n  aria-label=\"Bold\"\n  aria-keyshortcuts=\"Meta+B\"\n  render={<Button iconOnly />}\n>\n  <BoldIcon aria-hidden=\"true\" />\n</Tooltip.Trigger>\n<Tooltip.Popup>\n  Bold\n  <Tooltip.Shortcut>⌘B</Tooltip.Shortcut>\n</Tooltip.Popup>\n```",
     "props": [
       {
         "name": "children",
@@ -8173,6 +8227,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<kbd>` with another element or component. The\ndefault tag is already the semantically right one, so reach for this only\nwhen a host component needs the cap to be one of its own parts."
       }
     ]
   }

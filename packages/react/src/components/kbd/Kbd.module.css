@@ -1,0 +1,123 @@
+/*
+ * Kbd
+ *
+ * A key cap. Three decisions carry the file.
+ *
+ * 1. The chrome is DERIVED from `currentColor`, not looked up. A cap has no
+ *    surface of its own to be measured against: it sits on the page, on
+ *    Tooltip's inverted gray-12 popup, on a Button's solid fill, on a menu
+ *    row that just went Highlight-coloured — and no token pair covers all of
+ *    those, so a looked-up gray would be a guess at SC 1.4.3 on every surface
+ *    but one. Mixing a translucent fill and edge out of the text's own colour
+ *    keeps the glyphs at whatever contrast the surrounding text already has,
+ *    and survives a re-skin unchanged.
+ *
+ * 2. The geometry is in `em`, not tokens. A cap annotates the sentence (or the
+ *    menu row, or the tooltip label) it sits in, so it is that text it must
+ *    track — the same call Badge makes about `data-forte-density`, made with
+ *    the same consequence: nothing here resizes with density either.
+ *
+ * 3. The bidi run is PINNED. The modifier glyphs — ⌘ ⇧ ⌥ ⌫ — are
+ *    bidi-neutral, so in an RTL context they take the paragraph's direction
+ *    and reorder around the key they modify: `⌘X` renders as `X⌘`, and an
+ *    all-neutral `⌘⌫` reverses outright. A key sequence is literal — read the
+ *    same way in every locale — so it is pinned LTR rather than mirrored, and
+ *    `isolate` keeps the pin from dragging the surrounding label's own bidi
+ *    resolution along with it.
+ *
+ * The cap is deliberately FLAT — a tinted chip with a 1px edge, no shadow, no
+ * skeuomorphic thicker bottom border. It reads like the inline-code chip it
+ * sits alongside in prose, and the border is doing double duty: under forced
+ * colors the translucent fill is replaced, and the edge — forced to full
+ * contrast — is what keeps the cap visible.
+ */
+@layer forte.components {
+  .root {
+    /* Component knobs, declared HERE on the cap itself so an ancestor's value
+     * is only inherited and never wins. Re-skin one cap through `className`
+     * or `style`; re-skin a host component's caps from the host (the way
+     * Tooltip re-points these at its own `--forte-tooltip-shortcut-*` set). */
+    /** Cap fill. Translucent `currentColor` so it works on any surface. */
+    --forte-kbd-bg: color-mix(in oklab, currentColor 7%, transparent);
+    /** Cap outline — the edge that survives forced colors. */
+    --forte-kbd-border-color: color-mix(in oklab, currentColor 25%, transparent);
+    /** Corner radius. A step softer than the `radius-1` hairline: at cap
+     * size, 2px corners read as a sharp box rather than a chip. */
+    --forte-kbd-radius: var(--forte-radius-2);
+    /** Left and right padding inside the cap. */
+    --forte-kbd-padding-inline: var(--forte-space-1);
+    /** Key label size, relative to the surrounding text. */
+    --forte-kbd-font-size: 0.85em;
+    /** Smallest cap width — what squares up a lone letter instead of leaving
+     * a sliver the exact width of an `I`. */
+    --forte-kbd-min-inline-size: 1.6em;
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: var(--forte-kbd-min-inline-size);
+    padding-inline: var(--forte-kbd-padding-inline);
+    border: 1px solid var(--forte-kbd-border-color);
+    border-radius: var(--forte-kbd-radius);
+    background-color: var(--forte-kbd-bg);
+
+    font-size: var(--forte-kbd-font-size);
+    /* Keys are read as a group of glyphs, not as prose: tabular figures stop
+     * a run of caps jittering between `F1` and `F11`, and normal tracking
+     * undoes any tightening the surrounding text applied. */
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--forte-letter-spacing-normal);
+    line-height: var(--forte-line-height-normal);
+    /* A chord is one token. Wrapping it puts ⌘ on one line and ⇧P on the
+     * next, inside a cap that then has to be drawn around both. */
+    white-space: nowrap;
+
+    /* Chrome, not a control — the arrow, per the cursor table. But NOT
+     * `user-select: none` with it: a cap is part of the sentence it sits in,
+     * and "press ⌘K" copied out of the docs should paste with its keys. */
+    cursor: default;
+
+    /* The bidi pin — see the header. */
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+
+  /* A sequence of caps. No chrome of its own — the caps carry it — just the
+   * spacing, and the same LTR pin the cap has, for the layout's sake rather
+   * than the text's: the caps pin their own glyphs, but they are FLEX ITEMS,
+   * and flex lays a row out in the element's direction, so an unpinned group
+   * in an RTL page would print ⌘ K as K ⌘ with each cap individually
+   * correct. */
+  .group {
+    /** Gap between the caps of a sequence. */
+    --forte-kbd-group-gap: var(--forte-space-1);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--forte-kbd-group-gap);
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by layer alone.
+ *
+ * The cap's translucent fill is replaced with Canvas either way; what this
+ * block pins is the TEXT. The cap inherits its colour, and on a highlighted
+ * menu row that inheritance delivers HighlightText — painted onto the cap's
+ * forced Canvas fill, where nothing guarantees it is visible. Naming the pair
+ * makes the cap a miniature surface: Canvas under CanvasText, readable
+ * whatever row it sits in. Hosts that need a state to show through — a
+ * disabled menu row's GrayText — override from their own a11y block, where
+ * their selector outweighs this one.
+ * ------------------------------------------------------------------------- */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    .root {
+      background-color: Canvas;
+      color: CanvasText;
+    }
+  }
+}

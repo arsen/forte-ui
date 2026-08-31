@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { clsx } from "clsx";
+import { Kbd } from "../kbd";
 import styles from "./Menu.module.css";
 
 export type MenuItemTone = "neutral" | "danger";
@@ -985,10 +986,13 @@ export interface MenuShortcutProps
 }
 
 /**
- * The keyboard shortcut printed at the end of a row. Renders a `<span>`, and
- * is not a Base UI part — it is here for the same reason `Dialog.Footer` is:
- * every second menu grows one, and left to each consumer it is re-invented
- * with a different colour and a different gap each time.
+ * The keyboard shortcut printed at the end of a row. Renders a `<span>` that
+ * owns the row position — pushed to the trailing edge, never truncated — and
+ * draws the keys themselves in a composed `Kbd`, so a menu's caps and a
+ * tooltip's are the same cap. It is not a Base UI part; it is here for the
+ * same reason `Dialog.Footer` is: every second menu grows one, and left to
+ * each consumer it is re-invented with a different colour and a different gap
+ * each time.
  *
  * It is `aria-hidden`, deliberately. The glyphs menus print are read out as
  * "place of interest sign K" or "up arrowhead command P" — worse than silence.
@@ -1003,7 +1007,7 @@ export interface MenuShortcutProps
  * ```
  */
 export const MenuShortcut = React.forwardRef<HTMLSpanElement, MenuShortcutProps>(
-  function MenuShortcut({ className, ...props }, ref) {
+  function MenuShortcut({ className, children, ...props }, ref) {
     return (
       <span
         ref={ref}
@@ -1011,7 +1015,9 @@ export const MenuShortcut = React.forwardRef<HTMLSpanElement, MenuShortcutProps>
         data-forte="menu-shortcut"
         aria-hidden="true"
         {...props}
-      />
+      >
+        <Kbd>{children}</Kbd>
+      </span>
     );
   },
 );

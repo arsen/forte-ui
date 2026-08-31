@@ -357,6 +357,14 @@ import d_input_group_textarea from "./input-group/textarea";
 import d_input_group_textarea_src from "./input-group/textarea?raw";
 import d_input_group_variants from "./input-group/variants";
 import d_input_group_variants_src from "./input-group/variants?raw";
+import d_kbd_basic from "./kbd/basic";
+import d_kbd_basic_src from "./kbd/basic?raw";
+import d_kbd_composed from "./kbd/composed";
+import d_kbd_composed_src from "./kbd/composed?raw";
+import d_kbd_group from "./kbd/group";
+import d_kbd_group_src from "./kbd/group?raw";
+import d_kbd_in_text from "./kbd/in-text";
+import d_kbd_in_text_src from "./kbd/in-text?raw";
 import d_menu_basic from "./menu/basic";
 import d_menu_basic_src from "./menu/basic?raw";
 import d_menu_checkbox_items from "./menu/checkbox-items";
@@ -933,6 +941,10 @@ export type DemoId =
   | "input-group/text-addons"
   | "input-group/textarea"
   | "input-group/variants"
+  | "kbd/basic"
+  | "kbd/composed"
+  | "kbd/group"
+  | "kbd/in-text"
   | "menu/basic"
   | "menu/checkbox-items"
   | "menu/disabled"
@@ -1311,6 +1323,10 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input-group/text-addons": { Component: d_input_group_text_addons, source: d_input_group_text_addons_src, file: "input-group/text-addons.tsx" },
   "input-group/textarea": { Component: d_input_group_textarea, source: d_input_group_textarea_src, file: "input-group/textarea.tsx" },
   "input-group/variants": { Component: d_input_group_variants, source: d_input_group_variants_src, file: "input-group/variants.tsx" },
+  "kbd/basic": { Component: d_kbd_basic, source: d_kbd_basic_src, file: "kbd/basic.tsx" },
+  "kbd/composed": { Component: d_kbd_composed, source: d_kbd_composed_src, file: "kbd/composed.tsx" },
+  "kbd/group": { Component: d_kbd_group, source: d_kbd_group_src, file: "kbd/group.tsx" },
+  "kbd/in-text": { Component: d_kbd_in_text, source: d_kbd_in_text_src, file: "kbd/in-text.tsx" },
   "menu/basic": { Component: d_menu_basic, source: d_menu_basic_src, file: "menu/basic.tsx" },
   "menu/checkbox-items": { Component: d_menu_checkbox_items, source: d_menu_checkbox_items_src, file: "menu/checkbox-items.tsx" },
   "menu/disabled": { Component: d_menu_disabled, source: d_menu_disabled_src, file: "menu/disabled.tsx" },

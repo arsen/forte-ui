@@ -1,0 +1,115 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Kbd",
+  description:
+    "A key cap — a real <kbd> element that draws itself out of currentColor, so the same cap works in prose, in tooltips, in menus and on buttons.",
+};
+
+# Kbd
+
+The way the interface prints a key it wants pressed. It renders a real
+`<kbd>` — the element HTML has for exactly this — and draws its fill and edge
+out of `currentColor`, so the same cap sits in running text, on a tooltip's
+inverted popup, inside a solid button and on a highlighted menu row without a
+colour prop.
+
+<DemoBlock id="kbd/basic" />
+
+## Import
+
+```tsx
+import { Kbd, KbdGroup } from "@forte-ui/react";
+```
+
+## Examples
+
+### Groups and sequences
+
+A chord can be one cap (`⌘K`) or one cap per key. For the second form, wrap
+the caps in `KbdGroup` — it owns the spacing, and plain text written between
+the caps (`+`, `then`) rides along at the group's gap. The wrapper is itself a
+`<kbd>`, which is the HTML idiom for "these keys form one input".
+
+<DemoBlock id="kbd/group" />
+
+Glyph chords read best bare; spelled-out keys read best with the separator
+written in. Nothing here maps keys per platform — write them the way your app
+prints them.
+
+### In running text
+
+The cap's geometry is in `em`, not tokens, so it tracks whatever text it sits
+in — help text, a table cell, a footnote — the way an inline code chip does.
+
+<DemoBlock id="kbd/in-text" />
+
+### Inside other components
+
+Because the chrome derives from `currentColor`, composing a cap into a
+component costs nothing: on a solid button it draws itself out of the
+button's own label colour.
+
+<DemoBlock id="kbd/composed" />
+
+Two components already do this for you.
+[`Menu.Shortcut`](/components/menu/) positions a cap at the end of a row and
+hides it from assistive technology; [`Tooltip.Shortcut`](/components/tooltip/)
+*is* a `Kbd`, re-tuned through the tooltip's own knobs. Reach for those inside
+their components, and for `Kbd` everywhere else.
+
+## Accessibility
+
+<Callout kind="a11y">
+
+**A cap printing a word reads out fine; a cap printing a glyph does not.**
+`Ctrl`, `Esc` and `Enter` need nothing — which is why `Kbd` is not
+`aria-hidden` by default. But `⌘B` is announced as "place of interest sign B",
+so when the keys are glyphs *and* the cap sits on or beside the control that
+runs the shortcut, hide the cap (`aria-hidden`) and put
+`aria-keyshortcuts="Meta+B"` on the control itself, spelled in words —
+which is what the composed-buttons demo above does, and what `Menu.Shortcut`
+does for you.
+
+</Callout>
+
+A key sequence is literal — `⌘X` is read left to right in every locale — so
+the cap pins its own text `direction: ltr` with `unicode-bidi: isolate`, and
+`KbdGroup` pins its layout the same way. In an RTL page the surrounding
+sentence mirrors and the keys do not; flip the demo frame to RTL to see the
+seam hold.
+
+Under forced colors the translucent fill is replaced, and the cap survives on
+its border, which is forced to full contrast. The cap also pins its
+text to `CanvasText` there, so an inherited `HighlightText` cannot land on the
+cap's forced `Canvas` fill and vanish.
+
+## Theming
+
+Every visual decision is a `--forte-kbd-*` custom property declared on the
+cap's own root, so a re-skin is a `style` object or one CSS rule. Scope a rule
+with `[data-forte="kbd"]` to catch every cap — including the ones
+`Menu.Shortcut` and `Tooltip.Shortcut` render — or with
+`[data-forte="menu-popup"] [data-forte="kbd"]` to catch one component's.
+
+<ThemingTable component="Kbd" />
+
+The two colour knobs default to `color-mix()` expressions over `currentColor`
+rather than to tokens, and that is the load-bearing decision: a cap has no
+surface of its own to be measured against, so a looked-up grey would be a
+contrast guess everywhere but the page — deriving from the text it sits with
+keeps the glyphs at whatever contrast that text already has, on any surface
+and in any re-skin.
+
+## API reference
+
+### Kbd
+
+<PropTable component="Kbd" />
+
+### KbdGroup
+
+<PropTable component="KbdGroup" />

@@ -2,6 +2,7 @@ import { DemoBlock } from "@/components/demo/demo-block";
 import { PropTable } from "@/components/prop-table";
 import { Callout } from "@/components/callout";
 import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
 
 export const metadata = {
   title: "Nav List",
@@ -127,7 +128,7 @@ If the list sits inside a `<nav>` you already own, swap the root's element the s
 
 ## Accessibility
 
-The keyboard story is deliberately the platform's: rows are real links and real buttons, so <kbd>Tab</kbd> walks them in order, <kbd>Enter</kbd> follows a link, and <kbd>Enter</kbd> or <kbd>Space</kbd> toggles a group — there is no roving focus to learn. A `GroupTrigger` carries `aria-expanded` and `aria-controls`; keep its text as the accessible name, since "expanded"/"collapsed" is already announced and needs no "show/hide" wording of its own.
+The keyboard story is deliberately the platform's: rows are real links and real buttons, so <Kbd>Tab</Kbd> walks them in order, <Kbd>Enter</Kbd> follows a link, and <Kbd>Enter</Kbd> or <Kbd>Space</Kbd> toggles a group — there is no roving focus to learn. A `GroupTrigger` carries `aria-expanded` and `aria-controls`; keep its text as the accessible name, since "expanded"/"collapsed" is already announced and needs no "show/hide" wording of its own.
 
 The active row is never colour alone: `active` also sets `aria-current="page"` and a weight change, `marker="edge"` adds geometry, and under forced colors the fill is repainted with the system `Highlight` pair. Focus rings are inset — the list's usual home is a scroll container hard against the viewport edge, where an outward ring would be clipped.
 
