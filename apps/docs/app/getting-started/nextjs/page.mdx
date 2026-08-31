@@ -264,7 +264,9 @@ On the Tailwind path, nothing more is needed for colours: every token utility re
 
 ## Loading a font
 
-If you load a font with `next/font`, expose it as a variable and point `--forte-font-sans` at it:
+The library reads one token for its font: `--forte-font-sans`. Your `body` rule from step 4 reads it too. So the whole job is: get your font's name into that token. With `next/font` that is two steps.
+
+**Step 1 — load the font, get a variable.** In `app/layout.tsx`:
 
 ```tsx
 import { Inter } from "next/font/google";
@@ -275,13 +277,24 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 <html lang="en" className={inter.variable}>
 ```
 
+This changes nothing visible yet. The class does exactly one thing: it defines `--font-inter` on `<html>`. (`next/font` also self-hosts the font files for you — that part is automatic.)
+
+**Step 2 — feed it into the token.** In `app/globals.css`:
+
 ```css
 :root {
   --forte-font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 ```
 
-Components inherit your page's font wherever inheritance reaches; the token is how portalled surfaces — tooltips, menus, dialogs — get the same font without trusting whatever `body` happens to declare.
+Done. Your `body` rule reads `--forte-font-sans`, so the page text switches; the components read the same token, so tooltips, menus and dialogs switch with it. One token, everything in lockstep.
+
+Two details worth knowing, neither of which you have to act on:
+
+- **Why not just `body { font-family: "Inter" }`?** It would *almost* work — but some component parts declare `font-family: var(--forte-font-sans)` themselves (floating surfaces cannot rely on inheriting from your page), and those would stay on the system font. Routing through the token is what keeps page and components identical.
+- **Keep the `ui-sans-serif, system-ui, sans-serif` tail.** It is the fallback if the font fails to load or the variable class is missing — the page degrades to the system font instead of the browser default serif.
+
+On the Tailwind path, `font-sans` on `<body>` does the same job as the `body` rule — the bridge maps it to this exact token.
 
 ## Where next
 

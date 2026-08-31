@@ -187,7 +187,9 @@ By default Tailwind v4's `dark:` variant keys on `prefers-color-scheme`. You wil
 
 ## Loading a font
 
-Load it however you prefer — `@font-face`, Fontsource, a `<link>` — then point the token at it:
+The library reads one token for its font: `--forte-font-sans`. Your `body` rule from step 4 reads it too. So the whole job is: get your font's name into that token.
+
+Load the font however you normally would — `@font-face`, Fontsource, a `<link>` tag — then, in `src/index.css`:
 
 ```css
 :root {
@@ -195,7 +197,7 @@ Load it however you prefer — `@font-face`, Fontsource, a `<link>` — then poi
 }
 ```
 
-Components inherit your page's font wherever inheritance reaches; the token is how portalled surfaces — tooltips, menus, dialogs — get the same font without trusting whatever `body` happens to declare.
+Done. Your `body` rule reads `--forte-font-sans`, so the page text switches; the components read the same token, so tooltips, menus and dialogs switch with it. Don't set the font on `body` directly instead — some component parts declare `font-family: var(--forte-font-sans)` themselves and would stay on the system font. And keep the `ui-sans-serif, system-ui, sans-serif` tail: it is the fallback if the font fails to load.
 
 ## Where next
 
