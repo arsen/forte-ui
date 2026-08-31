@@ -1,6 +1,6 @@
 {
   "name": "forte-ui",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Alias for @forte-ui/react — the canonical package of the forte-ui component library.",
   "license": "MIT",
   "type": "module",
