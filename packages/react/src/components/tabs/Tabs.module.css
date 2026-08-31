@@ -116,7 +116,9 @@
     --forte-tabs-indicator-color: var(--forte-color-primary);
     /** Thickness of the indicator bar (line variant only) */
     --forte-tabs-indicator-size: 2px;
-    /** Corner radius of the indicator */
+    /** Corner radius of the indicator. A `line` indicator applies it only to
+     * the two corners away from the rail — its rail-side pair is square, like
+     * the tab's — while a `pill` indicator rounds all four */
     --forte-tabs-indicator-radius: var(--forte-radius-pill);
 
     /* Panel */
@@ -422,7 +424,17 @@
     translate: var(--active-tab-left);
     width: var(--active-tab-width);
     height: var(--forte-tabs-indicator-size);
-    border-radius: var(--forte-tabs-indicator-radius);
+    /* Rounded only on the pair away from the rail, square on the pair sitting
+     * on it — the same treatment the line tab gives its own corners, so the
+     * bar reads as attached to the rail rather than floating just above it.
+     * The default radius is the full pill: with the rail-side pair at 0 the
+     * browser's overlap rule caps the rounded pair at the bar's whole height,
+     * which is the roundest cap a 2px bar can carry. Under the `none` preset
+     * --forte-radius-pill is 0px, so the bar goes square with everything else. */
+    border-start-start-radius: var(--forte-tabs-indicator-radius);
+    border-start-end-radius: var(--forte-tabs-indicator-radius);
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
     background-color: var(--forte-tabs-indicator-color);
     /* Purely decorative — clicks belong to the tab underneath it. */
     pointer-events: none;
@@ -451,6 +463,13 @@
     translate: 0 var(--active-tab-top);
     width: var(--forte-tabs-indicator-size);
     height: var(--active-tab-height);
+    /* The rail is on the inline-end edge here, so the square pair moves with
+     * it and the inline-start pair takes the rounding — mirroring the vertical
+     * line tab. */
+    border-start-start-radius: var(--forte-tabs-indicator-radius);
+    border-end-start-radius: var(--forte-tabs-indicator-radius);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
   }
 
   /* Pill: same element, same transition, but it takes the full size of the
@@ -469,6 +488,9 @@
     translate: var(--active-tab-left) var(--active-tab-top);
     width: var(--active-tab-width);
     height: var(--active-tab-height);
+    /* A pill floats free of any rail, so all four corners round — this undoes
+     * the line geometry's square rail-side pair in both orientations. */
+    border-radius: var(--forte-tabs-indicator-radius);
   }
 
   /* Deliberately no `display` declaration anywhere on .indicator: Base UI sets
