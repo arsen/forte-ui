@@ -1758,6 +1758,26 @@
         ]
       },
       {
+        "name": "--forte-button-icon-size",
+        "value": "var(--forte-font-size-3)",
+        "description": "Size of an `svg` a consumer drops in; reassigned by `size`. Applies to direct children of the content span only, so a composed forte-ui component keeps sizing its own glyphs.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-font-size-3)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-4)"
+          }
+        ]
+      },
+      {
         "name": "--forte-button-spinner-size",
         "value": "1em",
         "description": "Diameter of the loading spinner",
