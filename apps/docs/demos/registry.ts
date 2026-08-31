@@ -291,6 +291,8 @@ import d_drawer_floating from "./drawer/floating";
 import d_drawer_floating_src from "./drawer/floating?raw";
 import d_drawer_nested from "./drawer/nested";
 import d_drawer_nested_src from "./drawer/nested?raw";
+import d_drawer_non_modal from "./drawer/non-modal";
+import d_drawer_non_modal_src from "./drawer/non-modal?raw";
 import d_drawer_scrollable from "./drawer/scrollable";
 import d_drawer_scrollable_src from "./drawer/scrollable?raw";
 import d_drawer_sides from "./drawer/sides";
@@ -888,6 +890,7 @@ export type DemoId =
   | "drawer/controlled"
   | "drawer/floating"
   | "drawer/nested"
+  | "drawer/non-modal"
   | "drawer/scrollable"
   | "drawer/sides"
   | "drawer/sizes"
@@ -1260,6 +1263,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "drawer/controlled": { Component: d_drawer_controlled, source: d_drawer_controlled_src, file: "drawer/controlled.tsx" },
   "drawer/floating": { Component: d_drawer_floating, source: d_drawer_floating_src, file: "drawer/floating.tsx" },
   "drawer/nested": { Component: d_drawer_nested, source: d_drawer_nested_src, file: "drawer/nested.tsx" },
+  "drawer/non-modal": { Component: d_drawer_non_modal, source: d_drawer_non_modal_src, file: "drawer/non-modal.tsx" },
   "drawer/scrollable": { Component: d_drawer_scrollable, source: d_drawer_scrollable_src, file: "drawer/scrollable.tsx" },
   "drawer/sides": { Component: d_drawer_sides, source: d_drawer_sides_src, file: "drawer/sides.tsx" },
   "drawer/sizes": { Component: d_drawer_sizes, source: d_drawer_sizes_src, file: "drawer/sizes.tsx" },
