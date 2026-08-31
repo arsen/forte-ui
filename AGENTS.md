@@ -53,7 +53,7 @@ pnpm dev                                    # docs site at :3000
 pnpm build                                  # everything
 pnpm generate                               # re-run ALL five generators
 pnpm typecheck                              # the real gate — there is no linter
-pnpm test                                   # contrast harness (--fine sweep)
+pnpm test                                   # contrast harness (--fine) + popup parity
 ```
 
 `pnpm generate` is the one to reach for after editing a source of truth while
@@ -71,12 +71,13 @@ Each generator still has its own script when you want just one:
 pnpm --filter @forte-ui/react tokens         # the generated CSS
 pnpm --filter @forte-ui/react docgen         # props.json + theming.json
 pnpm --filter @forte-ui/react check:contrast # the ramp gate
+pnpm --filter @forte-ui/react check:parity   # the popup-parity gate
 pnpm --filter @forte-ui/docs registry  # the demo registry
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
 ```
 
-`check:contrast` is deliberately outside `generate` — it is a gate, not a
-generator, and it writes nothing.
+`check:contrast` and `check:parity` are deliberately outside `generate` —
+they are gates, not generators, and they write nothing.
 
 Every root script is `turbo run <task>`, never the `turbo <task>` shorthand.
 `generate` is *also* a built-in turbo command (the plop-based code generator)
@@ -85,7 +86,8 @@ generator?" prompt instead of running the task. `run` everywhere means the next
 task name to collide does not repeat this.
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
-`typecheck` and `check:contrast` are the gates that actually catch things.
+`typecheck`, `check:contrast` and `check:parity` are the gates that actually
+catch things.
 
 ### Generated files — never edit by hand
 
@@ -162,6 +164,15 @@ before committing, or the file lands in the diff on somebody else's next build.
 `check:contrast` pairs with `ramp.mjs` alone. It is the only thing that catches
 a curve tweak silently dropping one hue band below AA, so do not skip it there
 and do not bother running it anywhere else.
+
+`check:parity` pairs with the anchored popups — Menu, Popover, PreviewCard,
+Tooltip, NavigationMenu — whose enter/exit blocks are deliberate per-component
+copies that must stay identical modulo their knob prefix, and whose arrow and
+viewport mechanics are shared `.forte-popup-*` patterns in `patterns.css` that
+each popup wires up by mapping its knobs onto generic `--forte-popup-*`
+properties. Run it after touching any of those files; when it fails on a
+change you meant, apply the change to every copy it names (the script header
+has the details).
 
 ### Introducing a new token
 

@@ -40,10 +40,11 @@
     "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs && node scripts/tokens-docgen.mjs",
     "generate": "pnpm run tokens && pnpm run docgen",
     "check:contrast": "node scripts/check-contrast.mjs",
+    "check:parity": "node scripts/check-popup-parity.mjs",
     "build": "pnpm run generate && vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/check-contrast.mjs --fine",
+    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs",
     "clean": "rm -rf dist .turbo"
   },
   "peerDependencies": {

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Spinner } from "@forte-ui/react";
+import { Button, Card, Spinner } from "@forte-ui/react";
 
 const ROWS = ["INV-2043 — £1,200.00", "INV-2044 — £340.00", "INV-2045 — £2,780.00"];
 
@@ -28,10 +28,10 @@ export default function SpinnerLoadingPanel() {
        * So the spinner inside it is `decorative` — the panel owns the
        * announcement, and `aria-busy` tells assistive technology the contents
        * are mid-update rather than final. */}
-      <div
+      <Card.Root
         role="status"
         aria-busy={state === "loading"}
-        className="grid min-h-[6rem] w-full max-w-[22rem] content-center justify-items-start gap-2 rounded-surface border border-border-muted bg-panel p-surface text-2"
+        className="min-h-[6rem] w-full max-w-[22rem] items-start justify-center gap-2"
       >
         {state === "idle" ? (
           <span className="text-foreground-muted">Nothing loaded yet.</span>
@@ -44,7 +44,7 @@ export default function SpinnerLoadingPanel() {
             </span>
           ))
         )}
-      </div>
+      </Card.Root>
     </div>
   );
 }

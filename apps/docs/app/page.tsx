@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { Button } from "@forte-ui/react";
+// The flat part names, not the `Card` namespace: this page is a Server
+// Component, and dereferencing `Card.Root` across the client boundary yields
+// `undefined` — the object arrives as an opaque client reference.
+import { Button, CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
 import { HeroThemer } from "@/components/home/hero-themer";
 import { CodeBlock } from "@/components/demo/code-block";
 import { Showcase } from "@/components/home/showcase";
@@ -125,10 +128,9 @@ export default function HomePage() {
         <h2 className={H2}>What you get</h2>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
           {FEATURES.map((f) => (
-            <div
+            <CardRoot
               key={f.title}
               className={cn(
-                "rounded-surface border border-border-muted bg-panel p-surface",
                 "transition-[border-color,translate] duration-fast ease-standard",
                 // `hover:` is already `@media (hover: hover)` in v4, so a touch
                 // screen never sticks the lift on the last thing tapped. The
@@ -136,9 +138,13 @@ export default function HomePage() {
                 "hover:-translate-y-(--forte-travel-xs) hover:border-primary-border",
               )}
             >
-              <h3 className="mb-2 text-3 font-semibold">{f.title}</h3>
-              <p className="text-2 leading-[1.6] text-foreground-muted text-pretty">{f.body}</p>
-            </div>
+              <CardHeader>
+                <CardTitle>
+                  <h3>{f.title}</h3>
+                </CardTitle>
+                <CardDescription className="text-pretty">{f.body}</CardDescription>
+              </CardHeader>
+            </CardRoot>
           ))}
         </div>
       </section>

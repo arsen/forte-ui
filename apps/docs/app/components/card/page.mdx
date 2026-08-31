@@ -1,0 +1,152 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Card",
+  description:
+    "A static grouping surface — the bordered panel that everything from a settings section to a pricing tier gets built on.",
+};
+
+# Card
+
+A card is the surface most interfaces are mostly made of: a panel, a hairline, a radius, some padding, and a loose contract about where the title goes. Before this component existed, that was a class string — `rounded-surface border border-border-muted bg-panel p-surface` — repeated at every call site, each copy free to drift a token from the others. `Card` is that string as vocabulary.
+
+<DemoBlock id="card/basic" />
+
+There is no Base UI primitive underneath and no state at all: a card is layout and surface. What earns it a component is one padding knob the density presets drive, a variant axis that never moves the content, a header grid that survives any subset of its parts, and an edge-to-edge media section that is otherwise four negative margins and a radius calculation at every call site.
+
+It sits **in** the page, which is what separates it from the floating surfaces: no shadow by default, no z-index, no enter or exit. A card that opens over things is a `Popover` or a `Dialog`.
+
+## Import
+
+```tsx
+import { Card } from "@forte-ui/react";
+```
+
+`Card` is a namespace of eight parts, and every one of them is optional — including all of them at once: any child of `Card.Root` is a section, so a card around a single paragraph or your own markup is still a card.
+
+```tsx
+<Card.Root>
+  <Card.Header>
+    <Card.Title>Storage</Card.Title>
+    <Card.Description>34.2 GB of 50 GB used.</Card.Description>
+    <Card.Action>
+      <Badge tone="warning">68%</Badge>
+    </Card.Action>
+  </Card.Header>
+  <Card.Content>…</Card.Content>
+  <Card.Footer align="end">
+    <Button variant="outline">Manage</Button>
+  </Card.Footer>
+</Card.Root>
+```
+
+Padding lives on the root rather than on the parts. The sections stack with one gap between them, and `--forte-card-p` is the single number that moves everything at once — it defaults to `--forte-surface-p`, so `data-forte-density` already drives it and a card needs no size prop.
+
+<Callout kind="note">
+  The parts are also exported flat — `CardRoot`, `CardHeader`, `CardTitle`, and so on. In a React **Server** Component, use those: `Card.Root` cannot be dereferenced there, because the namespace object crosses the client boundary as an opaque reference whose properties are `undefined` — a runtime error the type checker does not catch. (`Field` and `DatePicker` ship the same pair of spellings for the same reason.)
+</Callout>
+
+## Examples
+
+### Variants
+
+One axis and deliberately no tones. A card is the neutral ground other things sit *on* — a tinted grouping box that means something is an `Alert`.
+
+<DemoBlock id="card/variants" />
+
+All three variants occupy identical space: the border is reserved even where `soft` paints it transparent, so switching between them at runtime moves nothing. `elevated` keeps its hairline under the shadow on purpose — a shadow this size all but disappears on a dark background, where light has nothing to occlude, and without the border the card would dissolve into the page in exactly one theme.
+
+### A corner action
+
+<DemoBlock id="card/action" />
+
+`Card.Action` sits against the inline-end edge of the header — pinned to the top corner when the header has both text rows, centred on the title's line when the title is alone. It is a slot and not a control: a badge, an icon button and a `Menu` trigger are all real components with their own props, and the card wraps none of them.
+
+A header with no action has no action *column*: the track is `auto`, so with nothing in it the track is zero wide and the text runs the full width. The gap beside it is a margin on the action itself rather than a `column-gap` on the grid, which is what makes the collapse complete.
+
+### Media
+
+<DemoBlock id="card/media" />
+
+`Card.Media` is the edge-to-edge section — an image, a video, a chart. It undoes the root's padding with negative margins and, when it is the first or last section, clips itself to the card's corner radius minus the border width, so the image meets the border instead of floating inside it. In the middle of a card it bleeds only sideways.
+
+An `<img>` or `<video>` placed directly inside is made block-level and stretched to the full bleed. Height is deliberately not managed — wrap the image in `AspectRatio` when the box has to hold its shape before the file arrives, which is also what keeps the text below it from moving.
+
+### A form
+
+<DemoBlock id="card/form" />
+
+The classic composition. The whole `Form`, submit button included, lives in `Card.Content` — the button belongs to the `<form>` element, and splitting it into the footer would orphan it. The footer holds what is *not* part of the form: here, the way out for people without an account.
+
+`Card.Footer`'s `align` prop covers the four layouts a footer actually has — `start` for captions, `end` for actions, `between` for both at once, `center` for the odd one out — so the common cases stay one word instead of a flex recipe.
+
+## Accessibility
+
+A card is a `<div>` with no role, and that is the correct amount of semantics for a visual grouping. Two decisions are left to the page, because only the page can make them:
+
+**Headings.** `Card.Title` renders a `<div>`, not a heading — the same card sits at `h2` depth on one screen and `h4` on another, and a hardcoded level would put a wrong entry in the document outline on at least one of them. When the card genuinely opens a section of the document, nest the heading:
+
+```tsx
+<Card.Title>
+  <h3>Invoices</h3>
+</Card.Title>
+```
+
+A heading placed there takes the card's typography rather than the UA's — margins, size and weight — so the semantic version looks identical to the plain one. That is deliberate: the styling cost of doing the right thing is zero.
+
+**Interactivity.** If the whole card should navigate, put a real `<a>` inside and stretch it, rather than making the surface clickable — a `<div onClick>` is invisible to the keyboard and to assistive technology, and it also breaks text selection for everyone else. The card deliberately has no `interactive` prop to make that mistake convenient.
+
+Under forced colours the fill and the shadow are stripped and the border is the whole card. Every variant keeps its reserved 1px and paints it in the system ink — including `soft`, whose transparent edge would otherwise leave the grouping invisible.
+
+## Theming
+
+Everything below is declared on `Card.Root` itself, which is also why an ancestor is the wrong place to set one — the element's own declaration beats an inherited value. Override them on `Card.Root` through its `className` or a `style` object, or re-point the global tokens in the Default column to move every card at once.
+
+<ThemingTable component="Card" part="root" />
+
+The three surface slots — `--forte-card-bg`, `--forte-card-border-color`, `--forte-card-shadow` — are the whole variant system: `variant` fills them in, and a one-off look is those three properties on one element.
+
+<Callout>
+  `--forte-card-p` is the number `Card.Media`'s negative margins are computed from, so a padding override through the knob keeps full-bleed media working. Overriding `padding` directly instead leaves the media bleeding by the old amount.
+</Callout>
+
+State is on `data-variant`, reachable from plain CSS or a Tailwind arbitrary variant — `data-[variant=soft]:...` — without a wrapper element.
+
+## API reference
+
+Every part is a plain `<div>` and takes that element's whole prop surface, `ref` included. There is no `render` prop, because there is no Base UI primitive to swap the element on.
+
+### Card.Root
+
+<PropTable component="CardRoot" />
+
+### Card.Header
+
+<PropTable component="CardHeader" />
+
+### Card.Title
+
+<PropTable component="CardTitle" />
+
+### Card.Description
+
+<PropTable component="CardDescription" />
+
+### Card.Action
+
+<PropTable component="CardAction" />
+
+### Card.Content
+
+<PropTable component="CardContent" />
+
+### Card.Footer
+
+<PropTable component="CardFooter" />
+
+### Card.Media
+
+<PropTable component="CardMedia" />

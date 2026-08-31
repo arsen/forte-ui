@@ -99,6 +99,30 @@ export type {
   CalendarProps,
 } from "./components/calendar";
 
+export {
+  Card,
+  CardRoot,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardMedia,
+} from "./components/card";
+export type {
+  CardVariant,
+  CardFooterAlign,
+  CardRootProps,
+  CardHeaderProps,
+  CardTitleProps,
+  CardDescriptionProps,
+  CardActionProps,
+  CardContentProps,
+  CardFooterProps,
+  CardMediaProps,
+} from "./components/card";
+
 export { Checkbox, CheckboxGroup } from "./components/checkbox";
 export type {
   CheckboxProps,
