@@ -18,10 +18,19 @@ prompt you receive tells you which one you are in:
 
 Only the **publishable packages**. Find them, do not assume them: every
 `packages/*/package.json` that does not declare `"private": true` marks a
-publishable directory (today that is `packages/react` and `packages/forte-ui`).
-Everything else — `apps/docs` above all — is invisible to the changelog no
-matter how large its diff is. A commit that touches both docs and library
-contributes only its library half.
+publishable directory (today that is `packages/react`, `packages/forte-ui`
+and `packages/create-forte-ui`). Everything else — `apps/docs` above all — is
+invisible to the changelog no matter how large its diff is. A commit that
+touches both docs and library contributes only its library half.
+
+**The publishable packages share one version number and move in lockstep.**
+A release is a release of the whole set: every publishable `package.json`
+gets the new version, including one whose directory has no change at all in
+the range. The changelog says nothing about a package that did not change —
+the version bump alone is the record — but the bump is never skipped. A
+release that moved `create-forte-ui` and left `@forte-ui/react` behind is the
+drift this rule exists to prevent: the packages are documented and consumed
+as one set, so the numbers have to agree.
 
 ## Phase ANALYZE
 
@@ -40,8 +49,13 @@ contributes only its library half.
 2. **Collect the change set**, in one batch:
    - `git log --no-merges --oneline <from>..<to> -- <publishable paths>`
    - `git diff --stat <from>..<to> -- <publishable paths>`
-   - current `"version"` from `packages/react/package.json`
-   - If nothing comes back, return `STATUS: nothing-to-release`.
+   - the current `"version"` from **every** publishable `package.json`. They
+     should all be equal; if they are not, the set has drifted — report each
+     one in `CURRENT_VERSION`, say so in `NOTES`, and base the proposal on
+     the highest of them. APPLY brings the rest back into line.
+   - If no commit touches any publishable path, return
+     `STATUS: nothing-to-release`. One package changing is enough for a
+     release of all of them.
 3. **Read the actual diff** of the substantial files (`git diff <from>..<to> --
    <path>`, targeted, not the whole thing at once) so entries describe what a
    consumer of the library experiences, not which files moved. Commit messages
@@ -52,8 +66,14 @@ contributes only its library half.
      exported name (`select` → `Select`).
    - **Design tokens & motion** — `src/styles/*.css`, `scripts/ramp.mjs`,
      `scripts/motion.mjs`.
+   - One section per publishable package other than `@forte-ui/react`, headed
+     by its package name (`create-forte-ui`, `forte-ui`), for changes under
+     its directory.
    - **General** — everything else publishable: `cn` / `tailwind-merge`
      subpaths, build config, package metadata, new exports.
+
+   A publishable package with no change in the range gets no section — its
+   version still moves (see above), and that needs no entry.
 
    Generated files (`tokens.color.css`, `motion.css`, `docs-data/*.json`)
    never get their own entry — they only ever change because a source of
@@ -66,7 +86,8 @@ contributes only its library half.
    entry. Prefix genuinely breaking entries with `**Breaking:**` — removed or
    renamed exports, props, `--forte-*` tokens, or `data-forte` part names all
    qualify (the `data-forte` markers are documented public API).
-6. **Propose a version.** Read the current version, then:
+6. **Propose a version.** Start from the current version (the highest one,
+   if the packages have drifted apart), then:
    - While the version carries a pre-release suffix (`1.0.0-alpha.N`), the
      default proposal is the next pre-release number, whatever the contents.
    - Otherwise semver: any `**Breaking:**` entry → major, any new
@@ -104,12 +125,16 @@ the draft. Then:
      rewriting history.
    - If the file does not exist, create it with the Keep a Changelog preamble,
      an empty `[Unreleased]`, this first section, and the link definitions.
-3. **Bump `"version"`** in `packages/react/package.json` **and**
-   `packages/forte-ui/package.json` — they move in lockstep. Leave the
-   `workspace:^` dependency alone; pnpm rewrites it at publish.
-4. Verify: grep both package.json files for the new version, and confirm the
-   new changelog section sits between `## [Unreleased]` and the previous
-   version's heading — not at the bottom of the file.
+3. **Bump `"version"`** in **every** publishable `package.json` — the same
+   list you found in ANALYZE (`packages/react`, `packages/forte-ui`,
+   `packages/create-forte-ui` today), all set to the confirmed version. Do
+   this for a package with no change in the range too; "nothing changed
+   here" is not a reason to leave one behind, it is how the set drifts. Leave
+   the `workspace:^` dependency alone; pnpm rewrites it at publish.
+4. Verify: grep every publishable package.json for the new version and
+   confirm none still carries the old one, and confirm the new changelog
+   section sits between `## [Unreleased]` and the previous version's heading
+   — not at the bottom of the file.
 5. Do not run generators, tests, or git commands that mutate anything. The
    working tree diff is the deliverable — the user reviews and commits it.
 
@@ -129,7 +154,7 @@ this shape:
 ```
 STATUS: analyzed | applied | nothing-to-release | aborted
 RANGE: <from-sha> (<tag/desc if any>) .. <to-sha>
-CURRENT_VERSION: <version>
+CURRENT_VERSION: <version>          # or one `<package>: <version>` per line if they differ
 PROPOSED_VERSION: <version>          # analyzed only
 BREAKING: none | <one line per breaking entry>
 CHANGELOG:
@@ -137,6 +162,6 @@ CHANGELOG:
 QUESTIONS: none | <one line per genuine ambiguity — an entry you could not
   classify, a change you could not tell was breaking, a commit whose intent
   the diff does not reveal>
-FILES: <files written, or "none">
+FILES: <files written, or "none">   # applied: CHANGELOG.md plus every publishable package.json
 NOTES: <suspected generated-file drift, abort reason, or "none">
 ```

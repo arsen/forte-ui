@@ -710,8 +710,16 @@ the bottom. Cutting a release renames that section to the new version with a
 date, re-creates an empty `[Unreleased]` above it, and updates the comparison
 links at the bottom of the file.
 
+The publishable packages — `@forte-ui/react`, `forte-ui`, `create-forte-ui` —
+carry **one version number and move in lockstep**: a release bumps every one
+of them, including a package nothing in the range touched. An unchanged
+package gets no changelog section, but it still gets the bump; a release that
+moves one and leaves the others behind is drift, and the next one has to
+repair it.
+
 Within a release, entries are grouped by **component** — `### NavList`, plus
-`### Design tokens & motion` and `### General` for what belongs to no single
+`### Design tokens & motion`, `### General`, and a section per other
+publishable package (`### create-forte-ui`) for what belongs to no single
 one — rather than by Keep a Changelog's Added/Changed/Fixed buckets. A library
 this size changes one component at a time, and that is the axis a reader
 upgrades along. Breaking entries lead with `**Breaking:**`. `/release-prep`
