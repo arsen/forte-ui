@@ -550,6 +550,26 @@ export type {
   TextareaResize,
 } from "./components/textarea";
 
+export {
+  ThemeToggle,
+  ThemeScript,
+  themeInitScript,
+  useTheme,
+  setDocumentTheme,
+  resolvedDocumentTheme,
+} from "./components/theme-toggle";
+export type {
+  ThemeToggleProps,
+  ThemeToggleVariant,
+  ThemeToggleSize,
+  ThemeToggleIcons,
+  ThemeToggleLabels,
+  ThemeScriptProps,
+  ThemeMode,
+  ResolvedThemeMode,
+  UseThemeReturn,
+} from "./components/theme-toggle";
+
 export { Toast, useToast } from "./components/toast";
 export type {
   ToastType,

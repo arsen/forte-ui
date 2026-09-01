@@ -7293,6 +7293,81 @@
       }
     ]
   },
+  "ThemeScript": {
+    "name": "ThemeScript",
+    "description": "Replays a persisted theme choice before first paint, so a page saved as dark\ndoes not flash light while React loads. Render it in `<head>` of the root\nlayout, above the app:\n\n```tsx\n<html lang=\"en\" suppressHydrationWarning>\n  <head>\n    <ThemeScript />\n  </head>\n```\n\n`suppressHydrationWarning` belongs on `<html>` because the script legitimately\nmakes the client's root element differ from the server's. Vite and other\nstatic-`index.html` setups inline `themeInitScript` in the HTML instead —\n`create-forte-ui` scaffolds it — since a bundled component cannot run before\nthe bundle. Not needed at all if something else already replays the theme\n(e.g. next-themes, which brings its own script).",
+    "props": [
+      {
+        "name": "nonce",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "CSP nonce, when the app serves a `script-src` policy that requires one.\nForwarded to the rendered `<script>` element like any other prop; it is\nonly declared here so it appears in the prop table."
+      }
+    ]
+  },
+  "ThemeToggle": {
+    "name": "ThemeToggle",
+    "description": "A button that switches the page between light and dark. Renders a native\n`<button>` holding both a sun and a moon; **CSS keyed on `data-theme` (with\na `prefers-color-scheme` fallback) decides which one shows**, so the server\nneeds no idea what the visitor prefers — the HTML is theme-agnostic, there\nis no hydration mismatch, and the right icon is right at first paint.\n\nUncontrolled — the default — a click flips the *resolved* mode: it writes\n`data-theme` on `<html>`, persists the choice to\n`localStorage(\"forte-theme\")`, and every `useTheme` on the page follows.\nPair the page with `ThemeScript` so the choice survives a reload without a\nflash. Controlled — `theme` + `onThemeChange` — it is a dumb button for an\nexternal manager such as next-themes.\n\nThe current state is announced through a visually-hidden label naming the\n*action* (\"Switch to dark theme\"); the icons are decorative.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "icons",
+        "type": "ThemeToggleIcons",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replacement artwork, per resolved theme. Custom icons drop into the same\nwrappers as the built-in sun and moon — the CSS that decides which one\nshows, and the cross-fade between them, keep working unchanged."
+      },
+      {
+        "name": "labels",
+        "type": "ThemeToggleLabels",
+        "required": false,
+        "defaultValue": null,
+        "description": "Accessible names, per resolved theme — the override point for i18n. Each\nnames the action, not the state: while light shows, the button offers\ndark. An `aria-label` prop still wins over both, but flattens the two\nstates into one name."
+      },
+      {
+        "name": "onThemeChange",
+        "type": "((theme: ResolvedThemeMode) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the mode the click asks for. In uncontrolled mode it fires\nafter the document has been updated; with `theme` set it is the only\neffect a click has."
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Ref to the button element."
+      },
+      {
+        "name": "size",
+        "type": "ThemeToggleSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Size of the (square) button. Matches `Button` step for step so the toggle\nlines up beside one in a header."
+      },
+      {
+        "name": "theme",
+        "type": "ResolvedThemeMode",
+        "required": false,
+        "defaultValue": null,
+        "description": "Controls the toggle. When set, the button never touches the document —\nclicking only reports the opposite mode through `onThemeChange`, and the\nicon follows this prop instead of the page. This is the hook-up for an\nexternal theme manager (e.g. next-themes: pass its `resolvedTheme` here\nand its `setTheme` to `onThemeChange`). Leave unset for the built-in\nbehaviour: the click writes `data-theme` on `<html>` and persists it to\n`localStorage(\"forte-theme\")`."
+      },
+      {
+        "name": "variant",
+        "type": "ThemeToggleVariant",
+        "required": false,
+        "defaultValue": "ghost",
+        "description": "How much chrome the button carries at rest: `ghost` is bare until hovered,\n`soft` sits on a panel fill, `outline` draws a border. There is no `solid`\n— the toggle states nothing on or off the way `Toggle` does, so a loud\nfill would only compete with real actions nearby."
+      }
+    ]
+  },
   "ToastProvider": {
     "name": "ToastProvider",
     "description": "Owns every toast below it, and renders the stack.\n\nMount it once, near the root of the app:\n\n```tsx\n<Toast.Provider position=\"bottom-end\" timeout={5000}>\n  <App />\n</Toast.Provider>\n```\n\nThe viewport comes with it deliberately. Base UI keeps the two apart, which\nis the right primitive but the wrong default here: a provider without a\nviewport swallows every toast silently — the calls succeed, the store fills\nup, and nothing is ever drawn. Rendering it here means the failure cannot\nhappen, and `viewport={false}` is one prop away when you need to place it\nyourself.\n\nRenders no DOM element of its own; the stack is portalled.",

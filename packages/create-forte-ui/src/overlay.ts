@@ -76,6 +76,25 @@ function applyVite({ name, dir, tailwind, answers }: ProjectPlan): string[] {
   }
   html = anchored.replace(/<title>[^<]*<\/title>/, `<title>${name}</title>`);
 
+  /* Replay a stored light/dark choice before first paint — the guides'
+   * "Light and dark" step. A bundled component cannot run before the bundle,
+   * so on Vite the script lives in the document itself; the string must stay
+   * byte-identical to `themeInitScript` in @forte-ui/react, which is the
+   * other writer of the same localStorage key. */
+  const themeReplay =
+    "    <!-- Replays a stored light/dark choice before first paint\n" +
+    "         (themeInitScript from @forte-ui/react). -->\n" +
+    '    <script>(function(){try{var t=localStorage.getItem("forte-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>\n';
+  const replayed = html.replace(/[ \t]*<\/head>/, `${themeReplay}  </head>`);
+  if (replayed === html) {
+    throw new Error(
+      "could not find '</head>' in index.html to add the theme replay script — " +
+        "the create-vite template may have changed; copy the snippet from the " +
+        "guide's 'Light and dark' step into <head> by hand.",
+    );
+  }
+  html = replayed;
+
   /* Tailwind only: pin the cascade-layer order in the DOCUMENT, not the
    * stylesheet. The bridge's own `@layer theme, base, forte, components,
    * utilities;` statement is supposed to do this, but Vite's CSS pipeline

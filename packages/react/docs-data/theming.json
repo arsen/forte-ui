@@ -8951,6 +8951,118 @@
       }
     ]
   },
+  "ThemeToggle": {
+    "name": "ThemeToggle",
+    "tokens": [
+      {
+        "name": "--forte-theme-toggle-radius",
+        "value": "var(--forte-radius-control)",
+        "description": "Corner radius.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-size",
+        "value": "var(--forte-control-h-md)",
+        "description": "Width and height of the (square) button. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-theme-toggle-icon-size",
+        "value": "calc(var(--forte-theme-toggle-size) * 0.5)",
+        "description": "Icon size. Follows the button size unless pinned.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-bg",
+        "value": "transparent",
+        "description": "Fill at rest. `var(--forte-color-panel)` for `variant=\"soft\"`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--forte-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-theme-toggle-bg-hover",
+        "value": "var(--forte-color-panel-hover)",
+        "description": "Fill on hover.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-fg",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Icon colour at rest.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-fg-hover",
+        "value": "var(--forte-color-foreground)",
+        "description": "Icon colour on hover.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-border-width",
+        "value": "1px",
+        "description": "Border width, drawn in every variant — `outline` is the only one that gives it a colour.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-border-color",
+        "value": "transparent",
+        "description": "Border colour. `var(--forte-color-border)` for `variant=\"outline\"`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--forte-color-border)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-theme-toggle-duration",
+        "value": "var(--forte-duration-fast)",
+        "description": "Colour transitions between states, and the icon cross-fade.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-icon-turn",
+        "value": "90deg",
+        "description": "How far the leaving icon rotates on its way out (the entering one arrives from the other side). Multiplied by `--forte-motion-ok`, so it collapses under reduced motion and the swap becomes a plain fade.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-theme-toggle-press-scale",
+        "value": "var(--forte-scale-press)",
+        "description": "How far the button squashes while held. Multiplied by `--forte-motion-ok`, so a literal value still collapses under reduced motion.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Toast": {
     "name": "Toast",
     "tokens": [

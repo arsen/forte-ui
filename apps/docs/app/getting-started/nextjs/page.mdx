@@ -106,13 +106,34 @@ That is the whole integration: one install, one CSS import, one variable.
 
 ### 6. Light and dark
 
-Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, or to drive a toggle, set `data-theme` on the root element:
+Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, set `data-theme` on the root element:
 
 ```tsx
 <html lang="en" data-theme="dark">
 ```
 
-Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming/). If you would rather not write the toggle plumbing yourself, [next-themes drives this attribute directly](#dark-mode-with-next-themes).
+For a *switchable* theme, the library ships the whole kit: drop
+[`ThemeToggle`](/components/theme-toggle/) anywhere, and render `ThemeScript` in
+the layout's `<head>` so a stored choice is replayed before first paint instead
+of flashing (`create-forte-ui` scaffolds both the script and the
+`suppressHydrationWarning` it calls for):
+
+```tsx
+import { ThemeScript, ThemeToggle } from "@forte-ui/react";
+
+// app/layout.tsx
+<html lang="en" suppressHydrationWarning>
+  <head>
+    <ThemeScript />
+  </head>
+  <body>{children}</body>
+</html>
+
+// anywhere in the app
+<ThemeToggle />
+```
+
+Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control. If you already use next-themes, [it drives the same attribute directly](#dark-mode-with-next-themes).
 
 ## With Tailwind
 
@@ -199,7 +220,7 @@ A stock `twMerge` does not know the bridge's renamed scales — it parses `text-
 
 ## Dark mode with next-themes
 
-forte-ui needs no theming library — but if you already reach for [next-themes](https://github.com/pacocoursey/next-themes) for the persistence and the no-flash script, the two compose directly, because next-themes' whole job is writing an attribute on `<html>` and `data-theme` is the attribute forte-ui reads. This works identically on both paths above.
+forte-ui needs no theming library — [`ThemeToggle`, `ThemeScript` and `useTheme`](/components/theme-toggle/) cover the toggle, the persistence and the no-flash script. But if you already reach for [next-themes](https://github.com/pacocoursey/next-themes), the two compose directly, because next-themes' whole job is writing an attribute on `<html>` and `data-theme` is the attribute forte-ui reads. This works identically on both paths above. One rule: pick **one** writer — with next-themes installed, skip `ThemeScript` and forte-ui's own `useTheme`.
 
 ```bash
 npm install next-themes
@@ -233,33 +254,29 @@ Wrap the app in `app/layout.tsx`, and put `suppressHydrationWarning` on `<html>`
 </html>
 ```
 
-A toggle is then `useTheme` in any client component:
+A toggle is then forte-ui's own button in controlled mode, driven by
+next-themes' hook, in any client component:
 
 ```tsx
 "use client";
 
 import { useTheme } from "next-themes";
-import { Button } from "@forte-ui/react";
+import { ThemeToggle } from "@forte-ui/react";
 
-export function ThemeToggle() {
+export function ModeSwitch() {
   const { resolvedTheme, setTheme } = useTheme();
 
-  return (
-    <Button
-      variant="ghost"
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-    >
-      Toggle theme
-    </Button>
-  );
+  return <ThemeToggle theme={resolvedTheme} onThemeChange={setTheme} />;
 }
 ```
 
 <Callout kind="note">
   `resolvedTheme` is `undefined` until the component mounts — the server cannot
-  know the visitor's stored choice. A label or icon that *names* the current
-  theme has to wait for mount (next-themes' README shows the `mounted` gate);
-  a theme-neutral label like the one above sidesteps the problem.
+  know the visitor's stored choice. `ThemeToggle` shrugs: with the prop still
+  `undefined` it falls back to reading the document, and its icon is CSS-driven
+  either way, so nothing flashes. Your own control that *names* the current
+  theme has to wait for mount instead (next-themes' README shows the `mounted`
+  gate).
 </Callout>
 
 On the Tailwind path, nothing more is needed for colours: every token utility resolves through `light-dark()`, so `bg-panel` follows the toggle by itself and you will rarely write a `dark:` variant at all. If you do want one — for a non-colour tweak that differs per theme — note that Tailwind v4's stock `dark` variant keys on `prefers-color-scheme`, which ignores the toggle. Re-key it on the attribute, after the bridge import:

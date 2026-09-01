@@ -131,7 +131,12 @@ export function nextLayoutTsx(name: string, a: ThemeAnswers, tailwind: boolean):
    * globals.css imports it after the bridge (see the guide's ordering note),
    * and a second import here would pin the `forte` layer before `base`. */
   const themeImport = tailwind ? "" : `import "@forte-ui/react/theme.css";\n`;
+  /* ThemeScript + suppressHydrationWarning are the guides' "Light and dark"
+   * step: the script replays a stored light/dark choice onto <html> before
+   * first paint, and the suppression covers the attribute it legitimately
+   * adds. Harmless with nothing stored — the page just follows the OS. */
   return `import type { Metadata } from "next";
+import { ThemeScript } from "@forte-ui/react";
 ${font.importLine ? font.importLine + "\n" : ""}${themeImport}import "./globals.css";
 
 ${font.consts ? font.consts + "\n\n" : ""}export const metadata: Metadata = {
@@ -145,7 +150,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en"${htmlAttrs(a)}${font.htmlClassAttr}>
+    <html lang="en"${htmlAttrs(a)}${font.htmlClassAttr} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body>{children}</body>
     </html>
   );

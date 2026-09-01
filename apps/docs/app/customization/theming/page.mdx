@@ -71,6 +71,8 @@ Both modes are built from the same seed — dark mode is not a second theme, it 
 
 `"light"` and `"dark"` force a mode for that subtree; removing the attribute returns to the OS preference. There is nothing colour-related to write twice: a component, a page or a whole app themed by seed is automatically correct in both modes.
 
+You do not have to drive the attribute yourself: [`ThemeToggle`](/components/theme-toggle/) is a ready-made switch for it, `useTheme` is the hook underneath for building your own control, and `ThemeScript` replays a stored choice before first paint.
+
 ## Scoped themes
 
 Re-theming does not have to be global. Add the `forte-theme` class or a `data-forte-theme` attribute to any element and set seeds there — that subtree re-derives its entire palette while the rest of the page keeps yours:

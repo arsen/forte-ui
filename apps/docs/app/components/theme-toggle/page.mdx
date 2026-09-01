@@ -1,0 +1,226 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Theme Toggle",
+  description:
+    "A button that switches the page between light and dark — with the right icon at first paint and no flash on reload.",
+};
+
+# Theme Toggle
+
+A button that flips the page between light and dark. It renders **both** the sun
+and the moon and lets CSS keyed on `data-theme` decide which one shows — so the
+server never needs to know the visitor's preference, there is no hydration
+mismatch, and the icon is right at first paint, in any framework.
+
+<DemoBlock id="theme-toggle/basic" />
+
+Clicking writes `data-theme` on `<html>` — the one attribute the whole palette
+reads — and persists the choice to `localStorage("forte-theme")`. Try it: the
+demo above flips this entire site, because this site's theme *is* that
+attribute.
+
+## Import
+
+```tsx
+import { ThemeToggle, ThemeScript, useTheme } from "@forte-ui/react";
+```
+
+## No flash on reload
+
+With nothing stored, a page needs **no setup at all**: absent the attribute,
+every token resolves through `light-dark()` and follows the OS from the very
+first paint. The only load that can flash is one replaying a *stored* choice
+that disagrees with the OS — dark chosen on a light machine — and closing that
+gap takes one inline script that runs before `<body>` paints.
+
+In Next.js (or any framework that renders `<head>`), render `ThemeScript` in
+the root layout:
+
+```tsx
+import { ThemeScript } from "@forte-ui/react";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+`suppressHydrationWarning` goes on `<html>` because the script legitimately
+makes the client's root element differ from what the server sent.
+
+In a Vite (or any static-`index.html`) app, a bundled component cannot run
+before the bundle, so the same script goes into `index.html` directly —
+`create-forte-ui` already scaffolds it:
+
+```html
+<script>
+  (function(){try{var t=localStorage.getItem("forte-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();
+</script>
+```
+
+The string is also exported as `themeInitScript` for frameworks where head
+markup is authored as text.
+
+## Examples
+
+### Variants
+
+`variant` decides how much chrome the button carries: `ghost` is bare until
+hovered, `soft` sits on a panel fill, `outline` draws a border. There is no
+`solid` — the toggle asserts nothing on or off the way `Toggle` does, so a loud
+fill would only compete with real actions nearby.
+
+<DemoBlock id="theme-toggle/variants" />
+
+### Sizes
+
+The same three steps as `Button`, so the toggle lines up beside one in a header
+instead of sitting a pixel proud. The icon follows the button through
+`--forte-theme-toggle-icon-size`, which defaults to half the button size.
+
+<DemoBlock id="theme-toggle/sizes" />
+
+### Custom icons
+
+`icons` swaps the artwork per resolved theme. Custom icons drop into the same
+wrappers as the built-in glyphs, so the CSS that picks the visible one — and
+the cross-fade between them — keep working unchanged, and any `svg` handed over
+is sized to `--forte-theme-toggle-icon-size` regardless of its own box.
+
+<DemoBlock id="theme-toggle/custom-icons" />
+
+If what you want is not a different *icon* but a different *control* — a
+three-way picker, a menu item — skip the component and build on
+[`useTheme`](#usetheme) below.
+
+### Controlled
+
+Pass `theme` and `onThemeChange` and the button never touches the document: it
+reports the opposite mode and shows whatever the prop says — the attribute
+lands on the button itself, where it outranks any ancestor. That makes it a
+dumb button for an external theme manager, or for theming a subtree:
+
+<DemoBlock id="theme-toggle/controlled" />
+
+Note the `forte-theme` class next to `data-theme` on the card. The attribute
+alone only flips `color-scheme`; the palette is re-derived on scope markers, so
+an island without one keeps the page's already-resolved colours — the
+[scoped-themes](/customization/theming/#scoped-themes) trap.
+
+This is also the [next-themes](https://github.com/pacocoursey/next-themes)
+hook-up, spelled out in the
+[Next.js guide](/getting-started/nextjs/#dark-mode-with-next-themes):
+
+```tsx
+const { resolvedTheme, setTheme } = useTheme(); // next-themes' hook
+<ThemeToggle theme={resolvedTheme} onThemeChange={setTheme} />;
+```
+
+next-themes brings its own storage and its own pre-paint script, so skip
+`ThemeScript` and forte-ui's `useTheme` entirely in that setup — one writer for
+`data-theme` at a time.
+
+### useTheme
+
+The hook behind the toggle, for building your own control. `theme` is the
+stated preference — `"system"` when the page follows the OS — `resolvedTheme`
+is what that currently amounts to on screen, and `setTheme` writes a new one.
+`"system"` *removes* the attribute and the stored record, handing the page back
+to the OS live: no listener has to chase the preference, because CSS follows it
+natively.
+
+<DemoBlock id="theme-toggle/use-theme" />
+
+The document is the source of truth: the hook reads `data-theme` off `<html>`
+(watching it with a `MutationObserver`), so it stays correct even when
+something else writes the attribute, and a `storage` listener carries a choice
+made in one tab onto every other. On the server — and during the hydration
+render — the snapshot is `{ theme: "system", resolvedTheme: "light" }`; markup
+that must be correct at first paint should key off `data-theme` in CSS, the way
+`ThemeToggle` does, rather than branch on these values.
+
+## Accessibility
+
+<KeyboardTable
+  rows={[
+    {
+      keys: ["Tab"],
+      description: "Moves focus to the toggle.",
+    },
+    {
+      keys: ["Space", "Enter"],
+      description: "Switches the theme, as on any button.",
+    },
+  ]}
+/>
+
+The root is a native `<button>`. Its accessible name comes from a
+visually-hidden label inside the *visible* icon's wrapper — the hidden wrapper
+is `visibility: hidden`, which removes it from the accessibility tree — so the
+button always exposes exactly one action: "Switch to dark theme" while light
+shows, "Switch to light theme" while dark does. `labels` overrides both
+strings, which is the i18n hook.
+
+<Callout kind="a11y">
+  The label names the action, not the state, and the icons are decorative
+  (`aria-hidden`, with clicks passing through). Setting an `aria-label` prop
+  still wins over everything — but it flattens the two states into one name,
+  so prefer `labels`.
+</Callout>
+
+**Motion.** The swap is an opacity cross-fade with a rotate-and-shrink gesture
+on top, and the gesture is multiplied by `--forte-motion-ok` — under
+`prefers-reduced-motion: reduce` it collapses to the plain fade, with no media
+query in the component. The press squash follows the house pattern: snap in on
+`--forte-duration-instant`, spring out on `--forte-ease-spring-snappy`.
+
+## Theming
+
+Every visual decision is a custom property declared on the button root. Set
+them on the toggle itself — through `className` or an inline `style` — rather
+than on an ancestor: the component declares its own defaults on the root
+element, and an element's own declaration beats an inherited value.
+
+<ThemingTable component="ThemeToggle" part="root" />
+
+## API reference
+
+### ThemeToggle
+
+<PropTable component="ThemeToggle" />
+
+Anything a native `<button>` accepts passes through as well. `disabled` also
+sets `data-disabled`, which is what the styles key off.
+
+### ThemeScript
+
+Renders the pre-paint replay script — see [No flash on
+reload](#no-flash-on-reload). Takes any `<script>` prop; `nonce` is the one
+that matters under a strict CSP.
+
+<PropTable component="ThemeScript" />
+
+### useTheme
+
+```tsx
+const { theme, resolvedTheme, setTheme } = useTheme();
+// theme:         "light" | "dark" | "system"   the stated preference
+// resolvedTheme: "light" | "dark"              what is on screen
+// setTheme:      (theme: ThemeMode) => void    write + persist a preference
+```
+
+Two lower-level helpers ship beside it for code outside React's render cycle:
+`setDocumentTheme(theme)` (what `setTheme` and the uncontrolled toggle call)
+and `resolvedDocumentTheme()` (the current mode, read straight off the
+document).

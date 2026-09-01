@@ -689,6 +689,18 @@ import d_textarea_validation from "./textarea/validation";
 import d_textarea_validation_src from "./textarea/validation?raw";
 import d_textarea_variants from "./textarea/variants";
 import d_textarea_variants_src from "./textarea/variants?raw";
+import d_theme_toggle_basic from "./theme-toggle/basic";
+import d_theme_toggle_basic_src from "./theme-toggle/basic?raw";
+import d_theme_toggle_controlled from "./theme-toggle/controlled";
+import d_theme_toggle_controlled_src from "./theme-toggle/controlled?raw";
+import d_theme_toggle_custom_icons from "./theme-toggle/custom-icons";
+import d_theme_toggle_custom_icons_src from "./theme-toggle/custom-icons?raw";
+import d_theme_toggle_sizes from "./theme-toggle/sizes";
+import d_theme_toggle_sizes_src from "./theme-toggle/sizes?raw";
+import d_theme_toggle_use_theme from "./theme-toggle/use-theme";
+import d_theme_toggle_use_theme_src from "./theme-toggle/use-theme?raw";
+import d_theme_toggle_variants from "./theme-toggle/variants";
+import d_theme_toggle_variants_src from "./theme-toggle/variants?raw";
 import d_theming_scoped from "./theming/scoped";
 import d_theming_scoped_src from "./theming/scoped?raw";
 import d_toast_action from "./toast/action";
@@ -1109,6 +1121,12 @@ export type DemoId =
   | "textarea/states"
   | "textarea/validation"
   | "textarea/variants"
+  | "theme-toggle/basic"
+  | "theme-toggle/controlled"
+  | "theme-toggle/custom-icons"
+  | "theme-toggle/sizes"
+  | "theme-toggle/use-theme"
+  | "theme-toggle/variants"
   | "theming/scoped"
   | "toast/action"
   | "toast/basic"
@@ -1492,6 +1510,12 @@ const REGISTRY: Record<DemoId, Demo> = {
   "textarea/states": { Component: d_textarea_states, source: d_textarea_states_src, file: "textarea/states.tsx" },
   "textarea/validation": { Component: d_textarea_validation, source: d_textarea_validation_src, file: "textarea/validation.tsx" },
   "textarea/variants": { Component: d_textarea_variants, source: d_textarea_variants_src, file: "textarea/variants.tsx" },
+  "theme-toggle/basic": { Component: d_theme_toggle_basic, source: d_theme_toggle_basic_src, file: "theme-toggle/basic.tsx" },
+  "theme-toggle/controlled": { Component: d_theme_toggle_controlled, source: d_theme_toggle_controlled_src, file: "theme-toggle/controlled.tsx" },
+  "theme-toggle/custom-icons": { Component: d_theme_toggle_custom_icons, source: d_theme_toggle_custom_icons_src, file: "theme-toggle/custom-icons.tsx" },
+  "theme-toggle/sizes": { Component: d_theme_toggle_sizes, source: d_theme_toggle_sizes_src, file: "theme-toggle/sizes.tsx" },
+  "theme-toggle/use-theme": { Component: d_theme_toggle_use_theme, source: d_theme_toggle_use_theme_src, file: "theme-toggle/use-theme.tsx" },
+  "theme-toggle/variants": { Component: d_theme_toggle_variants, source: d_theme_toggle_variants_src, file: "theme-toggle/variants.tsx" },
   "theming/scoped": { Component: d_theming_scoped, source: d_theming_scoped_src, file: "theming/scoped.tsx" },
   "toast/action": { Component: d_toast_action, source: d_toast_action_src, file: "toast/action.tsx" },
   "toast/basic": { Component: d_toast_basic, source: d_toast_basic_src, file: "toast/basic.tsx" },

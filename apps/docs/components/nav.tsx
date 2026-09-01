@@ -93,6 +93,7 @@ const NAV: NavGroup[] = [
       { title: "Switch", href: "/components/switch/" },
       { title: "Tabs", href: "/components/tabs/" },
       { title: "Textarea", href: "/components/textarea/" },
+      { title: "Theme Toggle", href: "/components/theme-toggle/" },
       { title: "Toast", href: "/components/toast/" },
       { title: "Toggle", href: "/components/toggle/" },
       { title: "Toggle Group", href: "/components/toggle-group/" },
