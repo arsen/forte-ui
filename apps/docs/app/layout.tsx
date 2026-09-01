@@ -128,7 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   title="GitHub"
                   render={
                     <a
-                      href="https://github.com/dofortech/forte-ui"
+                      href="https://github.com/arsen/forte-ui"
                       target="_blank"
                       rel="noreferrer"
                     />
