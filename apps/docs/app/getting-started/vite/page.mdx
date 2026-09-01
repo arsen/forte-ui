@@ -101,13 +101,24 @@ Both palettes are already there — with no attribute set, the page follows the 
 <html lang="en" data-theme="dark">
 ```
 
-or with the library's own switch — drop [`ThemeToggle`](/components/theme-toggle/) anywhere:
+or with the library's own switch. [`ThemeToggle`](/components/theme-toggle/) goes anywhere; parking it in a corner is what `create-forte-ui` scaffolds, so `src/App.tsx` from step 5 becomes:
 
 ```tsx
-import { ThemeToggle } from "@forte-ui/react";
+import { Button, ThemeToggle } from "@forte-ui/react";
 
-<ThemeToggle />
+export default function App() {
+  return (
+    <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}>
+      <ThemeToggle
+        style={{ position: "fixed", top: "var(--forte-space-4)", right: "var(--forte-space-4)" }}
+      />
+      <Button>It works</Button>
+    </main>
+  );
+}
 ```
+
+On the Tailwind path below, that same placement is `className="fixed top-4 right-4"` — the offsets are the same two space tokens either way.
 
 A click writes the attribute and persists the choice to `localStorage("forte-theme")`. To replay it on the next visit *before first paint* — a bundled component runs too late — add one inline script to `index.html`'s `<head>` (`create-forte-ui` scaffolds it for you):
 
@@ -180,11 +191,12 @@ On Next.js the bridge's own `@layer` statement survives the build and this step 
 Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. Every utility that does compile responds to the seed, dark mode and theme scopes:
 
 ```tsx
-import { Button, Card } from "@forte-ui/react";
+import { Button, Card, ThemeToggle } from "@forte-ui/react";
 
 export default function App() {
   return (
     <main className="grid min-h-dvh place-items-center bg-background text-foreground">
+      <ThemeToggle className="fixed top-4 right-4" />
       <Card.Root variant="elevated" className="items-start gap-5">
         <h1 className="text-5 font-semibold">forte-ui + Tailwind</h1>
         <p className="text-2 text-foreground-muted">
@@ -197,7 +209,9 @@ export default function App() {
 }
 ```
 
-Note where `items-start gap-5` lands: on a component. That is the layer order from step 3 doing its job — utilities beat the card's own layout without `!important`.
+Note where `items-start gap-5` and the toggle's `fixed top-4 right-4` land: on components. That is the layer order from step 3 doing its job — utilities beat a component's own layout without `!important`.
+
+The [Light and dark](#6-light-and-dark) step applies verbatim on this path — the same toggle, and the same replay script in `index.html`.
 
 The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind/) page — including the shipped [`cn`](/customization/tailwind/#merging-classes-cn) merger for conditional class lists (install `tailwind-merge` if you use it).
 

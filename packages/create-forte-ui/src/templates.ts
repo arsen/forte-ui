@@ -22,6 +22,30 @@ function joinBlocks(...blocks: string[]): string {
   return blocks.filter(Boolean).join("\n") + "\n";
 }
 
+/* The starter's one piece of chrome, and the working half of the guides'
+ * "Light and dark" step: the theme the questionnaire just seeded can be
+ * flipped without writing a line. Two spellings of the same corner, because
+ * the Tailwind paths have utilities and the plain ones do not.
+ *
+ * `fixed` rather than in flow, so the page still centres the component it is
+ * there to demonstrate — and the offsets are space tokens rather than `1rem`,
+ * because this file is the first thing a new app is copied out of and a
+ * hardcoded value here is the habit it teaches. */
+const TOGGLE_TW = `<ThemeToggle className="fixed top-4 right-4" />`;
+const TOGGLE_STYLE = `<ThemeToggle
+  style={{ position: "fixed", top: "var(--forte-space-4)", right: "var(--forte-space-4)" }}
+/>`;
+
+/** `TOGGLE_STYLE` re-indented to sit at `indent` spaces (its first line is
+ *  placed by the caller, the continuation lines by this). */
+function indented(block: string, indent: number): string {
+  const pad = " ".repeat(indent);
+  return block
+    .split("\n")
+    .map((line, i) => (i === 0 ? line : pad + line))
+    .join("\n");
+}
+
 /* -------------------------------------------------------------------------
  * Vite
  * ---------------------------------------------------------------------- */
@@ -69,11 +93,12 @@ createRoot(document.getElementById("root")!).render(
 
 export function viteAppTsx(name: string, tailwind: boolean): string {
   if (tailwind) {
-    return `import { Button, Card } from "@forte-ui/react";
+    return `import { Button, Card, ThemeToggle } from "@forte-ui/react";
 
 export default function App() {
   return (
     <main className="grid min-h-dvh place-items-center bg-background text-foreground">
+      ${TOGGLE_TW}
       <Card.Root variant="elevated" className="items-start gap-5">
         <h1 className="text-5 font-semibold">${name}</h1>
         <p className="text-2 text-foreground-muted">
@@ -86,11 +111,12 @@ export default function App() {
 }
 `;
   }
-  return `import { Button } from "@forte-ui/react";
+  return `import { Button, ThemeToggle } from "@forte-ui/react";
 
 export default function App() {
   return (
     <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}>
+      ${indented(TOGGLE_STYLE, 6)}
       <Button>It works</Button>
     </main>
   );
@@ -135,8 +161,14 @@ export function nextLayoutTsx(name: string, a: ThemeAnswers, tailwind: boolean):
    * step: the script replays a stored light/dark choice onto <html> before
    * first paint, and the suppression covers the attribute it legitimately
    * adds. Harmless with nothing stored — the page just follows the OS. */
+  /* The toggle that writes what the script replays. It goes in the LAYOUT,
+   * not the page, because it is chrome: it then survives every route the app
+   * grows, and the page stays the one file a reader edits first. Being a flat
+   * export it needs no `"use client"` here — the boundary the compound
+   * components force on `page.tsx` does not reach the layout. */
+  const toggle = tailwind ? TOGGLE_TW : indented(TOGGLE_STYLE, 8);
   return `import type { Metadata } from "next";
-import { ThemeScript } from "@forte-ui/react";
+import { ThemeScript, ThemeToggle } from "@forte-ui/react";
 ${font.importLine ? font.importLine + "\n" : ""}${themeImport}import "./globals.css";
 
 ${font.consts ? font.consts + "\n\n" : ""}export const metadata: Metadata = {
@@ -154,7 +186,10 @@ export default function RootLayout({
       <head>
         <ThemeScript />
       </head>
-      <body>{children}</body>
+      <body>
+        ${toggle}
+        {children}
+      </body>
     </html>
   );
 }
