@@ -16,7 +16,13 @@ import pc from "picocolors";
 import { parseCliArgs, UsageError, HELP } from "./args.js";
 import { collectPlan } from "./prompts.js";
 import { hexToOklch, validateSeed } from "./color.js";
-import { applyOverlay, dependenciesFor, recordDependencies, type ProjectPlan } from "./overlay.js";
+import {
+  applyOverlay,
+  dependenciesFor,
+  recordDependencies,
+  toAddSpecs,
+  type ProjectPlan,
+} from "./overlay.js";
 import {
   detectPackageManager,
   runScaffolder,
@@ -130,16 +136,25 @@ async function main() {
   }
   p.log.success(`Wired up forte-ui: ${written.join(", ")}`);
 
-  const deps = dependenciesFor(plan);
+  const deps = dependenciesFor(plan, opts.library);
+  const specs = toAddSpecs(deps);
   if (opts.install) {
-    p.log.step(`Installing ${deps.join(", ")} with ${pm}…`);
-    if (!addDependencies(pm, deps, plan.dir)) {
-      p.cancel(`${pm} failed to install — run ${pc.bold(`${installCommand(pm)}`)} in ./${plan.name} yourself.`);
+    p.log.step(`Installing ${specs.join(", ")} with ${pm}…`);
+    if (!addDependencies(pm, specs, plan.dir)) {
+      /* A `--library` spec is validated only here, by the registry itself —
+       * so on failure say which spec died rather than suggesting a re-run
+       * that would resolve the exact same thing. */
+      p.cancel(
+        opts.library
+          ? `${pm} could not install @forte-ui/react@${opts.library} — see its output above. ` +
+              `Check that the --library spec exists on the registry.`
+          : `${pm} failed to install — run ${pc.bold(`${installCommand(pm)}`)} in ./${plan.name} yourself.`,
+      );
       process.exit(1);
     }
   } else {
     recordDependencies(plan.dir, deps);
-    p.log.info(`Skipped install; added ${deps.join(", ")} to package.json.`);
+    p.log.info(`Skipped install; added ${specs.join(", ")} to package.json.`);
   }
 
   const steps = [

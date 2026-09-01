@@ -21,6 +21,13 @@ export type CliOptions = {
   framework?: Framework;
   tailwind?: boolean;
   pm?: PackageManager;
+  /** Version spec for `@forte-ui/react` — exact ("1.0.0-alpha.4"), dist-tag
+   *  ("alpha"), or range. Deliberately NOT validated here: the package
+   *  manager understands every legal form (tags, ranges, `file:`…) and
+   *  rejects a wrong one at install with a better error than any regex
+   *  would give. Undefined = the registry's `latest`. Dev/CI knob only —
+   *  no prompt, and the studio dialog knows nothing about it. */
+  library?: string;
   yes: boolean;
   install: boolean;
   help: boolean;
@@ -74,6 +81,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
       motion: { type: "string" },
       "font-sans": { type: "string" },
       "font-mono": { type: "string" },
+      library: { type: "string" },
       pm: { type: "string" },
       yes: { type: "boolean", short: "y" },
       "no-install": { type: "boolean" },
@@ -123,6 +131,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
     framework: values.framework === undefined ? undefined : oneOf("framework", values.framework, ["next", "vite"] as const),
     tailwind: values.tailwind ? true : values["no-tailwind"] ? false : undefined,
     pm: values.pm === undefined ? undefined : oneOf("pm", values.pm, PACKAGE_MANAGERS),
+    library: values.library,
     yes: values.yes ?? false,
     install: !(values["no-install"] ?? false),
     help: values.help ?? false,
@@ -147,6 +156,9 @@ Project
   --tailwind             wire the Tailwind v4 bridge (default yes)
   --no-tailwind          plain CSS setup
   --pm                   npm | pnpm | yarn | bun (default: whoever invoked us)
+  --library              version spec for @forte-ui/react — exact
+                         ("1.0.0-alpha.4"), a dist-tag ("alpha"), or a range.
+                         Default: latest.
   --no-install           write files only; skip installing dependencies
   -y, --yes              accept the defaults for everything not passed
 
