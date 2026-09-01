@@ -1,12 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { Check, Copy } from "lucide-react";
 import {
   Button,
   ColorPicker,
   Dialog,
   Field,
   Input,
+  InputGroup,
   Select,
   Separator,
   Slider,
@@ -32,10 +34,12 @@ import { cn } from "@/lib/cn";
 import {
   DENSITY,
   MOTION,
+  PACKAGE_MANAGERS,
   RADIUS,
   SCHEME,
   toScaffoldCommand,
   useThemeConfig,
+  type PackageManager,
   type Scheme,
   type ThemeConfig,
 } from "./theme-config";
@@ -354,7 +358,9 @@ export function ThemeConfigurator({ className }: { className?: string }) {
           <p
             key={w.message}
             className={cn(
-              "m-0 rounded-3 p-2 text-1 leading-[1.45]",
+              // The surface radius, for the reason the command box below
+              // gives — a numbered step ignores the soft and pill presets.
+              "m-0 rounded-surface p-2 text-1 leading-[1.45]",
               w.level === "warn"
                 ? "bg-danger-soft text-danger-text"
                 : "bg-panel-active text-foreground-muted",
@@ -385,6 +391,7 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
   const [name, setName] = React.useState("my-app");
   const [framework, setFramework] = React.useState<"next" | "vite">("next");
   const [tailwind, setTailwind] = React.useState(true);
+  const [packageManager, setPackageManager] = React.useState<PackageManager>("pnpm");
 
   /* The command is pasted into a shell, so the name never gets to carry
    * quoting problems: spaces become the dashes the CLI would demand anyway,
@@ -393,13 +400,20 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
    * while someone is typing in it is how "my-app" becomes "myapp". */
   const safeName =
     name.trim().toLowerCase().replaceAll(/\s+/g, "-").replaceAll(/[^a-z0-9._-]/g, "") || "my-app";
-  const command = toScaffoldCommand(cfg, { name: safeName, framework, tailwind });
+  const command = toScaffoldCommand(cfg, { name: safeName, framework, tailwind, packageManager });
 
   React.useEffect(() => {
     if (!copied) return;
     const t = setTimeout(() => setCopied(false), 2000);
     return () => clearTimeout(t);
   }, [copied]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopied(true);
+    } catch { /* clipboard may be blocked; the command stays selectable */ }
+  };
 
   return (
     <section className={GROUP}>
@@ -456,22 +470,63 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
             </Field.Description>
           </Field.Root>
 
-          <pre className="m-0 overflow-x-auto rounded-3 bg-panel-active p-3 font-mono text-1 leading-[1.6]">
-            {command}
-          </pre>
+          {/* The manager sits ON the command rather than among the questions
+            * above: it changes the line's spelling, not the project, and the
+            * CLI then carries the choice through — it installs and runs the
+            * framework scaffold with whichever manager invoked it. The strip
+            * is the Framework one again (and again not `Segmented`, whose
+            * `capitalize` would print "Pnpm"), and the pair share the same
+            * gap every other group in the dialog uses, so they read as one
+            * setting: pick a manager, read the line. */}
+          <div className="grid gap-2">
+            <Tabs.Root
+              value={packageManager}
+              onValueChange={(v) => setPackageManager(v as PackageManager)}
+              variant="pill"
+              style={TAB_VARS}
+            >
+              <Tabs.List className="w-full" aria-label="Package manager">
+                {PACKAGE_MANAGERS.map((pm) => (
+                  <Tabs.Tab key={pm} value={pm} className="min-w-0 flex-1">
+                    {pm}
+                  </Tabs.Tab>
+                ))}
+                <Tabs.Indicator className={TAB_INDICATOR} />
+              </Tabs.List>
+            </Tabs.Root>
+            {/* A read-only field rather than a <pre>: it is a form control,
+              * so it wears the control radius and height the Input above it
+              * does, scrolls a long line the way a shell would, and gives
+              * keyboard users a caret to select from. The copy button lives
+              * INSIDE the boundary, the way the library's own copy-link
+              * demo does it — the field and its action are one thing.
+              *
+              * Focus selects the whole line, because the only reason to land
+              * here is to take the command: with the button beside it a
+              * select-all is what a keyboard reader would do next anyway. */}
+            <InputGroup.Root fullWidth>
+              <InputGroup.Input
+                readOnly
+                value={command}
+                aria-label="Scaffold command"
+                className="font-mono text-1"
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <InputGroup.Addon align="inline-end">
+                <InputGroup.Button iconOnly aria-label="Copy command" onClick={copy}>
+                  {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                </InputGroup.Button>
+              </InputGroup.Addon>
+            </InputGroup.Root>
+            {/* The icon swap is the sighted confirmation; this is the one a
+              * screen reader gets. */}
+            <span aria-live="polite" className="forte-visually-hidden">
+              {copied ? "Command copied" : ""}
+            </span>
+          </div>
 
           <Dialog.Footer>
             <Dialog.Close render={<Button variant="soft" tone="neutral" />}>Close</Dialog.Close>
-            <Button
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(command);
-                  setCopied(true);
-                } catch { /* clipboard may be blocked; the command stays visible */ }
-              }}
-            >
-              {copied ? "Copied" : "Copy command"}
-            </Button>
           </Dialog.Footer>
         </Dialog.Popup>
       </Dialog.Root>
