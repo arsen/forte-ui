@@ -125,23 +125,34 @@ function applyNext({ name, dir, tailwind, answers }: ProjectPlan): string[] {
   return written;
 }
 
+export type Dependency = { name: string; spec: string };
+
 /** The `--no-install` fallback: record the dependencies so the user's own
- *  install resolves them. "latest" is a dist-tag, which every manager
- *  accepts and replaces with a real range on first install. */
-export function recordDependencies(dir: string, deps: string[]) {
+ *  install resolves them. The default spec is the "latest" dist-tag, which
+ *  every manager accepts and replaces with a real range on first install —
+ *  and so is anything `--library` put there instead, tag, range or exact. */
+export function recordDependencies(dir: string, deps: Dependency[]) {
   const pkgPath = path.join(dir, "package.json");
   const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8")) as {
     dependencies?: Record<string, string>;
   };
   pkg.dependencies ??= {};
-  for (const dep of deps) pkg.dependencies[dep] = "latest";
+  for (const dep of deps) pkg.dependencies[dep.name] = dep.spec;
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
 }
 
-export function dependenciesFor(plan: ProjectPlan): string[] {
-  /* create-next-app's --tailwind scaffold already carries tailwindcss v4;
-   * on Vite the guide installs it alongside the library, plus the plugin. */
+/** `pm add` arguments: the bare name resolves `latest` exactly as before, so
+ *  only a `--library` spec changes what gets asked of the registry. */
+export function toAddSpecs(deps: Dependency[]): string[] {
+  return deps.map((d) => (d.spec === "latest" ? d.name : `${d.name}@${d.spec}`));
+}
+
+export function dependenciesFor(plan: ProjectPlan, library?: string): Dependency[] {
+  /* `--library` steers ONLY the library. The Vite Tailwind extras stay on
+   * latest — the templates target current Tailwind v4 regardless of which
+   * forte-ui build is being tried out. */
+  const lib = { name: "@forte-ui/react", spec: library ?? "latest" };
   return plan.framework === "vite" && plan.tailwind
-    ? ["@forte-ui/react", "tailwindcss", "@tailwindcss/vite"]
-    : ["@forte-ui/react"];
+    ? [lib, { name: "tailwindcss", spec: "latest" }, { name: "@tailwindcss/vite", spec: "latest" }]
+    : [lib];
 }

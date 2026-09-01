@@ -21,8 +21,19 @@ export type CliOptions = {
   framework?: Framework;
   tailwind?: boolean;
   pm?: PackageManager;
+  /** Version spec for `@forte-ui/react` — exact ("1.0.0-alpha.4"), dist-tag
+   *  ("alpha"), or range. Deliberately NOT validated here: the package
+   *  manager understands every legal form (tags, ranges, `file:`…) and
+   *  rejects a wrong one at install with a better error than any regex
+   *  would give. Undefined = the registry's `latest`. Dev/CI knob only —
+   *  no prompt, and the studio dialog knows nothing about it. */
+  library?: string;
   yes: boolean;
   install: boolean;
+  /** Install the forte-ui agent skill (skills.sh) into the project. On by
+   *  default; `--no-skill` opts out, and `--no-install` skips it with
+   *  everything else. */
+  skill: boolean;
   help: boolean;
   version: boolean;
   /** Only the keys given as flags — presence is what suppresses the prompt. */
@@ -74,9 +85,11 @@ export function parseCliArgs(argv: string[]): CliOptions {
       motion: { type: "string" },
       "font-sans": { type: "string" },
       "font-mono": { type: "string" },
+      library: { type: "string" },
       pm: { type: "string" },
       yes: { type: "boolean", short: "y" },
       "no-install": { type: "boolean" },
+      "no-skill": { type: "boolean" },
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "v" },
     },
@@ -123,8 +136,10 @@ export function parseCliArgs(argv: string[]): CliOptions {
     framework: values.framework === undefined ? undefined : oneOf("framework", values.framework, ["next", "vite"] as const),
     tailwind: values.tailwind ? true : values["no-tailwind"] ? false : undefined,
     pm: values.pm === undefined ? undefined : oneOf("pm", values.pm, PACKAGE_MANAGERS),
+    library: values.library,
     yes: values.yes ?? false,
     install: !(values["no-install"] ?? false),
+    skill: !(values["no-skill"] ?? false),
     help: values.help ?? false,
     version: values.version ?? false,
     answers,
@@ -147,7 +162,13 @@ Project
   --tailwind             wire the Tailwind v4 bridge (default yes)
   --no-tailwind          plain CSS setup
   --pm                   npm | pnpm | yarn | bun (default: whoever invoked us)
+  --library              version spec for @forte-ui/react — exact
+                         ("1.0.0-alpha.4"), a dist-tag ("alpha"), or a range.
+                         Default: latest.
   --no-install           write files only; skip installing dependencies
+                         and the agent skill
+  --no-skill             skip installing the forte-ui agent skill
+                         (skills.sh — .agents/skills plus .claude/skills)
   -y, --yes              accept the defaults for everything not passed
 
 Theme — every skipped value keeps the library default and writes NOTHING,
