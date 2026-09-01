@@ -19,6 +19,12 @@ and this project adheres to
 
 - New component: a built-in light/dark switch that works flash-free in both SSR (Next.js) and SPA (Vite) apps. The button renders both a sun and moon icon and lets CSS keyed on `data-theme` (with a `prefers-color-scheme` fallback) pick the visible one, so the server never needs the visitor's preference and there is no hydration mismatch or wrong icon at first paint. Ships alongside `useTheme` (treats the document attribute as the source of truth, with `localStorage` for persistence) and `ThemeScript` (replays a stored choice before paint). Controlled mode (`theme` + `onThemeChange`) makes the button a dumb control for external managers such as `next-themes`.
 
+### create-forte-ui
+
+- Added a `--scheme` flag (`system` | `light` | `dark`, default `system`) and a matching "Light and dark" step in the interactive "customize further?" prompt. Pinning `light` or `dark` writes a static `data-theme` on `<html>` and skips scaffolding the toggle below; the default keeps following the OS.
+- Vite and Next.js starters now scaffold a working `ThemeToggle` in the top-right corner when the scheme is left at `system` — the working half of the getting-started guides' "Light and dark" step. Vite gets an inline script in `index.html`'s `<head>` that replays a stored choice before first paint (byte-identical to `@forte-ui/react`'s `themeInitScript`); Next.js gets `ThemeScript` in the root layout's `<head>` plus `suppressHydrationWarning` on `<html>`.
+- Fixed the Vite path sometimes finishing as a stock Vite app with no forte-ui applied: `create-vite@latest` prompts interactively whenever stdin is a TTY even with `--template` set, and answering its "Install and start now?" question started a dev server inside the child process before the overlay could run. The scaffolder now passes `--no-interactive` to `create-vite`, which takes its non-interactive defaults and lets the scaffolder's own install (with the library included) run afterward.
+
 ### General
 
 - `docgen` now emits `docs-data/components.md`, a generated catalogue of every component with a one-line when-to-use summary, its `props.json` part keys, its `theming.json` pointer, and its hooks — assembled from new `@summary` / `@category` doc-comment tags that the build now requires on every component root, so a new component can no longer ship without being catalogued. The file is exported from the package (`@forte-ui/react/docs-data/components.md`), and the internal docgen script order changed so `theming.json` is generated before `components.md` reads it.
