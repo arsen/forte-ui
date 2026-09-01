@@ -1,6 +1,6 @@
 {
   "name": "create-forte-ui",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Scaffold a new app wired up with forte-ui — Vite or Next.js, with or without Tailwind, themed from your answers.",
   "license": "MIT",
   "type": "module",
