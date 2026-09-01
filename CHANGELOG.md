@@ -13,30 +13,7 @@ and this project adheres to
 
 ## [Unreleased]
 
-## [1.0.0-alpha.6] - 2026-09-01
-
-### ThemeToggle
-
-- New component: a built-in light/dark switch that works flash-free in both SSR (Next.js) and SPA (Vite) apps. The button renders both a sun and moon icon and lets CSS keyed on `data-theme` (with a `prefers-color-scheme` fallback) pick the visible one, so the server never needs the visitor's preference and there is no hydration mismatch or wrong icon at first paint. Ships alongside `useTheme` (treats the document attribute as the source of truth, with `localStorage` for persistence) and `ThemeScript` (replays a stored choice before paint). Controlled mode (`theme` + `onThemeChange`) makes the button a dumb control for external managers such as `next-themes`.
-
-### create-forte-ui
-
-- Added a `--scheme` flag (`system` | `light` | `dark`, default `system`) and a matching "Light and dark" step in the interactive "customize further?" prompt. Pinning `light` or `dark` writes a static `data-theme` on `<html>` and skips scaffolding the toggle below; the default keeps following the OS.
-- Vite and Next.js starters now scaffold a working `ThemeToggle` in the top-right corner when the scheme is left at `system` — the working half of the getting-started guides' "Light and dark" step. Vite gets an inline script in `index.html`'s `<head>` that replays a stored choice before first paint (byte-identical to `@forte-ui/react`'s `themeInitScript`); Next.js gets `ThemeScript` in the root layout's `<head>` plus `suppressHydrationWarning` on `<html>`.
-- Fixed the Vite path sometimes finishing as a stock Vite app with no forte-ui applied: `create-vite@latest` prompts interactively whenever stdin is a TTY even with `--template` set, and answering its "Install and start now?" question started a dev server inside the child process before the overlay could run. The scaffolder now passes `--no-interactive` to `create-vite`, which takes its non-interactive defaults and lets the scaffolder's own install (with the library included) run afterward.
-
-### General
-
-- `docgen` now emits `docs-data/components.md`, a generated catalogue of every component with a one-line when-to-use summary, its `props.json` part keys, its `theming.json` pointer, and its hooks — assembled from new `@summary` / `@category` doc-comment tags that the build now requires on every component root, so a new component can no longer ship without being catalogued. The file is exported from the package (`@forte-ui/react/docs-data/components.md`), and the internal docgen script order changed so `theming.json` is generated before `components.md` reads it.
-
-## [1.0.0-alpha.5] - 2026-09-01
-
-### create-forte-ui
-
-- Added a `--library` flag that pins the version spec used for the `@forte-ui/react` install — exact (`1.0.0-alpha.4`), a dist-tag (`alpha`), or a range — forwarded to the package manager unvalidated, so a bad spec fails with the registry's own error naming the exact spec rather than a generic "re-run the install" suggestion. It's a dev/CI knob only: no interactive prompt asks for it, and the Theme Studio's "Scaffold this theme" dialog does not use it. Defaults to the `latest` dist-tag, unchanged from before.
-- The scaffolder now installs the forte-ui agent skill (`skills add arsen/forte-ui -s forte-ui`) into the new project by default, so AI tooling working in the scaffolded app starts past the library's documented traps. A new `--no-skill` flag opts out on its own; `--no-install` continues to skip it along with everything else it installs. A failed skill install now only warns, with the manual command to retry, instead of failing the scaffold — the app itself is unaffected.
-
-## [1.0.0-alpha.4] - 2026-08-31
+## [1.0.0-alpha.7] - 2026-09-01
 
 ### Button
 
@@ -88,6 +65,11 @@ and this project adheres to
 
 - Fixed the `pill` variant's strip radius being measured against `--forte-tabs-radius` (the panel's radius) instead of the indicator's own `--forte-tabs-indicator-radius`, so the strip's curve is now concentric with the pill it contains at every `data-forte-radius` preset — previously only `none` and `pill` happened to agree. A `pill` tab's own corners now match the indicator too, so its focus ring and hover fill trace the same shape as the thumb underneath.
 
+### ThemeToggle
+
+- New component: a built-in light/dark switch that works flash-free in both SSR (Next.js) and SPA (Vite) apps. The button renders both a sun and moon icon and lets CSS keyed on `data-theme` (with a `prefers-color-scheme` fallback) pick the visible one, so the server never needs the visitor's preference and there is no hydration mismatch or wrong icon at first paint. Ships alongside `useTheme` (treats the document attribute as the source of truth, with `localStorage` for persistence) and `ThemeScript` (replays a stored choice before paint). Controlled mode (`theme` + `onThemeChange`) makes the button a dumb control for external managers such as `next-themes`.
+- The button carries its 24×24px minimum target on `min-inline-size`/`min-block-size` as well as `inline-size`/`block-size`, so a flex or grid parent (for example a `justify-between` header row, where a flex item's default `min-width: auto` would otherwise squeeze it to the icon plus the border) cannot shrink the square below the target.
+
 ### Tooltip
 
 - **Breaking:** `Tooltip.Shortcut` is now a composed `Kbd` — it renders a
@@ -105,6 +87,11 @@ and this project adheres to
 ### create-forte-ui
 
 - New package: `pnpm create forte-ui` (or `npm create forte-ui@latest`) scaffolds a fresh app already wired up with forte-ui. It runs `create-vite` / `create-next-app` non-interactively for the framework half and then applies only the forte-ui overlay — the same steps as the [getting-started guides](https://forte-ui.com/getting-started/nextjs/), which are its spec, so a scaffolded app diffs against the walkthrough and shows only your own answers. Four questions (name, framework, Tailwind, accent colour) reach a running app; secondary colour, neutral tint, radius, density, motion and fonts hide behind one "customize further?" gate. Every prompt has a flag twin (`--seed`, `--radius`, `--font-sans`, `--pm`, `--yes`, `--no-install`, …), so the [Theme Studio](https://forte-ui.com/theme/)'s "Scaffold this theme" dialog can hand back a complete, copy-pasteable command line. A skipped answer writes nothing — no restated defaults, no attributes for default presets — so the scaffolded app keeps following the library's own defaults as they change. `pnpm --filter create-forte-ui smoke` builds all four framework × Tailwind combinations against the workspace library as its drift check.
+- Added a `--library` flag that pins the version spec used for the `@forte-ui/react` install — exact (`1.0.0-alpha.4`), a dist-tag (`alpha`), or a range — forwarded to the package manager unvalidated, so a bad spec fails with the registry's own error naming the exact spec rather than a generic "re-run the install" suggestion. It's a dev/CI knob only: no interactive prompt asks for it, and the Theme Studio's "Scaffold this theme" dialog does not use it. Defaults to the `latest` dist-tag, unchanged from before.
+- The scaffolder now installs the forte-ui agent skill (`skills add arsen/forte-ui -s forte-ui`) into the new project by default, so AI tooling working in the scaffolded app starts past the library's documented traps. A new `--no-skill` flag opts out on its own; `--no-install` continues to skip it along with everything else it installs. A failed skill install now only warns, with the manual command to retry, instead of failing the scaffold — the app itself is unaffected.
+- Added a `--scheme` flag (`system` | `light` | `dark`, default `system`) and a matching "Light and dark" step in the interactive "customize further?" prompt. Pinning `light` or `dark` writes a static `data-theme` on `<html>` and skips scaffolding the toggle below; the default keeps following the OS.
+- Vite and Next.js starters now scaffold a working `ThemeToggle` in the top-right corner when the scheme is left at `system` — the working half of the getting-started guides' "Light and dark" step. Vite gets an inline script in `index.html`'s `<head>` that replays a stored choice before first paint (byte-identical to `@forte-ui/react`'s `themeInitScript`); Next.js gets `ThemeScript` in the root layout's `<head>` plus `suppressHydrationWarning` on `<html>`.
+- Fixed the Vite path sometimes finishing as a stock Vite app with no forte-ui applied: `create-vite@latest` prompts interactively whenever stdin is a TTY even with `--template` set, and answering its "Install and start now?" question started a dev server inside the child process before the overlay could run. The scaffolder now passes `--no-interactive` to `create-vite`, which takes its non-interactive defaults and lets the scaffolder's own install (with the library included) run afterward.
 
 ### Design tokens & motion
 
@@ -112,6 +99,7 @@ and this project adheres to
 
 ### General
 
+- `docgen` now emits `docs-data/components.md`, a generated catalogue of every component with a one-line when-to-use summary, its `props.json` part keys, its `theming.json` pointer, and its hooks — assembled from new `@summary` / `@category` doc-comment tags that the build now requires on every component root, so a new component can no longer ship without being catalogued. The file is exported from the package (`@forte-ui/react/docs-data/components.md`), and the internal docgen script order changed so `theming.json` is generated before `components.md` reads it.
 - Fixed a docs-data generation bug where two parts sharing a prop name in one file (for example `ScrollArea.Root`'s `orientation="both"` and `ScrollArea.Scrollbar`'s `orientation="vertical"`) could overwrite each other's documented default in the published `docs-data/props.json`; defaults are now read from each component's own declaration.
 
 ## [1.0.0-alpha.3] - 2026-08-31
@@ -241,10 +229,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.6...HEAD
-[1.0.0-alpha.6]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.5...v1.0.0-alpha.6
-[1.0.0-alpha.5]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.4...v1.0.0-alpha.5
-[1.0.0-alpha.4]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.4
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...HEAD
+[1.0.0-alpha.7]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.7
 [1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
 [1.0.0-alpha.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2
 [1.0.0-alpha.1]: https://github.com/arsen/forte-ui/releases/tag/v1.0.0-alpha.1
