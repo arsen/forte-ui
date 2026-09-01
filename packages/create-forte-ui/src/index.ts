@@ -57,7 +57,24 @@ function warnAboutSeeds(plan: ProjectPlan) {
 
 function scaffold(plan: ProjectPlan, pm: PackageManager): boolean {
   if (plan.framework === "vite") {
-    return runScaffolder(pm, "create-vite@latest", [plan.name, "--template", "react-ts"], process.cwd());
+    return runScaffolder(
+      pm,
+      "create-vite@latest",
+      [
+        plan.name,
+        "--template",
+        "react-ts",
+        /* create-vite 9 goes interactive whenever stdin is a TTY, template
+         * or not: it asks which linter to use and then "Install and start
+         * now?". A yes to that starts the dev server INSIDE our child
+         * process, so control never comes back and the overlay is never
+         * applied — the user ends up with a stock Vite app and no forte-ui.
+         * Non-interactive takes its defaults (Oxlint, no install), and the
+         * one install happens at the end with the library included. */
+        "--no-interactive",
+      ],
+      process.cwd(),
+    );
   }
   return runScaffolder(
     pm,
