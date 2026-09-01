@@ -112,26 +112,33 @@ Both palettes are already there — with no attribute set, the page follows the 
 <html lang="en" data-theme="dark">
 ```
 
-For a *switchable* theme, the library ships the whole kit: drop
-[`ThemeToggle`](/components/theme-toggle/) anywhere, and render `ThemeScript` in
-the layout's `<head>` so a stored choice is replayed before first paint instead
-of flashing (`create-forte-ui` scaffolds both the script and the
-`suppressHydrationWarning` it calls for):
+For a *switchable* theme, the library ships the whole kit:
+[`ThemeToggle`](/components/theme-toggle/) is the switch, and `ThemeScript` in
+the layout's `<head>` replays a stored choice before first paint instead of
+flashing. `app/layout.tsx` — which is where `create-forte-ui` puts both, along
+with the `suppressHydrationWarning` the script calls for:
 
 ```tsx
 import { ThemeScript, ThemeToggle } from "@forte-ui/react";
 
-// app/layout.tsx
 <html lang="en" suppressHydrationWarning>
   <head>
     <ThemeScript />
   </head>
-  <body>{children}</body>
+  <body>
+    <ThemeToggle
+      style={{ position: "fixed", top: "var(--forte-space-4)", right: "var(--forte-space-4)" }}
+    />
+    {children}
+  </body>
 </html>
-
-// anywhere in the app
-<ThemeToggle />
 ```
+
+The toggle goes in the layout because it is chrome — one declaration, and every
+route the app grows keeps it. It needs no `"use client"` there for the same
+reason `Button` does not in step 5: it is a flat export, so the layout stays a
+server component. On the Tailwind path below the placement is
+`className="fixed top-4 right-4"` instead, reading the same two space tokens.
 
 Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control. If you already use next-themes, [it drives the same attribute directly](#dark-mode-with-next-themes).
 
@@ -199,6 +206,8 @@ export default function Home() {
 The `"use client"` is `Card.Root`'s doing, not Tailwind's — the [compound-component callout](#5-render-a-component) from the plain path applies here verbatim, and without the directive this page fails to prerender with its exact error.
 
 Note where `items-start gap-5` lands: on a component. That is the layer order from step 2 doing its job — utilities beat the card's own layout without `!important`.
+
+The [Light and dark](#6-light-and-dark) step applies verbatim on this path — the same `ThemeScript` and `ThemeToggle` in `app/layout.tsx`, with the toggle's placement written as `className="fixed top-4 right-4"`.
 
 The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind/) page.
 
