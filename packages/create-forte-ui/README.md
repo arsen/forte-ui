@@ -10,7 +10,7 @@ npm create forte-ui@latest my-app
 
 Four questions get you to a running app (name, framework, Tailwind, accent
 color); everything else — secondary color, neutral tint, radius, density,
-motion, fonts — hides behind one "customize further?" gate. Every prompt has a
+motion, light/dark, fonts — hides behind one "customize further?" gate. Every prompt has a
 flag twin, so the [Theme Studio](https://forte-ui.com/theme/) can hand you a
 complete command line and `--yes` runs without a single question:
 

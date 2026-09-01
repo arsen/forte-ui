@@ -112,6 +112,8 @@ Both palettes are already there — with no attribute set, the page follows the 
 <html lang="en" data-theme="dark">
 ```
 
+That is what `create-forte-ui --scheme dark` writes — and it then leaves the toggle and script below out of the layout, since a static attribute has nothing to switch and nothing to replay.
+
 For a *switchable* theme, the library ships the whole kit:
 [`ThemeToggle`](/components/theme-toggle/) is the switch, and `ThemeScript` in
 the layout's `<head>` replays a stored choice before first paint instead of

@@ -48,7 +48,7 @@ function applyVite({ name, dir, tailwind, answers }: ProjectPlan): string[] {
   written.push("src/index.css");
   write(dir, "src/main.tsx", viteMainTsx(tailwind));
   written.push("src/main.tsx");
-  write(dir, "src/App.tsx", viteAppTsx(name, tailwind));
+  write(dir, "src/App.tsx", viteAppTsx(name, tailwind, answers.scheme === "system"));
   written.push("src/App.tsx");
   /* The guide's warning covers App.css too: its rules are unlayered and the
    * new App.tsx no longer imports it. Delete rather than empty, so nobody
@@ -80,20 +80,27 @@ function applyVite({ name, dir, tailwind, answers }: ProjectPlan): string[] {
    * "Light and dark" step. A bundled component cannot run before the bundle,
    * so on Vite the script lives in the document itself; the string must stay
    * byte-identical to `themeInitScript` in @forte-ui/react, which is the
-   * other writer of the same localStorage key. */
-  const themeReplay =
-    "    <!-- Replays a stored light/dark choice before first paint\n" +
-    "         (themeInitScript from @forte-ui/react). -->\n" +
-    '    <script>(function(){try{var t=localStorage.getItem("forte-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>\n';
-  const replayed = html.replace(/[ \t]*<\/head>/, `${themeReplay}  </head>`);
-  if (replayed === html) {
-    throw new Error(
-      "could not find '</head>' in index.html to add the theme replay script — " +
-        "the create-vite template may have changed; copy the snippet from the " +
-        "guide's 'Light and dark' step into <head> by hand.",
-    );
+   * other writer of the same localStorage key.
+   *
+   * Not when a scheme is pinned: `data-theme` is then static in the markup
+   * above, and the script would OVERRIDE it with any `forte-theme` record on
+   * the origin — which on localhost is shared by every project, so a toggle
+   * pressed in another app would flip this one's pinned palette. */
+  if (answers.scheme === "system") {
+    const themeReplay =
+      "    <!-- Replays a stored light/dark choice before first paint\n" +
+      "         (themeInitScript from @forte-ui/react). -->\n" +
+      '    <script>(function(){try{var t=localStorage.getItem("forte-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();</script>\n';
+    const replayed = html.replace(/[ \t]*<\/head>/, `${themeReplay}  </head>`);
+    if (replayed === html) {
+      throw new Error(
+        "could not find '</head>' in index.html to add the theme replay script — " +
+          "the create-vite template may have changed; copy the snippet from the " +
+          "guide's 'Light and dark' step into <head> by hand.",
+      );
+    }
+    html = replayed;
   }
-  html = replayed;
 
   /* Tailwind only: pin the cascade-layer order in the DOCUMENT, not the
    * stylesheet. The bridge's own `@layer theme, base, forte, components,

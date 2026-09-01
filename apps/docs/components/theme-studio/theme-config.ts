@@ -3,6 +3,7 @@
 import * as React from "react";
 import { SANS_FONTS, MONO_FONTS, findFont, ensureFontLink, type FontOption } from "./fonts";
 import { hexToOklch, bestOnColor } from "@/lib/color";
+import { readerTheme } from "@/components/theme-mode";
 
 /* The theme the studio edits, and everything that reads or writes it. Pulled
  * out of the studio component the day the configurator grew a second mount
@@ -16,6 +17,15 @@ import { hexToOklch, bestOnColor } from "@/lib/color";
 export const RADIUS = ["none", "default", "soft", "pill"] as const;
 export const DENSITY = ["compact", "default", "spacious"] as const;
 export const MOTION = ["full", "default", "reduce"] as const;
+/* Which palettes the theme ships with a way to reach. "system" is both: the
+ * page follows the OS and offers a toggle. "light" / "dark" pin one — the
+ * same `data-theme` attribute a reader's toggle would write, only static, so
+ * the other palette is still built and simply never shown. Spelled "system"
+ * rather than the other presets' "default" because it doubles as the CLI
+ * flag value and the strip label, and "default" names nothing there. */
+export const SCHEME = ["system", "light", "dark"] as const;
+
+export type Scheme = (typeof SCHEME)[number];
 
 export type ThemeConfig = {
   seed: string;
@@ -24,6 +34,10 @@ export type ThemeConfig = {
   radius: (typeof RADIUS)[number];
   density: (typeof DENSITY)[number];
   motion: (typeof MOTION)[number];
+  /* The one entry that also governs the panel's own light/dark toggle: while
+   * a scheme is pinned there is nothing for it to switch, and the document
+   * stops following the reader's `forte-theme` record. */
+  scheme: Scheme;
   /* Stored by NAME, not by stack: the name is what the picker shows and what
    * readStored() can validate against the catalogue, while the stack and the
    * stylesheet URL are derived from it in fonts.ts — one source of truth. */
@@ -38,6 +52,7 @@ export const THEME_DEFAULTS: ThemeConfig = {
   radius: "default",
   density: "default",
   motion: "default",
+  scheme: "system",
   fontSans: "System",
   fontMono: "System",
 };
@@ -98,6 +113,7 @@ function readStored(): ThemeConfig | null {
     radius: oneOf(c.radius, RADIUS, d.radius),
     density: oneOf(c.density, DENSITY, d.density),
     motion: oneOf(c.motion, MOTION, d.motion),
+    scheme: oneOf(c.scheme, SCHEME, d.scheme),
     fontSans: fontIn(c.fontSans, SANS_FONTS, d.fontSans),
     fontMono: fontIn(c.fontMono, MONO_FONTS, d.fontMono),
   };
@@ -132,6 +148,10 @@ export function configToAttrs(cfg: ThemeConfig) {
     "data-forte-radius": cfg.radius === "default" ? undefined : cfg.radius,
     "data-forte-density": cfg.density === "default" ? undefined : cfg.density,
     "data-forte-motion": cfg.motion === "default" ? undefined : cfg.motion,
+    /* Undefined for "system" so the preview scope inherits the page's mode —
+     * a pinned palette is the only case where the frame should disagree with
+     * the document around it. */
+    "data-theme": cfg.scheme === "system" ? undefined : cfg.scheme,
   };
 }
 
@@ -168,6 +188,7 @@ export function toScaffoldCommand(cfg: ThemeConfig, opts: ScaffoldOptions): stri
     cfg.radius !== "default" && `--radius ${cfg.radius}`,
     cfg.density !== "default" && `--density ${cfg.density}`,
     cfg.motion !== "default" && `--motion ${cfg.motion}`,
+    cfg.scheme !== "system" && `--scheme ${cfg.scheme}`,
     cfg.fontSans !== "System" && `--font-sans "${cfg.fontSans}"`,
     cfg.fontMono !== "System" && `--font-mono "${cfg.fontMono}"`,
     "--yes",
@@ -247,6 +268,11 @@ export function setThemeConfig(next: ThemeConfig) {
   (["forteRadius", "forteDensity", "forteMotion"] as const).forEach((k) => {
     if (!root.dataset[k]) delete root.dataset[k];
   });
+  /* Not in the clear-if-empty loop above: this site always carries
+   * `data-theme` (the pre-paint script resolves it), so "system" does not
+   * mean "remove" here — it means hand the attribute back to the reader's
+   * own choice, or the OS where they have made none. */
+  root.dataset.theme = attrs["data-theme"] ?? readerTheme();
 
   // The vars land on the root either way; without the stylesheet the stack
   // just falls through to the system tail, so this is what turns a font
