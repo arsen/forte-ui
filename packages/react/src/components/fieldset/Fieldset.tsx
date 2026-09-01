@@ -100,6 +100,10 @@ export const FieldsetLegend = React.forwardRef<
  *   <Field.Root name="city">…</Field.Root>
  * </Fieldset.Root>
  * ```
+ *
+ * @summary Groups related Fields under one legend, without the browser's
+ *   default fieldset chrome.
+ * @category Forms
  */
 export const Fieldset = {
   Root: FieldsetRoot,

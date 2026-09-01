@@ -510,6 +510,10 @@ export const ToolbarSeparator = React.forwardRef<HTMLDivElement, ToolbarSeparato
  * controls. Styling is driven by `data-*` attributes and `--forte-toolbar-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=outline]:...`) without wrapping.
+ *
+ * @summary A strip of related controls that behaves as one tab stop, arrow
+ *   keys moving between them — the row above an editor or table.
+ * @category Actions
  */
 export const Toolbar = {
   Root: ToolbarRoot,

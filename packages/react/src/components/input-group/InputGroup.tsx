@@ -431,6 +431,10 @@ export const InputGroupButton = React.forwardRef<
  *   </InputGroup.Addon>
  * </InputGroup.Root>
  * ```
+ *
+ * @summary Puts icons, prefixes, buttons and counters inside a text field's
+ *   boundary instead of bolted onto it.
+ * @category Forms
  */
 export const InputGroup = {
   Root: InputGroupRoot,

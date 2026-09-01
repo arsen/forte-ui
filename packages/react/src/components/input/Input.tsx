@@ -71,6 +71,11 @@ export interface InputProps
  * decision is a `--forte-input-*` custom property, so it can be re-skinned from
  * plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[invalid]:...`) without wrapping.
+ *
+ * @summary The single-line text field; wrap in Field for label and error
+ *   wiring, in InputGroup for inner icons and buttons; for numbers use
+ *   NumberField.
+ * @category Forms
  */
 export const Input = React.forwardRef<HTMLElement, InputProps>(
   function Input(

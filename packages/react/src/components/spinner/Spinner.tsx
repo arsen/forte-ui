@@ -113,6 +113,10 @@ export interface SpinnerProps extends Omit<React.ComponentPropsWithoutRef<"span"
  * Styling is driven by `data-*` attributes and `--forte-spinner-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[variant=dots]:...`) without wrapping.
+ *
+ * @summary An indeterminate busy indicator for waits with no measurable
+ *   progress; when progress is known, use Progress.
+ * @category Feedback
  */
 export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
   function Spinner(

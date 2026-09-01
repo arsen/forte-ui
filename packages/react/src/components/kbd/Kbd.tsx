@@ -46,6 +46,10 @@ export interface KbdProps
  * announced as "place of interest sign B"), so when you print glyphs, put
  * `aria-keyshortcuts` on the control the shortcut triggers, spelled in words,
  * and hide the caps — which is exactly what `Menu.Shortcut` does for you.
+ *
+ * @summary A keyboard key cap for shortcut hints — works in prose, tooltips,
+ *   menu items and buttons.
+ * @category Content & layout
  */
 export const Kbd = React.forwardRef<HTMLElement, KbdProps>(function Kbd(
   { render, className, ...props },
@@ -92,6 +96,9 @@ export interface KbdGroupProps
  * for "these keys form one input". It draws nothing itself; what it owns is
  * the spacing, and the left-to-right pin that keeps `⌘ K` from laying out as
  * `K ⌘` in an RTL page while each cap stays individually correct.
+ *
+ * @summary A sequence of Kbds read as one shortcut (⌘ K).
+ * @category Content & layout
  */
 export const KbdGroup = React.forwardRef<HTMLElement, KbdGroupProps>(
   function KbdGroup({ render, className, ...props }, ref) {

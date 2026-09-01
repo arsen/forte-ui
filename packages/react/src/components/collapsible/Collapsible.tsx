@@ -247,6 +247,10 @@ const CollapsiblePanel = React.forwardRef<HTMLDivElement, CollapsiblePanelProps>
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=contained]:...`) without
  * wrapping.
+ *
+ * @summary A single trigger and the region it reveals; for a stack of
+ *   exclusive disclosures, use Accordion.
+ * @category Content & layout
  */
 export const Collapsible = {
   Root: CollapsibleRoot,

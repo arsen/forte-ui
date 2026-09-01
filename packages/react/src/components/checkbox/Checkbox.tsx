@@ -93,6 +93,11 @@ export interface CheckboxProps
  * decision is a `--forte-checkbox-*` custom property, so it can be re-skinned
  * from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[indeterminate]:...`) without wrapping.
+ *
+ * @summary An independent yes/no option with an optional mixed state; for
+ *   one-of-many use RadioGroup, for a setting that applies immediately use
+ *   Switch.
+ * @category Forms
  */
 export const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
   function Checkbox(
@@ -204,6 +209,10 @@ export interface CheckboxGroupProps
  * The group has no implicit accessible name — give it `aria-labelledby`
  * pointing at a heading, or render it as a `Fieldset.Root` with a
  * `Fieldset.Legend`.
+ *
+ * @summary One array value shared by several Checkboxes, with an optional
+ *   parent checkbox that summarises and toggles the lot.
+ * @category Forms
  */
 export const CheckboxGroup = React.forwardRef<
   HTMLDivElement,

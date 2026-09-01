@@ -204,6 +204,11 @@ export const ButtonGroupText = React.forwardRef<HTMLDivElement, ButtonGroupTextP
  * properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[orientation=vertical]:...`) without
  * wrapping.
+ *
+ * @summary Fuses related buttons into one visual object with shared borders;
+ *   purely presentational — for a single-choice set with state, use
+ *   ToggleGroup.
+ * @category Actions
  */
 export const ButtonGroup = {
   Root: ButtonGroupRoot,

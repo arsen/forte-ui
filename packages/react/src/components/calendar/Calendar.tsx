@@ -1224,6 +1224,10 @@ const CalendarImpl = React.forwardRef<HTMLDivElement, CalendarProps<CalendarMode
  * <kbd>Page Down</kbd> to move a month, and <kbd>Shift</kbd> with either to
  * move a year. Days that cannot be picked are `aria-disabled` rather than
  * `disabled`, so navigation can cross them.
+ *
+ * @summary An inline month grid for picking one day, several days, or a range;
+ *   for a form field that opens a calendar on demand, use DatePicker.
+ * @category Forms
  */
 export const Calendar = CalendarImpl as <M extends CalendarMode = "single">(
   props: CalendarProps<M> & React.RefAttributes<HTMLDivElement>,

@@ -1729,6 +1729,10 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
  * Groups nest: put a group inside a panel and the inner panels register with
  * the inner group, so a three-pane editor layout is two groups and no
  * coordination between them.
+ *
+ * @summary Panels the user re-proportions by dragging the divider between them
+ *   — keyboard operable, constrainable, and persistable.
+ * @category Content & layout
  */
 export const Resizable = {
   Group: ResizableGroup,

@@ -1655,6 +1655,10 @@ export const ColorPickerHiddenInput = React.forwardRef<
  * Styling is driven by `data-*` attributes and `--forte-color-picker-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[selected]:...`) without wrapping.
+ *
+ * @summary Full colour selection — saturation/brightness canvas, hue and alpha
+ *   rails, preset swatches, and a text field that speaks four CSS notations.
+ * @category Forms
  */
 export const ColorPicker = {
   Root: ColorPickerRoot,

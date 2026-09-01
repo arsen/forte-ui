@@ -299,6 +299,10 @@ export const OTPFieldSeparator = React.forwardRef<HTMLDivElement, OTPFieldSepara
  * in the two seconds it takes to enter a code, next to the caret the user is
  * watching. What does transition is colour: the boundary on hover, on
  * completion and on failure, each of which has a start and an end.
+ *
+ * @summary A row of single-character slots holding one verification code — one
+ *   value, one tab stop, and paste that lands where you expect.
+ * @category Forms
  */
 export const OTPField = {
   Root: OTPFieldRoot,

@@ -369,6 +369,10 @@ const SkeletonGroup = React.forwardRef<HTMLDivElement, SkeletonGroupProps>(funct
  * Styling is driven by `data-*` attributes and `--forte-skeleton-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[variant=circle]:...`) without wrapping.
+ *
+ * @summary A loading placeholder that occupies exactly the space the real
+ *   content will, so the page doesn't jump when data lands.
+ * @category Feedback
  */
 export const Skeleton = {
   Root: SkeletonRoot,

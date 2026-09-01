@@ -557,6 +557,10 @@ const TooltipShortcut = React.forwardRef<HTMLElement, TooltipShortcutProps>(
  * Styling is driven by `data-*` attributes and `--forte-tooltip-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[side=top]:...`) without wrapping.
+ *
+ * @summary A short label shown on hover or focus naming a control — never the
+ *   only carrier of essential content; for interactive content use Popover.
+ * @category Overlays
  */
 export const Tooltip = {
   Provider: TooltipProvider,

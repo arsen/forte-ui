@@ -338,6 +338,10 @@ const AccordionPanel = React.forwardRef<HTMLDivElement, AccordionPanelProps>(
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=contained]:...`) without
  * wrapping.
+ *
+ * @summary A stack of headings that each expand a panel, one or several open
+ *   at a time; for a single independent disclosure, use Collapsible.
+ * @category Content & layout
  */
 export const Accordion = {
   Root: AccordionRoot,

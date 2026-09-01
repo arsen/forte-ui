@@ -498,6 +498,10 @@ const TabsPanel = React.forwardRef<HTMLDivElement, TabsPanelProps>(function Tabs
  * `data-*` attributes and `--forte-tabs-*` custom properties, so it can be
  * re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[variant=pill]:...`) without wrapping.
+ *
+ * @summary Switches between panels of related content in the same place, with
+ *   a sliding active indicator.
+ * @category Navigation
  */
 export const Tabs = {
   Root: TabsRoot,

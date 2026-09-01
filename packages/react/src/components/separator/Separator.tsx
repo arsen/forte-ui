@@ -102,6 +102,10 @@ export interface SeparatorProps extends Omit<BaseSeparatorProps, "className"> {
  * orientation is on `data-orientation`, so it can be re-skinned from plain CSS
  * or targeted with Tailwind arbitrary variants
  * (`data-[orientation=vertical]:...`) without wrapping.
+ *
+ * @summary A rule between things, horizontal or vertical, announced to
+ *   assistive technology unless marked decorative.
+ * @category Content & layout
  */
 export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
   function Separator(

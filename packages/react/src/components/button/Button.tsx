@@ -77,6 +77,10 @@ export interface ButtonProps extends Omit<BaseButtonProps, "className"> {
  * Styling is driven entirely by `data-*` attributes and `--forte-button-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=solid]:...`) without wrapping.
+ *
+ * @summary The clickable action control — submit, open, trigger; for a pressed
+ *   state that sticks, use Toggle, and for pure navigation use a link.
+ * @category Actions
  */
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(

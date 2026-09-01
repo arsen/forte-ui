@@ -749,6 +749,10 @@ export const SelectSeparator = React.forwardRef<
  * positioner. The global `--forte-color-*` / `--forte-control-*` / `--forte-radius-*`
  * / `--forte-space-*` tokens these resolve to ARE inherited, so re-pointing
  * those from `:root` or a theme scope moves every select at once.
+ *
+ * @summary A dropdown for choosing one option from a closed list; once the
+ *   list is long enough to need typing to navigate, use Combobox.
+ * @category Forms
  */
 export const Select = {
   Root: SelectRoot,

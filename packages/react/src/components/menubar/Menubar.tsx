@@ -107,6 +107,9 @@ export interface MenubarProps extends Omit<BaseMenubarProps, "className"> {
  * this element, including the ones the triggers read, so a bar can be
  * re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[variant=contained]:...`) without wrapping.
+ *
+ * @summary A row of Menus that behave as one strip — the application menu bar.
+ * @category Overlays
  */
 export const Menubar = React.forwardRef<HTMLDivElement, MenubarProps>(
   function Menubar(

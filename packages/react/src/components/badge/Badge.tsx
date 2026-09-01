@@ -128,6 +128,9 @@ export interface BadgeProps
  * Styling is driven by `data-*` attributes and `--forte-badge-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[tone=success]:...`) without wrapping.
+ *
+ * @summary A small label for status, counts and categories.
+ * @category Content & layout
  */
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   {

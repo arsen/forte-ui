@@ -1050,6 +1050,10 @@ export const MenuShortcut = React.forwardRef<HTMLSpanElement, MenuShortcutProps>
  * declared on the positioner. The global `--forte-color-*` / `--forte-control-*` /
  * `--forte-radius-*` / `--forte-space-*` tokens these resolve to ARE inherited, so
  * re-pointing those from `:root` or a theme scope moves every menu at once.
+ *
+ * @summary A button-opened list of commands with checkable items, submenus and
+ *   shortcut hints; for choosing a form value use Select instead.
+ * @category Overlays
  */
 export const Menu = {
   Root: MenuRoot,

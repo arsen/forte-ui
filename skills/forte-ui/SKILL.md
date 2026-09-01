@@ -49,16 +49,18 @@ if it fails, find the directory under `node_modules/@forte-ui/react`). Inside:
 | File | What it holds |
 | :-- | :-- |
 | `package.json` | the installed version |
+| `docs-data/components.md` | the component catalogue — every component with a one-line *when to use this* and the exact `props.json` / `theming.json` keys to look up next. Small enough to read whole; **start here when choosing a component** |
 | `docs-data/props.json` | every component part's props — keyed by part name (`ButtonProps` lives under `Button`, `SelectTrigger` under `SelectTrigger`), with descriptions, types, defaults |
 | `docs-data/theming.json` | every per-component theming knob — keyed by component, each knob with its name, default, the part it lives on, and every variant/size selector that reassigns it |
 | `docs-data/tokens.json` | every global `--forte-*` token — keyed by name, with its family, default value, and every declaration (including dark-mode and preset rewrites) |
 | `dist/index.d.ts` | the full typed surface, including doc comments |
 
-When a task needs "what props does X take", "what knobs does X expose", or
-"does token Y exist" — read the relevant file. A `var()` typo is not an error
-in CSS; the declaration silently becomes invalid and the element inherits
-instead, so verifying token names against `tokens.json` before writing them is
-the only guard.
+When a task needs "which component fits this UI" — read `components.md` whole
+and pick from it. When it needs "what props does X take", "what knobs does X
+expose", or "does token Y exist" — read the relevant JSON file. A `var()` typo
+is not an error in CSS; the declaration silently becomes invalid and the
+element inherits instead, so verifying token names against `tokens.json`
+before writing them is the only guard.
 
 ## Setup
 
@@ -294,20 +296,13 @@ export const cn = createCn({ extend: { theme: { spacing: ["header"] } } });
 - The imperative APIs (`useToast`, `useDialog`) pair with their providers —
   check `props.json` / the `.d.ts` for the wiring.
 
-## Component index
+## Choosing a component
 
-What exists (check `props.json` for each one's parts and props):
-
-- **Actions:** Button, ButtonGroup, Toggle, ToggleGroup, Toolbar
-- **Forms:** Input, InputGroup, Textarea, NumberField, OTPField, Checkbox,
-  CheckboxGroup, Radio, RadioGroup, Switch, Slider, Select, Combobox,
-  ColorPicker, Calendar, DatePicker, Field, Fieldset, Form
-- **Overlays:** Dialog, AlertDialog, Drawer, Popover, Tooltip, PreviewCard,
-  Menu, ContextMenu, Menubar, Toast
-- **Navigation:** Tabs, NavigationMenu, NavList, Breadcrumb
-- **Content & layout:** Card, Accordion, Collapsible, Alert, Avatar, Badge,
-  Kbd, KbdGroup, Separator, AspectRatio, ScrollArea, Resizable
-- **Feedback:** Progress, ProgressCircle, Spinner, Skeleton
+Do not pick from memory: read `docs-data/components.md` from the installed
+package (see the table above). It is generated from the source at build time,
+so it lists exactly the components this version ships — with a one-line
+when-to-use for each, which entries are compound, and the `props.json` /
+`theming.json` keys to read next.
 
 ## Pitfall checklist
 

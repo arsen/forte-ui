@@ -325,6 +325,10 @@ const ScrollAreaCorner = React.forwardRef<HTMLDivElement, ScrollAreaCornerProps>
  * The fade is pure CSS: Base UI publishes the distance from each edge on the
  * viewport as a custom property, and the stylesheet turns those into a mask.
  * Nothing runs per frame and no animation library is involved.
+ *
+ * @summary A scroll container with overlay scrollbars that look the same on
+ *   every platform, plus scroll-position edge fades.
+ * @category Content & layout
  */
 export const ScrollArea = {
   Root: ScrollAreaRoot,

@@ -645,6 +645,10 @@ export const NavListBadge = React.forwardRef<HTMLSpanElement, NavListBadgeProps>
  * Styling is driven entirely by `data-*` attributes and `--forte-nav-list-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[active]:...`) without wrapping.
+ *
+ * @summary A sidebar's vertical page list — titled sections, collapsible
+ *   groups, nesting, and a controlled notion of the current page.
+ * @category Navigation
  */
 export const NavList = {
   Root: NavListRoot,

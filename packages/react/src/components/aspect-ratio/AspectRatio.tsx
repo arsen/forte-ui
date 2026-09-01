@@ -182,6 +182,10 @@ export interface AspectRatioProps
  * `data-variant`, `data-fit` and `data-basis`, so a box can be re-skinned from
  * plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[variant=filled]:...`) without wrapping it.
+ *
+ * @summary Reserves a fixed-ratio box from first paint so late-arriving media
+ *   drops into already-reserved space instead of shifting the layout.
+ * @category Content & layout
  */
 export const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
   function AspectRatio(
