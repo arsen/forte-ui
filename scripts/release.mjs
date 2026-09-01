@@ -203,5 +203,17 @@ if (capture("git", ["tag", "-l", tag]).stdout.trim()) {
   run("git", ["tag", "-a", tag, "-m", `Release ${version}`]);
   console.log(`\nTagged ${tag}.`);
 }
+
+// Push main and the tag together. The publish above is the irreversible
+// step; this one is not, so a failed push (no network, expired credentials)
+// must not turn a successful release into a non-zero exit — print the
+// command and let the user retry it.
+const push = spawnSync("git", ["push", "origin", "main", tag], { cwd: root, stdio: "inherit" });
+const pushed = push.status === 0;
+
 console.log(`\n${green("✔")} Published ${toPublish.map((p) => p.name).join(", ")} at ${version} as ${distTag}.`);
-console.log(`  Push the tag with: ${bold(`git push origin main ${tag}`)}\n`);
+if (pushed) {
+  console.log(`  Pushed main and ${tag} to origin.\n`);
+} else {
+  console.log(`  ${yellow("Push failed")} — run it by hand: ${bold(`git push origin main ${tag}`)}\n`);
+}

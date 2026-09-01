@@ -730,7 +730,9 @@ alias after `@forte-ui/react`. It must stay on `pnpm publish`: `forte-ui`
 depends on the library as `workspace:^`, which pnpm rewrites in the tarball
 and npm ships verbatim. A successful publish creates the `v<version>` tag,
 because `/release-prep` reads the last `v*` tag as the start of the next
-range. `--dry-run`, `--yes`, `--skip-build`, `--tag <t>` and `--otp <code>`
+range, and pushes `main` and the tag to origin; a failed push prints the
+command to retry rather than failing the run, since the upload has already
+happened. `--dry-run`, `--yes`, `--skip-build`, `--tag <t>` and `--otp <code>`
 (one authenticator code forwarded to every publish) are the flags.
 
 Within a release, entries are grouped by **component** — `### NavList`, plus
