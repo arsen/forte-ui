@@ -356,7 +356,9 @@ export function ThemeConfigurator({ className }: { className?: string }) {
           <p
             key={w.message}
             className={cn(
-              "m-0 rounded-3 p-2 text-1 leading-[1.45]",
+              // The surface radius, for the reason the command box below
+              // gives — a numbered step ignores the soft and pill presets.
+              "m-0 rounded-surface p-2 text-1 leading-[1.45]",
               w.level === "warn"
                 ? "bg-danger-soft text-danger-text"
                 : "bg-panel-active text-foreground-muted",
@@ -482,7 +484,12 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
                 <Tabs.Indicator className={TAB_INDICATOR} />
               </Tabs.List>
             </Tabs.Root>
-            <pre className="m-0 overflow-x-auto rounded-3 bg-panel-active p-3 font-mono text-1 leading-[1.6]">
+            {/* `rounded-control`, not a numbered step: the presets retarget
+              * only the semantic pair, so `rounded-3` would follow the theme
+              * under `none` and ignore `soft` and `pill` — and this box sits
+              * between an Input and a tab strip that both wear the control
+              * radius, so it takes the same one. */}
+            <pre className="m-0 overflow-x-auto rounded-control bg-panel-active p-3 font-mono text-1 leading-[1.6]">
               {command}
             </pre>
           </div>
