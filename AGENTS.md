@@ -31,6 +31,11 @@ packages/react             the library
   src/components/<name>/  <Name>.tsx · <Name>.module.css · index.ts
   src/styles/             layers · properties · tokens · motion · a11y · patterns
   scripts/                ramp.mjs · motion.mjs (source of truth) + generators
+packages/create-forte-ui   the scaffolding CLI (`pnpm create forte-ui`)
+  src/templates.ts        the starter files — the getting-started GUIDES are its spec
+  src/fonts.ts            the font catalogue, MODULE OF RECORD (docs re-export it)
+  src/color.ts            the colour maths, MODULE OF RECORD (docs re-export it)
+  scripts/smoke.mjs       scaffold+build all four paths — run before releasing it
 apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/components/<name>/page.mdx   the written page
   app/globals.css                  the CSS that could not be a utility — read it
@@ -721,3 +726,15 @@ drafts a section in exactly this shape.
 - Base UI keeps an outgoing panel mounted until its exit transition finishes.
   Overlap panels in one grid cell; stacking them in flow makes the component
   grow and snap back.
+- The getting-started guides are executable: `create-forte-ui`'s templates
+  mirror their setup steps file for file. Change a setup step in a guide and
+  change `packages/create-forte-ui/src/templates.ts` in the same PR (and vice
+  versa); `pnpm --filter create-forte-ui smoke` builds all four paths and is
+  the check.
+- Vite's CSS pipeline rewrites `@layer` statements (Tailwind's compiler
+  re-slots them, the minifier merges them), so the bridge's own layer-order
+  statement does not survive a stock Vite + Tailwind app — Preflight ends up
+  beating the components and buttons render as bare text. The fix is a
+  document-level pin: `<style>@layer theme, base, forte, components,
+  utilities;</style>` in `index.html`'s head. The Vite guide documents it and
+  the scaffolder writes it; Next.js needs neither.

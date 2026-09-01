@@ -155,7 +155,17 @@ Replace `src/index.css` entirely (the scaffold-reset warning above applies here 
 
 Two orderings in that file are load-bearing, and they are the same two as on the [Next.js path](/getting-started/nextjs/#2-wire-the-three-stylesheets): the bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, so it must come before `tailwindcss` (or `p-4` on a `Button` loses to the button's own padding) — and before `theme.css`, which also declares the `forte` layer (or Preflight's `button { background: transparent }` beats every component by layer order).
 
-### 4. Style with token utilities
+### 4. Pin the layer order in `index.html`
+
+One line in `<head>`, before anything that loads CSS:
+
+```html
+<style>@layer theme, base, forte, components, utilities;</style>
+```
+
+On Next.js the bridge's own `@layer` statement survives the build and this step does not exist. Vite's CSS pipeline is not so gentle: Tailwind's compiler re-slots the statement around its own output, the minifier merges statement rules, and JS-imported component CSS lands in its own chunk — and once `base` first appears *after* `forte`, Preflight beats every component by layer order alone. The symptom is unmistakable: buttons render as bare text on a page whose colours are otherwise right. A `<style>` in the document itself loads ahead of every stylesheet, layer order is fixed at first appearance, and nothing the bundler emits later can unpin it.
+
+### 5. Style with token utilities
 
 Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. Every utility that does compile responds to the seed, dark mode and theme scopes:
 

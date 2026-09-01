@@ -1,0 +1,45 @@
+{
+  "name": "create-forte-ui",
+  "version": "1.0.0-alpha.3",
+  "description": "Scaffold a new app wired up with forte-ui — Vite or Next.js, with or without Tailwind, themed from your answers.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-forte-ui": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./fonts": {
+      "types": "./dist/fonts.d.ts",
+      "import": "./dist/fonts.js"
+    },
+    "./color": {
+      "types": "./dist/color.d.ts",
+      "import": "./dist/color.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "smoke": "node scripts/smoke.mjs",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "homepage": "https://forte-ui.com"
+}

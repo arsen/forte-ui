@@ -156,6 +156,8 @@ Two orderings in that file are load-bearing:
 Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. That is deliberate: a hardcoded colour would survive review and then ignore the seed, dark mode and every theme scope. Every utility that does compile responds to all of them:
 
 ```tsx
+"use client";
+
 import { Button, Card } from "@forte-ui/react";
 
 export default function Home() {
@@ -172,6 +174,8 @@ export default function Home() {
   );
 }
 ```
+
+The `"use client"` is `Card.Root`'s doing, not Tailwind's — the [compound-component callout](#5-render-a-component) from the plain path applies here verbatim, and without the directive this page fails to prerender with its exact error.
 
 Note where `items-start gap-5` lands: on a component. That is the layer order from step 2 doing its job — utilities beat the card's own layout without `!important`.
 

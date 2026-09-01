@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    /* NodeNext, not the base's bundler resolution: `dist` runs directly under
+     * Node as the CLI's bin, so emitted specifiers must be resolvable by Node
+     * itself — which is also why every relative import in `src` carries its
+     * `.js` extension. */
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}
