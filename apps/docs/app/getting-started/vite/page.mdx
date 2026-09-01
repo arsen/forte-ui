@@ -101,13 +101,23 @@ Both palettes are already there — with no attribute set, the page follows the 
 <html lang="en" data-theme="dark">
 ```
 
-or from a toggle:
+or with the library's own switch — drop [`ThemeToggle`](/components/theme-toggle/) anywhere:
 
 ```tsx
-document.documentElement.dataset.theme = "dark"; // or "light"
+import { ThemeToggle } from "@forte-ui/react";
+
+<ThemeToggle />
 ```
 
-Every derived colour re-resolves; there is no second stylesheet to load. Persisting the choice (localStorage plus an inline script in `index.html` so the first paint is right) is your app's call — the same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming/).
+A click writes the attribute and persists the choice to `localStorage("forte-theme")`. To replay it on the next visit *before first paint* — a bundled component runs too late — add one inline script to `index.html`'s `<head>` (`create-forte-ui` scaffolds it for you):
+
+```html
+<script>
+  (function(){try{var t=localStorage.getItem("forte-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();
+</script>
+```
+
+Every derived colour re-resolves; there is no second stylesheet to load. The same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control.
 
 ## With Tailwind
 

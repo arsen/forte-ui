@@ -1,0 +1,309 @@
+/*
+ * ThemeToggle
+ *
+ * A square icon button holding BOTH a sun and a moon; these rules decide which
+ * one shows. That decision deliberately lives in CSS, not in React state:
+ * the server cannot know the visitor's stored choice or OS preference, so any
+ * markup that differs by theme either flashes wrong at first paint or trips a
+ * hydration mismatch. Markup that contains both and lets the cascade pick
+ * does neither — the same reason the palette itself resolves through
+ * `light-dark()` instead of JavaScript.
+ *
+ * The resolved theme is reconstructed from what the palette actually reads:
+ *   no `data-theme` anywhere      → the OS decides → `prefers-color-scheme`
+ *   `[data-theme]` on an ancestor → that attribute (0,3,0 — beats the media
+ *                                    fallback's 0,2,0 rules)
+ *   `[data-theme]` on the BUTTON  → a controlled toggle showing its prop
+ *                                    (0,4,0 — beats any ancestor, so a
+ *                                    controlled toggle stays right inside a
+ *                                    page themed the other way)
+ * One caveat inherits from using descendant selectors: two NESTED `data-theme`
+ * islands tie on specificity and source order picks, not nearness. A toggle
+ * that lives inside an inner island should be controlled, which sidesteps the
+ * tie from the top row of that table.
+ *
+ * The hidden icon is `visibility: hidden`, not just `opacity: 0`, because
+ * visibility also removes the wrapper — and the visually-hidden action label
+ * inside it — from the accessibility tree, so the button always exposes
+ * exactly one name. `visibility` sits in the transition list on purpose: its
+ * special interpolation keeps a fading-out icon visible until the fade ends
+ * instead of vanishing it on the first frame.
+ *
+ * No `prefers-reduced-motion` block, per the house rule: the only geometry is
+ * the icons' entry/exit turn and shrink plus the press squash, all multiplied
+ * by `--forte-motion-ok`, so under reduced motion the swap collapses to the
+ * opacity cross-fade on its own.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens, declared on the button element itself so an
+     * ancestor's value is only inherited and never wins. */
+    /** Corner radius. */
+    --forte-theme-toggle-radius: var(--forte-radius-control);
+    /** Width and height of the (square) button. `size` re-points it. */
+    --forte-theme-toggle-size: var(--forte-control-h-md);
+    /** Icon size. Follows the button size unless pinned. */
+    --forte-theme-toggle-icon-size: calc(var(--forte-theme-toggle-size) * 0.5);
+    /** Fill at rest. `var(--forte-color-panel)` for `variant="soft"`. */
+    --forte-theme-toggle-bg: transparent;
+    /** Fill on hover. */
+    --forte-theme-toggle-bg-hover: var(--forte-color-panel-hover);
+    /** Icon colour at rest. */
+    --forte-theme-toggle-fg: var(--forte-color-foreground-muted);
+    /** Icon colour on hover. */
+    --forte-theme-toggle-fg-hover: var(--forte-color-foreground);
+    /** Border width, drawn in every variant — `outline` is the only one that
+     * gives it a colour. */
+    --forte-theme-toggle-border-width: 1px;
+    /** Border colour. `var(--forte-color-border)` for `variant="outline"`. */
+    --forte-theme-toggle-border-color: transparent;
+    /** Colour transitions between states, and the icon cross-fade. */
+    --forte-theme-toggle-duration: var(--forte-duration-fast);
+    /** How far the leaving icon rotates on its way out (the entering one
+     * arrives from the other side). Multiplied by `--forte-motion-ok`, so it
+     * collapses under reduced motion and the swap becomes a plain fade. */
+    --forte-theme-toggle-icon-turn: 90deg;
+    /** How far the button squashes while held. Multiplied by
+     * `--forte-motion-ok`, so a literal value still collapses under reduced
+     * motion. */
+    --forte-theme-toggle-press-scale: var(--forte-scale-press);
+
+    box-sizing: border-box;
+    position: relative;
+    /* A one-cell grid: both icon wrappers occupy the same cell so the
+     * cross-fade happens in place, without absolute positioning that would
+     * take the icons out of the button's own size calculation. */
+    display: inline-grid;
+    place-items: center;
+    /* Square, floored at the SC 2.5.8 minimum target. Every size token
+     * already clears 24px, but the floor is stated so a consumer shrinking
+     * `--forte-theme-toggle-size` cannot silently shrink the hit box. */
+    inline-size: max(var(--forte-theme-toggle-size), var(--forte-target-min));
+    block-size: max(var(--forte-theme-toggle-size), var(--forte-target-min));
+    padding: 0;
+    margin: 0;
+    border: var(--forte-theme-toggle-border-width) solid var(--forte-theme-toggle-border-color);
+    border-radius: var(--forte-theme-toggle-radius);
+
+    background-color: var(--forte-theme-toggle-bg);
+    color: var(--forte-theme-toggle-fg);
+
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    /* A theme toggle is a button, and the platform gives a native <button>
+     * `cursor: default` — not pointer. Stated explicitly, as everything
+     * interactive in this library is. */
+    -webkit-tap-highlight-color: transparent;
+    /* `scale` as an independent property rather than through `transform`, so
+     * a consumer animating `transform` on the same element does not fight the
+     * press squash. */
+    scale: 1;
+    transition:
+      background-color var(--forte-theme-toggle-duration) var(--forte-ease-standard),
+      border-color var(--forte-theme-toggle-duration) var(--forte-ease-standard),
+      color var(--forte-theme-toggle-duration) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+  }
+
+  /* States ---------------------------------------------------------------- */
+  @media (hover: hover) {
+    .root:hover:not([data-disabled]) {
+      background-color: var(--forte-theme-toggle-bg-hover);
+      color: var(--forte-theme-toggle-fg-hover);
+    }
+  }
+
+  .root:active:not([data-disabled]) {
+    scale: calc(1 + (var(--forte-theme-toggle-press-scale) - 1) * var(--forte-motion-ok));
+    /* Snap in, spring out: activation has to feel immediate, and the spring
+     * in the base rule is what carries the release. */
+    transition-duration: var(--forte-duration-instant);
+  }
+
+  .root[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    scale: 1;
+  }
+
+  /* Sizes ----------------------------------------------------------------- */
+  /* The same three steps as Button, so the toggle lines up beside one in a
+   * header instead of sitting a pixel proud. The icon follows through the
+   * ratio in `--forte-theme-toggle-icon-size`. */
+  .root[data-size="sm"] {
+    --forte-theme-toggle-size: var(--forte-control-h-sm);
+  }
+
+  .root[data-size="md"] {
+    --forte-theme-toggle-size: var(--forte-control-h-md);
+  }
+
+  .root[data-size="lg"] {
+    --forte-theme-toggle-size: var(--forte-control-h-lg);
+  }
+
+  /* Variants --------------------------------------------------------------- */
+  .root[data-variant="soft"] {
+    --forte-theme-toggle-bg: var(--forte-color-panel);
+  }
+
+  .root[data-variant="outline"] {
+    --forte-theme-toggle-border-color: var(--forte-color-border);
+  }
+
+  /* Icons ------------------------------------------------------------------
+   * The base rule is the SHOWN state; the matrix below only ever overrides
+   * the four properties that hide one (opacity, visibility, rotate, scale).
+   * Keep the two sets in step — a property added to one and not the other
+   * shows up as an icon that fades out but never back in. */
+  .icon {
+    grid-area: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Decorative content inside an interactive part: the button's cursor and
+     * clicks must pass straight through. */
+    pointer-events: none;
+
+    opacity: 1;
+    visibility: visible;
+    rotate: 0deg;
+    scale: 1;
+    transition:
+      opacity var(--forte-theme-toggle-duration) var(--forte-ease-standard),
+      visibility var(--forte-theme-toggle-duration) var(--forte-ease-standard),
+      rotate var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+  }
+
+  /* Sized on the wrapper, not baked into the artwork, so a custom icon passed
+   * through `icons` — lucide's 24px default box included — comes out the same
+   * size as the built-in glyphs. */
+  .icon svg {
+    display: block;
+    inline-size: var(--forte-theme-toggle-icon-size);
+    block-size: var(--forte-theme-toggle-icon-size);
+  }
+
+  /* The resolved-theme matrix. Sun and moon exit through opposite rotations
+   * so a toggle reads as one wheel turning, and the shrink interpolates
+   * toward 1 — never 0 — so reduced motion collapses it to identity. */
+
+  /* Default document: no attribute, light OS. */
+  .icon[data-icon="dark"] {
+    opacity: 0;
+    visibility: hidden;
+    rotate: calc(var(--forte-theme-toggle-icon-turn) * var(--forte-motion-ok));
+    scale: calc(1 - 0.35 * var(--forte-motion-ok));
+  }
+
+  /* No attribute, dark OS. (0,2,0), so any `data-theme` rule below wins. */
+  @media (prefers-color-scheme: dark) {
+    .icon[data-icon="light"] {
+      opacity: 0;
+      visibility: hidden;
+      rotate: calc(-1 * var(--forte-theme-toggle-icon-turn) * var(--forte-motion-ok));
+      scale: calc(1 - 0.35 * var(--forte-motion-ok));
+    }
+
+    .icon[data-icon="dark"] {
+      opacity: 1;
+      visibility: visible;
+      rotate: 0deg;
+      scale: 1;
+    }
+  }
+
+  /* An explicit theme on an ancestor — normally `<html>`. */
+  [data-theme="light"] .icon[data-icon="light"] {
+    opacity: 1;
+    visibility: visible;
+    rotate: 0deg;
+    scale: 1;
+  }
+
+  [data-theme="light"] .icon[data-icon="dark"] {
+    opacity: 0;
+    visibility: hidden;
+    rotate: calc(var(--forte-theme-toggle-icon-turn) * var(--forte-motion-ok));
+    scale: calc(1 - 0.35 * var(--forte-motion-ok));
+  }
+
+  [data-theme="dark"] .icon[data-icon="light"] {
+    opacity: 0;
+    visibility: hidden;
+    rotate: calc(-1 * var(--forte-theme-toggle-icon-turn) * var(--forte-motion-ok));
+    scale: calc(1 - 0.35 * var(--forte-motion-ok));
+  }
+
+  [data-theme="dark"] .icon[data-icon="dark"] {
+    opacity: 1;
+    visibility: visible;
+    rotate: 0deg;
+    scale: 1;
+  }
+
+  /* Controlled: the attribute sits on the button itself, and at (0,4,0) it
+   * outranks every ancestor rule above — a controlled toggle shows its prop
+   * whatever page it is embedded in. */
+  .root[data-theme="light"] .icon[data-icon="light"] {
+    opacity: 1;
+    visibility: visible;
+    rotate: 0deg;
+    scale: 1;
+  }
+
+  .root[data-theme="light"] .icon[data-icon="dark"] {
+    opacity: 0;
+    visibility: hidden;
+    rotate: calc(var(--forte-theme-toggle-icon-turn) * var(--forte-motion-ok));
+    scale: calc(1 - 0.35 * var(--forte-motion-ok));
+  }
+
+  .root[data-theme="dark"] .icon[data-icon="light"] {
+    opacity: 0;
+    visibility: hidden;
+    rotate: calc(-1 * var(--forte-theme-toggle-icon-turn) * var(--forte-motion-ok));
+    scale: calc(1 - 0.35 * var(--forte-motion-ok));
+  }
+
+  .root[data-theme="dark"] .icon[data-icon="dark"] {
+    opacity: 1;
+    visibility: visible;
+    rotate: 0deg;
+    scale: 1;
+  }
+}
+
+/* Forced colours -------------------------------------------------------------
+ * Top-level `forte.a11y`, ordered after `forte.components`, so everything here
+ * beats the rules above by layer alone. The icon visibility matrix needs no
+ * help: `visibility` is not a forced-colors casualty, and the glyphs stroke
+ * `currentColor`, which the rules below repoint.
+ * ------------------------------------------------------------------------- */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    /* The background is `transparent`, which forced colours replaces with a
+     * system colour of its choosing — pinning the pair keeps the button
+     * legible on any Canvas. */
+    .root {
+      background-color: Canvas;
+      color: CanvasText;
+    }
+
+    .root[data-variant="outline"] {
+      border-color: CanvasText;
+    }
+
+    /* `opacity: 0.55` survives forced colours (opacity is not overridden), so
+     * without this a disabled toggle would keep full-contrast CanvasText and
+     * read as enabled. `opacity: 1` itself comes from the global remedy in
+     * patterns.css; colours are restated because that rule is `:where()` and
+     * the bare `.root` rule above would beat it. */
+    .root[data-disabled] {
+      color: GrayText;
+      border-color: GrayText;
+    }
+  }
+}
