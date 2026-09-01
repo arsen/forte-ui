@@ -155,10 +155,38 @@ export function configToAttrs(cfg: ThemeConfig) {
   };
 }
 
+/* The CLI's own list (`packages/create-forte-ui/src/scaffold.ts`), restated:
+ * that module spawns processes, so the docs cannot import it. The order is
+ * the dialog's, pnpm first because it is the one this repo and its guides
+ * speak. The choice is not cosmetic — the CLI reads which manager invoked it
+ * and uses the same one to run the framework scaffold and install. */
+export const PACKAGE_MANAGERS = ["pnpm", "npm", "yarn", "bun"] as const;
+export type PackageManager = (typeof PACKAGE_MANAGERS)[number];
+
 export type ScaffoldOptions = {
   name: string;
   framework: "next" | "vite";
   tailwind: boolean;
+  packageManager: PackageManager;
+};
+
+/* How each manager runs a `create-*` package, in the form its own docs give.
+ *
+ * `@latest` wherever the manager honours it, because pnpm and npm otherwise
+ * reuse whichever `create-forte-ui` is already cached — a reader who
+ * scaffolded once keeps getting that version, and a flag the studio started
+ * emitting later is rejected as unknown by a CLI that predates it. Yarn's
+ * `create` takes no version and fetches fresh anyway; bun gets `bunx`, which
+ * is the form that takes one.
+ *
+ * npm is the odd one out on flags too: `npm create` parses `--yes` and the
+ * rest as its OWN options and never forwards them, so a `--` has to end
+ * npm's argument list before the CLI's starts. */
+const INVOCATION: Record<PackageManager, (name: string, flags: string) => string> = {
+  pnpm: (name, flags) => `pnpm create forte-ui@latest ${name} ${flags}`,
+  npm: (name, flags) => `npm create forte-ui@latest ${name} -- ${flags}`,
+  yarn: (name, flags) => `yarn create forte-ui ${name} ${flags}`,
+  bun: (name, flags) => `bunx create-forte-ui@latest ${name} ${flags}`,
 };
 
 /**
@@ -193,7 +221,7 @@ export function toScaffoldCommand(cfg: ThemeConfig, opts: ScaffoldOptions): stri
     cfg.fontMono !== "System" && `--font-mono "${cfg.fontMono}"`,
     "--yes",
   ].filter(Boolean);
-  return [`pnpm create forte-ui ${opts.name}`, ...flags].join(" ");
+  return INVOCATION[opts.packageManager](opts.name, flags.join(" "));
 }
 
 /* Every var `configToAttrs` can emit. Cleared before each apply, because a

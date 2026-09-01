@@ -32,10 +32,12 @@ import { cn } from "@/lib/cn";
 import {
   DENSITY,
   MOTION,
+  PACKAGE_MANAGERS,
   RADIUS,
   SCHEME,
   toScaffoldCommand,
   useThemeConfig,
+  type PackageManager,
   type Scheme,
   type ThemeConfig,
 } from "./theme-config";
@@ -385,6 +387,7 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
   const [name, setName] = React.useState("my-app");
   const [framework, setFramework] = React.useState<"next" | "vite">("next");
   const [tailwind, setTailwind] = React.useState(true);
+  const [packageManager, setPackageManager] = React.useState<PackageManager>("pnpm");
 
   /* The command is pasted into a shell, so the name never gets to carry
    * quoting problems: spaces become the dashes the CLI would demand anyway,
@@ -393,7 +396,7 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
    * while someone is typing in it is how "my-app" becomes "myapp". */
   const safeName =
     name.trim().toLowerCase().replaceAll(/\s+/g, "-").replaceAll(/[^a-z0-9._-]/g, "") || "my-app";
-  const command = toScaffoldCommand(cfg, { name: safeName, framework, tailwind });
+  const command = toScaffoldCommand(cfg, { name: safeName, framework, tailwind, packageManager });
 
   React.useEffect(() => {
     if (!copied) return;
@@ -456,9 +459,33 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
             </Field.Description>
           </Field.Root>
 
-          <pre className="m-0 overflow-x-auto rounded-3 bg-panel-active p-3 font-mono text-1 leading-[1.6]">
-            {command}
-          </pre>
+          {/* The manager sits ON the command rather than among the questions
+            * above: it changes the line's spelling, not the project, and the
+            * CLI then carries the choice through — it installs and runs the
+            * framework scaffold with whichever manager invoked it. The strip
+            * is the Framework one again (and again not `Segmented`, whose
+            * `capitalize` would print "Pnpm"), tight against the box, so
+            * the two read as one control: pick a manager, read the line. */}
+          <div className="grid gap-1">
+            <Tabs.Root
+              value={packageManager}
+              onValueChange={(v) => setPackageManager(v as PackageManager)}
+              variant="pill"
+              style={TAB_VARS}
+            >
+              <Tabs.List className="w-full" aria-label="Package manager">
+                {PACKAGE_MANAGERS.map((pm) => (
+                  <Tabs.Tab key={pm} value={pm} className="min-w-0 flex-1">
+                    {pm}
+                  </Tabs.Tab>
+                ))}
+                <Tabs.Indicator className={TAB_INDICATOR} />
+              </Tabs.List>
+            </Tabs.Root>
+            <pre className="m-0 overflow-x-auto rounded-3 bg-panel-active p-3 font-mono text-1 leading-[1.6]">
+              {command}
+            </pre>
+          </div>
 
           <Dialog.Footer>
             <Dialog.Close render={<Button variant="soft" tone="neutral" />}>Close</Dialog.Close>
