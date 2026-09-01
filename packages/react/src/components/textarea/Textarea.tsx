@@ -191,6 +191,10 @@ export function useAutoSize(enabled: boolean) {
  * decision is a `--forte-textarea-*` custom property, so it can be re-skinned
  * from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[invalid]:...`) without wrapping.
+ *
+ * @summary A multi-line text control sized in rows, with an optional ceiling
+ *   and CSS-driven auto-growth.
+ * @category Forms
  */
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   function Textarea(

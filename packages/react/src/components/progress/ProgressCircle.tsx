@@ -340,6 +340,10 @@ export const ProgressCircleLabel = React.forwardRef<HTMLSpanElement, ProgressCir
  * ring where a bar's full width is not available — a card corner, a tile, a
  * table cell — and for `Progress` where it is, because a bar's length is
  * comparable at a glance across a list and a ring's angle is not.
+ *
+ * @summary The circular Progress — a ring for tight spaces; same
+ *   determinate/indeterminate contract as the bar.
+ * @category Feedback
  */
 export const ProgressCircle = {
   Root: ProgressCircleRoot,

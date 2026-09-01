@@ -731,6 +731,10 @@ const PopoverViewport = React.forwardRef<HTMLDivElement, PopoverViewportProps>(
  * Styling is driven by `data-*` attributes and `--forte-popover-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[side=top]:...`) without wrapping.
+ *
+ * @summary An anchored non-modal surface for content the user reads or acts on
+ *   — tabbable and touch-reachable; for a hover-only hint use Tooltip.
+ * @category Overlays
  */
 export const Popover = {
   Root: PopoverRoot,

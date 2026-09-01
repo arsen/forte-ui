@@ -80,6 +80,10 @@ export interface RadioProps<Value = unknown>
  * `--forte-radio-*` custom property, so it can be re-skinned from plain CSS or
  * targeted with Tailwind arbitrary variants (`data-[checked]:...`) without
  * wrapping.
+ *
+ * @summary One option in a mutually exclusive set — always rendered inside a
+ *   RadioGroup.
+ * @category Forms
  */
 export function Radio<Value = unknown>({
   size = "md",
@@ -190,6 +194,10 @@ export interface RadioGroupProps<Value = unknown>
  * The group has no implicit accessible name — give it `aria-labelledby`
  * pointing at a heading, name it with a `Field.Label nativeLabel={false}`, or
  * render it inside a `Fieldset.Root` with a `Fieldset.Legend`.
+ *
+ * @summary A single choice among a few options that all stay visible; once the
+ *   list grows past a handful, use Select.
+ * @category Forms
  */
 export function RadioGroup<Value = unknown>({
   orientation = "vertical",

@@ -111,6 +111,10 @@ export interface ToggleProps<Value extends string = string>
  * and every visual decision is a `--forte-toggle-*` custom property, so it can
  * be re-skinned from plain CSS or targeted with Tailwind arbitrary variants
  * (`data-[pressed]:...`) without wrapping.
+ *
+ * @summary A two-state button that stays pressed — bold in a text editor; for
+ *   an on/off setting that reads as a control, use Switch.
+ * @category Actions
  */
 export function Toggle<Value extends string = string>({
   variant,
@@ -238,6 +242,10 @@ export interface ToggleGroupProps<Value extends string = string>
  * The group has no implicit accessible name. `role="group"` is not a labelable
  * element, so give it `aria-label` or point `aria-labelledby` at your own
  * heading.
+ *
+ * @summary A set of Toggles sharing one value, single or multiple choice — the
+ *   view-switcher pattern; for form data use RadioGroup or CheckboxGroup.
+ * @category Actions
  */
 export function ToggleGroup<Value extends string = string>({
   variant,

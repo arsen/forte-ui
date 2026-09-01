@@ -284,6 +284,10 @@ export const ProgressIndicator = React.forwardRef<HTMLDivElement, ProgressIndica
  * Reach for `ProgressCircle` where the bar's full width is not available — a
  * button, a card corner, a tile — and for `Spinner` when the wait is short and
  * a percentage would be noise.
+ *
+ * @summary A linear progress bar — determinate when passed a number,
+ *   indeterminate when passed null; the circular form is ProgressCircle.
+ * @category Feedback
  */
 export const Progress = {
   Root: ProgressRoot,

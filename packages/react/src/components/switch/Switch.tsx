@@ -84,6 +84,10 @@ export interface SwitchProps
  * still moves; only the spring flattens, because the duration token it rides
  * on shortens. The track colour, the thumb colour and the checkmark change
  * alongside it so state never rests on movement alone.
+ *
+ * @summary An on/off control whose change applies immediately — no submit
+ *   step; for a value collected and submitted by a form, use Checkbox.
+ * @category Forms
  */
 export const Switch = React.forwardRef<HTMLElement, SwitchProps>(function Switch(
   { size = "md", stateIcon = true, className, thumbClassName, ...props },

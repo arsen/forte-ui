@@ -378,6 +378,10 @@ export const SliderThumb = React.forwardRef<HTMLDivElement, SliderThumbProps>(
  * and it puts a layout-triggering property under animation for the whole
  * gesture. Colour and the hover halo still transition, because those have a
  * start and an end. See the note at the top of `Slider.module.css`.
+ *
+ * @summary Picks a numeric value or range by feel along a track; when the
+ *   exact number matters more than the feel, use NumberField.
+ * @category Forms
  */
 export const Slider = {
   Root: SliderRoot,

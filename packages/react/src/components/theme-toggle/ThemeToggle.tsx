@@ -130,6 +130,10 @@ function MoonIcon(): React.JSX.Element {
  *
  * The current state is announced through a visually-hidden label naming the
  * *action* ("Switch to dark theme"); the icons are decorative.
+ *
+ * @summary A ready-made light/dark mode button — pair with ThemeScript to
+ *   avoid a wrong-theme flash at first paint; useTheme drives custom toggles.
+ * @category Actions
  */
 export function ThemeToggle({
   variant = "ghost",

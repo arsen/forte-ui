@@ -666,6 +666,11 @@ export const NumberFieldScrubAreaCursor = React.forwardRef<
  * out, the way `Button` does. Nothing animates the value itself: it changes
  * every few pixels of a scrub, so a transition on the digits would spend the
  * whole gesture interpolating toward a number that has already moved.
+ *
+ * @summary A text input that knows it holds a number — parses, formats, steps,
+ *   clamps, and scrubs by dragging; use over Input whenever the value is
+ *   numeric.
+ * @category Forms
  */
 export const NumberField = {
   Root: NumberFieldRoot,

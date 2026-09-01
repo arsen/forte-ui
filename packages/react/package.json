@@ -28,6 +28,7 @@
     },
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
+    "./docs-data/components.md": "./docs-data/components.md",
     "./docs-data/props.json": "./docs-data/props.json",
     "./docs-data/theming.json": "./docs-data/theming.json",
     "./docs-data/tokens.json": "./docs-data/tokens.json"
@@ -37,7 +38,7 @@
   },
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs && node scripts/build-motion.mjs",
-    "docgen": "node scripts/docgen.mjs && node scripts/theming-docgen.mjs && node scripts/tokens-docgen.mjs",
+    "docgen": "node scripts/theming-docgen.mjs && node scripts/tokens-docgen.mjs && node scripts/docgen.mjs",
     "generate": "pnpm run tokens && pnpm run docgen",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:parity": "node scripts/check-popup-parity.mjs",

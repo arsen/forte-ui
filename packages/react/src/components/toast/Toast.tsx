@@ -1081,6 +1081,10 @@ export const ToastClose = React.forwardRef<HTMLButtonElement, ToastCloseProps>(
  * Styling is driven by `data-*` attributes and `--forte-toast-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[type=error]:...`) without wrapping anything.
+ *
+ * @summary Short transient messages raised imperatively from anywhere via
+ *   useToast; for a persistent in-page message use Alert.
+ * @category Overlays
  */
 export const Toast = {
   Provider: ToastProvider,

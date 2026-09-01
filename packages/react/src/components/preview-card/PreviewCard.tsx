@@ -529,6 +529,10 @@ const PreviewCardViewport = React.forwardRef<
  * Styling is driven by `data-*` attributes and `--forte-preview-card-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[side=top]:...`) without wrapping.
+ *
+ * @summary A rich preview of a link's destination revealed by resting on it —
+ *   supplementary by design, never the only route to what it shows.
+ * @category Overlays
  */
 export const PreviewCard = {
   Root: PreviewCardRoot,

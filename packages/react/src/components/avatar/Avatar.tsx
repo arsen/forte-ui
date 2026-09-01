@@ -359,6 +359,10 @@ const AvatarGroup = React.forwardRef<HTMLSpanElement, AvatarGroupProps>(function
  * Styling is driven by `data-*` attributes and `--forte-avatar-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[shape=square]:...`) without wrapping.
+ *
+ * @summary A picture of a person or thing with a sensible fallback when the
+ *   image is missing or slow, plus an optional status badge and grouping.
+ * @category Content & layout
  */
 export const Avatar = {
   Root: AvatarRoot,

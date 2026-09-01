@@ -1543,6 +1543,11 @@ export function useDialog(): DialogApi {
  * `Dialog.Provider` and `useDialog()` are the other way to reach the same
  * surface — a dialog opened by a call and awaited for its answer, for the
  * questions that have no button on screen to hang a `Root` off.
+ *
+ * @summary A modal surface that takes focus until dismissed; for confirmations
+ *   that must be answered use AlertDialog, for edge-anchored panels use
+ *   Drawer.
+ * @category Overlays
  */
 export const Dialog = {
   Root: DialogRoot,
@@ -1569,6 +1574,11 @@ export const Dialog = {
  * differ. There is deliberately no `modal` or `disablePointerDismissal` prop:
  * an alert dialog traps focus, locks page scroll, and cannot be dismissed by
  * clicking outside it. Give it at least one `AlertDialog.Close`.
+ *
+ * @summary A modal for decisions that must be answered — it cannot be
+ *   dismissed by clicking outside; the shape for destructive confirms. Shares
+ *   Dialog's parts (see Dialog's props.json keys) under AlertDialog.*.
+ * @category Overlays
  */
 export const AlertDialog = {
   Root: AlertDialogRoot,

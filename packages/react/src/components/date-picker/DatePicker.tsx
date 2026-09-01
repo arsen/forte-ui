@@ -715,6 +715,10 @@ export const DatePickerClear = React.forwardRef<HTMLButtonElement, DatePickerCle
  *
  * Every part declares its own knobs, so an ancestor's value is only inherited
  * and never wins.
+ *
+ * @summary A form field that opens a Calendar in a popover — the input-shaped
+ *   way to pick a day or a range.
+ * @category Forms
  */
 export const DatePicker = {
   Root: DatePickerRoot,

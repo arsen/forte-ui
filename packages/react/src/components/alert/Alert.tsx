@@ -630,6 +630,10 @@ const AlertClose = React.forwardRef<HTMLButtonElement, AlertCloseProps>(function
  * Styling is driven by `data-*` attributes and `--forte-alert-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[tone=danger]:...`) without wrapping.
+ *
+ * @summary A persistent in-page message about the page's state — the static
+ *   counterpart to Toast, which is transient and floats above the page.
+ * @category Content & layout
  */
 export const Alert = {
   Root: AlertRoot,

@@ -84,6 +84,10 @@ export interface FormProps<
  * is nearly always a stack of fields. Set `display` through `className` for
  * anything else; the gap is a knob rather than a hardcoded rule for exactly
  * that reason.
+ *
+ * @summary A <form> that aggregates every Field's validity, blocks submission
+ *   until they pass, and routes server errors back to fields by name.
+ * @category Forms
  */
 export function Form<
   FormValues extends Record<string, unknown> = Record<string, unknown>,

@@ -167,6 +167,10 @@ export const ContextMenuTrigger = React.forwardRef<
  * Treat it as an enhancement: it is undiscoverable, unreachable from the
  * keyboard, and awkward on touch, so every command in it needs a visible home
  * as well.
+ *
+ * @summary A Menu that opens at the pointer on right-click or long-press over
+ *   a region of the page rather than off a button.
+ * @category Overlays
  */
 export const ContextMenu = {
   Root: ContextMenuRoot,

@@ -551,6 +551,10 @@ export const BreadcrumbEllipsis = React.forwardRef<
  * Styling is driven entirely by `data-*` attributes and `--forte-breadcrumb-*`
  * custom properties, so it can be re-skinned from plain CSS or targeted with
  * Tailwind arbitrary variants (`data-[variant=chip]:...`) without wrapping.
+ *
+ * @summary The trail of ancestors above the current page, with automatic
+ *   separators and a collapsible middle for narrow screens.
+ * @category Navigation
  */
 export const Breadcrumb = {
   Root: BreadcrumbRoot,

@@ -267,6 +267,11 @@ export const FieldItem = React.forwardRef<HTMLDivElement, FieldItemProps>(
  *
  * `Field.Validity` is re-exported from Base UI unchanged — it renders no DOM
  * of its own, it hands the raw `ValidityState` to a render function.
+ *
+ * @summary Wires one control to its label, description and error message, and
+ *   owns the validation state they all read — the wrapper every form control
+ *   sits in.
+ * @category Forms
  */
 export const Field = {
   Root: FieldRoot,

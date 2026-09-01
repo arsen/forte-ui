@@ -328,6 +328,11 @@ export const CardMedia = React.forwardRef<HTMLDivElement, CardMediaProps>(functi
  * Styling is driven by `data-variant` and `--forte-card-*` custom properties,
  * so it can be re-skinned from plain CSS or targeted with Tailwind arbitrary
  * variants (`data-[variant=soft]:...`) without wrapping.
+ *
+ * @summary The bordered grouping surface — header, title, action, content,
+ *   footer and media slots for everything from settings sections to pricing
+ *   tiers.
+ * @category Content & layout
  */
 export const Card = {
   Root: CardRoot,

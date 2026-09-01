@@ -691,6 +691,10 @@ export function DrawerVirtualKeyboardProvider(
  * navigation, filters, a detail panel, a mobile action sheet. When the task
  * needs the user's whole attention and has no relationship to a screen edge,
  * reach for `Dialog`.
+ *
+ * @summary A panel that slides in from any screen edge, with drag-to-dismiss
+ *   and snap points; for a centred modal use Dialog.
+ * @category Overlays
  */
 export const Drawer = {
   Root: DrawerRoot,

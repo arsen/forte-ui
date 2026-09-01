@@ -101,6 +101,7 @@ catch things.
 | `packages/react/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `tokens` |
 | `packages/react/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
 | `packages/react/docs-data/props.json` | component TSX doc comments | `docgen` |
+| `packages/react/docs-data/components.md` | `@summary` / `@category` tags on component-root doc comments | `docgen` |
 | `packages/react/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
 | `packages/react/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
@@ -146,6 +147,7 @@ which does not re-run `tokens` or `docgen`.
 | a value in `scripts/ramp.mjs` | `tokens`, then `check:contrast` |
 | a value in `scripts/motion.mjs` | `tokens` |
 | a prop — added, renamed, removed, retyped, or its JSDoc | `docgen` |
+| a component root's `@summary` / `@category` doc-comment tag | `docgen` |
 | a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
 | any `--forte-*` declaration in `src/styles/*.css` — added, renamed, removed, its value or selector | `docgen` (rebuilds `tokens.json`; after a `ramp.mjs` / `motion.mjs` change run `tokens` first) |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
@@ -636,6 +638,12 @@ base rules without a single `!important`.
    part, and every reassigning selector) to `theming.json`, which is where the
    docs' `<ThemingTable />` reads from. A knob without one does not appear.
    Plain `/* … */` comments stay private — the why/what split is deliberate.
+   The root's doc comment additionally carries `@summary` (a one-line
+   when-to-use, naming the nearest alternative where one is confusable) and
+   `@category` (one of the six buckets in `docgen.mjs`) — `docgen` assembles
+   them into `docs-data/components.md`, the catalogue agents pick components
+   from, and **fails the build** if either tag is missing, so this step
+   cannot be skipped.
 9. Add demos in `apps/docs/demos/<name>/`, regenerate the registry, and write
    the MDX page. Demos are imported twice from the same file (once to render,
    once through `?raw`), so the code shown is provably the code that runs —

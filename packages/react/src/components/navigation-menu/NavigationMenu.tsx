@@ -865,6 +865,10 @@ function ArrowSvg() {
  * part declares its own knobs, so an ancestor's value is only inherited and
  * loses — set them on the part itself via `className`. The popup is portalled
  * to `<body>`, so an ancestor of the bar could not reach it in any case.
+ *
+ * @summary A horizontal site-nav bar whose items open one shared panel of
+ *   links that slides and resizes between them.
+ * @category Navigation
  */
 export const NavigationMenu = {
   Root: NavigationMenuRoot,

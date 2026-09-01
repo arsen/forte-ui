@@ -1068,6 +1068,10 @@ export const useComboboxFilteredItems = BaseCombobox.useFilteredItems;
  * global `--forte-color-*` / `--forte-control-*` / `--forte-radius-*` /
  * `--forte-space-*` tokens these resolve to ARE inherited, so re-pointing those
  * from `:root` or a theme scope moves every combobox at once.
+ *
+ * @summary A text input combined with a filterable option list — the Select to
+ *   reach for once the list is long enough to need typing.
+ * @category Forms
  */
 export const Combobox = {
   Root: ComboboxRoot,
