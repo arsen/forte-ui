@@ -1058,6 +1058,12 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "motion", text: "Motion", depth: 2 },
     { id: "for-tooling", text: "For tooling", depth: 2 },
   ],
+  "/getting-started/ai-agents/": [
+    { id: "install", text: "Install", depth: 2 },
+    { id: "what-it-teaches", text: "What it teaches", depth: 2 },
+    { id: "why-it-never-goes-stale", text: "Why it never goes stale", depth: 2 },
+    { id: "working-without-the-skill", text: "Working without the skill", depth: 2 },
+  ],
   "/getting-started/nextjs/": [
     { id: "without-tailwind", text: "Without Tailwind", depth: 2 },
     { id: "1-create-the-project", text: "1. Create the project", depth: 3 },

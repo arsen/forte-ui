@@ -1,0 +1,85 @@
+import { Callout } from "@/components/callout";
+
+export const metadata = {
+  title: "AI agents",
+  description:
+    "Install the forte-ui skill so coding agents use the library correctly — stable concepts in the skill, version-exact facts read from the package itself.",
+};
+
+# AI agents
+
+forte-ui ships a skill — a set of instructions an AI coding agent loads when it
+works on a project that uses the library. Agents write forte-ui code the way
+most developers first do: plausibly, and against the wrong instincts. The
+things that make the library work — the token vocabulary, the cascade-layer
+contract, the `data-forte` part markers, the two load-bearing import orderings
+— are exactly the things an agent cannot guess from reading a component's
+type signature. The skill states them once, so every agent session starts past
+the traps instead of rediscovering them.
+
+## Install
+
+One command, from [skills.sh](https://www.skills.sh/):
+
+```bash
+npx skills add arsen/forte-ui
+```
+
+It installs into the agents you use — Claude Code, Cursor, GitHub Copilot,
+Windsurf and others — and from then on the agent consults the skill whenever a
+task touches forte-ui.
+
+## What it teaches
+
+The skill carries the stable concepts, the ones that hold across releases:
+
+- **Setup** — the one-stylesheet import, and the Tailwind bridge's import
+  order, where each of the two orderings breaks silently if reversed.
+- **Theming** — the seed variables, `data-theme`, scoped themes, and why a
+  seed set outside a theme scope does nothing.
+- **Presets** — `data-forte-radius`, `data-forte-density`, `data-forte-motion`.
+- **Styling** — the props → knobs → CSS ladder, targeting parts through
+  `data-forte` attributes instead of hashed class names, and the accessibility
+  guarantees an override must not defeat.
+- **The pitfall list** — the silent failures, each with its cause: components
+  losing padding to an unlayered reset, utilities that stop compiling, a
+  `var()` typo that swallows a declaration.
+
+## Why it never goes stale
+
+The skill deliberately contains **no inventories** — no token list, no prop
+tables, no knob catalogues. Those change with every release, and a copy frozen
+into a skill would drift the moment a consumer runs on any version but the one
+it was written against.
+
+Instead, the package documents itself. Every release ships three generated
+JSON files, and the skill instructs the agent to read them from the consumer's
+own `node_modules` — so the facts always match the installed version exactly:
+
+```ts
+import props from "@forte-ui/react/docs-data/props.json";     // every part's props
+import theming from "@forte-ui/react/docs-data/theming.json"; // every theming knob
+import tokens from "@forte-ui/react/docs-data/tokens.json";   // every global token
+```
+
+These are the same files this site renders its prop tables, theming tables and
+[token reference](/customization/tokens/#for-tooling) from — generated at
+build time from the component source, doc comments and shipped stylesheets, so
+they cannot disagree with what actually renders. They are public API: theme
+editors, lint rules and design-tool sync can read them the same way the skill
+does.
+
+<Callout kind="note">
+  The split is the whole design: concepts in the skill, facts in the package.
+  The skill only needs an update when a concept changes — which is rare, and a
+  breaking change anyway — while every release updates the facts automatically.
+</Callout>
+
+## Working without the skill
+
+An agent without the skill still has a fair path: the library's TypeScript
+declarations carry the doc comments, the `docs-data` files are there to read,
+and everything stable is discoverable — `data-forte` markers in the DOM,
+`--forte-*` custom properties in the stylesheets. The skill does not gate any
+capability; it just replaces an hour of careful discovery with a page of
+stated intent.
