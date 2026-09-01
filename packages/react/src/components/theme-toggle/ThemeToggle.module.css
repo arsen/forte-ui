@@ -77,9 +77,20 @@
     place-items: center;
     /* Square, floored at the SC 2.5.8 minimum target. Every size token
      * already clears 24px, but the floor is stated so a consumer shrinking
-     * `--forte-theme-toggle-size` cannot silently shrink the hit box. */
-    inline-size: max(var(--forte-theme-toggle-size), var(--forte-target-min));
-    block-size: max(var(--forte-theme-toggle-size), var(--forte-target-min));
+     * `--forte-theme-toggle-size` cannot silently shrink the hit box.
+     *
+     * The floor is carried by the `min-*` pair, not by `inline-size` alone,
+     * because a flex item's default `min-width: auto` lets flexbox shrink it
+     * below its declared width down to min-content — the icon plus the
+     * border. A toggle beside a long heading in a `justify-between` header
+     * row came out 20px wide and 36px tall, a squeezed pill, with no rule in
+     * this file overridden. An explicit `min-inline-size` is a bound flexbox
+     * (and grid) cannot cross, which is the same defence Button's `iconOnly`
+     * square uses. */
+    inline-size: var(--forte-theme-toggle-size);
+    block-size: var(--forte-theme-toggle-size);
+    min-inline-size: max(var(--forte-theme-toggle-size), var(--forte-target-min));
+    min-block-size: max(var(--forte-theme-toggle-size), var(--forte-target-min));
     padding: 0;
     margin: 0;
     border: var(--forte-theme-toggle-border-width) solid var(--forte-theme-toggle-border-color);
