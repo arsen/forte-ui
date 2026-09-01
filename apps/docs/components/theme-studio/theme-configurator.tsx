@@ -475,9 +475,10 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
             * CLI then carries the choice through — it installs and runs the
             * framework scaffold with whichever manager invoked it. The strip
             * is the Framework one again (and again not `Segmented`, whose
-            * `capitalize` would print "Pnpm"), tight against the box, so
-            * the two read as one control: pick a manager, read the line. */}
-          <div className="grid gap-1">
+            * `capitalize` would print "Pnpm"), and the pair share the same
+            * gap every other group in the dialog uses, so they read as one
+            * setting: pick a manager, read the line. */}
+          <div className="grid gap-2">
             <Tabs.Root
               value={packageManager}
               onValueChange={(v) => setPackageManager(v as PackageManager)}
