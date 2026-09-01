@@ -30,6 +30,10 @@ export type CliOptions = {
   library?: string;
   yes: boolean;
   install: boolean;
+  /** Install the forte-ui agent skill (skills.sh) into the project. On by
+   *  default; `--no-skill` opts out, and `--no-install` skips it with
+   *  everything else. */
+  skill: boolean;
   help: boolean;
   version: boolean;
   /** Only the keys given as flags — presence is what suppresses the prompt. */
@@ -85,6 +89,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
       pm: { type: "string" },
       yes: { type: "boolean", short: "y" },
       "no-install": { type: "boolean" },
+      "no-skill": { type: "boolean" },
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "v" },
     },
@@ -134,6 +139,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
     library: values.library,
     yes: values.yes ?? false,
     install: !(values["no-install"] ?? false),
+    skill: !(values["no-skill"] ?? false),
     help: values.help ?? false,
     version: values.version ?? false,
     answers,
@@ -160,6 +166,9 @@ Project
                          ("1.0.0-alpha.4"), a dist-tag ("alpha"), or a range.
                          Default: latest.
   --no-install           write files only; skip installing dependencies
+                         and the agent skill
+  --no-skill             skip installing the forte-ui agent skill
+                         (skills.sh — .agents/skills plus .claude/skills)
   -y, --yes              accept the defaults for everything not passed
 
 Theme — every skipped value keeps the library default and writes NOTHING,

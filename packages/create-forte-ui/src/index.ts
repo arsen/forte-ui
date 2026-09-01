@@ -27,6 +27,7 @@ import {
   detectPackageManager,
   runScaffolder,
   addDependencies,
+  installSkill,
   devCommand,
   installCommand,
   type PackageManager,
@@ -155,6 +156,20 @@ async function main() {
   } else {
     recordDependencies(plan.dir, deps);
     p.log.info(`Skipped install; added ${specs.join(", ")} to package.json.`);
+  }
+
+  /* The agent skill, so AI tooling in the new project starts past the
+   * library's silent traps. Gated on `install` too: `--no-install` means
+   * "write files, run nothing". Failure is a warning, not an exit — the app
+   * is complete without it, and the guide's one-liner recovers it. */
+  if (opts.install && opts.skill) {
+    p.log.step("Installing the forte-ui agent skill…");
+    if (!installSkill(pm, plan.dir)) {
+      p.log.warn(
+        "Skill install failed — the app is unaffected. " +
+          `Run ${pc.bold("npx skills add arsen/forte-ui -s forte-ui")} in ./${plan.name} to retry.`,
+      );
+    }
   }
 
   const steps = [

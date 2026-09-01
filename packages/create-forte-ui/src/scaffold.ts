@@ -53,6 +53,16 @@ export function addDependencies(pm: PackageManager, deps: string[], cwd: string)
   return run(pm, [sub, ...deps], cwd);
 }
 
+/** Install the forte-ui agent skill into the project via skills.sh, the
+ *  same command the AI-agents guide documents. `-s forte-ui` is load-bearing:
+ *  the repository also carries internal skills (release-prep) that must not
+ *  reach consumers. `-y` writes the universal `.agents/skills` copy plus the
+ *  per-agent links — `.claude/skills` for Claude Code among them — without
+ *  prompting. */
+export function installSkill(pm: PackageManager, cwd: string): boolean {
+  return runScaffolder(pm, "skills@latest", ["add", "arsen/forte-ui", "-s", "forte-ui", "-y"], cwd);
+}
+
 /** The dev-server line for the outro, in the user's own manager. */
 export function devCommand(pm: PackageManager): string {
   return pm === "npm" ? "npm run dev" : `${pm} dev`;
