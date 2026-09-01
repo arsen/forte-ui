@@ -226,6 +226,141 @@
       }
     ]
   },
+  "AppBarRoot": {
+    "name": "AppBarRoot",
+    "description": "The bar across the top of a screen — a title, what leads it and what\nfollows it, and optionally a second row underneath. Renders a `<header>`.\n\n```tsx\n<AppBar.Root position=\"sticky\" elevateOnScroll>\n  <AppBar.Leading>\n    <Button variant=\"ghost\" iconOnly aria-label=\"Menu\">…</Button>\n  </AppBar.Leading>\n  <AppBar.Title>Inbox</AppBar.Title>\n  <AppBar.Trailing>\n    <ThemeToggle />\n    <Avatar.Root>…</Avatar.Root>\n  </AppBar.Trailing>\n</AppBar.Root>\n```\n\nThere is no Base UI primitive underneath and no keyboard contract of its\nown: a header is a landmark, not a widget, and Tab walks its controls one\nby one the way it walks the rest of the page. For a strip of related\ncontrols that should be one tab stop, put a `Toolbar` inside it.\n\nWhat the component owns is the scroll relationship. `position` decides\nwhether the bar stays, and once it stays the bar measures the page rather\nthan the other way round: `data-scrolled` while content is under it,\n`data-hidden` while a downward scroll has tucked it away. The styles read\nthose two attributes — for the elevation, the hide, a collapsing section\nand a revealing title — and so can yours.\n\nStyling is driven by `data-*` attributes and `--forte-app-bar-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[scrolled]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "elevateOnScroll",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Start with no surface at all and gain the variant's fill, hairline and a\nshadow once the page has scrolled under the bar. The Material \"on\nscroll\" behaviour: the bar reads as part of the page at the top and as\na surface over it everywhere else.\n\n`plain` has no surface to reveal, so pair this with another variant."
+      },
+      {
+        "name": "hideOnScroll",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Slide the bar out of view while the page scrolls down and back in as\nsoon as it scrolls up. The bar never hides within its own height of the\ntop, and a control inside it that holds focus keeps it on screen."
+      },
+      {
+        "name": "position",
+        "type": "AppBarPosition",
+        "required": false,
+        "defaultValue": "static",
+        "description": "How the bar is attached to the page. `static` scrolls away with the\ncontent; `sticky` pins to the top of its scroll container once reached\nand needs no layout compensation; `fixed` leaves the flow entirely, so\nthe content under it must add its own top padding.\n\nEvery scroll-aware feature — `elevateOnScroll`, `hideOnScroll`, a\ncollapsible section, a title that reveals on scroll — needs the bar to\nstill be on screen when the page moves, so all of them are ignored while\n`static`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<header>` with another element or component —\n`render={<div />}` for a bar that is not the page's banner, such as one\nheading a panel or a dialog body."
+      },
+      {
+        "name": "size",
+        "type": "AppBarSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Height of the bar, and the size of its title. Each step is the matching\ncontrol height plus the bar's padding, so a `size=\"sm\"` bar fits\n`size=\"sm\"` buttons exactly. The controls inside keep their own `size`\nprop — this sets the bar, not its contents."
+      },
+      {
+        "name": "tone",
+        "type": "AppBarTone",
+        "required": false,
+        "defaultValue": "neutral",
+        "description": "Which colour set the bar draws from. `neutral` is the grey scale;\n`primary` and `secondary` fill the bar with the accent and re-point the\nforeground tokens inside it, so the ghost buttons, links and separators\nyou compose into it recolour themselves for contrast."
+      },
+      {
+        "name": "variant",
+        "type": "AppBarVariant",
+        "required": false,
+        "defaultValue": "panel",
+        "description": "How much chrome the bar carries. `plain` is a bare row with no surface;\n`panel` fills with the panel colour; `outline` sits on the page\nbackground with a hairline underneath; `frosted` is `outline` made\ntranslucent, with the content behind it blurred.\n\n`frosted` is an enhancement in two directions: where `backdrop-filter`\nis unsupported the bar is simply translucent, and for a reader who has\nasked the OS to reduce transparency it is opaque."
+      }
+    ]
+  },
+  "AppBarLeading": {
+    "name": "AppBarLeading",
+    "description": "The start of the bar, before the title: a menu button, a back arrow, the\nproduct mark. A flex row with a tight gap, so two icon buttons read as a\npair rather than two things that happen to be adjacent.\n\nA slot, not a control: whatever goes in it is a real component with its\nown props. Compose rather than configure.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AppBarTrailing": {
+    "name": "AppBarTrailing",
+    "description": "The end of the bar, after the title: the actions, a search field, the\ntheme toggle, the account avatar. Pinned to the inline-end edge whatever\nthe title does, so it sits in the same place on every screen.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "AppBarTitle": {
+    "name": "AppBarTitle",
+    "description": "The bar's name for the screen, one type step above the body. Takes the\nfree space between the leading and trailing slots and truncates rather\nthan wraps, because a bar that grows a second line moves everything\nunder it.\n\nIt renders a `<div>` because the right heading level is the page's\ndecision — the same bar heads an `h1` screen and an `h2` panel. Nest the\nheading when the bar genuinely names the document:\n`<AppBar.Title><h1>Inbox</h1></AppBar.Title>`. A heading placed there\ntakes the bar's typography rather than the UA's.",
+    "props": [
+      {
+        "name": "align",
+        "type": "AppBarTitleAlign",
+        "required": false,
+        "defaultValue": "start",
+        "description": "Where the title sits in the space between the leading and trailing\nslots. `center` is the phone convention — the title between a back\nbutton and an action — and it is centred in *that* space, so a bar\nwith controls on only one side puts it off the bar's true middle."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "revealOnScroll",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep the title invisible until the page has scrolled under the bar.\nThis is the small half of the large-title pattern: put the large\nheading in a collapsible `AppBar.Section`, and this one takes over in\nthe bar as that one folds away.\n\nIgnored while `position=\"static\"`, where the bar never learns it has\nscrolled."
+      }
+    ]
+  },
+  "AppBarSection": {
+    "name": "AppBarSection",
+    "description": "A second row under the main one, running the full width of the bar: a\ntab strip, a search field, a breadcrumb, or the large title that\ncollapses into `AppBar.Title` on scroll. Several sections stack in DOM\norder.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "collapsible",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Fold the section away once the page has scrolled under the bar, and\nunfold it when the page comes back to the top. The large-title pattern\nis this prop with a heading inside; a search field or a tab strip that\nonly matters at the top of a screen is the same prop with that inside.\n\nIgnored while `position=\"static\"`."
+      }
+    ]
+  },
   "AspectRatio": {
     "name": "AspectRatio",
     "description": "A box that holds its shape, whatever goes in it.\n\n```tsx\n<AspectRatio ratio=\"video\">\n  <img src=\"/cover.jpg\" alt=\"\" />\n</AspectRatio>\n```\n\nThe reason to reach for it is layout shift: the box occupies its final size\nfrom the first paint, so an image that arrives half a second later drops\ninto space that was already reserved instead of shoving the page down.\n\nBase UI has no aspect-ratio primitive — there is no interaction to model —\nso this is built on the CSS property directly rather than on the\n`padding-bottom: 56.25%` trick the property replaced. Two things follow from\nthat, and both are the point:\n\n- **Children stack.** The box is a one-cell grid and every direct child is\n  placed in that cell, in source order, without leaving flow. A caption over\n  a photo is two elements and no `position: absolute`:\n\n  ```tsx\n  <AspectRatio ratio=\"photo\" variant=\"filled\">\n    <img src=\"/cover.jpg\" alt=\"\" />\n    <figcaption style={{ placeSelf: \"end start\" }}>Lisbon, 2019</figcaption>\n  </AspectRatio>\n  ```\n\n- **Either axis can be the measured one.** `basis=\"block\"` takes a definite\n  height and derives the width, which a percentage padding cannot do at all.\n\nMedia children are sized and `object-fit` for you — see `fit`. Everything\nvisual is a `--forte-aspect-*` custom property, and the state is on\n`data-variant`, `data-fit` and `data-basis`, so a box can be re-skinned from\nplain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=filled]:...`) without wrapping it.",
@@ -1588,7 +1723,7 @@
       },
       {
         "name": "positionMethod",
-        "type": "\"absolute\" | \"fixed\"",
+        "type": "\"fixed\" | \"absolute\"",
         "required": false,
         "defaultValue": "absolute",
         "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
@@ -3066,7 +3201,7 @@
       },
       {
         "name": "positionMethod",
-        "type": "\"absolute\" | \"fixed\"",
+        "type": "\"fixed\" | \"absolute\"",
         "required": false,
         "defaultValue": "absolute",
         "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
@@ -5449,7 +5584,7 @@
       },
       {
         "name": "positionMethod",
-        "type": "\"absolute\" | \"fixed\"",
+        "type": "\"fixed\" | \"absolute\"",
         "required": false,
         "defaultValue": "absolute",
         "description": "Whether the popup is positioned with `position: absolute` or\n`position: fixed`."
@@ -5818,7 +5953,7 @@
       },
       {
         "name": "positionMethod",
-        "type": "\"absolute\" | \"fixed\"",
+        "type": "\"fixed\" | \"absolute\"",
         "required": false,
         "defaultValue": "absolute",
         "description": "Whether the card is positioned with `position: absolute` or\n`position: fixed`."
@@ -8237,7 +8372,7 @@
       },
       {
         "name": "positionMethod",
-        "type": "\"absolute\" | \"fixed\"",
+        "type": "\"fixed\" | \"absolute\"",
         "required": false,
         "defaultValue": "absolute",
         "description": "Whether the tooltip is positioned with `position: absolute` or\n`position: fixed`."

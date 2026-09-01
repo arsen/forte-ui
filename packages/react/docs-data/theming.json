@@ -546,6 +546,310 @@
       }
     ]
   },
+  "AppBar": {
+    "name": "AppBar",
+    "tokens": [
+      {
+        "name": "--forte-app-bar-px",
+        "value": "var(--forte-control-px-md)",
+        "description": "Inline padding at the bar's edges. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-control-px-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-py",
+        "value": "var(--forte-space-3)",
+        "description": "Block padding above and below the rows. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-space-3)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-row-min-block-size",
+        "value": "var(--forte-control-h-md)",
+        "description": "Minimum height of the main row, before the padding. `size` re-points it to the matching control height, so the bar fits its own buttons.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-control-h-md)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-gap",
+        "value": "var(--forte-space-3)",
+        "description": "Gap between the leading slot, the title and the trailing slot.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-item-gap",
+        "value": "var(--forte-space-1)",
+        "description": "Gap between the items inside a slot. Tighter than the slot gap, so two icon buttons read as a pair.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-section-gap",
+        "value": "var(--forte-space-2)",
+        "description": "Gap between the main row and a section under it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-max-inline-size",
+        "value": "100%",
+        "description": "Width the rows are centred within. `100%` is edge to edge; set a measure — `72rem` — for a marketing header whose content should line up with the page column below it. Extra width becomes padding.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-title-font-size",
+        "value": "var(--forte-font-size-3)",
+        "description": "Size of the title. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-font-size-3)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-4)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-title-font-weight",
+        "value": "var(--forte-font-weight-semibold)",
+        "description": "Weight of the title.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-inset-block-start",
+        "value": "0px",
+        "description": "Distance from the top of the scroll container while `sticky` or `fixed` — the height of another bar above this one, typically. The scroll tracking reads it, so `data-scrolled` still lands on time.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-z-index",
+        "value": "10",
+        "description": "Stacking level while `sticky` or `fixed`. Popups are portaled to `<body>` and never compete with it; this is for the page's own positioned content.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-border-width",
+        "value": "1px",
+        "description": "Width of the hairline under the bar. Reserved even when the variant paints it transparent, so `elevateOnScroll` gaining an edge moves nothing, and so forced colours have a border to recolour.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-scrolled-shadow",
+        "value": "var(--forte-shadow-2)",
+        "description": "Shadow the bar gains under `elevateOnScroll` once scrolled.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-glass-alpha",
+        "value": "var(--forte-glass-alpha)",
+        "description": "Opacity of the `frosted` fill. Defaults to the global glass alpha, which `prefers-reduced-transparency` already raises to `1`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"frosted\"]",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-blur",
+        "value": "12px",
+        "description": "Blur radius behind a `frosted` bar.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-duration",
+        "value": "var(--forte-duration-fast)",
+        "description": "Duration of the surface changes — fill, edge, shadow.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-move-duration",
+        "value": "var(--forte-duration-normal)",
+        "description": "Duration of the moves — the hide, a collapsing section, a revealing title.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-ease",
+        "value": "var(--forte-ease-standard)",
+        "description": "Easing for everything the bar animates.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-app-bar-bg",
+        "value": "var(--forte-app-bar-tone-solid)",
+        "description": "Fill behind the bar. `variant` and `tone` set it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"frosted\"]",
+            "value": "color-mix( in oklab, var(--forte-app-bar-tone-soft) calc(var(--forte-app-bar-glass-alpha) * 100%), transparent )"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"][data-elevate-on-scroll]:not([data-scrolled])",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-fg",
+        "value": "var(--forte-app-bar-tone-on-solid)",
+        "description": "Text and icon colour, inherited by everything inside. `variant` and `tone` set it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft-text)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-fg-muted",
+        "value": "var(--forte-app-bar-tone-on-solid-muted)",
+        "description": "Muted text colour, handed to descendants as `--forte-color-foreground-muted` on the coloured tones.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft-text-muted)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-hover",
+        "value": "var(--forte-app-bar-tone-solid-hover)",
+        "description": "Hover fill handed to the ghost controls inside a coloured bar.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft-hover)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-active",
+        "value": "var(--forte-app-bar-tone-solid-active)",
+        "description": "Active fill handed to the ghost controls inside a coloured bar.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft-active)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-border-color",
+        "value": "var(--forte-app-bar-tone-solid-border)",
+        "description": "Colour of the hairline under the bar. `variant` and `tone` set it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"plain\"]",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"][data-elevate-on-scroll]:not([data-scrolled])",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-separator",
+        "value": "var(--forte-app-bar-tone-solid-separator)",
+        "description": "Rule colour handed to `Separator`s inside a coloured bar.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"plain\"], .root[data-variant=\"outline\"], .root[data-variant=\"frosted\"]",
+            "value": "var(--forte-app-bar-tone-soft-separator)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-app-bar-shadow",
+        "value": "none",
+        "description": "Drop shadow. `none` until `elevateOnScroll` has something to lift.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-elevate-on-scroll][data-scrolled]",
+            "value": "var(--forte-app-bar-scrolled-shadow)"
+          }
+        ]
+      }
+    ]
+  },
   "AspectRatio": {
     "name": "AspectRatio",
     "tokens": [

@@ -96,6 +96,8 @@ Components.
 
 ## Navigation
 
+- **AppBar** — The bar across the top of a screen — leading controls, a title and trailing actions, pinned, elevating, hiding or collapsing on scroll; for a one-tab-stop strip of controls inside it, use Toolbar.
+  compound · parts (props.json): AppBarRoot, AppBarLeading, AppBarTrailing, AppBarTitle, AppBarSection · knobs: theming.json → AppBar
 - **Breadcrumb** — The trail of ancestors above the current page, with automatic separators and a collapsible middle for narrow screens.
   compound · parts (props.json): BreadcrumbRoot, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis · knobs: theming.json → Breadcrumb
 - **NavigationMenu** — A horizontal site-nav bar whose items open one shared panel of links that slides and resizes between them.
