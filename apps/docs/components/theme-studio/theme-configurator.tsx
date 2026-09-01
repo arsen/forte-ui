@@ -1,12 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { Check, Copy } from "lucide-react";
 import {
   Button,
   ColorPicker,
   Dialog,
   Field,
   Input,
+  InputGroup,
   Select,
   Separator,
   Slider,
@@ -406,6 +408,13 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
     return () => clearTimeout(t);
   }, [copied]);
 
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopied(true);
+    } catch { /* clipboard may be blocked; the command stays selectable */ }
+  };
+
   return (
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>Start a project</h3>
@@ -484,28 +493,39 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
                 <Tabs.Indicator className={TAB_INDICATOR} />
               </Tabs.List>
             </Tabs.Root>
-            {/* `rounded-control`, not a numbered step: the presets retarget
-              * only the semantic pair, so `rounded-3` would follow the theme
-              * under `none` and ignore `soft` and `pill` — and this box sits
-              * between an Input and a tab strip that both wear the control
-              * radius, so it takes the same one. */}
-            <pre className="m-0 overflow-x-auto rounded-control bg-panel-active p-3 font-mono text-1 leading-[1.6]">
-              {command}
-            </pre>
+            {/* A read-only field rather than a <pre>: it is a form control,
+              * so it wears the control radius and height the Input above it
+              * does, scrolls a long line the way a shell would, and gives
+              * keyboard users a caret to select from. The copy button lives
+              * INSIDE the boundary, the way the library's own copy-link
+              * demo does it — the field and its action are one thing.
+              *
+              * Focus selects the whole line, because the only reason to land
+              * here is to take the command: with the button beside it a
+              * select-all is what a keyboard reader would do next anyway. */}
+            <InputGroup.Root fullWidth>
+              <InputGroup.Input
+                readOnly
+                value={command}
+                aria-label="Scaffold command"
+                className="font-mono text-1"
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <InputGroup.Addon align="inline-end">
+                <InputGroup.Button iconOnly aria-label="Copy command" onClick={copy}>
+                  {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                </InputGroup.Button>
+              </InputGroup.Addon>
+            </InputGroup.Root>
+            {/* The icon swap is the sighted confirmation; this is the one a
+              * screen reader gets. */}
+            <span aria-live="polite" className="forte-visually-hidden">
+              {copied ? "Command copied" : ""}
+            </span>
           </div>
 
           <Dialog.Footer>
             <Dialog.Close render={<Button variant="soft" tone="neutral" />}>Close</Dialog.Close>
-            <Button
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(command);
-                  setCopied(true);
-                } catch { /* clipboard may be blocked; the command stays visible */ }
-              }}
-            >
-              {copied ? "Copied" : "Copy command"}
-            </Button>
           </Dialog.Footer>
         </Dialog.Popup>
       </Dialog.Root>
