@@ -95,13 +95,15 @@ That is the whole integration: one install, one CSS import, one variable. And si
 
 ### 6. Light and dark
 
-Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, or to drive a toggle, set `data-theme` on the root element — either statically in `index.html`:
+Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, set `data-theme` on the root element statically in `index.html`:
 
 ```tsx
 <html lang="en" data-theme="dark">
 ```
 
-or with the library's own switch. [`ThemeToggle`](/components/theme-toggle/) goes anywhere; parking it in a corner is what `create-forte-ui` scaffolds, so `src/App.tsx` from step 5 becomes:
+That is what `create-forte-ui --scheme dark` writes — and it then leaves the toggle and replay script below out, since a static attribute has nothing to switch and nothing to replay.
+
+To let people choose instead, drive the same attribute with the library's own switch. [`ThemeToggle`](/components/theme-toggle/) goes anywhere; parking it in a corner is what `create-forte-ui` scaffolds, so `src/App.tsx` from step 5 becomes:
 
 ```tsx
 import { Button, ThemeToggle } from "@forte-ui/react";

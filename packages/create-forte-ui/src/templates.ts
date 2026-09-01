@@ -91,15 +91,19 @@ createRoot(document.getElementById("root")!).render(
 `;
 }
 
-export function viteAppTsx(name: string, tailwind: boolean): string {
+/** `toggle` is false when the answers pinned a colour scheme: `data-theme`
+ *  then sits statically on `<html>` and a toggle would be a button whose one
+ *  job is to fight it. The import goes with the element, so the starter
+ *  still compiles clean under `noUnusedLocals`. */
+export function viteAppTsx(name: string, tailwind: boolean, toggle: boolean): string {
   if (tailwind) {
-    return `import { Button, Card, ThemeToggle } from "@forte-ui/react";
+    const toggleLine = toggle ? `      ${TOGGLE_TW}\n` : "";
+    return `import { Button, Card${toggle ? ", ThemeToggle" : ""} } from "@forte-ui/react";
 
 export default function App() {
   return (
     <main className="grid min-h-dvh place-items-center bg-background text-foreground">
-      ${TOGGLE_TW}
-      <Card.Root variant="elevated" className="items-start gap-5">
+${toggleLine}      <Card.Root variant="elevated" className="items-start gap-5">
         <h1 className="text-5 font-semibold">${name}</h1>
         <p className="text-2 text-foreground-muted">
           Utilities and components, one theme.
@@ -111,13 +115,13 @@ export default function App() {
 }
 `;
   }
-  return `import { Button, ThemeToggle } from "@forte-ui/react";
+  const toggleLine = toggle ? `      ${indented(TOGGLE_STYLE, 6)}\n` : "";
+  return `import { Button${toggle ? ", ThemeToggle" : ""} } from "@forte-ui/react";
 
 export default function App() {
   return (
     <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}>
-      ${indented(TOGGLE_STYLE, 6)}
-      <Button>It works</Button>
+${toggleLine}      <Button>It works</Button>
     </main>
   );
 }
@@ -166,10 +170,19 @@ export function nextLayoutTsx(name: string, a: ThemeAnswers, tailwind: boolean):
    * grows, and the page stays the one file a reader edits first. Being a flat
    * export it needs no `"use client"` here — the boundary the compound
    * components force on `page.tsx` does not reach the layout. */
+  /* A pinned scheme drops all three. The attribute is static, so there is
+   * nothing for the script to replay and nothing for the suppression to
+   * cover — and the script is actively wrong here, not merely idle: it
+   * replays whatever `forte-theme` record is on the origin, and on
+   * localhost every project shares one origin, so a toggle pressed in some
+   * OTHER app would flip this one's pinned palette on load. */
+  const pinned = a.scheme !== "system";
   const toggle = tailwind ? TOGGLE_TW : indented(TOGGLE_STYLE, 8);
+  const libImport = pinned ? "" : `import { ThemeScript, ThemeToggle } from "@forte-ui/react";\n`;
+  const head = pinned ? "" : `      <head>\n        <ThemeScript />\n      </head>\n`;
+  const toggleLine = pinned ? "" : `        ${toggle}\n`;
   return `import type { Metadata } from "next";
-import { ThemeScript, ThemeToggle } from "@forte-ui/react";
-${font.importLine ? font.importLine + "\n" : ""}${themeImport}import "./globals.css";
+${libImport}${font.importLine ? font.importLine + "\n" : ""}${themeImport}import "./globals.css";
 
 ${font.consts ? font.consts + "\n\n" : ""}export const metadata: Metadata = {
   title: "${name}",
@@ -182,13 +195,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en"${htmlAttrs(a)}${font.htmlClassAttr} suppressHydrationWarning>
-      <head>
-        <ThemeScript />
-      </head>
-      <body>
-        ${toggle}
-        {children}
+    <html lang="en"${htmlAttrs(a)}${font.htmlClassAttr}${pinned ? "" : " suppressHydrationWarning"}>
+${head}      <body>
+${toggleLine}        {children}
       </body>
     </html>
   );

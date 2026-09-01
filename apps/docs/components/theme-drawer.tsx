@@ -6,6 +6,7 @@ import { Palette, X } from "lucide-react";
 import { ICON } from "./styles";
 import { useSystemThemeSync } from "./theme-mode";
 import { ThemeConfigurator } from "./theme-studio/theme-configurator";
+import { useThemeConfig } from "./theme-studio/theme-config";
 
 /**
  * The header's theme control. It used to flip light/dark on the spot; it now
@@ -33,7 +34,10 @@ import { ThemeConfigurator } from "./theme-studio/theme-configurator";
 export function ThemeDrawer() {
   // The OS listener lives on this component because the header is on every
   // page — see the hook's own comment for what it does and when it yields.
-  useSystemThemeSync();
+  // It yields, among other times, while the studio pins a scheme, which is
+  // why it is handed the config's answer.
+  const [cfg] = useThemeConfig();
+  useSystemThemeSync(cfg.scheme);
 
   return (
     <Drawer.Root side="right" modal={false} disablePointerDismissal>

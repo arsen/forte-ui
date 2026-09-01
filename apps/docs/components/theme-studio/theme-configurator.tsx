@@ -8,6 +8,7 @@ import {
   Field,
   Input,
   Select,
+  Separator,
   Slider,
   Switch,
   Tabs,
@@ -32,8 +33,10 @@ import {
   DENSITY,
   MOTION,
   RADIUS,
+  SCHEME,
   toScaffoldCommand,
   useThemeConfig,
+  type Scheme,
   type ThemeConfig,
 } from "./theme-config";
 
@@ -203,7 +206,17 @@ export function ThemeConfigurator({ className }: { className?: string }) {
 
   return (
     <div className={cn("grid gap-5", className)}>
-      <Appearance />
+      {/* The panel's one ACTION leads, and a rule sets it apart from the
+        * settings under it. It used to close the column, which in the header
+        * drawer put it a full screen of controls below the fold — the reader
+        * who never scrolls past the fonts never learns the theme can leave
+        * the site. The rule is decorative: the headings already name the
+        * groups, so announcing a boundary here would only read decoration
+        * aloud. */}
+      <Scaffold cfg={cfg} />
+      <Separator decorative />
+
+      <Appearance scheme={cfg.scheme} onChange={(v) => set("scheme", v)} />
 
       <section className={GROUP}>
         <h3 className={GROUP_TITLE}>Presets</h3>
@@ -352,8 +365,6 @@ export function ThemeConfigurator({ className }: { className?: string }) {
           </p>
         ))}
       </section>
-
-      <Scaffold cfg={cfg} />
     </div>
   );
 }
@@ -366,7 +377,8 @@ export function ThemeConfigurator({ className }: { className?: string }) {
  * opens a dialog that asks, then shows the finished command before it is
  * copied: the studio's rule is that an export is something you can read
  * before you run. It lives here rather than on the studio page so the header
- * drawer offers it on every page too.
+ * drawer offers it on every page too — at the top of the panel, where the
+ * drawer shows it without scrolling.
  */
 function Scaffold({ cfg }: { cfg: ThemeConfig }) {
   const [copied, setCopied] = React.useState(false);
@@ -576,19 +588,28 @@ function FontField({
 }
 
 /**
- * Light ⇄ dark for the whole page, offered here because this is the panel you
- * are reading while you judge a seed, and the mode is the one thing about the
- * page you cannot change from the other controls.
+ * Which palettes the theme ships with a way to reach — and, while it ships
+ * both, which one you are looking at.
  *
- * The library's own `ThemeToggle`, uncontrolled, rather than a segmented strip
- * or a hand-rolled button: this is the single control in the panel that is
- * not part of the theme being exported. Light/dark is a reader preference,
+ * The strip is the exported half. "system" is the library's default: the
+ * page follows the OS and the scaffold gets a toggle. "light" / "dark" pin
+ * one palette on `<html>` through the same `data-theme` attribute a toggle
+ * would write, only static, and the scaffold leaves the toggle and its replay
+ * script out. The pin lands on this document too, so the site is the
+ * preview: a "light only" theme is judged on a light page whatever the
+ * machine prefers, and the copied CSS and the command both carry it.
+ *
+ * The toggle is the reader's half, and it shows only under "system". Pinned,
+ * there is nothing for it to switch — and a button that could flip the page
+ * against the one palette the theme exports would misreport what is being
+ * designed. It is the library's own `ThemeToggle`, uncontrolled, rather than
+ * a fourth segment on the strip: light/dark here is a reader preference,
  * stored under the `forte-theme` key the pre-paint script in `layout.tsx`
  * replays, and the uncontrolled toggle writes exactly that key and the
- * `data-theme` attribute beside it — so it, the OS listener, the header, and
- * a second mounted copy of this panel all move the same two things and never
- * disagree. Both modes are already built from the same seed, so there is
- * nothing to export; this just decides which of the two you are looking at.
+ * `data-theme` attribute beside it — so it, the OS listener, and a second
+ * mounted copy of this panel all move the same two things and never
+ * disagree. Both palettes are built from the same seed either way; the
+ * toggle only decides which of the two you are looking at.
  *
  * The toggle is icon-only, and a sun or moon beside a heading reading
  * "Appearance" could be read as a statement of where you are. The label next
@@ -605,26 +626,32 @@ function FontField({
  * demand, and the price of a label that reads as text rather than as two
  * CSS-toggled spans.
  */
-function Appearance() {
+function Appearance({ scheme, onChange }: { scheme: Scheme; onChange: (v: Scheme) => void }) {
   const { resolvedTheme } = useTheme();
   const id = React.useId();
 
   return (
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>Appearance</h3>
-      {/* Right-aligned, label before button: the row reads as a sentence
-        * ending in the thing it describes, and the toggle sits on the same
-        * edge as the values the rows below it end in (the hex readouts, the
-        * slider's number). */}
-      <div className="flex items-center justify-start gap-2">
-        {/* `cursor-pointer` because this label performs the action (see the
-          * pointer-affordance rule): a click on it presses the toggle. */}
-        
-        <ThemeToggle id={id} variant="outline" />
-        <label htmlFor={id} className="cursor-pointer select-none text-2 text-foreground">
-          Switch to {resolvedTheme === "dark" ? "light" : "dark"}
-        </label>
-      </div>
+      <Segmented label="Colour scheme" options={SCHEME} value={scheme} onChange={onChange} />
+      {scheme === "system" ? (
+        /* Toggle before label: the button sits on the strip's leading edge,
+         * where the segment it belongs to starts, and the words read as its
+         * caption rather than as a sentence the button finishes. */
+        <div className="flex items-center gap-2">
+          <ThemeToggle id={id} variant="outline" />
+          {/* `cursor-pointer` because this label performs the action (see the
+            * pointer-affordance rule): a click on it presses the toggle. */}
+          <label htmlFor={id} className="cursor-pointer select-none text-2 text-foreground">
+            Switch to {resolvedTheme === "dark" ? "light" : "dark"}
+          </label>
+        </div>
+      ) : (
+        <p className={HINT}>
+          Every visitor gets the {scheme} palette. The scaffold pins it on {"<html>"} and leaves
+          the toggle out.
+        </p>
+      )}
     </section>
   );
 }
@@ -640,29 +667,46 @@ function Choice<T extends string>({
   return (
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>{label}</h3>
-      {/* A tab strip with no panels beneath it. These pick a setting rather
-        * than switch between regions, so there is nothing for a Tab's
-        * `aria-controls` to point at — the strip is named by `aria-label` and
-        * the tablist's own "1 of 4" is what a screen reader reads out.
-        *
-        * What it buys is the indicator: Base UI measures the active tab and
-        * publishes its geometry, so the pill slides without this file
-        * computing a single offset. */}
-      <Tabs.Root
-        value={value}
-        onValueChange={(next) => onChange(next as T)}
-        variant="pill"
-        style={TAB_VARS}
-      >
-        <Tabs.List className="w-full" aria-label={label}>
-          {options.map((o) => (
-            <Tabs.Tab key={o} value={o} className={TAB}>
-              {o}
-            </Tabs.Tab>
-          ))}
-          <Tabs.Indicator className={TAB_INDICATOR} />
-        </Tabs.List>
-      </Tabs.Root>
+      <Segmented label={label} options={options} value={value} onChange={onChange} />
     </section>
+  );
+}
+
+/* A tab strip with no panels beneath it. These pick a setting rather than
+ * switch between regions, so there is nothing for a Tab's `aria-controls` to
+ * point at — the strip is named by `aria-label` and the tablist's own "1 of
+ * 4" is what a screen reader reads out.
+ *
+ * What it buys is the indicator: Base UI measures the active tab and
+ * publishes its geometry, so the pill slides without this file computing a
+ * single offset.
+ *
+ * Its own component, separate from the section `Choice` wraps it in, for
+ * the one group that wants the strip UNDER a heading it does not own — the
+ * Appearance section, whose heading covers the toggle beside it too. */
+function Segmented<T extends string>({
+  label, options, value, onChange,
+}: {
+  label: string;
+  options: readonly T[];
+  value: T;
+  onChange: (v: T) => void;
+}) {
+  return (
+    <Tabs.Root
+      value={value}
+      onValueChange={(next) => onChange(next as T)}
+      variant="pill"
+      style={TAB_VARS}
+    >
+      <Tabs.List className="w-full" aria-label={label}>
+        {options.map((o) => (
+          <Tabs.Tab key={o} value={o} className={TAB}>
+            {o}
+          </Tabs.Tab>
+        ))}
+        <Tabs.Indicator className={TAB_INDICATOR} />
+      </Tabs.List>
+    </Tabs.Root>
   );
 }

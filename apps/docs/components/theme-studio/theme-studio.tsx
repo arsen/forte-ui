@@ -32,6 +32,7 @@ function toCss(cfg: ThemeConfig) {
     cfg.radius !== "default" && `data-forte-radius="${cfg.radius}"`,
     cfg.density !== "default" && `data-forte-density="${cfg.density}"`,
     cfg.motion !== "default" && `data-forte-motion="${cfg.motion}"`,
+    cfg.scheme !== "system" && `data-theme="${cfg.scheme}"`,
   ].filter(Boolean);
 
   /* @import must precede every other statement in a stylesheet, so the font
@@ -95,6 +96,7 @@ export function ThemeStudio() {
           data-forte-radius={attrs["data-forte-radius"]}
           data-forte-density={attrs["data-forte-density"]}
           data-forte-motion={attrs["data-forte-motion"]}
+          data-theme={attrs["data-theme"]}
         >
           <Ramp name="accent" />
           <Ramp name="secondary" />

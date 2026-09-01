@@ -12,7 +12,7 @@
 import { parseArgs } from "node:util";
 import { SANS_FONTS, MONO_FONTS, type FontOption } from "./fonts.js";
 import { hexToOklch } from "./color.js";
-import { RADIUS, DENSITY, MOTION, type ThemeAnswers } from "./theme.js";
+import { RADIUS, DENSITY, MOTION, SCHEME, type ThemeAnswers } from "./theme.js";
 import { PACKAGE_MANAGERS, type PackageManager } from "./scaffold.js";
 import type { Framework } from "./overlay.js";
 
@@ -83,6 +83,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
       radius: { type: "string" },
       density: { type: "string" },
       motion: { type: "string" },
+      scheme: { type: "string" },
       "font-sans": { type: "string" },
       "font-mono": { type: "string" },
       library: { type: "string" },
@@ -124,6 +125,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
     answers.motion =
       values.motion.toLowerCase() === "system" ? "default" : oneOf("motion", values.motion, MOTION);
   }
+  if (values.scheme !== undefined) answers.scheme = oneOf("scheme", values.scheme, SCHEME);
   if (values["font-sans"] !== undefined) {
     answers.fontSans = fontByName("font-sans", values["font-sans"], SANS_FONTS);
   }
@@ -181,7 +183,10 @@ so the app keeps following the library when defaults are tuned.
   --motion               system (default) | reduce | full
                          "full" overrides the OS reduced-motion preference
                          for everyone — prefer leaving it unset.
-  --font-sans            a catalogue name ("Inter", "DM Sans", ...)
+  --scheme               system (default) | light | dark
+                         "light" / "dark" pin one palette on <html> and
+                         leave the theme toggle and its replay script out.
+  --font-sans           a catalogue name ("Inter", "DM Sans", ...)
   --font-mono            a catalogue name ("JetBrains Mono", ...)
 
 Design the theme visually instead: https://forte-ui.com/theme

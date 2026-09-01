@@ -115,14 +115,14 @@ export async function collectPlan(opts: CliOptions): Promise<ProjectPlan> {
     answers.seed = await hexPrompt("Accent color — your brand's hex, the whole palette derives from it")();
   }
 
-  const advancedKeys = ["secondary", "tint", "radius", "density", "motion", "fontSans", "fontMono"];
+  const advancedKeys = ["secondary", "tint", "radius", "density", "motion", "scheme", "fontSans", "fontMono"];
   const remaining = advancedKeys.filter((k) => !flagged.has(k));
   const customize =
     !opts.yes &&
     remaining.length > 0 &&
     accept(
       await p.confirm({
-        message: "Customize further? (secondary, neutrals, radius, density, motion, fonts)",
+        message: "Customize further? (secondary, neutrals, radius, density, motion, light/dark, fonts)",
         initialValue: false,
       }),
     );
@@ -181,6 +181,19 @@ export async function collectPlan(opts: CliOptions): Promise<ProjectPlan> {
             { value: "default" as const, label: "System", hint: "follows the OS reduced-motion setting" },
             { value: "reduce" as const, label: "Reduce", hint: "geometry collapses, fades stay" },
             { value: "full" as const, label: "Full", hint: "overrides the OS preference for everyone" },
+          ],
+        }),
+      );
+    }
+    if (remaining.includes("scheme")) {
+      answers.scheme = accept(
+        await p.select({
+          message: "Light and dark",
+          initialValue: "system" as ThemeAnswers["scheme"],
+          options: [
+            { value: "system" as const, label: "Both", hint: "follows the OS, with a toggle" },
+            { value: "light" as const, label: "Light only" },
+            { value: "dark" as const, label: "Dark only" },
           ],
         }),
       );

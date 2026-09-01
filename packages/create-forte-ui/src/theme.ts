@@ -16,10 +16,18 @@ import { hexToOklch, bestOnColor } from "./color.js";
 export const RADIUS = ["none", "default", "soft", "pill"] as const;
 export const DENSITY = ["compact", "default", "spacious"] as const;
 export const MOTION = ["full", "default", "reduce"] as const;
+/* "system" is spelled out rather than being the "default" the other presets
+ * use, because it is also the flag value and the studio's strip label: the
+ * one mode that is not a mode. Pinning one writes `data-theme` on `<html>`,
+ * and that ATTRIBUTE is the whole mechanism — the stylesheet resolves every
+ * `light-dark()` through the `color-scheme` it sets, so a pinned app ships
+ * both palettes and simply never shows the other one. */
+export const SCHEME = ["system", "light", "dark"] as const;
 
 export type Radius = (typeof RADIUS)[number];
 export type Density = (typeof DENSITY)[number];
 export type Motion = (typeof MOTION)[number];
+export type Scheme = (typeof SCHEME)[number];
 
 export type ThemeAnswers = {
   /** Accent seed hex, or null to keep the library default (write nothing). */
@@ -30,6 +38,9 @@ export type ThemeAnswers = {
   radius: Radius;
   density: Density;
   motion: Motion;
+  /** "system" follows the OS and scaffolds the toggle; "light" / "dark" pin
+   *  one palette on `<html>` and leave the toggle and its replay script out. */
+  scheme: Scheme;
   /** Catalogue names. "System" writes nothing. */
   fontSans: string;
   fontMono: string;
@@ -42,6 +53,7 @@ export const DEFAULT_ANSWERS: ThemeAnswers = {
   radius: "default",
   density: "default",
   motion: "default",
+  scheme: "system",
   fontSans: "System",
   fontMono: "System",
 };
@@ -108,12 +120,13 @@ export function fontImports(a: ThemeAnswers): string[] {
 
 /** ` data-forte-radius="pill" ...` — leading space included, "" when all
  *  defaults. Default modes stay UNSET so the app keeps following the OS
- *  (motion) and the library's own defaults. */
+ *  (motion, colour scheme) and the library's own defaults. */
 export function htmlAttrs(a: ThemeAnswers): string {
   const attrs = [
     a.radius !== "default" && `data-forte-radius="${a.radius}"`,
     a.density !== "default" && `data-forte-density="${a.density}"`,
     a.motion !== "default" && `data-forte-motion="${a.motion}"`,
+    a.scheme !== "system" && `data-theme="${a.scheme}"`,
   ].filter(Boolean);
   return attrs.length ? " " + attrs.join(" ") : "";
 }
