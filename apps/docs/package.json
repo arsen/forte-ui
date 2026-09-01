@@ -22,6 +22,7 @@
     "@stefanprobst/rehype-extract-toc": "^3.0.0",
     "@tanstack/react-virtual": "^3.14.10",
     "clsx": "^2.1.1",
+    "create-forte-ui": "workspace:*",
     "lucide-react": "^1.34.0",
     "next": "^16.3.3",
     "react": "^19.2.8",

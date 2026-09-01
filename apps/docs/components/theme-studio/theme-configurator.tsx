@@ -4,8 +4,12 @@ import * as React from "react";
 import {
   Button,
   ColorPicker,
+  Dialog,
+  Field,
+  Input,
   Select,
   Slider,
+  Switch,
   Tabs,
   Toggle,
   ToggleGroup,
@@ -28,6 +32,7 @@ import {
   DENSITY,
   MOTION,
   RADIUS,
+  toScaffoldCommand,
   useThemeConfig,
   type ThemeConfig,
 } from "./theme-config";
@@ -347,7 +352,119 @@ export function ThemeConfigurator({ className }: { className?: string }) {
           </p>
         ))}
       </section>
+
+      <Scaffold cfg={cfg} />
     </div>
+  );
+}
+
+/**
+ * The theme as a project: one command that hands the whole config to
+ * `create-forte-ui`, which scaffolds a new app already wearing it. The theme
+ * half of the command comes from the shared config; the PROJECT half —
+ * name, framework, Tailwind — is nothing the studio knows, so the button
+ * opens a dialog that asks, then shows the finished command before it is
+ * copied: the studio's rule is that an export is something you can read
+ * before you run. It lives here rather than on the studio page so the header
+ * drawer offers it on every page too.
+ */
+function Scaffold({ cfg }: { cfg: ThemeConfig }) {
+  const [copied, setCopied] = React.useState(false);
+  const [name, setName] = React.useState("my-app");
+  const [framework, setFramework] = React.useState<"next" | "vite">("next");
+  const [tailwind, setTailwind] = React.useState(true);
+
+  /* The command is pasted into a shell, so the name never gets to carry
+   * quoting problems: spaces become the dashes the CLI would demand anyway,
+   * everything else invalid is dropped, and empty falls back to the
+   * placeholder. The input itself is left as typed — correcting a field
+   * while someone is typing in it is how "my-app" becomes "myapp". */
+  const safeName =
+    name.trim().toLowerCase().replaceAll(/\s+/g, "-").replaceAll(/[^a-z0-9._-]/g, "") || "my-app";
+  const command = toScaffoldCommand(cfg, { name: safeName, framework, tailwind });
+
+  React.useEffect(() => {
+    if (!copied) return;
+    const t = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(t);
+  }, [copied]);
+
+  return (
+    <section className={GROUP}>
+      <h3 className={GROUP_TITLE}>Start a project</h3>
+      <Dialog.Root onOpenChange={(open) => { if (!open) setCopied(false); }}>
+        <Dialog.Trigger render={<Button size="sm" variant="soft" tone="neutral" fullWidth />}>
+          Scaffold this theme…
+        </Dialog.Trigger>
+        <Dialog.Popup size="sm">
+          <Dialog.Title>Scaffold this theme</Dialog.Title>
+          <Dialog.Description>
+            One command hands the theme to <code className="font-mono text-2">create-forte-ui</code>,
+            which scaffolds a new app already wearing it.
+          </Dialog.Description>
+
+          <Field.Root name="scaffold-project">
+            <Field.Label>Project name</Field.Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="my-app" />
+          </Field.Root>
+
+          <div className="grid gap-2">
+            {/* The same panelless tab strip as the panel's Choice rows, and
+              * for the same reason — the indicator geometry comes measured
+              * from Base UI. Not Choice itself only because these values wear
+              * display names their flag values do not — which is also why
+              * TAB's `capitalize` is dropped: it would title-case "Next.js"
+              * into "Next.Js". */}
+            <h4 className={GROUP_TITLE}>Framework</h4>
+            <Tabs.Root
+              value={framework}
+              onValueChange={(v) => setFramework(v as "next" | "vite")}
+              variant="pill"
+              style={TAB_VARS}
+            >
+              <Tabs.List className="w-full" aria-label="Framework">
+                <Tabs.Tab value="next" className="min-w-0 flex-1">
+                  Next.js
+                </Tabs.Tab>
+                <Tabs.Tab value="vite" className="min-w-0 flex-1">
+                  Vite
+                </Tabs.Tab>
+                <Tabs.Indicator className={TAB_INDICATOR} />
+              </Tabs.List>
+            </Tabs.Root>
+          </div>
+
+          <Field.Root name="scaffold-tailwind">
+            <Field.Label>
+              <Switch checked={tailwind} onCheckedChange={setTailwind} />
+              Tailwind
+            </Field.Label>
+            <Field.Description>
+              Wires the token bridge, so utilities follow the theme too.
+            </Field.Description>
+          </Field.Root>
+
+          <pre className="m-0 overflow-x-auto rounded-3 bg-panel-active p-3 font-mono text-1 leading-[1.6]">
+            {command}
+          </pre>
+
+          <Dialog.Footer>
+            <Dialog.Close render={<Button variant="soft" tone="neutral" />}>Close</Dialog.Close>
+            <Button
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(command);
+                  setCopied(true);
+                } catch { /* clipboard may be blocked; the command stays visible */ }
+              }}
+            >
+              {copied ? "Copied" : "Copy command"}
+            </Button>
+          </Dialog.Footer>
+        </Dialog.Popup>
+      </Dialog.Root>
+      <p className={HINT}>A new app — Vite or Next.js, Tailwind optional — themed like this one.</p>
+    </section>
   );
 }
 

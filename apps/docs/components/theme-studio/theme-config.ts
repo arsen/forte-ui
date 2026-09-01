@@ -135,6 +135,46 @@ export function configToAttrs(cfg: ThemeConfig) {
   };
 }
 
+export type ScaffoldOptions = {
+  name: string;
+  framework: "next" | "vite";
+  tailwind: boolean;
+};
+
+/**
+ * The config as a `create-forte-ui` command line — the flag names ARE the
+ * CLI's, so this must move in lockstep with `packages/create-forte-ui`'s
+ * `args.ts`.
+ *
+ * The two halves follow different rules on purpose. The theme flags emit
+ * only deviations: the CLI's contract is that a skipped flag writes nothing
+ * and the scaffold keeps following the library's own defaults, so a value
+ * still sitting on the studio default (including the seeds, whose defaults
+ * here are the hex twins of the shipped `oklch` values) stays off the
+ * command rather than being frozen into the new app. The structural flags
+ * are always explicit: they answer the dialog's own questions, and a command
+ * you can read should say which project it creates. `--yes` closes the loop —
+ * everything not on the line is a deliberate default, so the command runs
+ * without a single prompt.
+ */
+export function toScaffoldCommand(cfg: ThemeConfig, opts: ScaffoldOptions): string {
+  const d = THEME_DEFAULTS;
+  const flags = [
+    `--framework ${opts.framework}`,
+    opts.tailwind ? "--tailwind" : "--no-tailwind",
+    cfg.seed !== d.seed && `--seed "${cfg.seed}"`,
+    cfg.secondary !== d.secondary && `--secondary "${cfg.secondary}"`,
+    cfg.tint !== d.tint && `--tint ${cfg.tint}`,
+    cfg.radius !== "default" && `--radius ${cfg.radius}`,
+    cfg.density !== "default" && `--density ${cfg.density}`,
+    cfg.motion !== "default" && `--motion ${cfg.motion}`,
+    cfg.fontSans !== "System" && `--font-sans "${cfg.fontSans}"`,
+    cfg.fontMono !== "System" && `--font-mono "${cfg.fontMono}"`,
+    "--yes",
+  ].filter(Boolean);
+  return [`pnpm create forte-ui ${opts.name}`, ...flags].join(" ");
+}
+
 /* Every var `configToAttrs` can emit. Cleared before each apply, because a
  * config is a complete statement, not a patch: pick Inter and then go back to
  * "System" and the new attrs simply LACK `--forte-font-sans` — only an
