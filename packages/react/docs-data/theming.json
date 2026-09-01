@@ -3992,6 +3992,25 @@
         "overrides": []
       },
       {
+        "name": "--forte-dialog-border-width",
+        "value": "1px",
+        "description": "Width of the hairline that separates the popup from the page",
+        "part": "popup",
+        "overrides": []
+      },
+      {
+        "name": "--forte-dialog-border-color",
+        "value": "var(--forte-color-border)",
+        "description": "Colour of that hairline. `transparent` when `size=\"fullscreen\"`.",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"fullscreen\"]",
+            "value": "transparent"
+          }
+        ]
+      },
+      {
         "name": "--forte-dialog-font-size",
         "value": "var(--forte-font-size-2)",
         "description": "Base font size inside the popup",

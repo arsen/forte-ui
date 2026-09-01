@@ -349,7 +349,7 @@ Give every dialog a `Dialog.Title`. If the design has no room for a visible one,
 `Dialog.Close iconOnly` has no text to announce, so it needs an `aria-label` (`aria-label="Close"`). The `iconOnly` styling already enforces the 24px minimum hit target from WCAG SC 2.5.8.
 </Callout>
 
-The popup itself carries a focus ring, because it is the element that receives focus on a touch-opened or keyboard-opened dialog. In forced-colors mode its shadow is stripped by the OS, so it also draws a border to keep its boundary visible.
+The popup itself carries a focus ring, because it is the element that receives focus on a touch-opened or keyboard-opened dialog. It also draws a hairline border (`--forte-dialog-border-color`) so its edge keeps its contrast where the shadow cannot promise it: over an already-dark page in dark mode, or under a light scrim. In forced-colors mode, where the shadow is stripped by the OS entirely, that same border is repainted in `CanvasText` and becomes the boundary.
 
 <Callout kind="a11y">
 A dialog opened by `useDialog()` has no trigger, so there is nothing for focus to return to by that route. Base UI restores the element that was focused before it opened — the button whose handler made the call — which is the right answer nearly every time. It is not the right answer when the dialog was opened by something with no focused element behind it: a timer, a socket message, a route guard. Focus lands on `<body>` there, and the next Tab starts from the top of the page. Give the user somewhere to land in those cases — move focus yourself once the promise resolves.

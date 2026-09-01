@@ -16,7 +16,7 @@ export default function ButtonGroupInput() {
       </ButtonGroup.Text>
       <Input
         id="clone-url"
-        defaultValue="github.com/dofortech/forte-ui.git"
+        defaultValue="github.com/arsen/forte-ui.git"
         readOnly
       />
       <Button variant="outline" tone="neutral" iconOnly aria-label="Copy URL">
