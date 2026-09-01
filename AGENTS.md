@@ -1,7 +1,9 @@
 # AGENTS.md
 
 Working notes for coding agents on **forte-ui**. Read this before touching any
-file. `CLAUDE.md` is a symlink to this file — one document, two names.
+file. `CLAUDE.md` is a stub that `@`-imports this one — it was a symlink
+until git checkouts on Windows proved that does not travel. Edit this file;
+`CLAUDE.md` carries no content of its own.
 
 ---
 
