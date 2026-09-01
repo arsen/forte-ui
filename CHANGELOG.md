@@ -13,6 +13,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0-alpha.6] - 2026-09-01
+
+### ThemeToggle
+
+- New component: a built-in light/dark switch that works flash-free in both SSR (Next.js) and SPA (Vite) apps. The button renders both a sun and moon icon and lets CSS keyed on `data-theme` (with a `prefers-color-scheme` fallback) pick the visible one, so the server never needs the visitor's preference and there is no hydration mismatch or wrong icon at first paint. Ships alongside `useTheme` (treats the document attribute as the source of truth, with `localStorage` for persistence) and `ThemeScript` (replays a stored choice before paint). Controlled mode (`theme` + `onThemeChange`) makes the button a dumb control for external managers such as `next-themes`.
+
+### General
+
+- `docgen` now emits `docs-data/components.md`, a generated catalogue of every component with a one-line when-to-use summary, its `props.json` part keys, its `theming.json` pointer, and its hooks — assembled from new `@summary` / `@category` doc-comment tags that the build now requires on every component root, so a new component can no longer ship without being catalogued. The file is exported from the package (`@forte-ui/react/docs-data/components.md`), and the internal docgen script order changed so `theming.json` is generated before `components.md` reads it.
+
 ## [1.0.0-alpha.5] - 2026-09-01
 
 ### create-forte-ui
@@ -225,7 +235,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.5...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.6...HEAD
+[1.0.0-alpha.6]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.5...v1.0.0-alpha.6
 [1.0.0-alpha.5]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.4...v1.0.0-alpha.5
 [1.0.0-alpha.4]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.4
 [1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
