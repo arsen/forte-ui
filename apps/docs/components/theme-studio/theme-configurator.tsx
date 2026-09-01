@@ -11,11 +11,12 @@ import {
   Slider,
   Switch,
   Tabs,
+  ThemeToggle,
   Toggle,
   ToggleGroup,
+  useTheme,
   type Rgba,
 } from "@forte-ui/react";
-import { Moon, Sun } from "lucide-react";
 import { SANS_FONTS, MONO_FONTS, ensureFontLink, type FontOption } from "./fonts";
 import {
   hexToOklch,
@@ -25,8 +26,7 @@ import {
   contrast,
   type Oklch,
 } from "@/lib/color";
-import { EYEBROW, ICON } from "@/components/styles";
-import { getDocumentTheme, setDocumentTheme } from "@/components/theme-mode";
+import { EYEBROW } from "@/components/styles";
 import { cn } from "@/lib/cn";
 import {
   DENSITY,
@@ -580,53 +580,50 @@ function FontField({
  * are reading while you judge a seed, and the mode is the one thing about the
  * page you cannot change from the other controls.
  *
- * A button rather than a segmented strip, and not only because two segments is
- * a thin excuse for one: this is the single control in the panel that is not
- * part of the theme being exported. Light/dark is a reader preference, stored
- * under its own `forte-theme` key and shared with the pre-paint script, while
- * everything else here ends up in the copied CSS. Both modes are already built
- * from the same seed, so there is nothing to export — this just decides which
- * of the two you are looking at, and a button that acts is the honest shape for
- * that.
+ * The library's own `ThemeToggle`, uncontrolled, rather than a segmented strip
+ * or a hand-rolled button: this is the single control in the panel that is
+ * not part of the theme being exported. Light/dark is a reader preference,
+ * stored under the `forte-theme` key the pre-paint script in `layout.tsx`
+ * replays, and the uncontrolled toggle writes exactly that key and the
+ * `data-theme` attribute beside it — so it, the OS listener, the header, and
+ * a second mounted copy of this panel all move the same two things and never
+ * disagree. Both modes are already built from the same seed, so there is
+ * nothing to export; this just decides which of the two you are looking at.
  *
- * It renders NOTHING from state, which is the whole point. The mode lives in
- * one place, `data-theme` on <html>, written before first paint by the inline
- * script in `layout.tsx` and also moved by the OS listener and by any second
- * mounted copy of this panel. State here would have to start at a guess on the
- * server and correct itself a frame after hydration — the label showing one
- * mode and then snapping. Both branches ship in the HTML instead and CSS picks
- * one off the same attribute the palette reads, so the server output is already
- * right and every writer of the attribute is followed for free.
+ * The toggle is icon-only, and a sun or moon beside a heading reading
+ * "Appearance" could be read as a statement of where you are. The label next
+ * to it names the ACTION instead — "Switch to dark" — and it is a real
+ * `<label for>`, so it is the button's accessible name (SC 2.5.3 satisfied by
+ * construction) and clicking the words presses the button.
  *
- * The label names the ACTION, not the current mode: with a visible label the
- * accessible name has to match it (SC 2.5.3), and "Dark" beside a heading
- * reading "Appearance" would read as a statement of where you are rather than
- * as a button.
+ * The label text comes from `useTheme`, which is a compromise the toggle
+ * itself does not make: its icons are picked by CSS off `data-theme`, so they
+ * are right in the server HTML, while `resolvedTheme` is `"light"` on the
+ * server and corrects itself once the store's client snapshot lands. A reader
+ * on a dark page therefore gets "Switch to dark" in the raw HTML and the
+ * right label a beat after hydration — a small cost in a panel that opens on
+ * demand, and the price of a label that reads as text rather than as two
+ * CSS-toggled spans.
  */
 function Appearance() {
+  const { resolvedTheme } = useTheme();
+  const id = React.useId();
+
   return (
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>Appearance</h3>
-      <Button
-        variant="outline"
-        tone="neutral"
-        size="sm"
-        fullWidth
-        onClick={() => setDocumentTheme(getDocumentTheme() === "dark" ? "light" : "dark")}
-      >
-        {/* Light is the default branch so a reader with JS off — where no
-          * script ever writes `data-theme` — sees one label rather than both.
-          * The icons carry their own size: `.content > svg` in Button reaches
-          * DIRECT children only, and these sit inside the branch span. */}
-        <span className="inline-flex items-center gap-2 in-data-[theme=dark]:hidden">
-          <Moon className={ICON} aria-hidden="true" />
-          Switch to dark
-        </span>
-        <span className="hidden items-center gap-2 in-data-[theme=dark]:inline-flex">
-          <Sun className={ICON} aria-hidden="true" />
-          Switch to light
-        </span>
-      </Button>
+      {/* Right-aligned, label before button: the row reads as a sentence
+        * ending in the thing it describes, and the toggle sits on the same
+        * edge as the values the rows below it end in (the hex readouts, the
+        * slider's number). */}
+      <div className="flex items-center justify-end gap-2">
+        {/* `cursor-pointer` because this label performs the action (see the
+          * pointer-affordance rule): a click on it presses the toggle. */}
+        <label htmlFor={id} className="cursor-pointer select-none text-2 text-foreground">
+          Switch to {resolvedTheme === "dark" ? "light" : "dark"}
+        </label>
+        <ThemeToggle id={id} variant="outline" />
+      </div>
     </section>
   );
 }

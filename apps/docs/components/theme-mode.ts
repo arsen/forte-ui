@@ -2,38 +2,16 @@
 
 import * as React from "react";
 
-/* Light ⇄ dark for the whole site — the reading of it, the writing of it, and
- * the listener that follows the OS while the reader has not chosen. The
- * BUTTON that used to live beside these helpers is gone: the header's theme
- * control now opens the theme drawer, and the mode strip inside the
- * configurator is what flips this. The helpers stay together here because the
- * attribute and its storage record have to move as a pair everywhere. */
+/* The OS listener for light ⇄ dark. The reading and writing of the mode
+ * itself now come from the library — `useTheme` and the uncontrolled
+ * `ThemeToggle` inside the configurator write `data-theme` and the
+ * `forte-theme` record together — so the helpers that used to do that here
+ * are gone. What is left is the one thing the library does not do: keep the
+ * attribute following the OS, since this site always writes it (the
+ * pre-paint script resolves the preference) rather than modelling "system"
+ * as its absence the way the library does. */
 
 const STORAGE_KEY = "forte-theme";
-
-export type DocTheme = "light" | "dark";
-
-/**
- * Write the mode. The one place `data-theme` and its storage record are set
- * together, because the two have to move as a pair: the attribute is what the
- * palette reads, and the record is what the pre-paint script in `layout.tsx`
- * replays on the next load. Writing only the attribute themes this page and
- * loses the choice on navigation.
- */
-export function setDocumentTheme(next: DocTheme) {
-  document.documentElement.setAttribute("data-theme", next);
-  try {
-    localStorage.setItem(STORAGE_KEY, next);
-  } catch {
-    // Private mode / blocked storage: the switch still works for this page.
-  }
-}
-
-/** The mode currently on the document. Only meaningful after mount — before
- *  the pre-paint script runs there is no attribute to read. */
-export function getDocumentTheme(): DocTheme {
-  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-}
 
 /**
  * Follow the OS while no explicit choice is stored. The pre-paint script
