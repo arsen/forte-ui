@@ -616,13 +616,14 @@ function Appearance() {
         * ending in the thing it describes, and the toggle sits on the same
         * edge as the values the rows below it end in (the hex readouts, the
         * slider's number). */}
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-start gap-2">
         {/* `cursor-pointer` because this label performs the action (see the
           * pointer-affordance rule): a click on it presses the toggle. */}
+        
+        <ThemeToggle id={id} variant="outline" />
         <label htmlFor={id} className="cursor-pointer select-none text-2 text-foreground">
           Switch to {resolvedTheme === "dark" ? "light" : "dark"}
         </label>
-        <ThemeToggle id={id} variant="outline" />
       </div>
     </section>
   );
