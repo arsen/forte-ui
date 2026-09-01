@@ -5,13 +5,24 @@
   above every existing version — never appended to the bottom.
 -->
 
-All notable changes to `@forte-ui/react` are documented in this file.
+All notable changes to the forte-ui packages — `@forte-ui/react`, `forte-ui` and `create-forte-ui` — are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.0-alpha.4] - 2026-08-31
+
+### Button
+
+- Added `--forte-button-icon-size`, a size-scaled token that sizes an `<svg>` dropped directly into a button's content — an unsized icon set's default (lucide draws at 24px) no longer inflates `iconOnly`'s square. Reassigned per `size`; a consumer wanting a different size sets `--forte-button-icon-size` directly, or wins outright with an unlayered rule or a utility class on the icon.
+
+### Calendar
+
+- Fixed a selected day that was also today repainting its number in the accent colour instead of the fill's own text colour; today's marker now only applies when the day is not selected, so the `on-primary` / `primary` pair holds.
+- Fixed `--forte-calendar-day-radius` pointing at a raw scale step (`--forte-radius-2`) instead of the semantic `--forte-radius-control`, so a day cell now follows the `soft` and `pill` `data-forte-radius` presets like every other control — previously only `none` had any effect.
 
 ### Card
 
@@ -46,6 +57,14 @@ and this project adheres to
   marker, `aria-hidden` behaviour and row positioning) is unchanged, and the
   cap inherits the row's muted/highlighted colour.
 
+### Select
+
+- `Select.Popup`'s `align` now defaults to `"start"` instead of falling through to Base UI's `"center"`, matching `Menu` — a popup wider than its trigger drops from the trigger's start edge instead of hanging off both. Only affects the dropdown-style placement reached with `alignItemWithTrigger={false}` (or Base UI's own touch/tight-viewport fallback); the default aligned mode ignores `align` entirely.
+
+### Tabs
+
+- Fixed the `pill` variant's strip radius being measured against `--forte-tabs-radius` (the panel's radius) instead of the indicator's own `--forte-tabs-indicator-radius`, so the strip's curve is now concentric with the pill it contains at every `data-forte-radius` preset — previously only `none` and `pill` happened to agree. A `pill` tab's own corners now match the indicator too, so its focus ring and hover fill trace the same shape as the thumb underneath.
+
 ### Tooltip
 
 - **Breaking:** `Tooltip.Shortcut` is now a composed `Kbd` — it renders a
@@ -59,6 +78,18 @@ and this project adheres to
   prose like `Press <Kbd>?</Kbd> to search` split into three stacked flex
   items with the whitespace between them dropped. The popup is now block-flow
   at rest and only becomes a flex row when a `Tooltip.Shortcut` is present.
+
+### create-forte-ui
+
+- New package: `pnpm create forte-ui` (or `npm create forte-ui@latest`) scaffolds a fresh app already wired up with forte-ui. It runs `create-vite` / `create-next-app` non-interactively for the framework half and then applies only the forte-ui overlay — the same steps as the [getting-started guides](https://forte-ui.com/getting-started/nextjs/), which are its spec, so a scaffolded app diffs against the walkthrough and shows only your own answers. Four questions (name, framework, Tailwind, accent colour) reach a running app; secondary colour, neutral tint, radius, density, motion and fonts hide behind one "customize further?" gate. Every prompt has a flag twin (`--seed`, `--radius`, `--font-sans`, `--pm`, `--yes`, `--no-install`, …), so the [Theme Studio](https://forte-ui.com/theme/)'s "Scaffold this theme" dialog can hand back a complete, copy-pasteable command line. A skipped answer writes nothing — no restated defaults, no attributes for default presets — so the scaffolded app keeps following the library's own defaults as they change. `pnpm --filter create-forte-ui smoke` builds all four framework × Tailwind combinations against the workspace library as its drift check.
+
+### Design tokens & motion
+
+- Consolidated the anchored-popup arrow (geometry, SVG sizing, forced-colors repaint) and content-swap viewport mechanics — previously hand-copied across `Popover`, `PreviewCard`, `Tooltip` and `NavigationMenu` — into shared `.forte-popup-*` patterns in `patterns.css`, and the duplicated `--available-width` registered property into one `--forte-popup-available-width` in `properties.css`. Each component's own `--forte-*` knobs, defaults and `data-forte` markers are unchanged; a build that imports only one of `Popover` / `PreviewCard` no longer risks shipping without the shared property's registration.
+
+### General
+
+- Fixed a docs-data generation bug where two parts sharing a prop name in one file (for example `ScrollArea.Root`'s `orientation="both"` and `ScrollArea.Scrollbar`'s `orientation="vertical"`) could overwrite each other's documented default in the published `docs-data/props.json`; defaults are now read from each component's own declaration.
 
 ## [1.0.0-alpha.3] - 2026-08-31
 
@@ -187,7 +218,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.4...HEAD
+[1.0.0-alpha.4]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.4
 [1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
 [1.0.0-alpha.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2
 [1.0.0-alpha.1]: https://github.com/arsen/forte-ui/releases/tag/v1.0.0-alpha.1
