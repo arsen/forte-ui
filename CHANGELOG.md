@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0-alpha.5] - 2026-09-01
+
+### create-forte-ui
+
+- Added a `--library` flag that pins the version spec used for the `@forte-ui/react` install — exact (`1.0.0-alpha.4`), a dist-tag (`alpha`), or a range — forwarded to the package manager unvalidated, so a bad spec fails with the registry's own error naming the exact spec rather than a generic "re-run the install" suggestion. It's a dev/CI knob only: no interactive prompt asks for it, and the Theme Studio's "Scaffold this theme" dialog does not use it. Defaults to the `latest` dist-tag, unchanged from before.
+- The scaffolder now installs the forte-ui agent skill (`skills add arsen/forte-ui -s forte-ui`) into the new project by default, so AI tooling working in the scaffolded app starts past the library's documented traps. A new `--no-skill` flag opts out on its own; `--no-install` continues to skip it along with everything else it installs. A failed skill install now only warns, with the manual command to retry, instead of failing the scaffold — the app itself is unaffected.
+
 ## [1.0.0-alpha.4] - 2026-08-31
 
 ### Button
@@ -218,7 +225,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.4...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.5...HEAD
+[1.0.0-alpha.5]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.4...v1.0.0-alpha.5
 [1.0.0-alpha.4]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.4
 [1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
 [1.0.0-alpha.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2

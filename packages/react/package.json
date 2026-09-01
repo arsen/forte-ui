@@ -1,6 +1,6 @@
 {
   "name": "@forte-ui/react",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "A React UI component library built on Base UI, styled with CSS Modules and a themeable CSS-variable design system.",
   "license": "MIT",
   "type": "module",
