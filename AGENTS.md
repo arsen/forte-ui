@@ -61,6 +61,7 @@ pnpm build                                  # everything
 pnpm generate                               # re-run ALL five generators
 pnpm typecheck                              # the real gate — there is no linter
 pnpm test                                   # contrast harness (--fine) + popup parity
+pnpm release                                # build packages/*, preview, confirm, publish
 ```
 
 `pnpm generate` is the one to reach for after editing a source of truth while
@@ -716,6 +717,21 @@ of them, including a package nothing in the range touched. An unchanged
 package gets no changelog section, but it still gets the bump; a release that
 moves one and leaves the others behind is drift, and the next one has to
 repair it.
+
+Publishing is `pnpm release` — [`scripts/release.mjs`](scripts/release.mjs),
+a plain script rather than a turbo task because the unit of work is the whole
+set and turbo's TUI cannot ask "publish these?" once. It refuses a dirty tree
+or a branch other than `main`, builds `packages/*` through turbo, refuses
+again if the build's generators changed a tracked file, prints each package's
+local version next to what the registry currently serves under the dist-tag
+(`alpha` for a `-alpha.N` version, `latest` for a stable one), asks, and
+runs `pnpm -r publish`, which skips versions already on npm and orders the
+alias after `@forte-ui/react`. It must stay on `pnpm publish`: `forte-ui`
+depends on the library as `workspace:^`, which pnpm rewrites in the tarball
+and npm ships verbatim. A successful publish creates the `v<version>` tag,
+because `/release-prep` reads the last `v*` tag as the start of the next
+range. `--dry-run`, `--yes`, `--skip-build`, `--tag <t>` and `--otp <code>`
+(one authenticator code forwarded to every publish) are the flags.
 
 Within a release, entries are grouped by **component** — `### NavList`, plus
 `### Design tokens & motion`, `### General`, and a section per other

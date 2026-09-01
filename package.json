@@ -14,7 +14,8 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "release": "node scripts/release.mjs"
   },
   "devDependencies": {
     "turbo": "^2.10.5",
