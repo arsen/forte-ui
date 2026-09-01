@@ -170,6 +170,20 @@
     --forte-dialog-gap: var(--forte-space-4);
     /** Popup shadow */
     --forte-dialog-shadow: var(--forte-shadow-4);
+    /* A hairline, and not the redundancy it looks like next to the shadow and
+     * the scrim. Overlay-on-background sits within a step on the grey ramp,
+     * and the scrim dims the page by a fraction rather than to black, so a
+     * dialog over a dark page in dark mode — or a light one over a bright
+     * page under a light scrim — has only its shadow to mark where it ends,
+     * and a shadow is a gradient that reads as nothing at all against a busy
+     * or already-dark background. The line is what keeps the edge at a
+     * contrast the shadow cannot promise. `.forte-hc-surface` already
+     * reserves a 1px transparent border on this element, so painting it
+     * costs no layout. */
+    /** Width of the hairline that separates the popup from the page */
+    --forte-dialog-border-width: 1px;
+    /** Colour of that hairline. `transparent` when `size="fullscreen"`. */
+    --forte-dialog-border-color: var(--forte-color-border);
     /** Base font size inside the popup */
     --forte-dialog-font-size: var(--forte-font-size-2);
     /* No width token exists in the inventory (widths are layout, not theme),
@@ -245,6 +259,13 @@
     inline-size: 100%;
     max-inline-size: var(--forte-dialog-max-inline-size);
     padding: var(--forte-dialog-padding);
+    /* Beats the transparent border `.forte-hc-surface` sets, on layer order
+     * alone — patterns is ordered before components. Forced colors then wins
+     * it back from the a11y layer, which is ordered after both. No
+     * `background-clip: padding-box` here, unlike `Menu`: the nested-dialog
+     * ring below relies on the background painting on under the border. */
+    border: var(--forte-dialog-border-width) solid
+      var(--forte-dialog-border-color);
     border-radius: var(--forte-dialog-radius);
 
     background-color: var(--forte-dialog-bg);
@@ -381,10 +402,13 @@
    * match, and it opts out on its own anyway.
    * ---------------------------------------------------------------------- */
   .popup:has(> .surface) {
-    /* The properties, not the knobs — `--forte-dialog-bg`, `-padding` and
-     * `-shadow` keep their values here so `.surface` inherits them and a
-     * consumer retunes the panel from the popup exactly as before. */
+    /* The properties, not the knobs — `--forte-dialog-bg`, `-padding`,
+     * `-shadow` and `-border-*` keep their values here so `.surface` inherits
+     * them and a consumer retunes the panel from the popup exactly as
+     * before. The border goes transparent rather than to zero width so the
+     * box does not shift by a pixel when a surface is added. */
     padding: 0;
+    border-color: transparent;
     background-color: transparent;
     box-shadow: none;
     pointer-events: none;
@@ -414,6 +438,10 @@
      * on `Dialog.Popup` keeps working unchanged. */
     gap: var(--forte-dialog-gap);
     padding: var(--forte-dialog-padding);
+    /* The hairline moves here with the paint — `.forte-hc-surface` is on this
+     * element too, so the slot is already reserved. */
+    border: var(--forte-dialog-border-width) solid
+      var(--forte-dialog-border-color);
     border-radius: var(--forte-dialog-radius);
 
     background-color: var(--forte-dialog-bg);
@@ -436,10 +464,15 @@
 
   /* A fullscreen sheet has no visible edges for a scale to work against —
    * shrinking it just pulls the content away from a screen it is supposed to
-   * fill — so it travels further and doesn't scale at all. */
+   * fill — so it travels further and doesn't scale at all. The hairline
+   * goes with the radius: every edge lies on the bezel, where a line buys
+   * nothing, and on a page that is a step off the overlay colour it would
+   * read as a stray frame around the screen. Set through the knob rather
+   * than `border-color` so the nested-dialog ring below still wins. */
   .popup[data-size="fullscreen"] {
     --forte-dialog-max-inline-size: 100%;
     --forte-dialog-radius: 0px;
+    --forte-dialog-border-color: transparent;
     --forte-dialog-enter-travel: var(--forte-travel-page);
     --forte-dialog-enter-scale: 1;
     --forte-dialog-exit-travel: var(--forte-travel-page);
