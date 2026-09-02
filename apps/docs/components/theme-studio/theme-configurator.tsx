@@ -135,6 +135,19 @@ const TAB_INDICATOR = "shadow-1";
  * follows whatever the flexbox settles on. */
 const TAB = "flex-1 min-w-0 capitalize";
 
+/* The scheme strip's segments, spelled as what the VISITOR gets rather than
+ * as the stored value. "system" names the mechanism — it reads as a third
+ * palette beside light and dark, when what it actually ships is both of them
+ * plus the toggle; "light" and "dark" read as "the page is light right now"
+ * rather than as the pin they are. Naming the outcome makes the three
+ * mutually exclusive on their face. The values themselves are untouched:
+ * they are the serialized config and the `data-theme` attribute. */
+const SCHEME_LABEL: Record<Scheme, string> = {
+  system: "Dark/Light",
+  light: "Only Light",
+  dark: "Only Dark",
+};
+
 function Ratio({ value, large = false }: { value: number; large?: boolean }) {
   // SC 1.4.3 relaxes to 3:1 for large text (>=24px, or >=18.66px bold).
   const aa = large ? 3 : 4.5;
@@ -397,7 +410,7 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>Start a project</h3>
       <Dialog.Root onOpenChange={(open) => { if (!open) setCopied(false); }}>
-        <Dialog.Trigger render={<Button size="sm" variant="soft" tone="neutral" fullWidth />}>
+        <Dialog.Trigger render={<Button variant="soft" tone="primary" fullWidth />}>
           Scaffold this theme…
         </Dialog.Trigger>
         <Dialog.Popup
@@ -682,13 +695,19 @@ function Appearance({ scheme, onChange }: { scheme: Scheme; onChange: (v: Scheme
   return (
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>Appearance</h3>
-      <Segmented label="Colour scheme" options={SCHEME} value={scheme} onChange={onChange} />
+      <Segmented
+        label="Colour scheme"
+        options={SCHEME}
+        value={scheme}
+        onChange={onChange}
+        labels={SCHEME_LABEL}
+      />
       {scheme === "system" ? (
         /* Toggle before label: the button sits on the strip's leading edge,
          * where the segment it belongs to starts, and the words read as its
          * caption rather than as a sentence the button finishes. */
-        <div className="flex items-center gap-2">
-          <ThemeToggle id={id} variant="outline" />
+        <div className="flex items-center justify-center gap-2">
+          <ThemeToggle id={id} variant="ghost" />
           {/* `cursor-pointer` because this label performs the action (see the
             * pointer-affordance rule): a click on it presses the toggle. */}
           <label htmlFor={id} className="cursor-pointer select-none text-2 text-foreground">
@@ -734,12 +753,16 @@ function Choice<T extends string>({
  * the one group that wants the strip UNDER a heading it does not own — the
  * Appearance section, whose heading covers the toggle beside it too. */
 function Segmented<T extends string>({
-  label, options, value, onChange,
+  label, options, value, onChange, labels,
 }: {
   label: string;
   options: readonly T[];
   value: T;
   onChange: (v: T) => void;
+  /* Display text per option, for a strip whose stored values do not read as
+   * their own labels — see the Appearance strip, where "system" names the
+   * mechanism and not what the visitor gets. Omitted, the value is the label. */
+  labels?: Record<T, string>;
 }) {
   return (
     <Tabs.Root
@@ -751,7 +774,7 @@ function Segmented<T extends string>({
       <Tabs.List className="w-full" aria-label={label}>
         {options.map((o) => (
           <Tabs.Tab key={o} value={o} className={TAB}>
-            {o}
+            {labels?.[o] ?? o}
           </Tabs.Tab>
         ))}
         <Tabs.Indicator className={TAB_INDICATOR} />
