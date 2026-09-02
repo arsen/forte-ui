@@ -1,14 +1,15 @@
 "use client";
 
 import * as React from "react";
+import { PRESETS, useThemeConfig } from "@/components/theme-studio/theme-config";
 
-const PALETTE = [
-  { name: "Ocean", seed: "#0e76be", secondary: "#8f5fc0" },
-  { name: "Violet", seed: "#6d43d4", secondary: "#c2410c" },
-  { name: "Forest", seed: "#0f7a52", secondary: "#a16207" },
-  { name: "Ember", seed: "#c2410c", secondary: "#0369a1" },
-  { name: "Rose", seed: "#b6155f", secondary: "#0f766e" },
-];
+/* The five the hero offers, resolved from the studio's own list rather than
+ * restated here. The two are one control seen twice now that a swatch writes
+ * the shared theme record, so a colour that drifted between two copies of the
+ * list would theme the page and light nothing up at either end. */
+const HERO_PRESETS = ["Ocean", "Violet", "Forest", "Ember", "Rose"].flatMap((name) =>
+  PRESETS.filter((p) => p.name === name),
+);
 
 /* One swatch.
  *
@@ -35,6 +36,19 @@ const SWATCH = [
   "forte-focus-ring",
 ].join(" ");
 
+/** How long the cross-fade lasts, read off the token rather than restated.
+ *
+ *  `--forte-duration-slow` is 400ms normally and 150ms under both
+ *  `prefers-reduced-motion` and `data-forte-motion="reduce"`, so reading it is
+ *  the only way the timer below stays in step with a reader who asked for
+ *  less motion — or with a later retune of the token. */
+function fadeMs(root: HTMLElement) {
+  const raw = getComputedStyle(root).getPropertyValue("--forte-duration-slow").trim();
+  const n = Number.parseFloat(raw);
+  if (!Number.isFinite(n)) return 400;
+  return raw.endsWith("ms") ? n : n * 1000;
+}
+
 /**
  * Re-themes the entire page from a row of swatches.
  *
@@ -43,24 +57,64 @@ const SWATCH = [
  * interpolates the seed and every one of the twelve derived ramp steps
  * recomputes from it each frame. The whole site cross-fades between palettes
  * with one transition on one variable, and no JavaScript in the animation path.
+ *
+ * The write goes through `setThemeConfig` — the studio's one write path —
+ * rather than straight onto `<html>`, which is what it used to do. Three
+ * things came of the shortcut: the palette was never persisted, so it was gone
+ * on the next navigation while one picked in the theme drawer survived; the
+ * measured `--forte-color-on-primary` was left behind on the old seed, so the
+ * auto-contrast guarantee held for a colour that was no longer on screen; and
+ * the drawer's preset grid went on showing whatever it last set. Sharing the
+ * record makes a hero swatch and a preset toggle the same control.
  */
 export function HeroThemer() {
-  const [active, setActive] = React.useState(0);
+  const [cfg, setThemeConfig] = useThemeConfig();
+  const fade = React.useRef<number | undefined>(undefined);
 
-  function apply(index: number) {
-    const p = PALETTE[index]!;
+  /* Matched on both colours, the way the studio's preset grid is: change
+   * either one there and no swatch here is current any more — a state this row
+   * can genuinely be in now that it reads a shared record rather than
+   * remembering its own last click. `findIndex` returning -1 leaves every
+   * swatch unchecked, which is the honest answer. */
+  const active = HERO_PRESETS.findIndex(
+    (p) => p.seed === cfg.seed && p.secondary === cfg.secondary,
+  );
+
+  /* The class has to come off again, and this is the only thing that puts it
+   * on. While it is there `<html>` carries a `transition` on both seeds, and
+   * every palette change AND every light/dark switch for the rest of the
+   * session pays for a 400ms fade nobody asked for. Leaving it on used to cost
+   * far more than that — see the rule's own comment in `globals.css`.
+   *
+   * The unmount arm covers navigating away mid-fade, which would otherwise
+   * strand the class on the document with nothing left mounted to remove it. */
+  React.useEffect(
+    () => () => {
+      window.clearTimeout(fade.current);
+      document.documentElement.classList.remove("themeTransition");
+    },
+    [],
+  );
+
+  function apply(preset: (typeof HERO_PRESETS)[number]) {
     const root = document.documentElement;
-    root.style.setProperty("--forte-accent-seed", p.seed);
-    root.style.setProperty("--forte-secondary-seed", p.secondary);
+    // Read before the class goes on, so the duration cannot come from a style
+    // the class itself introduced.
+    const ms = fadeMs(root);
     root.classList.add("themeTransition");
-    setActive(index);
+    // Clicking a second palette mid-fade retargets the transition; the timer
+    // has to be retargeted with it or the first click's would strip the class
+    // out from under the second's fade.
+    window.clearTimeout(fade.current);
+    fade.current = window.setTimeout(() => root.classList.remove("themeTransition"), ms);
+    setThemeConfig({ ...cfg, seed: preset.seed, secondary: preset.secondary });
   }
 
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-2 text-foreground-muted" id="palette-label">Try a palette</span>
       <div className="flex gap-2" role="radiogroup" aria-labelledby="palette-label">
-        {PALETTE.map((p, i) => (
+        {HERO_PRESETS.map((p, i) => (
           <button
             key={p.name}
             type="button"
@@ -68,7 +122,7 @@ export function HeroThemer() {
             aria-checked={active === i}
             className={SWATCH}
             style={{ "--a": p.seed, "--b": p.secondary } as React.CSSProperties}
-            onClick={() => apply(i)}
+            onClick={() => apply(p)}
           >
             <span className="forte-visually-hidden">{p.name}</span>
           </button>

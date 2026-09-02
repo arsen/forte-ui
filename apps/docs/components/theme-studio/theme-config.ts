@@ -27,6 +27,36 @@ export const SCHEME = ["system", "light", "dark"] as const;
 
 export type Scheme = (typeof SCHEME)[number];
 
+/** The named palettes, in the order the studio lays its preset grid out.
+ *
+ *  Shared rather than owned by the configurator, because the home page's hero
+ *  offers five of them too and the two are now one control seen twice: a hero
+ *  swatch writes this same record, so the panel renders the palette it picked
+ *  as the pressed preset. A colour that drifted between two copies of this
+ *  list would theme the page without lighting anything up at either end. */
+export const PRESETS: { name: string; seed: string; secondary: string }[] = [
+  { name: "Ocean", seed: "#0e76be", secondary: "#8f5fc0" },
+  { name: "Violet", seed: "#6d43d4", secondary: "#c2410c" },
+  { name: "Forest", seed: "#0f7a52", secondary: "#a16207" },
+  { name: "Ember", seed: "#c2410c", secondary: "#0369a1" },
+  { name: "Rose", seed: "#b6155f", secondary: "#0f766e" },
+  { name: "Slate", seed: "#475569", secondary: "#0e7490" },
+  { name: "Gold", seed: "#a16207", secondary: "#4338ca" },
+  { name: "Cyan", seed: "#0e7490", secondary: "#be123c" },
+  { name: "Indigo", seed: "#4f46e5", secondary: "#ca8a04" },
+  { name: "Grape", seed: "#9333ea", secondary: "#16a34a" },
+  { name: "Scarlet", seed: "#b91c1c", secondary: "#155e75" },
+  { name: "Lagoon", seed: "#0d9488", secondary: "#9d174d" },
+  { name: "Moss", seed: "#4d7c0f", secondary: "#6d28d9" },
+  { name: "Flamingo", seed: "#db2777", secondary: "#059669" },
+  { name: "Cobalt", seed: "#1d4ed8", secondary: "#ea580c" },
+  { name: "Orchid", seed: "#c026d3", secondary: "#0891b2" },
+  { name: "Lime", seed: "#65a30d", secondary: "#a21caf" },
+  { name: "Copper", seed: "#92400e", secondary: "#2a6f97" },
+  { name: "Plum", seed: "#86198f", secondary: "#5c7c0a" },
+  { name: "Coral", seed: "#e0533f", secondary: "#1f6f5c" },
+];
+
 export type ThemeConfig = {
   seed: string;
   secondary: string;
