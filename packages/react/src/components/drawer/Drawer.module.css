@@ -197,6 +197,17 @@
     z-index: var(--forte-drawer-z-index);
     inset: 0;
     display: grid;
+    /* One explicit cell the exact size of the padding box. Left implicit, the
+     * lone `auto` track sizes itself to the popup's OWN `inline-size` — 24rem
+     * for `md` — and the popup's `max-inline-size: 100%` then resolves against
+     * that track, not against the screen, which is circular and clamps
+     * nothing: on a 375px phone the surface computes to 384px and its far
+     * edge hangs off the screen. `minmax(0, 1fr)` pins the track to the
+     * available space, so `100%` on the popup means what it reads as. The
+     * row is fixed for the same reason, or a bottom sheet taller than the
+     * screen would grow the row instead of scrolling inside it. */
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     padding: var(--forte-drawer-inset);
     /* Only ever non-zero inside a `Drawer.VirtualKeyboardProvider`, which is
      * what publishes it. Without the provider the fallback keeps this equal to

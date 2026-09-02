@@ -53,16 +53,28 @@ export function ThemeDrawer() {
         * own padding would pinch the four-segment strips below the width they
         * were sized against. */}
       <Drawer.Popup size="md" variant="floating" backdrop={false}>
+        {/* The title row sits OUTSIDE `Drawer.Content`, and that placement is
+          * the whole of how it stays put. Content is the drawer's scroll
+          * container; the popup around it is a flex column that does not
+          * scroll, so a sibling placed before Content pins to the top the
+          * same way a `Drawer.Footer` placed after it pins to the bottom.
+          * Inside Content the row scrolled off with the first flick, and on a
+          * phone — where the panel is several screens tall and, with
+          * outside-press dismissal off, this × is the only exit a pointer
+          * can see — a reader two screens deep had no visible way out.
+          * Title and Close are still inside the Popup, which is all the
+          * `aria-labelledby` wiring needs; there is deliberately no
+          * `Drawer.Header` part, so the anatomy stays Base UI's. */}
+        <div className="flex items-center justify-between gap-3">
+          <Drawer.Title>Theme</Drawer.Title>
+          <Drawer.Close
+            aria-label="Close theme settings"
+            render={<Button variant="ghost" size="sm" iconOnly />}
+          >
+            <X className={ICON} aria-hidden="true" />
+          </Drawer.Close>
+        </div>
         <Drawer.Content>
-          <div className="flex items-center justify-between gap-3">
-            <Drawer.Title>Theme</Drawer.Title>
-            <Drawer.Close
-              aria-label="Close theme settings"
-              render={<Button variant="ghost" size="sm" iconOnly />}
-            >
-              <X className={ICON} aria-hidden="true" />
-            </Drawer.Close>
-          </div>
           <ThemeConfigurator />
         </Drawer.Content>
       </Drawer.Popup>
