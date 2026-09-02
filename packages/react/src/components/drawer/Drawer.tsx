@@ -15,6 +15,7 @@ import type {
   DrawerVirtualKeyboardProviderProps as BaseDrawerVirtualKeyboardProviderProps,
 } from "@base-ui/react/drawer";
 import { clsx } from "clsx";
+import { ScrollArea } from "../scroll-area";
 import styles from "./Drawer.module.css";
 
 export type DrawerSide = "top" | "right" | "bottom" | "left";
@@ -409,6 +410,21 @@ export const DrawerHandle = React.forwardRef<HTMLDivElement, DrawerHandleProps>(
 export interface DrawerContentProps
   extends Omit<BaseDrawerContentProps, "className"> {
   /**
+   * Scroll the body inside a `ScrollArea` instead of as a plain scroll
+   * container. The scroll track and the edge fade then sit against the
+   * drawer's own edge rather than inset over the text, and Base UI makes the
+   * viewport focusable while — and only while — there is something to scroll,
+   * so a keyboard user with no focusable control in the body can still read
+   * it.
+   *
+   * Turn it off for a body that brings its own scrolling: a virtualised list,
+   * a map, an embedded editor. Those measure the scrollport themselves, and
+   * an extra one wrapped around them is a second thing to fight over the
+   * gesture.
+   * @default true
+   */
+  scrollArea?: boolean;
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -423,9 +439,13 @@ export interface DrawerContentProps
  * of pulling the drawer. Touch dragging is unaffected, so the gesture still
  * works where it matters.
  *
- * It is also the drawer's scroll container, which is what keeps a
- * `Drawer.Handle` from scrolling away and lets a `Drawer.Footer` placed
- * *outside* it pin to the bottom of the drawer.
+ * It is also where the drawer scrolls, which is what keeps a `Drawer.Handle`
+ * from scrolling away and lets a `Drawer.Footer` placed *outside* it pin to
+ * the bottom of the drawer. Under the default `scrollArea` the scrolling box
+ * is the `ScrollArea.Viewport` nested inside this element rather than this
+ * element itself; either way it is the first scrollable ancestor Base UI
+ * finds from a gesture started in the body, so "swipe only once the scroll
+ * has bottomed out" holds in both.
  *
  * On a `top`/`bottom` drawer it caps and centres its own width through
  * `--forte-drawer-content-max-inline-size`, which is what keeps a full-width
@@ -434,14 +454,71 @@ export interface DrawerContentProps
 export const DrawerContent = React.forwardRef<
   HTMLDivElement,
   DrawerContentProps
->(function DrawerContent({ className, ...props }, ref) {
+>(function DrawerContent(
+  { scrollArea = true, className, children, ...props },
+  ref,
+) {
   return (
     <BaseDrawer.Content
       ref={ref}
       className={clsx(styles.content, className)}
       data-forte="drawer-content"
+      // The padding this element cancels is re-applied inside, so the two
+      // halves must not be able to disagree about which mode they are in.
+      data-scroll-area={scrollArea ? "" : undefined}
       {...props}
-    />
+    >
+      {scrollArea ? (
+        /* A real `ScrollArea`, not an `overflow: auto` of our own, for three
+         * things a bare scroll container cannot do. Its edge fade is a MASK
+         * driven off Base UI's scroll-distance properties, so it opens as the
+         * body moves under it and closes flush at either end — the "there is
+         * more past this edge" cue a drawer's hard, fixed edge otherwise
+         * swallows — and being a mask it is correct on the overlay background
+         * without being told what that background is. Its viewport is a tab
+         * stop only while it can actually scroll, which is SC 2.1.1 for a body
+         * whose content is all static text. And it splits the scroller from
+         * the measure box, which is what lets the track ride the drawer's edge
+         * while the text inside stays capped and centred — one box cannot be
+         * both.
+         *
+         * No `ScrollArea.Scrollbar`, deliberately, matching Tabs and
+         * Breadcrumb: an overlay track painted down the first column of a nav
+         * list or a form is worse than no track, and the fade already carries
+         * the cue. Base UI hides the native scrollbars on the viewport itself,
+         * so leaving the part out is all it takes. Render one from
+         * `className` if a body genuinely wants it.
+         *
+         * `orientation` is load-bearing rather than a tidy-up. Under the
+         * default `"both"` the viewport is a horizontal scroll container too,
+         * carrying `overscroll-behavior: contain` — whose entire job is to
+         * stop a gesture propagating. On a `left`/`right` drawer the dismiss
+         * drag IS horizontal, so it would be swallowed by a box with nothing
+         * to scroll. Naming the block axis releases the other one.
+         *
+         * No `data-forte` on these parts: rule 9 — a composed forte-ui
+         * component tags its own root, and consumers scope with a descendant
+         * selector. */
+        <ScrollArea.Root className={styles.scroller} orientation="vertical">
+          {/* No class of its own: the viewport already carries the overflow,
+            * the overscroll containment and the fade mask from ScrollArea, and
+            * `styles.viewport` in this file is the drawer's OWN fixed-position
+            * overlay viewport — applying it here pins the scrollport to the
+            * popup's border box (the popup's transform makes it the containing
+            * block for `position: fixed`) and turns its pointer events off. */}
+          <ScrollArea.Viewport>
+            {/* The measure box: the popup's padding, re-applied inside the
+              * scrollport so the track stays outside it, plus the width cap
+              * and centring that used to live on `.content`. */}
+            <ScrollArea.Content className={styles.measure}>
+              {children}
+            </ScrollArea.Content>
+          </ScrollArea.Viewport>
+        </ScrollArea.Root>
+      ) : (
+        children
+      )}
+    </BaseDrawer.Content>
   );
 });
 

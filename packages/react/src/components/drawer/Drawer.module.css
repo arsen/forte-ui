@@ -8,6 +8,16 @@
  *                                                →  Title / Description
  *                                                →  Footer / Close
  *
+ * Under the default `scrollArea`, Content holds a composed forte-ui
+ * `ScrollArea` rather than scrolling itself:
+ *   Content  →  .scroller (ScrollArea.Root)
+ *            →    viewport   — the scrollport: full-bleed, fades, tab stop
+ *            →      .measure — the padding, the width cap, the centring
+ * `.scroller` and `.measure` are the only rules here that style a composed
+ * component's parts; the viewport is left alone deliberately, since this
+ * file's own `.viewport` is the drawer's fixed overlay and would pin the
+ * scrollport to the popup's border box.
+ *
  * `Root` renders no DOM element, so there is no `.root` rule here; the popup
  * is the styling anchor and carries most of the `--forte-drawer-*` knobs. Two
  * live elsewhere on purpose — see the notes on `.viewport` and `.backdrop`.
@@ -40,11 +50,11 @@
  * its outer edge, off-screen at rest, that fills the gap as it opens. Base
  * UI's own examples build it out of extra width plus a matching negative
  * margin. This file uses a zero-blur, zero-spread `box-shadow` offset along
- * the axis vector instead, for one decisive reason: the popup is the scroll
- * container, and padding the box outward would push its scrollbar off-screen
- * with it. A shadow paints outside the border box and is not clipped by the
- * element's own `overflow`, so the drawer keeps its true size and its
- * scrollbar stays where the user can reach it.
+ * the axis vector instead, for one decisive reason: the drawer's scroll track
+ * rides the popup's inner edge, and padding the box outward would push that
+ * track off-screen with it. A shadow paints outside the border box and is not
+ * clipped by the element's own `overflow`, so the drawer keeps its true size
+ * and its scrollbar stays where the user can reach it.
  *
  * ---------------------------------------------------------------------------
  * Motion notes, all load-bearing
@@ -717,40 +727,156 @@
     left: var(--forte-drawer-handle-inset);
   }
 
-  /* Content ---------------------------------------------------------------- */
+  /* Content ----------------------------------------------------------------
+   * Where the drawer scrolls — and, under the default `scrollArea`, no longer
+   * the box that does the scrolling itself.
+   *
+   * The reason for the split is that ONE box cannot be both things this
+   * element used to be. A scroll container's track and its edge fade sit at
+   * its own edge, so for them to reach the drawer's edge the scroller has to
+   * run the full width of the popup; but the body's text is capped and centred
+   * (see the `top`/`bottom` rule below), so the box holding it must be
+   * narrower and inset. Written as one box, whichever job you pick the other
+   * one is wrong: keep the cap and the scrollbar floats in from the edge over
+   * the text, drop it and a bottom sheet runs its prose the full width of a
+   * desktop screen.
+   *
+   * So `scrollArea` splits them — `.scroller` bleeds to the popup's edge and
+   * scrolls, `.measure` holds the cap and the padding — and this element is
+   * left as the flex item that claims the space, plus the Base UI part that
+   * exempts the region from mouse dragging.
+   *
+   * `min-block-size: 0` is what permits the shrink at all: a flex item's
+   * automatic minimum size is its content, which would otherwise refuse to go
+   * below it and hand the overflow back to the popup.
+   *
+   * Either way the scroll stays BELOW the popup, which is what keeps a
+   * `Drawer.Handle` still. An out-of-flow child of a scroll container is
+   * anchored to the scroll ORIGIN, not to the scrollport — `position: fixed`
+   * included, since the popup's own transform makes it the containing block —
+   * so a grip positioned against a scrolling popup slides out of view the
+   * moment the drawer is scrolled. Against a popup that does not scroll, it
+   * simply holds. It also means a `Drawer.Footer` placed OUTSIDE this element
+   * pins to the bottom of the drawer instead of scrolling away. */
   .content {
     /* Side drawers are already narrow, so there is nothing to cap. */
-    /** Maximum width of `Drawer.Content`, which then centres itself. `32rem` on
-     * a `top`/`bottom` drawer. */
+    /** Maximum width of the drawer's body, which then centres itself. `32rem`
+     * on a `top`/`bottom` drawer. */
     --forte-drawer-content-max-inline-size: 100%;
 
-    /* This, and not the popup, is the drawer's scroll container.
-     *
-     * It grows into a drawer with room to spare (so a `Drawer.Footer` in here
-     * still sinks to the far end) and shrinks when the content outgrows the
-     * surface, scrolling internally rather than pushing the popup past its
-     * own bounds. `min-block-size: 0` is what permits the shrink at all — a
-     * flex item's automatic minimum size is its content, which would otherwise
-     * refuse to go below it and hand the overflow back to the popup.
-     *
-     * Putting the scroll here rather than on the popup is what keeps a
-     * `Drawer.Handle` still. An out-of-flow child of a scroll container is
-     * anchored to the scroll ORIGIN, not to the scrollport — `position: fixed`
-     * included, since the popup's own transform makes it the containing block
-     * — so a grip positioned against a scrolling popup slides out of view the
-     * moment the drawer is scrolled. Against a popup that does not scroll, it
-     * simply holds. It also means a `Drawer.Footer` placed OUTSIDE this
-     * element pins to the bottom of the drawer instead of scrolling away. */
     flex: 1 1 auto;
     min-block-size: 0;
-    overflow: hidden auto;
-    overscroll-behavior: contain;
     display: flex;
     flex-direction: column;
+  }
+
+  /* `scrollArea={false}`: exactly the box this was before the split — the
+   * scroller, the measure and the flex item all at once, with the scrollbar
+   * inset over the text. Kept whole rather than assembled from shared
+   * declarations, because a body that opts out is usually one that brings its
+   * own scrolling and wants the plain container it used to get. */
+  .content:not([data-scroll-area]) {
+    overflow: hidden auto;
+    overscroll-behavior: contain;
     gap: var(--forte-drawer-gap);
     inline-size: 100%;
     max-inline-size: var(--forte-drawer-content-max-inline-size);
     margin-inline: auto;
+  }
+
+  /* The bleed, and the only tricky part of the split.
+   *
+   * The popup pads itself, which is what every other part relies on — a
+   * `Drawer.Title` or a `Drawer.Footer` sitting directly in the popup is
+   * spaced by it and needs no rule of its own. The scroller has to escape it,
+   * or the track and the fade land `--forte-drawer-padding` in from the edge:
+   * exactly the inset-over-the-content look the split exists to remove.
+   *
+   * So it cancels that padding with a negative margin and `.measure` re-applies
+   * the same value INSIDE the scrollport, where padding does not move the
+   * track. The two are stated once each, per edge, through the pair of
+   * properties below — one number, cancelled and restored, so they cannot
+   * drift into a body that is double-padded or flush against the surface.
+   *
+   * The block axis is per-edge because the popup is a flex COLUMN: the inline
+   * padding is always the scroller's to cancel, but the block padding is only
+   * its own where it actually touches it. With a `Drawer.Footer` below it the
+   * bottom padding belongs to the footer, and cancelling it there would pull
+   * the two into each other. Hence the two selectors below rather than a
+   * blanket `margin: calc(-1 * ...)`. */
+  .content[data-scroll-area] {
+    --forte-drawer-content-bleed-block-start: 0px;
+    --forte-drawer-content-bleed-block-end: 0px;
+
+    margin-inline: calc(-1 * var(--forte-drawer-padding));
+    margin-block-start: calc(
+      -1 * var(--forte-drawer-content-bleed-block-start)
+    );
+    margin-block-end: calc(-1 * var(--forte-drawer-content-bleed-block-end));
+  }
+
+  /* Flush against the popup's leading edge — nothing in flow above it. The
+   * `left`/`right` handle is `position: absolute` (see its rule), so it is a
+   * DOM sibling that occupies no column space: the content behind it is still
+   * flush, and `:first-child` alone would miss that case. A `top`/`bottom`
+   * handle IS in flow, and correctly does not match here. */
+  .content[data-scroll-area]:first-child,
+  .popup[data-side="left"] .handle + .content[data-scroll-area],
+  .popup[data-side="right"] .handle + .content[data-scroll-area] {
+    --forte-drawer-content-bleed-block-start: var(--forte-drawer-padding);
+  }
+
+  /* Flush against the trailing edge — no `Drawer.Footer` pinned below it. */
+  .content[data-scroll-area]:last-child {
+    --forte-drawer-content-bleed-block-end: var(--forte-drawer-padding);
+  }
+
+  /* The scroll area itself. Base UI's viewport carries the overflow, the
+   * overscroll containment and the fade mask; all this has to do is claim the
+   * height, since a grid item's automatic minimum size is its content for the
+   * same reason a flex item's is. */
+  .scroller {
+    /* The fade reaches exactly as far as the padding it is drawn over, so the
+     * first line of a scrolled body is clear of the surface edge by the same
+     * measure as an unscrolled one. */
+    /** How far the body fades out at an edge it can still be scrolled past */
+    --forte-scroll-area-fade-size: var(--forte-drawer-padding);
+
+    flex: 1 1 auto;
+    min-block-size: 0;
+  }
+
+  /* The measure box: the popup's padding put back inside the scrollport, plus
+   * the cap and the centring the content element used to carry.
+   *
+   * The block padding mirrors the bleed above per edge — where the scroller
+   * cancelled nothing, this adds nothing, or a body following a
+   * `Drawer.Title` would be pushed off by a padding that was never removed.
+   *
+   * Two class selectors deep on purpose. `ScrollArea.Content` styles itself in
+   * the same cascade layer at the same specificity, so a bare `.measure` would
+   * be decided by which stylesheet the bundler happened to emit last — and
+   * `display: table` winning over `display: flex` here costs the body its gap.
+   * The descendant selector settles it by specificity instead. */
+  .content .measure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--forte-drawer-gap);
+    padding-inline: var(--forte-drawer-padding);
+    padding-block-start: var(--forte-drawer-content-bleed-block-start);
+    padding-block-end: var(--forte-drawer-content-bleed-block-end);
+    inline-size: 100%;
+    max-inline-size: var(--forte-drawer-content-max-inline-size);
+    margin-inline: auto;
+    /* A `Drawer.Footer` placed INSIDE the content sinks to the far end on
+     * `margin-block-start: auto`, and auto margins can only consume space that
+     * exists. The box this replaced was the flex item filling the drawer, so
+     * there was always some; this one is sized by its own content, so a short
+     * body would leave the footer floating directly under the last paragraph
+     * with the rest of the drawer empty below it. Stretching to the scrollport
+     * — and no further, since this is a MINIMUM — gives the margin its room
+     * back without capping a body that overflows. */
+    min-block-size: 100%;
   }
 
   /* A top or bottom drawer is as wide as the screen, and body text set across
