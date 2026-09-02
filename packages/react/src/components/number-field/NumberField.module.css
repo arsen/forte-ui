@@ -12,7 +12,8 @@
  *                   control, which is why it carries the focus ring.
  *   .input          borderless and transparent inside it.
  *   .stepper        both buttons — the same rule mirrored by logical radii.
- *   .scrubArea      the drag surface, above the group, wrapping the label.
+ *   .scrubArea      the drag surface wrapping the label — above the group,
+ *                   or before it on one row under `orientation="horizontal"`.
  *   .scrubAreaCursor  the stand-in pointer, portalled to <body>.
  *
  * Four things here are load-bearing and easy to undo by accident:
@@ -45,9 +46,10 @@
  */
 @layer forte.components {
   /* Root ------------------------------------------------------------------
-   * A column: the scrub area (wrapping the label) above the group. */
+   * A column: the scrub area (wrapping the label) above the group. The
+   * `horizontal` orientation below turns it into a row, label first. */
   .root {
-    /** Space between the scrub area and the group */
+    /** Space between the scrub area and the group, on either axis */
     --forte-number-field-gap: var(--forte-space-2);
 
     box-sizing: border-box;
@@ -68,6 +70,17 @@
      * next to it. Leaving `min-inline-size` at `auto` resolves it to the
      * group's min-content, which is exactly the floor the control has, so it
      * shrinks as far as it can and then stops. */
+  }
+
+  /* One row, the label before the control. `center` rather than `baseline`:
+   * the scrub area is an inline-flex box whose grip has no baseline of its
+   * own, so aligning on the text would leave the label sitting a few pixels
+   * high against a `lg` group. Centring on the group's height is what an
+   * inspector row does, and it holds at every size. The row flips on its own
+   * in RTL, since flex order is logical. */
+  .root[data-orientation="horizontal"] {
+    flex-direction: row;
+    align-items: center;
   }
 
   /* Group ------------------------------------------------------------------
@@ -473,6 +486,11 @@
      * group's border below it. */
     margin-inline: calc(-1 * var(--forte-number-field-scrub-padding-x));
     padding-inline: var(--forte-number-field-scrub-padding-x);
+    /* Never squeezed. In a row a `fullWidth` group asks for 100% and the two
+     * flex items would otherwise shrink together, wrapping the label mid-word
+     * so the group can keep a few more pixels; the group is the one that
+     * should give, and it can, down to its steppers. */
+    flex-shrink: 0;
     border-radius: var(--forte-number-field-scrub-radius);
     background-color: var(--forte-number-field-scrub-bg);
 
@@ -489,6 +507,16 @@
     touch-action: none;
 
     transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  /* On a row the root centres it, so `flex-start` (the column's "hug the
+   * label, do not stretch") would pin it to the top of a taller group. The
+   * start margin still cancels the padding so the label's first letter sits on
+   * the root's edge, but the END margin would eat into the gap before the
+   * group — and the hover wash would then run up against the border. */
+  .scrubArea[data-orientation="horizontal"] {
+    align-self: auto;
+    margin-inline-end: 0;
   }
 
   .scrubArea[data-direction="vertical"] {

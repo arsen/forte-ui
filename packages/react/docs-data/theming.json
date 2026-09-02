@@ -6374,7 +6374,7 @@
       {
         "name": "--forte-number-field-gap",
         "value": "var(--forte-space-2)",
-        "description": "Space between the scrub area and the group",
+        "description": "Space between the scrub area and the group, on either axis",
         "part": "root",
         "overrides": []
       },

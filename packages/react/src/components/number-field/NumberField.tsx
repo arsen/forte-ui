@@ -8,6 +8,7 @@ import styles from "./NumberField.module.css";
 export type NumberFieldSize = "sm" | "md" | "lg";
 export type NumberFieldVariant = "outline" | "soft" | "ghost";
 export type NumberFieldScrubDirection = "horizontal" | "vertical";
+export type NumberFieldOrientation = "vertical" | "horizontal";
 
 // Module-scoped ambient declaration, not a global one: the package compiles
 // without `@types/node`, and every bundler statically replaces the literal
@@ -132,11 +133,17 @@ function ScrubCursorIcon(props: React.ComponentProps<"svg">) {
  * `data-[size=lg]:…` against the input or a stepper without wrapping anything.
  * Passing them through context rather than as per-part props is what makes a
  * mismatched pair — an `lg` group holding `sm` steppers — unexpressible.
+ *
+ * `orientation` travels the same way, but only `ScrubArea` republishes it: it
+ * is the one part whose own layout changes with the axis (how it aligns to the
+ * group, and which margin it may cancel), and reading it off the root would
+ * take a descendant selector that a consumer's `render` wrapper could break.
  */
 const NumberFieldContext = React.createContext<{
   size: NumberFieldSize;
   variant: NumberFieldVariant;
-}>({ size: "md", variant: "outline" });
+  orientation: NumberFieldOrientation;
+}>({ size: "md", variant: "outline", orientation: "vertical" });
 
 /**
  * The scrub direction, published by `ScrubArea` and read by `ScrubAreaCursor`.
@@ -173,6 +180,17 @@ export interface NumberFieldRootProps extends Omit<BaseRootProps, "className"> {
    */
   variant?: NumberFieldVariant;
   /**
+   * Where the `ScrubArea` sits relative to the `Group`. `vertical` stacks the
+   * label above the control, the way a `Field` does; `horizontal` puts it on
+   * the same row, before the control — the shape of an inspector panel or a
+   * toolbar, where a stacked label would double the height of every row.
+   *
+   * Only the layout changes. The scrub gesture keeps its own `direction`,
+   * which is the axis the pointer travels along, not where the label lives.
+   * @default "vertical"
+   */
+  orientation?: NumberFieldOrientation;
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -181,8 +199,9 @@ export interface NumberFieldRootProps extends Omit<BaseRootProps, "className"> {
 
 /**
  * Groups every part of the number field and owns its value. Renders a `<div>`
- * laid out as a column, so a `ScrubArea` wrapping the label sits above the
- * `Group`.
+ * laid out as a column by default, so a `ScrubArea` wrapping the label sits
+ * above the `Group`; `orientation="horizontal"` lays the two out on one row
+ * instead, label first.
  *
  * The value is a `number | null`, never a string: `null` is the empty field,
  * which is what makes "cleared" distinguishable from zero. `format` takes
@@ -203,8 +222,14 @@ export interface NumberFieldRootProps extends Omit<BaseRootProps, "className"> {
  * ```
  */
 export const NumberFieldRoot = React.forwardRef<HTMLDivElement, NumberFieldRootProps>(
-  function NumberFieldRoot({ size = "md", variant = "outline", className, ...props }, ref) {
-    const context = React.useMemo(() => ({ size, variant }), [size, variant]);
+  function NumberFieldRoot(
+    { size = "md", variant = "outline", orientation = "vertical", className, ...props },
+    ref,
+  ) {
+    const context = React.useMemo(
+      () => ({ size, variant, orientation }),
+      [size, variant, orientation],
+    );
 
     return (
       <NumberFieldContext.Provider value={context}>
@@ -214,6 +239,7 @@ export const NumberFieldRoot = React.forwardRef<HTMLDivElement, NumberFieldRootP
           data-forte="number-field"
           data-size={size}
           data-variant={variant}
+          data-orientation={orientation}
           {...props}
         />
       </NumberFieldContext.Provider>
@@ -503,7 +529,9 @@ export interface NumberFieldScrubAreaProps
 /**
  * The click-and-drag surface. Renders a `<span>`, and is normally wrapped
  * around the field's label — dragging sideways over the word "Width" changes
- * the width, which is the interaction Figma and Blender taught everyone.
+ * the width, which is the interaction Figma and Blender taught everyone. It
+ * sits above the `Group`, or before it on the same row when the root has
+ * `orientation="horizontal"`.
  *
  * Scrubbing is invisible unless the component says so, so three cues ship by
  * default and they cover three different moments:
@@ -535,7 +563,7 @@ export const NumberFieldScrubArea = React.forwardRef<
   { direction = "horizontal", grip = true, cursor = true, className, children, ...props },
   ref,
 ) {
-  const { size, variant } = React.useContext(NumberFieldContext);
+  const { size, variant, orientation } = React.useContext(NumberFieldContext);
   const scrubContext = React.useMemo(() => ({ direction }), [direction]);
 
   if (isDevelopment && cursor) {
@@ -563,6 +591,7 @@ export const NumberFieldScrubArea = React.forwardRef<
         data-forte="number-field-scrub-area"
         data-size={size}
         data-variant={variant}
+        data-orientation={orientation}
         data-direction={direction}
         {...props}
       >
