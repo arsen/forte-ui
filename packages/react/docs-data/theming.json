@@ -706,7 +706,7 @@
       },
       {
         "name": "--forte-app-bar-duration",
-        "value": "var(--forte-duration-fast)",
+        "value": "var(--forte-duration-normal)",
         "description": "Duration of the surface changes — fill, edge, shadow.",
         "part": "root",
         "overrides": []
