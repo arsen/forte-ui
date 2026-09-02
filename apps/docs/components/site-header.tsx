@@ -69,7 +69,7 @@ export function SiteHeader() {
       position="sticky"
       variant="frosted"
       elevateOnScroll
-      scrollThreshold={100}
+      scrollThreshold={40}
       /* The one knob set here is the stacking level. The bar's default band
        * is 10, and a sticky AppBar in a demo on the page sits in the same
        * band later in the DOM, so scrolled past a demo it would paint over
