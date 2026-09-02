@@ -116,7 +116,7 @@
     /** Blur radius behind a `frosted` bar. */
     --forte-app-bar-blur: 12px;
     /** Duration of the surface changes — fill, edge, shadow. */
-    --forte-app-bar-duration: var(--forte-duration-fast);
+    --forte-app-bar-duration: var(--forte-duration-normal);
     /** Duration of the hide. */
     --forte-app-bar-move-duration: var(--forte-duration-normal);
     /** Easing for everything the bar animates. */
