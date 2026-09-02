@@ -104,6 +104,8 @@ Components.
   compound · parts (props.json): NavigationMenuRoot, NavigationMenuList, NavigationMenuItem, NavigationMenuIcon, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuLinkTitle, NavigationMenuLinkDescription, NavigationMenuPopup · knobs: theming.json → NavigationMenu
 - **NavList** — A sidebar's vertical page list — titled sections, collapsible groups, nesting, and a controlled notion of the current page.
   compound · parts (props.json): NavListRoot, NavListSection, NavListSectionLabel, NavListList, NavListItem, NavListLink, NavListGroup, NavListGroupTrigger, NavListGroupPanel, NavListBadge · knobs: theming.json → NavList
+- **Pagination** — Page controls for a long set — previous, next, numbered pages and an ellipsis; for moving through steps of one task use Tabs, and for a position within a document use Breadcrumb.
+  compound · parts (props.json): PaginationRoot, PaginationList, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationFirst, PaginationLast, PaginationEllipsis · knobs: theming.json → Pagination · hooks: usePaginationRange
 - **Steps** — A numbered sequence of steps and the user's position in it — a wizard header or an order's progress; for a single fraction done, use Progress instead.
   compound · parts (props.json): StepsRoot, StepsItem, StepsTrigger, StepsIndicator, StepsTitle, StepsDescription · knobs: theming.json → Steps
 - **Tabs** — Switches between panels of related content in the same place, with a sliding active indicator.
@@ -137,6 +139,8 @@ Components.
   compound · parts (props.json): ScrollAreaRoot, ScrollAreaViewport, ScrollAreaContent, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaCorner · knobs: theming.json → ScrollArea
 - **Separator** — A rule between things, horizontal or vertical, announced to assistive technology unless marked decorative.
   props.json: Separator · knobs: theming.json → Separator
+- **Table** — Rows and columns of data on a real `<table>` — variants, sizes, striping, selection tint, numeric columns, sortable headers and a sticky header; the data, sorting and selection state stay with the consumer.
+  compound · parts (props.json): TableContainer, TableRoot, TableCaption, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell · knobs: theming.json → Table
 
 ## Feedback
 

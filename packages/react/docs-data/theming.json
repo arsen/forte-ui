@@ -6374,7 +6374,7 @@
       {
         "name": "--forte-number-field-gap",
         "value": "var(--forte-space-2)",
-        "description": "Space between the scrub area and the group",
+        "description": "Space between the scrub area and the group, on either axis",
         "part": "root",
         "overrides": []
       },
@@ -6941,6 +6941,263 @@
         "name": "--forte-otp-field-separator-color",
         "value": "var(--forte-color-border-strong)",
         "description": "Colour of the dash `OTPField.Separator` draws",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Pagination": {
+    "name": "Pagination",
+    "tokens": [
+      {
+        "name": "--forte-pagination-gap",
+        "value": "var(--forte-space-1)",
+        "description": "Space between slots. The `joined` variant zeroes it",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"joined\"]",
+            "value": "0px"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-item-gap",
+        "value": "var(--forte-control-gap)",
+        "description": "Space between an icon and its label inside one control",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-height",
+        "value": "var(--forte-control-h-md)",
+        "description": "Height of every slot, and the minimum width of a page. Follows `data-forte-density`; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-control-h-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-px",
+        "value": "var(--forte-space-2)",
+        "description": "Inline padding of a page number and an icon-only control; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-nav-px",
+        "value": "var(--forte-control-px-md)",
+        "description": "Inline padding of Previous / Next / First / Last when they show their label; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-control-px-sm)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-control-px-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Text size; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-font-weight",
+        "value": "var(--forte-font-weight-medium)",
+        "description": "Weight of every label",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-icon-size",
+        "value": "var(--forte-font-size-3)",
+        "description": "Size of the chevrons, and of any `svg` dropped into a control; reassigned by `size`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-4)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-radius",
+        "value": "var(--forte-radius-control)",
+        "description": "Corner radius of every slot",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-border-width",
+        "value": "1px",
+        "description": "Border thickness. Always reserved so the variants line up; only `outline` and `joined` give it a colour",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-color",
+        "value": "var(--forte-color-foreground)",
+        "description": "Text colour of a page that is not current",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-bg",
+        "value": "transparent",
+        "description": "Resting fill of a page that is not current",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-bg-hover",
+        "value": "var(--forte-color-panel-hover)",
+        "description": "Fill of a page under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-bg-active",
+        "value": "var(--forte-color-panel-active)",
+        "description": "Fill of a page while pressed",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-border-color",
+        "value": "transparent",
+        "description": "Border colour of a page that is not current; filled in by `variant`",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"], .root[data-variant=\"joined\"]",
+            "value": "var(--forte-color-border)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-ellipsis-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Colour of the ellipsis. Muted, not subtle: it is text-sized punctuation and clears the 4.5:1 floor on its own",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-current-bg",
+        "value": "var(--forte-color-primary)",
+        "description": "Fill of the current page",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-color-panel-active)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-current-bg-hover",
+        "value": "var(--forte-color-primary-hover)",
+        "description": "Fill of the current page under the pointer",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary-hover)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-color-panel-active)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-current-color",
+        "value": "var(--forte-color-on-primary)",
+        "description": "Text colour on the current page's fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-current-border-color",
+        "value": "var(--forte-color-primary)",
+        "description": "Border colour of the current page",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-color-border-strong)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-pagination-shift-delay",
+        "value": "var(--forte-duration-fast)",
+        "description": "How long the strip holds still after the current page changes, before the window slides. Zero slides at once",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-shift-duration",
+        "value": "var(--forte-duration-move)",
+        "description": "How long the slide takes",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-pagination-shift-ease",
+        "value": "var(--forte-ease-spring-snappy)",
+        "description": "The slide's easing",
         "part": "root",
         "overrides": []
       }
@@ -9455,6 +9712,162 @@
         "name": "--forte-switch-travel",
         "value": "calc( var(--forte-switch-track-width) - var(--forte-switch-thumb-size) - 2 * var(--forte-switch-padding) - 2 * var(--forte-switch-border-width) )",
         "description": "Distance the thumb moves when checked.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
+  "Table": {
+    "name": "Table",
+    "tokens": [
+      {
+        "name": "--forte-table-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Type size for every cell. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-cell-px",
+        "value": "var(--forte-space-3)",
+        "description": "Inline padding of every cell. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-cell-py",
+        "value": "var(--forte-list-item-py)",
+        "description": "Block padding of every cell. At `md` it follows `data-forte-density`; `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-border-width",
+        "value": "1px",
+        "description": "Width of every rule and of the frame.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-border-color",
+        "value": "var(--forte-color-border-muted)",
+        "description": "Colour of the rules between rows and columns, and of the frame.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root",
+            "value": "CanvasText"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-radius",
+        "value": "0",
+        "description": "Corner radius of the frame. `0` on `line`, which has no frame to round; the surface radius on `outline` and `grid`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"line\"]",
+            "value": "0"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"], .root[data-variant=\"grid\"]",
+            "value": "var(--forte-radius-surface)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-bg",
+        "value": "transparent",
+        "description": "Fill behind the whole table. Transparent, so it takes the surface it sits on.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-header-bg",
+        "value": "transparent",
+        "description": "Fill behind the header row. Transparent unless the header is sticky, where it must hide the rows scrolling under it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-sticky-header]",
+            "value": "var(--forte-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-header-color",
+        "value": "var(--forte-color-foreground)",
+        "description": "Text colour of the header cells.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-header-font-weight",
+        "value": "var(--forte-font-weight-semibold)",
+        "description": "Weight of the header cells.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-footer-bg",
+        "value": "color-mix(in oklab, var(--forte-color-foreground) 4%, transparent)",
+        "description": "Fill behind the footer rows.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-row-bg-striped",
+        "value": "color-mix(in oklab, var(--forte-color-foreground) 4%, transparent)",
+        "description": "Fill on every other body row when `striped`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-row-bg-hover",
+        "value": "color-mix(in oklab, var(--forte-color-foreground) 7%, transparent)",
+        "description": "Fill on a body row under the pointer when `hoverable`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-row-bg-selected",
+        "value": "var(--forte-color-primary-soft)",
+        "description": "Fill on a body row with `selected`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-caption-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Text colour of the caption.",
         "part": "root",
         "overrides": []
       }

@@ -1,0 +1,387 @@
+/*
+ * Pagination
+ *
+ * Page controls for a long set. Three axes are set on the root and read by
+ * everything below through inherited custom properties:
+ *
+ *   data-size="sm|md|lg"                control height, text and padding
+ *   data-variant="ghost|outline|joined" bare numbers, boxed numbers, or one
+ *                                       fused strip
+ *   data-tone="primary|secondary|neutral" the colour of the CURRENT page —
+ *                                       the only slot that carries colour
+ *
+ * Every slot shares one box (`.control` and `.ellipsis`), so the strip keeps
+ * a single height and rhythm whether a slot is a page, a chevron or a gap.
+ *
+ * Motion is a colour change on hover and the library's press squash; the
+ * squash reads `--forte-scale-press`, which collapses to 1 under reduced
+ * motion on its own. No prefers-reduced-motion block, here or in any
+ * component file.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared here, on Pagination.Root itself, so an
+     * ancestor's value is only ever inherited and never wins — which is what
+     * lets the size, tone and variant presets below re-point a handful of
+     * them instead of restating rules. */
+
+    /* Rhythm */
+    /** Space between slots. The `joined` variant zeroes it */
+    --forte-pagination-gap: var(--forte-space-1);
+    /** Space between an icon and its label inside one control */
+    --forte-pagination-item-gap: var(--forte-control-gap);
+    /** Height of every slot, and the minimum width of a page. Follows
+     * `data-forte-density`; reassigned by `size` */
+    --forte-pagination-height: var(--forte-control-h-md);
+    /** Inline padding of a page number and an icon-only control; reassigned
+     * by `size` */
+    --forte-pagination-px: var(--forte-space-2);
+    /** Inline padding of Previous / Next / First / Last when they show their
+     * label; reassigned by `size` */
+    --forte-pagination-nav-px: var(--forte-control-px-md);
+    /** Text size; reassigned by `size` */
+    --forte-pagination-font-size: var(--forte-font-size-2);
+    /** Weight of every label */
+    --forte-pagination-font-weight: var(--forte-font-weight-medium);
+    /* One step above the label on the same scale — the pairing every
+     * icon-and-label control in the library draws. A size token rather than
+     * `1em` for the reason Button gives: an icon is read as a shape, and at
+     * `1em` a 12px chevron beside an `sm` label is a smudge. */
+    /** Size of the chevrons, and of any `svg` dropped into a control;
+     * reassigned by `size` */
+    --forte-pagination-icon-size: var(--forte-font-size-3);
+    /* `--forte-radius-control`, not a raw step: the `data-forte-radius`
+     * presets retarget the SEMANTIC tokens, so a pill-themed page rounds
+     * these with its buttons instead of leaving them square. */
+    /** Corner radius of every slot */
+    --forte-pagination-radius: var(--forte-radius-control);
+    /** Border thickness. Always reserved so the variants line up; only
+     * `outline` and `joined` give it a colour */
+    --forte-pagination-border-width: 1px;
+
+    /* Resting slots. Full foreground on the numbers — they are the reader's
+     * targets, not chrome — and a panel wash on hover so the cue is the
+     * same in every variant. */
+    /** Text colour of a page that is not current */
+    --forte-pagination-color: var(--forte-color-foreground);
+    /** Resting fill of a page that is not current */
+    --forte-pagination-bg: transparent;
+    /** Fill of a page under the pointer */
+    --forte-pagination-bg-hover: var(--forte-color-panel-hover);
+    /** Fill of a page while pressed */
+    --forte-pagination-bg-active: var(--forte-color-panel-active);
+    /** Border colour of a page that is not current; filled in by `variant` */
+    --forte-pagination-border-color: transparent;
+    /** Colour of the ellipsis. Muted, not subtle: it is text-sized
+     * punctuation and clears the 4.5:1 floor on its own */
+    --forte-pagination-ellipsis-color: var(--forte-color-foreground-muted);
+
+    /* The current page. Filled in per tone below; primary is the default. */
+    /** Fill of the current page */
+    --forte-pagination-current-bg: var(--forte-color-primary);
+    /** Fill of the current page under the pointer */
+    --forte-pagination-current-bg-hover: var(--forte-color-primary-hover);
+    /** Text colour on the current page's fill */
+    --forte-pagination-current-color: var(--forte-color-on-primary);
+    /** Border colour of the current page */
+    --forte-pagination-current-border-color: var(--forte-color-primary);
+
+    /* The shift — the slide the list plays when the window around the
+     * current page moves. Read by the TSX at runtime, since the distance is
+     * measured, and gated there on `--forte-motion-ok`; the durations still
+     * shorten under reduced motion on their own. The hold is the length of
+     * the fill's own colour transition, so the current page is seen to land
+     * before anything moves. The move pairs the duration and easing the Tabs
+     * indicator uses for the same kind of measured positional move. */
+    /** How long the strip holds still after the current page changes,
+     * before the window slides. Zero slides at once */
+    --forte-pagination-shift-delay: var(--forte-duration-fast);
+    /** How long the slide takes */
+    --forte-pagination-shift-duration: var(--forte-duration-move);
+    /** The slide's easing */
+    --forte-pagination-shift-ease: var(--forte-ease-spring-snappy);
+
+    box-sizing: border-box;
+    font-family: var(--forte-font-sans);
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * Re-point the knobs and nothing else. No `md` block: the defaults above
+   * ARE `md`. */
+  .root[data-size="sm"] {
+    --forte-pagination-height: var(--forte-control-h-sm);
+    --forte-pagination-px: var(--forte-space-1);
+    --forte-pagination-nav-px: var(--forte-control-px-sm);
+    --forte-pagination-font-size: var(--forte-font-size-1);
+    --forte-pagination-icon-size: var(--forte-font-size-2);
+  }
+
+  .root[data-size="lg"] {
+    --forte-pagination-height: var(--forte-control-h-lg);
+    --forte-pagination-px: var(--forte-space-3);
+    --forte-pagination-nav-px: var(--forte-control-px-lg);
+    --forte-pagination-font-size: var(--forte-font-size-3);
+    --forte-pagination-icon-size: var(--forte-font-size-4);
+  }
+
+  /* Tones ------------------------------------------------------------------
+   * Only the current page draws from the tone. The rest of the strip is
+   * neutral in every tone, so a `secondary` strip beside a `primary` button
+   * differs in one slot, not in twelve. */
+  .root[data-tone="secondary"] {
+    --forte-pagination-current-bg: var(--forte-color-secondary);
+    --forte-pagination-current-bg-hover: var(--forte-color-secondary-hover);
+    --forte-pagination-current-color: var(--forte-color-on-secondary);
+    --forte-pagination-current-border-color: var(--forte-color-secondary);
+  }
+
+  /* A grey fill on its own is the resting hover colour, so the current page
+   * would read as "the one the pointer is on". The stronger border is what
+   * separates "here" from "hovered" when both are grey. */
+  .root[data-tone="neutral"] {
+    --forte-pagination-current-bg: var(--forte-color-panel-active);
+    --forte-pagination-current-bg-hover: var(--forte-color-panel-active);
+    --forte-pagination-current-color: var(--forte-color-foreground);
+    --forte-pagination-current-border-color: var(--forte-color-border-strong);
+  }
+
+  /* Variants ---------------------------------------------------------------
+   * `ghost` is the default: every knob above already describes it. */
+  .root[data-variant="outline"],
+  .root[data-variant="joined"] {
+    --forte-pagination-border-color: var(--forte-color-border);
+  }
+
+  .root[data-variant="joined"] {
+    --forte-pagination-gap: 0px;
+  }
+
+  /* List -------------------------------------------------------------------- */
+
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--forte-pagination-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /* The `joined` variant promotes the current and the focused slot with
+     * `z-index`; isolating here keeps that promotion INSIDE the strip, so a
+     * raised page cannot climb over an unrelated overlay that shares its
+     * stacking context. */
+    isolation: isolate;
+    /* The containing block for a departing slot's ghost, which the list
+     * pins at the slot's old position while it fades out. */
+    position: relative;
+  }
+
+  .item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Slots -------------------------------------------------------------------
+   * `.control` (a page, or a Previous/Next/First/Last) and `.ellipsis` share
+   * the box so the strip keeps one height whether a slot is a number, a
+   * chevron or a gap; only colour and interactivity separate them. A page
+   * is at least as wide as it is tall, so single digits sit in squares and
+   * the strip reads as a row of equal cells, while "10" or "Previous" grows
+   * past the floor on its padding. */
+  .control,
+  .ellipsis {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--forte-pagination-item-gap);
+    block-size: var(--forte-pagination-height);
+    min-inline-size: var(--forte-pagination-height);
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--forte-pagination-px);
+    border: var(--forte-pagination-border-width) solid var(--forte-pagination-border-color);
+    border-radius: var(--forte-pagination-radius);
+    background-color: var(--forte-pagination-bg);
+    color: var(--forte-pagination-color);
+    font-family: inherit;
+    font-size: var(--forte-pagination-font-size);
+    font-weight: var(--forte-pagination-font-weight);
+    line-height: var(--forte-line-height-tight);
+    /* Tabular figures, so "1" and "7" take the same width and a strip of
+     * single digits is a row of identical cells rather than a ragged one. */
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    text-decoration: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* An svg placed straight into a control is an icon: it must not squash
+   * when the label is long, and it tracks the size presets. Direct child
+   * only, so anything a consumer nests deeper is left alone. */
+  .control > svg,
+  .ellipsis > svg {
+    flex: none;
+    inline-size: var(--forte-pagination-icon-size);
+    block-size: var(--forte-pagination-icon-size);
+  }
+
+  .control {
+    cursor: pointer;
+    scale: 1;
+    /* `box-shadow` is deliberately absent, for the reason Button gives: the
+     * focus ring is an `outline` plus a `box-shadow` halo, and animating
+     * only half of it makes the ring assemble in two stages on every Tab. */
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+  }
+
+  @media (hover: hover) {
+    .control:hover:not([data-disabled], [data-current]) {
+      background-color: var(--forte-pagination-bg-hover);
+    }
+
+    .control[data-current]:hover:not([data-disabled]) {
+      background-color: var(--forte-pagination-current-bg-hover);
+    }
+  }
+
+  .control:active:not([data-disabled]) {
+    scale: var(--forte-scale-press);
+    /* Snap in, spring out: pressing should feel immediate. */
+    transition-duration: var(--forte-duration-instant);
+  }
+
+  .control:active:not([data-disabled], [data-current]) {
+    background-color: var(--forte-pagination-bg-active);
+  }
+
+  /* The current page. Its border takes the fill's colour so the box reads
+   * as one solid cell in the boxed variants rather than a fill inside a
+   * grey frame; the neutral tone re-points it to a stronger grey instead. */
+  .control[data-current] {
+    background-color: var(--forte-pagination-current-bg);
+    border-color: var(--forte-pagination-current-border-color);
+    color: var(--forte-pagination-current-color);
+  }
+
+  .control[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    scale: 1;
+  }
+
+  /* Previous / Next / First / Last ------------------------------------------
+   * With a label they are padded like buttons; icon-only they fall back to
+   * the page padding and the width floor makes them squares. */
+  .nav {
+    padding-inline: var(--forte-pagination-nav-px);
+  }
+
+  .nav[data-icon-only] {
+    padding-inline: var(--forte-pagination-px);
+  }
+
+  /* The shipped chevrons are drawn for LTR, and `scale` is physical — there
+   * is no logical form of it — so RTL is a sign flip on `--forte-direction`.
+   * The selector is the icon's own class, not `> svg`, so an icon a consumer
+   * drops in is left as drawn. */
+  .icon {
+    scale: var(--forte-direction) 1;
+  }
+
+  /* Ellipsis ----------------------------------------------------------------
+   * Inert as a <span> and interactive as a <button> — the cursor is keyed off
+   * the element that was actually rendered, because `render` is what decides
+   * which of the two this is and there is no prop to read. */
+  .ellipsis {
+    color: var(--forte-pagination-ellipsis-color);
+    cursor: default;
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  button.ellipsis,
+  a.ellipsis,
+  [role="button"].ellipsis {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    button.ellipsis:hover,
+    a.ellipsis:hover,
+    [role="button"].ellipsis:hover {
+      background-color: var(--forte-pagination-bg-hover);
+      color: var(--forte-pagination-color);
+    }
+  }
+
+  /* Joined ------------------------------------------------------------------
+   * One fused strip: inner corners squared, one hairline between neighbours.
+   *
+   * The seam is made by OVERLAP — each slot after the first is pulled back
+   * over its neighbour's border by exactly one border width — rather than
+   * by stripping the shared edge the way ButtonGroup does. ButtonGroup
+   * rejected overlap because its seam colour would flip with hover order;
+   * here no slot changes its border colour on hover, and the one slot with
+   * a different border — the current page — is raised above its neighbours
+   * on purpose, so its fill is framed in its own colour on all four sides
+   * instead of borrowing a grey edge from the page before it. Logical
+   * properties throughout, so RTL flips the squared corners and the overlap
+   * together. */
+  .root[data-variant="joined"] .item:not(:first-child) {
+    margin-inline-start: calc(-1 * var(--forte-pagination-border-width));
+  }
+
+  .root[data-variant="joined"] .item:not(:first-child) > .control,
+  .root[data-variant="joined"] .item:not(:first-child) > .ellipsis {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+
+  .root[data-variant="joined"] .item:not(:last-child) > .control,
+  .root[data-variant="joined"] .item:not(:last-child) > .ellipsis {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .root[data-variant="joined"] .item:has(> [data-current]) {
+    z-index: 1;
+  }
+
+  /* The focus ring is an `outline` drawn OUTSIDE the border box, so on a
+   * fused edge it reaches over the neighbour — which, painting later, covers
+   * that stretch of ring. Raising the focused slot above even the current
+   * page restores the full rectangle whichever side of the seam it is on. */
+  .root[data-variant="joined"] .item:has(> :focus-visible) {
+    z-index: 2;
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by layer
+ * alone. patterns.css already handles the focus ring and the disabled
+ * state, and every slot's border — transparent or not — is forced to a
+ * system colour, so the boxes stay visible.
+ *
+ * What is Pagination-specific: the current page is marked by a FILL, and
+ * forced-colors discards fills. patterns.css restores that for
+ * `[data-selected]` and `[aria-selected]`, but `aria-current` is neither,
+ * so the strip says it here in the pair forced-colors reserves for exactly
+ * this: Highlight on HighlightText.
+ * ------------------------------------------------------------------------- */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    .control[data-current] {
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
+  }
+}

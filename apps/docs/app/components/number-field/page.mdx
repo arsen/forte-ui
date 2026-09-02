@@ -125,6 +125,20 @@ they take their height from the group rather than declaring one.
 
 <DemoBlock id="number-field/sizes" />
 
+### Orientation
+
+`orientation="horizontal"` on `Root` puts the scrub area on the same row as the
+group, label first, and centres it on the control's height. It is the shape of
+an inspector panel or a toolbar, where stacking the label would double the
+height of every row. Only the layout moves: the scrub area's `direction` is
+still the axis the pointer travels along, and the two are independent.
+
+<DemoBlock id="number-field/orientation" />
+
+The group keeps its natural width unless it is `fullWidth`, in which case it
+takes whatever the row has left after the label — the label never wraps to
+give it more.
+
 ### Variants
 
 The same three `Input` has: `outline` reads as a form control, `soft` as a

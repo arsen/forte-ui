@@ -1,0 +1,248 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
+
+export const metadata = {
+  title: "Pagination",
+  description:
+    "Page controls for a long set — previous, next, the page numbers and an ellipsis where the strip folds, with a hook that decides which pages to show.",
+};
+
+# Pagination
+
+Pagination is the row of controls under a list too long for one screen: a way back, a way forward, and the page numbers between them. It is a set of links or buttons and nothing more — no roving focus, no state of its own — and that is the point: a page is an address, and the strip's job is to make every address one click away.
+
+<DemoBlock id="pagination/basic" />
+
+## Import
+
+```tsx
+import { Pagination, usePaginationRange } from "@forte-ui/react";
+```
+
+`Pagination` is a namespace of nine parts. The full anatomy, with every optional slot present:
+
+```tsx
+<Pagination.Root>
+  <Pagination.List>
+    <Pagination.Item>
+      <Pagination.First href="?page=1" iconOnly />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Previous href="?page=4" />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Link href="?page=1">1</Pagination.Link>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Ellipsis />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Link href="?page=5" current>5</Pagination.Link>
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Next href="?page=6" />
+    </Pagination.Item>
+    <Pagination.Item>
+      <Pagination.Last href="?page=42" iconOnly />
+    </Pagination.Item>
+  </Pagination.List>
+</Pagination.Root>
+```
+
+Most strips need `Root → List → Item → Link`, with a `Previous` and a `Next` at the ends.
+
+<Callout kind="note">
+  **A slot is a link or a button, and you never say which.** Give `Pagination.Link` (or `Previous`, `Next`, `First`, `Last`) an `href` — or a `render` — and it is an `<a>`. Leave both off and it is a `<button type="button">`. Everything else works the same on both: `current`, `disabled`, `onClick`. Which one you want follows from where the pages live: in the URL, links; in component state, buttons.
+</Callout>
+
+## Examples
+
+### Paging state in place
+
+The shape most apps write. `usePaginationRange` turns a page and a count into the slots to draw — numbers, plus a named ellipsis wherever the strip folds — and the strip maps over them. No hrefs, so every slot is a `<button>`.
+
+<DemoBlock id="pagination/controlled" />
+
+Disable `Previous` on the first page and `Next` on the last rather than leaving them out. A control that disappears moves everything after it, and the reader's pointer is resting on the button they just pressed.
+
+### Variants
+
+`ghost` is bare numbers that tint on hover, with only the current page filled: the strip under a list of search results. `outline` boxes every slot, for a strip that has to hold its own on a busy surface. `joined` closes the gaps into one fused strip — the look of a segmented control, for a toolbar or a table footer.
+
+<DemoBlock id="pagination/variants" />
+
+In the `joined` variant the slots overlap by one border width rather than dropping their shared edge, and the current page is raised above its neighbours. That is what frames its fill in its own colour on all four sides instead of borrowing a grey edge from the page before it.
+
+### Tones
+
+Only the current page draws from the tone. Everything else in the strip is neutral in all three, so a `secondary` strip beside a `primary` button differs in one cell, not in twelve.
+
+<DemoBlock id="pagination/tones" />
+
+`neutral` swaps the brand fill for a grey one with a stronger border. A grey fill on its own is the resting hover colour, so without the border the current page would read as "the one the pointer is on".
+
+### Sizes
+
+<DemoBlock id="pagination/sizes" />
+
+The height is the same control token `Button` reads, so a strip lines up with the buttons beside it at every size, and follows `data-forte-density` the way they do. Flip the frame's density control to see all three move together.
+
+### The range
+
+`usePaginationRange` takes two knobs beyond the page and the count. `siblings` is how many pages sit on *each* side of the current one before the strip folds; `boundaries` is how many are pinned at *each* end.
+
+<DemoBlock id="pagination/range" />
+
+The slot count is **constant** for a given count, siblings and boundaries. An ellipsis takes exactly the place of the page it hides, and when only one page would be hidden that page is shown instead — a gap standing in for a single page costs the same slot and tells the reader less. Page through any strip above and watch `Next` stay put: a strip that changes width on every click is the single most common pagination bug, and the hook makes it impossible to write.
+
+The two ellipses come back as `"start-ellipsis"` and `"end-ellipsis"`, so they are React keys as they are — a range never holds the same item twice.
+
+Those keys are also what the strip animates by. A centred window re-labels every slot when the current page moves by one, so without motion the cell you just pressed reads "27" a frame later and the fill appears one cell to its left — nothing visibly moves, and the eye reads a glitch. `Pagination.List` plays what actually happened instead: the fill lands on the pressed page, the strip holds for the length of that colour change, then the numbers slide one cell over while the page that left fades out at the edge and the one that arrived fades in. A click that lands mid-slide continues from wherever the row visually is. Give each `Pagination.Item` a stable `key` and it happens by itself; the three `--forte-pagination-shift-*` knobs set the hold, the duration and the easing, and under reduced motion the swap stays instant.
+
+### Compact
+
+The strip for a phone or a crowded footer: no page numbers, just the four jumps around a counter. `iconOnly` hides each label visually and keeps it in the markup, so "First" and "Previous" are still what a screen reader hears.
+
+<DemoBlock id="pagination/compact" />
+
+The counter is a plain `Pagination.Item`. The list is only markup, so a slot that is text rather than a control is just an `<li>` with text in it, sized with the usual utilities.
+
+### Reaching the folded pages
+
+The ellipsis is inert on its own. Rendered as a `Menu.Trigger` it becomes the way *into* the pages it hides, so a reader can reach page 17 without pressing `Next` twelve times.
+
+<DemoBlock id="pagination/jump-menu" />
+
+The stylesheet keys the ellipsis' cursor off the element that actually got rendered, so it stays `default` as a span and becomes `pointer` as a button, with no prop to pass. Give it a `label`: three dots have no text of their own, and the menu's name is the only thing telling a screen reader user what the button opens.
+
+### A table footer
+
+Page-size select, row range, strip. Changing the page size re-derives the count and clamps the current page to it — jumping to page 10 of 4 is the bug that line exists to prevent.
+
+<DemoBlock id="pagination/table-footer" />
+
+The live region is the range text, not the strip. "Showing 26–50 of 97" is what changed, and it says so once; announcing the strip would read every slot.
+
+### Routing
+
+Framework links go in through `render`, which replaces the rendered `<a>` without losing the slot's styling. With Next.js, the page lives in the URL, so the strip is a plain map over the range and the router does the rest:
+
+```tsx
+"use client";
+
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Pagination, usePaginationRange } from "@forte-ui/react";
+
+export function ResultsPages({ count }: { count: number }) {
+  const params = useSearchParams();
+  const page = Math.max(1, Number(params.get("page") ?? 1));
+  const items = usePaginationRange({ page, count });
+  const href = (n: number) => `?page=${n}`;
+
+  return (
+    <Pagination.Root aria-label="Search results pages">
+      <Pagination.List>
+        <Pagination.Item>
+          <Pagination.Previous
+            render={<Link href={href(page - 1)} />}
+            disabled={page === 1}
+          />
+        </Pagination.Item>
+        {items.map((item) => (
+          <Pagination.Item key={item}>
+            {typeof item === "number" ? (
+              <Pagination.Link
+                render={<Link href={href(item)} />}
+                current={item === page}
+                aria-label={`Page ${item}`}
+              >
+                {item}
+              </Pagination.Link>
+            ) : (
+              <Pagination.Ellipsis />
+            )}
+          </Pagination.Item>
+        ))}
+        <Pagination.Item>
+          <Pagination.Next
+            render={<Link href={href(page + 1)} />}
+            disabled={page === count}
+          />
+        </Pagination.Item>
+      </Pagination.List>
+    </Pagination.Root>
+  );
+}
+```
+
+A disabled link keeps its `href` — a router link carries its own, and stripping ours would only ever work for plain anchors — so it is taken out of the tab order, marked `aria-disabled`, and its click is swallowed before the router sees it. `Previous` and `Next` also set `rel="prev"` and `rel="next"` on their anchor form, which is the hint search engines read a paginated series from.
+
+If the strip sits inside a `<nav>` you already own, swap the root's element the same way: `render={<div />}` on `Pagination.Root` keeps the page to one landmark.
+
+## Accessibility
+
+The keyboard story is the platform's: the slots are real links or buttons, so <Kbd>Tab</Kbd> walks them and <Kbd>Enter</Kbd> (or <Kbd>Space</Kbd>, on a button) follows one. There is no roving focus to learn — a strip is short, and a reader who wants page 17 should reach for the ellipsis menu, not an arrow key.
+
+Everything else the component does by default:
+
+- **`Root` is a named landmark.** It renders `<nav aria-label="Pagination">` without being asked, because a page routinely carries several navigation landmarks and an unnamed one cannot be told from the others in a screen reader's landmark list. Override the label when the page carries two strips.
+- **`List` is a `<ul>`.** A screen reader announces how many controls there are before the reader walks them, and each page is one item rather than one word in a run of numbers.
+- **The current page is `aria-current="page"`.** It is a link, not a static span — unlike a breadcrumb, reloading the page you are on is a reasonable thing to ask a strip for. The cue is never colour alone: `aria-current` carries it in the tree, and the tone's fill plus a border change carry it on screen.
+- **Page numbers get a name.** A bare "3" is announced as "link, 3", which is ambiguous next to "link, 30". Pass an `aria-label` of "Page 3" from the map, the way every example above does.
+- **Icon-only controls keep their label.** `iconOnly` hides the text with `.forte-visually-hidden` rather than dropping it, so `Previous` is still "Previous" to a screen reader. The `Ellipsis` carries "More pages" the same way.
+- **Disabled slots are announced as disabled** on both element forms — the native attribute on a button, `aria-disabled` on a link — and a disabled link also leaves the tab order, so <Kbd>Tab</Kbd> does not land on a control that does nothing.
+- **Every slot meets the 24×24 target floor** (SC 2.5.8): the height is a control token whose smallest value, at compact density, is exactly 24px, and a page is never narrower than it is tall.
+- **Under forced colors, the current page is Highlight on HighlightText.** Its fill is the cue, forced colors discards fills, and `aria-current` is not one of the states the library's shared rules restore — so the strip restores it itself, in the pair the mode reserves for exactly this.
+
+## Theming
+
+Every property below is declared on `Pagination.Root`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The presets work the same way: `size`, `tone` and `variant` each re-point a few of these knobs and nothing else.
+
+<ThemingTable component="Pagination" />
+
+The parts also expose their state as data attributes — `data-size`, `data-variant` and `data-tone` on the root; `data-current`, `data-disabled` and `data-icon-only` on the slots — so a Tailwind arbitrary variant such as `data-[current]:...` can target them without a wrapper.
+
+## API reference
+
+### Pagination.Root
+
+<PropTable component="PaginationRoot" />
+
+### Pagination.List
+
+<PropTable component="PaginationList" />
+
+### Pagination.Item
+
+<PropTable component="PaginationItem" />
+
+### Pagination.Link
+
+<PropTable component="PaginationLink" />
+
+### Pagination.Previous · Next · First · Last
+
+All four take the same props: `Pagination.Link`'s, minus `current`, plus the two below.
+
+<PropTable component="PaginationPrevious" />
+
+### Pagination.Ellipsis
+
+<PropTable component="PaginationEllipsis" />
+
+### usePaginationRange
+
+```ts
+function usePaginationRange(options: {
+  page: number;
+  count: number;
+  siblings?: number;   // default 1
+  boundaries?: number; // default 1
+}): Array<number | "start-ellipsis" | "end-ellipsis">;
+```
+
+A `page` outside `1…count` is clamped rather than thrown on, so a stale page from the URL still renders a strip. A `count` of `0` yields an empty range.

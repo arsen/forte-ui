@@ -469,6 +469,8 @@ import d_number_field_form from "./number-field/form";
 import d_number_field_form_src from "./number-field/form?raw";
 import d_number_field_format from "./number-field/format";
 import d_number_field_format_src from "./number-field/format?raw";
+import d_number_field_orientation from "./number-field/orientation";
+import d_number_field_orientation_src from "./number-field/orientation?raw";
 import d_number_field_scrubbing from "./number-field/scrubbing";
 import d_number_field_scrubbing_src from "./number-field/scrubbing?raw";
 import d_number_field_sensitivity from "./number-field/sensitivity";
@@ -499,6 +501,24 @@ import d_otp_field_states from "./otp-field/states";
 import d_otp_field_states_src from "./otp-field/states?raw";
 import d_otp_field_variants from "./otp-field/variants";
 import d_otp_field_variants_src from "./otp-field/variants?raw";
+import d_pagination_basic from "./pagination/basic";
+import d_pagination_basic_src from "./pagination/basic?raw";
+import d_pagination_compact from "./pagination/compact";
+import d_pagination_compact_src from "./pagination/compact?raw";
+import d_pagination_controlled from "./pagination/controlled";
+import d_pagination_controlled_src from "./pagination/controlled?raw";
+import d_pagination_jump_menu from "./pagination/jump-menu";
+import d_pagination_jump_menu_src from "./pagination/jump-menu?raw";
+import d_pagination_range from "./pagination/range";
+import d_pagination_range_src from "./pagination/range?raw";
+import d_pagination_sizes from "./pagination/sizes";
+import d_pagination_sizes_src from "./pagination/sizes?raw";
+import d_pagination_table_footer from "./pagination/table-footer";
+import d_pagination_table_footer_src from "./pagination/table-footer?raw";
+import d_pagination_tones from "./pagination/tones";
+import d_pagination_tones_src from "./pagination/tones?raw";
+import d_pagination_variants from "./pagination/variants";
+import d_pagination_variants_src from "./pagination/variants?raw";
 import d_popover_basic from "./popover/basic";
 import d_popover_basic_src from "./popover/basic?raw";
 import d_popover_controlled from "./popover/controlled";
@@ -713,6 +733,30 @@ import d_switch_settings_list from "./switch/settings-list";
 import d_switch_settings_list_src from "./switch/settings-list?raw";
 import d_switch_sizes from "./switch/sizes";
 import d_switch_sizes_src from "./switch/sizes?raw";
+import d_table_basic from "./table/basic";
+import d_table_basic_src from "./table/basic?raw";
+import d_table_card from "./table/card";
+import d_table_card_src from "./table/card?raw";
+import d_table_empty from "./table/empty";
+import d_table_empty_src from "./table/empty?raw";
+import d_table_footer from "./table/footer";
+import d_table_footer_src from "./table/footer?raw";
+import d_table_loading from "./table/loading";
+import d_table_loading_src from "./table/loading?raw";
+import d_table_scroll from "./table/scroll";
+import d_table_scroll_src from "./table/scroll?raw";
+import d_table_selection from "./table/selection";
+import d_table_selection_src from "./table/selection?raw";
+import d_table_sizes from "./table/sizes";
+import d_table_sizes_src from "./table/sizes?raw";
+import d_table_sorting from "./table/sorting";
+import d_table_sorting_src from "./table/sorting?raw";
+import d_table_sticky_header from "./table/sticky-header";
+import d_table_sticky_header_src from "./table/sticky-header?raw";
+import d_table_striped from "./table/striped";
+import d_table_striped_src from "./table/striped?raw";
+import d_table_variants from "./table/variants";
+import d_table_variants_src from "./table/variants?raw";
 import d_tabs_disabled_tab from "./tabs/disabled-tab";
 import d_tabs_disabled_tab_src from "./tabs/disabled-tab?raw";
 import d_tabs_line from "./tabs/line";
@@ -1065,6 +1109,7 @@ export type DemoId =
   | "number-field/basic"
   | "number-field/form"
   | "number-field/format"
+  | "number-field/orientation"
   | "number-field/scrubbing"
   | "number-field/sensitivity"
   | "number-field/sizes"
@@ -1080,6 +1125,15 @@ export type DemoId =
   | "otp-field/sizes"
   | "otp-field/states"
   | "otp-field/variants"
+  | "pagination/basic"
+  | "pagination/compact"
+  | "pagination/controlled"
+  | "pagination/jump-menu"
+  | "pagination/range"
+  | "pagination/sizes"
+  | "pagination/table-footer"
+  | "pagination/tones"
+  | "pagination/variants"
   | "popover/basic"
   | "popover/controlled"
   | "popover/detached-trigger"
@@ -1187,6 +1241,18 @@ export type DemoId =
   | "switch/disabled"
   | "switch/settings-list"
   | "switch/sizes"
+  | "table/basic"
+  | "table/card"
+  | "table/empty"
+  | "table/footer"
+  | "table/loading"
+  | "table/scroll"
+  | "table/selection"
+  | "table/sizes"
+  | "table/sorting"
+  | "table/sticky-header"
+  | "table/striped"
+  | "table/variants"
   | "tabs/disabled-tab"
   | "tabs/line"
   | "tabs/overflow"
@@ -1481,6 +1547,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "number-field/basic": { Component: d_number_field_basic, source: d_number_field_basic_src, file: "number-field/basic.tsx" },
   "number-field/form": { Component: d_number_field_form, source: d_number_field_form_src, file: "number-field/form.tsx" },
   "number-field/format": { Component: d_number_field_format, source: d_number_field_format_src, file: "number-field/format.tsx" },
+  "number-field/orientation": { Component: d_number_field_orientation, source: d_number_field_orientation_src, file: "number-field/orientation.tsx" },
   "number-field/scrubbing": { Component: d_number_field_scrubbing, source: d_number_field_scrubbing_src, file: "number-field/scrubbing.tsx" },
   "number-field/sensitivity": { Component: d_number_field_sensitivity, source: d_number_field_sensitivity_src, file: "number-field/sensitivity.tsx" },
   "number-field/sizes": { Component: d_number_field_sizes, source: d_number_field_sizes_src, file: "number-field/sizes.tsx" },
@@ -1496,6 +1563,15 @@ const REGISTRY: Record<DemoId, Demo> = {
   "otp-field/sizes": { Component: d_otp_field_sizes, source: d_otp_field_sizes_src, file: "otp-field/sizes.tsx" },
   "otp-field/states": { Component: d_otp_field_states, source: d_otp_field_states_src, file: "otp-field/states.tsx" },
   "otp-field/variants": { Component: d_otp_field_variants, source: d_otp_field_variants_src, file: "otp-field/variants.tsx" },
+  "pagination/basic": { Component: d_pagination_basic, source: d_pagination_basic_src, file: "pagination/basic.tsx" },
+  "pagination/compact": { Component: d_pagination_compact, source: d_pagination_compact_src, file: "pagination/compact.tsx" },
+  "pagination/controlled": { Component: d_pagination_controlled, source: d_pagination_controlled_src, file: "pagination/controlled.tsx" },
+  "pagination/jump-menu": { Component: d_pagination_jump_menu, source: d_pagination_jump_menu_src, file: "pagination/jump-menu.tsx" },
+  "pagination/range": { Component: d_pagination_range, source: d_pagination_range_src, file: "pagination/range.tsx" },
+  "pagination/sizes": { Component: d_pagination_sizes, source: d_pagination_sizes_src, file: "pagination/sizes.tsx" },
+  "pagination/table-footer": { Component: d_pagination_table_footer, source: d_pagination_table_footer_src, file: "pagination/table-footer.tsx" },
+  "pagination/tones": { Component: d_pagination_tones, source: d_pagination_tones_src, file: "pagination/tones.tsx" },
+  "pagination/variants": { Component: d_pagination_variants, source: d_pagination_variants_src, file: "pagination/variants.tsx" },
   "popover/basic": { Component: d_popover_basic, source: d_popover_basic_src, file: "popover/basic.tsx" },
   "popover/controlled": { Component: d_popover_controlled, source: d_popover_controlled_src, file: "popover/controlled.tsx" },
   "popover/detached-trigger": { Component: d_popover_detached_trigger, source: d_popover_detached_trigger_src, file: "popover/detached-trigger.tsx" },
@@ -1603,6 +1679,18 @@ const REGISTRY: Record<DemoId, Demo> = {
   "switch/disabled": { Component: d_switch_disabled, source: d_switch_disabled_src, file: "switch/disabled.tsx" },
   "switch/settings-list": { Component: d_switch_settings_list, source: d_switch_settings_list_src, file: "switch/settings-list.tsx" },
   "switch/sizes": { Component: d_switch_sizes, source: d_switch_sizes_src, file: "switch/sizes.tsx" },
+  "table/basic": { Component: d_table_basic, source: d_table_basic_src, file: "table/basic.tsx" },
+  "table/card": { Component: d_table_card, source: d_table_card_src, file: "table/card.tsx" },
+  "table/empty": { Component: d_table_empty, source: d_table_empty_src, file: "table/empty.tsx" },
+  "table/footer": { Component: d_table_footer, source: d_table_footer_src, file: "table/footer.tsx" },
+  "table/loading": { Component: d_table_loading, source: d_table_loading_src, file: "table/loading.tsx" },
+  "table/scroll": { Component: d_table_scroll, source: d_table_scroll_src, file: "table/scroll.tsx" },
+  "table/selection": { Component: d_table_selection, source: d_table_selection_src, file: "table/selection.tsx" },
+  "table/sizes": { Component: d_table_sizes, source: d_table_sizes_src, file: "table/sizes.tsx" },
+  "table/sorting": { Component: d_table_sorting, source: d_table_sorting_src, file: "table/sorting.tsx" },
+  "table/sticky-header": { Component: d_table_sticky_header, source: d_table_sticky_header_src, file: "table/sticky-header.tsx" },
+  "table/striped": { Component: d_table_striped, source: d_table_striped_src, file: "table/striped.tsx" },
+  "table/variants": { Component: d_table_variants, source: d_table_variants_src, file: "table/variants.tsx" },
   "tabs/disabled-tab": { Component: d_tabs_disabled_tab, source: d_tabs_disabled_tab_src, file: "tabs/disabled-tab.tsx" },
   "tabs/line": { Component: d_tabs_line, source: d_tabs_line_src, file: "tabs/line.tsx" },
   "tabs/overflow": { Component: d_tabs_overflow, source: d_tabs_overflow_src, file: "tabs/overflow.tsx" },

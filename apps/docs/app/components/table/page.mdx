@@ -1,0 +1,192 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Table",
+  description:
+    "Rows and columns of data on a real <table> — variants, sizes, striping, selection tint, numeric columns, sortable headers and a sticky header.",
+};
+
+# Table
+
+A table is the one component the browser already ships: `<table>`, `<thead>`, `<tr>`, `<th>` and `<td>` carry structure a screen reader can navigate by row and column, and no stack of `<div>`s can be made to do the same. Before this component existed, that markup was a class string — `border-b border-border-muted px-3 py-2` on every cell — repeated at every call site and free to drift a token from the others. `Table` is that string as vocabulary, on the real elements.
+
+<DemoBlock id="table/basic" />
+
+There is no Base UI primitive underneath and no state at all. Every part is one HTML table element, one to one, and takes that element's own props. What earns it a component is a variant axis for how much of the grid to draw, a size axis the density presets drive, striping, hover and selection tints that each know which section they belong to, numeric columns with tabular figures, a sortable header that puts a real button in the cell, and a sticky header that actually sticks.
+
+Sorting, filtering, pagination and selection **state** stay with you. The table reports a click on a sort control and tints a row it is told is selected, and does nothing else — which is what keeps it usable with any data layer, a row virtualiser included.
+
+## Import
+
+```tsx
+import { Table } from "@forte-ui/react";
+```
+
+`Table` is a namespace of nine parts. Eight of them are the HTML table elements under their usual names; the ninth, `Table.Container`, is an optional scroll box.
+
+```tsx
+<Table.Root variant="outline">
+  <Table.Caption>Invoices this quarter</Table.Caption>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Invoice</Table.Head>
+      <Table.Head>Status</Table.Head>
+      <Table.Head numeric>Amount</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>INV-2041</Table.Cell>
+      <Table.Cell>Paid</Table.Cell>
+      <Table.Cell numeric>$250.00</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table.Root>
+```
+
+<Callout kind="note">
+  The parts are also exported flat — `TableRoot`, `TableRow`, `TableCell`, and so on. In a React **Server** Component, use those: `Table.Root` cannot be dereferenced there, because the namespace object crosses the client boundary as an opaque reference whose properties are `undefined` — a runtime error the type checker does not catch. A table of rows fetched on the server is exactly the case, and `Card` ships the same pair of spellings for the same reason.
+</Callout>
+
+## Examples
+
+### Variants
+
+One axis: how much of the grid is drawn. `line` rules between rows and nothing else; `outline` adds a frame with the surface radius; `grid` adds the column rules too.
+
+<DemoBlock id="table/variants" />
+
+The frame is drawn on the `<table>` itself, not on a wrapper, so a framed table sits in a `Card` or a `Dialog` with no extra element — and so `Table.Container` can stay optional. The corners clip with `overflow: clip` rather than `hidden`, which is not a detail: `hidden` would make the table a scroll container, and a sticky header inside a `Table.Container` would then stick to the table, which never scrolls, instead of to the container, which does.
+
+### Sizes
+
+<DemoBlock id="table/sizes" />
+
+`md` follows `data-forte-density` through `--forte-list-item-py`, so a compact app gets compact tables without a prop. `sm` and `lg` are fixed steps either side of it — a table you sized by hand should not move again when the app's density does.
+
+### Striped and hoverable
+
+<DemoBlock id="table/striped" />
+
+Both are off by default. Stripes help the eye hold a row across a wide table and are noise on a narrow one; a hover fill says "you can click this", and most rows cannot be clicked. The tints are a few percent of the foreground mixed over transparent rather than a grey step, so they read as one shade darker on any surface — the page, a panel, a dialog — in either theme.
+
+### Selection
+
+<DemoBlock id="table/selection" />
+
+`selected` on a row is the tint and only the tint. The state itself lives on the `Checkbox` in the row, which is what assistive technology reads and what the keyboard can reach; a row that is "selected" with no control saying so is selected for sighted mouse users alone. The header checkbox is the whole-table control — ticked when every row is, `indeterminate` when some are — and takes an `aria-label` because there is no visible label a cell that narrow could hold.
+
+The tint order is deliberate: stripe, then hover, then selection, so a selected row stays selected under the pointer.
+
+### Sorting
+
+<DemoBlock id="table/sorting" />
+
+Passing `sort` to a `Table.Head` — any value, `"none"` included — makes it a sort control. The label becomes a real `<button>` with an arrow, and the cell takes `aria-sort`, so a screen reader in table navigation hears the state and a keyboard user can reach it. Activating it calls `onSortChange` with the direction the column should take **next**: `descending` when it is currently ascending, `ascending` otherwise. Sort your rows and pass the new direction back; the table holds no sort state of its own.
+
+The unsorted state shows a faint arrow rather than none — an invisible control is a control nobody finds — and the flip to `descending` is a rotation, which carries information and therefore keeps its duration under reduced motion.
+
+### Footer and row headers
+
+<DemoBlock id="table/footer" />
+
+`Table.Footer` is the `<tfoot>`: set apart by a heavier rule above it and the header's weight, for totals and summary lines. The first column here is a `Table.Head` with `scope="row"` — the cell that names its row — which is what lets a screen reader read "Additional seats, Total, $144.00" instead of a bare number.
+
+### Sticky header
+
+<DemoBlock id="table/sticky-header" />
+
+`stickyHeader` pins the header cells to the top of the nearest scrollport. That has to be a `Table.Container` with a height cap: a sticky element sticks to the nearest scrolling ancestor, and the page is a poor one. Because the container is what scrolls, the frame and the radius go on **it** here — a frame on the table would scroll away with the rows.
+
+The header fill flips to an opaque surface colour when sticky, since that is the point at which a transparent header turns into rows visible through it.
+
+### Horizontal scrolling
+
+<DemoBlock id="table/scroll" />
+
+A `<table>` refuses to be narrower than its widest row, so on a phone a twelve-column table pushes the whole page sideways. Inside `Table.Container` the table scrolls and the page does not. The container is a separate part rather than something the root renders unconditionally, so that a table which fits its column needs no wrapper — and so that every `ref`, `id` and `aria-*` you pass has exactly one element to land on.
+
+### Loading
+
+<DemoBlock id="table/loading" />
+
+The same rows render in both states, with each cell's content wrapped in a `Skeleton.Root` that sizes itself to the text it stands in for — so nothing shifts when the data arrives. `Skeleton.Group` goes around the whole table, not the body: a `<div>` inside a `<tbody>` is invalid markup, and the group is what marks the region busy and announces the label.
+
+### Empty
+
+<DemoBlock id="table/empty" />
+
+One cell spanning every column. The header stays, so the reader still knows what *would* be here.
+
+### In a card
+
+<DemoBlock id="table/card" />
+
+Use `line` inside a card: the card is already the frame, and a second one an inch inside it reads as a box in a box.
+
+## Accessibility
+
+The parts are the HTML table elements, which is most of the accessibility work done. Screen readers navigate a real `<table>` cell by cell and announce the column header for each; no `role="grid"` reconstruction of that on `<div>`s comes close. Three things remain yours:
+
+**Name the table.** Prefer `Table.Caption` to `aria-label` on the root: a caption is visible, so it names the table for everyone. `placement="bottom"` makes it read as a footnote if a title above the table is too much.
+
+**Mark row headers.** When one column names the row — an item, a person, a file — make it a `Table.Head` with `scope="row"`, so the row's other cells are announced against it.
+
+**Keep state on controls.** A sortable column is a `<button>` inside the header; a selected row is a `Checkbox` inside the row. The table's `sort` and `selected` props drive `aria-sort` and a tint respectively, and neither is a substitute for the control.
+
+The sort button reaches the 24px minimum target (SC 2.5.8) at every size through a negative block margin rather than by growing the row. Under forced colours the fills are stripped and the rules are the whole grid, painted in the system ink; a selected row takes the system highlight, and the faint unsorted arrow — which is `opacity`, untouched by forced colours — is redrawn in `GrayText` so it does not claim every sortable column is sorted.
+
+## Theming
+
+Everything below is declared on `Table.Root` itself, which is also why an ancestor is the wrong place to set one — the element's own declaration beats an inherited value. Override them on `Table.Root` through its `className` or a `style` object, or re-point the global tokens in the Default column to move every table at once.
+
+<ThemingTable component="Table" part="root" />
+
+State is on `data-variant`, `data-size`, `data-striped`, `data-hoverable`, `data-sticky-header`, `data-selected`, `data-align` and `data-numeric`, reachable from plain CSS or a Tailwind arbitrary variant — `data-[selected]:...` — without a wrapper element.
+
+<Callout>
+  The rules are borders on the cells with `border-collapse: separate`, not collapsed borders on the rows. That is what lets the frame take a radius and what keeps a sticky header's bottom rule with it when it sticks — a collapsed edge belongs to the row below, which scrolls away.
+</Callout>
+
+## API reference
+
+Every part is the plain HTML element of the same name and takes that element's whole prop surface, `ref` included. There is no `render` prop, because there is no Base UI primitive to swap the element on.
+
+### Table.Container
+
+<PropTable component="TableContainer" />
+
+### Table.Root
+
+<PropTable component="TableRoot" />
+
+### Table.Caption
+
+<PropTable component="TableCaption" />
+
+### Table.Header
+
+<PropTable component="TableHeader" />
+
+### Table.Body
+
+<PropTable component="TableBody" />
+
+### Table.Footer
+
+<PropTable component="TableFooter" />
+
+### Table.Row
+
+<PropTable component="TableRow" />
+
+### Table.Head
+
+<PropTable component="TableHead" />
+
+### Table.Cell
+
+<PropTable component="TableCell" />

@@ -1,0 +1,381 @@
+/*
+ * Table
+ *
+ * Rows and columns on the real `<table>` element — the one the docs and every
+ * app were hand-rolling as `border-b border-border-muted px-3 py-2` on each
+ * cell. No Base UI primitive, no state: every part is one HTML table element,
+ * and what the component adds is vocabulary.
+ *
+ * ---------------------------------------------------------------------------
+ * `border-collapse: separate`, and why
+ * ---------------------------------------------------------------------------
+ * The rules between rows are borders on the CELLS, not on the rows, with
+ * `border-spacing: 0` closing the gaps. Collapsed borders would let `tr`
+ * carry them and would be the smaller stylesheet — but a collapsed border
+ * belongs to no single box, so the outer frame cannot take a radius, and a
+ * sticky header cell loses its bottom rule the moment it sticks (the shared
+ * edge is painted by the row below, which scrolls away). Separate borders
+ * cost a handful of `:last-child` rules and buy both.
+ *
+ * ---------------------------------------------------------------------------
+ * The frame is on the table, not on a wrapper
+ * ---------------------------------------------------------------------------
+ * `outline` and `grid` draw their frame on the `<table>` itself, clipped to
+ * the radius with `overflow: clip`. `hidden` would ALSO clip, but it makes
+ * the table a scroll container, and a sticky `<th>` sticks to the nearest
+ * one — a header inside a `Table.Container` would then stick to the table,
+ * which never scrolls, instead of to the container, which does. `clip`
+ * clips without becoming a scrollport. The caption is unaffected either way:
+ * it lives in the table wrapper box, outside the grid box the frame and the
+ * clip apply to.
+ *
+ * Keeping the frame off `Table.Container` is what lets the container stay
+ * optional, and lets a framed table sit in a `Card` with no wrapper at all.
+ *
+ * ---------------------------------------------------------------------------
+ * Tints are translucent
+ * ---------------------------------------------------------------------------
+ * A table sits on whatever surface it is given — the page, a `Card`, a
+ * `Dialog` — and a stripe painted in `--forte-gray-2` is invisible on a panel
+ * that IS gray-2. The stripe, hover and footer tints are therefore a few
+ * percent of the foreground mixed over transparent, which reads as one step
+ * darker on any surface in either theme. The one opaque fill is the sticky
+ * header's, which has rows scrolling underneath it and must hide them.
+ */
+@layer forte.components {
+  .container {
+    /* The scroll box. Both axes, because the sticky header needs THIS to be
+     * the scrollport and an `overflow-x` of `auto` alone would already make
+     * it one — `overflow` cannot be `visible` on one axis and not the other.
+     * The height cap that makes vertical scrolling happen is the consumer's
+     * class; without one the box is as tall as the table and only ever
+     * scrolls sideways. */
+    inline-size: 100%;
+    overflow: auto;
+    /* Isolate so the sticky header's stacking stays inside the box and a
+     * `z-index` here cannot leak into the page's own layering. */
+    isolation: isolate;
+  }
+
+  .root {
+    /* Component tokens. Declared HERE, on the table, so a value set on an
+     * ancestor is only INHERITED and loses to these. Re-skin one table by
+     * setting them via `className` or `style`; re-skin every table by
+     * re-pointing the global tokens on the right-hand side. */
+    /** Type size for every cell. `size` re-points it. */
+    --forte-table-font-size: var(--forte-font-size-2);
+    /** Inline padding of every cell. `size` re-points it. */
+    --forte-table-cell-px: var(--forte-space-3);
+    /** Block padding of every cell. At `md` it follows `data-forte-density`;
+     * `size` re-points it. */
+    --forte-table-cell-py: var(--forte-list-item-py);
+    /** Width of every rule and of the frame. */
+    --forte-table-border-width: 1px;
+    /** Colour of the rules between rows and columns, and of the frame. */
+    --forte-table-border-color: var(--forte-color-border-muted);
+    /** Corner radius of the frame. `0` on `line`, which has no frame to
+     * round; the surface radius on `outline` and `grid`. */
+    --forte-table-radius: 0;
+    /** Fill behind the whole table. Transparent, so it takes the surface it
+     * sits on. */
+    --forte-table-bg: transparent;
+    /** Fill behind the header row. Transparent unless the header is sticky,
+     * where it must hide the rows scrolling under it. */
+    --forte-table-header-bg: transparent;
+    /** Text colour of the header cells. */
+    --forte-table-header-color: var(--forte-color-foreground);
+    /** Weight of the header cells. */
+    --forte-table-header-font-weight: var(--forte-font-weight-semibold);
+    /** Fill behind the footer rows. */
+    --forte-table-footer-bg: color-mix(in oklab, var(--forte-color-foreground) 4%, transparent);
+    /** Fill on every other body row when `striped`. */
+    --forte-table-row-bg-striped: color-mix(in oklab, var(--forte-color-foreground) 4%, transparent);
+    /** Fill on a body row under the pointer when `hoverable`. */
+    --forte-table-row-bg-hover: color-mix(in oklab, var(--forte-color-foreground) 7%, transparent);
+    /** Fill on a body row with `selected`. */
+    --forte-table-row-bg-selected: var(--forte-color-primary-soft);
+    /** Text colour of the caption. */
+    --forte-table-caption-color: var(--forte-color-foreground-muted);
+
+    box-sizing: border-box;
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    /* The frame. Zero-width on `line` — declared here all the same so that
+     * switching variants at runtime changes a colour and a width, not the
+     * box model. */
+    border: 0 solid var(--forte-table-border-color);
+    border-radius: var(--forte-table-radius);
+    overflow: clip;
+    background-color: var(--forte-table-bg);
+
+    color: var(--forte-color-foreground);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-table-font-size);
+    line-height: var(--forte-line-height-normal);
+    /* Tables are the one place figures line up in columns by design; opting
+     * the whole table in means a numeric cell and a text cell holding a
+     * number agree. `numeric` adds the alignment on top. */
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Variants ---------------------------------------------------------------
+   * One axis: how much of the grid is drawn. The defaults above ARE `line`;
+   * each block below is a complete statement rather than a patch, so a
+   * variant never depends on the one before it in the file.
+   * ---------------------------------------------------------------------- */
+  .root[data-variant="line"] {
+    --forte-table-radius: 0;
+    border-width: 0;
+  }
+
+  .root[data-variant="outline"],
+  .root[data-variant="grid"] {
+    --forte-table-radius: var(--forte-radius-surface);
+    border-width: var(--forte-table-border-width);
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * Re-point the knobs and nothing else. No `md` block: the defaults above
+   * ARE `md`, and they are the one size that follows the density preset —
+   * `sm` and `lg` are fixed steps, because a table the consumer sized by
+   * hand should not move again when the app's density does.
+   * ---------------------------------------------------------------------- */
+  .root[data-size="sm"] {
+    --forte-table-font-size: var(--forte-font-size-1);
+    --forte-table-cell-px: var(--forte-space-2);
+    --forte-table-cell-py: var(--forte-space-1);
+  }
+
+  .root[data-size="lg"] {
+    --forte-table-font-size: var(--forte-font-size-3);
+    --forte-table-cell-px: var(--forte-space-4);
+    --forte-table-cell-py: var(--forte-space-3);
+  }
+
+  /* Caption ---------------------------------------------------------------- */
+  .caption {
+    caption-side: top;
+    padding-block: var(--forte-table-cell-py);
+    padding-inline: var(--forte-table-cell-px);
+    color: var(--forte-table-caption-color);
+    /* The UA centres captions; nothing else in the table is centred. */
+    text-align: start;
+  }
+
+  .caption[data-placement="bottom"] {
+    caption-side: bottom;
+  }
+
+  /* Cells ------------------------------------------------------------------
+   * `.head` and `.cell` share one box so a column keeps one edge from its
+   * header to its last row; only weight, colour and the sort control
+   * separate them.
+   * ---------------------------------------------------------------------- */
+  .head,
+  .cell {
+    padding-block: var(--forte-table-cell-py);
+    padding-inline: var(--forte-table-cell-px);
+    border-block-end: var(--forte-table-border-width) solid var(--forte-table-border-color);
+    /* The UA gives `<th>` `center` and both cells `baseline`; a control in
+     * one cell and a line of text in the next then sit at different heights. */
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  .head {
+    color: var(--forte-table-header-color);
+    font-weight: var(--forte-table-header-font-weight);
+    /* A header that wraps onto two lines mid-word is worse than a column a
+     * little wider than its data. */
+    white-space: nowrap;
+  }
+
+  .header {
+    background-color: var(--forte-table-header-bg);
+  }
+
+  /* Alignment and numbers -------------------------------------------------- */
+  :is(.head, .cell)[data-numeric] {
+    text-align: end;
+  }
+
+  :is(.head, .cell)[data-align="start"] {
+    text-align: start;
+  }
+
+  :is(.head, .cell)[data-align="center"] {
+    text-align: center;
+  }
+
+  :is(.head, .cell)[data-align="end"] {
+    text-align: end;
+  }
+
+  /* The last body row drops its rule: against the frame it would double up,
+   * and against nothing it would underline empty space. A footer restores a
+   * rule of its own above itself, so the two never meet. */
+  .body > .row:last-child > :is(.head, .cell) {
+    border-block-end-width: 0;
+  }
+
+  /* Footer ----------------------------------------------------------------- */
+  .footer {
+    background-color: var(--forte-table-footer-bg);
+    font-weight: var(--forte-table-header-font-weight);
+  }
+
+  .footer > .row > :is(.head, .cell) {
+    border-block-start: var(--forte-table-border-width) solid var(--forte-table-border-color);
+    border-block-end-width: 0;
+  }
+
+  /* Column rules ----------------------------------------------------------- */
+  .root[data-variant="grid"] :is(.head, .cell) {
+    border-inline-end: var(--forte-table-border-width) solid var(--forte-table-border-color);
+  }
+
+  .root[data-variant="grid"] :is(.head, .cell):last-child {
+    border-inline-end-width: 0;
+  }
+
+  /* Row tints ---------------------------------------------------------------
+   * Body rows only: a striped header or a hoverable footer answers no
+   * question. Order is load-bearing — stripe, then hover, then selection —
+   * so a selected row stays selected under the pointer and a hovered row
+   * shows the hover over its stripe.
+   * ---------------------------------------------------------------------- */
+  .root[data-striped] .body > .row:nth-child(even) {
+    background-color: var(--forte-table-row-bg-striped);
+  }
+
+  @media (hover: hover) {
+    .root[data-hoverable] .body > .row:hover {
+      background-color: var(--forte-table-row-bg-hover);
+    }
+  }
+
+  .body > .row[data-selected] {
+    background-color: var(--forte-table-row-bg-selected);
+  }
+
+  /* Sticky header ---------------------------------------------------------
+   * On the CELLS: `position: sticky` on a `<thead>` or a `<tr>` is honoured
+   * by some engines and ignored by others, and on a cell it works in all of
+   * them. The fill moves onto the cell for the same reason — the row's own
+   * background would stay behind while the cell scrolls on top of the body,
+   * and the body would show through. The knob flips to an opaque surface
+   * colour here because that is the point at which transparency turns into
+   * rows visible through the header.
+   * ---------------------------------------------------------------------- */
+  .root[data-sticky-header] {
+    --forte-table-header-bg: var(--forte-color-panel);
+  }
+
+  .root[data-sticky-header] .header .head {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    background-color: var(--forte-table-header-bg);
+  }
+
+  /* Sort control -----------------------------------------------------------
+   * A real `<button>` inside the `<th>`, because the header cell itself
+   * cannot take focus without a tabindex and a role it would then have to
+   * fake. It inherits the cell's type so the sortable column reads like the
+   * others, and the negative block margin lets it reach the 24px target
+   * (SC 2.5.8) without growing the row on the `sm` size, where the cell's
+   * own padding does not get it there.
+   * ---------------------------------------------------------------------- */
+  .sortButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--forte-space-1);
+    min-block-size: var(--forte-target-min);
+    margin-block: calc(-1 * var(--forte-space-1));
+    padding: 0;
+    border: 0;
+    border-radius: var(--forte-radius-control);
+    background: none;
+    color: inherit;
+    font: inherit;
+    /* `<th>` gives its text `nowrap`; a button does not inherit that and
+     * would wrap its label around the arrow. */
+    white-space: inherit;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .sortIcon {
+    flex-shrink: 0;
+    /* The unsorted state shows a faint arrow rather than none: an invisible
+     * control is a control nobody finds. */
+    opacity: 0.35;
+    rotate: 0deg;
+    transition:
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      rotate var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  .sortButton[data-direction="ascending"] .sortIcon,
+  .sortButton[data-direction="descending"] .sortIcon {
+    opacity: 1;
+  }
+
+  /* The flip is a rotation and not a travel, and it carries information —
+   * which way the column runs — so it stays a duration under reduced
+   * motion instead of collapsing with the geometry tokens. */
+  .sortButton[data-direction="descending"] .sortIcon {
+    rotate: 180deg;
+  }
+
+  @media (hover: hover) {
+    .sortButton:hover .sortIcon {
+      opacity: 1;
+    }
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    /* Backgrounds are stripped here, so the rules are the whole grid: every
+     * one is painted in the system ink, and the tints that separated a
+     * stripe, a hovered row and a selected row become the system highlight
+     * where the state matters and nothing where it was only a comfort. */
+    .root {
+      --forte-table-border-color: CanvasText;
+      background-color: Canvas;
+    }
+
+    .root[data-striped] .body > .row:nth-child(even),
+    .footer {
+      background-color: Canvas;
+    }
+
+    .body > .row[data-selected] {
+      background-color: Highlight;
+      color: HighlightText;
+    }
+
+    .root[data-sticky-header] .header .head {
+      background-color: Canvas;
+    }
+
+    /* The faint unsorted arrow is `opacity`, which forced colours does not
+     * touch; at full strength it would claim every sortable column is
+     * sorted, so it is drawn as an outline instead. */
+    .sortIcon {
+      opacity: 1;
+      color: GrayText;
+    }
+
+    .sortButton[data-direction="ascending"] .sortIcon,
+    .sortButton[data-direction="descending"] .sortIcon {
+      color: CanvasText;
+    }
+  }
+}
