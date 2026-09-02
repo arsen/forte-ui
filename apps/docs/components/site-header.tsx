@@ -4,6 +4,7 @@ import * as React from "react";
 import { AppBar, Button } from "@forte-ui/react";
 import { SiGithub } from "react-icons/si";
 import { ICON } from "./styles";
+import { Logo } from "./logo";
 import { ThemeDrawer } from "./theme-drawer";
 import { NavDrawer, TocDrawer } from "./shell-drawers";
 import Link from "next/link";
@@ -48,17 +49,12 @@ export function SiteHeader() {
         * open on every desktop width. */}
       <AppBar.Leading>
         <NavDrawer />
-        <Link
-          className="inline-flex items-center gap-2 text-4 font-bold tracking-tight whitespace-nowrap"
-          href="/"
-        >
-          {/* Decorative: hidden in forced-colors, where a gradient becomes a
-            * meaningless flat system-coloured block. */}
-          <span
-            className="size-5 rounded-3 bg-[linear-gradient(135deg,var(--forte-accent-9),var(--forte-secondary-9))] forte-hc-decorative"
-            aria-hidden="true"
-          />
-          Forte UI
+        {/* The logo carries the link's name — it is `role="img"` with an
+          * `aria-label` — so the link needs no text of its own. `flex` on the
+          * anchor is what keeps an inline SVG from sitting on the text
+          * baseline and adding descender space under it. */}
+        <Link className="flex shrink-0" href="/">
+          <Logo />
         </Link>
       </AppBar.Leading>
       <AppBar.Trailing>
