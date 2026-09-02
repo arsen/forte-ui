@@ -7787,6 +7787,214 @@
       }
     ]
   },
+  "TableContainer": {
+    "name": "TableContainer",
+    "description": "The scroll box. A `<table>` refuses to be narrower than its widest row, so\non a phone a six-column table pushes the whole page sideways; wrapped in\nthis, the table scrolls and the page does not. It is also what a sticky\nheader sticks to — cap its height with a class (`max-h-80`) and set\n`stickyHeader` on the root.\n\nOptional, and deliberately a separate part: a table that fits its column\nneeds no wrapper, and putting one in unconditionally would leave every\n`ref`, `id` and `aria-*` a consumer passes with two candidate elements.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "TableRoot": {
+    "name": "TableRoot",
+    "description": "The `<table>` itself, and the element every appearance prop lives on.\nRendered as `border-collapse: separate` so the frame can carry a radius —\ncollapsed borders belong to no single box, and cannot be rounded.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "hoverable",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Tint a body row under the pointer. Off by default because a hover fill\nsays \"you can click this\", and most rows cannot be clicked."
+      },
+      {
+        "name": "size",
+        "type": "TableSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Cell padding and type size. `md` follows `data-forte-density` through\n`--forte-list-item-py`; `sm` and `lg` are fixed steps either side of it."
+      },
+      {
+        "name": "stickyHeader",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Keep the header row visible while the body scrolls. Needs a scrolling\nancestor — `Table.Container` with a height cap — because a sticky\nelement sticks to the nearest scrollport, and the page is a poor one."
+      },
+      {
+        "name": "striped",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Tint every other body row. Helps the eye hold a row across a wide table;\nnoise on a narrow one."
+      },
+      {
+        "name": "variant",
+        "type": "TableVariant",
+        "required": false,
+        "defaultValue": "line",
+        "description": "How much of the grid is drawn. `line` rules between rows only; `outline`\nadds a frame with the surface radius around the whole table; `grid`\nadds the column rules as well."
+      }
+    ]
+  },
+  "TableCaption": {
+    "name": "TableCaption",
+    "description": "The table's name — what a screen reader announces before the column\ncount, and what a sighted reader gets as a title or a footnote. Prefer it\nto `aria-label` on the root: it is visible, so it names the table for\neveryone.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "placement",
+        "type": "TableCaptionPlacement",
+        "required": false,
+        "defaultValue": "top",
+        "description": "Which edge of the table the caption sits on. It is the table's\naccessible name either way; `bottom` reads as a footnote, `top` as a\ntitle."
+      }
+    ]
+  },
+  "TableHeader": {
+    "name": "TableHeader",
+    "description": "The `<thead>`. Holds one `Table.Row` of `Table.Head` cells.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "TableBody": {
+    "name": "TableBody",
+    "description": "The `<tbody>`. Striping, hover and selection apply to its rows only.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "TableFooter": {
+    "name": "TableFooter",
+    "description": "The `<tfoot>` — totals, a summary line. Set apart from the body by a\nheavier rule above it and the header's weight.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "TableRow": {
+    "name": "TableRow",
+    "description": "A `<tr>`. The same part in every section; where it sits decides whether\n`striped`, `hoverable` and `selected` apply.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "selected",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Tint the row as chosen. Visual only — put the state itself on a\n`Checkbox` in the row, which is what assistive technology reads and\nwhat the keyboard can reach."
+      }
+    ]
+  },
+  "TableHead": {
+    "name": "TableHead",
+    "description": "A `<th>`. Column headers go in `Table.Header`; a row header — the one cell\nin a body row that names the row — is this part inside `Table.Body` with\n`scope=\"row\"`.",
+    "props": [
+      {
+        "name": "align",
+        "type": "TableAlign",
+        "required": false,
+        "defaultValue": "start",
+        "description": "Horizontal alignment of the cell's content. Defaults to the start edge —\nthe UA centres `<th>` text, which lines up with nothing beneath it."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "numeric",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Mark the column as numeric: end-aligned, with tabular figures so digits\nline up down the column. Set it on the header and the cells alike."
+      },
+      {
+        "name": "onSortChange",
+        "type": "((direction: \"ascending\" | \"descending\") => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when the sort control is activated, with the direction the\ncolumn should take next: `descending` when it is currently ascending,\n`ascending` otherwise. The table holds no sort state of its own — sort\nthe rows and pass the new `sort` back."
+      },
+      {
+        "name": "sort",
+        "type": "TableSortDirection",
+        "required": false,
+        "defaultValue": "undefined",
+        "description": "The column's current sort. Passing any value — `none` included — makes\nthe header a sort control: the label becomes a button with an arrow,\nand `aria-sort` reports the state to assistive technology."
+      }
+    ]
+  },
+  "TableCell": {
+    "name": "TableCell",
+    "description": "A `<td>`.",
+    "props": [
+      {
+        "name": "align",
+        "type": "TableAlign",
+        "required": false,
+        "defaultValue": "start",
+        "description": "Horizontal alignment of the cell's content."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "numeric",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Mark the cell as numeric: end-aligned, with tabular figures so digits\nline up down the column. Set it on the header and the cells alike."
+      }
+    ]
+  },
   "TabsRoot": {
     "name": "TabsRoot",
     "description": "Groups the tab strip and its panels.\n\nNote the Base UI default: `defaultValue` is `0`, an *index*, not the first\ntab's string value. With string values and no `defaultValue`, Base UI emits\nan automatic `onValueChange` with reason `'initial'` to correct itself, so\nalways pass `defaultValue` (or `value`) pointing at an **enabled** tab —\nduring server rendering a disabled first tab is not skipped. `null` is a\nlegal \"nothing active\" value and is deliberately not normalised away.",

@@ -576,6 +576,35 @@ export type {
 export { Switch } from "./components/switch";
 export type { SwitchProps, SwitchSize } from "./components/switch";
 
+export {
+  Table,
+  TableContainer,
+  TableRoot,
+  TableCaption,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "./components/table";
+export type {
+  TableVariant,
+  TableSize,
+  TableAlign,
+  TableCaptionPlacement,
+  TableSortDirection,
+  TableContainerProps,
+  TableRootProps,
+  TableCaptionProps,
+  TableHeaderProps,
+  TableBodyProps,
+  TableFooterProps,
+  TableRowProps,
+  TableHeadProps,
+  TableCellProps,
+} from "./components/table";
+
 export { Tabs } from "./components/tabs";
 export type {
   TabsVariant,

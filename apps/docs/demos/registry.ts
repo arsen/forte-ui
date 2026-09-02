@@ -711,6 +711,30 @@ import d_switch_settings_list from "./switch/settings-list";
 import d_switch_settings_list_src from "./switch/settings-list?raw";
 import d_switch_sizes from "./switch/sizes";
 import d_switch_sizes_src from "./switch/sizes?raw";
+import d_table_basic from "./table/basic";
+import d_table_basic_src from "./table/basic?raw";
+import d_table_card from "./table/card";
+import d_table_card_src from "./table/card?raw";
+import d_table_empty from "./table/empty";
+import d_table_empty_src from "./table/empty?raw";
+import d_table_footer from "./table/footer";
+import d_table_footer_src from "./table/footer?raw";
+import d_table_loading from "./table/loading";
+import d_table_loading_src from "./table/loading?raw";
+import d_table_scroll from "./table/scroll";
+import d_table_scroll_src from "./table/scroll?raw";
+import d_table_selection from "./table/selection";
+import d_table_selection_src from "./table/selection?raw";
+import d_table_sizes from "./table/sizes";
+import d_table_sizes_src from "./table/sizes?raw";
+import d_table_sorting from "./table/sorting";
+import d_table_sorting_src from "./table/sorting?raw";
+import d_table_sticky_header from "./table/sticky-header";
+import d_table_sticky_header_src from "./table/sticky-header?raw";
+import d_table_striped from "./table/striped";
+import d_table_striped_src from "./table/striped?raw";
+import d_table_variants from "./table/variants";
+import d_table_variants_src from "./table/variants?raw";
 import d_tabs_disabled_tab from "./tabs/disabled-tab";
 import d_tabs_disabled_tab_src from "./tabs/disabled-tab?raw";
 import d_tabs_line from "./tabs/line";
@@ -1184,6 +1208,18 @@ export type DemoId =
   | "switch/disabled"
   | "switch/settings-list"
   | "switch/sizes"
+  | "table/basic"
+  | "table/card"
+  | "table/empty"
+  | "table/footer"
+  | "table/loading"
+  | "table/scroll"
+  | "table/selection"
+  | "table/sizes"
+  | "table/sorting"
+  | "table/sticky-header"
+  | "table/striped"
+  | "table/variants"
   | "tabs/disabled-tab"
   | "tabs/line"
   | "tabs/overflow"
@@ -1599,6 +1635,18 @@ const REGISTRY: Record<DemoId, Demo> = {
   "switch/disabled": { Component: d_switch_disabled, source: d_switch_disabled_src, file: "switch/disabled.tsx" },
   "switch/settings-list": { Component: d_switch_settings_list, source: d_switch_settings_list_src, file: "switch/settings-list.tsx" },
   "switch/sizes": { Component: d_switch_sizes, source: d_switch_sizes_src, file: "switch/sizes.tsx" },
+  "table/basic": { Component: d_table_basic, source: d_table_basic_src, file: "table/basic.tsx" },
+  "table/card": { Component: d_table_card, source: d_table_card_src, file: "table/card.tsx" },
+  "table/empty": { Component: d_table_empty, source: d_table_empty_src, file: "table/empty.tsx" },
+  "table/footer": { Component: d_table_footer, source: d_table_footer_src, file: "table/footer.tsx" },
+  "table/loading": { Component: d_table_loading, source: d_table_loading_src, file: "table/loading.tsx" },
+  "table/scroll": { Component: d_table_scroll, source: d_table_scroll_src, file: "table/scroll.tsx" },
+  "table/selection": { Component: d_table_selection, source: d_table_selection_src, file: "table/selection.tsx" },
+  "table/sizes": { Component: d_table_sizes, source: d_table_sizes_src, file: "table/sizes.tsx" },
+  "table/sorting": { Component: d_table_sorting, source: d_table_sorting_src, file: "table/sorting.tsx" },
+  "table/sticky-header": { Component: d_table_sticky_header, source: d_table_sticky_header_src, file: "table/sticky-header.tsx" },
+  "table/striped": { Component: d_table_striped, source: d_table_striped_src, file: "table/striped.tsx" },
+  "table/variants": { Component: d_table_variants, source: d_table_variants_src, file: "table/variants.tsx" },
   "tabs/disabled-tab": { Component: d_tabs_disabled_tab, source: d_tabs_disabled_tab_src, file: "tabs/disabled-tab.tsx" },
   "tabs/line": { Component: d_tabs_line, source: d_tabs_line_src, file: "tabs/line.tsx" },
   "tabs/overflow": { Component: d_tabs_overflow, source: d_tabs_overflow_src, file: "tabs/overflow.tsx" },
