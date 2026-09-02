@@ -13,6 +13,25 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0-alpha.9] - 2026-09-01
+
+### NumberField
+
+- Added an `orientation` prop (`"vertical"` default, `"horizontal"`) to `NumberField.Root`, laying the `ScrubArea` label and the `Group` out on one row instead of stacked — the shape of an inspector panel, where a stacked label would double the height of every row. Only the layout changes; the scrub gesture's own `direction` is independent.
+
+### Pagination
+
+- New component: page controls for a long set — `Root`, `List`, `Item`, `Link`, `Previous`, `Next`, `First`, `Last` and `Ellipsis` — with `size`, `variant` (`ghost` / `outline` / `joined`) and `tone` axes. A slot renders an `<a>` when it has an `href` or `render` and a `<button>` otherwise, so URL-driven and state-driven strips share one API.
+- New `usePaginationRange` hook turns `page`, `count`, `siblings` and `boundaries` into a constant-length slot list, so `Next` never moves under the pointer. The window shift animates by key — fill lands on the pressed page, the strip holds, then the numbers slide one cell while the departing page fades out and the arriving one fades in — with an instant swap under reduced motion.
+
+### Steps
+
+- New component: a numbered sequence of steps and the user's position in it, with six parts (`Root`, `Item`, `Trigger`, `Indicator`, `Title`, `Description`). `current` on the root derives every step's status; `status` on an `Item` overrides it; wrapping the parts in a `Trigger` makes a step a real button. Horizontal (title inline or below the circle) and vertical layouts, three variants (`solid`, `outline`, `dot`), four tones, three sizes. The connector belongs to the step before it and fills when that step completes; the check draws on via `stroke-dashoffset` so it survives reduced motion.
+
+### Table
+
+- New component: rows and columns on the real `<table>` element, with `Container`, `Root`, `Caption`, `Header`, `Body`, `Footer`, `Row`, `Head` and `Cell` parts. Three variants (`line`, `outline`, `grid`), sizes that follow the density preset at `md`, striped/hoverable/selected tints scoped to the body, numeric columns with tabular figures, a sortable header with a real `<button>` and `aria-sort`, and a sticky header pinned to an optional `Table.Container` scroll box. The table holds no state — sorting, selection and pagination stay with the consumer.
+
 ## [1.0.0-alpha.8] - 2026-09-01
 
 ### AppBar
@@ -252,7 +271,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.9...HEAD
+[1.0.0-alpha.9]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...v1.0.0-alpha.9
 [1.0.0-alpha.8]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8
 [1.0.0-alpha.7]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.7
 [1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
