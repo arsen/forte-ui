@@ -21,14 +21,23 @@
       "cache": false,
       "persistent": true
     },
-    // Never cached. These five scripts write CHECKED-IN files, so a cache hit
-    // on an unchanged input set would leave a hand-edit to tokens.color.css or
+    // Never cached. These six scripts write CHECKED-IN files, so a cache hit on
+    // an unchanged input set would leave a hand-edit to tokens.color.css or
     // registry.ts sitting in the tree -- the exact drift `pnpm generate` exists
-    // to repair. They run in well under a second; caching buys nothing and
-    // costs the guarantee. No dependsOn either: neither docs generator reads
-    // anything the library builds, so both packages run in parallel.
+    // to repair. They run in a couple of seconds; caching buys nothing and
+    // costs the guarantee.
+    //
+    // `^generate` orders the two packages, and it is load-bearing as of
+    // build-catalog.mjs: that script reads the library's docs-data/components.json
+    // to resolve every component page, so running the pair in parallel -- which
+    // is what this task did before, and the comment here used to promise -- would
+    // let a run that ADDS a component read the previous run's catalogue and emit
+    // a site index missing the very page that run created. Depending on
+    // `generate` rather than `docgen` is what keeps the library's own chain from
+    // running its slowest script twice.
     "generate": {
-      "cache": false
+      "cache": false,
+      "dependsOn": ["^generate"]
     },
     "tokens": {
       "outputs": [

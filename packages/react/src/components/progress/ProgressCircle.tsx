@@ -344,6 +344,7 @@ export const ProgressCircleLabel = React.forwardRef<HTMLSpanElement, ProgressCir
  * @summary The circular Progress — a ring for tight spaces; same
  *   determinate/indeterminate contract as the bar.
  * @category Feedback
+ * @partOf Progress
  */
 export const ProgressCircle = {
   Root: ProgressCircleRoot,

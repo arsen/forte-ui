@@ -1,7 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
-import { PROSE_H1, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/components/styles";
+import { HEADING, PROSE_H1, PROSE_H2, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/components/styles";
 
 /**
  * Next looks for this file by convention to resolve MDX element mappings.
@@ -40,13 +40,6 @@ import { PROSE_H1, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/component
 
 type El<T extends keyof React.JSX.IntrinsicElements> = ComponentPropsWithoutRef<T>;
 
-/* The root's `scroll-padding-top` already clears the sticky app bar when a
- * #fragment lands on a heading (WCAG SC 2.4.11); the `scroll-mt-6` here is
- * only the breathing room under it — the two ADD. It is also what the section
- * rail reads back to decide which heading is current, so the two can never
- * disagree about where a section starts — see `components/toc.tsx`. */
-const HEADING = "scroll-mt-6 font-semibold";
-
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
@@ -55,7 +48,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1 className={cn(PROSE_H1, "mb-3", className)} {...props} />
     ),
     h2: ({ className, ...props }: El<"h2">) => (
-      <h2 className={cn(HEADING, "mt-8 mb-3 text-6 tracking-tight", className)} {...props} />
+      <h2 className={cn(PROSE_H2, className)} {...props} />
     ),
     h3: ({ className, ...props }: El<"h3">) => (
       <h3 className={cn(HEADING, "mt-6 mb-2 text-4", className)} {...props} />

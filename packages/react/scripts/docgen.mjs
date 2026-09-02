@@ -1,6 +1,6 @@
 /**
  * Extracts prop documentation from the TypeScript source into docs-data/props.json,
- * and the component catalogue into docs-data/components.md.
+ * and the component catalogue into docs-data/components.md and components.json.
  *
  * Generated at build time in THIS package (not in the docs app) so the docs
  * build never pays the cost of constructing a TypeScript program, and so turbo
@@ -18,6 +18,12 @@
  * new component cannot ship uncatalogued (the drift that killed the skill's
  * hand-written index). react-docgen-typescript strips block tags from the
  * description it returns, so the tags never leak into props.json.
+ *
+ * components.json is the same catalogue as machine-readable data. The docs
+ * site builds its component index and its sidebar from it, so the pages a
+ * reader can reach are derived from the tags rather than typed out a second
+ * time; `@partOf` is what tells that build which entries head a page of their
+ * own and which are documented on a sibling's.
  *
  * This script runs LAST in the docgen chain (see package.json) so the
  * theming.json it reads for the per-entry knob pointers is this run's output,
@@ -149,7 +155,17 @@ for (const [dir, comps] of byDir) {
     if (!CATEGORIES.includes(category)) {
       errors.push(`${c.displayName}: @category "${category}" is not one of: ${CATEGORIES.join(", ")}`);
     }
-    entries.push({ name: c.displayName, dir, summary, category, parts: [], hooks: [] });
+    entries.push({
+      name: c.displayName,
+      dir,
+      summary,
+      category,
+      // Optional, and the exception rather than the rule: an entry that heads
+      // no docs page of its own because it is documented alongside a sibling.
+      partOf: oneLine(c.tags.partOf) || null,
+      parts: [],
+      hooks: [],
+    });
   }
 
   // Attach every part to the catalogue root whose name is its longest prefix
@@ -196,8 +212,34 @@ for (const stmt of indexSrc.statements) {
   }
 }
 
+/*
+ * `@partOf Dialog` says "AlertDialog does not head a page; it is documented as
+ * part of the Dialog family". Validated here for the same reason @category is:
+ * the docs site resolves an entry either to its own page or, for these, to the
+ * named entry's page, and a typo would otherwise resolve to nothing — which
+ * looks exactly like a component whose page nobody wrote.
+ *
+ * Same directory, because that is what "documented together" means in this
+ * source tree, and one hop only: a chain would leave the docs build asking
+ * where a page is by following a pointer to another pointer.
+ */
+for (const e of entries) {
+  if (!e.partOf) continue;
+  const target = entries.find((x) => x.name === e.partOf);
+  if (!target) {
+    errors.push(`${e.name}: @partOf "${e.partOf}" is not a catalogue entry`);
+  } else if (target.dir !== e.dir) {
+    errors.push(
+      `${e.name}: @partOf "${e.partOf}" lives in src/components/${target.dir}, not ${e.dir} — ` +
+        `an entry can only be documented alongside a sibling`,
+    );
+  } else if (target.partOf) {
+    errors.push(`${e.name}: @partOf "${e.partOf}" is itself @partOf — chains are not resolvable`);
+  }
+}
+
 if (errors.length) {
-  console.error("\ndocgen: components.md cannot be generated:");
+  console.error("\ndocgen: the catalogue cannot be generated:");
   for (const e of errors) console.error(`  ✗ ${e}`);
   process.exit(1);
 }
@@ -225,18 +267,49 @@ const lines = [
   "Components.",
 ];
 
+/*
+ * One ordered list, and both outputs read from it — the markdown a human or an
+ * agent reads, and the JSON the docs site builds its index and sidebar from.
+ * Deriving them separately is how the two would come to disagree about which
+ * entries are compound, which is the sort of difference nobody checks.
+ *
+ * Category order first, because that is the order the file is scanned in, then
+ * name within it.
+ */
+const catalogue = CATEGORIES.flatMap((cat) =>
+  entries
+    .filter((e) => e.category === cat)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((e) => ({
+      name: e.name,
+      dir: e.dir,
+      category: e.category,
+      summary: e.summary,
+      partOf: e.partOf,
+      // No props.json key of its own means the entry IS the namespace object —
+      // it renders dot-notation parts, and the file rendering them needs
+      // "use client".
+      compound: !out[e.name],
+      theming: themingKeys.has(e.name),
+      parts: e.parts,
+      hooks: e.hooks,
+    })),
+);
+
 for (const cat of CATEGORIES) {
-  const inCat = entries.filter((e) => e.category === cat).sort((a, b) => a.name.localeCompare(b.name));
+  const inCat = catalogue.filter((e) => e.category === cat);
   if (!inCat.length) continue;
   lines.push("", `## ${cat}`, "");
   for (const e of inCat) {
     lines.push(`- **${e.name}** — ${e.summary}`);
     const facts = [];
     const selfOnly = e.parts.length === 1 && e.parts[0] === e.name;
-    if (!out[e.name]) facts.push("compound");
+    // First, because it is the fact that changes where you go looking next.
+    if (e.partOf) facts.push(`documented with ${e.partOf}`);
+    if (e.compound) facts.push("compound");
     if (e.parts.length && !selfOnly) facts.push(`parts (props.json): ${e.parts.join(", ")}`);
     else if (selfOnly) facts.push(`props.json: ${e.name}`);
-    if (themingKeys.has(e.name)) facts.push(`knobs: theming.json → ${e.name}`);
+    if (e.theming) facts.push(`knobs: theming.json → ${e.name}`);
     if (e.hooks.length) facts.push(`hooks: ${e.hooks.join(", ")}`);
     if (facts.length) lines.push(`  ${facts.join(" · ")}`);
   }
@@ -244,4 +317,9 @@ for (const cat of CATEGORIES) {
 lines.push("");
 
 writeFileSync(join(dest, "components.md"), lines.join("\n"));
-console.log(`docgen: catalogue — ${entries.length} entries across ${byDir.size} directories`);
+writeFileSync(join(dest, "components.json"), JSON.stringify(catalogue, null, 2) + "\n");
+const hosted = catalogue.filter((e) => e.partOf).length;
+console.log(
+  `docgen: catalogue — ${catalogue.length} entries across ${byDir.size} directories` +
+    ` (${hosted} documented with a sibling)`,
+);

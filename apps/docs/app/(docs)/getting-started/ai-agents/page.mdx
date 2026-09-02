@@ -52,13 +52,14 @@ tables, no knob catalogues. Those change with every release, and a copy frozen
 into a skill would drift the moment a consumer runs on any version but the one
 it was written against.
 
-Instead, the package documents itself. Every release ships four generated
+Instead, the package documents itself. Every release ships five generated
 files, and the skill instructs the agent to read them from the consumer's
 own `node_modules` — so the facts always match the installed version exactly:
 
 ```ts
 // docs-data/components.md — the catalogue: every component, a one-line
 // when-to-use, and the props.json / theming.json keys to look up next
+import catalogue from "@forte-ui/react/docs-data/components.json"; // the same, as data
 import props from "@forte-ui/react/docs-data/props.json";     // every part's props
 import theming from "@forte-ui/react/docs-data/theming.json"; // every theming knob
 import tokens from "@forte-ui/react/docs-data/tokens.json";   // every global token
@@ -70,7 +71,8 @@ actually ships — the summaries are `@summary` doc comments in the component
 source, and the build fails if a component is missing one. The JSON files then
 answer the follow-up lookups exactly.
 
-These are the same files this site renders its prop tables, theming tables and
+These are the same files this site renders its [component index](/components/),
+its sidebar, its prop tables, its theming tables and its
 [token reference](/customization/tokens/#for-tooling) from — generated at
 build time from the component source, doc comments and shipped stylesheets, so
 they cannot disagree with what actually renders. They are public API: theme
