@@ -28,6 +28,19 @@ export type {
   AlertCloseProps,
 } from "./components/alert";
 
+export { AppBar } from "./components/app-bar";
+export type {
+  AppBarVariant,
+  AppBarTone,
+  AppBarSize,
+  AppBarPosition,
+  AppBarTitleAlign,
+  AppBarRootProps,
+  AppBarLeadingProps,
+  AppBarTitleProps,
+  AppBarTrailingProps,
+} from "./components/app-bar";
+
 export { AspectRatio } from "./components/aspect-ratio";
 export type {
   AspectRatioProps,

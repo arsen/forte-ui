@@ -35,6 +35,18 @@ import d_alert_tones from "./alert/tones";
 import d_alert_tones_src from "./alert/tones?raw";
 import d_alert_variants from "./alert/variants";
 import d_alert_variants_src from "./alert/variants?raw";
+import d_app_bar_basic from "./app-bar/basic";
+import d_app_bar_basic_src from "./app-bar/basic?raw";
+import d_app_bar_hide_on_scroll from "./app-bar/hide-on-scroll";
+import d_app_bar_hide_on_scroll_src from "./app-bar/hide-on-scroll?raw";
+import d_app_bar_sizes from "./app-bar/sizes";
+import d_app_bar_sizes_src from "./app-bar/sizes?raw";
+import d_app_bar_sticky from "./app-bar/sticky";
+import d_app_bar_sticky_src from "./app-bar/sticky?raw";
+import d_app_bar_tones from "./app-bar/tones";
+import d_app_bar_tones_src from "./app-bar/tones?raw";
+import d_app_bar_variants from "./app-bar/variants";
+import d_app_bar_variants_src from "./app-bar/variants?raw";
 import d_aspect_ratio_basic from "./aspect-ratio/basic";
 import d_aspect_ratio_basic_src from "./aspect-ratio/basic?raw";
 import d_aspect_ratio_basis from "./aspect-ratio/basis";
@@ -794,6 +806,12 @@ export type DemoId =
   | "alert/parts"
   | "alert/tones"
   | "alert/variants"
+  | "app-bar/basic"
+  | "app-bar/hide-on-scroll"
+  | "app-bar/sizes"
+  | "app-bar/sticky"
+  | "app-bar/tones"
+  | "app-bar/variants"
   | "aspect-ratio/basic"
   | "aspect-ratio/basis"
   | "aspect-ratio/fit"
@@ -1183,6 +1201,12 @@ const REGISTRY: Record<DemoId, Demo> = {
   "alert/parts": { Component: d_alert_parts, source: d_alert_parts_src, file: "alert/parts.tsx" },
   "alert/tones": { Component: d_alert_tones, source: d_alert_tones_src, file: "alert/tones.tsx" },
   "alert/variants": { Component: d_alert_variants, source: d_alert_variants_src, file: "alert/variants.tsx" },
+  "app-bar/basic": { Component: d_app_bar_basic, source: d_app_bar_basic_src, file: "app-bar/basic.tsx" },
+  "app-bar/hide-on-scroll": { Component: d_app_bar_hide_on_scroll, source: d_app_bar_hide_on_scroll_src, file: "app-bar/hide-on-scroll.tsx" },
+  "app-bar/sizes": { Component: d_app_bar_sizes, source: d_app_bar_sizes_src, file: "app-bar/sizes.tsx" },
+  "app-bar/sticky": { Component: d_app_bar_sticky, source: d_app_bar_sticky_src, file: "app-bar/sticky.tsx" },
+  "app-bar/tones": { Component: d_app_bar_tones, source: d_app_bar_tones_src, file: "app-bar/tones.tsx" },
+  "app-bar/variants": { Component: d_app_bar_variants, source: d_app_bar_variants_src, file: "app-bar/variants.tsx" },
   "aspect-ratio/basic": { Component: d_aspect_ratio_basic, source: d_aspect_ratio_basic_src, file: "aspect-ratio/basic.tsx" },
   "aspect-ratio/basis": { Component: d_aspect_ratio_basis, source: d_aspect_ratio_basis_src, file: "aspect-ratio/basis.tsx" },
   "aspect-ratio/fit": { Component: d_aspect_ratio_fit, source: d_aspect_ratio_fit_src, file: "aspect-ratio/fit.tsx" },

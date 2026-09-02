@@ -1,0 +1,161 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "App Bar",
+  description:
+    "The bar across the top of a screen — leading controls, a title and trailing actions, that pins, elevates or hides as the page scrolls under it.",
+};
+
+# App Bar
+
+The bar across the top of a screen: what leads it, its title, and what follows it. Renders a `<header>`.
+
+<DemoBlock id="app-bar/basic" />
+
+There is no Base UI primitive underneath and no keyboard contract of its own. A header is a landmark, not a widget — Tab walks its controls one by one the way it walks the rest of the page, and that is correct. For a strip of related controls that should be one tab stop, put a [`Toolbar`](/components/toolbar/) inside it.
+
+What earns it a component is the **scroll relationship**. `position` decides whether the bar stays, and once it stays the bar measures the page rather than the other way round: `data-scrolled` while content is under it, `data-hidden` while a downward scroll has tucked it away. The styles read those two attributes — for the elevation and the hide — and so can yours, from plain CSS or a Tailwind arbitrary variant like `data-[scrolled]:shadow-2`.
+
+## Import
+
+```tsx
+import { AppBar } from "@forte-ui/react";
+```
+
+`AppBar` is a namespace of four parts. `Root` is the surface and the grid; the other three are plain `<div>`s that place themselves in it, so any subset in any order still lays out — a bar with only a title, a bar with only a trailing cluster, a bar whose trailing slot is written first.
+
+```tsx
+<AppBar.Root position="sticky" elevateOnScroll>
+  <AppBar.Leading>
+    <Button variant="ghost" iconOnly aria-label="Open navigation">…</Button>
+  </AppBar.Leading>
+  <AppBar.Title>Inbox</AppBar.Title>
+  <AppBar.Trailing>
+    <ThemeToggle />
+    <Avatar.Root>…</Avatar.Root>
+  </AppBar.Trailing>
+</AppBar.Root>
+```
+
+The slots are slots, not controls: whatever goes in them is a real component with its own props, and wrapping one would mean re-exposing all of them. Compose a [`Button`](/components/button/), a [`NavigationMenu`](/components/navigation-menu/), an [`Avatar`](/components/avatar/); the bar only decides where they sit.
+
+<Callout kind="note">
+  The parts are also exported flat — `AppBarRoot`, `AppBarTitle`, and so on. In a React **Server** Component, use those: `AppBar.Root` cannot be dereferenced there, because the namespace object crosses the client boundary as an opaque reference whose properties are `undefined` — a runtime error the type checker does not catch.
+</Callout>
+
+## Examples
+
+### Variants
+
+Four levels of chrome. `plain` is a bare row; `panel` fills with the panel colour; `outline` sits on the page background with a hairline underneath; `frosted` is `outline` made translucent, with the content behind it blurred.
+
+<DemoBlock id="app-bar/variants" />
+
+`frosted` is an enhancement in two directions, and the bar never depends on either. Where `backdrop-filter` is unsupported the bar is simply translucent. For a reader who has asked the OS to reduce transparency, it is opaque: the global glass alpha the fill is mixed at is already raised to `1` under that preference, and the blur sits behind the same query. `prefers-contrast: more` gets the opaque bar too.
+
+### Tones
+
+`tone` is the second axis — which colour set the bar draws from — and it is independent of `variant`: a `panel` bar in `primary` is filled with the accent, an `outline` one sits on the accent's soft step.
+
+<DemoBlock id="app-bar/tones" />
+
+Nothing inside the bar is told the tone. A coloured bar **re-points the foreground tokens for its subtree** — `--forte-color-foreground`, `-foreground-muted`, `-panel-hover`, `-panel-active` and the two border tokens — so the ghost buttons, the muted caption and the separator you compose into it recolour themselves for contrast, without a prop. Popups opened from the bar are portaled to `<body>` and keep the page's palette, which is what you want from a menu.
+
+<Callout kind="warn">
+  That hand-off covers what reads the foreground tokens: ghost and outline controls, text, links, separators, icons. A control that paints its own surface — a text [`Input`](/components/input/), a solid `primary` button on a `primary` bar — keeps that surface and is your call: give the button `tone="neutral"`, or leave the field for a `neutral` bar.
+</Callout>
+
+### Sizes
+
+Each step is the matching control height plus the bar's padding, so a `size="sm"` bar fits `size="sm"` buttons exactly and the title steps with it. The bar's `size` sets the bar, not its contents — the controls keep their own `size` prop, matched here by hand.
+
+<DemoBlock id="app-bar/sizes" />
+
+Because the row height is a control-height token, `data-forte-density` already drives it and a compact app gets a shorter bar without touching the component.
+
+### Sticky, and elevating on scroll
+
+`position="sticky"` pins the bar to the top of its **scroll container** once the page reaches it — the nearest ancestor that scrolls, which is the window for a page bar and the box for a bar at the top of a [`ScrollArea`](/components/scroll-area/), a dialog body or the demo below. It needs no layout compensation: the bar keeps its place in the flow.
+
+`elevateOnScroll` is the Material "on scroll" behaviour: at the top the bar is part of the page, with no fill and no edge, and once content is under it, it is a surface over the page — the variant's fill and hairline, plus a shadow.
+
+<DemoBlock id="app-bar/sticky" />
+
+Only a `neutral` bar drops its fill at rest. On a coloured tone the fill is what carries the text's contrast, so there the surface stays and only the shadow is deferred. And `plain` has no surface to reveal, so pair the prop with one of the other three.
+
+`position="fixed"` is also available, for a bar that is not the first thing in its scroll container. It leaves the flow entirely, so the content under it must add its own top padding — the bar's height is `--forte-app-bar-row-min-block-size` plus twice `--forte-app-bar-py`, plus the hairline. Reach for `sticky` first; it is the same pinning without the arithmetic.
+
+### Hiding on scroll
+
+`hideOnScroll` slides the bar out of view while the page scrolls down and back in as soon as it scrolls up, by any amount. It never hides within its own height of the top, and a control inside it that holds focus keeps it on screen — Tab into a hidden bar and it returns.
+
+<DemoBlock id="app-bar/hide-on-scroll" />
+
+The hide is a move even under reduced motion, and that is a considered exception to the library's rule of collapsing geometry. A bar that faded in place would still cover the content under it and swallow the taps meant for that content; one that also gave up pointer events would have to leave the accessibility tree to be consistent, taking the page's landmark with it. So the bar moves — a state change the page asked for, not an ornament — on a duration that reduced motion shortens rather than removes.
+
+### A centred measure
+
+A marketing header wants its content lined up with the page column below it while the surface still runs edge to edge. That is one knob, not a prop:
+
+```tsx
+<AppBar.Root style={{ "--forte-app-bar-max-inline-size": "72rem" }}>
+```
+
+Extra width becomes padding on both sides, and the edge padding is still respected below the measure.
+
+## Accessibility
+
+**The landmark.** `AppBar.Root` renders a `<header>`, which is the page's `banner` landmark when it is not inside `<main>`, an `<article>`, a `<section>` or a `<nav>`. A bar that heads a panel or a dialog body rather than the page should not be a banner — pass `render={<div />}`, or give it `aria-label` if it should stay a landmark with a name of its own.
+
+**Headings.** `AppBar.Title` renders a `<div>`, not a heading — the same bar heads an `h1` screen and an `h2` panel, and a hardcoded level would put a wrong entry in the outline on one of them. Nest the heading when the bar genuinely names the document:
+
+```tsx
+<AppBar.Title>
+  <h1>Inbox</h1>
+</AppBar.Title>
+```
+
+A heading placed there takes the bar's typography rather than the UA's, so the semantic version looks identical to the plain one.
+
+**Names.** Every icon-only control in the bar needs its own `aria-label` — an icon is not an accessible name — and the [`Button`](/components/button/)'s `iconOnly` holds the 24×24 minimum hit target from SC 2.5.8 for you.
+
+**Focus.** A bar hidden by `hideOnScroll` stays in the tree and focusable; it slides back the moment a control inside it receives focus, so keyboard users reach everything a pointer user can.
+
+**Under forced colours** the fill, the blur and the shadow are stripped, and the hairline is the whole bar: every variant paints it in the system ink, `plain` included. Text and icons take `CanvasText`, and `frosted` is opaque there and under `prefers-contrast: more` alike.
+
+## Theming
+
+Everything below is declared on `AppBar.Root` itself, which is also why an ancestor is the wrong place to set one — the element's own declaration beats an inherited value. Override them on the root through its `className` or a `style` object, or re-point the global tokens in the Default column to move every bar at once.
+
+<ThemingTable component="AppBar" part="root" />
+
+The surface slots — `--forte-app-bar-bg`, `-fg`, `-border-color`, `-shadow` — are the whole variant system: `variant` and `tone` fill them in, and a one-off look is those properties on one element. The three hand-off slots — `-fg-muted`, `-hover`, `-active` — plus `-separator` are what a coloured bar passes down to its subtree as the global foreground tokens; on a `neutral` bar they are declared but not handed down, because the neutral slots read those very tokens and a custom property that references itself is a cycle.
+
+<Callout>
+  `--forte-app-bar-inset-block-start` is read by the scroll tracking as well as the styles. Set it — rather than `top` directly — when a bar sits below another one, so `data-scrolled` still lands the moment the page moves under it.
+</Callout>
+
+State is on `data-variant`, `data-tone`, `data-size`, `data-position`, `data-scrolled` and `data-hidden`, reachable from plain CSS or a Tailwind arbitrary variant without a wrapper element. Part markers are `data-forte="app-bar"` on the root and `app-bar-leading`, `app-bar-title`, `app-bar-trailing` on the parts; a bar that tracks scroll also renders `app-bar-sentinel`, the 1px sibling the observer watches.
+
+## API reference
+
+Every part is a plain element and takes that element's whole prop surface, `ref` included. Only `AppBar.Root` has a `render` prop, for swapping the `<header>`.
+
+### AppBar.Root
+
+<PropTable component="AppBarRoot" />
+
+### AppBar.Leading
+
+<PropTable component="AppBarLeading" />
+
+### AppBar.Title
+
+<PropTable component="AppBarTitle" />
+
+### AppBar.Trailing
+
+<PropTable component="AppBarTrailing" />

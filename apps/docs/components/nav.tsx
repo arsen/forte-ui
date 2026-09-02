@@ -50,6 +50,7 @@ const NAV: NavGroup[] = [
     items: [
       { title: "Accordion", href: "/components/accordion/" },
       { title: "Alert", href: "/components/alert/" },
+      { title: "App Bar", href: "/components/app-bar/" },
       { title: "Aspect Ratio", href: "/components/aspect-ratio/" },
       { title: "Avatar", href: "/components/avatar/" },
       { title: "Badge", href: "/components/badge/" },

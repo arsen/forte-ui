@@ -1,0 +1,499 @@
+/*
+ * AppBar
+ *
+ * The bar across the top of a screen. No Base UI primitive underneath and no
+ * keyboard contract of its own — a header is a landmark, not a widget — so
+ * what this file decides is the surface, the row, and how both answer the
+ * page scrolling under them.
+ *
+ * Three axes on the root, as everywhere else in the library:
+ *   data-variant   how much chrome the bar carries (plain / panel / outline /
+ *                  frosted)
+ *   data-tone      which colour set it draws from (neutral / primary /
+ *                  secondary)
+ *   data-size      how tall the bar is, and how large its title
+ *
+ * plus the two the page writes, through the observer in `AppBar.tsx`:
+ *   data-scrolled  content has moved under the bar
+ *   data-hidden    a downward scroll has tucked it away
+ *
+ * ---------------------------------------------------------------------------
+ * The layout is one grid, placed by name
+ * ---------------------------------------------------------------------------
+ * The root is a three-column grid — `auto minmax(0, 1fr) auto` — and the
+ * three slots place themselves in it by name: leading in column 1, title in
+ * column 2, trailing in column 3. Any subset in any DOM order lands in the
+ * right place, which a flex row with `margin-inline-start: auto` on the
+ * trailing slot would only manage while all three are present.
+ *
+ * `column-gap` is deliberately 0. A grid keeps its gaps whether or not the
+ * tracks hold anything, so a bar with no leading slot would carry a dead gap
+ * before the title. The gap is a margin on the slot instead — Card's reason
+ * — and a margin only exists when its element does.
+ *
+ * ---------------------------------------------------------------------------
+ * A coloured bar re-points the foreground tokens for its subtree
+ * ---------------------------------------------------------------------------
+ * Nothing composed into the bar is told about its tone. A ghost `Button`, a
+ * `Separator`, a link — each reads the global tokens for its colours, and a
+ * bar filled with the accent would leave them painted for a grey panel. So
+ * `[data-tone="primary"]` and `[data-tone="secondary"]` re-declare
+ * `--forte-color-foreground`, `-foreground-muted`, `-panel-hover`,
+ * `-panel-active` and the two border tokens on the root. Every descendant's
+ * own knob — `--forte-button-tone-text: var(--forte-color-foreground)` — is
+ * declared on that descendant, so its `var()` resolves there and picks up
+ * the bar's value. Popups are portaled to `<body>` and keep the page's.
+ *
+ * This is the one place in the library a component overrides a global token
+ * for its subtree, and it is scoped away from `neutral` for a reason that is
+ * not taste: the neutral slots READ those same tokens, and a custom property
+ * that references itself, even through two hops, is a cycle — both halves
+ * compute to the guaranteed-invalid value and `color` falls back to
+ * inheriting. Neutral leaves the globals alone; the coloured tones only read
+ * `--forte-color-primary-*` / `-secondary-*`, which are never re-pointed.
+ *
+ * ---------------------------------------------------------------------------
+ * The hide is a move, even under reduced motion
+ * ---------------------------------------------------------------------------
+ * `[data-hidden]` translates the bar off the top by its own height. It is
+ * NOT gated on `--forte-motion-ok`, unlike every decorative offset in the
+ * library, because the alternatives are worse for exactly the reader the
+ * gate protects: a bar that fades in place still covers the content under
+ * it and swallows the taps meant for that content, and one that also drops
+ * `pointer-events` has to be `visibility: hidden` to leave the accessibility
+ * tree consistently, which removes the page's landmark while it is off
+ * screen. So the bar moves — a state change the page asked for, not an
+ * ornament — on `--forte-duration-normal`, which reduced motion shortens
+ * rather than removes. Off screen it stays in the tree and focusable, and
+ * `:focus-within` brings it back the moment a control inside it is reached.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens, declared here on the bar itself so an ancestor's
+     * value is only inherited and never wins. Re-skin one bar by setting
+     * them on it (an unlayered consumer rule beats this layer at any
+     * specificity); re-skin every bar by re-pointing the global tokens they
+     * resolve to. */
+    /** Inline padding at the bar's edges. `size` re-points it. */
+    --forte-app-bar-px: var(--forte-control-px-md);
+    /** Block padding above and below the row. `size` re-points it. */
+    --forte-app-bar-py: var(--forte-space-3);
+    /** Minimum height of the row, before the padding. `size` re-points it
+     * to the matching control height, so the bar fits its own buttons. */
+    --forte-app-bar-row-min-block-size: var(--forte-control-h-md);
+    /** Gap between the leading slot, the title and the trailing slot. */
+    --forte-app-bar-gap: var(--forte-space-3);
+    /** Gap between the items inside a slot. Tighter than the slot gap, so
+     * two icon buttons read as a pair. */
+    --forte-app-bar-item-gap: var(--forte-space-1);
+    /** Width the row is centred within. `100%` is edge to edge; set a
+     * measure — `72rem` — for a marketing header whose content should line
+     * up with the page column below it. Extra width becomes padding. */
+    --forte-app-bar-max-inline-size: 100%;
+    /** Size of the title. `size` re-points it. */
+    --forte-app-bar-title-font-size: var(--forte-font-size-3);
+    /** Weight of the title. */
+    --forte-app-bar-title-font-weight: var(--forte-font-weight-semibold);
+    /** Distance from the top of the scroll container while `sticky` or
+     * `fixed` — the height of another bar above this one, typically. The
+     * scroll tracking reads it, so `data-scrolled` still lands on time. */
+    --forte-app-bar-inset-block-start: 0px;
+    /** Stacking level while `sticky` or `fixed`. Popups are portaled to
+     * `<body>` and never compete with it; this is for the page's own
+     * positioned content. */
+    --forte-app-bar-z-index: 10;
+    /** Width of the hairline under the bar. Reserved even when the variant
+     * paints it transparent, so `elevateOnScroll` gaining an edge moves
+     * nothing, and so forced colours have a border to recolour. */
+    --forte-app-bar-border-width: 1px;
+    /** Shadow the bar gains under `elevateOnScroll` once scrolled. */
+    --forte-app-bar-scrolled-shadow: var(--forte-shadow-2);
+    /** Opacity of the `frosted` fill. Defaults to the global glass alpha,
+     * which `prefers-reduced-transparency` already raises to `1`. */
+    --forte-app-bar-glass-alpha: var(--forte-glass-alpha);
+    /** Blur radius behind a `frosted` bar. */
+    --forte-app-bar-blur: 12px;
+    /** Duration of the surface changes — fill, edge, shadow. */
+    --forte-app-bar-duration: var(--forte-duration-fast);
+    /** Duration of the hide. */
+    --forte-app-bar-move-duration: var(--forte-duration-normal);
+    /** Easing for everything the bar animates. */
+    --forte-app-bar-ease: var(--forte-ease-standard);
+
+    /* Per-tone palette. Two sets of slots — `solid` for the filled `panel`
+     * variant, `soft` for the three that sit on the page — filled in by
+     * [data-tone] below. This is the neutral set. */
+    --forte-app-bar-tone-solid: var(--forte-color-panel);
+    --forte-app-bar-tone-on-solid: var(--forte-color-foreground);
+    --forte-app-bar-tone-on-solid-muted: var(--forte-color-foreground-muted);
+    --forte-app-bar-tone-solid-hover: var(--forte-color-panel-hover);
+    --forte-app-bar-tone-solid-active: var(--forte-color-panel-active);
+    --forte-app-bar-tone-solid-border: var(--forte-color-border-muted);
+    --forte-app-bar-tone-solid-separator: var(--forte-color-border);
+    --forte-app-bar-tone-soft: var(--forte-color-background);
+    --forte-app-bar-tone-soft-text: var(--forte-color-foreground);
+    --forte-app-bar-tone-soft-text-muted: var(--forte-color-foreground-muted);
+    --forte-app-bar-tone-soft-hover: var(--forte-color-panel-hover);
+    --forte-app-bar-tone-soft-active: var(--forte-color-panel-active);
+    --forte-app-bar-tone-soft-border: var(--forte-color-border-muted);
+    --forte-app-bar-tone-soft-separator: var(--forte-color-border);
+
+    /* The surface, picked from the slots above by [data-variant] below. This
+     * is the `panel` set. */
+    /** Fill behind the bar. `variant` and `tone` set it. */
+    --forte-app-bar-bg: var(--forte-app-bar-tone-solid);
+    /** Text and icon colour, inherited by everything inside. `variant` and
+     * `tone` set it. */
+    --forte-app-bar-fg: var(--forte-app-bar-tone-on-solid);
+    /** Muted text colour, handed to descendants as
+     * `--forte-color-foreground-muted` on the coloured tones. */
+    --forte-app-bar-fg-muted: var(--forte-app-bar-tone-on-solid-muted);
+    /** Hover fill handed to the ghost controls inside a coloured bar. */
+    --forte-app-bar-hover: var(--forte-app-bar-tone-solid-hover);
+    /** Active fill handed to the ghost controls inside a coloured bar. */
+    --forte-app-bar-active: var(--forte-app-bar-tone-solid-active);
+    /** Colour of the hairline under the bar. `variant` and `tone` set it. */
+    --forte-app-bar-border-color: var(--forte-app-bar-tone-solid-border);
+    /** Rule colour handed to `Separator`s inside a coloured bar. */
+    --forte-app-bar-separator: var(--forte-app-bar-tone-solid-separator);
+    /** Drop shadow. `none` until `elevateOnScroll` has something to lift. */
+    --forte-app-bar-shadow: none;
+
+    /* Private: how far a focus ring reaches outside its element. The title
+     * clips its contents for the ellipsis, and this is the margin it leaves
+     * so a ring on a link inside is not cut. */
+    --forte-app-bar-ring: calc(var(--forte-focus-ring-width) + var(--forte-focus-ring-offset));
+
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: minmax(var(--forte-app-bar-row-min-block-size), auto);
+    align-items: center;
+
+    padding-block: var(--forte-app-bar-py);
+    /* The larger of the edge padding and whatever centres the measure: at
+     * the default `100%` the second term is `0` and this is just the
+     * padding; with a measure set, the bar's content sits in a centred
+     * column and the surface still runs edge to edge. */
+    padding-inline: max(
+      var(--forte-app-bar-px),
+      calc((100% - var(--forte-app-bar-max-inline-size)) / 2)
+    );
+    border: 0;
+    border-block-end: var(--forte-app-bar-border-width) solid var(--forte-app-bar-border-color);
+    background-color: var(--forte-app-bar-bg);
+    box-shadow: var(--forte-app-bar-shadow);
+
+    color: var(--forte-app-bar-fg);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-font-size-2);
+    line-height: var(--forte-line-height-normal);
+
+    /* Chrome, not a control: the bar performs no action, so it takes
+     * `default` per the cursor table in AGENTS.md. Each control inside
+     * declares its own `pointer`. */
+    cursor: default;
+
+    /* `translate` as its own property, never through `transform`, so the
+     * hide cannot fight a consumer's transform on the same element. */
+    transition:
+      background-color var(--forte-app-bar-duration) var(--forte-app-bar-ease),
+      border-color var(--forte-app-bar-duration) var(--forte-app-bar-ease),
+      box-shadow var(--forte-app-bar-duration) var(--forte-app-bar-ease),
+      translate var(--forte-app-bar-move-duration) var(--forte-app-bar-ease);
+  }
+
+  /* Position ---------------------------------------------------------------
+   * `static` sets nothing: the bar is a block in the flow like any other.
+   * The two attached positions share the inset and the stacking level; only
+   * `fixed` needs the inline inset, because leaving the flow also leaves
+   * behind the width the flow gave it.
+   * ---------------------------------------------------------------------- */
+  .root[data-position="sticky"] {
+    position: sticky;
+    inset-block-start: var(--forte-app-bar-inset-block-start);
+    z-index: var(--forte-app-bar-z-index);
+  }
+
+  .root[data-position="fixed"] {
+    position: fixed;
+    inset-block-start: var(--forte-app-bar-inset-block-start);
+    inset-inline: 0;
+    z-index: var(--forte-app-bar-z-index);
+  }
+
+  /* Hide on scroll — see the header for why this moves under reduced
+   * motion. The extra `--forte-space-4` carries the shadow out with the
+   * bar; at exactly its own height the blur would still peek over the top
+   * edge of the viewport. */
+  .root[data-hidden]:not(:focus-within) {
+    translate: 0 calc(-1 * (100% + var(--forte-space-4)));
+  }
+
+  /* Sizes ------------------------------------------------------------------
+   * Each step is a control height and the padding that goes with it, so the
+   * bar is exactly as tall as the matching buttons need. The title steps
+   * with it.
+   * ---------------------------------------------------------------------- */
+  .root[data-size="sm"] {
+    --forte-app-bar-px: var(--forte-control-px-sm);
+    --forte-app-bar-py: var(--forte-space-2);
+    --forte-app-bar-row-min-block-size: var(--forte-control-h-sm);
+    --forte-app-bar-title-font-size: var(--forte-font-size-2);
+  }
+
+  .root[data-size="md"] {
+    --forte-app-bar-px: var(--forte-control-px-md);
+    --forte-app-bar-py: var(--forte-space-3);
+    --forte-app-bar-row-min-block-size: var(--forte-control-h-md);
+    --forte-app-bar-title-font-size: var(--forte-font-size-3);
+  }
+
+  .root[data-size="lg"] {
+    --forte-app-bar-px: var(--forte-control-px-lg);
+    --forte-app-bar-py: var(--forte-space-3);
+    --forte-app-bar-row-min-block-size: var(--forte-control-h-lg);
+    --forte-app-bar-title-font-size: var(--forte-font-size-4);
+  }
+
+  /* Tones ------------------------------------------------------------------
+   * The coloured tones use the pairs the ramp promises: `on-primary` on
+   * step 9 for the fill, step 11 on step 3 for the soft surface. The muted
+   * text on a fill is a mix of the two rather than a lighter step, because
+   * a second tint of the same hue is not a pair the ramp guarantees
+   * anything about; mixing toward the fill keeps it legible at any seed.
+   * ---------------------------------------------------------------------- */
+  .root[data-tone="primary"] {
+    --forte-app-bar-tone-solid: var(--forte-color-primary);
+    --forte-app-bar-tone-on-solid: var(--forte-color-on-primary);
+    --forte-app-bar-tone-on-solid-muted: color-mix(
+      in oklab,
+      var(--forte-color-on-primary) 78%,
+      var(--forte-color-primary)
+    );
+    --forte-app-bar-tone-solid-hover: var(--forte-color-primary-hover);
+    --forte-app-bar-tone-solid-active: var(--forte-color-primary-active);
+    --forte-app-bar-tone-solid-border: transparent;
+    --forte-app-bar-tone-solid-separator: color-mix(
+      in oklab,
+      var(--forte-color-on-primary) 32%,
+      transparent
+    );
+    --forte-app-bar-tone-soft: var(--forte-color-primary-soft);
+    --forte-app-bar-tone-soft-text: var(--forte-color-primary-text);
+    --forte-app-bar-tone-soft-text-muted: var(--forte-color-primary-text);
+    --forte-app-bar-tone-soft-hover: var(--forte-color-primary-soft-hover);
+    --forte-app-bar-tone-soft-active: var(--forte-color-primary-soft-active);
+    --forte-app-bar-tone-soft-border: var(--forte-color-primary-border);
+    --forte-app-bar-tone-soft-separator: var(--forte-color-primary-border);
+  }
+
+  .root[data-tone="secondary"] {
+    --forte-app-bar-tone-solid: var(--forte-color-secondary);
+    --forte-app-bar-tone-on-solid: var(--forte-color-on-secondary);
+    --forte-app-bar-tone-on-solid-muted: color-mix(
+      in oklab,
+      var(--forte-color-on-secondary) 78%,
+      var(--forte-color-secondary)
+    );
+    --forte-app-bar-tone-solid-hover: var(--forte-color-secondary-hover);
+    --forte-app-bar-tone-solid-active: var(--forte-color-secondary-active);
+    --forte-app-bar-tone-solid-border: transparent;
+    --forte-app-bar-tone-solid-separator: color-mix(
+      in oklab,
+      var(--forte-color-on-secondary) 32%,
+      transparent
+    );
+    --forte-app-bar-tone-soft: var(--forte-color-secondary-soft);
+    --forte-app-bar-tone-soft-text: var(--forte-color-secondary-text);
+    --forte-app-bar-tone-soft-text-muted: var(--forte-color-secondary-text);
+    --forte-app-bar-tone-soft-hover: var(--forte-color-secondary-soft-hover);
+    --forte-app-bar-tone-soft-active: var(--forte-color-secondary-soft-active);
+    --forte-app-bar-tone-soft-border: var(--forte-color-secondary-border);
+    --forte-app-bar-tone-soft-separator: var(--forte-color-secondary-border);
+  }
+
+  /* The subtree hand-off — see the header. Neutral is deliberately absent. */
+  .root[data-tone="primary"],
+  .root[data-tone="secondary"] {
+    --forte-color-foreground: var(--forte-app-bar-fg);
+    --forte-color-foreground-muted: var(--forte-app-bar-fg-muted);
+    --forte-color-foreground-subtle: var(--forte-app-bar-fg-muted);
+    --forte-color-panel-hover: var(--forte-app-bar-hover);
+    --forte-color-panel-active: var(--forte-app-bar-active);
+    --forte-color-border: var(--forte-app-bar-separator);
+    --forte-color-border-muted: var(--forte-app-bar-separator);
+  }
+
+  /* Variants ---------------------------------------------------------------
+   * `panel` is the only filled one and takes the solid slots. The other
+   * three sit on the page and take the soft slots; they differ only in what
+   * the fill is — nothing, the page, or the page seen through glass.
+   * ---------------------------------------------------------------------- */
+  .root[data-variant="plain"],
+  .root[data-variant="outline"],
+  .root[data-variant="frosted"] {
+    --forte-app-bar-bg: var(--forte-app-bar-tone-soft);
+    --forte-app-bar-fg: var(--forte-app-bar-tone-soft-text);
+    --forte-app-bar-fg-muted: var(--forte-app-bar-tone-soft-text-muted);
+    --forte-app-bar-hover: var(--forte-app-bar-tone-soft-hover);
+    --forte-app-bar-active: var(--forte-app-bar-tone-soft-active);
+    --forte-app-bar-border-color: var(--forte-app-bar-tone-soft-border);
+    --forte-app-bar-separator: var(--forte-app-bar-tone-soft-separator);
+  }
+
+  .root[data-variant="plain"] {
+    --forte-app-bar-bg: transparent;
+    --forte-app-bar-border-color: transparent;
+  }
+
+  .root[data-variant="frosted"] {
+    /* The page colour at the glass alpha. A11y sets the alpha to `1` where
+     * the reader has asked for no transparency, and `color-mix` at 100% is
+     * just the colour, so the opaque path costs no extra rule. */
+    --forte-app-bar-bg: color-mix(
+      in oklab,
+      var(--forte-app-bar-tone-soft) calc(var(--forte-app-bar-glass-alpha) * 100%),
+      transparent
+    );
+  }
+
+  /* The blur is an enhancement in two directions: only where the browser
+   * can blur, and never for a reader who has asked for less transparency —
+   * the translucent fill on its own already reads over content, so nothing
+   * depends on this block matching. */
+  @supports (backdrop-filter: blur(1px)) {
+    @media (prefers-reduced-transparency: no-preference) {
+      .root[data-variant="frosted"] {
+        backdrop-filter: blur(var(--forte-app-bar-blur));
+      }
+    }
+  }
+
+  /* Elevate on scroll ------------------------------------------------------
+   * At rest the bar is part of the page; once content is under it, it is a
+   * surface over the page. Only a neutral bar drops its fill at rest — on
+   * a coloured tone the fill is what carries the text's contrast, so there
+   * the surface stays and only the shadow is deferred.
+   *
+   * (0,4,0) and (0,3,0) against the variants' (0,2,0), so the resting rule
+   * wins whatever the variant — including `frosted`'s blur, which would
+   * otherwise frost a transparent bar over the hero under it.
+   * ---------------------------------------------------------------------- */
+  .root[data-tone="neutral"][data-elevate-on-scroll]:not([data-scrolled]) {
+    --forte-app-bar-bg: transparent;
+    --forte-app-bar-border-color: transparent;
+    backdrop-filter: none;
+  }
+
+  .root[data-elevate-on-scroll][data-scrolled] {
+    --forte-app-bar-shadow: var(--forte-app-bar-scrolled-shadow);
+  }
+
+  /* Slots ------------------------------------------------------------------
+   * Placed by name — see the header for why there is no wrapper and no
+   * `column-gap`.
+   * ---------------------------------------------------------------------- */
+  .leading,
+  .trailing {
+    display: flex;
+    align-items: center;
+    gap: var(--forte-app-bar-item-gap);
+    min-inline-size: 0;
+  }
+
+  .leading {
+    grid-column: 1;
+    margin-inline-end: var(--forte-app-bar-gap);
+  }
+
+  .trailing {
+    grid-column: 3;
+    margin-inline-start: var(--forte-app-bar-gap);
+  }
+
+  /* Title ------------------------------------------------------------------
+   * A block, not a flex row: `text-overflow: ellipsis` only applies to a
+   * block container's own inline content, and a flex container wraps its
+   * text in an anonymous item the ellipsis cannot reach.
+   *
+   * The clip needed for the ellipsis would also cut the focus ring off a
+   * link placed in the title, so the box is padded out by the ring's reach
+   * and pulled back by the same margin: the layout is unchanged and the
+   * clip edge sits one ring further out.
+   * ---------------------------------------------------------------------- */
+  .title {
+    grid-column: 2;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: var(--forte-app-bar-ring);
+    margin: calc(-1 * var(--forte-app-bar-ring));
+
+    color: inherit;
+    font-size: var(--forte-app-bar-title-font-size);
+    font-weight: var(--forte-app-bar-title-font-weight);
+    line-height: var(--forte-line-height-tight);
+    letter-spacing: var(--forte-letter-spacing-tight);
+  }
+
+  .title[data-align="center"] {
+    text-align: center;
+  }
+
+  /* A heading nested for the document outline takes the title's type
+   * rather than the UA's, so the semantic version looks identical. */
+  .title > :is(h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  /* The observer's target — see `AppBar.tsx`. */
+  .sentinel {
+    block-size: 1px;
+    margin-block-end: -1px;
+    pointer-events: none;
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer forte.a11y {
+  /* A translucent bar is, by construction, content showing through other
+   * content — the opposite of what both of these readers asked for. Forced
+   * colours strips the fill anyway; `prefers-contrast: more` does not, so
+   * the alpha is raised by hand. (`prefers-reduced-transparency` is handled
+   * upstream: a11y.css sets the global glass alpha to `1`, and the blur is
+   * behind that query in the components layer.) */
+  @media (forced-colors: active), (prefers-contrast: more) {
+    .root[data-variant="frosted"] {
+      --forte-app-bar-glass-alpha: 1;
+      backdrop-filter: none;
+    }
+  }
+
+  @media (forced-colors: active) {
+    /* Fill and shadow are gone here, and the hairline is the whole bar:
+     * every variant keeps its reserved 1px and paints it in the system ink,
+     * `plain` included — `transparent` is replaced with a system colour, so
+     * it would have gained an edge regardless, and this at least chooses
+     * which one. Explicit so a future tint cannot quietly take the
+     * boundary with it. */
+    .root {
+      background-color: Canvas;
+      border-block-end-color: CanvasText;
+      box-shadow: none;
+    }
+
+    .root,
+    .title,
+    .leading,
+    .trailing {
+      color: CanvasText;
+    }
+  }
+}
