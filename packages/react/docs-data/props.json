@@ -266,6 +266,13 @@
         "description": "Replaces the rendered `<header>` with another element or component —\n`render={<div />}` for a bar that is not the page's banner, such as one\nheading a panel or a dialog body."
       },
       {
+        "name": "scrollThreshold",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How far the scroll container has to move, in pixels, before the bar\ncounts as scrolled. `0` is the first pixel past the bar's resting\nposition; `80` holds the bar in its at-rest state until the page has\nmoved 80px under it. Negative values are clamped to `0` — the bar\ncannot be scrolled before it is reached.\n\nThis moves `data-scrolled`, not the elevation: everything keyed on that\nattribute shifts with it — `elevateOnScroll`, and any rule of your own\nreading `[data-scrolled]` for a border, a background or a shorter\ntitle. `hideOnScroll` is the exception and is unaffected, because\n`data-hidden` follows scroll *direction* rather than distance.\n\nIgnored while `static`, along with the rest of the scroll tracking."
+      },
+      {
         "name": "size",
         "type": "AppBarSize",
         "required": false,

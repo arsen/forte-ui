@@ -18,7 +18,8 @@ export type AppBarTitleAlign = "start" | "center";
  * both are measured rather than computed from a scroll offset:
  *
  *   data-scrolled  the page has moved past the bar's resting position — the
- *                  bar is now over content instead of above it
+ *                  bar is now over content instead of above it, or past
+ *                  `scrollThreshold` beyond it
  *   data-hidden    the last meaningful scroll went down, and the bar is
  *                  further down the page than its own height
  *
@@ -55,6 +56,7 @@ function useScrollState(
   sentinelRef: React.RefObject<HTMLDivElement | null>,
   enabled: boolean,
   hideOnScroll: boolean,
+  scrollThreshold: number,
 ) {
   const [scrolled, setScrolled] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
@@ -73,12 +75,29 @@ function useScrollState(
     // `top` pixels down, so the sentinel has to leave through a viewport
     // shrunk by that much or `data-scrolled` would arrive late.
     const top = parseFloat(getComputedStyle(header).top) || 0;
+    // The threshold rides on the same margin, with the opposite sign, rather
+    // than on the sentinel's own height: both delay the crossing by the same
+    // distance, but this one costs the layout nothing and leaves the sentinel
+    // at 1px — the smallest box the observer can still measure.
+    //
+    // The signs are not symmetric and the shorthand hides it. `top` SHRINKS
+    // the root, moving the line the sentinel has to cross downward to where
+    // the bar actually pins; the threshold GROWS it, holding that line above
+    // the sentinel's resting position so the sentinel has to travel the extra
+    // distance to clear it. Collapsing them into one subtraction is the whole
+    // mechanism — with `-(top + threshold)` the line starts below a sentinel
+    // that rests at the top of the container, and the bar is born scrolled.
+    //
+    // Clamped at zero because a negative threshold would mean "scrolled
+    // before the bar is reached", and the sentinel sits at the bar's resting
+    // position: there is nothing above it to observe.
+    const rootMarginTop = Math.max(0, scrollThreshold) - top;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry) setScrolled(!entry.isIntersecting);
       },
-      { root: scroller, rootMargin: `-${top}px 0px 0px 0px`, threshold: 0 },
+      { root: scroller, rootMargin: `${rootMarginTop}px 0px 0px 0px`, threshold: 0 },
     );
     observer.observe(sentinel);
 
@@ -109,7 +128,7 @@ function useScrollState(
       observer.disconnect();
       target.removeEventListener("scroll", onScroll);
     };
-  }, [headerRef, sentinelRef, enabled, hideOnScroll]);
+  }, [headerRef, sentinelRef, enabled, hideOnScroll, scrollThreshold]);
 
   return { scrolled, hidden };
 }
@@ -183,6 +202,23 @@ export interface AppBarRootProps
    */
   hideOnScroll?: boolean;
   /**
+   * How far the scroll container has to move, in pixels, before the bar
+   * counts as scrolled. `0` is the first pixel past the bar's resting
+   * position; `80` holds the bar in its at-rest state until the page has
+   * moved 80px under it. Negative values are clamped to `0` — the bar
+   * cannot be scrolled before it is reached.
+   *
+   * This moves `data-scrolled`, not the elevation: everything keyed on that
+   * attribute shifts with it — `elevateOnScroll`, and any rule of your own
+   * reading `[data-scrolled]` for a border, a background or a shorter
+   * title. `hideOnScroll` is the exception and is unaffected, because
+   * `data-hidden` follows scroll *direction* rather than distance.
+   *
+   * Ignored while `static`, along with the rest of the scroll tracking.
+   * @default 0
+   */
+  scrollThreshold?: number;
+  /**
    * Replaces the rendered `<header>` with another element or component —
    * `render={<div />}` for a bar that is not the page's banner, such as one
    * heading a panel or a dialog body.
@@ -235,6 +271,7 @@ export const AppBarRoot = React.forwardRef<HTMLElement, AppBarRootProps>(functio
     position = "static",
     elevateOnScroll = false,
     hideOnScroll = false,
+    scrollThreshold = 0,
     render,
     className,
     ...props
@@ -244,7 +281,13 @@ export const AppBarRoot = React.forwardRef<HTMLElement, AppBarRootProps>(functio
   const headerRef = React.useRef<HTMLElement>(null);
   const sentinelRef = React.useRef<HTMLDivElement>(null);
   const tracking = position !== "static";
-  const { scrolled, hidden } = useScrollState(headerRef, sentinelRef, tracking, hideOnScroll);
+  const { scrolled, hidden } = useScrollState(
+    headerRef,
+    sentinelRef,
+    tracking,
+    hideOnScroll,
+    scrollThreshold,
+  );
 
   const element = useRender({
     render,

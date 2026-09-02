@@ -86,6 +86,14 @@ Each height is a global density token — `--forte-app-bar-h-sm`, `-md`, `-lg` �
 
 Only a `neutral` bar drops its fill at rest. On a coloured tone the fill is what carries the text's contrast, so there the surface stays and only the shadow is deferred. And `plain` has no surface to reveal, so pair the prop with one of the other three.
 
+By default the bar elevates on the first pixel of scroll. `scrollThreshold` holds it in its at-rest state for longer — useful under a tall hero, where a shadow appearing the moment a finger moves reads as a twitch rather than a state change:
+
+```tsx
+<AppBar.Root position="sticky" elevateOnScroll scrollThreshold={80}>
+```
+
+The prop moves `data-scrolled` rather than the elevation, so it is not tied to `elevateOnScroll`: a bar that only reports the attribute, with a border or a background of your own hung off `[data-scrolled]`, gets the same delay. `hideOnScroll` is the exception — `data-hidden` follows the scroll's *direction*, not how far it has gone, so the threshold leaves it alone.
+
 `position="fixed"` is also available, for a bar that is not the first thing in its scroll container. It leaves the flow entirely, so the content under it must add its own top padding — the bar's height is the `--forte-app-bar-h-*` token for its size, hairline included. Reach for `sticky` first; it is the same pinning without the padding.
 
 ### Hiding on scroll
