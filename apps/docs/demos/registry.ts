@@ -171,6 +171,26 @@ import d_card_media from "./card/media";
 import d_card_media_src from "./card/media?raw";
 import d_card_variants from "./card/variants";
 import d_card_variants_src from "./card/variants?raw";
+import d_carousel_auto_height from "./carousel/auto-height";
+import d_carousel_auto_height_src from "./carousel/auto-height?raw";
+import d_carousel_autoplay from "./carousel/autoplay";
+import d_carousel_autoplay_src from "./carousel/autoplay?raw";
+import d_carousel_basic from "./carousel/basic";
+import d_carousel_basic_src from "./carousel/basic?raw";
+import d_carousel_centered from "./carousel/centered";
+import d_carousel_centered_src from "./carousel/centered?raw";
+import d_carousel_controlled from "./carousel/controlled";
+import d_carousel_controlled_src from "./carousel/controlled?raw";
+import d_carousel_lazy from "./carousel/lazy";
+import d_carousel_lazy_src from "./carousel/lazy?raw";
+import d_carousel_loop from "./carousel/loop";
+import d_carousel_loop_src from "./carousel/loop?raw";
+import d_carousel_per_view from "./carousel/per-view";
+import d_carousel_per_view_src from "./carousel/per-view?raw";
+import d_carousel_thumbs from "./carousel/thumbs";
+import d_carousel_thumbs_src from "./carousel/thumbs?raw";
+import d_carousel_vertical from "./carousel/vertical";
+import d_carousel_vertical_src from "./carousel/vertical?raw";
 import d_checkbox_basic from "./checkbox/basic";
 import d_checkbox_basic_src from "./checkbox/basic?raw";
 import d_checkbox_disabled from "./checkbox/disabled";
@@ -874,6 +894,16 @@ export type DemoId =
   | "card/form"
   | "card/media"
   | "card/variants"
+  | "carousel/auto-height"
+  | "carousel/autoplay"
+  | "carousel/basic"
+  | "carousel/centered"
+  | "carousel/controlled"
+  | "carousel/lazy"
+  | "carousel/loop"
+  | "carousel/per-view"
+  | "carousel/thumbs"
+  | "carousel/vertical"
   | "checkbox/basic"
   | "checkbox/disabled"
   | "checkbox/indeterminate"
@@ -1269,6 +1299,16 @@ const REGISTRY: Record<DemoId, Demo> = {
   "card/form": { Component: d_card_form, source: d_card_form_src, file: "card/form.tsx" },
   "card/media": { Component: d_card_media, source: d_card_media_src, file: "card/media.tsx" },
   "card/variants": { Component: d_card_variants, source: d_card_variants_src, file: "card/variants.tsx" },
+  "carousel/auto-height": { Component: d_carousel_auto_height, source: d_carousel_auto_height_src, file: "carousel/auto-height.tsx" },
+  "carousel/autoplay": { Component: d_carousel_autoplay, source: d_carousel_autoplay_src, file: "carousel/autoplay.tsx" },
+  "carousel/basic": { Component: d_carousel_basic, source: d_carousel_basic_src, file: "carousel/basic.tsx" },
+  "carousel/centered": { Component: d_carousel_centered, source: d_carousel_centered_src, file: "carousel/centered.tsx" },
+  "carousel/controlled": { Component: d_carousel_controlled, source: d_carousel_controlled_src, file: "carousel/controlled.tsx" },
+  "carousel/lazy": { Component: d_carousel_lazy, source: d_carousel_lazy_src, file: "carousel/lazy.tsx" },
+  "carousel/loop": { Component: d_carousel_loop, source: d_carousel_loop_src, file: "carousel/loop.tsx" },
+  "carousel/per-view": { Component: d_carousel_per_view, source: d_carousel_per_view_src, file: "carousel/per-view.tsx" },
+  "carousel/thumbs": { Component: d_carousel_thumbs, source: d_carousel_thumbs_src, file: "carousel/thumbs.tsx" },
+  "carousel/vertical": { Component: d_carousel_vertical, source: d_carousel_vertical_src, file: "carousel/vertical.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },
   "checkbox/disabled": { Component: d_checkbox_disabled, source: d_checkbox_disabled_src, file: "checkbox/disabled.tsx" },
   "checkbox/indeterminate": { Component: d_checkbox_indeterminate, source: d_checkbox_indeterminate_src, file: "checkbox/indeterminate.tsx" },

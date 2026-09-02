@@ -2813,6 +2813,179 @@
       }
     ]
   },
+  "Carousel": {
+    "name": "Carousel",
+    "tokens": [
+      {
+        "name": "--forte-carousel-gap",
+        "value": "var(--forte-space-4)",
+        "description": "Space between slides",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-controls-gap",
+        "value": "var(--forte-space-4)",
+        "description": "Space between the viewport and the dots or thumbnails under it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-radius",
+        "value": "var(--forte-radius-surface)",
+        "description": "Corner radius of the viewport, which clips the slides",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-duration",
+        "value": "var(--forte-duration-spring-precise)",
+        "description": "How long the track takes to settle on a slide after a button or a drag. Paired with the matching spring easing below: a shorter duration truncates the spring mid-settle",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-ease",
+        "value": "var(--forte-ease-spring-precise)",
+        "description": "Easing of that move",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-height-duration",
+        "value": "var(--forte-duration-normal)",
+        "description": "How long the viewport takes to grow or shrink to the slides in view under `autoHeight`",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-size",
+        "value": "var(--forte-control-h-md)",
+        "description": "Size of the round control buttons",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-inset",
+        "value": "var(--forte-space-3)",
+        "description": "How far in from the viewport's edge Prev and Next sit when rendered inside it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-bg",
+        "value": "var(--forte-color-panel)",
+        "description": "Background of a control",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-bg-hover",
+        "value": "var(--forte-color-panel-hover)",
+        "description": "Background of a control on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-color",
+        "value": "var(--forte-color-foreground)",
+        "description": "Icon colour of a control",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-border-color",
+        "value": "var(--forte-color-border)",
+        "description": "Border colour of a control",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-radius",
+        "value": "var(--forte-radius-pill)",
+        "description": "Corner radius of a control",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-control-shadow",
+        "value": "var(--forte-shadow-2)",
+        "description": "Shadow under a control, which is what lifts it off a photo",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-dot-size",
+        "value": "var(--forte-space-2)",
+        "description": "Diameter of a dot. The active dot stretches to two and a half of it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-dot-gap",
+        "value": "var(--forte-space-2)",
+        "description": "Space between dots",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-dot-color",
+        "value": "var(--forte-color-border-strong)",
+        "description": "Colour of an inactive dot",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-dot-color-hover",
+        "value": "var(--forte-color-foreground-subtle)",
+        "description": "Colour of an inactive dot on hover",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-dot-color-active",
+        "value": "var(--forte-color-primary)",
+        "description": "Colour of the active dot",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-thumb-gap",
+        "value": "var(--forte-space-2)",
+        "description": "Space between thumbnails",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-thumb-radius",
+        "value": "var(--forte-radius-control)",
+        "description": "Corner radius of a thumbnail",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-thumb-border-width",
+        "value": "2px",
+        "description": "Width of the ring drawn around a thumbnail. It is always drawn, in `transparent` on the inactive ones, so the active ring does not move the strip by its own width",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-thumb-border-color-active",
+        "value": "var(--forte-color-primary)",
+        "description": "Ring colour of the active thumbnail",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-carousel-thumb-opacity",
+        "value": "0.6",
+        "description": "Opacity of an inactive thumbnail",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Checkbox": {
     "name": "Checkbox",
     "tokens": [

@@ -1,0 +1,505 @@
+/*
+ * Carousel
+ *
+ * One number moves everything. The component writes the track's position, in
+ * slides, to --forte-carousel-position, and the `translate` below turns it
+ * into pixels with a `calc()` the browser resolves itself:
+ *
+ *   step  = (100% + gap) / slides-per-view          one slide plus one gap
+ *   slide = step − gap                              what a slide is sized to
+ *   track = −direction × (position − offset) × step  where the track sits
+ *
+ * `offset` is the alignment: zero with the active slide at the start edge,
+ * half the spare room when it is centred, so slide 0 centred means the track
+ * starts part-way into the view.
+ *
+ * The percentage is the track's own inline size, which is the viewport's, so
+ * resting positions need no measurement: resize the page, change the density
+ * or override the gap and the track is still parked on the same slide. The
+ * same `--forte-carousel-step` sizes the slides, so the two cannot drift.
+ * `--forte-direction` flips the sign in RTL, where slide 0 is at the right.
+ *
+ * Three things about the motion are worth knowing before editing:
+ *
+ *   - The move is a transition on `translate`, so pressing Next while the
+ *     track is still travelling retargets from wherever it is. Under reduced
+ *     motion the duration token shortens to its floor and the track cuts to
+ *     the slide; there is no prefers-reduced-motion block here, and there
+ *     must not be one.
+ *   - [data-dragging] switches the transition OFF with `transition: none`.
+ *     The library's rule that durations never reach 0s exists because code
+ *     that awaits `transitionend` deadlocks at zero — nothing awaits this
+ *     one. A drag writes the position every frame and a 1ms transition would
+ *     lag one frame behind the finger on every write.
+ *   - The viewport clips with `overflow: clip`, not `hidden`. A hidden
+ *     overflow is still a scroll container, and the browser will scroll it to
+ *     bring a focused element into view — Tab into a control in the next
+ *     slide and the whole strip would shift under the transform and stay
+ *     there. `clip` cannot scroll, so focus is handled by making off-screen
+ *     slides inert instead.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared here, on Carousel.Root itself, so an
+     * ancestor's value is only ever inherited and never wins. Re-skin one
+     * carousel by setting these on the root element (an unlayered consumer
+     * rule beats this layer whatever its specificity); re-skin every carousel
+     * by re-pointing the global tokens they resolve to. */
+
+    /* Layout */
+    /** Space between slides */
+    --forte-carousel-gap: var(--forte-space-4);
+    /** Space between the viewport and the dots or thumbnails under it */
+    --forte-carousel-controls-gap: var(--forte-space-4);
+    /** Corner radius of the viewport, which clips the slides */
+    --forte-carousel-radius: var(--forte-radius-surface);
+
+    /* Motion */
+    /** How long the track takes to settle on a slide after a button or a
+     * drag. Paired with the matching spring easing below: a shorter duration
+     * truncates the spring mid-settle */
+    --forte-carousel-duration: var(--forte-duration-spring-precise);
+    /** Easing of that move */
+    --forte-carousel-ease: var(--forte-ease-spring-precise);
+    /** How long the viewport takes to grow or shrink to the slides in view
+     * under `autoHeight` */
+    --forte-carousel-height-duration: var(--forte-duration-normal);
+
+    /* Prev / Next / PlayPause */
+    /** Size of the round control buttons */
+    --forte-carousel-control-size: var(--forte-control-h-md);
+    /** How far in from the viewport's edge Prev and Next sit when rendered
+     * inside it */
+    --forte-carousel-control-inset: var(--forte-space-3);
+    /** Background of a control */
+    --forte-carousel-control-bg: var(--forte-color-panel);
+    /** Background of a control on hover */
+    --forte-carousel-control-bg-hover: var(--forte-color-panel-hover);
+    /** Icon colour of a control */
+    --forte-carousel-control-color: var(--forte-color-foreground);
+    /** Border colour of a control */
+    --forte-carousel-control-border-color: var(--forte-color-border);
+    /** Corner radius of a control */
+    --forte-carousel-control-radius: var(--forte-radius-pill);
+    /** Shadow under a control, which is what lifts it off a photo */
+    --forte-carousel-control-shadow: var(--forte-shadow-2);
+
+    /* Dots */
+    /** Diameter of a dot. The active dot stretches to two and a half of it */
+    --forte-carousel-dot-size: var(--forte-space-2);
+    /** Space between dots */
+    --forte-carousel-dot-gap: var(--forte-space-2);
+    /** Colour of an inactive dot */
+    --forte-carousel-dot-color: var(--forte-color-border-strong);
+    /** Colour of an inactive dot on hover */
+    --forte-carousel-dot-color-hover: var(--forte-color-foreground-subtle);
+    /** Colour of the active dot */
+    --forte-carousel-dot-color-active: var(--forte-color-primary);
+
+    /* Thumbs */
+    /** Space between thumbnails */
+    --forte-carousel-thumb-gap: var(--forte-space-2);
+    /** Corner radius of a thumbnail */
+    --forte-carousel-thumb-radius: var(--forte-radius-control);
+    /** Width of the ring drawn around a thumbnail. It is always drawn, in
+     * `transparent` on the inactive ones, so the active ring does not move
+     * the strip by its own width */
+    --forte-carousel-thumb-border-width: 2px;
+    /** Ring colour of the active thumbnail */
+    --forte-carousel-thumb-border-color-active: var(--forte-color-primary);
+    /** Opacity of an inactive thumbnail */
+    --forte-carousel-thumb-opacity: 0.6;
+
+    /* Set inline by the component from `slidesPerView` and `align`. Declared
+     * so the calc below has values on the first frame of a root that has not
+     * set them. Not theming knobs: the props are the API. The offset is how
+     * many slides the view's start edge sits before the active slide — zero
+     * start-aligned, half the spare room when centred. */
+    --forte-carousel-per-view: 1;
+    --forte-carousel-align-offset: 0;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--forte-carousel-controls-gap);
+    box-sizing: border-box;
+    /* A flex or grid child is `min-width: auto`, and the track's slides would
+     * size that "auto" to the whole strip: the root would grow to fit every
+     * slide side by side instead of clipping them. */
+    min-inline-size: 0;
+  }
+
+  /* Text under the finger would otherwise be selected as the strip moves,
+   * and a mouse drag would drag the selection rather than the track. On the
+   * root, not the viewport, so a drag that wanders over the dots does not
+   * start selecting there either. */
+  .root[data-dragging] {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grabbing;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Viewport
+   * --------------------------------------------------------------------- */
+
+  .viewport {
+    position: relative;
+    box-sizing: border-box;
+    overflow: clip;
+    border-radius: var(--forte-carousel-radius);
+    min-inline-size: 0;
+    /* Claim the inline axis for the drag and leave the block axis to the
+     * page: a thumb sweeping down over the carousel scrolls the page, a thumb
+     * sweeping across moves the slides, and the browser decides which on the
+     * first movement. `none` would trap the page under every carousel. */
+    touch-action: pan-y pinch-zoom;
+    /* Measured off the slides in view by the component under `autoHeight`
+     * and transitioned here — `auto` cannot be. Unset, the viewport is as
+     * tall as its tallest slide, which is what a plain flex row gives. */
+    block-size: var(--forte-carousel-height, auto);
+    transition: block-size var(--forte-carousel-height-duration) var(--forte-ease-standard);
+  }
+
+  .viewport[data-orientation="vertical"] {
+    touch-action: pan-x pinch-zoom;
+  }
+
+  .viewport[data-draggable] {
+    cursor: grab;
+  }
+
+  .root[data-dragging] .viewport {
+    cursor: grabbing;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Track and slides
+   * --------------------------------------------------------------------- */
+
+  .track {
+    /* One slide plus one gap. Both the slides' size and the track's travel
+     * are derived from this, which is what keeps them in step. The
+     * percentage resolves where it is USED: against the track for
+     * `translate`, against the track (the flex container) for a slide's
+     * `flex-basis` — the same length both times, because the track has no
+     * padding and no border. Do not give it either. */
+    --forte-carousel-step: calc(
+      (100% + var(--forte-carousel-gap)) / var(--forte-carousel-per-view)
+    );
+
+    display: flex;
+    gap: var(--forte-carousel-gap);
+    inline-size: 100%;
+    block-size: 100%;
+    box-sizing: border-box;
+    translate: calc(
+        -1 * var(--forte-direction) *
+          (var(--forte-carousel-position, 0) - var(--forte-carousel-align-offset, 0)) *
+          var(--forte-carousel-step)
+      )
+      0;
+    transition: translate var(--forte-carousel-duration) var(--forte-carousel-ease);
+    /* Promoted once rather than on every drag, so the first frame of a
+     * gesture is not spent rasterising the strip into a layer. */
+    will-change: translate;
+  }
+
+  .root[data-orientation="vertical"] .track {
+    flex-direction: column;
+    /* The block axis has no writing-direction to flip for. */
+    translate: 0
+      calc(
+        -1 * (var(--forte-carousel-position, 0) - var(--forte-carousel-align-offset, 0)) *
+          var(--forte-carousel-step)
+      );
+  }
+
+  .root[data-dragging] .track {
+    transition: none;
+  }
+
+  /* Under `autoHeight` the slides must not be stretched to the tallest one,
+   * or every slide would measure the same and the viewport would never
+   * change size. */
+  .root[data-auto-height] .track {
+    align-items: flex-start;
+  }
+
+  .slide {
+    position: relative;
+    flex: 0 0 calc(var(--forte-carousel-step) - var(--forte-carousel-gap));
+    box-sizing: border-box;
+    min-inline-size: 0;
+    min-block-size: 0;
+  }
+
+  .root[data-orientation="vertical"] .slide {
+    inline-size: 100%;
+  }
+
+  /* ------------------------------------------------------------------------
+   * Prev / Next / PlayPause
+   * --------------------------------------------------------------------- */
+
+  .control {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--forte-carousel-control-size);
+    block-size: var(--forte-carousel-control-size);
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--forte-carousel-control-border-color);
+    border-radius: var(--forte-carousel-control-radius);
+    background: var(--forte-carousel-control-bg);
+    color: var(--forte-carousel-control-color);
+    box-shadow: var(--forte-carousel-control-shadow);
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    /* Snap in, spring out: the press lands on the instant duration below and
+     * the release runs back on the spring. */
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+  }
+
+  .control:hover {
+    background: var(--forte-carousel-control-bg-hover);
+  }
+
+  .control:active {
+    scale: var(--forte-scale-press);
+    transition-duration: var(--forte-duration-instant);
+  }
+
+  .control[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .control[data-disabled]:active {
+    scale: 1;
+  }
+
+  .controlIcon {
+    display: block;
+    pointer-events: none;
+  }
+
+  /* The chevron is drawn pointing at the inline END. Prev mirrors it; both
+   * flip again in RTL, where "previous" is on the right. `--forte-direction`
+   * is 1 or -1, so the pair of products below is the whole of that logic. */
+  .control[data-direction="prev"] .controlIcon {
+    scale: calc(-1 * var(--forte-direction)) 1;
+  }
+
+  .control[data-direction="next"] .controlIcon {
+    scale: var(--forte-direction) 1;
+  }
+
+  .control[data-orientation="vertical"] .controlIcon {
+    scale: 1 1;
+  }
+
+  .control[data-orientation="vertical"][data-direction="prev"] .controlIcon {
+    rotate: -90deg;
+  }
+
+  .control[data-orientation="vertical"][data-direction="next"] .controlIcon {
+    rotate: 90deg;
+  }
+
+  /* Rendered inside the viewport, a control floats over the slides at the
+   * edge it moves towards. Rendered anywhere else it is an ordinary button
+   * in the flow, and the consumer lays it out. */
+  .viewport > .control {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 50%;
+    translate: 0 -50%;
+  }
+
+  .viewport > .control[data-direction="prev"] {
+    inset-inline-start: var(--forte-carousel-control-inset);
+  }
+
+  .viewport > .control[data-direction="next"] {
+    inset-inline-end: var(--forte-carousel-control-inset);
+  }
+
+  /* Centred on the inline axis: `inset-inline-start: 50%` puts the button's
+   * START edge at the middle, and the translate pulls it back by half its
+   * width — in the direction the start edge is on, hence the product. */
+  .viewport > .control[data-orientation="vertical"] {
+    inset-block: auto;
+    inset-inline: 50% auto;
+    translate: calc(-50% * var(--forte-direction)) 0;
+  }
+
+  .viewport > .control[data-orientation="vertical"][data-direction="prev"] {
+    inset-block-start: var(--forte-carousel-control-inset);
+  }
+
+  .viewport > .control[data-orientation="vertical"][data-direction="next"] {
+    inset-block-end: var(--forte-carousel-control-inset);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Dots
+   * --------------------------------------------------------------------- */
+
+  .dots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--forte-carousel-dot-gap);
+    margin: 0;
+    padding: 0;
+  }
+
+  .dots[data-orientation="vertical"] {
+    flex-direction: column;
+  }
+
+  .dot {
+    box-sizing: border-box;
+    inline-size: var(--forte-carousel-dot-size);
+    block-size: var(--forte-carousel-dot-size);
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--forte-radius-pill);
+    background: var(--forte-carousel-dot-color);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    /* The stretch is a positional cue with no travel token, so it runs on
+     * the move duration like the Tabs indicator; it collapses to its floor
+     * under reduced motion and the colour change carries the state. */
+    transition:
+      inline-size var(--forte-duration-move) var(--forte-ease-spring-snappy),
+      block-size var(--forte-duration-move) var(--forte-ease-spring-snappy),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  .dot:hover {
+    background: var(--forte-carousel-dot-color-hover);
+  }
+
+  .dot[data-active] {
+    inline-size: calc(var(--forte-carousel-dot-size) * 2.5);
+    background: var(--forte-carousel-dot-color-active);
+  }
+
+  .dots[data-orientation="vertical"] .dot[data-active] {
+    inline-size: var(--forte-carousel-dot-size);
+    block-size: calc(var(--forte-carousel-dot-size) * 2.5);
+  }
+
+  /* ------------------------------------------------------------------------
+   * Thumbs
+   * --------------------------------------------------------------------- */
+
+  .thumbs {
+    display: flex;
+    gap: var(--forte-carousel-thumb-gap);
+    margin: 0;
+    /* Room for the focus ring, which is an outline and would otherwise be
+     * cropped by the scroll container on the two outer thumbnails. */
+    padding: var(--forte-focus-ring-width);
+    overflow: auto;
+    scrollbar-width: thin;
+    /* A swipe that reaches the end of the strip stops there rather than
+     * handing the remainder to the page. */
+    overscroll-behavior: contain;
+  }
+
+  .thumbs[data-orientation="vertical"] {
+    flex-direction: column;
+  }
+
+  .thumb {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    border: var(--forte-carousel-thumb-border-width) solid transparent;
+    border-radius: var(--forte-carousel-thumb-radius);
+    background: none;
+    color: inherit;
+    font: inherit;
+    line-height: 0;
+    overflow: clip;
+    opacity: var(--forte-carousel-thumb-opacity);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      opacity var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  .thumb:hover {
+    opacity: 1;
+  }
+
+  .thumb[data-active] {
+    opacity: 1;
+    border-color: var(--forte-carousel-thumb-border-color-active);
+  }
+
+  .thumb > img,
+  .thumb > svg {
+    display: block;
+    pointer-events: none;
+  }
+}
+
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    .control {
+      border-color: ButtonText;
+      box-shadow: none;
+    }
+
+    /* Opacity is not overridden under forced colours, so a dimmed control
+     * would keep full contrast and read as enabled. */
+    .control[data-disabled] {
+      opacity: 1;
+      color: GrayText;
+      border-color: GrayText;
+    }
+
+    /* A dot's fill is stripped; the border is what survives, and the active
+     * one is painted in the one system colour that means "selected". */
+    .dot {
+      border: 1px solid ButtonText;
+      background: ButtonFace;
+    }
+
+    .dot[data-active] {
+      background: Highlight;
+      border-color: Highlight;
+    }
+
+    /* `transparent` is replaced with a system colour under forced colours,
+     * so the inactive ring would appear; Canvas is the page and stays
+     * invisible. Opacity is not honoured, so the active ring is the cue. */
+    .thumb {
+      opacity: 1;
+      border-color: Canvas;
+    }
+
+    .thumb[data-active] {
+      border-color: Highlight;
+    }
+  }
+}
