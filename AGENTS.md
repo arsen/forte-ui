@@ -43,6 +43,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
+  components/site-header.tsx       the app bar — the shell's top row, on the library's AppBar
   components/nav.tsx               the page list itself — rail and drawer share it
   components/sidebar.tsx           the page list — the shell's left column
   components/toc.tsx               the section rail — the shell's right column
@@ -508,16 +509,17 @@ off rather than obviously broken. Add the path when you add the file.
 | `color: var(--forte-color-foreground-muted)` | `text-foreground-muted` |
 | `transition-duration: var(--forte-duration-fast)` | `duration-fast` (namespace is `--transition-duration-*`) |
 | `inline-size: min(32rem, 100%)` | `w-full max-w-lg` — the `--container-*` scale is untouched |
-| the site's own measures | `h-header`, `scroll-mt-anchor`, `max-w-hero` |
+| the site's own measures | `max-w-hero` — the header's height is the library's `--forte-app-bar-h-md`, read as `top-(--forte-app-bar-h-md)` |
 | a layout breakpoint | `max-toc:`, `max-two-col:`, `max-split:`, `max-nav:` — named for the column that stops fitting |
 | any other token | `h-(--forte-control-h-md)` — v4's shorthand for `var()`, and it resolves at the element |
 
-Four named `@custom-variant`s exist because their guard is an `@supports`
-nested in a `@media`, which the bracket syntax can express only as a class name
-nobody reads twice — and the half that would get dropped in the shortening is
-always the accessibility half: `frosted:` (backdrop blur, not under reduced
-transparency), `scroll-driven:` (a view timeline exists), `gradient-text:`
+Two named `@custom-variant`s exist because their guard is one the bracket
+syntax can express only as a class name nobody reads twice — and the half
+that would get dropped in the shortening is always the accessibility half:
+`scroll-driven:` (a view timeline exists), `gradient-text:`
 (`background-clip: text` will actually paint, so not under forced colours).
+There is no `frosted:` any more: the site header is the library's `AppBar`
+with `variant="frosted"`, and the blur guard lives in the component.
 
 Three things stay in a `style` object, and are not oversights:
 

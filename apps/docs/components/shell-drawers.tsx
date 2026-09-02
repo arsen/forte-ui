@@ -18,9 +18,10 @@ import { TocList, goToHeading, useActiveHeading, useTocHeadings } from "./toc";
  * the same components, imported from `nav.tsx` and `toc.tsx`, so the two
  * renderings cannot drift.
  *
- * Both triggers live in the header, which is why they are here and not inside
- * `Sidebar` / `Toc`: a button in the header cannot be rendered by a component
- * in the grid below it.
+ * Both triggers live in the app bar, which is why they are here and not inside
+ * `Sidebar` / `Toc`: a button in the bar cannot be rendered by a component in
+ * the grid below it. They take the bar's default `md` control size, which is
+ * the row height the bar was sized for.
  *
  * ---------------------------------------------------------------------------
  * Where the icons come from
@@ -88,7 +89,7 @@ export function NavDrawer() {
     <Drawer.Root side="left" open={open} onOpenChange={setOpen}>
       <Drawer.Trigger
         ref={trigger}
-        render={<Button variant="ghost" size="sm" iconOnly />}
+        render={<Button variant="ghost" iconOnly />}
         className="hidden max-nav:inline-flex"
         aria-label="Open navigation"
       >
@@ -138,7 +139,7 @@ export function TocDrawer() {
     <Drawer.Root side="right" open={open} onOpenChange={setOpen}>
       <Drawer.Trigger
         ref={trigger}
-        render={<Button variant="ghost" size="sm" iconOnly />}
+        render={<Button variant="ghost" iconOnly />}
         className="hidden max-toc:inline-flex"
         aria-label="On this page"
       >

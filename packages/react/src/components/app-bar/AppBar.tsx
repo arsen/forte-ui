@@ -145,6 +145,11 @@ export interface AppBarRootProps
    * control height plus the bar's padding, so a `size="sm"` bar fits
    * `size="sm"` buttons exactly. The controls inside keep their own `size`
    * prop — this sets the bar, not its contents.
+   *
+   * The height of each step is a global token, `--forte-app-bar-h-sm` /
+   * `-md` / `-lg`, so the layout around the bar — a sticky sidebar's offset,
+   * a page's `scroll-padding-top` — can read it without knowing how the bar
+   * is built.
    * @default "md"
    */
   size?: AppBarSize;

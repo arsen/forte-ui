@@ -109,9 +109,9 @@ The numbered scale plus the three semantic radii components actually read. Prefe
 
 ## Controls and density
 
-Control heights, padding and the surface metrics — the group the [density presets](/customization/presets/#density) rewrite.
+Control heights, padding and the surface metrics — the group the [density presets](/customization/presets/#density) rewrite. The `--forte-app-bar-h-*` heights are here too: an [`AppBar`](/components/app-bar/) is exactly that tall at each size, and the token exists so the layout around one — a sticky sidebar's offset, a page's `scroll-padding-top` — can read it.
 
-<TokenTable families={["control", "surface", "list", "target"]} label="Control and density tokens" />
+<TokenTable families={["control", "surface", "list", "target", "app"]} label="Control and density tokens" />
 
 <Callout kind="a11y">
   `--forte-target-min` is 24px because WCAG SC 2.5.8 says so. Deriving a smaller control from these tokens is possible and wrong.

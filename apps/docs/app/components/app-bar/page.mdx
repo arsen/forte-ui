@@ -74,7 +74,7 @@ Each step is the matching control height plus the bar's padding, so a `size="sm"
 
 <DemoBlock id="app-bar/sizes" />
 
-Because the row height is a control-height token, `data-forte-density` already drives it and a compact app gets a shorter bar without touching the component.
+Each height is a global density token — `--forte-app-bar-h-sm`, `-md`, `-lg` — so `data-forte-density` already drives it and a compact app gets a shorter bar without touching the component. The tokens are global on purpose: a sticky sidebar's offset or a page's `scroll-padding-top` can read the bar's height without knowing how it is built, which is exactly what this site's own shell does.
 
 ### Sticky, and elevating on scroll
 
@@ -86,7 +86,7 @@ Because the row height is a control-height token, `data-forte-density` already d
 
 Only a `neutral` bar drops its fill at rest. On a coloured tone the fill is what carries the text's contrast, so there the surface stays and only the shadow is deferred. And `plain` has no surface to reveal, so pair the prop with one of the other three.
 
-`position="fixed"` is also available, for a bar that is not the first thing in its scroll container. It leaves the flow entirely, so the content under it must add its own top padding — the bar's height is `--forte-app-bar-row-min-block-size` plus twice `--forte-app-bar-py`, plus the hairline. Reach for `sticky` first; it is the same pinning without the arithmetic.
+`position="fixed"` is also available, for a bar that is not the first thing in its scroll container. It leaves the flow entirely, so the content under it must add its own top padding — the bar's height is the `--forte-app-bar-h-*` token for its size, hairline included. Reach for `sticky` first; it is the same pinning without the padding.
 
 ### Hiding on scroll
 

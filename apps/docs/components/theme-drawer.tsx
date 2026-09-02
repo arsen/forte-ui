@@ -42,7 +42,7 @@ export function ThemeDrawer() {
   return (
     <Drawer.Root side="right" modal={false} disablePointerDismissal>
       <Drawer.Trigger
-        render={<Button variant="ghost" size="sm" iconOnly />}
+        render={<Button variant="ghost" iconOnly />}
         aria-label="Theme settings"
         title="Theme settings"
       >

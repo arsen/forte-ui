@@ -78,9 +78,11 @@
     --forte-app-bar-px: var(--forte-control-px-md);
     /** Block padding above and below the row. `size` re-points it. */
     --forte-app-bar-py: var(--forte-space-3);
-    /** Minimum height of the row, before the padding. `size` re-points it
-     * to the matching control height, so the bar fits its own buttons. */
-    --forte-app-bar-row-min-block-size: var(--forte-control-h-md);
+    /** Minimum height of the bar, padding and hairline included. `size`
+     * re-points it to the matching global `--forte-app-bar-h-*` token — the
+     * control height plus the padding — so the bar fits its own buttons and
+     * the layout around it can read the same number from the token. */
+    --forte-app-bar-min-block-size: var(--forte-app-bar-h-md);
     /** Gap between the leading slot, the title and the trailing slot. */
     --forte-app-bar-gap: var(--forte-space-3);
     /** Gap between the items inside a slot. Tighter than the slot gap, so
@@ -167,7 +169,12 @@
     box-sizing: border-box;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-rows: minmax(var(--forte-app-bar-row-min-block-size), auto);
+    /* The minimum is on the bar, not on the row, so that it is the number the
+     * global token promises: with `border-box` it includes the padding and
+     * the hairline. The single `auto` row stretches to fill it — a grid's
+     * `align-content: normal` is `stretch` — and the items centre in it. A
+     * control taller than that row still grows the bar; nothing clips. */
+    min-block-size: var(--forte-app-bar-min-block-size);
     align-items: center;
 
     padding-block: var(--forte-app-bar-py);
@@ -231,28 +238,30 @@
   }
 
   /* Sizes ------------------------------------------------------------------
-   * Each step is a control height and the padding that goes with it, so the
-   * bar is exactly as tall as the matching buttons need. The title steps
-   * with it.
+   * Each step points at the matching `--forte-app-bar-h-*` token: a control
+   * height and the padding that goes with it, so the bar is exactly as tall
+   * as the matching buttons need. The title steps with it. The padding here
+   * and the token's literal in tokens.css restate one sum — change one and
+   * change the other, or the token becomes a floor the bar overshoots.
    * ---------------------------------------------------------------------- */
   .root[data-size="sm"] {
     --forte-app-bar-px: var(--forte-control-px-sm);
     --forte-app-bar-py: var(--forte-space-2);
-    --forte-app-bar-row-min-block-size: var(--forte-control-h-sm);
+    --forte-app-bar-min-block-size: var(--forte-app-bar-h-sm);
     --forte-app-bar-title-font-size: var(--forte-font-size-2);
   }
 
   .root[data-size="md"] {
     --forte-app-bar-px: var(--forte-control-px-md);
     --forte-app-bar-py: var(--forte-space-3);
-    --forte-app-bar-row-min-block-size: var(--forte-control-h-md);
+    --forte-app-bar-min-block-size: var(--forte-app-bar-h-md);
     --forte-app-bar-title-font-size: var(--forte-font-size-3);
   }
 
   .root[data-size="lg"] {
     --forte-app-bar-px: var(--forte-control-px-lg);
     --forte-app-bar-py: var(--forte-space-3);
-    --forte-app-bar-row-min-block-size: var(--forte-control-h-lg);
+    --forte-app-bar-min-block-size: var(--forte-app-bar-h-lg);
     --forte-app-bar-title-font-size: var(--forte-font-size-4);
   }
 

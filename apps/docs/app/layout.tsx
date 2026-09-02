@@ -8,14 +8,10 @@ import type { Metadata } from "next";
 import "@forte-ui/react/theme.css";
 import "./globals.css";
 import "./tailwind.css";
-import { Button } from "@forte-ui/react";
-import { SiGithub } from "react-icons/si";
 import { TooltipProvider } from "@/components/tooltip-provider";
-import { ICON } from "@/components/styles";
-import { ThemeDrawer } from "@/components/theme-drawer";
+import { SiteHeader } from "@/components/site-header";
 import { Sidebar } from "@/components/sidebar";
 import { Toc } from "@/components/toc";
-import { NavDrawer, TocDrawer } from "@/components/shell-drawers";
 
 export const metadata: Metadata = {
   title: { default: "Forte UI", template: "%s · Forte UI" },
@@ -32,9 +28,9 @@ export const metadata: Metadata = {
 //
 // `data-theme` is always written, resolved against the OS when nothing is
 // stored, rather than left off to let the media query decide. It is what the
-// header toggle reads to label itself and what it flips, so an unset attribute
-// would mean neither the button nor the first click knows which way round the
-// page currently is.
+// app bar's theme control reads to label itself and what it flips, so an
+// unset attribute would mean neither the button nor the first click knows
+// which way round the page currently is.
 // A scheme the studio has PINNED outranks both the stored choice and the OS:
 // it is part of the theme being designed, so a "light only" theme has to come
 // back light on a dark-mode machine. That is why the studio record is parsed
@@ -56,11 +52,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      // `scroll-pt-anchor` keeps an anchored heading clear of the sticky header
-      // (WCAG SC 2.4.11). Smooth scroll is opt-in per user preference — the
-      // library's a11y.css already forces `scroll-behavior: auto` under
+      // The scroll padding is the app bar's own height token, so an anchored
+      // heading lands clear of the sticky bar (WCAG SC 2.4.11); the breathing
+      // room under it is the heading's own `scroll-mt` in
+      // `mdx-components.tsx`. Smooth scroll is opt-in per user preference —
+      // the library's a11y.css already forces `scroll-behavior: auto` under
       // prefers-reduced-motion, so it needs no guard here.
-      className="scroll-smooth scroll-pt-anchor [-webkit-text-size-adjust:100%]"
+      className="scroll-smooth scroll-pt-(--forte-app-bar-h-md) [-webkit-text-size-adjust:100%]"
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
@@ -70,77 +68,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           * the first tooltip, instead of re-waiting the delay on each one. */}
         <TooltipProvider>
           <a className={SKIP_LINK} href="#main">Skip to content</a>
-          <div className="grid min-h-dvh grid-rows-[auto_1fr]">
-            <header
-              className={[
-                "sticky top-0 z-20 flex h-header items-center justify-between gap-4 px-5",
-                "border-b border-border-muted bg-background/78",
-                // Translucency plus blur, but only where the browser can blur
-                // and only for a reader who has not asked for less
-                // transparency — see the `frosted` variant in tailwind.css.
-                "frosted:backdrop-blur-md frosted:backdrop-saturate-180",
-              ].join(" ")}
-            >
-              {/* The page list's drawer trigger leads the header, ahead of the
-                * wordmark, because that is where a reader's thumb already goes
-                * looking for it. It shows itself only below `--breakpoint-nav`
-                * — see `shell-drawers.tsx`. */}
-              <div className="inline-flex items-center gap-2">
-                <NavDrawer />
-                <a
-                  className="inline-flex items-center gap-2 text-4 font-bold tracking-tight whitespace-nowrap"
-                  href="/"
-                >
-                  {/* Decorative: hidden in forced-colors, where a gradient becomes
-                    * a meaningless flat system-coloured block. */}
-                  <span
-                    className="size-5 rounded-3 bg-[linear-gradient(135deg,var(--forte-accent-9),var(--forte-secondary-9))] forte-hc-decorative"
-                    aria-hidden="true"
-                  />
-                  Forte UI
-                </a>
-              </div>
-              <div className="inline-flex items-center gap-2">
-                {/* A link, rendered as a button, so the three controls on this
-                  * side share one shape — the alternative is a bare `<a>` whose
-                  * icon sits at a different optical size and hovers
-                  * differently from the two beside it. `render` swaps the
-                  * ELEMENT and keeps the styling, which is the whole point of
-                  * the prop; `aria-label` carries the name the glyph dropped.
-                  *
-                  * `nativeButton={false}` tells Base UI the element is not a
-                  * `<button>`, and `role="link"` then puts back the semantics
-                  * Base UI's button emulation would otherwise take away. This
-                  * really is a link — it navigates, and it opens in a new tab
-                  * from the context menu — so it must be announced as one.
-                  *
-                  * The mark is Simple Icons' rather than a lucide one: lucide
-                  * removed its brand icons, and a brand belongs to its owner —
-                  * an approximation of the Octocat is worse than the real
-                  * one. */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  iconOnly
-                  nativeButton={false}
-                  role="link"
-                  aria-label="forte-ui on GitHub"
-                  title="GitHub"
-                  render={
-                    <a
-                      href="https://github.com/arsen/forte-ui"
-                      target="_blank"
-                      rel="noreferrer"
-                    />
-                  }
-                >
-                  <SiGithub className={ICON} aria-hidden="true" />
-                </Button>
-                <ThemeDrawer />
-                {/* Trailing, on the same side as the column it replaces. */}
-                <TocDrawer />
-              </div>
-            </header>
+          {/* A flex column, not a `grid-rows-[auto_1fr]`: a sticky AppBar
+            * renders a 1px scroll sentinel as its own previous sibling, and in
+            * a two-row grid that sentinel would take the `auto` row and push
+            * the page into the `1fr`. */}
+          <div className="flex min-h-dvh flex-col">
+            {/* The library's AppBar, in a client component of its own — see
+              * `site-header.tsx` for why it cannot be written here. */}
+            <SiteHeader />
             {/* The cap is on the PAGE COLUMN, not on the grid, and the two are
               * not interchangeable. A `max-width` on the grid is spent by the
               * two fixed rails first — at 72rem it leaves the page 38rem, less
@@ -157,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               * the line length: prose, tables, demos and code blocks all run to
               * the same right edge, and `mdx-components.tsx` adds no second
               * maximum of its own. Widen this and the paragraphs widen too. */}
-            <div className="grid w-full justify-center grid-cols-[15rem_minmax(0,var(--container-5xl))_14rem] gap-6 px-4 max-toc:grid-cols-[15rem_minmax(0,var(--container-6xl))] max-nav:grid-cols-[minmax(0,var(--container-6xl))]">
+            <div className="grid w-full flex-1 justify-center grid-cols-[15rem_minmax(0,var(--container-5xl))_14rem] gap-6 px-4 max-toc:grid-cols-[15rem_minmax(0,var(--container-6xl))] max-nav:grid-cols-[minmax(0,var(--container-6xl))]">
               <Sidebar />
               <main className="min-w-0 pt-7 pb-8" id="main">{children}</main>
               {/* The section rail. It renders nothing on a page with fewer than
