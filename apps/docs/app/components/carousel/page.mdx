@@ -62,6 +62,8 @@ The demo at the top of the page: five slides, `Prev` and `Next` rendered inside 
 
 `slidesPerView` fits several slides in the viewport; a fraction leaves the next one peeking in at the end, which is the cue that there are more. The last position is the one that still fills the view, so a row never scrolls on to show two slides and a blank, and `Dots` renders one dot per position rather than one per slide.
 
+`gap` sets the space between slides: a step on the spacing scale (`gap={2}` is `--forte-space-2`, `gap={0}` is none) or any CSS length as a string. It is the `--forte-carousel-gap` knob under another name — both the slide size and the track's travel are derived from it, so changing it never puts the track off a slide.
+
 <DemoBlock id="carousel/per-view" />
 
 ### Lazy
@@ -137,6 +139,8 @@ Under `prefers-reduced-motion` there is no separate path and no reduced-motion b
 Every property below is declared on `Carousel.Root`, so override them there — through its `className` or an inline `style` — rather than on an ancestor, whose value only inherits and loses to the root's own declaration. To move every carousel at once, re-point the global tokens in the Default column instead.
 
 <ThemingTable component="Carousel" />
+
+`gap` on the root is `--forte-carousel-gap` as a prop; the two are the same declaration, and the prop wins when both are set because it is written inline.
 
 The parts also expose their state as data attributes — `data-orientation`, `data-loop`, `data-dragging`, `data-auto-height`, `data-autoplay` (`playing` or `paused`), `data-at-start` and `data-at-end` on the root; `data-active`, `data-in-view` and `data-clone` on a slide; `data-disabled` on the controls; `data-active` on a dot or thumb — so a Tailwind arbitrary variant such as `data-[dragging]:...` can target them without a wrapper.
 

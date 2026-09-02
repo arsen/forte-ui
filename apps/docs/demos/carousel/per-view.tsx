@@ -9,7 +9,7 @@ const slide =
 
 export default function CarouselPerView() {
   return (
-    <Carousel.Root aria-label="Products" slidesPerView={2.5} className="w-full max-w-lg">
+    <Carousel.Root aria-label="Products" slidesPerView={2.5} gap={2} className="w-full max-w-lg">
       <Carousel.Viewport>
         <Carousel.Track>
           {PRODUCTS.map((name) => (

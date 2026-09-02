@@ -1128,6 +1128,13 @@
         "description": "Whether the slides can be dragged with a pointer or swiped on touch."
       },
       {
+        "name": "gap",
+        "type": "CarouselGap",
+        "required": false,
+        "defaultValue": "4",
+        "description": "Space between slides: a step on the spacing scale (`2` is\n`--forte-space-2`, `0` is none) or a CSS length (`\"2px\"`,\n`\"var(--my-gap)\"`). Sets the `--forte-carousel-gap` knob, which the\nslide size and the track's travel are both derived from, so the two\ncannot disagree. Left unset, the knob's own default applies."
+      },
+      {
         "name": "index",
         "type": "number",
         "required": false,

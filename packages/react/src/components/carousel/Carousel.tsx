@@ -56,6 +56,20 @@ export type CarouselOrientation = "horizontal" | "vertical";
 /** What caused the active slide to change. */
 export type CarouselChangeReason = "drag" | "control" | "autoplay" | "clamp";
 
+/**
+ * Space between slides: a step on the spacing scale (`--forte-space-1` to
+ * `--forte-space-8`, with `0` for none) or any CSS length as a string.
+ */
+export type CarouselGap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | (string & {});
+
+/* A step becomes its token, so the gap follows a density preset the way
+ * every other spacing does; a string is trusted as written. `0` is a real
+ * length rather than a bare number, which `calc()` would reject. */
+function gapValue(gap: CarouselGap): string {
+  if (typeof gap === "string") return gap;
+  return gap === 0 ? "0px" : `var(--forte-space-${gap})`;
+}
+
 const useIsoLayoutEffect =
   typeof document !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
@@ -244,6 +258,15 @@ export interface CarouselRootProps
    */
   draggable?: boolean;
   /**
+   * Space between slides: a step on the spacing scale (`2` is
+   * `--forte-space-2`, `0` is none) or a CSS length (`"2px"`,
+   * `"var(--my-gap)"`). Sets the `--forte-carousel-gap` knob, which the
+   * slide size and the track's travel are both derived from, so the two
+   * cannot disagree. Left unset, the knob's own default applies.
+   * @default 4
+   */
+  gap?: CarouselGap;
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -273,6 +296,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
     lazy = false,
     autoHeight = false,
     draggable = true,
+    gap,
     className,
     style,
     children,
@@ -469,7 +493,13 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
         data-autoplay={autoplayOn ? (advancing ? "playing" : "paused") : undefined}
         data-at-start={count > 0 && !looping && index === 0 ? "" : undefined}
         data-at-end={count > 0 && !looping && index >= maxIndex ? "" : undefined}
-        style={{ ...style, "--forte-carousel-per-view": perView } as React.CSSProperties}
+        style={
+          {
+            ...style,
+            "--forte-carousel-per-view": perView,
+            ...(gap !== undefined ? { "--forte-carousel-gap": gapValue(gap) } : null),
+          } as React.CSSProperties
+        }
         onPointerEnter={(event) => {
           onPointerEnter?.(event);
           // Touch has no hover: a finger that tapped Next and lifted would
