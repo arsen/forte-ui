@@ -35,9 +35,10 @@ import { EYEBROW, STICKY_COLUMN } from "./styles";
  * running — a generated file is only as fresh as its last run, and nothing
  * re-runs that one mid-session. The DOM read cannot run before hydration, and
  * it is also the only thing that sees headings a client component mounts (and
- * pages MDX never touched, should one ever grow headings with ids — today none
- * do: the home page's and the Theme Studio's have none, so they contribute
- * nothing to either source).
+ * pages MDX never touched — the home page's `<h2 id>`s, which are there for
+ * `aria-labelledby` and would otherwise put a rail on a page that has no
+ * column for one; `site-header.tsx` keeps the drawer off that route for
+ * exactly this reason).
  *
  * Reading second means the DOM always wins, which is the right way round: the
  * page is the thing the reader is looking at. `signature()` below keeps that

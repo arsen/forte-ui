@@ -125,8 +125,16 @@ export function SiteHeader() {
           <SiGithub className={ICON} aria-hidden="true" />
         </Button>
         <ThemeDrawer />
-        {/* Trailing, on the same side as the column it replaces. */}
-        <TocDrawer />
+        {/* Trailing, on the same side as the column it replaces — and only
+          * where that column exists. The section rail is part of the docs
+          * shell, and the home page is the one route outside it, so the
+          * drawer that stands in for the rail has no business there either.
+          * Without the check it appeared anyway, a beat after load: the home
+          * page's `<h2 id>`s are there for `aria-labelledby`, not as a table
+          * of contents, but `useTocHeadings` reads them off the DOM on mount
+          * all the same and the button popped in over a page that had
+          * rendered without one. */}
+        {!home && <TocDrawer />}
       </AppBar.Trailing>
     </AppBar.Root>
   );
