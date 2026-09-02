@@ -337,7 +337,21 @@
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: inherit;
+    /* The INNER radius, not `inherit`. `inset: 0` puts this box on the
+     * popup's padding edge, and a rounded corner does not survive the trip
+     * inward unchanged: the padding edge is the same arc with the border
+     * width taken off the radius. Painting the outer radius here draws an
+     * arc one pixel off-centre from the edge it is meant to cover, and the
+     * sliver between the two — under a pixel, anti-aliased into a soft
+     * crescent — is the popup's own undimmed background. Invisible in dark
+     * mode, where the surface is nearly the scrim's colour already; in light
+     * mode a bright white fleck at every corner of a parent that is supposed
+     * to have receded. `max()` keeps a fullscreen popup's `0px` radius from
+     * going negative and invalidating the declaration. */
+    border-radius: max(
+      0px,
+      calc(var(--forte-dialog-radius) - var(--forte-dialog-border-width))
+    );
     background-color: var(--forte-scrim-color);
     opacity: 0;
     pointer-events: none;
@@ -426,6 +440,14 @@
    * alike. */
   .popup:has(> .surface)[data-nested-dialog-open] {
     border-color: transparent;
+  }
+
+  /* And the overlay goes back to the full radius: the container's padding
+   * edge is the surface's BORDER edge, so the arc to match is the outer one
+   * after all. The inner-radius correction above was for the border sitting
+   * outside the overlay; here the border sits inside it. */
+  .popup:has(> .surface)::after {
+    border-radius: inherit;
   }
 
   .surface {
