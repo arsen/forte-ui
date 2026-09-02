@@ -9162,6 +9162,397 @@
       }
     ]
   },
+  "Steps": {
+    "name": "Steps",
+    "tokens": [
+      {
+        "name": "--forte-steps-tone-solid",
+        "value": "var(--forte-color-primary)",
+        "description": "Fill of an active or completed indicator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--forte-color-success)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-gray-12)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-tone-on-solid",
+        "value": "var(--forte-color-on-primary)",
+        "description": "Text and icon colour on that fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-on-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--forte-color-on-success)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-gray-1)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-tone-soft",
+        "value": "var(--forte-color-primary-soft)",
+        "description": "The active indicator's halo, and the `outline` variant's active fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--forte-color-success-soft)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-gray-4)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-tone-text",
+        "value": "var(--forte-color-primary-text)",
+        "description": "Text colour on the soft fill",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"success\"]",
+            "value": "var(--forte-color-success-text)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-color-foreground)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-indicator-size",
+        "value": "var(--forte-space-6)",
+        "description": "Diameter of the indicator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-5)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-7)"
+          },
+          {
+            "selector": ".root[data-variant=\"dot\"]",
+            "value": "var(--forte-steps-dot-size)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-indicator-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Text size of the number inside the indicator",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-indicator-border-width",
+        "value": "2px",
+        "description": "Width of the indicator's ring. Painted in the indicator's own colour in `solid`, so it only shows in `outline`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-indicator-radius",
+        "value": "var(--forte-radius-full)",
+        "description": "Corner radius of the indicator",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-dot-size",
+        "value": "var(--forte-space-3)",
+        "description": "Diameter of the indicator in the `dot` variant. Retuned by `size`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-active-halo",
+        "value": "var(--forte-space-1)",
+        "description": "Width of the ring around the active indicator",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-gap",
+        "value": "var(--forte-control-gap)",
+        "description": "Space between the indicator and the title — and between a connector's end and the circle it points at. Follows `data-forte-density`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-description-gap",
+        "value": "var(--forte-space-1)",
+        "description": "Space between the title and the description",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-connector-thickness",
+        "value": "2px",
+        "description": "Thickness of the connector",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-connector-min",
+        "value": "var(--forte-space-6)",
+        "description": "Shortest a connector can get, and the space between stacked steps",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-5)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-7)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-track-color",
+        "value": "var(--forte-color-border)",
+        "description": "Colour of a connector that has not been reached",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-fill-color",
+        "value": "var(--forte-steps-tone-solid)",
+        "description": "Colour of a connector after a completed step",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-title-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Colour of a title on a step not yet reached",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-title-color-active",
+        "value": "var(--forte-color-foreground)",
+        "description": "Colour of the active and completed steps' titles",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-title-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Text size of the title",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-title-font-weight",
+        "value": "var(--forte-font-weight-medium)",
+        "description": "Weight of a title, when not the active one",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-title-font-weight-active",
+        "value": "var(--forte-font-weight-semibold)",
+        "description": "Weight of the active step's title",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-description-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Colour of the description",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-description-font-size",
+        "value": "var(--forte-font-size-1)",
+        "description": "Text size of the description",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-2)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-trigger-p",
+        "value": "var(--forte-space-1)",
+        "description": "Padding of a clickable step, which is the inset of its hover fill",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-trigger-radius",
+        "value": "var(--forte-radius-control)",
+        "description": "Corner radius of a clickable step's hover fill and focus ring",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-trigger-bg-hover",
+        "value": "var(--forte-color-panel-hover)",
+        "description": "Fill of a clickable step under the pointer",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-fill-duration",
+        "value": "var(--forte-duration-normal)",
+        "description": "How long the connector takes to fill after its step completes",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-draw-duration",
+        "value": "var(--forte-duration-normal)",
+        "description": "How long the check takes to draw on",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-steps-indicator-bg",
+        "value": "var(--forte-color-panel-active)",
+        "description": "Fill of the indicator",
+        "part": "indicator",
+        "overrides": [
+          {
+            "selector": ".indicator[data-status=\"active\"], .indicator[data-status=\"complete\"]",
+            "value": "var(--forte-steps-tone-solid)"
+          },
+          {
+            "selector": ".indicator[data-status=\"error\"]",
+            "value": "var(--forte-color-danger)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator",
+            "value": "transparent"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"active\"]",
+            "value": "var(--forte-steps-tone-soft)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"complete\"]",
+            "value": "var(--forte-steps-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"error\"]",
+            "value": "var(--forte-color-danger-soft)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-indicator-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Colour of the number or icon inside the indicator",
+        "part": "indicator",
+        "overrides": [
+          {
+            "selector": ".indicator[data-status=\"active\"], .indicator[data-status=\"complete\"]",
+            "value": "var(--forte-steps-tone-on-solid)"
+          },
+          {
+            "selector": ".indicator[data-status=\"error\"]",
+            "value": "var(--forte-color-on-danger)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"active\"]",
+            "value": "var(--forte-steps-tone-text)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"complete\"]",
+            "value": "var(--forte-steps-tone-on-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"error\"]",
+            "value": "var(--forte-color-danger-text)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-steps-indicator-border-color",
+        "value": "var(--forte-steps-indicator-bg)",
+        "description": "Colour of the indicator's ring",
+        "part": "indicator",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator",
+            "value": "var(--forte-color-border-strong)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"active\"]",
+            "value": "var(--forte-steps-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"complete\"]",
+            "value": "var(--forte-steps-tone-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"] .indicator[data-status=\"error\"]",
+            "value": "var(--forte-color-danger)"
+          }
+        ]
+      }
+    ]
+  },
   "Switch": {
     "name": "Switch",
     "tokens": [

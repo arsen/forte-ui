@@ -699,6 +699,28 @@ import d_spinner_tones from "./spinner/tones";
 import d_spinner_tones_src from "./spinner/tones?raw";
 import d_spinner_variants from "./spinner/variants";
 import d_spinner_variants_src from "./spinner/variants?raw";
+import d_steps_basic from "./steps/basic";
+import d_steps_basic_src from "./steps/basic?raw";
+import d_steps_clickable from "./steps/clickable";
+import d_steps_clickable_src from "./steps/clickable?raw";
+import d_steps_controlled from "./steps/controlled";
+import d_steps_controlled_src from "./steps/controlled?raw";
+import d_steps_error from "./steps/error";
+import d_steps_error_src from "./steps/error?raw";
+import d_steps_icons from "./steps/icons";
+import d_steps_icons_src from "./steps/icons?raw";
+import d_steps_label_below from "./steps/label-below";
+import d_steps_label_below_src from "./steps/label-below?raw";
+import d_steps_manual from "./steps/manual";
+import d_steps_manual_src from "./steps/manual?raw";
+import d_steps_sizes from "./steps/sizes";
+import d_steps_sizes_src from "./steps/sizes?raw";
+import d_steps_tones from "./steps/tones";
+import d_steps_tones_src from "./steps/tones?raw";
+import d_steps_variants from "./steps/variants";
+import d_steps_variants_src from "./steps/variants?raw";
+import d_steps_vertical from "./steps/vertical";
+import d_steps_vertical_src from "./steps/vertical?raw";
 import d_styling_knobs from "./styling/knobs";
 import d_styling_knobs_src from "./styling/knobs?raw";
 import d_styling_parts from "./styling/parts";
@@ -1202,6 +1224,17 @@ export type DemoId =
   | "spinner/theming"
   | "spinner/tones"
   | "spinner/variants"
+  | "steps/basic"
+  | "steps/clickable"
+  | "steps/controlled"
+  | "steps/error"
+  | "steps/icons"
+  | "steps/label-below"
+  | "steps/manual"
+  | "steps/sizes"
+  | "steps/tones"
+  | "steps/variants"
+  | "steps/vertical"
   | "styling/knobs"
   | "styling/parts"
   | "switch/basic"
@@ -1629,6 +1662,17 @@ const REGISTRY: Record<DemoId, Demo> = {
   "spinner/theming": { Component: d_spinner_theming, source: d_spinner_theming_src, file: "spinner/theming.tsx" },
   "spinner/tones": { Component: d_spinner_tones, source: d_spinner_tones_src, file: "spinner/tones.tsx" },
   "spinner/variants": { Component: d_spinner_variants, source: d_spinner_variants_src, file: "spinner/variants.tsx" },
+  "steps/basic": { Component: d_steps_basic, source: d_steps_basic_src, file: "steps/basic.tsx" },
+  "steps/clickable": { Component: d_steps_clickable, source: d_steps_clickable_src, file: "steps/clickable.tsx" },
+  "steps/controlled": { Component: d_steps_controlled, source: d_steps_controlled_src, file: "steps/controlled.tsx" },
+  "steps/error": { Component: d_steps_error, source: d_steps_error_src, file: "steps/error.tsx" },
+  "steps/icons": { Component: d_steps_icons, source: d_steps_icons_src, file: "steps/icons.tsx" },
+  "steps/label-below": { Component: d_steps_label_below, source: d_steps_label_below_src, file: "steps/label-below.tsx" },
+  "steps/manual": { Component: d_steps_manual, source: d_steps_manual_src, file: "steps/manual.tsx" },
+  "steps/sizes": { Component: d_steps_sizes, source: d_steps_sizes_src, file: "steps/sizes.tsx" },
+  "steps/tones": { Component: d_steps_tones, source: d_steps_tones_src, file: "steps/tones.tsx" },
+  "steps/variants": { Component: d_steps_variants, source: d_steps_variants_src, file: "steps/variants.tsx" },
+  "steps/vertical": { Component: d_steps_vertical, source: d_steps_vertical_src, file: "steps/vertical.tsx" },
   "styling/knobs": { Component: d_styling_knobs, source: d_styling_knobs_src, file: "styling/knobs.tsx" },
   "styling/parts": { Component: d_styling_parts, source: d_styling_parts_src, file: "styling/parts.tsx" },
   "switch/basic": { Component: d_switch_basic, source: d_switch_basic_src, file: "switch/basic.tsx" },
