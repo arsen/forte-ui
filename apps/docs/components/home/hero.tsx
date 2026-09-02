@@ -57,7 +57,7 @@ export function Hero() {
       </p>
       <div className="mb-6 flex flex-wrap justify-center gap-3">
         <Button size="lg" nativeButton={false} render={<Link href="/getting-started/introduction/">Get started</Link>} />
-        <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/components/button/">Browse components</Link>} />
+        <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/components/">Browse components</Link>} />
         <Button size="lg" variant="ghost" nativeButton={false} render={<Link href="/theme/">Open Theme Studio</Link>} />
       </div>
       <HeroThemer />

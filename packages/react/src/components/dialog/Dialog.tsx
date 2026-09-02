@@ -1579,6 +1579,7 @@ export const Dialog = {
  *   dismissed by clicking outside; the shape for destructive confirms. Shares
  *   Dialog's parts (see Dialog's props.json keys) under AlertDialog.*.
  * @category Overlays
+ * @partOf Dialog
  */
 export const AlertDialog = {
   Root: AlertDialogRoot,

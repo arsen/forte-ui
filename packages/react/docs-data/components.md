@@ -61,7 +61,7 @@ Components.
 - **Radio** — One option in a mutually exclusive set — always rendered inside a RadioGroup.
   props.json: Radio · knobs: theming.json → Radio
 - **RadioGroup** — A single choice among a few options that all stay visible; once the list grows past a handful, use Select.
-  props.json: RadioGroup
+  documented with Radio · props.json: RadioGroup
 - **Select** — A dropdown for choosing one option from a closed list; once the list is long enough to need typing to navigate, use Combobox.
   compound · parts (props.json): SelectLabel, SelectTrigger, SelectValue, SelectIcon, SelectPopup, SelectItem, SelectGroup, SelectGroupLabel, SelectSeparator · knobs: theming.json → Select
 - **Slider** — Picks a numeric value or range by feel along a track; when the exact number matters more than the feel, use NumberField.
@@ -74,7 +74,7 @@ Components.
 ## Overlays
 
 - **AlertDialog** — A modal for decisions that must be answered — it cannot be dismissed by clicking outside; the shape for destructive confirms. Shares Dialog's parts (see Dialog's props.json keys) under AlertDialog.*.
-  compound · parts (props.json): AlertDialogTrigger
+  documented with Dialog · compound · parts (props.json): AlertDialogTrigger
 - **ContextMenu** — A Menu that opens at the pointer on right-click or long-press over a region of the page rather than off a button.
   compound · parts (props.json): ContextMenuRoot, ContextMenuTrigger, MenuPopup, MenuItem, MenuLinkItem, MenuCheckboxItem, MenuRadioGroup, MenuRadioItem, MenuGroup, MenuGroupLabel, MenuSeparator, MenuSubmenuRoot, MenuSubmenuTrigger, MenuShortcut · knobs: theming.json → ContextMenu
 - **Dialog** — A modal surface that takes focus until dismissed; for confirmations that must be answered use AlertDialog, for edge-anchored panels use Drawer.
@@ -125,14 +125,14 @@ Components.
   props.json: Badge · knobs: theming.json → Badge
 - **Card** — The bordered grouping surface — header, title, action, content, footer and media slots for everything from settings sections to pricing tiers.
   compound · parts (props.json): CardRoot, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, CardMedia · knobs: theming.json → Card
-- **CarouselRoot** — A strip of slides shown one (or a few) at a time, moved by drag, by buttons or on a timer; for panels chosen by name rather than by position use Tabs, and for a list that merely scrolls use ScrollArea.
-  parts (props.json): CarouselRoot, CarouselViewport, CarouselTrack, CarouselSlide, CarouselPrev, CarouselNext, CarouselDots, CarouselThumbs, CarouselThumb, CarouselPlayPause
+- **Carousel** — A strip of slides shown one (or a few) at a time, moved by drag, by buttons or on a timer; for panels chosen by name rather than by position use Tabs, and for a list that merely scrolls use ScrollArea.
+  compound · parts (props.json): CarouselRoot, CarouselViewport, CarouselTrack, CarouselSlide, CarouselPrev, CarouselNext, CarouselDots, CarouselThumbs, CarouselThumb, CarouselPlayPause · knobs: theming.json → Carousel
 - **Collapsible** — A single trigger and the region it reveals; for a stack of exclusive disclosures, use Accordion.
   compound · parts (props.json): CollapsibleRoot, CollapsibleTrigger, CollapsiblePanel · knobs: theming.json → Collapsible
 - **Kbd** — A keyboard key cap for shortcut hints — works in prose, tooltips, menu items and buttons.
   props.json: Kbd · knobs: theming.json → Kbd
 - **KbdGroup** — A sequence of Kbds read as one shortcut (⌘ K).
-  props.json: KbdGroup
+  documented with Kbd · props.json: KbdGroup
 - **Resizable** — Panels the user re-proportions by dragging the divider between them — keyboard operable, constrainable, and persistable.
   compound · parts (props.json): ResizableGroup, ResizablePanel, ResizableHandle · knobs: theming.json → Resizable
 - **ScrollArea** — A scroll container with overlay scrollbars that look the same on every platform, plus scroll-position edge fades.
@@ -147,7 +147,7 @@ Components.
 - **Progress** — A linear progress bar — determinate when passed a number, indeterminate when passed null; the circular form is ProgressCircle.
   compound · parts (props.json): ProgressRoot, ProgressLabel, ProgressValue, ProgressTrack, ProgressIndicator · knobs: theming.json → Progress
 - **ProgressCircle** — The circular Progress — a ring for tight spaces; same determinate/indeterminate contract as the bar.
-  compound · parts (props.json): ProgressCircleRoot, ProgressCircleTrack, ProgressCircleIndicator, ProgressCircleValue, ProgressCircleLabel · knobs: theming.json → ProgressCircle
+  documented with Progress · compound · parts (props.json): ProgressCircleRoot, ProgressCircleTrack, ProgressCircleIndicator, ProgressCircleValue, ProgressCircleLabel · knobs: theming.json → ProgressCircle
 - **Skeleton** — A loading placeholder that occupies exactly the space the real content will, so the page doesn't jump when data lands.
   compound · parts (props.json): SkeletonRoot, SkeletonText, SkeletonGroup · knobs: theming.json → Skeleton
 - **Spinner** — An indeterminate busy indicator for waits with no measurable progress; when progress is known, use Progress.

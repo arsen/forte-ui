@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, Bot, Palette, Paintbrush, Rocket, Zap } from "lucide-react";
 import { CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
+import { LINK_CARD, LINK_CARD_SURFACE } from "../styles";
 
 /**
  * The "start here" row: one card per place a new reader might want to go.
@@ -51,37 +52,6 @@ const ENTRIES: { title: string; body: string; href: string; icon: LucideIcon }[]
   },
 ];
 
-/* A card that IS a link. The anchor wraps the card rather than sitting inside
- * it, so the whole surface is the target and there is no dead border to miss
- * by a pixel. The hover state lives on the card and is driven by the anchor's
- * `group` state, so the focus ring stays on the anchor. `hover:` is already
- * `@media (hover: hover)` in v4, so a touch screen never sticks it on the
- * last thing tapped.
- *
- * `text-foreground` on the anchor is not cosmetic. The site's link reset in
- * globals.css is `a:not(.forte-focus-ring) { color: inherit }` — it skips
- * anything carrying the ring class, on the assumption that such a link is a
- * library part painting its own colour. This one is not, so without the
- * class it kept the browser's default link colour, a lavender blue in dark
- * mode. Nothing visible reads it directly, but it IS the anchor's
- * `currentColor`, which is what any descendant's colour or border falls
- * back to the moment its own value fails to resolve — and that is exactly
- * what a palette switch showed: a lavender border on the cards for the
- * length of the cross-fade.
- *
- * The card deliberately carries no transition. It used to say so out loud,
- * with `transition-none`, because the palette cross-fade was a blanket
- * `transition` on `.themeTransition *` and the card's border would otherwise
- * restart a 400ms one every frame of the fade — chasing a target that had
- * moved again before it arrived, so the edge lagged everything it sits
- * against. That rule is now two properties on `:root` alone (globals.css
- * says why at length), `Card` declares no transition of its own, and the
- * border simply follows the seed. The class was left behind as a no-op.
- *
- * No geometry on hover either — motion rule 7 in AGENTS.md: hover is a
- * colour cue, lift is opt-in. */
-export const LINK_CARD = "group block h-full rounded-surface text-foreground forte-focus-ring";
-export const LINK_CARD_SURFACE = "h-full group-hover:border-primary-border";
 
 export function EntryCards() {
   return (

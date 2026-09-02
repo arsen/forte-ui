@@ -41,6 +41,7 @@ packages/create-forte-ui   the scaffolding CLI (`pnpm create forte-ui`)
 apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/page.tsx                     the home page — the one route outside the docs shell
   app/(docs)/layout.tsx            the docs shell: sidebar · page column · section rail
+  app/(docs)/components/page.mdx          the component index — cards, from the catalogue
   app/(docs)/components/<name>/page.mdx   the written page
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
@@ -51,6 +52,8 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   components/toc.tsx               the section rail — the shell's right column
   components/shell-drawers.tsx     both columns again, for screens without room
   components/toc-registry.ts       GENERATED — the rail's server-rendered seed
+  components/component-catalog.ts  GENERATED — the library's catalogue, resolved to routes
+  components/component-index.tsx   the index page's cards, grouped by category
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   mdx-components.tsx               the prose typography, per element
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
@@ -69,9 +72,13 @@ pnpm release                                # build packages/*, preview, confirm
 
 `pnpm generate` is the one to reach for after editing a source of truth while
 the dev server is already running — it fans out to `generate` in both packages
-(`tokens && docgen` in the library, `registry && toc` in the docs) and they run
-in parallel, since neither docs generator reads anything the library builds.
-Under a second, and it is deliberately **not** turbo-cached: these scripts write
+(`tokens && docgen` in the library, `registry && toc && catalog` in the docs).
+The two used to run in parallel. They no longer can: `build-catalog.mjs` reads
+the library's `docs-data/components.json` to resolve every component page, so
+turbo orders the docs behind the library with `^generate` — otherwise a run that
+adds a component reads the PREVIOUS run's catalogue and emits a site index
+missing the page that same run just created. A couple of seconds, and it is
+deliberately **not** turbo-cached: these scripts write
 checked-in files, so a cache hit on an unchanged input set would leave a hand
 edit to `tokens.color.css` or `registry.ts` sitting in the tree — the exact
 drift the command exists to repair.
@@ -85,6 +92,7 @@ pnpm --filter @forte-ui/react check:contrast # the ramp gate
 pnpm --filter @forte-ui/react check:parity   # the popup-parity gate
 pnpm --filter @forte-ui/docs registry  # the demo registry
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
+pnpm --filter @forte-ui/docs catalog   # the component index + the sidebar
 ```
 
 `check:contrast` and `check:parity` are deliberately outside `generate` —
@@ -107,11 +115,13 @@ catch things.
 | `packages/react/src/styles/tokens.color.css` | `scripts/ramp.mjs` | `tokens` |
 | `packages/react/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
 | `packages/react/docs-data/props.json` | component TSX doc comments | `docgen` |
-| `packages/react/docs-data/components.md` | `@summary` / `@category` tags on component-root doc comments | `docgen` |
+| `packages/react/docs-data/components.md` | `@summary` / `@category` / `@partOf` tags on component-root doc comments | `docgen` |
+| `packages/react/docs-data/components.json` | the same tags — the catalogue as data | `docgen` |
 | `packages/react/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
 | `packages/react/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
 | `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `toc` |
+| `apps/docs/components/component-catalog.ts` | `docs-data/components.json` + the dirs under `app/(docs)/components/` | `catalog` |
 
 `pnpm generate` from the root runs every row of that table.
 
@@ -153,7 +163,8 @@ which does not re-run `tokens` or `docgen`.
 | a value in `scripts/ramp.mjs` | `tokens`, then `check:contrast` |
 | a value in `scripts/motion.mjs` | `tokens` |
 | a prop — added, renamed, removed, retyped, or its JSDoc | `docgen` |
-| a component root's `@summary` / `@category` doc-comment tag | `docgen` |
+| a component root's `@summary` / `@category` / `@partOf` doc-comment tag | `docgen`, then `catalog` |
+| the set of pages under `app/(docs)/components/` — added, renamed, removed | `catalog` |
 | a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
 | any `--forte-*` declaration in `src/styles/*.css` — added, renamed, removed, its value or selector | `docgen` (rebuilds `tokens.json`; after a `ramp.mjs` / `motion.mjs` change run `tokens` first) |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
@@ -173,6 +184,17 @@ page's `tableOfContents` export. `Toc` then reconciles it against the rendered
 headings on mount, so a heading renamed mid-session shows the NEW heading — the
 stale seed costs a re-render nobody sees, not a wrong rail. Run it anyway
 before committing, or the file lands in the diff on somebody else's next build.
+
+`catalog` is the opposite of `toc`, and worth knowing before it stops a build.
+It is a GATE as much as a generator: it resolves every catalogue entry to a page
+under `app/(docs)/components/` and fails if the two disagree in either
+direction — a component with no page, or a page no component resolves to. There
+is deliberately no fallback. An earlier draft resolved a missing page to the
+component's source DIRECTORY, which is right for the four entries documented on
+a sibling's page and silently wrong for the case that matters: a new component
+whose page nobody wrote would have resolved to its neighbour's and looked
+documented. The four say so themselves instead, with `@partOf` in the library
+source, and everything else is an error naming the file to fix.
 
 `check:contrast` pairs with `ramp.mjs` alone. It is the only thing that catches
 a curve tweak silently dropping one hue band below AA, so do not skip it there
@@ -649,18 +671,26 @@ base rules without a single `!important`.
    when-to-use, naming the nearest alternative where one is confusable) and
    `@category` (one of the six buckets in `docgen.mjs`) — `docgen` assembles
    them into `docs-data/components.md`, the catalogue agents pick components
-   from, and **fails the build** if either tag is missing, so this step
-   cannot be skipped.
+   from, and `components.json`, the same data, which the docs site builds its
+   component index and its sidebar out of. It **fails the build** if either tag
+   is missing, so this step cannot be skipped. A third tag, `@partOf <Component>`,
+   is for the exception: an entry documented on a sibling's page rather than one
+   of its own — `AlertDialog` on Dialog's, `KbdGroup` on Kbd's. It must name a
+   catalogue entry in the same directory, and it is what keeps a component with
+   a genuinely missing page from being mistaken for one of these.
 9. Add demos in `apps/docs/demos/<name>/`, regenerate the registry, and write
    the MDX page. Demos are imported twice from the same file (once to render,
    once through `?raw`), so the code shown is provably the code that runs —
    which is also why their layout is Tailwind rather than a `style` object; see
    *Styling the docs site* above.
-10. Add the page to the `NAV` array in
-    [`apps/docs/components/nav.tsx`](apps/docs/components/nav.tsx) — which is
-    the list `Sidebar` and the navigation drawer both render, so one edit
-    covers the rail and the phone — and
-    run `toc` so the right-hand "On this page" rail is in the server HTML for
+10. Run `catalog`, then `toc`. There is no navigation list to edit: the
+    Components group in
+    [`apps/docs/components/nav.tsx`](apps/docs/components/nav.tsx) — the list
+    `Sidebar` and the navigation drawer both render — and the cards on
+    `/components/` are both spread in from `component-catalog.ts`, so `catalog`
+    adds the page to the rail, the phone and the index at once. It also fails
+    if the page and the component do not line up, which is the point.
+    `toc` then puts the right-hand "On this page" rail in the server HTML for
     the new route. It will find the headings without you — reading them off the
     rendered page is what it falls back to — but until the seed is regenerated
     they arrive a frame after hydration instead of with the document.

@@ -334,11 +334,6 @@ export interface CarouselRootProps
  * is active. Give it an `aria-label` — it is a `region` with the
  * `carousel` role description, and that name is how a screen reader user
  * tells one carousel from the next.
- *
- * @summary A strip of slides shown one (or a few) at a time, moved by drag,
- *   by buttons or on a timer; for panels chosen by name rather than by
- *   position use Tabs, and for a list that merely scrolls use ScrollArea.
- * @category Content & layout
  */
 const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(function CarouselRoot(
   {
@@ -1508,6 +1503,20 @@ const CarouselPlayPause = React.forwardRef<HTMLButtonElement, CarouselPlayPauseP
  * Namespace
  * ---------------------------------------------------------------------- */
 
+/**
+ * The carousel namespace — the viewport, its controls and its pagination.
+ *
+ * The catalogue tags sit HERE rather than on `CarouselRoot`, which is what
+ * every other compound does (see `ButtonGroup`). docgen names the entry after
+ * whatever carries them, so tagging the Root published a catalogue entry
+ * called "CarouselRoot" — a name no consumer writes, and one that does not
+ * kebab to this component's docs route.
+ *
+ * @summary A strip of slides shown one (or a few) at a time, moved by drag,
+ *   by buttons or on a timer; for panels chosen by name rather than by
+ *   position use Tabs, and for a list that merely scrolls use ScrollArea.
+ * @category Content & layout
+ */
 export const Carousel = {
   Root: CarouselRoot,
   Viewport: CarouselViewport,

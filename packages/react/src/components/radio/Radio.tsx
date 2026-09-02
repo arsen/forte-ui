@@ -198,6 +198,7 @@ export interface RadioGroupProps<Value = unknown>
  * @summary A single choice among a few options that all stay visible; once the
  *   list grows past a handful, use Select.
  * @category Forms
+ * @partOf Radio
  */
 export function RadioGroup<Value = unknown>({
   orientation = "vertical",

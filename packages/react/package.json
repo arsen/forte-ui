@@ -29,6 +29,7 @@
     "./styles/*": "./dist/styles/*",
     "./package.json": "./package.json",
     "./docs-data/components.md": "./docs-data/components.md",
+    "./docs-data/components.json": "./docs-data/components.json",
     "./docs-data/props.json": "./docs-data/props.json",
     "./docs-data/theming.json": "./docs-data/theming.json",
     "./docs-data/tokens.json": "./docs-data/tokens.json"

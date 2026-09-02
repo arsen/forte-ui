@@ -99,6 +99,7 @@ export interface KbdGroupProps
  *
  * @summary A sequence of Kbds read as one shortcut (⌘ K).
  * @category Content & layout
+ * @partOf Kbd
  */
 export const KbdGroup = React.forwardRef<HTMLElement, KbdGroupProps>(
   function KbdGroup({ render, className, ...props }, ref) {

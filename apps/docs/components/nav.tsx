@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { NavList } from "@forte-ui/react";
 import { routeKey } from "@/lib/route";
+import { COMPONENT_PAGES } from "./component-catalog";
 
 /**
  * The documentation page list, and the markup for it.
@@ -13,6 +14,13 @@ import { routeKey } from "@/lib/route";
  * too narrow for a rail. A page added to one copy and not the other would be
  * unreachable on exactly one class of device — and on the class nobody
  * develops on.
+ *
+ * The Components group is not written here. It is spread in from
+ * `component-catalog.ts`, which `scripts/build-catalog.mjs` generates from the
+ * library's `@summary` / `@category` doc comments — so adding a component to
+ * the package adds it to both navigations, and a page with no component behind
+ * it (or a component with no page) fails the build rather than quietly
+ * appearing, or quietly not.
  *
  * Only ONE of the two is ever in the accessibility tree, which is why both can
  * carry the same `aria-label`: the rail is `display: none` below
@@ -47,64 +55,17 @@ const NAV: NavGroup[] = [
   },
   {
     title: "Components",
-    items: [
-      { title: "Accordion", href: "/components/accordion/" },
-      { title: "Alert", href: "/components/alert/" },
-      { title: "App Bar", href: "/components/app-bar/" },
-      { title: "Aspect Ratio", href: "/components/aspect-ratio/" },
-      { title: "Avatar", href: "/components/avatar/" },
-      { title: "Badge", href: "/components/badge/" },
-      { title: "Breadcrumb", href: "/components/breadcrumb/" },
-      { title: "Button", href: "/components/button/" },
-      { title: "Button Group", href: "/components/button-group/" },
-      { title: "Calendar", href: "/components/calendar/" },
-      { title: "Card", href: "/components/card/" },
-      { title: "Carousel", href: "/components/carousel/" },
-      { title: "Checkbox", href: "/components/checkbox/" },
-      { title: "Checkbox Group", href: "/components/checkbox-group/" },
-      { title: "Collapsible", href: "/components/collapsible/" },
-      { title: "Color Picker", href: "/components/color-picker/" },
-      { title: "Combobox", href: "/components/combobox/" },
-      { title: "Context Menu", href: "/components/context-menu/" },
-      { title: "Date Picker", href: "/components/date-picker/" },
-      { title: "Dialog", href: "/components/dialog/" },
-      { title: "Drawer", href: "/components/drawer/" },
-      { title: "Field", href: "/components/field/" },
-      { title: "Fieldset", href: "/components/fieldset/" },
-      { title: "Form", href: "/components/form/" },
-      { title: "Input", href: "/components/input/" },
-      { title: "Input Group", href: "/components/input-group/" },
-      { title: "Kbd", href: "/components/kbd/" },
-      { title: "Menu", href: "/components/menu/" },
-      { title: "Menubar", href: "/components/menubar/" },
-      { title: "Nav List", href: "/components/nav-list/" },
-      { title: "Navigation Menu", href: "/components/navigation-menu/" },
-      { title: "Number Field", href: "/components/number-field/" },
-      { title: "OTP Field", href: "/components/otp-field/" },
-      { title: "Pagination", href: "/components/pagination/" },
-      { title: "Popover", href: "/components/popover/" },
-      { title: "Preview Card", href: "/components/preview-card/" },
-      { title: "Progress", href: "/components/progress/" },
-      { title: "Radio", href: "/components/radio/" },
-      { title: "Resizable", href: "/components/resizable/" },
-      { title: "Scroll Area", href: "/components/scroll-area/" },
-      { title: "Select", href: "/components/select/" },
-      { title: "Separator", href: "/components/separator/" },
-      { title: "Skeleton", href: "/components/skeleton/" },
-      { title: "Slider", href: "/components/slider/" },
-      { title: "Spinner", href: "/components/spinner/" },
-      { title: "Steps", href: "/components/steps/" },
-      { title: "Switch", href: "/components/switch/" },
-      { title: "Table", href: "/components/table/" },
-      { title: "Tabs", href: "/components/tabs/" },
-      { title: "Textarea", href: "/components/textarea/" },
-      { title: "Theme Toggle", href: "/components/theme-toggle/" },
-      { title: "Toast", href: "/components/toast/" },
-      { title: "Toggle", href: "/components/toggle/" },
-      { title: "Toggle Group", href: "/components/toggle-group/" },
-      { title: "Toolbar", href: "/components/toolbar/" },
-      { title: "Tooltip", href: "/components/tooltip/" },
-    ],
+    /* Every row below the first is GENERATED — `COMPONENT_PAGES` comes from
+     * `scripts/build-catalog.mjs`, which resolves the library's own catalogue
+     * to the pages on this site and fails the build if the two disagree in
+     * either direction. These fifty-six titles were typed out here until then,
+     * and the derived ones came out identical to the last character, which is
+     * the only reason the swap was safe to make in one go.
+     *
+     * Overview is hand-written because it is not a component: it is the index
+     * those rows point into, and it belongs at the top of the group rather
+     * than alphabetised among them. */
+    items: [{ title: "Overview", href: "/components/" }, ...COMPONENT_PAGES],
   },
 ];
 

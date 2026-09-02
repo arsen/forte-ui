@@ -1,0 +1,1038 @@
+[
+  {
+    "name": "Button",
+    "dir": "button",
+    "category": "Actions",
+    "summary": "The clickable action control — submit, open, trigger; for a pressed state that sticks, use Toggle, and for pure navigation use a link.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Button"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ButtonGroup",
+    "dir": "button-group",
+    "category": "Actions",
+    "summary": "Fuses related buttons into one visual object with shared borders; purely presentational — for a single-choice set with state, use ToggleGroup.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ButtonGroupRoot",
+      "ButtonGroupSeparator",
+      "ButtonGroupText"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ThemeToggle",
+    "dir": "theme-toggle",
+    "category": "Actions",
+    "summary": "A ready-made light/dark mode button — pair with ThemeScript to avoid a wrong-theme flash at first paint; useTheme drives custom toggles.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "ThemeScript",
+      "ThemeToggle"
+    ],
+    "hooks": [
+      "useTheme"
+    ]
+  },
+  {
+    "name": "Toggle",
+    "dir": "toggle",
+    "category": "Actions",
+    "summary": "A two-state button that stays pressed — bold in a text editor; for an on/off setting that reads as a control, use Switch.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Toggle"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ToggleGroup",
+    "dir": "toggle",
+    "category": "Actions",
+    "summary": "A set of Toggles sharing one value, single or multiple choice — the view-switcher pattern; for form data use RadioGroup or CheckboxGroup.",
+    "partOf": null,
+    "compound": false,
+    "theming": false,
+    "parts": [
+      "ToggleGroup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Toolbar",
+    "dir": "toolbar",
+    "category": "Actions",
+    "summary": "A strip of related controls that behaves as one tab stop, arrow keys moving between them — the row above an editor or table.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ToolbarRoot",
+      "ToolbarGroup",
+      "ToolbarButton",
+      "ToolbarLink",
+      "ToolbarInput",
+      "ToolbarSeparator"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Calendar",
+    "dir": "calendar",
+    "category": "Forms",
+    "summary": "An inline month grid for picking one day, several days, or a range; for a form field that opens a calendar on demand, use DatePicker.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Calendar"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Checkbox",
+    "dir": "checkbox",
+    "category": "Forms",
+    "summary": "An independent yes/no option with an optional mixed state; for one-of-many use RadioGroup, for a setting that applies immediately use Switch.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Checkbox"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "CheckboxGroup",
+    "dir": "checkbox",
+    "category": "Forms",
+    "summary": "One array value shared by several Checkboxes, with an optional parent checkbox that summarises and toggles the lot.",
+    "partOf": null,
+    "compound": false,
+    "theming": false,
+    "parts": [
+      "CheckboxGroup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ColorPicker",
+    "dir": "color-picker",
+    "category": "Forms",
+    "summary": "Full colour selection — saturation/brightness canvas, hue and alpha rails, preset swatches, and a text field that speaks four CSS notations.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ColorPickerRoot",
+      "ColorPickerHueSlider",
+      "ColorPickerAlphaSlider",
+      "ColorPickerFormatSelect",
+      "ColorPickerTrigger",
+      "ColorPickerPopup",
+      "ColorPickerArrow",
+      "ColorPickerPanel",
+      "ColorPickerRow",
+      "ColorPickerArea",
+      "ColorPickerSwatches",
+      "ColorPickerSwatch",
+      "ColorPickerPreview",
+      "ColorPickerValue",
+      "ColorPickerInput",
+      "ColorPickerEyeDropper",
+      "ColorPickerHiddenInput"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Combobox",
+    "dir": "combobox",
+    "category": "Forms",
+    "summary": "A text input combined with a filterable option list — the Select to reach for once the list is long enough to need typing.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ComboboxLabel",
+      "ComboboxInputGroup",
+      "ComboboxInput",
+      "ComboboxTrigger",
+      "ComboboxIcon",
+      "ComboboxClear",
+      "ComboboxChips",
+      "ComboboxChip",
+      "ComboboxChipRemove",
+      "ComboboxPopup",
+      "ComboboxList",
+      "ComboboxEmpty",
+      "ComboboxStatus",
+      "ComboboxItem",
+      "ComboboxGroup",
+      "ComboboxGroupLabel",
+      "ComboboxSeparator",
+      "ComboboxRow"
+    ],
+    "hooks": [
+      "useComboboxFilter",
+      "useComboboxFilteredItems"
+    ]
+  },
+  {
+    "name": "DatePicker",
+    "dir": "date-picker",
+    "category": "Forms",
+    "summary": "A form field that opens a Calendar in a popover — the input-shaped way to pick a day or a range.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "DatePickerRoot",
+      "DatePickerTrigger",
+      "DatePickerValue",
+      "DatePickerIcon",
+      "DatePickerPopup",
+      "DatePickerCalendar",
+      "DatePickerFooter",
+      "DatePickerClear"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Field",
+    "dir": "field",
+    "category": "Forms",
+    "summary": "Wires one control to its label, description and error message, and owns the validation state they all read — the wrapper every form control sits in.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "FieldRoot",
+      "FieldLabel",
+      "FieldDescription",
+      "FieldError",
+      "FieldItem"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Fieldset",
+    "dir": "fieldset",
+    "category": "Forms",
+    "summary": "Groups related Fields under one legend, without the browser's default fieldset chrome.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "FieldsetRoot",
+      "FieldsetLegend"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Form",
+    "dir": "form",
+    "category": "Forms",
+    "summary": "A <form> that aggregates every Field's validity, blocks submission until they pass, and routes server errors back to fields by name.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Form"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Input",
+    "dir": "input",
+    "category": "Forms",
+    "summary": "The single-line text field; wrap in Field for label and error wiring, in InputGroup for inner icons and buttons; for numbers use NumberField.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Input"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "InputGroup",
+    "dir": "input-group",
+    "category": "Forms",
+    "summary": "Puts icons, prefixes, buttons and counters inside a text field's boundary instead of bolted onto it.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "InputGroupRoot",
+      "InputGroupInput",
+      "InputGroupTextarea",
+      "InputGroupAddon",
+      "InputGroupText",
+      "InputGroupButton"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "NumberField",
+    "dir": "number-field",
+    "category": "Forms",
+    "summary": "A text input that knows it holds a number — parses, formats, steps, clamps, and scrubs by dragging; use over Input whenever the value is numeric.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "NumberFieldRoot",
+      "NumberFieldGroup",
+      "NumberFieldInput",
+      "NumberFieldIncrement",
+      "NumberFieldDecrement",
+      "NumberFieldScrubArea",
+      "NumberFieldScrubAreaCursor"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "OTPField",
+    "dir": "otp-field",
+    "category": "Forms",
+    "summary": "A row of single-character slots holding one verification code — one value, one tab stop, and paste that lands where you expect.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "OTPFieldRoot",
+      "OTPFieldInput",
+      "OTPFieldSeparator"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Radio",
+    "dir": "radio",
+    "category": "Forms",
+    "summary": "One option in a mutually exclusive set — always rendered inside a RadioGroup.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Radio"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "RadioGroup",
+    "dir": "radio",
+    "category": "Forms",
+    "summary": "A single choice among a few options that all stay visible; once the list grows past a handful, use Select.",
+    "partOf": "Radio",
+    "compound": false,
+    "theming": false,
+    "parts": [
+      "RadioGroup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Select",
+    "dir": "select",
+    "category": "Forms",
+    "summary": "A dropdown for choosing one option from a closed list; once the list is long enough to need typing to navigate, use Combobox.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "SelectLabel",
+      "SelectTrigger",
+      "SelectValue",
+      "SelectIcon",
+      "SelectPopup",
+      "SelectItem",
+      "SelectGroup",
+      "SelectGroupLabel",
+      "SelectSeparator"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Slider",
+    "dir": "slider",
+    "category": "Forms",
+    "summary": "Picks a numeric value or range by feel along a track; when the exact number matters more than the feel, use NumberField.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "SliderRoot",
+      "SliderLabel",
+      "SliderValue",
+      "SliderControl",
+      "SliderTrack",
+      "SliderIndicator",
+      "SliderThumb"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Switch",
+    "dir": "switch",
+    "category": "Forms",
+    "summary": "An on/off control whose change applies immediately — no submit step; for a value collected and submitted by a form, use Checkbox.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Switch"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Textarea",
+    "dir": "textarea",
+    "category": "Forms",
+    "summary": "A multi-line text control sized in rows, with an optional ceiling and CSS-driven auto-growth.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Textarea"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "AlertDialog",
+    "dir": "dialog",
+    "category": "Overlays",
+    "summary": "A modal for decisions that must be answered — it cannot be dismissed by clicking outside; the shape for destructive confirms. Shares Dialog's parts (see Dialog's props.json keys) under AlertDialog.*.",
+    "partOf": "Dialog",
+    "compound": true,
+    "theming": false,
+    "parts": [
+      "AlertDialogTrigger"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ContextMenu",
+    "dir": "context-menu",
+    "category": "Overlays",
+    "summary": "A Menu that opens at the pointer on right-click or long-press over a region of the page rather than off a button.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ContextMenuRoot",
+      "ContextMenuTrigger",
+      "MenuPopup",
+      "MenuItem",
+      "MenuLinkItem",
+      "MenuCheckboxItem",
+      "MenuRadioGroup",
+      "MenuRadioItem",
+      "MenuGroup",
+      "MenuGroupLabel",
+      "MenuSeparator",
+      "MenuSubmenuRoot",
+      "MenuSubmenuTrigger",
+      "MenuShortcut"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Dialog",
+    "dir": "dialog",
+    "category": "Overlays",
+    "summary": "A modal surface that takes focus until dismissed; for confirmations that must be answered use AlertDialog, for edge-anchored panels use Drawer.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "DialogProvider",
+      "DialogTrigger",
+      "DialogPopup",
+      "DialogSurface",
+      "DialogTitle",
+      "DialogDescription",
+      "DialogClose",
+      "DialogFooter"
+    ],
+    "hooks": [
+      "useDialog"
+    ]
+  },
+  {
+    "name": "Drawer",
+    "dir": "drawer",
+    "category": "Overlays",
+    "summary": "A panel that slides in from any screen edge, with drag-to-dismiss and snap points; for a centred modal use Dialog.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "DrawerRoot",
+      "DrawerTrigger",
+      "DrawerPopup",
+      "DrawerHandle",
+      "DrawerContent",
+      "DrawerTitle",
+      "DrawerDescription",
+      "DrawerClose",
+      "DrawerFooter",
+      "DrawerSwipeArea"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Menu",
+    "dir": "menu",
+    "category": "Overlays",
+    "summary": "A button-opened list of commands with checkable items, submenus and shortcut hints; for choosing a form value use Select instead.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "MenuSubmenuRoot",
+      "MenuTrigger",
+      "MenuPopup",
+      "MenuItem",
+      "MenuLinkItem",
+      "MenuCheckboxItem",
+      "MenuRadioGroup",
+      "MenuRadioItem",
+      "MenuGroup",
+      "MenuGroupLabel",
+      "MenuSeparator",
+      "MenuSubmenuTrigger",
+      "MenuShortcut"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Menubar",
+    "dir": "menubar",
+    "category": "Overlays",
+    "summary": "A row of Menus that behave as one strip — the application menu bar.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Menubar"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Popover",
+    "dir": "popover",
+    "category": "Overlays",
+    "summary": "An anchored non-modal surface for content the user reads or acts on — tabbable and touch-reachable; for a hover-only hint use Tooltip.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "PopoverRoot",
+      "PopoverTrigger",
+      "PopoverPopup",
+      "PopoverArrow",
+      "PopoverTitle",
+      "PopoverDescription",
+      "PopoverClose",
+      "PopoverFooter",
+      "PopoverViewport"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "PreviewCard",
+    "dir": "preview-card",
+    "category": "Overlays",
+    "summary": "A rich preview of a link's destination revealed by resting on it — supplementary by design, never the only route to what it shows.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "PreviewCardRoot",
+      "PreviewCardTrigger",
+      "PreviewCardPopup",
+      "PreviewCardArrow",
+      "PreviewCardViewport"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Toast",
+    "dir": "toast",
+    "category": "Overlays",
+    "summary": "Short transient messages raised imperatively from anywhere via useToast; for a persistent in-page message use Alert.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ToastProvider",
+      "ToastViewport",
+      "ToastItem",
+      "ToastIcon",
+      "ToastTitle",
+      "ToastDescription",
+      "ToastAction",
+      "ToastClose"
+    ],
+    "hooks": [
+      "useToast"
+    ]
+  },
+  {
+    "name": "Tooltip",
+    "dir": "tooltip",
+    "category": "Overlays",
+    "summary": "A short label shown on hover or focus naming a control — never the only carrier of essential content; for interactive content use Popover.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "TooltipProvider",
+      "TooltipRoot",
+      "TooltipTrigger",
+      "TooltipPopup",
+      "TooltipArrow",
+      "TooltipShortcut"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "AppBar",
+    "dir": "app-bar",
+    "category": "Navigation",
+    "summary": "The bar across the top of a screen — leading controls, a title and trailing actions, pinned, elevating or hiding on scroll; for a one-tab-stop strip of controls inside it, use Toolbar.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "AppBarRoot",
+      "AppBarLeading",
+      "AppBarTrailing",
+      "AppBarTitle"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Breadcrumb",
+    "dir": "breadcrumb",
+    "category": "Navigation",
+    "summary": "The trail of ancestors above the current page, with automatic separators and a collapsible middle for narrow screens.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "BreadcrumbRoot",
+      "BreadcrumbList",
+      "BreadcrumbItem",
+      "BreadcrumbLink",
+      "BreadcrumbPage",
+      "BreadcrumbSeparator",
+      "BreadcrumbEllipsis"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "NavigationMenu",
+    "dir": "navigation-menu",
+    "category": "Navigation",
+    "summary": "A horizontal site-nav bar whose items open one shared panel of links that slides and resizes between them.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "NavigationMenuRoot",
+      "NavigationMenuList",
+      "NavigationMenuItem",
+      "NavigationMenuIcon",
+      "NavigationMenuTrigger",
+      "NavigationMenuContent",
+      "NavigationMenuLink",
+      "NavigationMenuLinkTitle",
+      "NavigationMenuLinkDescription",
+      "NavigationMenuPopup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "NavList",
+    "dir": "nav-list",
+    "category": "Navigation",
+    "summary": "A sidebar's vertical page list — titled sections, collapsible groups, nesting, and a controlled notion of the current page.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "NavListRoot",
+      "NavListSection",
+      "NavListSectionLabel",
+      "NavListList",
+      "NavListItem",
+      "NavListLink",
+      "NavListGroup",
+      "NavListGroupTrigger",
+      "NavListGroupPanel",
+      "NavListBadge"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Pagination",
+    "dir": "pagination",
+    "category": "Navigation",
+    "summary": "Page controls for a long set — previous, next, numbered pages and an ellipsis; for moving through steps of one task use Tabs, and for a position within a document use Breadcrumb.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "PaginationRoot",
+      "PaginationList",
+      "PaginationItem",
+      "PaginationLink",
+      "PaginationPrevious",
+      "PaginationNext",
+      "PaginationFirst",
+      "PaginationLast",
+      "PaginationEllipsis"
+    ],
+    "hooks": [
+      "usePaginationRange"
+    ]
+  },
+  {
+    "name": "Steps",
+    "dir": "steps",
+    "category": "Navigation",
+    "summary": "A numbered sequence of steps and the user's position in it — a wizard header or an order's progress; for a single fraction done, use Progress instead.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "StepsRoot",
+      "StepsItem",
+      "StepsTrigger",
+      "StepsIndicator",
+      "StepsTitle",
+      "StepsDescription"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Tabs",
+    "dir": "tabs",
+    "category": "Navigation",
+    "summary": "Switches between panels of related content in the same place, with a sliding active indicator.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "TabsRoot",
+      "TabsList",
+      "TabsTab",
+      "TabsIndicator",
+      "TabsPanel"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Accordion",
+    "dir": "accordion",
+    "category": "Content & layout",
+    "summary": "A stack of headings that each expand a panel, one or several open at a time; for a single independent disclosure, use Collapsible.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "AccordionRoot",
+      "AccordionItem",
+      "AccordionHeader",
+      "AccordionTrigger",
+      "AccordionPanel"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Alert",
+    "dir": "alert",
+    "category": "Content & layout",
+    "summary": "A persistent in-page message about the page's state — the static counterpart to Toast, which is transient and floats above the page.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "AlertRoot",
+      "AlertIcon",
+      "AlertTitle",
+      "AlertDescription",
+      "AlertAction",
+      "AlertClose"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "AspectRatio",
+    "dir": "aspect-ratio",
+    "category": "Content & layout",
+    "summary": "Reserves a fixed-ratio box from first paint so late-arriving media drops into already-reserved space instead of shifting the layout.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "AspectRatio"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Avatar",
+    "dir": "avatar",
+    "category": "Content & layout",
+    "summary": "A picture of a person or thing with a sensible fallback when the image is missing or slow, plus an optional status badge and grouping.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "AvatarRoot",
+      "AvatarImage",
+      "AvatarFallback",
+      "AvatarBadge",
+      "AvatarGroup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Badge",
+    "dir": "badge",
+    "category": "Content & layout",
+    "summary": "A small label for status, counts and categories.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Badge"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Card",
+    "dir": "card",
+    "category": "Content & layout",
+    "summary": "The bordered grouping surface — header, title, action, content, footer and media slots for everything from settings sections to pricing tiers.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "CardRoot",
+      "CardHeader",
+      "CardTitle",
+      "CardDescription",
+      "CardAction",
+      "CardContent",
+      "CardFooter",
+      "CardMedia"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Carousel",
+    "dir": "carousel",
+    "category": "Content & layout",
+    "summary": "A strip of slides shown one (or a few) at a time, moved by drag, by buttons or on a timer; for panels chosen by name rather than by position use Tabs, and for a list that merely scrolls use ScrollArea.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "CarouselRoot",
+      "CarouselViewport",
+      "CarouselTrack",
+      "CarouselSlide",
+      "CarouselPrev",
+      "CarouselNext",
+      "CarouselDots",
+      "CarouselThumbs",
+      "CarouselThumb",
+      "CarouselPlayPause"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Collapsible",
+    "dir": "collapsible",
+    "category": "Content & layout",
+    "summary": "A single trigger and the region it reveals; for a stack of exclusive disclosures, use Accordion.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "CollapsibleRoot",
+      "CollapsibleTrigger",
+      "CollapsiblePanel"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Kbd",
+    "dir": "kbd",
+    "category": "Content & layout",
+    "summary": "A keyboard key cap for shortcut hints — works in prose, tooltips, menu items and buttons.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Kbd"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "KbdGroup",
+    "dir": "kbd",
+    "category": "Content & layout",
+    "summary": "A sequence of Kbds read as one shortcut (⌘ K).",
+    "partOf": "Kbd",
+    "compound": false,
+    "theming": false,
+    "parts": [
+      "KbdGroup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Resizable",
+    "dir": "resizable",
+    "category": "Content & layout",
+    "summary": "Panels the user re-proportions by dragging the divider between them — keyboard operable, constrainable, and persistable.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ResizableGroup",
+      "ResizablePanel",
+      "ResizableHandle"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ScrollArea",
+    "dir": "scroll-area",
+    "category": "Content & layout",
+    "summary": "A scroll container with overlay scrollbars that look the same on every platform, plus scroll-position edge fades.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ScrollAreaRoot",
+      "ScrollAreaViewport",
+      "ScrollAreaContent",
+      "ScrollAreaScrollbar",
+      "ScrollAreaThumb",
+      "ScrollAreaCorner"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Separator",
+    "dir": "separator",
+    "category": "Content & layout",
+    "summary": "A rule between things, horizontal or vertical, announced to assistive technology unless marked decorative.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Separator"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Table",
+    "dir": "table",
+    "category": "Content & layout",
+    "summary": "Rows and columns of data on a real `<table>` — variants, sizes, striping, selection tint, numeric columns, sortable headers and a sticky header; the data, sorting and selection state stay with the consumer.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "TableContainer",
+      "TableRoot",
+      "TableCaption",
+      "TableHeader",
+      "TableBody",
+      "TableFooter",
+      "TableRow",
+      "TableHead",
+      "TableCell"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Progress",
+    "dir": "progress",
+    "category": "Feedback",
+    "summary": "A linear progress bar — determinate when passed a number, indeterminate when passed null; the circular form is ProgressCircle.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ProgressRoot",
+      "ProgressLabel",
+      "ProgressValue",
+      "ProgressTrack",
+      "ProgressIndicator"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "ProgressCircle",
+    "dir": "progress",
+    "category": "Feedback",
+    "summary": "The circular Progress — a ring for tight spaces; same determinate/indeterminate contract as the bar.",
+    "partOf": "Progress",
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ProgressCircleRoot",
+      "ProgressCircleTrack",
+      "ProgressCircleIndicator",
+      "ProgressCircleValue",
+      "ProgressCircleLabel"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Skeleton",
+    "dir": "skeleton",
+    "category": "Feedback",
+    "summary": "A loading placeholder that occupies exactly the space the real content will, so the page doesn't jump when data lands.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "SkeletonRoot",
+      "SkeletonText",
+      "SkeletonGroup"
+    ],
+    "hooks": []
+  },
+  {
+    "name": "Spinner",
+    "dir": "spinner",
+    "category": "Feedback",
+    "summary": "An indeterminate busy indicator for waits with no measurable progress; when progress is known, use Progress.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Spinner"
+    ],
+    "hooks": []
+  }
+]
