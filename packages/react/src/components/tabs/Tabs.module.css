@@ -126,6 +126,14 @@
     /* Panel */
     /** Padding inside the panel */
     --forte-tabs-panel-padding: 0px;
+    /* --forte-duration-move, the same clock the indicator runs on, so the
+     * strip's marker and the panel area read as one gesture rather than two
+     * overlapping ones. It is also the token that collapses to 1ms under
+     * reduced motion, which is what a height change — the largest layout
+     * movement this component makes — should do there. */
+    /** How long the panel area takes to grow or shrink to the active panel,
+     * under `autoHeight` on the root */
+    --forte-tabs-auto-height-duration: var(--forte-duration-move);
 
     box-sizing: border-box;
     /* Grid, not flex, and `position: relative`, because every panel is placed
@@ -193,6 +201,65 @@
 
   .root[data-orientation="vertical"] > .panel {
     grid-area: 1 / 2;
+  }
+
+  /* Auto height -------------------------------------------------------------
+   * `autoHeight` on the root turns the panel track from a share of the leftover
+   * space into the height of the panel standing in it — measured by the
+   * component, transitioned here.
+   *
+   * The transition is on `grid-template-rows` and not on anything's height,
+   * because the root is the only box that survives a switch: the panel is a new
+   * element every time (Base UI unmounts the outgoing one unless `keepMounted`
+   * is set) and a transition never runs on an element's FIRST computed style, so
+   * a height animated on the panel would not play at all. A track list
+   * interpolates track by track as long as only its <length> sizes differ, which
+   * is exactly the shape here — the strip's `auto` track is identical on both
+   * sides and passes through untouched.
+   *
+   * The first measurement is the one pair that is not interpolable, and it is
+   * also the one nobody sees: `minmax(0, 1fr)` to a length flips discretely
+   * between two values that are the same height, since an unconstrained fr track
+   * had already resolved to the panel's content. */
+  .root[data-auto-height] {
+    grid-template-rows: auto var(--forte-tabs-auto-height, minmax(0, 1fr));
+    transition: grid-template-rows var(--forte-tabs-auto-height-duration)
+      var(--forte-ease-standard);
+  }
+
+  /* Vertical has one row and the strip shares it with the panel, so that is the
+   * track to animate — and the component measures it as the taller of the two
+   * rather than as the panel alone. Written at (0,3,0) because the rule above
+   * and the vertical layout rule further up tie at (0,2,0); this one has to beat
+   * both, and the later of the two would otherwise win by document order. */
+  .root[data-auto-height][data-orientation="vertical"] {
+    grid-template-rows: var(--forte-tabs-auto-height, minmax(0, auto));
+  }
+
+  /* Start-aligned rather than stretched, which is what makes the measurement
+   * possible at all: a panel stretched to its track reports that track's height
+   * back, so the component would keep measuring the value it just wrote and the
+   * height would never move again — and the panel's box would stop changing
+   * size, taking the ResizeObserver that follows late-arriving content down with
+   * it. The cost is that a `Tabs.Root` given a height of its own no longer has
+   * its panel stretched to fill it, which is the deal `autoHeight` is: the panel
+   * decides the height. */
+  .root[data-auto-height] > .panel {
+    align-self: start;
+  }
+
+  /* A growing track is shorter than the panel standing in it until the
+   * transition lands, so without this the panel's content spills over whatever
+   * the page puts below the tabs. The component sets the attribute for exactly
+   * that long and takes it off again — the note in Tabs.tsx has why it is not
+   * simply left on.
+   *
+   * `clip`, not `hidden`: `hidden` would make the root a scroll container, and
+   * focus landing on something inside the clipped part would scroll the root
+   * itself — leaving the strip pushed out of view with nothing to scroll it
+   * back, since there is no scrollbar and the overflow is gone a frame later. */
+  .root[data-auto-height][data-resizing] {
+    overflow: clip;
   }
 
   /* The pill treatment turns the strip into a segmented control: the rail

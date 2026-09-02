@@ -10054,6 +10054,13 @@
         "description": "Padding inside the panel",
         "part": "root",
         "overrides": []
+      },
+      {
+        "name": "--forte-tabs-auto-height-duration",
+        "value": "var(--forte-duration-move)",
+        "description": "How long the panel area takes to grow or shrink to the active panel, under `autoHeight` on the root",
+        "part": "root",
+        "overrides": []
       }
     ]
   },

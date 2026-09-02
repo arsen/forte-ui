@@ -1008,6 +1008,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "pill", text: "Pill", depth: 3 },
     { id: "vertical", text: "Vertical", depth: 3 },
     { id: "overflow", text: "Overflow", depth: 3 },
+    { id: "animated-height", text: "Animated height", depth: 3 },
     { id: "with-icons", text: "With icons", depth: 3 },
     { id: "disabled-tab", text: "Disabled tab", depth: 3 },
     { id: "accessibility", text: "Accessibility", depth: 2 },

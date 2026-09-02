@@ -37,6 +37,185 @@ const TabsContext = React.createContext<{
 }>({ variant: "line", overflow: "scroll", orientation: "horizontal" });
 
 /* -------------------------------------------------------------------------
+ * Auto height
+ * ---------------------------------------------------------------------- */
+
+/** The active panel's measured height, consumed by the root's panel track. */
+const AUTO_HEIGHT = "--forte-tabs-auto-height";
+
+/* The panel that is actually in flow.
+ *
+ * `inert` is the marker rather than `hidden` or `data-ending-style` because it
+ * is derived straight from the active value while the panel renders — Base UI
+ * writes `inert` on every panel it is not showing, which is both the ones held
+ * back by `keepMounted` and the outgoing one on its way out — so it cannot
+ * disagree with what is on screen, and one selector covers all of them.
+ *
+ * Scoped to direct children, and that part is load-bearing: a nested tab set's
+ * own panel is not inert either, and it would be found FIRST, because it sits
+ * inside the outgoing panel and the outgoing panel precedes the incoming one in
+ * document order. The docs' own demo frame is a tab set with a tab set in it. */
+const IN_FLOW_PANEL = ':scope > [data-forte="tabs-panel"]:not([inert])';
+
+/**
+ * How long the root's height transition runs, in ms.
+ *
+ * Read off the element rather than off the token so everything already folded
+ * into the computed value stays folded in: the in-page motion toggle, a subtree
+ * `data-forte-motion`, and a consumer's own override of the duration knob.
+ * Under reduced motion `--forte-duration-move` is 1ms, so the clip below is
+ * released about as soon as it is applied — which is correct, since there is no
+ * longer an animation for it to hide.
+ */
+function resizeDuration(element: HTMLElement) {
+  return Math.max(
+    0,
+    ...getComputedStyle(element)
+      .transitionDuration.split(",")
+      .map((value) => parseFloat(value) * 1000 || 0),
+  );
+}
+
+/**
+ * Size the panel track to the active panel, so switching to a taller or shorter
+ * panel grows or shrinks the component instead of snapping.
+ *
+ * The measurement is written to the ROOT, and that is the whole design. The
+ * panel is a different element on every switch — Base UI unmounts the outgoing
+ * one unless `keepMounted` is set — and a transition never runs on an element's
+ * first computed style, so a height animated on the panel would simply not
+ * play. The root is the one box that survives the switch, and its
+ * `grid-template-rows` interpolates track by track as long as only the
+ * `<length>` ones differ: the strip's `auto` track passes through untouched
+ * while the panel's track travels.
+ *
+ * What is measured is the panel's own natural height, never the root's. The
+ * stylesheet composes the rest — strip, gap, padding — for free, and reading a
+ * value the transition does not own is what lets a measurement land mid-flight
+ * without disturbing the transition already running. `align-self: start` under
+ * `[data-auto-height]` is what keeps that reading honest: a stretched panel
+ * would report the track it was just given rather than the height it wants, and
+ * the ResizeObserver below would never fire again, because a box pinned to the
+ * track does not change size when the content inside it does.
+ */
+function useAutoHeight(
+  rootRef: React.RefObject<HTMLDivElement | null>,
+  enabled: boolean,
+  orientation: "horizontal" | "vertical",
+) {
+  useIsoLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root || !enabled) return;
+
+    /* Vertical puts the strip in the SAME row as the panel, so the row is the
+     * taller of the two. Measuring the panel alone there would shrink the row
+     * under a strip that is longer than the panel — and, because the scroller
+     * is capped at the row, put that strip into a scroll it does not need. */
+    const strip =
+      orientation === "vertical"
+        ? root.querySelector<HTMLElement>('[data-forte="tabs-list"]')
+        : null;
+
+    let panel: HTMLElement | null = null;
+    let timer = 0;
+
+    const measure = () => {
+      const height = Math.max(panel?.offsetHeight ?? 0, strip?.offsetHeight ?? 0);
+
+      /* A panel that measures nothing while it has no offset parent is not an
+       * empty panel, it is a panel nobody is laying out — the whole tab set is
+       * under a `display: none`, which is where a kept-mounted panel of some
+       * OTHER component puts it. Writing that 0 would collapse the track, and
+       * the tab set would then animate itself open the first time it is shown,
+       * on top of whatever enter transition the thing revealing it is already
+       * playing. Leaving the property alone means the first measurement that
+       * can see anything is the one that lands, with nothing to travel from.
+       * An empty panel that IS laid out still measures 0 and still collapses
+       * the track, which is what it should do. */
+      if (height === 0 && panel && panel.offsetParent === null) return;
+
+      const next = `${height}px`;
+      const previous = root.style.getPropertyValue(AUTO_HEIGHT);
+      if (previous === next) return;
+      root.style.setProperty(AUTO_HEIGHT, next);
+
+      /* Clip, but only while a GROWING track is behind its content, and only
+       * for as long as that takes.
+       *
+       * A growing track is shorter than the panel standing in it for the length
+       * of the transition, and an unclipped panel spills its content over
+       * whatever the page puts under the tabs. A shrinking one never does: the
+       * incoming panel is already the smaller height before the track starts
+       * travelling, and the outgoing panel is out of flow and at `opacity: 0`
+       * within a millisecond.
+       *
+       * Permanent would be the easy version and it is the wrong one. The panel
+       * has no padding of its own by default, so a card filling it sits flush
+       * against the root's edges and a clip that outlives the animation cuts the
+       * card's shadow off on every side — plus the focus ring of anything
+       * against the panel's edge, and a strip left spilling on purpose with
+       * `overflow="visible"`. None of that is worth paying for at rest, when
+       * the track is exactly the height of the panel and there is nothing to
+       * clip in the first place.
+       *
+       * `previous` empty is the first measurement of this tab set: there is no
+       * old height to travel from, so nothing is mid-flight and nothing spills. */
+      if (previous && height > parseFloat(previous)) {
+        root.setAttribute("data-resizing", "");
+        window.clearTimeout(timer);
+        timer = window.setTimeout(
+          () => root.removeAttribute("data-resizing"),
+          resizeDuration(root),
+        );
+      }
+    };
+
+    /* The panel's own box, which stays at its natural height (see above), so
+     * this fires for content that arrives after the switch — an image that has
+     * loaded, a fetch that has resolved, a disclosure the reader opened — and
+     * the track follows it with the same transition. In the vertical case the
+     * strip is measured too, since it shares the row. */
+    const resize = new ResizeObserver(measure);
+    if (strip) resize.observe(strip);
+
+    /* Which panel is in flow is not something this component is ever told: Base
+     * UI owns the value, and it moves for reasons no prop of ours sees. The DOM
+     * is where all of them land, so that is what is watched — the same bargain
+     * `Tabs.List` makes to keep the active tab scrolled into view.
+     *
+     * `subtree` is on because the attribute that flips is the panels' and not
+     * the root's, and it costs nothing: the callback is one direct-child query
+     * and an identity check, so the extra calls a busy panel generates return
+     * before doing any work. Content that changes SIZE is the ResizeObserver's
+     * business, not this one's. */
+    const sync = () => {
+      const next = root.querySelector<HTMLElement>(IN_FLOW_PANEL);
+      if (next === panel) return;
+      if (panel) resize.unobserve(panel);
+      panel = next;
+      if (panel) resize.observe(panel);
+      measure();
+    };
+
+    sync();
+    const switches = new MutationObserver(sync);
+    switches.observe(root, {
+      childList: true,
+      subtree: true,
+      attributeFilter: ["inert"],
+    });
+
+    return () => {
+      switches.disconnect();
+      resize.disconnect();
+      window.clearTimeout(timer);
+      root.style.removeProperty(AUTO_HEIGHT);
+      root.removeAttribute("data-resizing");
+    };
+  }, [rootRef, enabled, orientation]);
+}
+
+/* -------------------------------------------------------------------------
  * Root
  * ---------------------------------------------------------------------- */
 
@@ -64,6 +243,25 @@ export interface TabsRootProps extends Omit<BaseRootProps, "className"> {
    */
   overflow?: TabsOverflow;
   /**
+   * Whether the component animates between panel heights. Off by default: the
+   * panel area snaps to whatever the new panel needs, which is what a tab set
+   * has always done and what a page of equal-height panels should keep doing.
+   *
+   * Turn it on when the panels differ in height enough for the switch to look
+   * like a jump. The track is sized from the active panel and transitioned, and
+   * it keeps following that panel afterwards — content that arrives late, an
+   * image that has loaded or a disclosure the reader opened, moves the height
+   * with the same transition rather than snapping.
+   *
+   * Two things change while it is on. The panel is aligned to the start of its
+   * track rather than stretched, so it no longer fills a `Tabs.Root` that has
+   * been given a height of its own; and the component clips itself for the
+   * length of a *growing* transition, so anything a panel deliberately paints
+   * outside its own box is cut off for those frames.
+   * @default false
+   */
+  autoHeight?: boolean;
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -81,13 +279,27 @@ export interface TabsRootProps extends Omit<BaseRootProps, "className"> {
  * legal "nothing active" value and is deliberately not normalised away.
  */
 const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(function TabsRoot(
-  { variant = "line", overflow = "scroll", className, children, ...props },
+  { variant = "line", overflow = "scroll", autoHeight = false, className, children, ...props },
   ref,
 ) {
   // Base UI owns `orientation` and defaults it to "horizontal"; the default is
   // restated here only because the context needs the resolved value before
   // Base UI sees the prop.
   const orientation = props.orientation ?? "horizontal";
+
+  // The root is the element the panel track is measured onto, so the component
+  // needs its own handle on it whether or not the consumer asked for one.
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const setRefs = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  useAutoHeight(rootRef, autoHeight, orientation);
 
   // Stable across renders unless one of the three actually changes, so a root
   // that sets none of them never re-renders its subtree for this.
@@ -99,11 +311,12 @@ const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(function TabsRo
   return (
     <TabsContext.Provider value={context}>
       <BaseTabs.Root
-        ref={ref}
+        ref={setRefs}
         className={clsx(styles.root, className)}
         data-forte="tabs"
         data-variant={variant}
         data-overflow={overflow}
+        data-auto-height={autoHeight ? "" : undefined}
         {...props}
       >
         {children}
@@ -494,10 +707,11 @@ const TabsPanel = React.forwardRef<HTMLDivElement, TabsPanelProps>(function Tabs
  * Arrow keys move focus along the strip; Enter or Space activates. A strip
  * with more tabs than room scrolls rather than spilling out of its container,
  * and activating a tab that is off the edge brings it into view — set
- * `overflow="visible"` on `Tabs.Root` to opt out. Styling is driven entirely by
- * `data-*` attributes and `--forte-tabs-*` custom properties, so it can be
- * re-skinned from plain CSS or targeted with Tailwind arbitrary variants
- * (`data-[variant=pill]:...`) without wrapping.
+ * `overflow="visible"` on `Tabs.Root` to opt out. Panels of different heights
+ * snap from one to the next; `autoHeight` transitions between them instead.
+ * Styling is driven entirely by `data-*` attributes and `--forte-tabs-*` custom
+ * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
+ * arbitrary variants (`data-[variant=pill]:...`) without wrapping.
  *
  * @summary Switches between panels of related content in the same place, with
  *   a sliding active indicator.
