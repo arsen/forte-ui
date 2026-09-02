@@ -103,7 +103,7 @@
    * by the sidebar and the section rail before the page sees any of it — at
    * 84rem a five-column prop table scrolled inside itself while 400px of gutter
    * sat empty beside it. The ultra-wide stop is on the page COLUMN instead, in
-   * `layout.tsx`, and it is Tailwind's own `--container-6xl`: one number, used
+   * `app/(docs)/layout.tsx`, and it is Tailwind's own `--container-6xl`: one number, used
    * once, with a name a reader already knows. */
   /* There is deliberately no `--container-measure` either. Running text used to
    * stop at 48rem while the demo and table beside it spanned the column, which
@@ -140,6 +140,21 @@
     from {
       opacity: 0;
       translate: 0 var(--forte-travel-lg);
+    }
+  }
+
+  /* The home page hero's entrance — the logo settling into place on load.
+   * Time-based rather than scroll-driven, so it needs a duration, and the
+   * duration is the spring's own settle time: a shorter one truncates the
+   * curve mid-bounce. `--forte-scale-enter` is `1` under reduced motion and
+   * the spring duration shortens with it, so what is left is a short fade —
+   * reduced, not removed, the way the library's own popups do it. */
+  --animate-enter: forte-enter var(--forte-duration-spring-gentle) var(--forte-ease-spring-gentle) both;
+
+  @keyframes forte-enter {
+    from {
+      opacity: 0;
+      scale: var(--forte-scale-enter);
     }
   }
 }

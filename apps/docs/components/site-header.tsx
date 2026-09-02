@@ -8,6 +8,9 @@ import { Logo } from "./logo";
 import { ThemeDrawer } from "./theme-drawer";
 import { NavDrawer, TocDrawer } from "./shell-drawers";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { routeKey } from "@/lib/route";
+import { cn } from "@/lib/cn";
 
 /**
  * The site header — the shell's top row, and the library's own `AppBar`.
@@ -26,7 +29,41 @@ import Link from "next/link";
  * offset the two shell columns hang from is the bar's height, read from the
  * library's `--forte-app-bar-h-md` token.
  */
+/**
+ * On the home page the wordmark in the bar starts hidden and fades in once
+ * the page has scrolled.
+ *
+ * The hero directly under the bar IS the logo, half a screen tall, and a
+ * second copy an inch above it names the site twice. So on that one route
+ * the bar's copy waits for the reader to leave the top — and only there:
+ * on every docs page it is the only thing naming the site, and it stays.
+ *
+ * The signal is the AppBar's own `data-scrolled`, which the library sets
+ * from an IntersectionObserver on a sentinel above the bar, so this is
+ * pure CSS on the docs side and works in every browser the library does.
+ * The cost is timing: `data-scrolled` lands after the first pixel of
+ * scroll, while the big logo is still in view, so for a few hundred pixels
+ * both are on screen. The exact version — the wordmark fading in AS the
+ * hero logo slides out under the bar — is a scroll-driven animation: a
+ * `view-timeline-name` on the hero's logo, `timeline-scope` on `body`, and
+ * an `animation-range: exit` on this link. Firefox does not implement
+ * scroll-driven animations today, which would leave it hidden or visible
+ * for good depending on the fill; once it ships them, switch to that and
+ * drop the route check, since a page with no hero has no timeline and the
+ * link simply keeps its base style.
+ *
+ * `visibility` rides along with the opacity so the invisible link is not a
+ * tab stop at the top of the page. Transitioned together, it flips to
+ * visible at the start of the fade-in and to hidden at the end of the
+ * fade-out — the discrete interpolation of `visibility` gives exactly that.
+ */
+const HOME_LOGO = cn(
+  "invisible opacity-0 transition-[opacity,visibility] duration-fast ease-standard",
+  "[[data-scrolled]_&]:visible [[data-scrolled]_&]:opacity-100",
+);
+
 export function SiteHeader() {
+  const home = routeKey(usePathname()) === "/";
   return (
     <AppBar.Root
       position="sticky"
@@ -53,7 +90,7 @@ export function SiteHeader() {
           * `aria-label` — so the link needs no text of its own. `flex` on the
           * anchor is what keeps an inline SVG from sitting on the text
           * baseline and adding descender space under it. */}
-        <Link className="flex shrink-0" href="/">
+        <Link className={cn("flex shrink-0", home && HOME_LOGO)} href="/">
           <Logo />
         </Link>
       </AppBar.Leading>

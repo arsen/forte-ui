@@ -39,7 +39,9 @@ packages/create-forte-ui   the scaffolding CLI (`pnpm create forte-ui`)
   src/color.ts            the colour maths, MODULE OF RECORD (docs re-export it)
   scripts/smoke.mjs       scaffold+build all four paths — run before releasing it
 apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
-  app/components/<name>/page.mdx   the written page
+  app/page.tsx                     the home page — the one route outside the docs shell
+  app/(docs)/layout.tsx            the docs shell: sidebar · page column · section rail
+  app/(docs)/components/<name>/page.mdx   the written page
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
@@ -609,7 +611,7 @@ import line all want the room — and the paragraphs now run to the same right
 edge as the demo frame under them. A 48rem cap on `p` / `ul` / `ol` did exist,
 and it read as a layout bug: a paragraph stopping a couple of hundred pixels
 short of the code block beneath it looks broken, not readable. The only width
-on a component page is the page COLUMN's own cap in `app/layout.tsx`. Do not
+on a component page is the page COLUMN's own cap in `app/(docs)/layout.tsx`. Do not
 reintroduce a per-element one; `--container-measure` is gone from the theme
 along with it.
 
