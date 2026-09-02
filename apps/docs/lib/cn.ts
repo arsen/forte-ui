@@ -20,9 +20,9 @@ import { createCn } from "@forte-ui/react/cn";
 export const cn = createCn({
   extend: {
     theme: {
-      // `--animate-*` is deleted in the bridge and exactly one animation is
+      // `--animate-*` is deleted in the bridge and exactly two animations are
       // added back by the docs.
-      animate: ["reveal"],
+      animate: ["reveal", "enter"],
       // Added to Tailwind's stock container scale rather than replacing it —
       // `max-w-lg` and friends are untouched and still useful.
       container: ["hero"],

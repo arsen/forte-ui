@@ -3,22 +3,26 @@ import Link from "next/link";
 // Component, and dereferencing `Card.Root` across the client boundary yields
 // `undefined` — the object arrives as an opaque client reference.
 import { Button, CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
-import { HeroThemer } from "@/components/home/hero-themer";
-import { CodeBlock } from "@/components/demo/code-block";
+import { Hero } from "@/components/home/hero";
+import { EntryCards } from "@/components/home/entry-cards";
 import { Showcase } from "@/components/home/showcase";
-import { EYEBROW, LEAD } from "@/components/styles";
+import { CodeBlock } from "@/components/demo/code-block";
 import { cn } from "@/lib/cn";
 
-const THEME_SNIPPET = `:root {
-  --forte-accent-seed: #6d43d4;
-}`;
-
-const USAGE_SNIPPET = `import "@forte-ui/react/theme.css";
-import { Button, Dialog } from "@forte-ui/react";
-
-export function Example() {
-  return <Button tone="danger">Delete</Button>;
-}`;
+/**
+ * The home page — the one route outside the docs shell.
+ *
+ * It renders its own `<main>` because the shell that would normally provide
+ * one is the `(docs)` group's layout, which this page is not under. The `id`
+ * is the skip link's target and has to be here for the same reason.
+ *
+ * Every section below the hero is a link out: the entry cards to the
+ * guides, the closing block to the install steps. The page is a front door,
+ * not a second copy of the Introduction — the prose about WHY the library is
+ * shaped the way it is lives there. There is deliberately no component
+ * index: fifty-odd tiles is a sidebar laid flat, and the sidebar is one
+ * click away on every page the cards lead to.
+ */
 
 const FEATURES = [
   {
@@ -57,65 +61,34 @@ const REVEAL = [
   "motion-safe:scroll-driven:[animation-range:entry_0%_entry_60%]",
 ].join(" ");
 
-const SECTION = "border-t border-border-muted py-8";
+/* The width every section below the hero shares. It is the docs pages' widest
+ * column stop, so a reader crossing from the gallery to a component page sees
+ * the content stay put rather than jump inward. */
+const BAND = "mx-auto w-full max-w-6xl px-4";
+const SECTION = cn(BAND, "border-t border-border-muted py-8");
 const H2 = "mb-3 text-6 font-semibold tracking-tight";
-const BODY = "mb-4 max-w-2xl text-foreground-muted text-pretty";
+const BODY = "mb-5 max-w-2xl text-foreground-muted text-pretty";
 
 export default function HomePage() {
   return (
-    <div>
-      <section className="max-w-hero pt-8 pb-7">
-        <h1 className="mb-4 text-[clamp(2.25rem,1.2rem_+_3.6vw,3.75rem)] leading-[1.05] font-bold tracking-[-0.03em] text-balance">
-          A component library that
-          <br />
-          <span
-            className={cn(
-              "text-primary-text",
-              "gradient-text:bg-[linear-gradient(100deg,var(--forte-accent-11),var(--forte-secondary-9)_70%)]",
-              "gradient-text:[-webkit-background-clip:text] gradient-text:bg-clip-text",
-              "gradient-text:text-transparent",
-            )}
-          >
-            takes its own advice.
-          </span>
-        </h1>
-        <p className={cn(LEAD, "mb-5")}>
-          Accessible React components built on Base UI, with a design system
-          that rebuilds itself around one colour. Every accessibility claim on
-          this site is one we measured — and two of them started as bugs we
-          found in our own code.
+    <main id="main" className="min-w-0 flex-1">
+      <Hero />
+
+      <section className={cn(SECTION, REVEAL)} aria-labelledby="start">
+        {/* Centred, like the hero above it, so the page turns from the
+          * centred landing into the left-aligned sections one row later
+          * than the first border line — the cards under it are a symmetric
+          * grid, and a left-set heading over them reads as misaligned. */}
+        <h2 id="start" className={cn(H2, "text-center")}>Start here</h2>
+        <p className={cn(BODY, "mx-auto text-center")}>
+          Two guides, one for each bundler, and the studio for when you would
+          rather see the theme than read about it.
         </p>
-        <div className="mb-6 flex flex-wrap gap-3">
-          <Button size="lg" nativeButton={false} render={<Link href="/components/button/">Browse components</Link>} />
-          <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/theme/">Open Theme Studio</Link>} />
-        </div>
-        <div className="border-t border-border-muted pt-5">
-          <HeroThemer />
-        </div>
+        <EntryCards />
       </section>
 
-      <section className={cn(SECTION, REVEAL)}>
-        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-6 max-split:grid-cols-[minmax(0,1fr)]">
-          <div>
-            <h2 className={H2}>Change one line. Change everything.</h2>
-            <p className={BODY}>
-              There is no palette to generate, no build step, and no JavaScript.
-              Relative colour syntax derives the whole ramp from your seed, and
-              a fitted lightness threshold picks black or white text so the
-              contrast holds up whatever you choose.
-            </p>
-            <CodeBlock code={THEME_SNIPPET} lang="css" />
-          </div>
-          <div className="grid gap-4">
-            <Ramp name="accent" label="Accent" />
-            <Ramp name="secondary" label="Secondary" />
-            <Ramp name="gray" label="Neutrals, tinted toward your brand" />
-          </div>
-        </div>
-      </section>
-
-      <section className={cn(SECTION, REVEAL)}>
-        <h2 className={H2}>Real components, right here</h2>
+      <section className={cn(SECTION, REVEAL)} aria-labelledby="showcase">
+        <h2 id="showcase" className={H2}>Real components, right here</h2>
         <p className={BODY}>
           Everything below is the actual library. Try it with a keyboard — every
           control is reachable, and the focus ring stays visible on any
@@ -124,20 +97,11 @@ export default function HomePage() {
         <Showcase />
       </section>
 
-      <section className={cn(SECTION, REVEAL)}>
-        <h2 className={H2}>What you get</h2>
+      <section className={cn(SECTION, REVEAL)} aria-labelledby="features">
+        <h2 id="features" className={H2}>What you get</h2>
         <div className="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
           {FEATURES.map((f) => (
-            <CardRoot
-              key={f.title}
-              className={cn(
-                "transition-[border-color,translate] duration-fast ease-standard",
-                // `hover:` is already `@media (hover: hover)` in v4, so a touch
-                // screen never sticks the lift on the last thing tapped. The
-                // travel token collapses to 0px under reduced motion on its own.
-                "hover:-translate-y-(--forte-travel-xs) hover:border-primary-border",
-              )}
-            >
+            <CardRoot key={f.title}>
               <CardHeader>
                 <CardTitle>
                   <h3>{f.title}</h3>
@@ -149,33 +113,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={cn(SECTION, REVEAL)}>
-        <h2 className={H2}>Get started</h2>
-        <CodeBlock code="npm install @forte-ui/react" lang="bash" />
-        <CodeBlock code={USAGE_SNIPPET} lang="tsx" />
+      <section className={cn(SECTION, REVEAL)} aria-labelledby="install">
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-6 max-split:grid-cols-[minmax(0,1fr)]">
+          <div>
+            <h2 id="install" className={H2}>Ready when you are</h2>
+            <p className={BODY}>
+              One package, one stylesheet import, no provider. Pick the guide
+              for your bundler and you will be rendering a themed component in
+              a few minutes.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button nativeButton={false} render={<Link href="/getting-started/nextjs/">Next.js guide</Link>} />
+              <Button variant="outline" nativeButton={false} render={<Link href="/getting-started/vite/">Vite guide</Link>} />
+            </div>
+          </div>
+          <CodeBlock code="npm install @forte-ui/react" lang="bash" />
+        </div>
       </section>
-    </div>
-  );
-}
-
-function Ramp({ name, label }: { name: string; label: string }) {
-  return (
-    <div className="grid gap-2">
-      <p className={cn(EYEBROW, "m-0")}>{label}</p>
-      <div
-        className="grid h-8 grid-cols-12 gap-[2px] overflow-hidden rounded-3"
-        role="img"
-        aria-label={`${label}: twelve steps`}
-      >
-        {Array.from({ length: 12 }, (_, i) => (
-          // Colour is the entire content of a swatch — keep it in forced-colors.
-          <span
-            key={i}
-            className="block [forced-color-adjust:none]"
-            style={{ background: `var(--forte-${name}-${i + 1})` }}
-          />
-        ))}
-      </div>
-    </div>
+    </main>
   );
 }

@@ -15,7 +15,7 @@
  * Moving the cap onto `p`, `ul` and `ol` fixed that and bought a second
  * problem: the paragraphs then stopped short of the demo frame under them, for
  * no reason a reader could see. So there is no cap at either level now, and the
- * page column's own maximum in `app/layout.tsx` is the only width there is.
+ * page column's own maximum in `app/(docs)/layout.tsx` is the only width there is.
  */
 export default function ComponentsLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;

@@ -28,7 +28,7 @@ const NAV: NavGroup[] = [
   {
     title: "Getting started",
     items: [
-      { title: "Introduction", href: "/" },
+      { title: "Introduction", href: "/getting-started/introduction/" },
       { title: "Next.js", href: "/getting-started/nextjs/" },
       { title: "Vite", href: "/getting-started/vite/" },
       { title: "AI agents", href: "/getting-started/ai-agents/" },

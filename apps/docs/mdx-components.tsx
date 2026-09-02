@@ -34,7 +34,7 @@ import { PROSE_H1, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/component
  * shares one right edge now.
  *
  * That leaves exactly one thing setting the line length: the page column's own
- * cap in `app/layout.tsx`. Change it there — a second cap here is what let the
+ * cap in `app/(docs)/layout.tsx`. Change it there — a second cap here is what let the
  * two disagree in the first place.
  */
 

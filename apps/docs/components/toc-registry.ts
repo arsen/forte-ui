@@ -1199,6 +1199,12 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "why-it-never-goes-stale", text: "Why it never goes stale", depth: 2 },
     { id: "working-without-the-skill", text: "Working without the skill", depth: 2 },
   ],
+  "/getting-started/introduction/": [
+    { id: "what-makes-it-different", text: "What makes it different", depth: 2 },
+    { id: "change-one-line-change-everything", text: "Change one line. Change everything.", depth: 2 },
+    { id: "install", text: "Install", depth: 2 },
+    { id: "where-to-go-next", text: "Where to go next", depth: 2 },
+  ],
   "/getting-started/nextjs/": [
     { id: "without-tailwind", text: "Without Tailwind", depth: 2 },
     { id: "1-create-the-project", text: "1. Create the project", depth: 3 },
