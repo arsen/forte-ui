@@ -1093,6 +1093,13 @@
     "description": "Groups the viewport, its controls and its pagination, and owns which slide\nis active. Give it an `aria-label` — it is a `region` with the\n`carousel` role description, and that name is how a screen reader user\ntells one carousel from the next.",
     "props": [
       {
+        "name": "align",
+        "type": "CarouselAlign",
+        "required": false,
+        "defaultValue": "start",
+        "description": "Where the active slide sits when more than one fits. `\"start\"` parks it\nat the start edge and fills the view with the slides after it — a row of\ncards. `\"center\"` puts it in the middle with its neighbours peeking on\nboth sides — a gallery. Centred, every slide can take the middle: with\n`loop` the last slides show before the first one, without it the first\nand last sit beside blank track."
+      },
+      {
         "name": "autoHeight",
         "type": "boolean",
         "required": false,

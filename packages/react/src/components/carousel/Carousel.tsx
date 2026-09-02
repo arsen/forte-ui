@@ -57,6 +57,12 @@ export type CarouselOrientation = "horizontal" | "vertical";
 export type CarouselChangeReason = "drag" | "control" | "autoplay" | "clamp";
 
 /**
+ * Where the active slide sits in the view when more than one fits: at the
+ * start edge, or in the middle with its neighbours peeking on both sides.
+ */
+export type CarouselAlign = "start" | "center";
+
+/**
  * Space between slides: a step on the spacing scale (`--forte-space-1` to
  * `--forte-space-8`, with `0` for none) or any CSS length as a string.
  */
@@ -107,11 +113,50 @@ function clonesFor(count: number, perView: number, loop: boolean) {
   return loop && count > 1 ? Math.min(count, Math.ceil(perView) + 1) : 0;
 }
 
-/** The last index the track can rest on without looping. With more than one
- * slide in view the last position is the one that still fills the view, so a
- * row of three never scrolls to show two and a blank. */
-function maxIndexFor(count: number, perView: number) {
+/** The last index the track can rest on without looping. Start-aligned, with
+ * more than one slide in view, the last position is the one that still fills
+ * the view, so a row of three never scrolls to show two and a blank. Centred,
+ * every slide can take the middle — the last one with blank track after it,
+ * the mirror of the first one's blank track before it. */
+function maxIndexFor(count: number, perView: number, align: CarouselAlign) {
+  if (align === "center") return Math.max(0, count - 1);
   return Math.max(0, count - Math.max(1, Math.floor(perView)));
+}
+
+/** How far, in slides, the view's start edge sits before the active slide.
+ * Zero at the start; half the room beside the active slide when centred. */
+function alignOffset(perView: number, align: CarouselAlign) {
+  return align === "center" ? (perView - 1) / 2 : 0;
+}
+
+/**
+ * Which slides the view covers, as offsets from the active one: `[lo, hi]`
+ * are the ones fully in view, `[loAny, hiAny]` the ones with any part in
+ * view. The view spans `perView` slides starting `offset` before the active
+ * one; a slide is fully in view when both its edges are, and partly in view
+ * when either is. Shared by the inert/aria-hidden decision, the lazy window
+ * and the height measurement, so the three cannot disagree about what "in
+ * view" means.
+ */
+function viewRange(perView: number, align: CarouselAlign) {
+  const offset = alignOffset(perView, align);
+  const lo = Math.ceil(-offset);
+  const hi = Math.max(lo, Math.floor(perView - 1 - offset));
+  return {
+    lo,
+    hi,
+    loAny: Math.floor(-offset),
+    hiAny: Math.max(lo, Math.ceil(perView - 1 - offset)),
+  };
+}
+
+/** Signed distance from the active slide, measured the short way round the
+ * ring when looping — the slide before the first is `-1` away, which is what
+ * keeps a clone's content in step with the slide it copies. */
+function distanceFrom(index: number, i: number, count: number, loop: boolean) {
+  if (!loop) return i - index;
+  const half = Math.floor(count / 2);
+  return mod(i - index + half, count) - half;
 }
 
 /**
@@ -144,6 +189,7 @@ interface CarouselContextValue {
    * render when the root's is not yet. */
   wantsLoop: boolean;
   perView: number;
+  align: CarouselAlign;
   lazy: number | false;
   autoHeight: boolean;
   draggable: boolean;
@@ -238,6 +284,16 @@ export interface CarouselRootProps
    */
   slidesPerView?: number;
   /**
+   * Where the active slide sits when more than one fits. `"start"` parks it
+   * at the start edge and fills the view with the slides after it — a row of
+   * cards. `"center"` puts it in the middle with its neighbours peeking on
+   * both sides — a gallery. Centred, every slide can take the middle: with
+   * `loop` the last slides show before the first one, without it the first
+   * and last sit beside blank track.
+   * @default "start"
+   */
+  align?: CarouselAlign;
+  /**
    * Render only the slides near the view. `true` keeps the slides in view plus
    * one on either side mounted; a number keeps that many on either side. A
    * slide outside the window keeps its box and its size but renders no
@@ -293,6 +349,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
     loop = false,
     autoplay = false,
     slidesPerView = 1,
+    align = "start",
     lazy = false,
     autoHeight = false,
     draggable = true,
@@ -327,7 +384,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
   const [uncontrolled, setUncontrolled] = React.useState(defaultIndex);
   const controlled = indexProp !== undefined;
   const [count, setCount] = React.useState(0);
-  const maxIndex = maxIndexFor(count, perView);
+  const maxIndex = maxIndexFor(count, perView, align);
   const looping = loop && count > 1;
   // A controlled index past the end, or a stale one after slides were
   // removed, is shown at the nearest slide that exists rather than as a
@@ -437,6 +494,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
       loop: looping,
       wantsLoop: loop,
       perView,
+      align,
       lazy: lazyWindow,
       autoHeight: autoHeight && orientation === "horizontal",
       draggable,
@@ -461,6 +519,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
       looping,
       loop,
       perView,
+      align,
       lazyWindow,
       autoHeight,
       draggable,
@@ -487,6 +546,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
         className={clsx(styles.root, className)}
         data-forte="carousel"
         data-orientation={orientation}
+        data-align={align}
         data-loop={looping ? "" : undefined}
         data-dragging={dragging ? "" : undefined}
         data-auto-height={autoHeight && orientation === "horizontal" ? "" : undefined}
@@ -497,6 +557,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
           {
             ...style,
             "--forte-carousel-per-view": perView,
+            "--forte-carousel-align-offset": alignOffset(perView, align),
             ...(gap !== undefined ? { "--forte-carousel-gap": gapValue(gap) } : null),
           } as React.CSSProperties
         }
@@ -583,8 +644,20 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
     ref,
   ) {
     const context = useCarousel("Viewport");
-    const { orientation, loop, perView, autoHeight, draggable, index, count, maxIndex, clones, trackRef } =
-      context;
+    const {
+      orientation,
+      loop,
+      perView,
+      align,
+      autoHeight,
+      draggable,
+      index,
+      count,
+      maxIndex,
+      clones,
+      trackRef,
+    } = context;
+    const offset = alignOffset(perView, align);
 
     const viewportRef = React.useRef<HTMLDivElement | null>(null);
     const setRefs = React.useCallback(
@@ -622,8 +695,9 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
       const slides = Array.from(
         track.querySelectorAll<HTMLElement>(':scope > [data-forte="carousel-slide"]'),
       );
-      const first = index + clones;
-      const last = Math.min(slides.length - 1, first + Math.max(1, Math.floor(perView)) - 1);
+      const range = viewRange(perView, align);
+      const first = Math.max(0, index + clones + range.lo);
+      const last = Math.min(slides.length - 1, index + clones + range.hi);
 
       const measure = () => {
         let height = 0;
@@ -641,7 +715,7 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
         if (slide) observer.observe(slide);
       }
       return () => observer.disconnect();
-    }, [autoHeight, index, count, clones, perView, trackRef]);
+    }, [autoHeight, index, count, clones, perView, align, trackRef]);
 
     /* ---- Drag ------------------------------------------------------------ */
 
@@ -668,7 +742,8 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
       const parts = translate.split(" ").map(parseFloat);
       const px = (horizontal ? parts[0] : parts[1]) ?? 0;
       if (Number.isNaN(px)) return index + clones;
-      return (-px * sign) / step;
+      // The translate carries the alignment offset; the position does not.
+      return (-px * sign) / step + offset;
     };
 
     const write = (position: number) => {
@@ -686,8 +761,9 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
       let position = state.base - (travel * state.sign) / state.step;
 
       if (loop) {
-        // Never past the clones: beyond them is an empty track.
-        position = clamp(position, 0, count + 2 * clones - perView);
+        // Never past the clones: beyond them is an empty track. The view
+        // starts `offset` before the position, so both bounds shift by it.
+        position = clamp(position, offset, count + 2 * clones - perView + offset);
       } else if (position < 0) {
         position *= RESISTANCE;
       } else if (position > maxIndex) {
@@ -984,7 +1060,7 @@ const CarouselSlide = React.forwardRef<HTMLDivElement, CarouselSlideProps>(funct
   const slot = React.useContext(SlideSlotContext);
   if (!slot) throw new Error("Carousel.Slide must be a direct child of Carousel.Track.");
 
-  const { index, perView, lazy } = context;
+  const { index, perView, align, lazy } = context;
   const { index: i, count, clone } = slot;
   // The count is the track's own, computed from its children in the same
   // render, not the root's state, which is still 0 on the first render — the
@@ -992,17 +1068,10 @@ const CarouselSlide = React.forwardRef<HTMLDivElement, CarouselSlideProps>(funct
   // a lazy carousel would ship empty.
   const loop = context.wantsLoop && count > 1;
 
-  // Offset from the active slide, in the direction of travel. Looping
-  // measures it around the ring so the slide before the first is "-1 away",
-  // which is what keeps the clones' content in step with the slides they copy.
-  const ahead = loop ? mod(i - index, count) : i - index;
-  const behind = loop ? mod(index - i, count) : index - i;
-  const inView = ahead >= 0 && ahead < Math.max(1, Math.floor(perView));
-  const reach = Math.ceil(perView) - 1;
-  const mounted =
-    lazy === false ||
-    (ahead >= 0 && ahead <= reach + lazy) ||
-    (behind > 0 && behind <= lazy);
+  const d = distanceFrom(index, i, count, loop);
+  const range = viewRange(perView, align);
+  const inView = d >= range.lo && d <= range.hi;
+  const mounted = lazy === false || (d >= range.loAny - lazy && d <= range.hiAny + lazy);
 
   const hidden = clone || !inView;
 

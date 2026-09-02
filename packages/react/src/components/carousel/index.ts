@@ -2,6 +2,7 @@ export { Carousel } from "./Carousel";
 export type {
   CarouselOrientation,
   CarouselChangeReason,
+  CarouselAlign,
   CarouselGap,
   CarouselRootProps,
   CarouselViewportProps,

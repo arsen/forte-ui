@@ -165,6 +165,8 @@ import d_carousel_autoplay from "./carousel/autoplay";
 import d_carousel_autoplay_src from "./carousel/autoplay?raw";
 import d_carousel_basic from "./carousel/basic";
 import d_carousel_basic_src from "./carousel/basic?raw";
+import d_carousel_centered from "./carousel/centered";
+import d_carousel_centered_src from "./carousel/centered?raw";
 import d_carousel_controlled from "./carousel/controlled";
 import d_carousel_controlled_src from "./carousel/controlled?raw";
 import d_carousel_lazy from "./carousel/lazy";
@@ -877,6 +879,7 @@ export type DemoId =
   | "carousel/auto-height"
   | "carousel/autoplay"
   | "carousel/basic"
+  | "carousel/centered"
   | "carousel/controlled"
   | "carousel/lazy"
   | "carousel/loop"
@@ -1275,6 +1278,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "carousel/auto-height": { Component: d_carousel_auto_height, source: d_carousel_auto_height_src, file: "carousel/auto-height.tsx" },
   "carousel/autoplay": { Component: d_carousel_autoplay, source: d_carousel_autoplay_src, file: "carousel/autoplay.tsx" },
   "carousel/basic": { Component: d_carousel_basic, source: d_carousel_basic_src, file: "carousel/basic.tsx" },
+  "carousel/centered": { Component: d_carousel_centered, source: d_carousel_centered_src, file: "carousel/centered.tsx" },
   "carousel/controlled": { Component: d_carousel_controlled, source: d_carousel_controlled_src, file: "carousel/controlled.tsx" },
   "carousel/lazy": { Component: d_carousel_lazy, source: d_carousel_lazy_src, file: "carousel/lazy.tsx" },
   "carousel/loop": { Component: d_carousel_loop, source: d_carousel_loop_src, file: "carousel/loop.tsx" },

@@ -194,6 +194,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "loop", text: "Loop", depth: 3 },
     { id: "autoplay", text: "Autoplay", depth: 3 },
     { id: "slides-per-view", text: "Slides per view", depth: 3 },
+    { id: "centered", text: "Centered", depth: 3 },
     { id: "lazy", text: "Lazy", depth: 3 },
     { id: "auto-height", text: "Auto height", depth: 3 },
     { id: "vertical", text: "Vertical", depth: 3 },

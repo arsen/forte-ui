@@ -5,9 +5,13 @@
  * slides, to --forte-carousel-position, and the `translate` below turns it
  * into pixels with a `calc()` the browser resolves itself:
  *
- *   step  = (100% + gap) / slides-per-view      one slide plus one gap
- *   slide = step − gap                          what a slide is sized to
- *   track = −direction × position × step        where the track sits
+ *   step  = (100% + gap) / slides-per-view          one slide plus one gap
+ *   slide = step − gap                              what a slide is sized to
+ *   track = −direction × (position − offset) × step  where the track sits
+ *
+ * `offset` is the alignment: zero with the active slide at the start edge,
+ * half the spare room when it is centred, so slide 0 centred means the track
+ * starts part-way into the view.
  *
  * The percentage is the track's own inline size, which is the viewport's, so
  * resting positions need no measurement: resize the page, change the density
@@ -106,10 +110,13 @@
     /** Opacity of an inactive thumbnail */
     --forte-carousel-thumb-opacity: 0.6;
 
-    /* Set inline by the component from `slidesPerView`. Declared so the calc
-     * below has a value on the first frame of a root that has not set it. Not
-     * a theming knob: the prop is the API. */
+    /* Set inline by the component from `slidesPerView` and `align`. Declared
+     * so the calc below has values on the first frame of a root that has not
+     * set them. Not theming knobs: the props are the API. The offset is how
+     * many slides the view's start edge sits before the active slide — zero
+     * start-aligned, half the spare room when centred. */
     --forte-carousel-per-view: 1;
+    --forte-carousel-align-offset: 0;
 
     position: relative;
     display: flex;
@@ -187,7 +194,9 @@
     block-size: 100%;
     box-sizing: border-box;
     translate: calc(
-        -1 * var(--forte-direction) * var(--forte-carousel-position, 0) * var(--forte-carousel-step)
+        -1 * var(--forte-direction) *
+          (var(--forte-carousel-position, 0) - var(--forte-carousel-align-offset, 0)) *
+          var(--forte-carousel-step)
       )
       0;
     transition: translate var(--forte-carousel-duration) var(--forte-carousel-ease);
@@ -199,7 +208,11 @@
   .root[data-orientation="vertical"] .track {
     flex-direction: column;
     /* The block axis has no writing-direction to flip for. */
-    translate: 0 calc(-1 * var(--forte-carousel-position, 0) * var(--forte-carousel-step));
+    translate: 0
+      calc(
+        -1 * (var(--forte-carousel-position, 0) - var(--forte-carousel-align-offset, 0)) *
+          var(--forte-carousel-step)
+      );
   }
 
   .root[data-dragging] .track {

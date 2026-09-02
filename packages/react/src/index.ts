@@ -127,6 +127,7 @@ export { Carousel } from "./components/carousel";
 export type {
   CarouselOrientation,
   CarouselChangeReason,
+  CarouselAlign,
   CarouselGap,
   CarouselRootProps,
   CarouselViewportProps,

@@ -60,11 +60,19 @@ The demo at the top of the page: five slides, `Prev` and `Next` rendered inside 
 
 ### Slides per view
 
-`slidesPerView` fits several slides in the viewport; a fraction leaves the next one peeking in at the end, which is the cue that there are more. The last position is the one that still fills the view, so a row never scrolls on to show two slides and a blank, and `Dots` renders one dot per position rather than one per slide.
+`slidesPerView` fits several slides in the viewport; a fraction leaves the next one peeking in at the end, which is the cue that there are more. The active slide sits at the start edge and the rest fill in after it. The last position is the one that still fills the view, so a row never scrolls on to show two slides and a blank, and `Dots` renders one dot per position rather than one per slide.
 
 `gap` sets the space between slides: a step on the spacing scale (`gap={2}` is `--forte-space-2`, `gap={0}` is none) or any CSS length as a string. It is the `--forte-carousel-gap` knob under another name — both the slide size and the track's travel are derived from it, so changing it never puts the track off a slide.
 
 <DemoBlock id="carousel/per-view" />
+
+### Centered
+
+`align="center"` puts the active slide in the middle instead, with its neighbours peeking on both sides — the gallery arrangement, where one slide is the subject and the others are context. Every slide can take the middle, so there is a dot per slide again. With `loop`, as here, the last slides show before the first one; without it the first and last slides sit beside blank track, the way a gallery's ends do. The demo dims the slides that are not active with a Tailwind variant on `data-active`.
+
+<DemoBlock id="carousel/centered" />
+
+Centering is one number: the view's start edge sits `(slidesPerView - 1) / 2` slides before the active one, and that offset is subtracted from the track's position in the same `calc()`. The window that decides which slides are in view — for `inert`, `lazy` and `autoHeight` — centres on the active slide with it, so the two peeking neighbours are mounted but not reachable with Tab.
 
 ### Lazy
 
@@ -142,7 +150,7 @@ Every property below is declared on `Carousel.Root`, so override them there — 
 
 `gap` on the root is `--forte-carousel-gap` as a prop; the two are the same declaration, and the prop wins when both are set because it is written inline.
 
-The parts also expose their state as data attributes — `data-orientation`, `data-loop`, `data-dragging`, `data-auto-height`, `data-autoplay` (`playing` or `paused`), `data-at-start` and `data-at-end` on the root; `data-active`, `data-in-view` and `data-clone` on a slide; `data-disabled` on the controls; `data-active` on a dot or thumb — so a Tailwind arbitrary variant such as `data-[dragging]:...` can target them without a wrapper.
+The parts also expose their state as data attributes — `data-orientation`, `data-align`, `data-loop`, `data-dragging`, `data-auto-height`, `data-autoplay` (`playing` or `paused`), `data-at-start` and `data-at-end` on the root; `data-active`, `data-in-view` and `data-clone` on a slide; `data-disabled` on the controls; `data-active` on a dot or thumb — so a Tailwind arbitrary variant such as `data-[dragging]:...` can target them without a wrapper.
 
 ## API reference
 
