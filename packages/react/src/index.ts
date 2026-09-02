@@ -558,6 +558,23 @@ export type {
   SpinnerLabelPlacement,
 } from "./components/spinner";
 
+export { Steps } from "./components/steps";
+export type {
+  StepsOrientation,
+  StepsLabelPlacement,
+  StepsSize,
+  StepsVariant,
+  StepsTone,
+  StepsStatus,
+  StepsLabels,
+  StepsRootProps,
+  StepsItemProps,
+  StepsTriggerProps,
+  StepsIndicatorProps,
+  StepsTitleProps,
+  StepsDescriptionProps,
+} from "./components/steps";
+
 export { Switch } from "./components/switch";
 export type { SwitchProps, SwitchSize } from "./components/switch";
 

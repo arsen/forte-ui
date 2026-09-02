@@ -1,0 +1,675 @@
+/*
+ * Steps
+ *
+ * A sequence of steps and the user's position in it. Five axes are set on the
+ * root and read below through inherited custom properties and attribute
+ * selectors:
+ *
+ *   data-orientation="horizontal|vertical"   across the row, or down the side
+ *   data-label-placement="inline|below"      title beside the circle, or under it
+ *   data-size="sm|md|lg"                     circle diameter and text size
+ *   data-variant="solid|outline|dot"         how the circle is drawn
+ *   data-tone="primary|secondary|…"          which colour "done" and "here" are
+ *
+ * and one on every item, data-status="incomplete|active|complete|error",
+ * which is the thing all the colour actually keys off.
+ *
+ * The one structural decision worth knowing before editing: the connector is
+ * drawn by the item AFTER whose step it runs, not before. The line after a
+ * completed step fills; nothing else about it is conditional. That reads the
+ * same whether the steps run across or down, and it is why the last item's
+ * connector is hidden rather than the first's. Where the line goes differs
+ * per layout — a flex sibling that grows to fill the row for `inline`, an
+ * absolutely positioned bar between circle centres for `below`, and an
+ * absolutely positioned bar down the indicator column for `vertical` — but
+ * what it is never changes.
+ *
+ * Every step's face — indicator, title, description — lays out on one grid,
+ * `.body`. That element is a plain <div> in a static step and the <span>
+ * inside `Steps.Trigger` in a clickable one, so the two are pixel-identical
+ * and the connector maths above holds for both. A clickable step also gets
+ * padding for its hover fill; `--forte-steps-body-p` carries that inset to
+ * the connector rules, which is what keeps the line pointing at the circle's
+ * centre on either kind of item.
+ *
+ * Motion is three things: colours on `--forte-duration-fast`, the connector
+ * fill growing along the line on `--forte-duration-normal`, and the check
+ * drawing itself on. All three are durations, which shorten under reduced
+ * motion rather than vanishing — a fill that teleports is harder to read,
+ * not easier, and the check is information rather than decoration. There is
+ * deliberately no prefers-reduced-motion block here, or in any component.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared here, on Steps.Root itself, so an ancestor's
+     * value is only ever inherited and never wins — which is what lets the
+     * size, variant and tone presets below re-point a handful of them instead
+     * of restating rules. Re-skin one list by setting them on the root through
+     * `className` or `style`; re-skin every list by re-pointing the global
+     * tokens on the right-hand side, which this file only reads. */
+
+    /* Tone slots, swapped wholesale by [data-tone] below. Only the "done" and
+     * "here" colours come from the tone: a step not yet reached stays neutral
+     * in every tone, so the colour only ever says "this far". */
+    /** Fill of an active or completed indicator */
+    --forte-steps-tone-solid: var(--forte-color-primary);
+    /** Text and icon colour on that fill */
+    --forte-steps-tone-on-solid: var(--forte-color-on-primary);
+    /** The active indicator's halo, and the `outline` variant's active fill */
+    --forte-steps-tone-soft: var(--forte-color-primary-soft);
+    /** Text colour on the soft fill */
+    --forte-steps-tone-text: var(--forte-color-primary-text);
+
+    /* Geometry. The indicator's diameter is the one measure everything else
+     * is placed against — the title centres on it, and every connector rule
+     * offsets by half of it. */
+    /** Diameter of the indicator */
+    --forte-steps-indicator-size: var(--forte-space-6);
+    /** Text size of the number inside the indicator */
+    --forte-steps-indicator-font-size: var(--forte-font-size-2);
+    /** Width of the indicator's ring. Painted in the indicator's own colour in
+     * `solid`, so it only shows in `outline`. */
+    --forte-steps-indicator-border-width: 2px;
+    /* `--forte-radius-full`, not a literal: the `none` preset zeroes it so a
+     * squared-off theme gets square steps to match its square buttons. */
+    /** Corner radius of the indicator */
+    --forte-steps-indicator-radius: var(--forte-radius-full);
+    /** Diameter of the indicator in the `dot` variant. Retuned by `size`. */
+    --forte-steps-dot-size: var(--forte-space-3);
+    /** Width of the ring around the active indicator */
+    --forte-steps-active-halo: var(--forte-space-1);
+    /** Space between the indicator and the title — and between a connector's
+     * end and the circle it points at. Follows `data-forte-density`. */
+    --forte-steps-gap: var(--forte-control-gap);
+    /** Space between the title and the description */
+    --forte-steps-description-gap: var(--forte-space-1);
+    /** Thickness of the connector */
+    --forte-steps-connector-thickness: 2px;
+    /** Shortest a connector can get, and the space between stacked steps */
+    --forte-steps-connector-min: var(--forte-space-6);
+
+    /* Colour. The connector's rail is `-border`, below the text floor and fine
+     * for it: a non-text indicator (SC 1.4.11) that repeats what the list's
+     * order already says. */
+    /** Colour of a connector that has not been reached */
+    --forte-steps-track-color: var(--forte-color-border);
+    /** Colour of a connector after a completed step */
+    --forte-steps-fill-color: var(--forte-steps-tone-solid);
+    /** Colour of a title on a step not yet reached */
+    --forte-steps-title-color: var(--forte-color-foreground-muted);
+    /** Colour of the active and completed steps' titles */
+    --forte-steps-title-color-active: var(--forte-color-foreground);
+    /** Text size of the title */
+    --forte-steps-title-font-size: var(--forte-font-size-2);
+    /** Weight of a title, when not the active one */
+    --forte-steps-title-font-weight: var(--forte-font-weight-medium);
+    /** Weight of the active step's title */
+    --forte-steps-title-font-weight-active: var(--forte-font-weight-semibold);
+    /** Colour of the description */
+    --forte-steps-description-color: var(--forte-color-foreground-muted);
+    /** Text size of the description */
+    --forte-steps-description-font-size: var(--forte-font-size-1);
+
+    /* The clickable step. It is padded so its hover fill has room to be a
+     * fill rather than a tight outline around the text, and that padding is
+     * published to the connector rules through `--forte-steps-body-p`. */
+    /** Padding of a clickable step, which is the inset of its hover fill */
+    --forte-steps-trigger-p: var(--forte-space-1);
+    /** Corner radius of a clickable step's hover fill and focus ring */
+    --forte-steps-trigger-radius: var(--forte-radius-control);
+    /** Fill of a clickable step under the pointer */
+    --forte-steps-trigger-bg-hover: var(--forte-color-panel-hover);
+
+    /* Motion. */
+    /** How long the connector takes to fill after its step completes */
+    --forte-steps-fill-duration: var(--forte-duration-normal);
+    /** How long the check takes to draw on */
+    --forte-steps-draw-duration: var(--forte-duration-normal);
+
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-steps-title-font-size);
+    line-height: var(--forte-line-height-tight);
+    color: var(--forte-color-foreground);
+  }
+
+  /* Presets re-point the knobs and nothing else. No `md` and no `primary`
+   * block: the defaults above ARE those. ------------------------------------ */
+
+  .root[data-size="sm"] {
+    --forte-steps-indicator-size: var(--forte-space-5);
+    --forte-steps-indicator-font-size: var(--forte-font-size-1);
+    --forte-steps-dot-size: var(--forte-space-2);
+    --forte-steps-title-font-size: var(--forte-font-size-1);
+    --forte-steps-connector-min: var(--forte-space-5);
+  }
+
+  .root[data-size="lg"] {
+    --forte-steps-indicator-size: var(--forte-space-7);
+    --forte-steps-indicator-font-size: var(--forte-font-size-3);
+    --forte-steps-dot-size: var(--forte-space-4);
+    --forte-steps-title-font-size: var(--forte-font-size-3);
+    --forte-steps-description-font-size: var(--forte-font-size-2);
+    --forte-steps-connector-min: var(--forte-space-7);
+  }
+
+  .root[data-tone="secondary"] {
+    --forte-steps-tone-solid: var(--forte-color-secondary);
+    --forte-steps-tone-on-solid: var(--forte-color-on-secondary);
+    --forte-steps-tone-soft: var(--forte-color-secondary-soft);
+    --forte-steps-tone-text: var(--forte-color-secondary-text);
+  }
+
+  .root[data-tone="success"] {
+    --forte-steps-tone-solid: var(--forte-color-success);
+    --forte-steps-tone-on-solid: var(--forte-color-on-success);
+    --forte-steps-tone-soft: var(--forte-color-success-soft);
+    --forte-steps-tone-text: var(--forte-color-success-text);
+  }
+
+  .root[data-tone="neutral"] {
+    --forte-steps-tone-solid: var(--forte-gray-12);
+    --forte-steps-tone-on-solid: var(--forte-gray-1);
+    --forte-steps-tone-soft: var(--forte-gray-4);
+    --forte-steps-tone-text: var(--forte-color-foreground);
+  }
+
+  /* The dot has no number to fit, so it takes over the diameter that every
+   * placement rule reads — the title still centres on it and the connectors
+   * still meet it. After the size blocks, because it must win the same
+   * (0,2,0) tie; the dot's own size is what `size` retunes here. */
+  .root[data-variant="dot"] {
+    --forte-steps-indicator-size: var(--forte-steps-dot-size);
+  }
+
+  /* Orientation ---------------------------------------------------------- */
+
+  .root[data-orientation="vertical"] {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Item ------------------------------------------------------------------
+   * The item owns the two things a step's face does not: its share of the
+   * row, and the connector. */
+  .item {
+    /* Zero on a static step; the clickable one re-points it to the trigger's
+     * padding below. Declared as a length with a unit, because the connector
+     * rules add it inside calc() and a unitless zero there is invalid. */
+    --forte-steps-body-p: 0px;
+
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    /* `auto`, not `0`, as the basis: every item's base size is its own face
+     * plus the connector's minimum, and the row's spare width is then shared
+     * EQUALLY on top — which is what makes every connector the same length,
+     * whatever the titles beside them measure. */
+    flex: 1 1 auto;
+    /* A flex item refuses to shrink below its content by default; without
+     * this a long title pushes the row past its container instead of
+     * wrapping. */
+    min-inline-size: 0;
+  }
+
+  .item[data-interactive] {
+    --forte-steps-body-p: var(--forte-steps-trigger-p);
+  }
+
+  /* No line after the last step, and no spare width for it either — the last
+   * face sits flush at the end of the row and the connectors before it take
+   * the rest. */
+  .item:last-child {
+    flex: 0 1 auto;
+  }
+
+  .item:last-child .connector {
+    display: none;
+  }
+
+  /* Body ------------------------------------------------------------------
+   * One grid for the face, whichever element carries it. Two rows so the
+   * indicator can span title and description; with no description the
+   * second row is empty and collapses, and the indicator sits against the
+   * title alone. */
+  .body {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "indicator title"
+      "indicator description";
+    column-gap: var(--forte-steps-gap);
+    align-items: start;
+    min-inline-size: 0;
+    /* Chrome, not a control: the static face performs no action on click, so
+     * it takes `default` per the cursor table. Text stays selectable — a
+     * step's title is content. */
+    cursor: default;
+  }
+
+  /* Indicator -------------------------------------------------------------
+   * A grid with every child in the same cell: the number, the check and the
+   * error mark overlap at the centre and opacity decides which one shows, so
+   * a change of status is a cross-fade rather than a remount — and the check,
+   * which is always in the DOM, has something to transition from. */
+  .indicator {
+    /* Colour slots, set per status below and per variant further down. */
+    /** Fill of the indicator */
+    --forte-steps-indicator-bg: var(--forte-color-panel-active);
+    /** Colour of the number or icon inside the indicator */
+    --forte-steps-indicator-color: var(--forte-color-foreground-muted);
+    /** Colour of the indicator's ring */
+    --forte-steps-indicator-border-color: var(--forte-steps-indicator-bg);
+
+    grid-area: indicator;
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    box-sizing: border-box;
+    inline-size: var(--forte-steps-indicator-size);
+    block-size: var(--forte-steps-indicator-size);
+    border: var(--forte-steps-indicator-border-width) solid
+      var(--forte-steps-indicator-border-color);
+    border-radius: var(--forte-steps-indicator-radius);
+    background-color: var(--forte-steps-indicator-bg);
+    color: var(--forte-steps-indicator-color);
+    font-size: var(--forte-steps-indicator-font-size);
+    font-weight: var(--forte-font-weight-semibold);
+    line-height: 1;
+    /* A number or a glyph, not text you copy: dragging across a stepper
+     * should select the titles, not "1 2 3". */
+    -webkit-user-select: none;
+    user-select: none;
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  .indicator > * {
+    grid-area: 1 / 1;
+  }
+
+  /* An svg placed straight into the indicator — the built-in marks or a
+   * consumer's icon — is sized off the indicator's text so it follows the
+   * size preset, and rides `currentColor` through every status. Slightly
+   * over 1em: a glyph drawn to its box reads smaller than a digit at the same
+   * size. */
+  .indicator > svg {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+  }
+
+  .number,
+  .check,
+  .error {
+    transition: opacity var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  .check,
+  .error {
+    opacity: 0;
+  }
+
+  /* pathLength="1" on the paths makes both of these fractions of the whole
+   * stroke: 1 = fully retracted, 0 = fully drawn. */
+  .check path,
+  .error path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset var(--forte-steps-draw-duration) var(--forte-ease-standard);
+  }
+
+  .indicator[data-status="complete"] .number,
+  .indicator[data-status="error"] .number {
+    opacity: 0;
+  }
+
+  .indicator[data-status="complete"] .check,
+  .indicator[data-status="error"] .error {
+    opacity: 1;
+  }
+
+  .indicator[data-status="complete"] .check path,
+  .indicator[data-status="error"] .error path {
+    stroke-dashoffset: 0;
+  }
+
+  /* Status colours, `solid` variant. Active and complete share the fill —
+   * what tells them apart is the check, the halo and the title's weight, so
+   * the cue is never colour alone. */
+  .indicator[data-status="active"],
+  .indicator[data-status="complete"] {
+    --forte-steps-indicator-bg: var(--forte-steps-tone-solid);
+    --forte-steps-indicator-color: var(--forte-steps-tone-on-solid);
+  }
+
+  .indicator[data-status="active"] {
+    box-shadow: 0 0 0 var(--forte-steps-active-halo) var(--forte-steps-tone-soft);
+  }
+
+  .indicator[data-status="error"] {
+    --forte-steps-indicator-bg: var(--forte-color-danger);
+    --forte-steps-indicator-color: var(--forte-color-on-danger);
+  }
+
+  /* `outline` variant: a ring until the step is done, so the filled circles
+   * are exactly the completed ones and the active step is the one with the
+   * soft fill inside its ring. The ring colour is the only slot it adds. */
+  .root[data-variant="outline"] .indicator {
+    --forte-steps-indicator-bg: transparent;
+    --forte-steps-indicator-border-color: var(--forte-color-border-strong);
+  }
+
+  .root[data-variant="outline"] .indicator[data-status="active"] {
+    --forte-steps-indicator-bg: var(--forte-steps-tone-soft);
+    --forte-steps-indicator-color: var(--forte-steps-tone-text);
+    --forte-steps-indicator-border-color: var(--forte-steps-tone-solid);
+  }
+
+  .root[data-variant="outline"] .indicator[data-status="complete"] {
+    --forte-steps-indicator-bg: var(--forte-steps-tone-solid);
+    --forte-steps-indicator-color: var(--forte-steps-tone-on-solid);
+    --forte-steps-indicator-border-color: var(--forte-steps-tone-solid);
+  }
+
+  .root[data-variant="outline"] .indicator[data-status="error"] {
+    --forte-steps-indicator-bg: var(--forte-color-danger-soft);
+    --forte-steps-indicator-color: var(--forte-color-danger-text);
+    --forte-steps-indicator-border-color: var(--forte-color-danger);
+  }
+
+  /* `dot` variant: nothing inside the circle. The marks are hidden rather
+   * than unmounted so the status word for screen readers, which is not one
+   * of these three, stays in the tree. */
+  .root[data-variant="dot"] .number,
+  .root[data-variant="dot"] .check,
+  .root[data-variant="dot"] .error {
+    display: none;
+  }
+
+  /* Title and description ------------------------------------------------- */
+
+  .title {
+    grid-area: title;
+    display: flex;
+    align-items: center;
+    /* As tall as the indicator, so the text centres on the circle while the
+     * indicator itself stays top-aligned — which is what keeps it beside the
+     * title, not floating halfway down a three-line description. */
+    min-block-size: var(--forte-steps-indicator-size);
+    min-inline-size: 0;
+    color: var(--forte-steps-title-color);
+    font-size: var(--forte-steps-title-font-size);
+    font-weight: var(--forte-steps-title-font-weight);
+    text-align: start;
+    overflow-wrap: anywhere;
+    transition: color var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  .item[data-status="active"] .title,
+  .item[data-status="complete"] .title,
+  .item[data-status="error"] .title {
+    color: var(--forte-steps-title-color-active);
+  }
+
+  .item[data-status="active"] .title {
+    font-weight: var(--forte-steps-title-font-weight-active);
+  }
+
+  .description {
+    grid-area: description;
+    min-inline-size: 0;
+    margin-block-start: var(--forte-steps-description-gap);
+    color: var(--forte-steps-description-color);
+    font-size: var(--forte-steps-description-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-normal);
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+
+  /* Trigger ---------------------------------------------------------------
+   * The button is a transparent box around the same grid the static face
+   * uses. It is NOT the grid itself, so a `<button>` never has to be
+   * `display: grid` — a button's children lay out in an anonymous block
+   * that some engines still centre — and so the padding that gives its hover
+   * fill room can be accounted for on the item. */
+  .trigger {
+    display: block;
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    margin: 0;
+    padding: var(--forte-steps-body-p);
+    border: 0;
+    border-radius: var(--forte-steps-trigger-radius);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
+  }
+
+  /* Inside the button the face is not chrome; the pointer is the button's. */
+  .trigger .body {
+    cursor: inherit;
+  }
+
+  @media (hover: hover) {
+    .trigger:not([data-disabled]):hover {
+      background-color: var(--forte-steps-trigger-bg-hover);
+    }
+
+    .trigger:not([data-disabled]):hover .title {
+      color: var(--forte-steps-title-color-active);
+    }
+  }
+
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  /* A disabled step without a trigger has nothing to press; it only dims. */
+  .item[data-disabled]:not([data-interactive]) .body {
+    opacity: 0.55;
+  }
+
+  /* Connector -------------------------------------------------------------
+   * The rail is the element; the fill is its ::after, which grows along the
+   * line from the step it belongs to. Both are backgrounds rather than
+   * borders because the fill has to be a fraction of the rail's length, and
+   * a border cannot be; the forced-colors block at the bottom names system
+   * colours for them, which that mode preserves. */
+  .connector {
+    position: relative;
+    flex: 1 1 auto;
+    min-inline-size: var(--forte-steps-connector-min);
+    block-size: var(--forte-steps-connector-thickness);
+    /* Half the indicator down, and the trigger's padding on top of that, so
+     * the line meets the circle's centre on a static and a clickable step
+     * alike. */
+    margin-block-start: calc(
+      var(--forte-steps-body-p) +
+        (var(--forte-steps-indicator-size) - var(--forte-steps-connector-thickness)) / 2
+    );
+    /* Less the trigger's padding on both sides, because on a clickable step
+     * that padding already sits between the line and each circle: its own
+     * face's on the start side, the next step's on the end side. */
+    margin-inline: calc(var(--forte-steps-gap) - var(--forte-steps-body-p));
+    border-radius: var(--forte-radius-full);
+    background-color: var(--forte-steps-track-color);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .connector::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 0;
+    background-color: var(--forte-steps-fill-color);
+    /* The one geometric transition in the file, and a logical one: growing
+     * `inline-size` from the inline start needs no `--forte-direction`
+     * arithmetic, where a `scale` from a transform-origin would. */
+    transition:
+      inline-size var(--forte-steps-fill-duration) var(--forte-ease-standard),
+      block-size var(--forte-steps-fill-duration) var(--forte-ease-standard);
+  }
+
+  .item[data-status="complete"] .connector::after {
+    inline-size: 100%;
+  }
+
+  /* Label below -----------------------------------------------------------
+   * Every step takes an equal share of the row, its face stacks and centres,
+   * and the connector is lifted out of the flow to run from this circle's
+   * centre to the next one's. The insets are percentages of the ITEM, and
+   * equal items are what make "the next centre" a fixed `50%` away. */
+  .root[data-orientation="horizontal"][data-label-placement="below"] .item {
+    display: block;
+    flex: 1 1 0;
+  }
+
+  .root[data-orientation="horizontal"][data-label-placement="below"] .body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "indicator"
+      "title"
+      "description";
+    justify-items: center;
+  }
+
+  .root[data-orientation="horizontal"][data-label-placement="below"] .trigger {
+    inline-size: 100%;
+  }
+
+  .root[data-orientation="horizontal"][data-label-placement="below"] .title {
+    min-block-size: 0;
+    margin-block-start: var(--forte-steps-gap);
+    text-align: center;
+  }
+
+  .root[data-orientation="horizontal"][data-label-placement="below"] .description {
+    text-align: center;
+  }
+
+  .root[data-orientation="horizontal"][data-label-placement="below"] .connector {
+    position: absolute;
+    inset-block-start: calc(
+      var(--forte-steps-body-p) +
+        (var(--forte-steps-indicator-size) - var(--forte-steps-connector-thickness)) / 2
+    );
+    inset-inline-start: calc(50% + var(--forte-steps-indicator-size) / 2 + var(--forte-steps-gap));
+    inset-inline-end: calc(-50% + var(--forte-steps-indicator-size) / 2 + var(--forte-steps-gap));
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  /* Vertical --------------------------------------------------------------
+   * The face is the inline grid again, and the connector runs down the
+   * indicator's column, alongside whatever the description holds, to stop a
+   * gap short of the next circle. The step gap is the item's own padding,
+   * so the line has that much room at minimum and grows with the content. */
+  .root[data-orientation="vertical"] .item {
+    display: block;
+    flex: none;
+    padding-block-end: var(--forte-steps-connector-min);
+  }
+
+  .root[data-orientation="vertical"] .item:last-child {
+    padding-block-end: 0;
+  }
+
+  .root[data-orientation="vertical"] .trigger {
+    inline-size: 100%;
+  }
+
+  .root[data-orientation="vertical"] .connector {
+    position: absolute;
+    inset-inline-start: calc(
+      var(--forte-steps-body-p) +
+        (var(--forte-steps-indicator-size) - var(--forte-steps-connector-thickness)) / 2
+    );
+    inset-block-start: calc(
+      var(--forte-steps-body-p) + var(--forte-steps-indicator-size) + var(--forte-steps-gap)
+    );
+    /* The next circle starts a trigger-padding below this item's edge, so
+     * the gap before it is that much smaller than the one after this one. */
+    inset-block-end: calc(var(--forte-steps-gap) - var(--forte-steps-body-p));
+    inline-size: var(--forte-steps-connector-thickness);
+    block-size: auto;
+    min-inline-size: 0;
+    margin: 0;
+  }
+
+  .root[data-orientation="vertical"] .connector::after {
+    inset-block: 0 auto;
+    inline-size: 100%;
+    block-size: 0;
+  }
+
+  .root[data-orientation="vertical"] .item[data-status="complete"] .connector::after {
+    block-size: 100%;
+  }
+}
+
+/* Forced colors --------------------------------------------------------------
+ * In `forte.a11y`, ordered after `forte.components`, so it wins by layer
+ * alone. patterns.css already handles the focus ring.
+ *
+ * Everything that says "done" or "here" is a fill, and fills go to `Canvas`
+ * — so the indicators would all dissolve to their rings, with `solid` having
+ * none. System colour keywords are preserved, so the reached steps are named
+ * `Highlight` and the rest get a `CanvasText` ring to stay circles at all.
+ * The connector's two colours are the same story.
+ *
+ * `opacity` is one of the few properties forced colours does NOT override,
+ * so the 0.55 on a disabled step would leave it at full contrast, reading as
+ * enabled; `GrayText` at opacity 1 is the convention. */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    .indicator {
+      border-color: CanvasText;
+    }
+
+    .indicator[data-status="active"],
+    .indicator[data-status="complete"],
+    .indicator[data-status="error"] {
+      background-color: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
+
+    .connector {
+      background-color: GrayText;
+    }
+
+    .connector::after {
+      background-color: Highlight;
+    }
+
+    .trigger[data-disabled],
+    .item[data-disabled]:not([data-interactive]) .body {
+      opacity: 1;
+      color: GrayText;
+    }
+
+    .trigger[data-disabled] .indicator {
+      border-color: GrayText;
+      background-color: Canvas;
+      color: GrayText;
+    }
+  }
+}

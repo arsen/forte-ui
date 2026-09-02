@@ -1,0 +1,162 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
+
+export const metadata = {
+  title: "Steps",
+  description:
+    "A numbered sequence of steps and the user's position in it — the header of a wizard or the progress of an order, across the row or down the side.",
+};
+
+# Steps
+
+A stepper is the line at the top of a wizard that says how many steps there are and which one you are on. It is a progress bar that can be read: each segment has a name, the ones behind you are ticked, and the one you are on is the one that is lit.
+
+<DemoBlock id="steps/basic" />
+
+## Import
+
+```tsx
+import { Steps } from "@forte-ui/react";
+```
+
+`Steps` is a namespace of six parts. The full anatomy, with every optional layer present:
+
+```tsx
+<Steps.Root current={1}>
+  <Steps.Item>
+    <Steps.Trigger onClick={() => go(0)}>
+      <Steps.Indicator />
+      <Steps.Title>Account</Steps.Title>
+      <Steps.Description render={<span />}>Email and password</Steps.Description>
+    </Steps.Trigger>
+  </Steps.Item>
+</Steps.Root>
+```
+
+Most lists need less: `Root → Item → Indicator + Title`, and a `Description` where a step has something to say.
+
+<Callout kind="note">
+  **You do not set a state on each step.** `current` on the root is the zero-based index of the step the user is on; every step before it is complete, that step is active, and every step after it is still to come. A step that needs a state of its own — an error, usually — sets `status` on its `Item`, which wins over what `current` would have given it.
+</Callout>
+
+## Examples
+
+### A wizard
+
+The shape a real form takes: `current` in state, and two buttons that move it. Stepping past the last index marks every step complete, which is how the header says "done" without a fifth step to say it on.
+
+<DemoBlock id="steps/controlled" />
+
+### Labels below
+
+`labelPlacement="below"` centres each title under its circle and gives every step an equal share of the row. The connector then runs from one circle's centre to the next — which is what the equal shares are for. It suits a short wizard whose titles are a word or two; a title that needs a description reads better beside the circle.
+
+<DemoBlock id="steps/label-below" />
+
+### Vertical
+
+`orientation="vertical"` stacks the steps with the connector running down the side. The line runs alongside whatever the `Description` holds for its full height, so the active step can open up into its own content — a form section with its buttons — and the line simply gets longer.
+
+<DemoBlock id="steps/vertical" />
+
+### Sizes
+
+`size` is the circle's diameter and the text beside it. The connector keeps its thickness in every size; its minimum length grows with the circle.
+
+<DemoBlock id="steps/sizes" />
+
+### Variants
+
+`solid` fills every circle and is the default. `outline` rings a step until it is done, so the filled circles are exactly the completed ones and the active step is the one with the soft fill inside its ring. `dot` drops the number and shrinks the circle to a point on a line — a timeline rather than a numbered list.
+
+<DemoBlock id="steps/variants" />
+
+### Tones
+
+`tone` colours "done" and "here" and nothing else. A step not yet reached stays neutral in every tone, so the colour only ever says "this far" — and the error state is always `danger`, whatever the tone.
+
+<DemoBlock id="steps/tones" />
+
+### Icons
+
+Children of `Steps.Indicator` replace the number, in every state. The fill colour still carries the status, and a completed step still gets its visually hidden "Completed" for a screen reader — the icon is not asked to mean "done" on its own.
+
+<DemoBlock id="steps/icons" />
+
+A direct-child `svg` is sized off the circle's text by the stylesheet, so it follows the size preset without a class of its own, and it rides `currentColor` through every status.
+
+### Clickable steps
+
+Wrap a step's parts in a `Steps.Trigger` and the whole face becomes one `<button>`. It takes `disabled` from its `Item`, and `aria-current="step"` when the step is the active one, so the current step is announced when the button takes focus rather than only when the list is walked.
+
+<DemoBlock id="steps/clickable" />
+
+This one lets the reader jump anywhere. A stricter wizard would disable the steps ahead of the furthest one reached — and a step that is a route goes in through `render`: `render={<Link href="/checkout/address" />}` replaces the button with the framework's link and keeps the step's styling and states.
+
+### Errors
+
+`status` on an item overrides what `current` would have given it. Here the reader is on the third step, but the second one failed validation on the way past. The connector after it stays empty: the line only fills after a step that is actually done, so a broken line reads as "something back there needs attention".
+
+<DemoBlock id="steps/error" />
+
+### Without `current`
+
+Leave `current` off the root and each item's `status` is the whole story. That is the shape for a list that is not a straight line — an order's history, where the steps are events rather than pages and "complete" does not imply the one before it.
+
+<DemoBlock id="steps/manual" />
+
+## How the connector works
+
+The line after a step belongs to that step, and it fills when that step is complete. Nothing else about it is conditional — which is the only rule that reads the same whether the steps run across the row or down the side, and it is why the **last** step's connector is the one that is hidden, rather than the first's.
+
+The fill grows along the line, over `--forte-steps-fill-duration`, from the step it belongs to. Under reduced motion the duration shortens rather than disappearing, for the same reason [Progress](/components/progress/) keeps its fill transition there: a line that teleports is harder to read, not easier. The check in a completed circle is drawn on the same way — it is `stroke-dashoffset` over a duration, not a scale, because the mark is information rather than decoration and must still draw when motion is reduced.
+
+## Accessibility
+
+The keyboard story is the platform's: a clickable step is a real `<button>`, so <Kbd>Tab</Kbd> reaches it and <Kbd>Enter</Kbd> or <Kbd>Space</Kbd> presses it. There is no roving focus to learn. A static list has nothing to focus.
+
+Everything else the component does by default:
+
+- **`Root` is an `<ol>`.** The steps are ordered — that is the whole point — and "list, 4 items" tells a reader how long the road is before they walk it. The visible number is real text, so a screen reader hears "2 Address" the way a sighted reader sees it.
+- **The active step carries `aria-current="step"`.** On the `<li>` in a static list, and on the `Trigger` in a clickable one, so it is announced when the button takes focus.
+- **The two icon states get a word.** A check mark has no text of its own; without one, a done step and an undone one would both be heard as "1 Account". `Indicator` adds a visually hidden "Completed" or "Has an error" after the number — `labels` on the root localises both.
+- **The connector is `aria-hidden`.** It repeats what the list's order already says.
+- **State is never colour alone.** Active and complete share a fill; what tells them apart is the check, the halo and the title's weight. Under forced colors, where every fill goes to `Canvas`, the reached steps are named `Highlight` and the rest get a `CanvasText` ring so they stay circles at all.
+- **A disabled step dims to `opacity: 0.55`,** and to `GrayText` at full opacity under forced colors — `opacity` is one of the few properties that mode does not override, so left alone a dimmed step would keep full contrast and read as enabled.
+
+## Theming
+
+Every property below is declared on `Steps.Root`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The presets work the same way: `size`, `variant` and `tone` re-point a few of these knobs and nothing else. The three `--forte-steps-indicator-*` colour slots are the exception: they sit on each `Indicator`, set per status, and are the thing to re-point for one step rather than all of them.
+
+<ThemingTable component="Steps" />
+
+The parts also expose their state as data attributes — `data-orientation`, `data-label-placement`, `data-size`, `data-variant` and `data-tone` on the root; `data-status` on every item, indicator and trigger; `data-interactive` and `data-disabled` on an item — so a Tailwind arbitrary variant such as `data-[status=complete]:...` can target them without a wrapper.
+
+## API reference
+
+### Steps.Root
+
+<PropTable component="StepsRoot" />
+
+### Steps.Item
+
+<PropTable component="StepsItem" />
+
+### Steps.Trigger
+
+<PropTable component="StepsTrigger" />
+
+### Steps.Indicator
+
+<PropTable component="StepsIndicator" />
+
+### Steps.Title
+
+<PropTable component="StepsTitle" />
+
+### Steps.Description
+
+<PropTable component="StepsDescription" />

@@ -104,6 +104,8 @@ Components.
   compound · parts (props.json): NavigationMenuRoot, NavigationMenuList, NavigationMenuItem, NavigationMenuIcon, NavigationMenuTrigger, NavigationMenuContent, NavigationMenuLink, NavigationMenuLinkTitle, NavigationMenuLinkDescription, NavigationMenuPopup · knobs: theming.json → NavigationMenu
 - **NavList** — A sidebar's vertical page list — titled sections, collapsible groups, nesting, and a controlled notion of the current page.
   compound · parts (props.json): NavListRoot, NavListSection, NavListSectionLabel, NavListList, NavListItem, NavListLink, NavListGroup, NavListGroupTrigger, NavListGroupPanel, NavListBadge · knobs: theming.json → NavList
+- **Steps** — A numbered sequence of steps and the user's position in it — a wizard header or an order's progress; for a single fraction done, use Progress instead.
+  compound · parts (props.json): StepsRoot, StepsItem, StepsTrigger, StepsIndicator, StepsTitle, StepsDescription · knobs: theming.json → Steps
 - **Tabs** — Switches between panels of related content in the same place, with a sliding active indicator.
   compound · parts (props.json): TabsRoot, TabsList, TabsTab, TabsIndicator, TabsPanel · knobs: theming.json → Tabs
 

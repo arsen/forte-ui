@@ -7440,6 +7440,175 @@
       }
     ]
   },
+  "StepsRoot": {
+    "name": "StepsRoot",
+    "description": "The list of steps. Renders an `<ol>`.\n\n```tsx\n<Steps.Root current={1}>\n  <Steps.Item>\n    <Steps.Indicator />\n    <Steps.Title>Account</Steps.Title>\n  </Steps.Item>\n  <Steps.Item>\n    <Steps.Indicator />\n    <Steps.Title>Address</Steps.Title>\n  </Steps.Item>\n</Steps.Root>\n```\n\nNumbering is positional: the root stamps an index onto each direct child,\nwhich is what `Indicator` prints and what `current` is compared against.\n`React.Children.toArray` drops `null` children before the count is taken,\nso a conditionally rendered step does not leave a gap in the numbers — but\na fragment counts as one child, so steps go in as direct children or as an\narray, not wrapped in `<>…</>`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "required": false,
+        "defaultValue": null,
+        "description": "The zero-based index of the step the user is on. Every step before it\nbecomes `complete`, it becomes `active`, and every step after it stays\n`incomplete` — a wizard sets this one number and nothing else. Leave it\nunset to drive each step's `status` by hand, for a list that is not a\nstraight line."
+      },
+      {
+        "name": "labelPlacement",
+        "type": "StepsLabelPlacement",
+        "required": false,
+        "defaultValue": "inline",
+        "description": "Where a horizontal step's title sits. `\"inline\"` puts it beside the\nindicator, with the connector filling the space to the next step.\n`\"below\"` centres it under the indicator and gives every step an equal\nshare of the row — the layout for a short wizard whose titles are one or\ntwo words. Ignored when `orientation=\"vertical\"`."
+      },
+      {
+        "name": "labels",
+        "type": "StepsLabels",
+        "required": false,
+        "defaultValue": null,
+        "description": "The words read after a step's number for the states the visuals carry\nwith an icon alone. Override to localise them."
+      },
+      {
+        "name": "orientation",
+        "type": "StepsOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the steps run. `\"vertical\"` stacks them with the connector\nrunning down the side, which is the layout for a step that carries\ncontent of its own — a form section, a set of actions — under its title."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<ol>` with another element or component."
+      },
+      {
+        "name": "size",
+        "type": "StepsSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Indicator diameter and text size for the whole list."
+      },
+      {
+        "name": "tone",
+        "type": "StepsTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which semantic colour the active and completed steps draw from. The\nerror state is always `danger`, and the steps not yet reached stay\nneutral in every tone, so the colour only ever says \"this far\"."
+      },
+      {
+        "name": "variant",
+        "type": "StepsVariant",
+        "required": false,
+        "defaultValue": "solid",
+        "description": "How the indicator is drawn. `\"solid\"` fills every indicator. `\"outline\"`\nrings a step until it is done, so the filled circles are exactly the\ncompleted ones. `\"dot\"` shrinks the indicator to a plain dot with no\nnumber in it — a timeline rather than a numbered list."
+      }
+    ]
+  },
+  "StepsItem": {
+    "name": "StepsItem",
+    "description": "One step's `<li>`. It resolves the step's status — the `status` prop if\ngiven, otherwise its position against the root's `current` — and carries\nit as `data-status` for everything below to style against.\n\nThe item also draws the connector to the next step, as a sibling of the\nstep's content rather than a sibling of the item, so the connector's\ncolour follows THIS step's status: the line after a completed step fills,\nwhich is the only rule that reads the same whether the steps run across\nor down.\n\nPut a `Steps.Trigger` inside to make the step clickable. The item notices\nand leaves the trigger to carry `aria-current`, so the current step is\nannounced when the button takes focus rather than only when the list is\nwalked.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Disables the step's `Trigger`, if it has one, and marks the step\n`data-disabled` for styling. A step without a trigger has nothing to\ndisable, so this only dims it."
+      },
+      {
+        "name": "status",
+        "type": "StepsStatus",
+        "required": false,
+        "defaultValue": null,
+        "description": "This step's state, when it is not the one `current` on the root would\ngive it. `\"error\"` is the usual reason — a step the user went past that\nfailed validation — but any of the four can be set, and a root with no\n`current` is driven entirely by these."
+      }
+    ]
+  },
+  "StepsTrigger": {
+    "name": "StepsTrigger",
+    "description": "Makes a step clickable. Wrap the `Indicator` and `Title` in it, and the\nwhole of the step's face becomes one `<button>` — so a reader can jump\nback to a completed step, or ahead in a wizard that allows it.\n\n```tsx\n<Steps.Item>\n  <Steps.Trigger onClick={() => go(0)}>\n    <Steps.Indicator />\n    <Steps.Title>Account</Steps.Title>\n  </Steps.Trigger>\n</Steps.Item>\n```\n\nIt takes `disabled` from its item, and `aria-current=\"step\"` when the step\nis the active one. `type=\"button\"` is set so a stepper inside a form does\nnot submit it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component —\n`render={<Link href=\"/checkout/address\" />}` when each step is a route."
+      }
+    ]
+  },
+  "StepsIndicator": {
+    "name": "StepsIndicator",
+    "description": "The circle. Empty, it prints the step's number and swaps it for a check\nwhen the step completes or a mark when it errors — the number stays in\nthe DOM underneath, so the swap is a fade and the check can draw itself\non. Give it children — an icon — and they are shown in every state; the\nfill colour still carries the status.\n\nThe two icon states also get a visually hidden word (`labels` on the\nroot), because a check mark has no text of its own and a screen reader\nwould otherwise hear \"1 Account\" for a done step and an undone one alike.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "StepsTitle": {
+    "name": "StepsTitle",
+    "description": "The step's name. A `<span>` rather than a heading, because a step title\ninside a `Trigger` sits inside a `<button>`, where only phrasing content\nis allowed — and because the list already gives it structure.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<span>` with another element or component."
+      }
+    ]
+  },
+  "StepsDescription": {
+    "name": "StepsDescription",
+    "description": "Whatever sits under the title: a one-line caption, or — in a vertical\nlist — the step's own content, a form section with its buttons. A\n`<div>`, so block content is legal in it. In the vertical orientation\nthe connector runs alongside it for its full height.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component. Pass\n`render={<span />}` inside a `Trigger`, where a `<div>` is not valid\ncontent for the button."
+      }
+    ]
+  },
   "Switch": {
     "name": "Switch",
     "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--forte-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",

@@ -92,6 +92,7 @@ const NAV: NavGroup[] = [
       { title: "Skeleton", href: "/components/skeleton/" },
       { title: "Slider", href: "/components/slider/" },
       { title: "Spinner", href: "/components/spinner/" },
+      { title: "Steps", href: "/components/steps/" },
       { title: "Switch", href: "/components/switch/" },
       { title: "Tabs", href: "/components/tabs/" },
       { title: "Textarea", href: "/components/textarea/" },
