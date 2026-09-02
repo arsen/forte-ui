@@ -4,7 +4,6 @@ export {
   AppBarLeading,
   AppBarTitle,
   AppBarTrailing,
-  AppBarSection,
 } from "./AppBar";
 export type {
   AppBarVariant,
@@ -16,5 +15,4 @@ export type {
   AppBarLeadingProps,
   AppBarTitleProps,
   AppBarTrailingProps,
-  AppBarSectionProps,
 } from "./AppBar";

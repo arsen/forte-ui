@@ -6,18 +6,18 @@ import { ThemingTable } from "@/components/theming-table";
 export const metadata = {
   title: "App Bar",
   description:
-    "The bar across the top of a screen — leading controls, a title and trailing actions, that pins, elevates, hides or collapses as the page scrolls under it.",
+    "The bar across the top of a screen — leading controls, a title and trailing actions, that pins, elevates or hides as the page scrolls under it.",
 };
 
 # App Bar
 
-The bar across the top of a screen: what leads it, its title, what follows it, and optionally a second row underneath. Renders a `<header>`.
+The bar across the top of a screen: what leads it, its title, and what follows it. Renders a `<header>`.
 
 <DemoBlock id="app-bar/basic" />
 
 There is no Base UI primitive underneath and no keyboard contract of its own. A header is a landmark, not a widget — Tab walks its controls one by one the way it walks the rest of the page, and that is correct. For a strip of related controls that should be one tab stop, put a [`Toolbar`](/components/toolbar/) inside it.
 
-What earns it a component is the **scroll relationship**. `position` decides whether the bar stays, and once it stays the bar measures the page rather than the other way round: `data-scrolled` while content is under it, `data-hidden` while a downward scroll has tucked it away. The styles read those two attributes — for the elevation, the hide, a collapsing section and a revealing title — and so can yours, from plain CSS or a Tailwind arbitrary variant like `data-[scrolled]:shadow-2`.
+What earns it a component is the **scroll relationship**. `position` decides whether the bar stays, and once it stays the bar measures the page rather than the other way round: `data-scrolled` while content is under it, `data-hidden` while a downward scroll has tucked it away. The styles read those two attributes — for the elevation and the hide — and so can yours, from plain CSS or a Tailwind arbitrary variant like `data-[scrolled]:shadow-2`.
 
 ## Import
 
@@ -25,7 +25,7 @@ What earns it a component is the **scroll relationship**. `position` decides whe
 import { AppBar } from "@forte-ui/react";
 ```
 
-`AppBar` is a namespace of five parts. `Root` is the surface and the grid; the other four are plain `<div>`s that place themselves in it, so any subset in any order still lays out — a bar with only a title, a bar with only a trailing cluster, a bar whose section is written first.
+`AppBar` is a namespace of four parts. `Root` is the surface and the grid; the other three are plain `<div>`s that place themselves in it, so any subset in any order still lays out — a bar with only a title, a bar with only a trailing cluster, a bar whose trailing slot is written first.
 
 ```tsx
 <AppBar.Root position="sticky" elevateOnScroll>
@@ -96,22 +96,6 @@ Only a `neutral` bar drops its fill at rest. On a coloured tone the fill is what
 
 The hide is a move even under reduced motion, and that is a considered exception to the library's rule of collapsing geometry. A bar that faded in place would still cover the content under it and swallow the taps meant for that content; one that also gave up pointer events would have to leave the accessibility tree to be consistent, taking the page's landmark with it. So the bar moves — a state change the page asked for, not an ornament — on a duration that reduced motion shortens rather than removes.
 
-### A second row
-
-`AppBar.Section` is a full-width row under the main one: a tab strip, a search field, a breadcrumb. Several sections stack in DOM order.
-
-<DemoBlock id="app-bar/section" />
-
-The tab strip lives in the bar and its panels live below it, which is the shape [`Tabs`](/components/tabs/) already allows — `Tabs.Root` wraps both, and the bar is just an element in between.
-
-### A large title
-
-The phone convention: the heading starts large, on its own row below the controls, and as the page scrolls under the bar that row folds away and a small title fades into the bar in its place. Two props, one on each half — `collapsible` on the section and `revealOnScroll` on the title.
-
-<DemoBlock id="app-bar/large-title" />
-
-The fold animates the row's height to zero and then hides it, so anything in a collapsed section leaves the tab order and the accessibility tree together — the consistent thing for a control that is no longer on screen. That makes `collapsible` right for a search field or a filter strip that only matters at the top of a screen, too.
-
 ### A centred measure
 
 A marketing header wants its content lined up with the page column below it while the surface still runs edge to edge. That is one knob, not a prop:
@@ -134,11 +118,11 @@ Extra width becomes padding on both sides, and the edge padding is still respect
 </AppBar.Title>
 ```
 
-A heading placed there takes the bar's typography rather than the UA's, so the semantic version looks identical to the plain one. The large-title pattern is the one place the heading and the visible title are two elements; put the heading in the section and leave the small title as text, so the document has one `h1`, not two.
+A heading placed there takes the bar's typography rather than the UA's, so the semantic version looks identical to the plain one.
 
 **Names.** Every icon-only control in the bar needs its own `aria-label` — an icon is not an accessible name — and the [`Button`](/components/button/)'s `iconOnly` holds the 24×24 minimum hit target from SC 2.5.8 for you.
 
-**Focus.** A bar hidden by `hideOnScroll` stays in the tree and focusable; it slides back the moment a control inside it receives focus, so keyboard users reach everything a pointer user can. A collapsed section, by contrast, is `visibility: hidden` and leaves the tab order — its contents are off screen and should not be reachable.
+**Focus.** A bar hidden by `hideOnScroll` stays in the tree and focusable; it slides back the moment a control inside it receives focus, so keyboard users reach everything a pointer user can.
 
 **Under forced colours** the fill, the blur and the shadow are stripped, and the hairline is the whole bar: every variant paints it in the system ink, `plain` included. Text and icons take `CanvasText`, and `frosted` is opaque there and under `prefers-contrast: more` alike.
 
@@ -154,7 +138,7 @@ The surface slots — `--forte-app-bar-bg`, `-fg`, `-border-color`, `-shadow` �
   `--forte-app-bar-inset-block-start` is read by the scroll tracking as well as the styles. Set it — rather than `top` directly — when a bar sits below another one, so `data-scrolled` still lands the moment the page moves under it.
 </Callout>
 
-State is on `data-variant`, `data-tone`, `data-size`, `data-position`, `data-scrolled` and `data-hidden`, reachable from plain CSS or a Tailwind arbitrary variant without a wrapper element. Part markers are `data-forte="app-bar"` on the root and `app-bar-leading`, `app-bar-title`, `app-bar-trailing`, `app-bar-section` on the parts; a bar that tracks scroll also renders `app-bar-sentinel`, the 1px sibling the observer watches.
+State is on `data-variant`, `data-tone`, `data-size`, `data-position`, `data-scrolled` and `data-hidden`, reachable from plain CSS or a Tailwind arbitrary variant without a wrapper element. Part markers are `data-forte="app-bar"` on the root and `app-bar-leading`, `app-bar-title`, `app-bar-trailing` on the parts; a bar that tracks scroll also renders `app-bar-sentinel`, the 1px sibling the observer watches.
 
 ## API reference
 
@@ -175,7 +159,3 @@ Every part is a plain element and takes that element's whole prop surface, `ref`
 ### AppBar.Trailing
 
 <PropTable component="AppBarTrailing" />
-
-### AppBar.Section
-
-<PropTable component="AppBarSection" />

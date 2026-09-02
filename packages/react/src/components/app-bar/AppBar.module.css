@@ -18,24 +18,18 @@
  *   data-hidden    a downward scroll has tucked it away
  *
  * ---------------------------------------------------------------------------
- * The layout is one grid, not a row inside a column
+ * The layout is one grid, placed by name
  * ---------------------------------------------------------------------------
  * The root is a three-column grid — `auto minmax(0, 1fr) auto` — and the
  * three slots place themselves in it by name: leading in column 1, title in
- * column 2, trailing in column 3, all on row 1. A section spans every column
- * and lands on the next row by auto-placement. That is what lets the main
- * row and a second row be siblings under one element, with no wrapper for
- * the consumer to know about and no `AppBar.Row` to remember.
+ * column 2, trailing in column 3. Any subset in any DOM order lands in the
+ * right place, which a flex row with `margin-inline-start: auto` on the
+ * trailing slot would only manage while all three are present.
  *
  * `column-gap` is deliberately 0. A grid keeps its gaps whether or not the
  * tracks hold anything, so a bar with no leading slot would carry a dead gap
  * before the title. The gap is a margin on the slot instead — Card's reason
  * — and a margin only exists when its element does.
- *
- * The first row is `minmax(control-height, auto)` rather than a min-height on
- * the bar: a bar with a section under it is taller than its main row, and a
- * min-height on the whole box would let that row shrink below the height
- * that fits the controls in it.
  *
  * ---------------------------------------------------------------------------
  * A coloured bar re-points the foreground tokens for its subtree
@@ -82,19 +76,17 @@
      * resolve to. */
     /** Inline padding at the bar's edges. `size` re-points it. */
     --forte-app-bar-px: var(--forte-control-px-md);
-    /** Block padding above and below the rows. `size` re-points it. */
+    /** Block padding above and below the row. `size` re-points it. */
     --forte-app-bar-py: var(--forte-space-3);
-    /** Minimum height of the main row, before the padding. `size` re-points
-     * it to the matching control height, so the bar fits its own buttons. */
+    /** Minimum height of the row, before the padding. `size` re-points it
+     * to the matching control height, so the bar fits its own buttons. */
     --forte-app-bar-row-min-block-size: var(--forte-control-h-md);
     /** Gap between the leading slot, the title and the trailing slot. */
     --forte-app-bar-gap: var(--forte-space-3);
     /** Gap between the items inside a slot. Tighter than the slot gap, so
      * two icon buttons read as a pair. */
     --forte-app-bar-item-gap: var(--forte-space-1);
-    /** Gap between the main row and a section under it. */
-    --forte-app-bar-section-gap: var(--forte-space-2);
-    /** Width the rows are centred within. `100%` is edge to edge; set a
+    /** Width the row is centred within. `100%` is edge to edge; set a
      * measure — `72rem` — for a marketing header whose content should line
      * up with the page column below it. Extra width becomes padding. */
     --forte-app-bar-max-inline-size: 100%;
@@ -123,8 +115,7 @@
     --forte-app-bar-blur: 12px;
     /** Duration of the surface changes — fill, edge, shadow. */
     --forte-app-bar-duration: var(--forte-duration-fast);
-    /** Duration of the moves — the hide, a collapsing section, a revealing
-     * title. */
+    /** Duration of the hide. */
     --forte-app-bar-move-duration: var(--forte-duration-normal);
     /** Easing for everything the bar animates. */
     --forte-app-bar-ease: var(--forte-ease-standard);
@@ -169,15 +160,14 @@
     --forte-app-bar-shadow: none;
 
     /* Private: how far a focus ring reaches outside its element. The title
-     * and a collapsible section clip their contents, and this is the margin
-     * they leave so a ring on a control inside is not cut. */
+     * clips its contents for the ellipsis, and this is the margin it leaves
+     * so a ring on a link inside is not cut. */
     --forte-app-bar-ring: calc(var(--forte-focus-ring-width) + var(--forte-focus-ring-offset));
 
     box-sizing: border-box;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: minmax(var(--forte-app-bar-row-min-block-size), auto);
-    grid-auto-rows: auto;
     align-items: center;
 
     padding-block: var(--forte-app-bar-py);
@@ -406,7 +396,6 @@
    * ---------------------------------------------------------------------- */
   .leading,
   .trailing {
-    grid-row: 1;
     display: flex;
     align-items: center;
     gap: var(--forte-app-bar-item-gap);
@@ -435,7 +424,6 @@
    * ---------------------------------------------------------------------- */
   .title {
     grid-column: 2;
-    grid-row: 1;
     min-inline-size: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -460,83 +448,6 @@
     margin: 0;
     font: inherit;
     letter-spacing: inherit;
-  }
-
-  /* Reveal on scroll — the small half of the large-title pattern. The
-   * travel token collapses to `0px` under reduced motion, leaving the
-   * fade. */
-  .title[data-reveal-on-scroll] {
-    opacity: 0;
-    visibility: hidden;
-    translate: 0 var(--forte-travel-xs);
-    transition:
-      opacity var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      translate var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      visibility var(--forte-app-bar-move-duration);
-  }
-
-  .root[data-scrolled] .title[data-reveal-on-scroll] {
-    opacity: 1;
-    visibility: visible;
-    translate: 0 0;
-  }
-
-  /* Section ----------------------------------------------------------------
-   * Spans the grid and takes the next row. Its own layout is a one-row grid
-   * because that is the only height a browser will animate to zero without
-   * knowing the content's size: `grid-template-rows` interpolates from
-   * `1fr` to `0fr`, and the inner element's `min-block-size: 0` is what
-   * lets the row actually shrink past its content.
-   *
-   * The gap above it is padding, not a row-gap on the root, so it folds
-   * away with the section instead of leaving a dead band under the main
-   * row once the section has collapsed.
-   * ---------------------------------------------------------------------- */
-  .section {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-rows: 1fr;
-    padding-block-start: var(--forte-app-bar-section-gap);
-    min-inline-size: 0;
-  }
-
-  .sectionInner {
-    min-block-size: 0;
-    min-inline-size: 0;
-  }
-
-  /* Only a collapsible section clips, and only a clipping section needs
-   * the ring margin — the same padding/negative-margin pair as the title,
-   * on the three edges that are not the gap. The block-end pair is undone
-   * in the collapsed state below: with the row at `0fr`, a stretched item
-   * is exactly as tall as its negative margin, and that sliver would show. */
-  .section[data-collapsible] {
-    overflow: hidden;
-    padding-inline: var(--forte-app-bar-ring);
-    padding-block-end: var(--forte-app-bar-ring);
-    margin-inline: calc(-1 * var(--forte-app-bar-ring));
-    margin-block-end: calc(-1 * var(--forte-app-bar-ring));
-    transition:
-      grid-template-rows var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      padding-block-start var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      padding-block-end var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      margin-block-end var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      opacity var(--forte-app-bar-move-duration) var(--forte-app-bar-ease),
-      visibility var(--forte-app-bar-move-duration);
-  }
-
-  /* `visibility: hidden` at the end of the fold takes whatever was in the
-   * section — a tab strip, a search field — out of the tab order and the
-   * accessibility tree together, which is the only consistent thing to do
-   * with a control that is no longer on screen. `visibility` interpolates
-   * as visible for the whole transition in either direction, so it flips
-   * exactly when the fold finishes. */
-  .root[data-scrolled] .section[data-collapsible] {
-    grid-template-rows: 0fr;
-    padding-block: 0;
-    margin-block-end: 0;
-    opacity: 0;
-    visibility: hidden;
   }
 
   /* The observer's target — see `AppBar.tsx`. */
@@ -581,8 +492,7 @@
     .root,
     .title,
     .leading,
-    .trailing,
-    .section {
+    .trailing {
       color: CanvasText;
     }
   }

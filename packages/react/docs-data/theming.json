@@ -572,7 +572,7 @@
       {
         "name": "--forte-app-bar-py",
         "value": "var(--forte-space-3)",
-        "description": "Block padding above and below the rows. `size` re-points it.",
+        "description": "Block padding above and below the row. `size` re-points it.",
         "part": "root",
         "overrides": [
           {
@@ -592,7 +592,7 @@
       {
         "name": "--forte-app-bar-row-min-block-size",
         "value": "var(--forte-control-h-md)",
-        "description": "Minimum height of the main row, before the padding. `size` re-points it to the matching control height, so the bar fits its own buttons.",
+        "description": "Minimum height of the row, before the padding. `size` re-points it to the matching control height, so the bar fits its own buttons.",
         "part": "root",
         "overrides": [
           {
@@ -624,16 +624,9 @@
         "overrides": []
       },
       {
-        "name": "--forte-app-bar-section-gap",
-        "value": "var(--forte-space-2)",
-        "description": "Gap between the main row and a section under it.",
-        "part": "root",
-        "overrides": []
-      },
-      {
         "name": "--forte-app-bar-max-inline-size",
         "value": "100%",
-        "description": "Width the rows are centred within. `100%` is edge to edge; set a measure — `72rem` — for a marketing header whose content should line up with the page column below it. Extra width becomes padding.",
+        "description": "Width the row is centred within. `100%` is edge to edge; set a measure — `72rem` — for a marketing header whose content should line up with the page column below it. Extra width becomes padding.",
         "part": "root",
         "overrides": []
       },
@@ -721,7 +714,7 @@
       {
         "name": "--forte-app-bar-move-duration",
         "value": "var(--forte-duration-normal)",
-        "description": "Duration of the moves — the hide, a collapsing section, a revealing title.",
+        "description": "Duration of the hide.",
         "part": "root",
         "overrides": []
       },

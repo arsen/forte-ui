@@ -39,10 +39,6 @@ import d_app_bar_basic from "./app-bar/basic";
 import d_app_bar_basic_src from "./app-bar/basic?raw";
 import d_app_bar_hide_on_scroll from "./app-bar/hide-on-scroll";
 import d_app_bar_hide_on_scroll_src from "./app-bar/hide-on-scroll?raw";
-import d_app_bar_large_title from "./app-bar/large-title";
-import d_app_bar_large_title_src from "./app-bar/large-title?raw";
-import d_app_bar_section from "./app-bar/section";
-import d_app_bar_section_src from "./app-bar/section?raw";
 import d_app_bar_sizes from "./app-bar/sizes";
 import d_app_bar_sizes_src from "./app-bar/sizes?raw";
 import d_app_bar_sticky from "./app-bar/sticky";
@@ -812,8 +808,6 @@ export type DemoId =
   | "alert/variants"
   | "app-bar/basic"
   | "app-bar/hide-on-scroll"
-  | "app-bar/large-title"
-  | "app-bar/section"
   | "app-bar/sizes"
   | "app-bar/sticky"
   | "app-bar/tones"
@@ -1209,8 +1203,6 @@ const REGISTRY: Record<DemoId, Demo> = {
   "alert/variants": { Component: d_alert_variants, source: d_alert_variants_src, file: "alert/variants.tsx" },
   "app-bar/basic": { Component: d_app_bar_basic, source: d_app_bar_basic_src, file: "app-bar/basic.tsx" },
   "app-bar/hide-on-scroll": { Component: d_app_bar_hide_on_scroll, source: d_app_bar_hide_on_scroll_src, file: "app-bar/hide-on-scroll.tsx" },
-  "app-bar/large-title": { Component: d_app_bar_large_title, source: d_app_bar_large_title_src, file: "app-bar/large-title.tsx" },
-  "app-bar/section": { Component: d_app_bar_section, source: d_app_bar_section_src, file: "app-bar/section.tsx" },
   "app-bar/sizes": { Component: d_app_bar_sizes, source: d_app_bar_sizes_src, file: "app-bar/sizes.tsx" },
   "app-bar/sticky": { Component: d_app_bar_sticky, source: d_app_bar_sticky_src, file: "app-bar/sticky.tsx" },
   "app-bar/tones": { Component: d_app_bar_tones, source: d_app_bar_tones_src, file: "app-bar/tones.tsx" },

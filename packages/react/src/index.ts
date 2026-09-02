@@ -39,7 +39,6 @@ export type {
   AppBarLeadingProps,
   AppBarTitleProps,
   AppBarTrailingProps,
-  AppBarSectionProps,
 } from "./components/app-bar";
 
 export { AspectRatio } from "./components/aspect-ratio";

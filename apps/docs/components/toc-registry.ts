@@ -57,8 +57,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "sizes", text: "Sizes", depth: 3 },
     { id: "sticky-and-elevating-on-scroll", text: "Sticky, and elevating on scroll", depth: 3 },
     { id: "hiding-on-scroll", text: "Hiding on scroll", depth: 3 },
-    { id: "a-second-row", text: "A second row", depth: 3 },
-    { id: "a-large-title", text: "A large title", depth: 3 },
     { id: "a-centred-measure", text: "A centred measure", depth: 3 },
     { id: "accessibility", text: "Accessibility", depth: 2 },
     { id: "theming", text: "Theming", depth: 2 },
@@ -67,7 +65,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "appbarleading", text: "AppBar.Leading", depth: 3 },
     { id: "appbartitle", text: "AppBar.Title", depth: 3 },
     { id: "appbartrailing", text: "AppBar.Trailing", depth: 3 },
-    { id: "appbarsection", text: "AppBar.Section", depth: 3 },
   ],
   "/components/aspect-ratio/": [
     { id: "import", text: "Import", depth: 2 },

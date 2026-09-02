@@ -228,7 +228,7 @@
   },
   "AppBarRoot": {
     "name": "AppBarRoot",
-    "description": "The bar across the top of a screen — a title, what leads it and what\nfollows it, and optionally a second row underneath. Renders a `<header>`.\n\n```tsx\n<AppBar.Root position=\"sticky\" elevateOnScroll>\n  <AppBar.Leading>\n    <Button variant=\"ghost\" iconOnly aria-label=\"Menu\">…</Button>\n  </AppBar.Leading>\n  <AppBar.Title>Inbox</AppBar.Title>\n  <AppBar.Trailing>\n    <ThemeToggle />\n    <Avatar.Root>…</Avatar.Root>\n  </AppBar.Trailing>\n</AppBar.Root>\n```\n\nThere is no Base UI primitive underneath and no keyboard contract of its\nown: a header is a landmark, not a widget, and Tab walks its controls one\nby one the way it walks the rest of the page. For a strip of related\ncontrols that should be one tab stop, put a `Toolbar` inside it.\n\nWhat the component owns is the scroll relationship. `position` decides\nwhether the bar stays, and once it stays the bar measures the page rather\nthan the other way round: `data-scrolled` while content is under it,\n`data-hidden` while a downward scroll has tucked it away. The styles read\nthose two attributes — for the elevation, the hide, a collapsing section\nand a revealing title — and so can yours.\n\nStyling is driven by `data-*` attributes and `--forte-app-bar-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[scrolled]:...`) without wrapping.",
+    "description": "The bar across the top of a screen — a title, what leads it and what\nfollows it. Renders a `<header>`.\n\n```tsx\n<AppBar.Root position=\"sticky\" elevateOnScroll>\n  <AppBar.Leading>\n    <Button variant=\"ghost\" iconOnly aria-label=\"Menu\">…</Button>\n  </AppBar.Leading>\n  <AppBar.Title>Inbox</AppBar.Title>\n  <AppBar.Trailing>\n    <ThemeToggle />\n    <Avatar.Root>…</Avatar.Root>\n  </AppBar.Trailing>\n</AppBar.Root>\n```\n\nThere is no Base UI primitive underneath and no keyboard contract of its\nown: a header is a landmark, not a widget, and Tab walks its controls one\nby one the way it walks the rest of the page. For a strip of related\ncontrols that should be one tab stop, put a `Toolbar` inside it.\n\nWhat the component owns is the scroll relationship. `position` decides\nwhether the bar stays, and once it stays the bar measures the page rather\nthan the other way round: `data-scrolled` while content is under it,\n`data-hidden` while a downward scroll has tucked it away. The styles read\nthose two attributes — for the elevation and the hide — and so can yours.\n\nStyling is driven by `data-*` attributes and `--forte-app-bar-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[scrolled]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -256,7 +256,7 @@
         "type": "AppBarPosition",
         "required": false,
         "defaultValue": "static",
-        "description": "How the bar is attached to the page. `static` scrolls away with the\ncontent; `sticky` pins to the top of its scroll container once reached\nand needs no layout compensation; `fixed` leaves the flow entirely, so\nthe content under it must add its own top padding.\n\nEvery scroll-aware feature — `elevateOnScroll`, `hideOnScroll`, a\ncollapsible section, a title that reveals on scroll — needs the bar to\nstill be on screen when the page moves, so all of them are ignored while\n`static`."
+        "description": "How the bar is attached to the page. `static` scrolls away with the\ncontent; `sticky` pins to the top of its scroll container once reached\nand needs no layout compensation; `fixed` leaves the flow entirely, so\nthe content under it must add its own top padding.\n\nBoth scroll-aware features — `elevateOnScroll` and `hideOnScroll` —\nneed the bar to still be on screen when the page moves, so both are\nignored while `static`."
       },
       {
         "name": "render",
@@ -331,33 +331,6 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "revealOnScroll",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Keep the title invisible until the page has scrolled under the bar.\nThis is the small half of the large-title pattern: put the large\nheading in a collapsible `AppBar.Section`, and this one takes over in\nthe bar as that one folds away.\n\nIgnored while `position=\"static\"`, where the bar never learns it has\nscrolled."
-      }
-    ]
-  },
-  "AppBarSection": {
-    "name": "AppBarSection",
-    "description": "A second row under the main one, running the full width of the bar: a\ntab strip, a search field, a breadcrumb, or the large title that\ncollapses into `AppBar.Title` on scroll. Several sections stack in DOM\norder.",
-    "props": [
-      {
-        "name": "className",
-        "type": "string",
-        "required": false,
-        "defaultValue": null,
-        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
-      },
-      {
-        "name": "collapsible",
-        "type": "boolean",
-        "required": false,
-        "defaultValue": "false",
-        "description": "Fold the section away once the page has scrolled under the bar, and\nunfold it when the page comes back to the top. The large-title pattern\nis this prop with a heading inside; a search field or a tab strip that\nonly matters at the top of a screen is the same prop with that inside.\n\nIgnored while `position=\"static\"`."
       }
     ]
   },

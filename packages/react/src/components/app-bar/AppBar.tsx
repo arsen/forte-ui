@@ -154,10 +154,9 @@ export interface AppBarRootProps
    * and needs no layout compensation; `fixed` leaves the flow entirely, so
    * the content under it must add its own top padding.
    *
-   * Every scroll-aware feature — `elevateOnScroll`, `hideOnScroll`, a
-   * collapsible section, a title that reveals on scroll — needs the bar to
-   * still be on screen when the page moves, so all of them are ignored while
-   * `static`.
+   * Both scroll-aware features — `elevateOnScroll` and `hideOnScroll` —
+   * need the bar to still be on screen when the page moves, so both are
+   * ignored while `static`.
    * @default "static"
    */
   position?: AppBarPosition;
@@ -193,7 +192,7 @@ export interface AppBarRootProps
 
 /**
  * The bar across the top of a screen — a title, what leads it and what
- * follows it, and optionally a second row underneath. Renders a `<header>`.
+ * follows it. Renders a `<header>`.
  *
  * ```tsx
  * <AppBar.Root position="sticky" elevateOnScroll>
@@ -217,8 +216,7 @@ export interface AppBarRootProps
  * whether the bar stays, and once it stays the bar measures the page rather
  * than the other way round: `data-scrolled` while content is under it,
  * `data-hidden` while a downward scroll has tucked it away. The styles read
- * those two attributes — for the elevation, the hide, a collapsing section
- * and a revealing title — and so can yours.
+ * those two attributes — for the elevation and the hide — and so can yours.
  *
  * Styling is driven by `data-*` attributes and `--forte-app-bar-*` custom
  * properties, so it can be re-skinned from plain CSS or targeted with
@@ -356,17 +354,6 @@ export interface AppBarTitleProps
    */
   align?: AppBarTitleAlign;
   /**
-   * Keep the title invisible until the page has scrolled under the bar.
-   * This is the small half of the large-title pattern: put the large
-   * heading in a collapsible `AppBar.Section`, and this one takes over in
-   * the bar as that one folds away.
-   *
-   * Ignored while `position="static"`, where the bar never learns it has
-   * scrolled.
-   * @default false
-   */
-  revealOnScroll?: boolean;
-  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -386,67 +373,15 @@ export interface AppBarTitleProps
  * takes the bar's typography rather than the UA's.
  */
 export const AppBarTitle = React.forwardRef<HTMLDivElement, AppBarTitleProps>(
-  function AppBarTitle({ align = "start", revealOnScroll = false, className, ...props }, ref) {
+  function AppBarTitle({ align = "start", className, ...props }, ref) {
     return (
       <div
         ref={ref}
         className={clsx(styles.title, className)}
         data-forte="app-bar-title"
         data-align={align}
-        {...(revealOnScroll && { "data-reveal-on-scroll": true })}
         {...props}
       />
-    );
-  },
-);
-
-/* -------------------------------------------------------------------------
- * Section
- * ---------------------------------------------------------------------- */
-
-export interface AppBarSectionProps
-  extends Omit<React.ComponentPropsWithoutRef<"div">, "className"> {
-  /**
-   * Fold the section away once the page has scrolled under the bar, and
-   * unfold it when the page comes back to the top. The large-title pattern
-   * is this prop with a heading inside; a search field or a tab strip that
-   * only matters at the top of a screen is the same prop with that inside.
-   *
-   * Ignored while `position="static"`.
-   * @default false
-   */
-  collapsible?: boolean;
-  /**
-   * Additional class name(s). Applied after the internal styles so consumer
-   * utilities (e.g. Tailwind) win without needing `!important`.
-   */
-  className?: string;
-}
-
-/**
- * A second row under the main one, running the full width of the bar: a
- * tab strip, a search field, a breadcrumb, or the large title that
- * collapses into `AppBar.Title` on scroll. Several sections stack in DOM
- * order.
- */
-export const AppBarSection = React.forwardRef<HTMLDivElement, AppBarSectionProps>(
-  function AppBarSection({ collapsible = false, className, children, ...props }, ref) {
-    return (
-      <div
-        ref={ref}
-        className={clsx(styles.section, className)}
-        data-forte="app-bar-section"
-        {...(collapsible && { "data-collapsible": true })}
-        {...props}
-      >
-        {/* The collapse animates `grid-template-rows` to `0fr`, and a grid
-          * row can only shrink below its content when the item in it is
-          * allowed to — which needs an element to put `min-block-size: 0`
-          * on. This is that element. */}
-        <div className={styles.sectionInner} data-forte="app-bar-section-inner">
-          {children}
-        </div>
-      </div>
     );
   },
 );
@@ -457,9 +392,9 @@ export const AppBarSection = React.forwardRef<HTMLDivElement, AppBarSectionProps
 
 /**
  * The bar across the top of a screen: what leads it, its title, what
- * follows it, and an optional second row. `Root` renders a `<header>`; the
- * four parts are plain `<div>`s that place themselves in its grid, so any
- * subset of them, in any order, still lays out.
+ * follows it. `Root` renders a `<header>`; the three parts are plain
+ * `<div>`s that place themselves in its grid, so any subset of them, in any
+ * order, still lays out.
  *
  * There is no state and no keyboard contract of its own. What the component
  * owns is the scroll relationship — `position` decides whether the bar
@@ -467,8 +402,8 @@ export const AppBarSection = React.forwardRef<HTMLDivElement, AppBarSectionProps
  * `data-hidden` for its own styles and yours to read.
  *
  * @summary The bar across the top of a screen — leading controls, a title
- *   and trailing actions, pinned, elevating, hiding or collapsing on scroll;
- *   for a one-tab-stop strip of controls inside it, use Toolbar.
+ *   and trailing actions, pinned, elevating or hiding on scroll; for a
+ *   one-tab-stop strip of controls inside it, use Toolbar.
  * @category Navigation
  */
 export const AppBar = {
@@ -476,5 +411,4 @@ export const AppBar = {
   Leading: AppBarLeading,
   Title: AppBarTitle,
   Trailing: AppBarTrailing,
-  Section: AppBarSection,
 };
