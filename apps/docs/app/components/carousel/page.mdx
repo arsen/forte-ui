@@ -1,0 +1,181 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Carousel",
+  description:
+    "A strip of slides shown one or a few at a time — dragged, stepped with buttons or advanced on a timer — with looping, lazy slides and a viewport that fits its content.",
+};
+
+# Carousel
+
+A carousel puts several pieces of content in one place and shows one — or a few — at a time, in a fixed order. Reach for it when the items are peers that a reader browses in sequence: product photos, testimonials, a row of cards there is not room to lay out at once. If the reader picks a panel by *name* rather than by position, use [Tabs](/components/tabs/); if the strip only needs to scroll, use [ScrollArea](/components/scroll-area/). And if the content is important, put it on the page: a carousel is where the second slide goes to be missed.
+
+<DemoBlock id="carousel/basic" />
+
+## Import
+
+```tsx
+import { Carousel } from "@forte-ui/react";
+```
+
+`Carousel` is a namespace of ten parts. `Carousel.Root` owns the active slide; `Carousel.Viewport` is the box that clips and takes the drag; `Carousel.Track` is the row of `Carousel.Slide`s that moves inside it. `Carousel.Prev` and `Carousel.Next` step through the slides, `Carousel.Dots` and `Carousel.Thumbs` (a strip of `Carousel.Thumb`s) jump to one, and `Carousel.PlayPause` stops and starts `autoplay`.
+
+Slides must be **direct children** of `Carousel.Track`, and thumbs of `Carousel.Thumbs`: each reads its index from its position among the children, which is how the active slide is known on the very first render — the server's — rather than after a registry fills in on mount. Render them straight from an array; a wrapper component around several slides counts as one.
+
+<Callout kind="a11y">
+  Give `Carousel.Root` an `aria-label`. It is a `region` with the `carousel` role description, and that name is how a screen reader user tells one carousel from the next — and how they find it at all in a landmark list. Every demo on this page does this.
+</Callout>
+
+## Examples
+
+### Basic
+
+The demo at the top of the page: five slides, `Prev` and `Next` rendered inside the viewport where they float over the slides, and `Dots` under it. Drag the slides with a mouse, swipe them on touch, or use the buttons. A short swipe moves one slide in its direction; a long, slow drag lands on whichever slide is nearest when it is let go. At either end the track resists rather than stops, so a drag past the last slide says "there is no more" without pretending there is.
+
+### Controlled
+
+`index` and `onIndexChange` make the carousel controlled, and the index can then be driven from anywhere — here, from a pair of buttons outside it, with `draggable={false}` so the only way through the steps is the one the form allows. `onIndexChange` also receives a `reason`: `"drag"`, `"control"`, `"autoplay"`, or `"clamp"` when the index was pulled back into range because slides were removed.
+
+<DemoBlock id="carousel/controlled" />
+
+### Loop
+
+`loop` wraps the last slide around to the first. The track carries copies of the slides at each end — enough to fill the view, plus one — and a move across the boundary is one step through a copy, not a sweep back across the whole strip. The copies are hidden from assistive technology and made inert, so a screen reader still counts four slides, not eight; but an element `id` inside a slide will occur more than once in the document.
+
+<DemoBlock id="carousel/loop" />
+
+### Autoplay
+
+`autoplay` advances on a timer — `true` for every five seconds, or the interval in milliseconds. It pauses while the pointer is over the carousel, while focus is inside it, during a drag and while the tab is hidden, and any move the reader makes resets the clock so the next automatic one is a full interval later. Without `loop` it wraps from the end to the start.
+
+<DemoBlock id="carousel/autoplay" />
+
+<Callout kind="a11y">
+  Render `Carousel.PlayPause` with every autoplaying carousel. Content that moves on its own must have a way to stop it — that is [SC 2.2.2](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html), and it is not satisfied by hover, which a keyboard or touch user does not have. The button renders nothing when the root has no `autoplay`, so it can be left in place. Autoplay also does not start under reduced motion, read off `--forte-motion-ok` so the in-page toggle counts as well as the OS setting; a reader who then presses Play has asked.
+</Callout>
+
+### Slides per view
+
+`slidesPerView` fits several slides in the viewport; a fraction leaves the next one peeking in at the end, which is the cue that there are more. The last position is the one that still fills the view, so a row never scrolls on to show two slides and a blank, and `Dots` renders one dot per position rather than one per slide.
+
+<DemoBlock id="carousel/per-view" />
+
+### Lazy
+
+`lazy` mounts only the slides near the view: `true` keeps the slides in view plus one on either side, a number keeps that many on either side. A slide outside the window keeps its box and its size — so drag distances stay right — but renders none of its content. Step through the demo and watch the count.
+
+<DemoBlock id="carousel/lazy" />
+
+A slide's content is unmounted when it leaves the window, so anything it holds — a form draft, a video's position — is lost. Keep `lazy` for slides that are cheap to recreate: images, fetched cards. One on either side covers a swipe; a long, slow drag can reveal a slide the window has not reached yet, which renders empty until the track settles.
+
+### Auto height
+
+By default the viewport is as tall as the tallest slide, and a short slide floats in it. `autoHeight` sizes the viewport to the slides in view instead and animates between heights, measured off the slides themselves — so a lazy slide that has just mounted, or an image that has just loaded, grows the viewport with it. Horizontal carousels only: a vertical one needs a definite height to lay its slides out in.
+
+<DemoBlock id="carousel/auto-height" />
+
+### Vertical
+
+`orientation="vertical"` stacks the slides and moves them on the block axis. Give `Carousel.Viewport` a height — the slides are sized from it — and `Prev` and `Next` move to the top and bottom edges. Touch claims vertical swipes over the carousel, which is what a vertical carousel *is*, so keep one short: a tall vertical carousel is a stretch of page a thumb cannot scroll past. `Dots` and `Thumbs` follow the root's orientation unless given their own.
+
+<DemoBlock id="carousel/vertical" />
+
+### Thumbnails
+
+`Carousel.Thumbs` is a strip of `Carousel.Thumb`s in the same order as the slides. Each is a button that jumps to its slide, the active one is ringed, and the strip scrolls itself to keep it in view. Put an image with `alt`, or an `aria-label`, on each thumb — it is a button, and a button needs a name.
+
+<DemoBlock id="carousel/thumbs" />
+
+## Accessibility
+
+<KeyboardTable rows={[
+  { keys: ["Tab"], description: "Moves through the focusable controls in order: anything inside the visible slides, then Prev, Next, the active dot, the thumbnails and PlayPause. Slides out of view are inert, so their links and buttons are skipped." },
+  { keys: ["Enter"], description: "Activates the focused control." },
+  { keys: ["Space"], description: "Activates the focused control." },
+  { keys: ["ArrowRight"], description: "On the dots of a horizontal carousel: moves to the next slide, and focus to its dot." },
+  { keys: ["ArrowLeft"], description: "On the dots of a horizontal carousel: moves to the previous slide, and focus to its dot." },
+  { keys: ["ArrowDown"], description: "On the dots of a vertical carousel: moves to the next slide." },
+  { keys: ["ArrowUp"], description: "On the dots of a vertical carousel: moves to the previous slide." },
+  { keys: ["Home"], description: "On the dots: moves to the first slide." },
+  { keys: ["End"], description: "On the dots: moves to the last position." },
+]} />
+
+The parts carry the [APG carousel pattern](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)'s roles. `Carousel.Root` is a `region` with `aria-roledescription="carousel"`; each `Carousel.Slide` is a `group` with `aria-roledescription="slide"` and is named "n of total" unless given an `aria-label`. `Carousel.Track` is a polite live region while the carousel is under the reader's control, so a move announces the new slide, and switches itself off while autoplay is running — a region that speaks every five seconds is not assistive. The active dot and thumb carry `aria-current`.
+
+Slides out of view are `aria-hidden` and `inert`. That is what keeps a link in the next slide out of the tab order, and it is also why the viewport clips with `overflow: clip` rather than `hidden`: a hidden overflow is still a scroll container, and focusing a control in it would scroll the strip under the transform and leave it there.
+
+`Prev` and `Next` use `aria-disabled` rather than `disabled` at the ends of a non-looping carousel, so reaching the last slide with Next leaves focus on the button instead of dropping it to the page. The dots are a single tab stop with the arrow keys moving between them, which is also what moves the carousel.
+
+Under forced colors the controls keep a system-coloured border in place of their shadow, the active dot is painted `Highlight`, and the active thumbnail's ring is `Highlight` while the inactive ones' become invisible — `transparent` is replaced in that mode, so they are set to `Canvas`, the page colour, instead.
+
+### Motion
+
+The track is moved by one number. `Carousel.Track` carries `--forte-carousel-position` — which slide sits at the start edge — and the stylesheet turns it into a `translate` with a `calc()` the browser resolves itself:
+
+```css
+.track {
+  --forte-carousel-step: calc((100% + var(--forte-carousel-gap)) / var(--forte-carousel-per-view));
+  translate: calc(-1 * var(--forte-direction) * var(--forte-carousel-position) * var(--forte-carousel-step)) 0;
+  transition: translate var(--forte-carousel-duration) var(--forte-carousel-ease);
+}
+```
+
+The percentage is the track's own width, so the resting positions never need measuring: resize the page, switch density, override the gap, and the track is still parked on the same slide. Only a drag needs pixels, to turn the pointer's travel into slides, and those are measured once at pointerdown. `--forte-direction` flips the sign in RTL, where the first slide is on the right — try the demo frame's toggle.
+
+The move is a transition, so pressing Next while the track is still travelling retargets from wherever it is. During a drag the transition is off and the same variable is written straight to the DOM every frame; letting go is one state update that puts the transition back and sets the target, and the browser tweens from under the finger to the slide.
+
+Looping never waits for a transition to end. A move that would cross the boundary first jumps the track — instantly, with the transition suppressed for that one write — to the copy of the slide that paints the identical picture, and then animates one step onto the real slide. The track always comes to rest on a real slide, so there is nothing to fix up afterwards and nothing that can go wrong when a background tab's transitions never run.
+
+Under `prefers-reduced-motion` there is no separate path and no reduced-motion block in the stylesheet. `--forte-duration-spring-precise` shortens to its floor, so the track cuts to the next slide instead of sliding; the viewport's height change and the dot's stretch shorten the same way; and autoplay does not start.
+
+## Theming
+
+Every property below is declared on `Carousel.Root`, so override them there — through its `className` or an inline `style` — rather than on an ancestor, whose value only inherits and loses to the root's own declaration. To move every carousel at once, re-point the global tokens in the Default column instead.
+
+<ThemingTable component="Carousel" />
+
+The parts also expose their state as data attributes — `data-orientation`, `data-loop`, `data-dragging`, `data-auto-height`, `data-autoplay` (`playing` or `paused`), `data-at-start` and `data-at-end` on the root; `data-active`, `data-in-view` and `data-clone` on a slide; `data-disabled` on the controls; `data-active` on a dot or thumb — so a Tailwind arbitrary variant such as `data-[dragging]:...` can target them without a wrapper.
+
+## API reference
+
+Every part forwards the props it does not consume to the element it renders. `Carousel.Prev`, `Carousel.Next` and `Carousel.PlayPause` take `render` to swap the element for another — `render={<Button iconOnly variant="ghost" />}` composes them with `Button`.
+
+### Carousel.Root
+
+<PropTable component="CarouselRoot" />
+
+### Carousel.Viewport
+
+<PropTable component="CarouselViewport" />
+
+### Carousel.Track
+
+<PropTable component="CarouselTrack" />
+
+### Carousel.Slide
+
+<PropTable component="CarouselSlide" />
+
+### Carousel.Prev and Carousel.Next
+
+<PropTable component="CarouselNext" />
+
+### Carousel.Dots
+
+<PropTable component="CarouselDots" />
+
+### Carousel.Thumbs
+
+<PropTable component="CarouselThumbs" />
+
+### Carousel.Thumb
+
+<PropTable component="CarouselThumb" />
+
+### Carousel.PlayPause
+
+<PropTable component="CarouselPlayPause" />

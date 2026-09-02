@@ -1088,6 +1088,262 @@
       }
     ]
   },
+  "CarouselRoot": {
+    "name": "CarouselRoot",
+    "description": "Groups the viewport, its controls and its pagination, and owns which slide\nis active. Give it an `aria-label` — it is a `region` with the\n`carousel` role description, and that name is how a screen reader user\ntells one carousel from the next.",
+    "props": [
+      {
+        "name": "autoHeight",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Size the viewport to the slides in view and animate between heights, so a\nshort slide next to a tall one does not leave a gap under it. Horizontal\ncarousels only."
+      },
+      {
+        "name": "autoplay",
+        "type": "number | boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Advance on a timer: `true` for every 5 seconds, or the interval in\nmilliseconds. Pauses while the pointer is over the carousel, while focus\nis inside it, during a drag and while the tab is hidden, and does not\nstart at all under reduced motion — `Carousel.PlayPause` lets the reader\nstart it anyway. A carousel that autoplays should render that button:\nWCAG 2.2.2 asks for a way to pause anything that moves on its own."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "defaultIndex",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "The slide shown first when the carousel is uncontrolled."
+      },
+      {
+        "name": "draggable",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the slides can be dragged with a pointer or swiped on touch."
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "required": false,
+        "defaultValue": null,
+        "description": "The active slide, zero-based. Makes the carousel controlled: pair it with\n`onIndexChange`."
+      },
+      {
+        "name": "lazy",
+        "type": "number | boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render only the slides near the view. `true` keeps the slides in view plus\none on either side mounted; a number keeps that many on either side. A\nslide outside the window keeps its box and its size but renders no\ncontent, so drag distances stay correct."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the last slide wraps around to the first. Copies of the slides at\neach end of the track make the wrap seamless, so an element `id` inside a\nslide will occur more than once in the document."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "((index: number, reason: CarouselChangeReason) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the new index whenever the active slide changes — by a drag,\na control, autoplay, or a clamp after slides were removed. `reason` says\nwhich."
+      },
+      {
+        "name": "orientation",
+        "type": "CarouselOrientation",
+        "required": false,
+        "defaultValue": "horizontal",
+        "description": "Which way the slides are laid out and travel. A vertical carousel needs a\ndefinite height on `Carousel.Viewport` — its slides are sized from it —\nand ignores `autoHeight`."
+      },
+      {
+        "name": "slidesPerView",
+        "type": "number",
+        "required": false,
+        "defaultValue": "1",
+        "description": "How many slides fit in the view. A fraction leaves the next slide peeking\nin at the end: `1.2` shows one slide and a fifth of the next."
+      }
+    ]
+  },
+  "CarouselViewport": {
+    "name": "CarouselViewport",
+    "description": "The box the slides move inside. Clips to its own bounds, takes the drag, and\n— under `autoHeight` — grows and shrinks to fit the slides in view. Render\nthe `Track` inside it; `Prev` and `Next` can go inside it too, where they\noverlay the slides.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CarouselTrack": {
+    "name": "CarouselTrack",
+    "description": "The row (or column) of slides that moves. Every direct child is one slide\nand is expected to be a `Carousel.Slide`; render them straight from an\narray rather than through a wrapper, since the wrapper would count as one\nslide. With `loop` the track also renders copies of the slides at each end.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CarouselSlide": {
+    "name": "CarouselSlide",
+    "description": "One slide. Named \"n of total\" for assistive technology unless given an\n`aria-label`, hidden from it and made inert while out of view — so a link\nin the next slide is neither announced nor reachable with Tab until the\nslide is — and, under `lazy`, empty until it is near the view.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CarouselPrev": {
+    "name": "CarouselPrev",
+    "description": "Moves to the previous slide. Disabled — but still focusable — on the\nfirst slide unless the carousel loops. Renders a chevron unless given\nchildren.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replace the rendered element — compose the control with `Button`, say:\n`render={<Button iconOnly variant=\"ghost\" />}`."
+      }
+    ]
+  },
+  "CarouselNext": {
+    "name": "CarouselNext",
+    "description": "Moves to the next slide. Disabled — but still focusable — on the last\nslide unless the carousel loops. Renders a chevron unless given children.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replace the rendered element — compose the control with `Button`, say:\n`render={<Button iconOnly variant=\"ghost\" />}`."
+      }
+    ]
+  },
+  "CarouselDots": {
+    "name": "CarouselDots",
+    "description": "One button per position the track can rest on. A single tab stop: the\nactive dot is the one in the tab order, and the arrow keys move between the\nothers — and move the carousel with them.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "getLabel",
+        "type": "((index: number) => string)",
+        "required": false,
+        "defaultValue": "(i) => `Slide ${i + 1}`",
+        "description": "Names a dot for assistive technology, given its zero-based index."
+      },
+      {
+        "name": "orientation",
+        "type": "CarouselOrientation",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way the dots run, and which arrow keys move between them. Follows\nthe carousel's own orientation unless set — a vertical carousel with a\nrow of dots under it is fine."
+      }
+    ]
+  },
+  "CarouselThumbs": {
+    "name": "CarouselThumbs",
+    "description": "A strip of `Carousel.Thumb`s, one per slide in order, that scrolls to keep\nthe active one in view. Like the track, it reads each thumb's index from\nits position among the children.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "CarouselOrientation",
+        "required": false,
+        "defaultValue": null,
+        "description": "Which way the strip runs. Follows the carousel's own orientation unless\nset — a vertical carousel with a row of thumbnails under it is fine."
+      }
+    ]
+  },
+  "CarouselThumb": {
+    "name": "CarouselThumb",
+    "description": "One thumbnail: a button that moves the carousel to the slide at the same\nposition. Give it an `aria-label` (or an image with `alt`) so the button\nhas a name.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "CarouselPlayPause": {
+    "name": "CarouselPlayPause",
+    "description": "Stops and restarts autoplay. Renders nothing when the root has no\n`autoplay`, so it can be left in place. Its label names the action —\n\"Pause\" while playing, \"Play\" while stopped — which is the whole of its\nstate, so it carries no `aria-pressed`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "pauseLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Pause",
+        "description": "Accessible name while autoplay is running — the button's action."
+      },
+      {
+        "name": "playLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "Play",
+        "description": "Accessible name while autoplay is stopped."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replace the rendered element, to compose the control with `Button`."
+      }
+    ]
+  },
   "Checkbox": {
     "name": "Checkbox",
     "description": "A checkbox built on Base UI's unstyled `Checkbox` primitive.\n\nThe root renders a `<span>` plus a hidden `<input>` beside it, so it carries\nno accessible name of its own — wrap it in a `<label>`, pair it with a\n`<label htmlFor>` (see `nativeButton`), or put it inside a `Field.Root`.\n\nState is exposed on `data-*` attributes (`data-checked`, `data-unchecked`,\n`data-indeterminate`, `data-disabled`, `data-readonly`, and the `Field`\nvalidity attributes) on both the root and the indicator, and every visual\ndecision is a `--forte-checkbox-*` custom property, so it can be re-skinned\nfrom plain CSS or targeted with Tailwind arbitrary variants\n(`data-[indeterminate]:...`) without wrapping.",

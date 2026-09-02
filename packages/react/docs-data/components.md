@@ -119,6 +119,8 @@ Components.
   props.json: Badge · knobs: theming.json → Badge
 - **Card** — The bordered grouping surface — header, title, action, content, footer and media slots for everything from settings sections to pricing tiers.
   compound · parts (props.json): CardRoot, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, CardMedia · knobs: theming.json → Card
+- **CarouselRoot** — A strip of slides shown one (or a few) at a time, moved by drag, by buttons or on a timer; for panels chosen by name rather than by position use Tabs, and for a list that merely scrolls use ScrollArea.
+  parts (props.json): CarouselRoot, CarouselViewport, CarouselTrack, CarouselSlide, CarouselPrev, CarouselNext, CarouselDots, CarouselThumbs, CarouselThumb, CarouselPlayPause
 - **Collapsible** — A single trigger and the region it reveals; for a stack of exclusive disclosures, use Accordion.
   compound · parts (props.json): CollapsibleRoot, CollapsibleTrigger, CollapsiblePanel · knobs: theming.json → Collapsible
 - **Kbd** — A keyboard key cap for shortcut hints — works in prose, tooltips, menu items and buttons.

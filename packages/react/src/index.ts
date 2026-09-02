@@ -123,6 +123,21 @@ export type {
   CardMediaProps,
 } from "./components/card";
 
+export { Carousel } from "./components/carousel";
+export type {
+  CarouselOrientation,
+  CarouselChangeReason,
+  CarouselRootProps,
+  CarouselViewportProps,
+  CarouselTrackProps,
+  CarouselSlideProps,
+  CarouselControlProps,
+  CarouselDotsProps,
+  CarouselThumbsProps,
+  CarouselThumbProps,
+  CarouselPlayPauseProps,
+} from "./components/carousel";
+
 export { Checkbox, CheckboxGroup } from "./components/checkbox";
 export type {
   CheckboxProps,
