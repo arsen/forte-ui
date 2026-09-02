@@ -579,19 +579,29 @@
   .popup::after {
     content: "";
     position: absolute;
-    /* Oversized on purpose, so the popup's `overflow` does the shaping. A box
-     * drawn at the padding edge with `inset: 0` and `border-radius: inherit`
-     * traces the wrong arc: the padding edge is the border edge's arc with
-     * the border width taken off the radius, and painting the outer radius
-     * there leaves a sub-pixel crescent of undimmed background at every
-     * rounded corner — a bright fleck in light mode, where the surface is
-     * far from the scrim's colour. `Dialog` corrects the radius instead;
-     * that is not an option here, where the radius is per side and set
-     * through four shorthands. But an overflow clip follows the padding
-     * edge's own arc exactly, so pushing the box out past the border and
-     * letting the clip trim it lands the overlay on the right curve without
-     * restating the corners. */
-    inset: calc(-1 * var(--forte-drawer-border-width));
+    /* Drawn at the padding edge, with a one-border-width spread shadow in
+     * the same colour reaching past it. A box at `inset: 0` with
+     * `border-radius: inherit` traces the wrong arc on its own: the padding
+     * edge is the border edge's arc with the border width taken off the
+     * radius, and painting the outer radius there leaves a sub-pixel
+     * crescent of undimmed background at every rounded corner — a bright
+     * fleck in light mode, where the surface is far from the scrim's colour.
+     * `Dialog` corrects the radius instead; that is not an option here, where
+     * the radius is per side and set through four shorthands. The spread
+     * shadow's outer arc is one border width wider than the box's, which
+     * dips inside the padding edge's own arc at every corner, and the
+     * popup's overflow clip then trims it to that arc exactly.
+     *
+     * It used to be a negative `inset` instead, and that was a bug: an
+     * out-of-flow box that pokes past the bottom or end edge of a scroll
+     * container ADDS to its scrollable overflow, and the popup is one — its
+     * fallback `overflow: auto` above. One pixel of overflow was enough to
+     * switch that scroller on, and Android drew its scrollbar as a
+     * full-height bar down the popup's inner edge, beside the real one on
+     * `Drawer.Content`. A shadow is ink overflow, which scrolls nothing. */
+    inset: 0;
+    box-shadow: 0 0 0 var(--forte-drawer-border-width)
+      var(--forte-drawer-nested-scrim);
     border-radius: inherit;
     background-color: var(--forte-drawer-nested-scrim);
     opacity: 0;
@@ -616,7 +626,7 @@
    * Painting the ring in the scrim colour composites it over that same
    * background, which is exactly what the overlay does to the rest of the
    * surface — so the two agree by construction rather than by a matched pair
-   * of hand-picked colours. The overlay's negative inset does not reach the
+   * of hand-picked colours. The overlay's spread shadow does not reach the
    * ring for the same reason it is there at all: the popup's `overflow` clips
    * it straight back to the padding box.
    *
