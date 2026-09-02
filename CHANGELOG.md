@@ -13,6 +13,29 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0-alpha.8] - 2026-09-01
+
+### AppBar
+
+- New component: a header bar with `Leading`, `Title` and `Trailing` slots laid out as one three-column grid, so any subset of parts in any order still places itself. Four variants (`plain`, `panel`, `outline`, `frosted`), three tones (`neutral`, `primary`, `secondary`) and three sizes (`sm`, `md`, `lg`). `position` (`static`, `sticky`, `fixed`) controls whether the bar stays put, and once it stays it reports `data-scrolled` and `data-hidden` — driven by an `IntersectionObserver` and a direction-thresholded scroll listener on the bar's nearest scrolling ancestor — for `elevateOnScroll` and `hideOnScroll` and for consumer CSS to read.
+
+### Carousel
+
+- New component: a strip of slides moved by drag, by buttons, or on a timer, with a track driven by a single position variable so resizes, density changes and gap overrides never need re-measuring. `orientation` (horizontal/vertical), `loop`, `autoplay` (boolean or an interval), `slidesPerView`, `align` (`"start"` or `"center"`, for a centred active slide), `lazy` loading of slides outside a window around the active one, `autoHeight`, a `gap` prop for the space between slides, and a thumbnails pattern for building a synced strip alongside the main track.
+
+### Dialog
+
+- Added a 1px hairline border on the popup (`--forte-dialog-border-width`, `--forte-dialog-border-color`) so a dialog's edge stays visible against a page close to the scrim's own colour, where the shadow alone reads as nothing. Transparent at `size="fullscreen"`, where every edge lies on the bezel.
+- Fixed a nested dialog's dimming overlay leaving a sub-pixel crescent of undimmed background at each corner — a bright fleck in light mode — by painting it at the corner radius the padding box actually traces instead of inheriting the popup's outer radius.
+
+### Drawer
+
+- Fixed the same nested-parent dimming overlay leaving a corner gap as Dialog: the overlay is now oversized past the border and clipped by the popup's own `overflow`, which follows the padding box's arc exactly since Drawer's radius is set per side rather than through one token.
+
+### Design tokens & motion
+
+- Added `--forte-app-bar-h-sm`, `--forte-app-bar-h-md` and `--forte-app-bar-h-lg`, the AppBar's height at each size, for layout that needs the number from outside the bar — a sticky sidebar's offset, a page's `scroll-padding-top`, padding under a `fixed` bar. Restated per `data-forte-density` preset.
+
 ## [1.0.0-alpha.7] - 2026-09-01
 
 ### Button
@@ -229,7 +252,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...HEAD
+[1.0.0-alpha.8]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8
 [1.0.0-alpha.7]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.7
 [1.0.0-alpha.3]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3
 [1.0.0-alpha.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2
