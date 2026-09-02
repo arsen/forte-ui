@@ -7225,8 +7225,8 @@
         "name": "align",
         "type": "Align",
         "required": false,
-        "defaultValue": "start",
-        "description": "How the popup aligns along the chosen side. Ignored while\n`alignItemWithTrigger` is in effect.\n\nDefaults to `\"start\"` rather than Base UI's `\"center\"`, matching Menu: a\npopup wider than its trigger should drop from the trigger's start edge,\nnot hang off both of them."
+        "defaultValue": "center",
+        "description": "How the popup aligns along the chosen side. Ignored while\n`alignItemWithTrigger` is in effect."
       },
       {
         "name": "alignItemWithTrigger",
