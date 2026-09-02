@@ -422,7 +422,23 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
         <Dialog.Trigger render={<Button size="sm" variant="soft" tone="neutral" fullWidth />}>
           Scaffold this theme…
         </Dialog.Trigger>
-        <Dialog.Popup size="sm">
+        <Dialog.Popup
+          size="sm"
+          /* The header drawer is built on the same Base UI dialog store, so
+           * from inside it this dialog counts as NESTED and Base UI drops its
+           * backdrop, expecting the parent to dim itself — which a drawer
+           * only does for nested drawers. Forcing it back restores the scrim
+           * in both mounts (the studio page renders it regardless). The two
+           * z-index knobs then lift the scrim and the popup over the drawer's
+           * 40: the dialog is modal, so a drawer left bright and sharp above
+           * the scrim would read as usable while it is not. Still under the
+           * 50 the anchored popups sit at. Set through the class names
+           * because the backdrop and viewport are siblings the popup's own
+           * `style` cannot reach. */
+          forceBackdrop
+          backdropClassName="[--forte-dialog-backdrop-z-index:41]"
+          viewportClassName="[--forte-dialog-z-index:42]"
+        >
           <Dialog.Title>Scaffold this theme</Dialog.Title>
           <Dialog.Description>
             One command hands the theme to <code className="font-mono text-2">create-forte-ui</code>,
