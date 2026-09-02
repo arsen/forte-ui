@@ -499,6 +499,24 @@ import d_otp_field_states from "./otp-field/states";
 import d_otp_field_states_src from "./otp-field/states?raw";
 import d_otp_field_variants from "./otp-field/variants";
 import d_otp_field_variants_src from "./otp-field/variants?raw";
+import d_pagination_basic from "./pagination/basic";
+import d_pagination_basic_src from "./pagination/basic?raw";
+import d_pagination_compact from "./pagination/compact";
+import d_pagination_compact_src from "./pagination/compact?raw";
+import d_pagination_controlled from "./pagination/controlled";
+import d_pagination_controlled_src from "./pagination/controlled?raw";
+import d_pagination_jump_menu from "./pagination/jump-menu";
+import d_pagination_jump_menu_src from "./pagination/jump-menu?raw";
+import d_pagination_range from "./pagination/range";
+import d_pagination_range_src from "./pagination/range?raw";
+import d_pagination_sizes from "./pagination/sizes";
+import d_pagination_sizes_src from "./pagination/sizes?raw";
+import d_pagination_table_footer from "./pagination/table-footer";
+import d_pagination_table_footer_src from "./pagination/table-footer?raw";
+import d_pagination_tones from "./pagination/tones";
+import d_pagination_tones_src from "./pagination/tones?raw";
+import d_pagination_variants from "./pagination/variants";
+import d_pagination_variants_src from "./pagination/variants?raw";
 import d_popover_basic from "./popover/basic";
 import d_popover_basic_src from "./popover/basic?raw";
 import d_popover_controlled from "./popover/controlled";
@@ -1058,6 +1076,15 @@ export type DemoId =
   | "otp-field/sizes"
   | "otp-field/states"
   | "otp-field/variants"
+  | "pagination/basic"
+  | "pagination/compact"
+  | "pagination/controlled"
+  | "pagination/jump-menu"
+  | "pagination/range"
+  | "pagination/sizes"
+  | "pagination/table-footer"
+  | "pagination/tones"
+  | "pagination/variants"
   | "popover/basic"
   | "popover/controlled"
   | "popover/detached-trigger"
@@ -1463,6 +1490,15 @@ const REGISTRY: Record<DemoId, Demo> = {
   "otp-field/sizes": { Component: d_otp_field_sizes, source: d_otp_field_sizes_src, file: "otp-field/sizes.tsx" },
   "otp-field/states": { Component: d_otp_field_states, source: d_otp_field_states_src, file: "otp-field/states.tsx" },
   "otp-field/variants": { Component: d_otp_field_variants, source: d_otp_field_variants_src, file: "otp-field/variants.tsx" },
+  "pagination/basic": { Component: d_pagination_basic, source: d_pagination_basic_src, file: "pagination/basic.tsx" },
+  "pagination/compact": { Component: d_pagination_compact, source: d_pagination_compact_src, file: "pagination/compact.tsx" },
+  "pagination/controlled": { Component: d_pagination_controlled, source: d_pagination_controlled_src, file: "pagination/controlled.tsx" },
+  "pagination/jump-menu": { Component: d_pagination_jump_menu, source: d_pagination_jump_menu_src, file: "pagination/jump-menu.tsx" },
+  "pagination/range": { Component: d_pagination_range, source: d_pagination_range_src, file: "pagination/range.tsx" },
+  "pagination/sizes": { Component: d_pagination_sizes, source: d_pagination_sizes_src, file: "pagination/sizes.tsx" },
+  "pagination/table-footer": { Component: d_pagination_table_footer, source: d_pagination_table_footer_src, file: "pagination/table-footer.tsx" },
+  "pagination/tones": { Component: d_pagination_tones, source: d_pagination_tones_src, file: "pagination/tones.tsx" },
+  "pagination/variants": { Component: d_pagination_variants, source: d_pagination_variants_src, file: "pagination/variants.tsx" },
   "popover/basic": { Component: d_popover_basic, source: d_popover_basic_src, file: "popover/basic.tsx" },
   "popover/controlled": { Component: d_popover_controlled, source: d_popover_controlled_src, file: "popover/controlled.tsx" },
   "popover/detached-trigger": { Component: d_popover_detached_trigger, source: d_popover_detached_trigger_src, file: "popover/detached-trigger.tsx" },

@@ -81,6 +81,7 @@ const NAV: NavGroup[] = [
       { title: "Navigation Menu", href: "/components/navigation-menu/" },
       { title: "Number Field", href: "/components/number-field/" },
       { title: "OTP Field", href: "/components/otp-field/" },
+      { title: "Pagination", href: "/components/pagination/" },
       { title: "Popover", href: "/components/popover/" },
       { title: "Preview Card", href: "/components/preview-card/" },
       { title: "Progress", href: "/components/progress/" },

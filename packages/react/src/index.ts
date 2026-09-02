@@ -431,6 +431,21 @@ export type {
   OTPFieldSeparatorProps,
 } from "./components/otp-field";
 
+export { Pagination, usePaginationRange } from "./components/pagination";
+export type {
+  PaginationSize,
+  PaginationVariant,
+  PaginationTone,
+  PaginationRootProps,
+  PaginationListProps,
+  PaginationItemProps,
+  PaginationLinkProps,
+  PaginationNavProps,
+  PaginationEllipsisProps,
+  PaginationRangeItem,
+  UsePaginationRangeOptions,
+} from "./components/pagination";
+
 export { Popover } from "./components/popover";
 export type {
   PopoverSize,

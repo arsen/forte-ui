@@ -5578,6 +5578,298 @@
       }
     ]
   },
+  "PaginationRoot": {
+    "name": "PaginationRoot",
+    "description": "The strip's container. Renders a `<nav aria-label=\"Pagination\">`.\n\n```tsx\n<Pagination.Root>\n  <Pagination.List>\n    <Pagination.Item>\n      <Pagination.Previous href=\"?page=1\" />\n    </Pagination.Item>\n    <Pagination.Item>\n      <Pagination.Link href=\"?page=1\">1</Pagination.Link>\n    </Pagination.Item>\n    <Pagination.Item>\n      <Pagination.Link href=\"?page=2\" current>2</Pagination.Link>\n    </Pagination.Item>\n    <Pagination.Item>\n      <Pagination.Next href=\"?page=3\" />\n    </Pagination.Item>\n  </Pagination.List>\n</Pagination.Root>\n```\n\nThe label is what tells this landmark apart from the page's other\nnavigation landmarks in a screen reader's landmark list, so it is set by\ndefault rather than left to be forgotten. Override it when a page carries\nmore than one strip — \"Search results pages\", \"Comment pages\".",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<nav>` with another element or component — pass\n`render={<div />}` when the strip already sits inside a `<nav>` landmark\nyou own, so the page does not grow a second one."
+      },
+      {
+        "name": "size",
+        "type": "PaginationSize",
+        "required": false,
+        "defaultValue": "md",
+        "description": "Control height, text size and padding for the whole strip. The actual\ndimensions also follow the ambient `data-forte-density` setting."
+      },
+      {
+        "name": "tone",
+        "type": "PaginationTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which colour marks the current page. `\"primary\"` and `\"secondary\"` are\na solid brand fill; `\"neutral\"` is a quiet grey fill with a stronger\nborder, for a strip that must not compete with the page's real primary\naction."
+      },
+      {
+        "name": "variant",
+        "type": "PaginationVariant",
+        "required": false,
+        "defaultValue": "ghost",
+        "description": "How much chrome the pages carry. `\"ghost\"` is bare numbers that tint on\nhover, with only the current page filled. `\"outline\"` boxes every page.\n`\"joined\"` fuses the boxes into one strip with shared borders — the look\nof a segmented control, for a toolbar or a table footer."
+      }
+    ]
+  },
+  "PaginationList": {
+    "name": "PaginationList",
+    "description": "The `<ul>` holding the controls. A list, so a screen reader announces how\nmany controls there are before the reader walks them — and so each page\nis one item, not one word in a run of numbers.\n\nIt also animates the window's shift when the current page changes: keyed\nslots slide to their new cell, a slot that left fades out where it was\nand a slot that arrived fades in — see the note above the implementation.\nGive each `Pagination.Item` a stable `key` (the page number, or the\nellipsis names from `usePaginationRange`) and it happens by itself.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PaginationItem": {
+    "name": "PaginationItem",
+    "description": "One slot's `<li>`. Structural — the `Link`, `Previous`, `Next` or\n`Ellipsis` inside it is what the reader sees.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "PaginationLink": {
+    "name": "PaginationLink",
+    "description": "One page. Which element it renders follows from what it was given: with\nan `href` (or a `render`) it is an `<a>`, so a page is a real address that\nopens in a new tab and is found by every keyboard the platform ships;\nwithout one it is a `<button type=\"button\">`, for a strip that pages\nstate in place. Nothing else changes between the two — the same\n`current`, `disabled` and `onClick` work on both.\n\nChildren lay out on a flex row and a direct-child `svg` is sized to the\nstrip's icon size, so an icon needs no wrapper.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "current",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Marks this as the page the reader is on. Sets `aria-current=\"page\"` and\ndraws the tone's fill — the only slot in the strip that carries colour."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Blocks the control. A `<button>` gets the native attribute; an `<a>`\nkeeps its `href` — a router link needs it — and gets `aria-disabled`,\nleaves the tab order, and swallows its click instead."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered element with another element or component —\n`render={<Link href=\"?page=3\" />}` is how a framework's router link goes\nin without losing the control's styling and states. Counts as a link\nfor the element choice below."
+      }
+    ]
+  },
+  "PaginationPrevious": {
+    "name": "PaginationPrevious",
+    "description": "The step-back control: a chevron and \"Previous\". Same element rules and\nprops as `Pagination.Link`, plus `rel=\"prev\"` when it renders an anchor,\nwhich is the hint search engines read a paginated series from.\n\nOn the first page, pass `disabled` rather than leaving it out: a control\nthat disappears moves everything after it, and the reader's pointer is\nresting on the button they just pressed.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Blocks the control. A `<button>` gets the native attribute; an `<a>`\nkeeps its `href` — a router link needs it — and gets `aria-disabled`,\nleaves the tab order, and swallows its click instead."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show the chevron alone. The label stays in the markup, visually hidden,\nso the control keeps its name — a bare chevron is announced as \"link\"\nand nothing else."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "More pages",
+        "description": "The accessible name when `iconOnly` hides the text, and the visible\nlabel otherwise. Override it for another language."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered element with another element or component —\n`render={<Link href=\"?page=3\" />}` is how a framework's router link goes\nin without losing the control's styling and states. Counts as a link\nfor the element choice below."
+      }
+    ]
+  },
+  "PaginationNext": {
+    "name": "PaginationNext",
+    "description": "The step-forward control: \"Next\" and a chevron, with `rel=\"next\"` on the\nanchor form. Disable it on the last page rather than dropping it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Blocks the control. A `<button>` gets the native attribute; an `<a>`\nkeeps its `href` — a router link needs it — and gets `aria-disabled`,\nleaves the tab order, and swallows its click instead."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show the chevron alone. The label stays in the markup, visually hidden,\nso the control keeps its name — a bare chevron is announced as \"link\"\nand nothing else."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "More pages",
+        "description": "The accessible name when `iconOnly` hides the text, and the visible\nlabel otherwise. Override it for another language."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered element with another element or component —\n`render={<Link href=\"?page=3\" />}` is how a framework's router link goes\nin without losing the control's styling and states. Counts as a link\nfor the element choice below."
+      }
+    ]
+  },
+  "PaginationFirst": {
+    "name": "PaginationFirst",
+    "description": "Jumps to the first page: a double chevron and \"First\". Usually rendered\n`iconOnly`, at the outer end of a compact strip.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Blocks the control. A `<button>` gets the native attribute; an `<a>`\nkeeps its `href` — a router link needs it — and gets `aria-disabled`,\nleaves the tab order, and swallows its click instead."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show the chevron alone. The label stays in the markup, visually hidden,\nso the control keeps its name — a bare chevron is announced as \"link\"\nand nothing else."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "More pages",
+        "description": "The accessible name when `iconOnly` hides the text, and the visible\nlabel otherwise. Override it for another language."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered element with another element or component —\n`render={<Link href=\"?page=3\" />}` is how a framework's router link goes\nin without losing the control's styling and states. Counts as a link\nfor the element choice below."
+      }
+    ]
+  },
+  "PaginationLast": {
+    "name": "PaginationLast",
+    "description": "Jumps to the last page: \"Last\" and a double chevron.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Blocks the control. A `<button>` gets the native attribute; an `<a>`\nkeeps its `href` — a router link needs it — and gets `aria-disabled`,\nleaves the tab order, and swallows its click instead."
+      },
+      {
+        "name": "iconOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Show the chevron alone. The label stays in the markup, visually hidden,\nso the control keeps its name — a bare chevron is announced as \"link\"\nand nothing else."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "More pages",
+        "description": "The accessible name when `iconOnly` hides the text, and the visible\nlabel otherwise. Override it for another language."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered element with another element or component —\n`render={<Link href=\"?page=3\" />}` is how a framework's router link goes\nin without losing the control's styling and states. Counts as a link\nfor the element choice below."
+      }
+    ]
+  },
+  "PaginationEllipsis": {
+    "name": "PaginationEllipsis",
+    "description": "Stands in for the pages folded out of a long strip. Renders an inert\n`<span>` sized like a page, so the strip keeps its rhythm across the gap.\n\nThe stylesheet keys its cursor off the rendered element, so the span stays\n`default` and a `<button>` handed in through `render` becomes `pointer`\nwithout a prop to pass.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": "More pages",
+        "description": "The accessible name, in a visually hidden span. Three dots have no text\nof their own, so without this the slot is silent — and a reader walking\n\"1, 2, 3, 42\" cannot tell that anything was skipped."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<span>` with another element or component — a\n`Menu.Trigger` or a `Popover.Trigger` makes the folded pages reachable\nwithout walking to them."
+      }
+    ]
+  },
   "PopoverRoot": {
     "name": "PopoverRoot",
     "description": "Groups one popover's trigger and popup, and owns its open state. Renders no\nDOM element, so it takes no `className`, `style` or `ref`.",
