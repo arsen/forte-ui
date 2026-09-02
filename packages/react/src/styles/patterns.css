@@ -382,6 +382,32 @@
    * --------------------------------------------------------------------- */
   .forte-visually-hidden:not(:focus-within) {
     position: absolute;
+    /* Pinned to the containing block's start corner, which is the difference
+     * between "takes no space" and "takes no space HERE". Left at `auto` the
+     * box keeps its static position but is laid out against the nearest
+     * POSITIONED ancestor — and in a subtree of static parts that can be
+     * several components up, on the far side of a scroll container. Overflow
+     * clipping only applies between a box and its containing block, so the
+     * span escapes the scroller it looks like it is inside and adds its
+     * static offset to the SCROLLED ancestor's scrollable overflow instead.
+     *
+     * One `ColorPicker` low in a `Drawer.Content` was enough: its trigger is
+     * static, so the span announcing the colour resolved against
+     * `Drawer.Popup` and landed 22px below the popup's padding edge. That
+     * switched on the popup's fallback `overflow: auto` (see `Drawer`) and
+     * Android drew a second scrollbar down the popup's inner edge, beside
+     * the real one on the content. Overlay scrollbars — macOS, and Chrome's
+     * device emulation — only paint while a scroller is moving, so the
+     * phantom is invisible on a desktop unless you happen to drag it.
+     *
+     * The start corner is the one place this cannot recur from: scrollable
+     * overflow is only ever measured toward the block-end and inline-end
+     * edges, so a box parked past the start edges is unreachable and counts
+     * for nothing. Both properties are logical, so RTL pins to the right and
+     * behaves identically. Neither survives `:focus-within`, where the whole
+     * rule drops and the content is meant to lay out normally. */
+    inset-block-start: 0;
+    inset-inline-start: 0;
     width: 1px;
     height: 1px;
     margin: -1px;
