@@ -579,7 +579,19 @@
   .popup::after {
     content: "";
     position: absolute;
-    inset: 0;
+    /* Oversized on purpose, so the popup's `overflow` does the shaping. A box
+     * drawn at the padding edge with `inset: 0` and `border-radius: inherit`
+     * traces the wrong arc: the padding edge is the border edge's arc with
+     * the border width taken off the radius, and painting the outer radius
+     * there leaves a sub-pixel crescent of undimmed background at every
+     * rounded corner — a bright fleck in light mode, where the surface is
+     * far from the scrim's colour. `Dialog` corrects the radius instead;
+     * that is not an option here, where the radius is per side and set
+     * through four shorthands. But an overflow clip follows the padding
+     * edge's own arc exactly, so pushing the box out past the border and
+     * letting the clip trim it lands the overlay on the right curve without
+     * restating the corners. */
+    inset: calc(-1 * var(--forte-drawer-border-width));
     border-radius: inherit;
     background-color: var(--forte-drawer-nested-scrim);
     opacity: 0;
@@ -594,19 +606,19 @@
     opacity: 1;
   }
 
-  /* The overlay above stops at the PADDING box, and `.forte-hc-surface` gives
-   * every floating surface a 1px transparent border outside it. Backgrounds
-   * paint under a border by default, so that ring keeps the drawer's own
-   * undimmed background and draws a bright outline around a parent that is
-   * supposed to have receded — the one part of it still at full strength, and
-   * the most visible part, because it is the silhouette.
+  /* The overlay above is clipped to the PADDING box, and `.forte-hc-surface`
+   * gives every floating surface a 1px transparent border outside it.
+   * Backgrounds paint under a border by default, so that ring keeps the
+   * drawer's own undimmed background and draws a bright outline around a
+   * parent that is supposed to have receded — the one part of it still at
+   * full strength, and the most visible part, because it is the silhouette.
    *
    * Painting the ring in the scrim colour composites it over that same
    * background, which is exactly what the overlay does to the rest of the
    * surface — so the two agree by construction rather than by a matched pair
-   * of hand-picked colours. Growing the overlay instead would not work: the
-   * popup's `overflow` clips a negative inset straight back to the padding
-   * box.
+   * of hand-picked colours. The overlay's negative inset does not reach the
+   * ring for the same reason it is there at all: the popup's `overflow` clips
+   * it straight back to the padding box.
    *
    * Forced-colors mode reassigns this to CanvasText from the `a11y` layer,
    * which is ordered after this one and therefore wins. */
