@@ -26,7 +26,7 @@ export default function AppBarTones() {
             <Button variant="ghost" tone="neutral" iconOnly aria-label="Search">
               <Search className={ICON} />
             </Button>
-            <Separator orientation="vertical" decorative className="h-4" />
+            <Separator orientation="vertical" decorative />
             <Button variant="ghost" tone="neutral" iconOnly aria-label="More">
               <MoreVertical className={ICON} />
             </Button>
