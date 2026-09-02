@@ -8,9 +8,9 @@ import { createCn } from "@forte-ui/react/cn";
  * needs configuring at all (short version: the bridge renamed most of the
  * theme, and an unrecognised class is silently never merged; `text-2` even
  * parses as a COLOUR without it). Listed here is only what the DOCS added to
- * the theme in `app/tailwind.css`: the site's chrome measures and its one
- * animation. The extension APPENDS to the library's scales, so `spacing`
- * gains `header`/`anchor` beside `surface` rather than replacing it.
+ * the theme in `app/tailwind.css`: the hero measure and the one animation.
+ * The extension APPENDS to the library's scales, so `container` gains `hero`
+ * beside `lg` and friends rather than replacing them.
  *
  * A key added to `app/tailwind.css` gets added here; a key added to the
  * library's bridge gets added to the package config instead — this file
@@ -20,7 +20,6 @@ import { createCn } from "@forte-ui/react/cn";
 export const cn = createCn({
   extend: {
     theme: {
-      spacing: ["header", "anchor"],
       // `--animate-*` is deleted in the bridge and exactly one animation is
       // added back by the docs.
       animate: ["reveal"],

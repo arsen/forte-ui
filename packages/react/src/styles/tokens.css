@@ -373,6 +373,24 @@
     --forte-control-gap: var(--forte-space-2);
     --forte-surface-p: var(--forte-space-5);
     --forte-list-item-py: var(--forte-space-2);
+
+    /* The AppBar at each of its sizes: the matching control height, the
+     * bar's block padding either side of it (`--forte-space-2` for `sm`,
+     * `--forte-space-3` above that), and its 1px hairline. Global rather
+     * than a bar knob because the layout AROUND a bar needs the number — a
+     * sticky sidebar's offset, a page's `scroll-padding-top`, the padding
+     * under a `fixed` bar — and a knob declared on the bar's root cannot be
+     * read from a sibling. Literals restated per density preset for the
+     * reason the presets themselves are: a calc() over `--forte-control-h-*`
+     * would freeze at :root and never re-derive inside a scoped subtree.
+     *
+     * The bar sets its `min-block-size` from these, so they are a floor it
+     * always meets, and exact while its padding and hairline knobs sit at
+     * their defaults. The two restate one sum; change the padding in
+     * AppBar.module.css and change these with it. */
+    --forte-app-bar-h-sm: calc(2.75rem + 1px);
+    --forte-app-bar-h-md: calc(3.75rem + 1px);
+    --forte-app-bar-h-lg: calc(4.25rem + 1px);
   }
 
   /* Radius presets. Discrete literals rather than a calc() multiplier: an
@@ -444,6 +462,9 @@
     --forte-control-gap: var(--forte-space-1);
     --forte-surface-p: var(--forte-space-4);
     --forte-list-item-py: var(--forte-space-1);
+    --forte-app-bar-h-sm: calc(2.5rem + 1px);
+    --forte-app-bar-h-md: calc(3.375rem + 1px);
+    --forte-app-bar-h-lg: calc(3.75rem + 1px);
   }
 
   [data-forte-density="spacious"] {
@@ -456,5 +477,8 @@
     --forte-control-gap: var(--forte-space-3);
     --forte-surface-p: var(--forte-space-6);
     --forte-list-item-py: var(--forte-space-3);
+    --forte-app-bar-h-sm: calc(3.25rem + 1px);
+    --forte-app-bar-h-md: calc(4.25rem + 1px);
+    --forte-app-bar-h-lg: calc(4.75rem + 1px);
   }
 }

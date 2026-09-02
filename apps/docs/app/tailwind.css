@@ -46,22 +46,16 @@
 /* ---------------------------------------------------------------------------
  * Custom variants.
  *
- * Two conditions the site needs are `@supports` nested inside `@media`, which
- * the bracket syntax can express but only as a class name long enough that
- * nobody reads it twice — and the second half, the accessibility half, is the
- * part that would get dropped in the shortening. Naming them keeps the guard
- * legible at the call site.
+ * Two conditions the site needs are guards the bracket syntax can express but
+ * only as a class name long enough that nobody reads it twice — and the half
+ * that would get dropped in the shortening is the accessibility half. Naming
+ * them keeps the guard legible at the call site.
+ *
+ * There is deliberately no `frosted:` variant any more. The site's header was
+ * the only thing that blurred, and it is now the library's `AppBar` with
+ * `variant="frosted"`, which carries the `@supports` + reduced-transparency
+ * guard itself — a second copy here would be a second place to get it wrong.
  * ------------------------------------------------------------------------ */
-
-/* A frosted surface: only where `backdrop-filter` actually works, and never
- * for a reader who has asked the OS to reduce transparency. */
-@custom-variant frosted {
-  @supports (backdrop-filter: blur(1px)) {
-    @media (prefers-reduced-transparency: no-preference) {
-      @slot;
-    }
-  }
-}
 
 /* Scroll-driven animation, which Firefox does not implement today. Anything
  * behind this variant must be enhancement — never the thing that makes
@@ -90,15 +84,14 @@
  *
  * Everything above is the library's token system. These are the few values the
  * DOCUMENTATION owns — chrome dimensions that no component knows about. They
- * are literals rather than token references, so a plain `@theme` is correct
- * here: there is no `var()` to be substituted at the wrong element.
+ * exist as theme keys instead of arbitrary values because each is used in
+ * more than one place and they have to agree.
  *
- * They exist as theme keys instead of arbitrary values because each is used in
- * more than one place and they have to agree. `--spacing-header` is the header's
- * height AND the offset the two sticky columns hang from; `--spacing-anchor` is
- * the page's `scroll-padding-top` AND the `scroll-margin-top` on every anchored
- * heading. Written as `h-[3.5rem]` / `top-[3.5rem]`, one of the pair eventually
- * gets edited alone and the sidebar tucks under the header.
+ * The header's height is deliberately NOT one of them. The header is the
+ * library's `AppBar`, whose height is the library's `--forte-app-bar-h-md`,
+ * and the shell reads that token directly with the variable shorthand —
+ * `top-(--forte-app-bar-h-md)` — so there is no docs-side copy to keep in
+ * step and a density preset moves the columns with the bar.
  *
  * One-off decorative sizes are NOT here — a swatch that happens to be 1.1rem is
  * a magic number whether it is spelled in CSS or in brackets, and inventing a
@@ -106,9 +99,6 @@
  * arbitrary values at the point of use.
  * ------------------------------------------------------------------------ */
 @theme {
-  --spacing-header: 3.5rem;
-  --spacing-anchor: 5rem;
-
   /* There is deliberately no `--container-shell`. A cap on the shell is spent
    * by the sidebar and the section rail before the page sees any of it — at
    * 84rem a five-column prop table scrolled inside itself while 400px of gutter

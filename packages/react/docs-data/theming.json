@@ -590,22 +590,22 @@
         ]
       },
       {
-        "name": "--forte-app-bar-row-min-block-size",
-        "value": "var(--forte-control-h-md)",
-        "description": "Minimum height of the row, before the padding. `size` re-points it to the matching control height, so the bar fits its own buttons.",
+        "name": "--forte-app-bar-min-block-size",
+        "value": "var(--forte-app-bar-h-md)",
+        "description": "Minimum height of the bar, padding and hairline included. `size` re-points it to the matching global `--forte-app-bar-h-*` token — the control height plus the padding — so the bar fits its own buttons and the layout around it can read the same number from the token.",
         "part": "root",
         "overrides": [
           {
             "selector": ".root[data-size=\"sm\"]",
-            "value": "var(--forte-control-h-sm)"
+            "value": "var(--forte-app-bar-h-sm)"
           },
           {
             "selector": ".root[data-size=\"md\"]",
-            "value": "var(--forte-control-h-md)"
+            "value": "var(--forte-app-bar-h-md)"
           },
           {
             "selector": ".root[data-size=\"lg\"]",
-            "value": "var(--forte-control-h-lg)"
+            "value": "var(--forte-app-bar-h-lg)"
           }
         ]
       },

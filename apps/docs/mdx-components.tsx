@@ -40,11 +40,12 @@ import { PROSE_H1, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/component
 
 type El<T extends keyof React.JSX.IntrinsicElements> = ComponentPropsWithoutRef<T>;
 
-/* `scroll-mt-anchor` on every anchored heading keeps it clear of the sticky
- * header when a #fragment lands on it (WCAG SC 2.4.11). It is also what the
- * section rail reads back to decide which heading is current, so the two can
- * never disagree about where a section starts — see `components/toc.tsx`. */
-const HEADING = "scroll-mt-anchor font-semibold";
+/* The root's `scroll-padding-top` already clears the sticky app bar when a
+ * #fragment lands on a heading (WCAG SC 2.4.11); the `scroll-mt-6` here is
+ * only the breathing room under it — the two ADD. It is also what the section
+ * rail reads back to decide which heading is current, so the two can never
+ * disagree about where a section starts — see `components/toc.tsx`. */
+const HEADING = "scroll-mt-6 font-semibold";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {

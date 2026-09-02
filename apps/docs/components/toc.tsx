@@ -95,12 +95,12 @@ const scrollPad = () =>
 
 /**
  * The line a heading comes to rest on: the root's scroll-padding plus the
- * heading's own `scroll-margin-top`. The two ADD, and on this site both are
- * `--spacing-anchor`, so a heading parks 160px down and not the 80px either
- * value suggests on its own. Both are read rather than restated — a rail that
- * disagrees with where the browser stops highlights the section above the one
- * under the reader's eye, and the animated jump below would scroll to a line
- * the browser never uses.
+ * heading's own `scroll-margin-top`. The two ADD — on this site the first is
+ * the app bar's height and the second the breathing room under it, so a
+ * heading parks a step below the bar and not against it. Both are read rather
+ * than restated — a rail that disagrees with where the browser stops
+ * highlights the section above the one under the reader's eye, and the
+ * animated jump below would scroll to a line the browser never uses.
  */
 const anchorLine = (el: HTMLElement, pad = scrollPad()) =>
   pad + (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);

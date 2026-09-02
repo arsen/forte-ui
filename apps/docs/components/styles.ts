@@ -77,8 +77,10 @@ export const LEAD = "text-4 leading-[1.6] text-foreground-muted text-pretty";
 /**
  * The two outer columns of the shell: the nav on one side, the table of
  * contents on the other. They have to stay the same shape — any disagreement
- * about the sticky offset shows up as one column tucking under the header
- * while the other does not.
+ * about the sticky offset shows up as one column tucking under the app bar
+ * while the other does not. The offset is the bar's own height token,
+ * `--forte-app-bar-h-md`, read straight from the library — the site keeps no
+ * copy of it.
  *
  * It lives in this module, and not in `sidebar.tsx` where it is mostly used,
  * because the root layout is a SERVER component and `sidebar.tsx` is
@@ -88,4 +90,4 @@ export const LEAD = "text-4 leading-[1.6] text-foreground-muted text-pretty";
  * It fails silently in the DOM — the column simply stops being sticky.
  */
 export const STICKY_COLUMN =
-  "sticky top-header max-h-[calc(100dvh-var(--spacing-header))] self-start overflow-y-auto py-6 [scrollbar-width:thin]";
+  "sticky top-(--forte-app-bar-h-md) max-h-[calc(100dvh-var(--forte-app-bar-h-md))] self-start overflow-y-auto py-6 [scrollbar-width:thin]";
