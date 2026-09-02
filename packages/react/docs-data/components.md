@@ -135,6 +135,8 @@ Components.
   compound · parts (props.json): ScrollAreaRoot, ScrollAreaViewport, ScrollAreaContent, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaCorner · knobs: theming.json → ScrollArea
 - **Separator** — A rule between things, horizontal or vertical, announced to assistive technology unless marked decorative.
   props.json: Separator · knobs: theming.json → Separator
+- **Table** — Rows and columns of data on a real `<table>` — variants, sizes, striping, selection tint, numeric columns, sortable headers and a sticky header; the data, sorting and selection state stay with the consumer.
+  compound · parts (props.json): TableContainer, TableRoot, TableCaption, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell · knobs: theming.json → Table
 
 ## Feedback
 

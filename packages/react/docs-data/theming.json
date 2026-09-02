@@ -9069,6 +9069,162 @@
       }
     ]
   },
+  "Table": {
+    "name": "Table",
+    "tokens": [
+      {
+        "name": "--forte-table-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Type size for every cell. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-cell-px",
+        "value": "var(--forte-space-3)",
+        "description": "Inline padding of every cell. `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-2)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-4)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-cell-py",
+        "value": "var(--forte-list-item-py)",
+        "description": "Block padding of every cell. At `md` it follows `data-forte-density`; `size` re-points it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-space-1)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-space-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-border-width",
+        "value": "1px",
+        "description": "Width of every rule and of the frame.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-border-color",
+        "value": "var(--forte-color-border-muted)",
+        "description": "Colour of the rules between rows and columns, and of the frame.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root",
+            "value": "CanvasText"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-radius",
+        "value": "0",
+        "description": "Corner radius of the frame. `0` on `line`, which has no frame to round; the surface radius on `outline` and `grid`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"line\"]",
+            "value": "0"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"], .root[data-variant=\"grid\"]",
+            "value": "var(--forte-radius-surface)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-bg",
+        "value": "transparent",
+        "description": "Fill behind the whole table. Transparent, so it takes the surface it sits on.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-header-bg",
+        "value": "transparent",
+        "description": "Fill behind the header row. Transparent unless the header is sticky, where it must hide the rows scrolling under it.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-sticky-header]",
+            "value": "var(--forte-color-panel)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-table-header-color",
+        "value": "var(--forte-color-foreground)",
+        "description": "Text colour of the header cells.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-header-font-weight",
+        "value": "var(--forte-font-weight-semibold)",
+        "description": "Weight of the header cells.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-footer-bg",
+        "value": "color-mix(in oklab, var(--forte-color-foreground) 4%, transparent)",
+        "description": "Fill behind the footer rows.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-row-bg-striped",
+        "value": "color-mix(in oklab, var(--forte-color-foreground) 4%, transparent)",
+        "description": "Fill on every other body row when `striped`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-row-bg-hover",
+        "value": "color-mix(in oklab, var(--forte-color-foreground) 7%, transparent)",
+        "description": "Fill on a body row under the pointer when `hoverable`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-row-bg-selected",
+        "value": "var(--forte-color-primary-soft)",
+        "description": "Fill on a body row with `selected`.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-table-caption-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Text colour of the caption.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Tabs": {
     "name": "Tabs",
     "tokens": [
