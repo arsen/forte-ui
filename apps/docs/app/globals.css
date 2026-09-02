@@ -200,24 +200,46 @@
    * Because every ramp step derives from the seed with relative colour syntax,
    * interpolating this ONE variable re-derives all twelve steps per frame and
    * the whole page cross-fades. Applied via a class so it only costs anything
-   * once the user actually switches palette.
+   * once the user actually switches palette — and taken off again the moment
+   * the fade ends, by `hero-themer.tsx`, which is the only thing that adds it.
    *
    * Not a utility, and not expressible as one: it transitions custom properties
-   * by name, and it has to reach every descendant of <html> — including markup
-   * no component of ours renders.
+   * by name.
+   *
+   * The two seeds, on the root, and NOTHING else. This rule used to read
+   * `.themeTransition, .themeTransition *` and to transition `background-color`,
+   * `border-color` and `color` alongside them. Each half of that was its own
+   * bug:
+   *
+   * - The three colour properties are redundant. A `var()` is substituted where
+   *   the property is DECLARED — the ramp on `:root` — so an interpolating seed
+   *   already re-derives every token and every element repaints from it with no
+   *   transition of its own. Adding one only makes each element chase a target
+   *   that moves again next frame, so a card's border lagged whatever it sits
+   *   against by up to the full duration.
+   * - `*` put roughly eight transitions on all ~330 elements of the home page
+   *   (four border sides, background, colour, two seeds). One style recalc went
+   *   from 5ms to 15ms — past the frame budget on its own — and the entry
+   *   cards' 1px borders flickered as the dropped frames landed.
+   * - Worst, the `transition` SHORTHAND on `*` reset every component's own.
+   *   This layer is declared after every `forte.*` layer and layer order
+   *   outranks specificity completely, so Button's press spring, the Switch
+   *   thumb and the Tabs indicator were all replaced by these five properties
+   *   for as long as the class stayed on — which, before the class was ever
+   *   removed, meant the rest of the session.
+   *
+   * Descendants need no rule of their own: a registered custom property is
+   * inherited, and what a child inherits is the ANIMATED value — which is also
+   * what lets a `.forte-theme` scope re-derive its own ramp per frame.
    *
    * Gated on reduced motion: a full-page colour wash is exactly the kind of
    * large-area change that guidance asks us to drop.
    * ---------------------------------------------------------------------- */
   @media (prefers-reduced-motion: no-preference) {
-    .themeTransition,
-    .themeTransition * {
+    :root.themeTransition {
       transition:
         --forte-accent-seed var(--forte-duration-slow) var(--forte-ease-standard),
-        --forte-secondary-seed var(--forte-duration-slow) var(--forte-ease-standard),
-        background-color var(--forte-duration-slow) var(--forte-ease-standard),
-        border-color var(--forte-duration-slow) var(--forte-ease-standard),
-        color var(--forte-duration-slow) var(--forte-ease-standard);
+        --forte-secondary-seed var(--forte-duration-slow) var(--forte-ease-standard);
     }
   }
 }

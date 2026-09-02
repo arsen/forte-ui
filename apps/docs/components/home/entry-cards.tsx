@@ -69,15 +69,19 @@ const ENTRIES: { title: string; body: string; href: string; icon: LucideIcon }[]
  * what a palette switch showed: a lavender border on the cards for the
  * length of the cross-fade.
  *
- * `transition-none` on the card, hover included. During the cross-fade the
- * root's seed animates every frame, so a card with its own `border-color`
- * transition restarts one every frame, from whatever it last painted toward
- * a target it never reaches; the site-wide cross-fade on the root already
- * carries the change, and a 1px border snapping between two near-identical
- * greys is invisible. No geometry on hover either — motion rule 7 in
- * AGENTS.md: hover is a colour cue, lift is opt-in. */
+ * The card deliberately carries no transition. It used to say so out loud,
+ * with `transition-none`, because the palette cross-fade was a blanket
+ * `transition` on `.themeTransition *` and the card's border would otherwise
+ * restart a 400ms one every frame of the fade — chasing a target that had
+ * moved again before it arrived, so the edge lagged everything it sits
+ * against. That rule is now two properties on `:root` alone (globals.css
+ * says why at length), `Card` declares no transition of its own, and the
+ * border simply follows the seed. The class was left behind as a no-op.
+ *
+ * No geometry on hover either — motion rule 7 in AGENTS.md: hover is a
+ * colour cue, lift is opt-in. */
 export const LINK_CARD = "group block h-full rounded-surface text-foreground forte-focus-ring";
-export const LINK_CARD_SURFACE = "h-full transition-none group-hover:border-primary-border";
+export const LINK_CARD_SURFACE = "h-full group-hover:border-primary-border";
 
 export function EntryCards() {
   return (
