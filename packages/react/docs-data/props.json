@@ -4032,7 +4032,7 @@
   },
   "DrawerContent": {
     "name": "DrawerContent",
-    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also the drawer's scroll container, which is what keeps a\n`Drawer.Handle` from scrolling away and lets a `Drawer.Footer` placed\n*outside* it pin to the bottom of the drawer.\n\nOn a `top`/`bottom` drawer it caps and centres its own width through\n`--forte-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
+    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also where the drawer scrolls, which is what keeps a `Drawer.Handle`\nfrom scrolling away and lets a `Drawer.Footer` placed *outside* it pin to\nthe bottom of the drawer. Under the default `scrollArea` the scrolling box\nis the `ScrollArea.Viewport` nested inside this element rather than this\nelement itself; either way it is the first scrollable ancestor Base UI\nfinds from a gesture started in the body, so \"swipe only once the scroll\nhas bottomed out\" holds in both.\n\nOn a `top`/`bottom` drawer it caps and centres its own width through\n`--forte-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
     "props": [
       {
         "name": "className",
@@ -4040,6 +4040,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "scrollArea",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Scroll the body inside a `ScrollArea` instead of as a plain scroll\ncontainer. The scroll track and the edge fade then sit against the\ndrawer's own edge rather than inset over the text, and Base UI makes the\nviewport focusable while — and only while — there is something to scroll,\nso a keyboard user with no focusable control in the body can still read\nit.\n\nTurn it off for a body that brings its own scrolling: a virtualised list,\na map, an embedded editor. Those measure the scrollport themselves, and\nan extra one wrapped around them is a second thing to fight over the\ngesture."
       }
     ]
   },

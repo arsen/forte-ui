@@ -4856,7 +4856,7 @@
       {
         "name": "--forte-drawer-content-max-inline-size",
         "value": "100%",
-        "description": "Maximum width of `Drawer.Content`, which then centres itself. `32rem` on a `top`/`bottom` drawer.",
+        "description": "Maximum width of the drawer's body, which then centres itself. `32rem` on a `top`/`bottom` drawer.",
         "part": "content",
         "overrides": [
           {
@@ -4864,6 +4864,13 @@
             "value": "32rem"
           }
         ]
+      },
+      {
+        "name": "--forte-scroll-area-fade-size",
+        "value": "var(--forte-drawer-padding)",
+        "description": "How far the body fades out at an edge it can still be scrolled past",
+        "part": "scroller",
+        "overrides": []
       },
       {
         "name": "--forte-drawer-swipe-area-size",

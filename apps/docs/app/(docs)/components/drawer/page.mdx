@@ -68,9 +68,13 @@ Both variants work non-modally, and they say different things: `edge` reads as a
 
 ### Long content
 
-`Drawer.Content` is the scroll container — not the viewport around the popup, the way `Dialog` does it, and not the popup itself. Base UI walks up from wherever the finger landed and takes the first scrollable ancestor, so a drag only takes over once that scroll has bottomed out. A scrolled-down drawer therefore swipes only at the end of its list, which is what every native sheet does, and `overscroll-behavior: contain` keeps a scroll that reaches the end from chaining to the page behind it.
+`Drawer.Content` is where the drawer scrolls — not the viewport around the popup, the way `Dialog` does it, and not the popup itself. Base UI walks up from wherever the finger landed and takes the first scrollable ancestor, so a drag only takes over once that scroll has bottomed out. A scrolled-down drawer therefore swipes only at the end of its list, which is what every native sheet does, and `overscroll-behavior: contain` keeps a scroll that reaches the end from chaining to the page behind it.
 
 That placement decides two other things. A `Drawer.Handle` on a `left`/`right` drawer holds its position instead of scrolling away, and **`Drawer.Footer` pins to the bottom of the drawer when it sits outside `Drawer.Content`**, or scrolls with the list when it sits inside. Put it outside for a long drawer, where an action row you have to scroll to reach is a nuisance; inside for a short one, or for a bottom sheet where it should stay within the centred content column.
+
+By default the body scrolls inside a [ScrollArea](/components/scroll-area/), which buys three things a bare scroll container cannot give it. The content fades out at any edge it can still be scrolled past — the "there is more below" cue a drawer's hard, fixed edge otherwise swallows. That fade and the scroll track sit against the drawer's **own** edge rather than inset over the text, because the scroller runs the full width of the popup while a box inside it carries the padding and the width cap. And the scrollport becomes a tab stop exactly while it can scroll, so a body of static text is reachable by keyboard.
+
+`scrollArea={false}` on `Drawer.Content` returns it to a plain scroll container. Reach for it when the body brings its own scrolling — a virtualised list, a map, an embedded editor — since those measure the scrollport themselves and an extra one wrapped around them is a second thing to fight over the gesture.
 
 The popup keeps a fallback `overflow` of its own, so a drawer built without `Drawer.Content` still scrolls rather than spilling out of the surface.
 
@@ -152,7 +156,7 @@ Leave it on for anything that reaches a touch screen. A drag toward the edge is 
 
 That is the whole reason this part stayed separate instead of being folded into `Drawer.Popup` the way the portal and viewport were. Folding it in would have made every drawer text-selectable and left `Drawer.Handle` — which has to be draggable with a mouse — with nowhere to live. Keep the handle outside `Drawer.Content`, and the body inside it.
 
-It also caps its own width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so `Drawer.Content` stops at `32rem` and centres itself there. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--forte-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
+It also caps its width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so the body stops at `32rem` and centres itself there. Under the default `scrollArea` the cap sits on the box *inside* the scrollport rather than on the scroller, which is what lets the fade and the track reach the sheet's edges while the text stays in a centred column. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--forte-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
 
 ## Accessibility
 
@@ -222,7 +226,7 @@ What is left in the per-side blocks is the handful of things that are genuinely 
 
 Dragging a drawer the wrong way — pulling a bottom sheet *upward*, which is the first thing anybody tries — is damped rather than blocked. Base UI applies a square root, so a 300px pull still moves the surface about 17px past its resting place. That opens a gap between the drawer and the edge of the screen and shows a strip of scrim through it, which reads as the drawer having come loose from the frame.
 
-The fix is a skirt: a slab of the drawer's own background extending past its outer edge, off-screen at rest, that fills the gap as it opens. Base UI's own examples build it from extra width plus a matching negative margin. This component uses a zero-blur, zero-spread `box-shadow` offset along the axis vector instead, for one decisive reason — the popup is the scroll container, and padding its box outward would push its scrollbar off-screen along with it. A shadow paints outside the border box and is not clipped by the element's own `overflow`, so the drawer keeps its true size and its scrollbar stays where the user can reach it.
+The fix is a skirt: a slab of the drawer's own background extending past its outer edge, off-screen at rest, that fills the gap as it opens. Base UI's own examples build it from extra width plus a matching negative margin. This component uses a zero-blur, zero-spread `box-shadow` offset along the axis vector instead, for one decisive reason — the drawer's scroll track rides the popup's inner edge, and padding its box outward would push that track off-screen along with it. A shadow paints outside the border box and is not clipped by the element's own `overflow`, so the drawer keeps its true size and its scrollbar stays where the user can reach it.
 
 `variant="floating"` sets the bleed to `0px`. A floating drawer is already surrounded by scrim, so an overdrag moves it within a gap that was meant to be there rather than opening one that was not.
 
