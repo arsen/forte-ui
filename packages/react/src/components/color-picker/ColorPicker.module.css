@@ -235,7 +235,6 @@
     touch-action: none;
     -webkit-user-select: none;
     user-select: none;
-    -webkit-tap-highlight-color: transparent;
   }
 
   .area[data-disabled] {
@@ -405,7 +404,6 @@
       var(--forte-color-picker-thumb-border);
     border-radius: var(--forte-radius-full);
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     /* Position is written inline by Base UI on every pointermove and is
      * deliberately absent from this transition — see the file header. */
     transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
@@ -498,7 +496,6 @@
      * palette starts with. */
     color: var(--forte-color-picker-swatch-on, #ffffff);
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     transition: box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
   }
 

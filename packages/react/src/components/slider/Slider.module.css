@@ -292,7 +292,6 @@
     touch-action: none;
     -webkit-user-select: none;
     user-select: none;
-    -webkit-tap-highlight-color: transparent;
     cursor: pointer;
   }
 
@@ -346,7 +345,6 @@
     border-radius: var(--forte-radius-full);
     background-color: var(--forte-slider-thumb-bg);
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
 
     /* `box-shadow` is deliberately absent from this rule — the elevation and
      * the halo are painted by ::before below instead. The focus ring's second

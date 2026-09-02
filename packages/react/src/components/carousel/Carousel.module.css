@@ -259,7 +259,6 @@
     box-shadow: var(--forte-carousel-control-shadow);
     font: inherit;
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     /* Snap in, spring out: the press lands on the instant duration below and
      * the release runs back on the spring. */
     transition:
@@ -381,7 +380,6 @@
     cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
-    -webkit-tap-highlight-color: transparent;
     /* The stretch is a positional cue with no travel token, so it runs on
      * the move duration like the Tabs indicator; it collapses to its floor
      * under reduced motion and the colour change carries the state. */
@@ -441,7 +439,6 @@
     overflow: clip;
     opacity: var(--forte-carousel-thumb-opacity);
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     transition:
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
       border-color var(--forte-duration-fast) var(--forte-ease-standard);

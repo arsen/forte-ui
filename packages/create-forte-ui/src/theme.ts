@@ -141,7 +141,10 @@ export type NextFontSetup = {
   /** The `const fontSans = Inter({...});` declarations, or "". */
   consts: string;
   /** ` className={...}` for the `<html>` element, or "". */
-  htmlClassAttr: string;
+  /** The `next/font` CSS-variable idents, e.g. ["fontSans.variable"]. The
+   *  `<html>` class list is composed from these plus `forte-reset`, which is
+   *  why this is the parts rather than a finished attribute. */
+  fontVars: string[];
 };
 
 /** The axes string in the catalogue is the truth about what a family can
@@ -159,7 +162,7 @@ export function nextFontSetup(a: ThemeAnswers): NextFontSetup {
     { font: findFont(MONO_FONTS, a.fontMono), variable: "--font-mono", ident: "fontMono" },
   ].filter((p) => p.font.css);
 
-  if (picks.length === 0) return { importLine: "", consts: "", htmlClassAttr: "" };
+  if (picks.length === 0) return { importLine: "", consts: "", fontVars: [] };
 
   const names = picks.map((p) => p.font.name.replaceAll(" ", "_"));
   const consts = picks
@@ -170,14 +173,24 @@ export function nextFontSetup(a: ThemeAnswers): NextFontSetup {
     })
     .join("\n");
 
-  const classExpr =
-    picks.length === 1
-      ? `{${picks[0]!.ident}.variable}`
-      : `{\`\${fontSans.variable} \${fontMono.variable}\`}`;
-
   return {
     importLine: `import { ${names.join(", ")} } from "next/font/google";`,
     consts,
-    htmlClassAttr: ` className=${classExpr}`,
+    fontVars: picks.map((p) => `${p.ident}.variable`),
   };
+}
+
+/** ` className="forte-reset"` — or a template literal when next/font variables
+ *  have to ride along on the same element.
+ *
+ *  `forte-reset` is unconditional: it is what switches on
+ *  `@forte-ui/react/styles/reset.css`, which the starter imports. A scaffolded
+ *  app is the one place the blanket reset is unambiguously right — there is no
+ *  existing markup for it to change behaviour under, and it becomes the
+ *  baseline everything the author writes next is built against. The library
+ *  itself stays scoped to `[data-forte]` for exactly the opposite reason. */
+export function htmlClassAttr(fontVars: string[]): string {
+  if (fontVars.length === 0) return ` className="forte-reset"`;
+  const vars = fontVars.map((v) => `\${${v}}`).join(" ");
+  return ` className={\`forte-reset ${vars}\`}`;
 }

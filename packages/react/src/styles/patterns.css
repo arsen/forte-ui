@@ -57,6 +57,37 @@
   }
 
   /* ------------------------------------------------------------------------
+   * Tap highlight
+   *
+   * WebKit and Blink paint a translucent grey box over whatever a touch lands
+   * on. It ignores border-radius, so it squares off every pill Button and
+   * rounded Tab; it covers the whole element rather than the pressed part;
+   * and it lingers after the finger lifts, so a tapped control stays greyed
+   * while the next screen is already arriving. A long press is a tap that has
+   * not finished, so a ContextMenu trigger wears it over the whole region for
+   * the half-second before the menu opens — Base UI suppresses the iOS callout
+   * inline, and this is the other half. It is the platform guessing at
+   * a press state — and every component here already draws its own, which is
+   * the only reason this is safe to remove: Button's `:active` fill, the Tabs
+   * indicator, the Switch thumb, the Checkbox tick, `[data-highlighted]` in
+   * every popup. Do not suppress it on a part that has no state of its own.
+   *
+   * One rule rather than a copy per component, because the property INHERITS:
+   * `data-forte` is on the root of every part the library renders (rule 9 in
+   * CONTRIBUTING.md), and everything inside one — icons, labels, the SVG
+   * descendants the marker deliberately skips — picks the value up from it.
+   * Popups that portal out of their trigger's tree carry their own marker, so
+   * they are covered directly rather than by inheritance.
+   *
+   * Deliberately not `:root`: the library suppresses this on its own parts and
+   * leaves the app's alone. A consumer who wants it back declares the property
+   * unlayered, which beats every `forte.*` layer.
+   * --------------------------------------------------------------------- */
+  [data-forte] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ------------------------------------------------------------------------
    * Hit target — SC 2.5.8 (24x24 minimum)
    * Grows the interactive area without changing the visual box.
    * --------------------------------------------------------------------- */

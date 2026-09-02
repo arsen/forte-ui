@@ -113,11 +113,10 @@
 
     -webkit-user-select: none;
     user-select: none;
-    cursor: pointer;
     /* A toggle is a button, and the platform gives a native <button>
      * `cursor: default` — not pointer. Stated explicitly, as everything
      * interactive in this library is. */
-    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
     /* `scale` as an independent property rather than through `transform`, so a
      * consumer animating `transform` on the same element does not fight it. */
     scale: 1;
