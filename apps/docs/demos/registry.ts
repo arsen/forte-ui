@@ -469,6 +469,8 @@ import d_number_field_form from "./number-field/form";
 import d_number_field_form_src from "./number-field/form?raw";
 import d_number_field_format from "./number-field/format";
 import d_number_field_format_src from "./number-field/format?raw";
+import d_number_field_orientation from "./number-field/orientation";
+import d_number_field_orientation_src from "./number-field/orientation?raw";
 import d_number_field_scrubbing from "./number-field/scrubbing";
 import d_number_field_scrubbing_src from "./number-field/scrubbing?raw";
 import d_number_field_sensitivity from "./number-field/sensitivity";
@@ -1043,6 +1045,7 @@ export type DemoId =
   | "number-field/basic"
   | "number-field/form"
   | "number-field/format"
+  | "number-field/orientation"
   | "number-field/scrubbing"
   | "number-field/sensitivity"
   | "number-field/sizes"
@@ -1448,6 +1451,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "number-field/basic": { Component: d_number_field_basic, source: d_number_field_basic_src, file: "number-field/basic.tsx" },
   "number-field/form": { Component: d_number_field_form, source: d_number_field_form_src, file: "number-field/form.tsx" },
   "number-field/format": { Component: d_number_field_format, source: d_number_field_format_src, file: "number-field/format.tsx" },
+  "number-field/orientation": { Component: d_number_field_orientation, source: d_number_field_orientation_src, file: "number-field/orientation.tsx" },
   "number-field/scrubbing": { Component: d_number_field_scrubbing, source: d_number_field_scrubbing_src, file: "number-field/scrubbing.tsx" },
   "number-field/sensitivity": { Component: d_number_field_sensitivity, source: d_number_field_sensitivity_src, file: "number-field/sensitivity.tsx" },
   "number-field/sizes": { Component: d_number_field_sizes, source: d_number_field_sizes_src, file: "number-field/sizes.tsx" },

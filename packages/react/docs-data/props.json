@@ -5317,7 +5317,7 @@
   },
   "NumberFieldRoot": {
     "name": "NumberFieldRoot",
-    "description": "Groups every part of the number field and owns its value. Renders a `<div>`\nlaid out as a column, so a `ScrubArea` wrapping the label sits above the\n`Group`.\n\nThe value is a `number | null`, never a string: `null` is the empty field,\nwhich is what makes \"cleared\" distinguishable from zero. `format` takes\n`Intl.NumberFormatOptions`, so currency, percent and unit displays are a prop\nrather than a wrapper.\n\n```tsx\n<NumberField.Root defaultValue={100} min={0} max={999}>\n  <NumberField.ScrubArea>\n    <Field.Label>Width</Field.Label>\n  </NumberField.ScrubArea>\n  <NumberField.Group>\n    <NumberField.Decrement />\n    <NumberField.Input />\n    <NumberField.Increment />\n  </NumberField.Group>\n</NumberField.Root>\n```",
+    "description": "Groups every part of the number field and owns its value. Renders a `<div>`\nlaid out as a column by default, so a `ScrubArea` wrapping the label sits\nabove the `Group`; `orientation=\"horizontal\"` lays the two out on one row\ninstead, label first.\n\nThe value is a `number | null`, never a string: `null` is the empty field,\nwhich is what makes \"cleared\" distinguishable from zero. `format` takes\n`Intl.NumberFormatOptions`, so currency, percent and unit displays are a prop\nrather than a wrapper.\n\n```tsx\n<NumberField.Root defaultValue={100} min={0} max={999}>\n  <NumberField.ScrubArea>\n    <Field.Label>Width</Field.Label>\n  </NumberField.ScrubArea>\n  <NumberField.Group>\n    <NumberField.Decrement />\n    <NumberField.Input />\n    <NumberField.Increment />\n  </NumberField.Group>\n</NumberField.Root>\n```",
     "props": [
       {
         "name": "className",
@@ -5325,6 +5325,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "orientation",
+        "type": "NumberFieldOrientation",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "Where the `ScrubArea` sits relative to the `Group`. `vertical` stacks the\nlabel above the control, the way a `Field` does; `horizontal` puts it on\nthe same row, before the control — the shape of an inspector panel or a\ntoolbar, where a stacked label would double the height of every row.\n\nOnly the layout changes. The scrub gesture keeps its own `direction`,\nwhich is the axis the pointer travels along, not where the label lives."
       },
       {
         "name": "size",
@@ -5417,7 +5424,7 @@
   },
   "NumberFieldScrubArea": {
     "name": "NumberFieldScrubArea",
-    "description": "The click-and-drag surface. Renders a `<span>`, and is normally wrapped\naround the field's label — dragging sideways over the word \"Width\" changes\nthe width, which is the interaction Figma and Blender taught everyone.\n\nScrubbing is invisible unless the component says so, so three cues ship by\ndefault and they cover three different moments:\n\n1. **At rest** — the `grip`, a double-headed arrow after the label. This is\n   the only cue present before the user has done anything, and the only one a\n   touch user ever sees, so it is on by default.\n2. **On hover** — a resize cursor (`ew-resize` / `ns-resize`, per\n   `direction`) and a panel wash behind the label.\n3. **During the drag** — `data-scrubbing` tints this area and the `Group`'s\n   border, and the `cursor` stands in for the pointer the lock has hidden.\n\nThe resize cursor is a deliberate exception to the library's pointer rule.\n`cursor: pointer` promises \"click me and something happens\", and clicking a\nscrub area does nothing at all — the value only moves once the pointer does.\nThe resize cursor is the one the platform already uses for exactly this\ngesture.\n\n```tsx\n<NumberField.ScrubArea direction=\"vertical\" pixelSensitivity={3}>\n  <Field.Label>Opacity</Field.Label>\n</NumberField.ScrubArea>\n```",
+    "description": "The click-and-drag surface. Renders a `<span>`, and is normally wrapped\naround the field's label — dragging sideways over the word \"Width\" changes\nthe width, which is the interaction Figma and Blender taught everyone. It\nsits above the `Group`, or before it on the same row when the root has\n`orientation=\"horizontal\"`.\n\nScrubbing is invisible unless the component says so, so three cues ship by\ndefault and they cover three different moments:\n\n1. **At rest** — the `grip`, a double-headed arrow after the label. This is\n   the only cue present before the user has done anything, and the only one a\n   touch user ever sees, so it is on by default.\n2. **On hover** — a resize cursor (`ew-resize` / `ns-resize`, per\n   `direction`) and a panel wash behind the label.\n3. **During the drag** — `data-scrubbing` tints this area and the `Group`'s\n   border, and the `cursor` stands in for the pointer the lock has hidden.\n\nThe resize cursor is a deliberate exception to the library's pointer rule.\n`cursor: pointer` promises \"click me and something happens\", and clicking a\nscrub area does nothing at all — the value only moves once the pointer does.\nThe resize cursor is the one the platform already uses for exactly this\ngesture.\n\n```tsx\n<NumberField.ScrubArea direction=\"vertical\" pixelSensitivity={3}>\n  <Field.Label>Opacity</Field.Label>\n</NumberField.ScrubArea>\n```",
     "props": [
       {
         "name": "className",

@@ -653,6 +653,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "the-wheel", text: "The wheel", depth: 3 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "sizes", text: "Sizes", depth: 3 },
+    { id: "orientation", text: "Orientation", depth: 3 },
     { id: "variants", text: "Variants", depth: 3 },
     { id: "formatting", text: "Formatting", depth: 3 },
     { id: "steps", text: "Steps", depth: 3 },
