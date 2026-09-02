@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, Bot, Palette, Paintbrush, Rocket, Zap } from "lucide-react";
 import { CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
-import { cn } from "@/lib/cn";
 
 /**
  * The "start here" row: one card per place a new reader might want to go.
@@ -59,18 +58,26 @@ const ENTRIES: { title: string; body: string; href: string; icon: LucideIcon }[]
  * `@media (hover: hover)` in v4, so a touch screen never sticks it on the
  * last thing tapped.
  *
- * Hover is a colour cue only — no lift. There was a 2px `translate` here,
- * and it caused a one-frame flash: animating `translate` puts the card on
- * its own compositor layer while it moves, and when the palette swatches
- * re-theme the page Chrome briefly showed those layers' last texture, hover
- * border and all, on every card the pointer had crossed. Geometry on hover
- * is opt-in in this library for reasons like this one — see motion rule 7
- * in AGENTS.md. */
-export const LINK_CARD = "group block h-full rounded-surface forte-focus-ring";
-export const LINK_CARD_SURFACE = cn(
-  "h-full transition-[border-color] duration-fast ease-standard",
-  "group-hover:border-primary-border",
-);
+ * `text-foreground` on the anchor is not cosmetic. The site's link reset in
+ * globals.css is `a:not(.forte-focus-ring) { color: inherit }` — it skips
+ * anything carrying the ring class, on the assumption that such a link is a
+ * library part painting its own colour. This one is not, so without the
+ * class it kept the browser's default link colour, a lavender blue in dark
+ * mode. Nothing visible reads it directly, but it IS the anchor's
+ * `currentColor`, which is what any descendant's colour or border falls
+ * back to the moment its own value fails to resolve — and that is exactly
+ * what a palette switch showed: a lavender border on the cards for the
+ * length of the cross-fade.
+ *
+ * `transition-none` on the card, hover included. During the cross-fade the
+ * root's seed animates every frame, so a card with its own `border-color`
+ * transition restarts one every frame, from whatever it last painted toward
+ * a target it never reaches; the site-wide cross-fade on the root already
+ * carries the change, and a 1px border snapping between two near-identical
+ * greys is invisible. No geometry on hover either — motion rule 7 in
+ * AGENTS.md: hover is a colour cue, lift is opt-in. */
+export const LINK_CARD = "group block h-full rounded-surface text-foreground forte-focus-ring";
+export const LINK_CARD_SURFACE = "h-full transition-none group-hover:border-primary-border";
 
 export function EntryCards() {
   return (
