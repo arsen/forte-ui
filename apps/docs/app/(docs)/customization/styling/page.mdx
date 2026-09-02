@@ -49,6 +49,31 @@ The same selectors work as Tailwind arbitrary variants — `data-[variant=solid]
 
 Write your values as tokens (`var(--forte-shadow-2)`, not a literal) and your customisations keep responding to the seed, the presets and dark mode like the library's own styles do.
 
+## The tap highlight on touch
+
+Safari and Chrome paint a translucent grey box over whatever a touch lands on. It ignores `border-radius`, so it squares off a pill button and a rounded card; it covers the whole element rather than the part you pressed; and it lingers after your finger lifts, so a tapped control sits greyed while the next screen is already arriving.
+
+The library suppresses it on every part it renders — the rule is one line in `patterns.css`, keyed off the `data-forte` marker, and the property inherits so it reaches the icons and labels inside each part too. Nothing to configure, and no per-component opt-in.
+
+It stops there on purpose. Suppressing the highlight is only safe where something else signals the press, and the library can promise that for its own parts — Button's `:active` fill, the Tabs indicator, the Switch thumb, the highlighted row in every menu — but not for markup it did not write. So your own buttons, cards and links keep the platform behaviour until you ask for otherwise.
+
+To take the same treatment app-wide, import the optional reset and switch it on with a class:
+
+```tsx
+import "@forte-ui/react/theme.css";
+import "@forte-ui/react/styles/reset.css";
+```
+
+```html
+<html class="forte-reset">
+```
+
+The class is what activates it — the import alone does nothing. Put it on `<html>` for the whole document, or on any element to cover just that subtree. The reset also sets `box-sizing: border-box`, and everything in it sits in `forte.reset`, the lowest of the library's layers, so your own CSS beats it without `!important`.
+
+<Callout kind="a11y">
+  Opting in takes away the only touch feedback a plain `<button>` has. The platform highlight is crude, but on a control with no `:active` rule of its own it is the entire press affordance, and removing it leaves the control feeling broken rather than styled. Give your interactive elements a press state — a background shift on `:active` is enough — before you turn this on app-wide.
+</Callout>
+
 ## What you take on
 
 The library's defaults carry guarantees your CSS can silently defeat, because winning the cascade means winning against the accessibility rules too:

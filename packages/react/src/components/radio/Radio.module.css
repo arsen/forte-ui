@@ -101,10 +101,6 @@
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
-    /* The root is the focusable element (Base UI puts tabindex on the span and
-     * parks the hidden input at tabindex -1), so it also owns the focus ring
-     * and must not flash a platform tap highlight underneath it. */
-    -webkit-tap-highlight-color: transparent;
     transition:
       background-color var(--forte-radio-duration) var(--forte-ease-standard),
       border-color var(--forte-radio-duration) var(--forte-ease-standard),

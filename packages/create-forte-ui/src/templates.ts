@@ -5,7 +5,14 @@
  * answers. When a guide step changes, change the builder with it.
  */
 
-import { rootBlock, fontImports, htmlAttrs, nextFontSetup, type ThemeAnswers } from "./theme.js";
+import {
+  rootBlock,
+  fontImports,
+  htmlAttrs,
+  htmlClassAttr,
+  nextFontSetup,
+  type ThemeAnswers,
+} from "./theme.js";
 
 /* The body rule from the guides' "Replace the scaffold CSS" step. Present on
  * the non-Tailwind paths only — the Tailwind starter page carries the same
@@ -65,6 +72,7 @@ export function viteIndexCss(a: ThemeAnswers, tailwind: boolean): string {
       `@import "@forte-ui/react/tailwind.css";
 @import "tailwindcss";
 @import "@forte-ui/react/theme.css";
+@import "@forte-ui/react/styles/reset.css";
 `,
       rootBlock(a, "import"),
     );
@@ -77,7 +85,9 @@ export function viteMainTsx(tailwind: boolean): string {
    * bridge — importing it here would pin the `forte` layer first and hand
    * Preflight the win. Without Tailwind there is no ordering hazard and the
    * guide imports it at the entry point. */
-  const themeImport = tailwind ? "" : `import "@forte-ui/react/theme.css";\n`;
+  const themeImport = tailwind
+    ? ""
+    : `import "@forte-ui/react/theme.css";\nimport "@forte-ui/react/styles/reset.css";\n`;
   return `import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 ${themeImport}import "./index.css";
@@ -147,6 +157,7 @@ export function nextGlobalsCss(a: ThemeAnswers, tailwind: boolean): string {
       `@import "@forte-ui/react/tailwind.css";
 @import "tailwindcss";
 @import "@forte-ui/react/theme.css";
+@import "@forte-ui/react/styles/reset.css";
 `,
       rootBlock(a, "next-font"),
     );
@@ -160,7 +171,9 @@ export function nextLayoutTsx(name: string, a: ThemeAnswers, tailwind: boolean):
    * because nothing else declares layers. With Tailwind it must NOT be:
    * globals.css imports it after the bridge (see the guide's ordering note),
    * and a second import here would pin the `forte` layer before `base`. */
-  const themeImport = tailwind ? "" : `import "@forte-ui/react/theme.css";\n`;
+  const themeImport = tailwind
+    ? ""
+    : `import "@forte-ui/react/theme.css";\nimport "@forte-ui/react/styles/reset.css";\n`;
   /* ThemeScript + suppressHydrationWarning are the guides' "Light and dark"
    * step: the script replays a stored light/dark choice onto <html> before
    * first paint, and the suppression covers the attribute it legitimately
@@ -195,7 +208,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en"${htmlAttrs(a)}${font.htmlClassAttr}${pinned ? "" : " suppressHydrationWarning"}>
+    <html lang="en"${htmlAttrs(a)}${htmlClassAttr(font.fontVars)}${pinned ? "" : " suppressHydrationWarning"}>
 ${head}      <body>
 ${toggleLine}        {children}
       </body>

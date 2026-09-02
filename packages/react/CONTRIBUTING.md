@@ -83,6 +83,17 @@ and open a second block:
 }
 ```
 
+**5c. Do not write `-webkit-tap-highlight-color` in a component.**
+`patterns.css` sets it to `transparent` once, on `[data-forte]`, which is the
+touch counterpart of rule 5: the platform's grey tap box ignores
+`border-radius`, covers the whole element rather than the pressed part, and
+lingers after the finger lifts. The property INHERITS, so the one rule reaches
+every part and everything inside it — nine components each carried their own
+copy before it existed. What a component owes instead is a press state of its
+own, since suppressing the platform's leaves nothing else: an `:active` fill, a
+`[data-highlighted]` row, a thumb or tick that moves. Note that a hover fill
+written under `@media (hover: hover)` is not one — it never matches on touch.
+
 **6. Floating surfaces get `.forte-hc-surface`.** It carries a transparent border
 that is invisible normally but becomes a system-coloured boundary in forced-
 colors mode, where all shadows are stripped and an unbordered popup would

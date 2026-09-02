@@ -293,7 +293,6 @@
     text-underline-offset: var(--forte-toolbar-link-underline-offset);
 
     cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     /* `box-shadow` is deliberately absent: the focus ring is an `outline` plus
      * a `box-shadow` halo, and `outline` cannot be transitioned — animating
      * only half of it makes the ring assemble in two stages on every Tab. */

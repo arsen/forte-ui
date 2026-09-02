@@ -6,6 +6,11 @@ import type { Metadata } from "next";
 // site's own base rules). tailwind.css only fills layers those two already
 // positioned.
 import "@forte-ui/react/theme.css";
+// Opt into the library's blanket reset — box-sizing, and the platform tap
+// highlight the site's own chrome would otherwise flash on touch. Inert
+// without `forte-reset` on <html> below. After theme.css because that is what
+// declares `forte.reset` for it to land in.
+import "@forte-ui/react/styles/reset.css";
 import "./globals.css";
 import "./tailwind.css";
 import { TooltipProvider } from "@/components/tooltip-provider";
@@ -56,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       // `mdx-components.tsx`. Smooth scroll is opt-in per user preference —
       // the library's a11y.css already forces `scroll-behavior: auto` under
       // prefers-reduced-motion, so it needs no guard here.
-      className="scroll-smooth scroll-pt-(--forte-app-bar-h-md) [-webkit-text-size-adjust:100%]"
+      className="forte-reset scroll-smooth scroll-pt-(--forte-app-bar-h-md) [-webkit-text-size-adjust:100%]"
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />

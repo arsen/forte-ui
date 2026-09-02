@@ -31,16 +31,25 @@ npm install @forte-ui/react
 
 React 18 or 19 and the matching `react-dom` are the only required peer dependencies. [Base UI](https://base-ui.com) comes with the package.
 
-### 3. Import the stylesheet
+### 3. Import the stylesheets
 
-One stylesheet, imported once at the root. In `app/layout.tsx`:
+Two, imported once at the root. In `app/layout.tsx`:
 
 ```tsx
 import "@forte-ui/react/theme.css";
+import "@forte-ui/react/styles/reset.css";
 import "./globals.css";
 ```
 
 `theme.css` carries the whole system — the tokens, the colour ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
+
+`reset.css` is the second one, and it is opt-in twice over: importing it does nothing until `forte-reset` appears on an element. It sets `box-sizing: border-box` and suppresses the platform tap highlight — the grey box Safari and Chrome paint over whatever a touch lands on, which ignores `border-radius` and lingers after your finger lifts. The library already suppresses it on its own components; this extends the same treatment to the markup you write. Drop both lines if you would rather keep the platform default — see [the tap highlight on touch](/customization/styling/#the-tap-highlight-on-touch) for the trade-off.
+
+The class is what switches it on. On the same file's `<html>`:
+
+```tsx
+<html lang="en" className="forte-reset">
+```
 
 ### 4. Seed the theme
 
@@ -109,7 +118,7 @@ That is the whole integration: one install, one CSS import, one variable.
 Both palettes are already there — with no attribute set, the page follows the OS through `prefers-color-scheme`. To pin one, set `data-theme` on the root element:
 
 ```tsx
-<html lang="en" data-theme="dark">
+<html lang="en" className="forte-reset" data-theme="dark">
 ```
 
 That is what `create-forte-ui --scheme dark` writes — and it then leaves the toggle and script below out of the layout, since a static attribute has nothing to switch and nothing to replay.
@@ -123,7 +132,7 @@ with the `suppressHydrationWarning` the script calls for:
 ```tsx
 import { ThemeScript, ThemeToggle } from "@forte-ui/react";
 
-<html lang="en" suppressHydrationWarning>
+<html lang="en" className="forte-reset" suppressHydrationWarning>
   <head>
     <ThemeScript />
   </head>
@@ -166,6 +175,7 @@ Replace `app/globals.css` entirely:
 @import "@forte-ui/react/tailwind.css";
 @import "tailwindcss";
 @import "@forte-ui/react/theme.css";
+@import "@forte-ui/react/styles/reset.css";
 
 :root {
   --forte-accent-seed: #6d43d4;

@@ -53,12 +53,6 @@
     --forte-context-menu-trigger-ring-offset: calc(
       -1 * var(--forte-context-menu-trigger-ring-width)
     );
-
-    /* A long press is a tap that has not finished, so Android and iOS paint
-     * their tap highlight over the whole region for the half-second before the
-     * menu appears. Base UI already suppresses the iOS callout inline; this is
-     * the other half. */
-    -webkit-tap-highlight-color: transparent;
   }
 
   /* Which region produced the menu. A context menu opens at the pointer rather

@@ -66,9 +66,14 @@ function applyVite({ name, dir, tailwind, answers }: ProjectPlan): string[] {
    * report it, never guess. */
   const htmlPath = path.join(dir, "index.html");
   let html = fs.readFileSync(htmlPath, "utf8");
-  const attrs = htmlAttrs(answers);
+  /* `forte-reset` is unconditional — it switches on the reset stylesheet
+   * index.css imports, so the two must not drift. That makes the anchor
+   * always load-bearing here, unlike the theme attributes, which are empty on
+   * an all-defaults run: the guard below therefore checks the replacement
+   * outright rather than only when `attrs` is non-empty. */
+  const attrs = `${htmlAttrs(answers)} class="forte-reset"`;
   const anchored = html.replace(/<html lang="en">/, `<html lang="en"${attrs}>`);
-  if (attrs && anchored === html) {
+  if (anchored === html) {
     throw new Error(
       `could not find '<html lang="en">' in index.html to add${attrs} — ` +
         `the create-vite template may have changed; add the attribute(s) by hand.`,
