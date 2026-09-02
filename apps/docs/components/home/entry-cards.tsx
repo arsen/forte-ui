@@ -54,22 +54,15 @@ const ENTRIES: { title: string; body: string; href: string; icon: LucideIcon }[]
 
 /* A card that IS a link. The anchor wraps the card rather than sitting inside
  * it, so the whole surface is the target and there is no dead border to miss
- * by a pixel. The hover state lives on the card and is driven by the anchor's
- * `group` state, so the focus ring stays on the anchor. `hover:` is already
- * `@media (hover: hover)` in v4, so a touch screen never sticks it on the
- * last thing tapped.
- *
- * Hover is a colour cue only — no lift. There was a 2px `translate` here,
- * and it caused a one-frame flash: animating `translate` puts the card on
- * its own compositor layer while it moves, and when the palette swatches
- * re-theme the page Chrome briefly showed those layers' last texture, hover
- * border and all, on every card the pointer had crossed. Geometry on hover
- * is opt-in in this library for reasons like this one — see motion rule 7
- * in AGENTS.md. */
+ * by a pixel. The hover lift lives on the card and is driven by the anchor's
+ * `group` state, so the focus ring — on the anchor — stays put while the
+ * card moves. `hover:` is already `@media (hover: hover)` in v4, so a touch
+ * screen never sticks the lift on the last thing tapped; the travel token
+ * collapses to 0px under reduced motion on its own. */
 export const LINK_CARD = "group block h-full rounded-surface forte-focus-ring";
 export const LINK_CARD_SURFACE = cn(
-  "h-full transition-[border-color] duration-fast ease-standard",
-  "group-hover:border-primary-border",
+  "h-full transition-[border-color,translate] duration-fast ease-standard",
+  "group-hover:-translate-y-(--forte-travel-xs) group-hover:border-primary-border",
 );
 
 export function EntryCards() {
