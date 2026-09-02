@@ -8176,6 +8176,13 @@
     "description": "Groups the tab strip and its panels.\n\nNote the Base UI default: `defaultValue` is `0`, an *index*, not the first\ntab's string value. With string values and no `defaultValue`, Base UI emits\nan automatic `onValueChange` with reason `'initial'` to correct itself, so\nalways pass `defaultValue` (or `value`) pointing at an **enabled** tab —\nduring server rendering a disabled first tab is not skipped. `null` is a\nlegal \"nothing active\" value and is deliberately not normalised away.",
     "props": [
       {
+        "name": "autoHeight",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the component animates between panel heights. Off by default: the\npanel area snaps to whatever the new panel needs, which is what a tab set\nhas always done and what a page of equal-height panels should keep doing.\n\nTurn it on when the panels differ in height enough for the switch to look\nlike a jump. The track is sized from the active panel and transitioned, and\nit keeps following that panel afterwards — content that arrives late, an\nimage that has loaded or a disclosure the reader opened, moves the height\nwith the same transition rather than snapping.\n\nTwo things change while it is on. The panel is aligned to the start of its\ntrack rather than stretched, so it no longer fills a `Tabs.Root` that has\nbeen given a height of its own; and the component clips itself for the\nlength of a *growing* transition, so anything a panel deliberately paints\noutside its own box is cut off for those frames."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false,

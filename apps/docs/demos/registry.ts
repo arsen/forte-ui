@@ -757,6 +757,8 @@ import d_table_striped from "./table/striped";
 import d_table_striped_src from "./table/striped?raw";
 import d_table_variants from "./table/variants";
 import d_table_variants_src from "./table/variants?raw";
+import d_tabs_auto_height from "./tabs/auto-height";
+import d_tabs_auto_height_src from "./tabs/auto-height?raw";
 import d_tabs_disabled_tab from "./tabs/disabled-tab";
 import d_tabs_disabled_tab_src from "./tabs/disabled-tab?raw";
 import d_tabs_line from "./tabs/line";
@@ -1253,6 +1255,7 @@ export type DemoId =
   | "table/sticky-header"
   | "table/striped"
   | "table/variants"
+  | "tabs/auto-height"
   | "tabs/disabled-tab"
   | "tabs/line"
   | "tabs/overflow"
@@ -1691,6 +1694,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "table/sticky-header": { Component: d_table_sticky_header, source: d_table_sticky_header_src, file: "table/sticky-header.tsx" },
   "table/striped": { Component: d_table_striped, source: d_table_striped_src, file: "table/striped.tsx" },
   "table/variants": { Component: d_table_variants, source: d_table_variants_src, file: "table/variants.tsx" },
+  "tabs/auto-height": { Component: d_tabs_auto_height, source: d_tabs_auto_height_src, file: "tabs/auto-height.tsx" },
   "tabs/disabled-tab": { Component: d_tabs_disabled_tab, source: d_tabs_disabled_tab_src, file: "tabs/disabled-tab.tsx" },
   "tabs/line": { Component: d_tabs_line, source: d_tabs_line_src, file: "tabs/line.tsx" },
   "tabs/overflow": { Component: d_tabs_overflow, source: d_tabs_overflow_src, file: "tabs/overflow.tsx" },

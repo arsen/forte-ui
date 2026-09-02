@@ -68,6 +68,25 @@ A vertical strip needs a height to scroll against. The scroller is capped at the
   The fade is the only overflow cue here — there is deliberately no scrollbar, which would be painted across the bottom of a one-line strip and over the rail in the `line` variant. Under `forced-colors`, `prefers-contrast: more` and `prefers-reduced-transparency` the fade is dropped, since all three ask for the opposite of translucent text. Nothing is unreachable in those modes — the arrow keys walk the whole strip and scroll it as they go — but if the strip is the primary navigation of a page, consider keeping the tab count low enough to fit.
 </Callout>
 
+### Animated height
+
+Panels rarely come out the same height, and by default the component snaps from one to the next: everything below the tabs jumps up or down the moment a tab is activated. `autoHeight` on `Tabs.Root` turns that jump into a transition — the panel area travels to the new panel's height on the same clock the indicator slides on, so the strip's marker and the content underneath read as one movement.
+
+<DemoBlock id="tabs/auto-height" />
+
+It is off by default, and that is not timidity: a tab set whose panels are already the same height gains nothing from it, and a page-level tab set with a long panel would animate a height nobody can see the bottom of. Turn it on where the difference is small enough to follow and large enough to read as a jump — a settings pane, a card, a summary beside a list.
+
+The track keeps following the panel after the switch, so height that arrives late moves it too: an image that has loaded, a fetch that has resolved, a disclosure the reader opened. There is no prop for that and nothing to call — a `ResizeObserver` on the panel drives the same transition.
+
+Two things change while it is on, and both follow from the panel being the thing that now decides the height:
+
+- The panel is aligned to the start of its track rather than stretched to it, so a `Tabs.Root` you have given a `height` of your own no longer has its panel fill that height.
+- A *growing* panel is taller than the track carrying it until the transition lands, so the component clips itself for exactly those frames. Anything a panel paints outside its own box — a shadow under a flush card, a focus ring against the edge — is cut off while the height is travelling and whole again as soon as it arrives. A shrinking panel never overflows, so it is never clipped.
+
+<Callout kind="a11y">
+  Under reduced motion the height simply changes: `--forte-tabs-auto-height-duration` resolves to `--forte-duration-move`, which collapses to `1ms`. That is the right answer rather than a compromise — resizing the panel area moves everything below the tabs, which is the largest layout movement this component makes and exactly the kind the preference is asking to be spared.
+</Callout>
+
 ### With icons
 
 A tab lays out its children in a row with `--forte-control-gap` between them, so an icon needs no wrapper or extra class.
@@ -132,6 +151,8 @@ Scrolling the active tab into view is the one movement that is not a CSS transit
 
 Panels move too. `Tabs.Root` publishes `data-activation-direction` naming where the new tab sits relative to the old one, and the incoming panel starts offset by `--forte-travel-md` on that side and slides back to rest as it fades in.
 
+The panel area's own height is animated only if you ask for it. With `autoHeight` on the root, the component measures the panel that is in flow and writes that height into the root's `grid-template-rows`, which is what the transition runs on. The root is the only box that survives a tab switch — the outgoing panel is unmounted unless `keepMounted` is set, and a transition never runs on an element's first computed style — so a height animated on the panel itself would not play at all. A track list interpolates track by track as long as only its lengths differ, and the strip's `auto` track is identical on both sides.
+
 Only ever one panel is readable. `Tabs.Root` is a grid and every `Tabs.Panel` is placed in the same cell, so the outgoing panel — which Base UI keeps mounted until its exit transition ends — overlaps the incoming one instead of being laid out beneath it, and the component never grows to fit both and snaps back. The outgoing panel is also taken out of flow for those frames, so the cell is sized by the incoming panel alone. Its exit is a cut rather than a fade: a panel has no background of its own, so two panels fading past each other would leave both sets of text legible at once.
 
 Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--forte-duration-move` collapses to `1ms` and `--forte-travel-md` to `0px`, so the indicator jumps to the new tab and the panel fades in place without travelling. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
@@ -144,7 +165,7 @@ Every property below is declared on `Tabs.Root`, which is also why an ancestor i
 
 `variant="pill"` is itself implemented by overriding five of these on the root — `--forte-tabs-list-bg`, `--forte-tabs-list-padding`, `--forte-tabs-list-radius`, `--forte-tabs-indicator-color` and `--forte-tabs-indicator-radius`. Setting them yourself on a pill tab set still works: the library's rules live in the `forte.components` cascade layer, and an unlayered rule of yours beats a layered one whatever its specificity.
 
-The parts also expose their state as data attributes — `data-variant`, `data-overflow`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction` — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
+The parts also expose their state as data attributes — `data-variant`, `data-overflow`, `data-orientation`, `data-active`, `data-disabled`, `data-activation-direction`, and `data-auto-height` with `data-resizing` on the root while a height transition is in flight — so a Tailwind arbitrary variant such as `data-[variant=pill]:...` can target them without a wrapper element.
 
 ## API reference
 
