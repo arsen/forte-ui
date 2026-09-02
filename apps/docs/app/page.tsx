@@ -71,7 +71,20 @@ const BODY = "mb-5 max-w-2xl text-foreground-muted text-pretty";
 
 export default function HomePage() {
   return (
-    <main id="main" className="min-w-0 flex-1">
+    /* `overflow-x-clip`, for one element: the hero's glow. It is a
+     * pseudo-element inset 20% BEYOND the logo's box, and on a phone the box
+     * is the viewport, so the glow's right edge stood 50px past it and the
+     * whole page scrolled sideways to reach it. Clipping the axis here, on
+     * the full-width column, costs the desktop nothing — the glow sits well
+     * inside — and stops the phone at the viewport's edge.
+     *
+     * `clip` and not `hidden`. A `hidden` on one axis turns the other from
+     * `visible` into `auto`, which makes this element a scroll container: the
+     * page would then scroll INSIDE `main` instead of the document, the
+     * sections' `view()` timelines would measure against it, and the sticky
+     * app bar above would lose the scroll it listens to. `clip` is the one
+     * value that cuts an axis off without becoming a scroll container. */
+    <main id="main" className="min-w-0 flex-1 overflow-x-clip">
       <Hero />
 
       <section className={cn(SECTION, REVEAL)} aria-labelledby="start">
