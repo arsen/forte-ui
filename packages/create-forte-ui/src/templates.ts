@@ -165,6 +165,14 @@ export function nextGlobalsCss(a: ThemeAnswers, tailwind: boolean): string {
   return joinBlocks(rootBlock(a, "next-font"), BODY_RULE);
 }
 
+/* Shipped into the Tailwind layout above its first import: the one line a
+ * reader is most likely to reorder while tidying, and the one that breaks the
+ * page when they do. */
+const GLOBALS_FIRST_NOTE = `// globals.css first: it pins the cascade-layer order, and the library's own
+// CSS arrives with its JS import. Import the library above it and Tailwind's
+// Preflight wins over every component.
+`;
+
 export function nextLayoutTsx(name: string, a: ThemeAnswers, tailwind: boolean): string {
   const font = nextFontSetup(a);
   /* Without Tailwind, `theme.css` is imported here, above globals — safe
@@ -194,9 +202,20 @@ export function nextLayoutTsx(name: string, a: ThemeAnswers, tailwind: boolean):
   const libImport = pinned ? "" : `import { ThemeScript, ThemeToggle } from "@forte-ui/react";\n`;
   const head = pinned ? "" : `      <head>\n        <ThemeScript />\n      </head>\n`;
   const toggleLine = pinned ? "" : `        ${toggle}\n`;
+  /* On the Tailwind path `globals.css` is the layout's FIRST import, above
+   * `@forte-ui/react`. Next emits CSS in import order, and the library's JS
+   * pulls its own `@layer forte.*` blocks in with it — so with the library
+   * imported first the compiled stylesheet OPENS with `@layer forte.components
+   * { … }`, `forte` is pinned before the bridge's statement ever runs, and the
+   * order ends up `forte, theme, base, …`: Preflight beats every component
+   * and the starter's Button renders as bare text. Without Tailwind nothing
+   * else declares layers and the guide's order (theme.css, then globals) is
+   * the right one. */
+  const imports = tailwind
+    ? `${GLOBALS_FIRST_NOTE}import "./globals.css";\n${libImport}${font.importLine ? font.importLine + "\n" : ""}`
+    : `${libImport}${font.importLine ? font.importLine + "\n" : ""}${themeImport}import "./globals.css";\n`;
   return `import type { Metadata } from "next";
-${libImport}${font.importLine ? font.importLine + "\n" : ""}${themeImport}import "./globals.css";
-
+${imports}
 ${font.consts ? font.consts + "\n\n" : ""}export const metadata: Metadata = {
   title: "${name}",
   description: "Scaffolded by create-forte-ui",

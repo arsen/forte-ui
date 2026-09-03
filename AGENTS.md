@@ -821,7 +821,14 @@ drafts a section in exactly this shape.
   beating the components and buttons render as bare text. The fix is a
   document-level pin: `<style>@layer theme, base, forte, components,
   utilities;</style>` in `index.html`'s head. The Vite guide documents it and
-  the scaffolder writes it; Next.js needs neither.
+  the scaffolder writes it. Next.js keeps the statement intact but has its own
+  version of the race: it emits CSS in import order, and the library's
+  component CSS arrives with the library's JS. A layout that imports
+  `@forte-ui/react` (for `ThemeToggle`) *above* `./globals.css` ships a
+  stylesheet that opens with `@layer forte.components { … }`, which pins
+  `forte` first and hands Preflight the same win. `./globals.css` must be the
+  root layout's first import; the Next.js guide and `nextLayoutTsx` in the
+  scaffolder both say so, and the scaffolder used to get it wrong.
 - Do not put a `transition` on the registered seeds to cross-fade a palette.
   The home page did, and in the desktop app's Chromium (148) every
   `border: 1px solid var(--…)` shorthand on the page — Card, the outline

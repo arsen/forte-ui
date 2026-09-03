@@ -184,12 +184,14 @@ Replace `app/globals.css` entirely:
 
 Everything the scaffold put there goes — its `@theme inline` block and `--background` / `--foreground` pair are precisely the hardcoded colors the seed replaces.
 
-Two orderings in that file are load-bearing:
+Three orderings are load-bearing — two in that file, one in the layout that imports it:
 
 - **The bridge before `tailwindcss`.** The bridge's first line pins the cascade-layer order to `theme, base, forte, components, utilities`, and a layer order is fixed at its first appearance. That statement is what keeps Tailwind's Preflight (in `base`) from blanking the components, and what keeps `utilities` able to beat them — `p-4` on a `Button` wins because of it. Import Tailwind first and its own layer statement wins the race instead.
 - **`theme.css` after the bridge — here, not in `layout.tsx`.** `theme.css` also declares the `forte` layer. Import it in `layout.tsx` above `globals.css` and `forte` gets pinned before `base`, at which point Preflight's `button { background: transparent }` and friends beat every component by layer order alone.
 
-`app/layout.tsx` keeps importing only `./globals.css`.
+- **`./globals.css` first in `app/layout.tsx` — above `@forte-ui/react`.** The components' own CSS travels with the library's JavaScript, and Next emits stylesheets in import order. Put `import { ThemeToggle } from "@forte-ui/react"` above `import "./globals.css"` and the compiled stylesheet *opens* with `@layer forte.components { … }` — `forte` is pinned before the bridge's statement runs, the order comes out `forte, theme, base, …`, and the result is the same bare-text Button as the previous bullet, from a file that looks correct. The layout's first import is `./globals.css`; everything from the library comes after it.
+
+`app/layout.tsx` imports `./globals.css` and nothing else stylesheet-shaped — no `theme.css`, no second Tailwind entry.
 
 ### 3. Style with token utilities
 
@@ -219,7 +221,7 @@ The `"use client"` is `Card.Root`'s doing, not Tailwind's — the [compound-comp
 
 Note where `items-start gap-5` lands: on a component. That is the layer order from step 2 doing its job — utilities beat the card's own layout without `!important`.
 
-The [Light and dark](#6-light-and-dark) step applies verbatim on this path — the same `ThemeScript` and `ThemeToggle` in `app/layout.tsx`, with the toggle's placement written as `className="fixed top-4 right-4"`.
+The [Light and dark](#6-light-and-dark) step applies on this path with one adjustment — the same `ThemeScript` and `ThemeToggle` in `app/layout.tsx`, with the toggle's placement written as `className="fixed top-4 right-4"`, and the `@forte-ui/react` import placed *below* `import "./globals.css"`, for the third ordering in [step 2](#2-wire-the-three-stylesheets).
 
 The full utility mapping, targeting component state from arbitrary variants (`data-[loading]:opacity-70`), and how to opt a stock scale back in are on the [Tailwind](/customization/tailwind/) page.
 

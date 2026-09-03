@@ -117,7 +117,9 @@ function applyVite({ name, dir, tailwind, answers }: ProjectPlan): string[] {
    * component by layer order and buttons render as bare text. An inline
    * <style> ahead of every stylesheet is untouchable by that pipeline, and
    * layer order is fixed at first appearance, so nothing later can unpin it.
-   * Next.js needs none of this — its pipeline emits the statement in order. */
+   * Next.js emits the statement intact and needs no pin, but has its own race:
+   * the layout must import `globals.css` before `@forte-ui/react` — see
+   * `nextLayoutTsx`. */
   if (tailwind) {
     const pin =
       "    <!-- Pins the cascade-layer order before any stylesheet loads; the CSS\n" +
