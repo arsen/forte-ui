@@ -15,6 +15,7 @@ import "./globals.css";
 import "./tailwind.css";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { SiteHeader } from "@/components/site-header";
+import { Analytics } from "@/components/analytics";
 
 export const metadata: Metadata = {
   title: { default: "Forte UI", template: "%s · Forte UI" },
@@ -85,6 +86,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               * under the same bar. */}
             {children}
           </div>
+          {/* Page-view tracking. Inert without a measurement id in the env —
+            * see `components/analytics.tsx` and `.env.example`. */}
+          <Analytics />
         </TooltipProvider>
       </body>
     </html>

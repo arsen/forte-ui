@@ -47,6 +47,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
   components/site-header.tsx       the app bar — the shell's top row, on the library's AppBar
+  components/analytics.tsx         Firebase page views — inert without NEXT_PUBLIC_FIREBASE_* in .env.local
   components/nav.tsx               the page list itself — rail and drawer share it
   components/sidebar.tsx           the page list — the shell's left column
   components/toc.tsx               the section rail — the shell's right column
@@ -55,6 +56,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   components/component-catalog.ts  GENERATED — the library's catalog, resolved to routes
   components/component-index.tsx   the index page's cards, grouped by category
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
+  lib/env.ts                       the ONLY `process.env` reads — typed exports, nothing else touches the env
   mdx-components.tsx               the prose typography, per element
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
 ```
