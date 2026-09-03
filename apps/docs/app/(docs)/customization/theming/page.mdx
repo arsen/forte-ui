@@ -31,7 +31,7 @@ That is a complete theme. Everything colour-shaped that is not a status colour f
 
 `--forte-secondary-seed` drives everything a component renders with `tone="secondary"`. `--forte-neutral-tint` controls how much of the accent hue bleeds into the grey ramp — at `1` the neutrals carry a recognisable sliver of the brand, at `0` they are achromatic.
 
-The seeds are registered custom properties with a typed `<color>` syntax. That buys two things: a malformed value falls back to the registered default instead of silently invalidating every derived token, and the properties are animatable — which is how a theme switch can cross-fade instead of snapping.
+The seeds are registered custom properties with a typed `<color>` syntax. That buys two things: a malformed value falls back to the registered default instead of silently invalidating every derived token, and the properties are animatable — which is how a theme switch can cross-fade instead of snapping. If you do transition a seed, judge the result from a screen recording rather than a paused inspector: in one Chromium build (148), a `border: 1px solid var(--…)` shorthand painted `currentColor` for the length of the fade while the same token through a longhand `border-color` held, and every frame of a seed transition is a full-page style recalc. This site's own home page cross-fades palettes with a view transition around the change instead, which has neither cost.
 
 <Callout kind="note">
   The contrast guarantees hold for seeds inside the supported envelope: OKLCH lightness 0.45–0.90, chroma 0.02–0.30, inside the sRGB gamut. Outside it the ramp still renders, but the derived pairs are no longer certified — the Theme Studio warns when a seed leaves the envelope.

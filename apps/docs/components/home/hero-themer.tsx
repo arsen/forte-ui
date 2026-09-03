@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { PRESETS, useThemeConfig } from "@/components/theme-studio/theme-config";
 
 /* The five the hero offers, resolved from the studio's own list rather than
@@ -36,27 +37,44 @@ const SWATCH = [
   "forte-focus-ring",
 ].join(" ");
 
-/** How long the cross-fade lasts, read off the token rather than restated.
+/** Whether a full-page cross-fade is welcome right now, read off the
+ *  library's own motion token rather than a media query of this file's own.
  *
- *  `--forte-duration-slow` is 400ms normally and 150ms under both
- *  `prefers-reduced-motion` and `data-forte-motion="reduce"`, so reading it is
- *  the only way the timer below stays in step with a reader who asked for
- *  less motion — or with a later retune of the token. */
-function fadeMs(root: HTMLElement) {
-  const raw = getComputedStyle(root).getPropertyValue("--forte-duration-slow").trim();
-  const n = Number.parseFloat(raw);
-  if (!Number.isFinite(n)) return 400;
-  return raw.endsWith("ms") ? n : n * 1000;
+ *  `--forte-motion-ok` is `1` normally and `0` under BOTH the OS preference
+ *  and a `data-forte-motion="reduce"` set in the studio, so asking it is the
+ *  only way the fade below stays in step with a reader who asked for less
+ *  motion either way — and a whole-page colour wash is exactly the kind of
+ *  large-area change that guidance asks us to drop, so under `0` the palette
+ *  simply snaps. */
+function motionOk(root: HTMLElement) {
+  return getComputedStyle(root).getPropertyValue("--forte-motion-ok").trim() !== "0";
 }
 
 /**
  * Re-themes the entire page from a row of swatches.
  *
- * The transition is the point. `--forte-accent-seed` is registered with
- * `@property` as a `<color>`, which makes it animatable — so the browser
- * interpolates the seed and every one of the twelve derived ramp steps
- * recomputes from it each frame. The whole site cross-fades between palettes
- * with one transition on one variable, and no JavaScript in the animation path.
+ * The cross-fade is a view transition: the browser snapshots the page, the
+ * seeds change in ONE style recalc, and the old and new snapshots fade on the
+ * compositor for `--forte-duration-slow` (the pseudo-element rule in
+ * `globals.css` puts it on the library's clock). Nothing in the DOM is in an
+ * intermediate state at any point of the fade, and nothing is transitioned.
+ *
+ * It used to be a `transition` on the two registered seeds instead — one
+ * animatable property, re-deriving every ramp step per frame, no JavaScript
+ * in the animation path — and it was the better story right up until a
+ * screen recording showed what the frames in between actually held. In the
+ * desktop app's Chromium (148) every `border: 1px solid var(--…)` shorthand
+ * on the page painted its edge in `currentColor` for the length of the fade:
+ * near-white on every entry card, the label colour on the outline Button.
+ * Longhand `border-color: var(--…)` declarations feeding on the SAME token —
+ * the swatches here, the divider under the hero — held, so the ramp was
+ * fine and the shorthand's colour was what dropped. It does not reproduce
+ * on a forced style read mid-fade, nor in headless Chrome 152, which is why
+ * it survived for as long as it did. The per-frame cost was the other half:
+ * every element re-resolves every token on every frame, which measured at
+ * ~100ms of style recalc each, so the 400ms "fade" was three or four
+ * frames. The snapshot fade has neither problem — the DOM never holds a
+ * mid-fade value, and the fade is two textures.
  *
  * The write goes through `setThemeConfig` — the studio's one write path —
  * rather than straight onto `<html>`, which is what it used to do. Three
@@ -69,7 +87,6 @@ function fadeMs(root: HTMLElement) {
  */
 export function HeroThemer() {
   const [cfg, setThemeConfig] = useThemeConfig();
-  const fade = React.useRef<number | undefined>(undefined);
 
   /* Matched on both colours, the way the studio's preset grid is: change
    * either one there and no swatch here is current any more — a state this row
@@ -80,34 +97,31 @@ export function HeroThemer() {
     (p) => p.seed === cfg.seed && p.secondary === cfg.secondary,
   );
 
-  /* The class has to come off again, and this is the only thing that puts it
-   * on. While it is there `<html>` carries a `transition` on both seeds, and
-   * every palette change AND every light/dark switch for the rest of the
-   * session pays for a 400ms fade nobody asked for. Leaving it on used to cost
-   * far more than that — see the rule's own comment in `globals.css`.
-   *
-   * The unmount arm covers navigating away mid-fade, which would otherwise
-   * strand the class on the document with nothing left mounted to remove it. */
-  React.useEffect(
-    () => () => {
-      window.clearTimeout(fade.current);
-      document.documentElement.classList.remove("themeTransition");
-    },
-    [],
-  );
-
   function apply(preset: (typeof HERO_PRESETS)[number]) {
+    const next = { ...cfg, seed: preset.seed, secondary: preset.secondary };
     const root = document.documentElement;
-    // Read before the class goes on, so the duration cannot come from a style
-    // the class itself introduced.
-    const ms = fadeMs(root);
-    root.classList.add("themeTransition");
-    // Clicking a second palette mid-fade retargets the transition; the timer
-    // has to be retargeted with it or the first click's would strip the class
-    // out from under the second's fade.
-    window.clearTimeout(fade.current);
-    fade.current = window.setTimeout(() => root.classList.remove("themeTransition"), ms);
-    setThemeConfig({ ...cfg, seed: preset.seed, secondary: preset.secondary });
+    /* Feature-detected, not assumed: a browser without view transitions
+     * gets the same palette as a cut, which is what the theme drawer does
+     * on every page anyway. */
+    if (typeof document.startViewTransition !== "function" || !motionOk(root)) {
+      setThemeConfig(next);
+      return;
+    }
+    /* `flushSync`, so the re-render the store change queues — the ring
+     * moving to the pressed swatch — is committed inside the callback, where
+     * the "new" snapshot is taken. Left to React's own scheduling it lands a
+     * frame later, after that snapshot, and the ring pops in once the fade
+     * has finished instead of fading in with the palette. */
+    const transition = document.startViewTransition(() => {
+      flushSync(() => setThemeConfig(next));
+    });
+    /* A transition the browser skips — the tab is hidden, or a second click
+     * lands mid-fade and supersedes the first — rejects `ready`, and nothing
+     * here waits on it. Chromium 148 reports that rejection as an uncaught
+     * error in the console; the palette has still been applied, because the
+     * update callback runs either way, so the only thing to do is to say so
+     * to the promise. */
+    transition.ready.catch(() => {});
   }
 
   return (

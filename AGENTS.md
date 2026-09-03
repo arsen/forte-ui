@@ -617,8 +617,9 @@ targets something no class can reach:
 - **Shiki's output** — `pre.shiki`, `.shiki span`, `.line.highlighted`. It
   arrives as an HTML string from the highlighter or the rehype plugin; there is
   no element to hang a class on.
-- **The palette cross-fade** — it transitions custom properties by name across
-  `.themeTransition *`.
+- **The palette cross-fade** — the clock for the `::view-transition-*(root)`
+  pseudo-elements the home page's swatches fade through; a pseudo-element has
+  no element to carry a class.
 
 Prose typography is NOT in there. It lives in
 [`mdx-components.tsx`](apps/docs/mdx-components.tsx), one class list per
@@ -808,3 +809,13 @@ drafts a section in exactly this shape.
   document-level pin: `<style>@layer theme, base, forte, components,
   utilities;</style>` in `index.html`'s head. The Vite guide documents it and
   the scaffolder writes it; Next.js needs neither.
+- Do not put a `transition` on the registered seeds to cross-fade a palette.
+  The home page did, and in the desktop app's Chromium (148) every
+  `border: 1px solid var(--…)` shorthand on the page — Card, the outline
+  Button — painted its edge in `currentColor` for the length of the fade,
+  while a longhand `border-color: var(--…)` on the same token held. It does
+  not reproduce on a forced style read mid-fade, nor in headless Chrome 152;
+  only a screen recording of a live fade shows it. It was also a full-page
+  style recalc per frame, ~100ms each. The palette cross-fade is a view
+  transition now (`hero-themer.tsx`): one recalc, then a compositor fade
+  between two snapshots.

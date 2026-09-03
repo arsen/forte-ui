@@ -195,51 +195,43 @@
   /* -------------------------------------------------------------------------
    * Palette cross-fade.
    *
-   * `--forte-accent-seed` is registered via @property as a <color>, which is what
-   * makes it animatable at all — an unregistered custom property would snap.
-   * Because every ramp step derives from the seed with relative colour syntax,
-   * interpolating this ONE variable re-derives all twelve steps per frame and
-   * the whole page cross-fades. Applied via a class so it only costs anything
-   * once the user actually switches palette — and taken off again the moment
-   * the fade ends, by `hero-themer.tsx`, which is the only thing that adds it.
+   * The home page's swatches change the palette inside a view transition
+   * (`hero-themer.tsx` is the only caller): the browser snapshots the page,
+   * the seeds change in one style recalc, and the two snapshots cross-fade on
+   * the compositor. The UA's own keyframes do the fading — old out, new in,
+   * blended `plus-lighter` so the middle never dips — and these two
+   * declarations only put them on the library's clock. Reduced motion is
+   * decided in the caller, off `--forte-motion-ok`, by not starting a
+   * transition at all; there is nothing to gate here.
    *
-   * Not a utility, and not expressible as one: it transitions custom properties
-   * by name.
+   * Not a utility: a pseudo-element has no element to carry a class.
    *
-   * The two seeds, on the root, and NOTHING else. This rule used to read
-   * `.themeTransition, .themeTransition *` and to transition `background-color`,
-   * `border-color` and `color` alongside them. Each half of that was its own
-   * bug:
+   * It used to be a `transition` on the two registered seeds, on `:root` —
+   * one animatable property, re-deriving every ramp step per frame with
+   * relative colour syntax, no JavaScript in the animation path. Two things
+   * were wrong with it, and only one was visible from here:
    *
-   * - The three colour properties are redundant. A `var()` is substituted where
-   *   the property is DECLARED — the ramp on `:root` — so an interpolating seed
-   *   already re-derives every token and every element repaints from it with no
-   *   transition of its own. Adding one only makes each element chase a target
-   *   that moves again next frame, so a card's border lagged whatever it sits
-   *   against by up to the full duration.
-   * - `*` put roughly eight transitions on all ~330 elements of the home page
-   *   (four border sides, background, colour, two seeds). One style recalc went
-   *   from 5ms to 15ms — past the frame budget on its own — and the entry
-   *   cards' 1px borders flickered as the dropped frames landed.
-   * - Worst, the `transition` SHORTHAND on `*` reset every component's own.
-   *   This layer is declared after every `forte.*` layer and layer order
-   *   outranks specificity completely, so Button's press spring, the Switch
-   *   thumb and the Tabs indicator were all replaced by these five properties
-   *   for as long as the class stayed on — which, before the class was ever
-   *   removed, meant the rest of the session.
+   * - In the desktop app's Chromium (148) every `border: 1px solid var(--…)`
+   *   SHORTHAND on the page painted its edge in `currentColor` for the length
+   *   of the fade — near-white on the entry cards, the label colour on the
+   *   outline Button — while longhand `border-color: var(--…)` declarations
+   *   on the same tokens (the swatches, the divider under the hero) held. The
+   *   ramp was fine; the shorthand's colour was what dropped. A forced style
+   *   read mid-fade resolves it correctly, and headless Chrome 152 paints it
+   *   correctly, so a screen recording of a live fade is the only place it
+   *   shows. `styles.ts` records the earlier sighting of the same fallback,
+   *   when it was lavender because the card's anchor still had the UA link
+   *   colour.
+   * - The whole page re-resolved every token on every frame of the fade,
+   *   measured at ~100ms of style recalc each — so a 400ms fade was three or
+   *   four frames, whatever the border did.
    *
-   * Descendants need no rule of their own: a registered custom property is
-   * inherited, and what a child inherits is the ANIMATED value — which is also
-   * what lets a `.forte-theme` scope re-derive its own ramp per frame.
-   *
-   * Gated on reduced motion: a full-page colour wash is exactly the kind of
-   * large-area change that guidance asks us to drop.
+   * A snapshot fade has neither problem: the DOM never holds a mid-fade
+   * value, and the fade is two textures.
    * ---------------------------------------------------------------------- */
-  @media (prefers-reduced-motion: no-preference) {
-    :root.themeTransition {
-      transition:
-        --forte-accent-seed var(--forte-duration-slow) var(--forte-ease-standard),
-        --forte-secondary-seed var(--forte-duration-slow) var(--forte-ease-standard);
-    }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--forte-duration-slow);
+    animation-timing-function: var(--forte-ease-standard);
   }
 }
