@@ -13,6 +13,42 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0-beta.0] - 2026-09-02
+
+### AppBar
+
+- Added a `scrollThreshold` prop to `AppBar.Root`: how far, in pixels, the scroll container has to move before the bar counts as scrolled. `0` (the previous, and default, behaviour) is the first pixel past the bar's resting position; a larger value holds `data-scrolled` — and everything keyed on it, including `elevateOnScroll` and a consumer's own `[data-scrolled]` rule — off until the page has moved that far under it. `hideOnScroll` is unaffected, since `data-hidden` follows scroll direction rather than distance.
+- Slowed the bar's surface transition (fill, edge, shadow) from `--forte-duration-fast` to `--forte-duration-normal` via the `--forte-app-bar-duration` knob's default.
+
+### Drawer
+
+- Added a `scrollArea` prop to `Drawer.Content` (default `true`): the body now scrolls inside a composed `ScrollArea` rather than a plain `overflow: auto` box, so the scroll track and the edge-fade sit flush against the drawer's own edge instead of inset over the text, and the scrollport is a tab stop only while there is something to scroll. Set it to `false` for a body that brings its own scrolling — a virtualised list, a map, an embedded editor. Ships with the `--forte-scroll-area-fade-size` knob, set by default to the drawer's own padding.
+- Fixed the popup overflowing a narrow phone screen: its width now resolves against an explicit grid track sized to the available space instead of an implicit `auto` track sized to the popup's own width, which had let `max-inline-size: 100%` resolve circularly and leave the far edge of a `md` drawer hanging off a 375px screen.
+- Fixed a nested drawer's dimming overlay drawing a second, phantom scrollbar (most visible on Android): the overlay used to reach past the popup's edge with a negative `inset`, which counted as scrollable overflow on the popup's own fallback scroll container; it now reaches the same distance with a spread `box-shadow`, which paints outside the box without adding to anything's scrollable area.
+
+### Select
+
+- **Breaking:** `Select.Popup` now defaults `align` to Base UI's own default, `"center"`, instead of `"start"`. Every `Select.Popup` that did not set `align` explicitly now opens centred on its trigger rather than aligned to its start edge; pass `align="start"` to restore the previous position.
+
+### Tabs
+
+- Added an `autoHeight` prop to `Tabs.Root` (default `false`): when on, the panel area is measured and the root's height transitions between panels instead of snapping to the new panel's size, and keeps following the active panel afterwards as its content changes — an image loading, a disclosure opening. Ships with a new `--forte-tabs-auto-height-duration` knob (defaults to `--forte-duration-move`, the same clock the Tabs indicator runs on) controlling the transition length. While it is on, the panel is start-aligned rather than stretched to the track.
+
+### Design tokens & motion
+
+- Suppressed the platform's translucent tap-highlight box on every part the library renders, via one rule on `[data-forte]` in `patterns.css` rather than a scattered per-component declaration. It ignored border-radius, covered the whole element rather than the pressed part, and lingered after release; every interactive part already draws its own press state, so this is safe everywhere the library controls.
+- Added an opt-in `forte-reset` class (switched on by importing `@forte-ui/react/styles/reset.css`) that also suppresses the tap highlight for the rest of an app, for apps that draw their own press states outside the library's parts.
+- **Breaking:** Moved the reset stylesheet's `box-sizing` rule into its own `forte.reset` sublayer instead of the bare `forte` layer, fixing it silently outranking every other `forte.*` sublayer, including `forte.components`. An app whose own styles were being outranked by the old bare-`forte` placement may now see those styles win where they previously lost, since `forte.reset` sits below the other `forte.*` sublayers.
+- Fixed a `.forte-visually-hidden` span adding phantom scrollable overflow to a distant scrolling ancestor — seen with a `ColorPicker` nested low inside a `Drawer`, which grew a second, invisible-until-dragged scrollbar on the drawer's popup — by pinning the span to its containing block's start corner instead of leaving it to lay out against the nearest positioned ancestor.
+
+### create-forte-ui
+
+- Scaffolded Vite and Next.js apps now import `@forte-ui/react/styles/reset.css` and add the `forte-reset` class to `<html>`, switching on the library's blanket reset — box-sizing plus the tap-highlight suppression — as the new project's baseline.
+
+### General
+
+- `@forte-ui/react/docs-data/components.json` — the generated component catalogue as data — is now an exported subpath.
+
 ## [1.0.0-alpha.9] - 2026-09-01
 
 ### NumberField
@@ -271,7 +307,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.9...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...HEAD
+[1.0.0-beta.0]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.9...v1.0.0-beta.0
 [1.0.0-alpha.9]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...v1.0.0-alpha.9
 [1.0.0-alpha.8]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8
 [1.0.0-alpha.7]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.7
