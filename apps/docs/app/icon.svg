@@ -6,8 +6,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-14 -8 64 64" width="64" height="64">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="36" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0e76be"/>
-      <stop offset="1" stop-color="#8f5fc0"/>
+      <stop offset="0" stop-color="#0f7a52"/>
+      <stop offset="1" stop-color="#a16207"/>
     </linearGradient>
   </defs>
   <path fill="url(#g)" d="M6 0a6 6 0 0 1 6 6v36a6 6 0 0 1 -6 6a6 6 0 0 1 -6 -6v-36a6 6 0 0 1 6 -6zM6 0h24a6 6 0 0 1 6 6a6 6 0 0 1 -6 6h-24a6 6 0 0 1 -6 -6a6 6 0 0 1 6 -6zM6 16h15a6 6 0 0 1 6 6a6 6 0 0 1 -6 6h-15a6 6 0 0 1 -6 -6a6 6 0 0 1 6 -6z"/>
