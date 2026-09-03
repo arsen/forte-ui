@@ -189,7 +189,7 @@ function snapCollapsible(
  * The delta is taken from the panels on the shrinking side, NEAREST FIRST,
  * and cascades outward as each one bottoms out at its minimum. Cascading is
  * what stops a handle "sticking" the moment its immediate neighbour is at its
- * minimum while there is obviously room two panels over — the behaviour every
+ * minimum while there is obviously room two panels over — the behavior every
  * real splitter has, and the one people notice is missing.
  *
  * Only the panel touching the handle may cross below its minimum, and only
@@ -243,7 +243,7 @@ function resizeAt(
 
   /* The growing panel may be a collapsed one on its way back open, in which
    * case it lands in the same dead band and snaps by the same rule — but here
-   * the snap costs room rather than releasing it, so it can only be honoured
+   * the snap costs room rather than releasing it, so it can only be honored
    * out of what is still in hand. When it cannot be, the panel stays shut and
    * the reader drags a little further; the alternative is stealing percent
    * from a panel already at its minimum. */
@@ -333,7 +333,7 @@ function enforce(sizes: number[], constraints: readonly PanelConstraints[]): num
   }
 
   /* Over-subscribed, so scale the whole thing back to 100 and let every panel
-   * share the shortfall. `flex-grow` would normalise the ratios anyway — this
+   * share the shortfall. `flex-grow` would normalize the ratios anyway — this
    * changes no pixels — but the numbers are also what `aria-valuenow` and
    * `onLayout` publish, and a separator reporting 58 for a pane occupying 46%
    * of the group is simply wrong. */
@@ -1129,7 +1129,7 @@ export interface ResizablePanelProps
    */
   defaultSize?: ResizableLength;
   /**
-   * Smallest the panel may be dragged to. A `px` string is honoured at every
+   * Smallest the panel may be dragged to. A `px` string is honored at every
    * container width — `minSize="240px"` is the constraint a sidebar actually
    * has, and the one a percentage cannot express.
    * @default 0
@@ -1477,7 +1477,7 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
      * notice that the interaction was a pointer. The programmatic `focus()`
      * that follows is then treated as focus of unknown provenance, and on the
      * page's FIRST interaction, with no modality recorded yet, Chrome resolves
-     * that in favour of showing the ring. Hence a ring that appears on the
+     * that in favor of showing the ring. Hence a ring that appears on the
      * first drag of a fresh page and never again.
      *
      * So the modality is tracked here instead: pointer focus is silent,

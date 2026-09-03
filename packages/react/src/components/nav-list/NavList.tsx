@@ -21,7 +21,7 @@ type BaseGroupPanelProps = React.ComponentPropsWithoutRef<typeof BaseCollapsible
  * the section cannot see at render time, so it REGISTERS: the label reports
  * its id up through context, and the section writes `aria-labelledby` only
  * once a label has actually said it exists. Pointing at a hardcoded id
- * unconditionally would leave a dangling reference on every unlabelled
+ * unconditionally would leave a dangling reference on every unlabeled
  * section, which audit tooling rightly flags.
  * ---------------------------------------------------------------------- */
 
@@ -84,7 +84,7 @@ export interface NavListRootProps
   /**
    * How the current item is marked. `"fill"` is a tinted row. `"edge"` adds
    * an accent border along the row's inline-start edge on top of the fill —
-   * it follows the row's corner radius, and is a second, non-colour-only cue.
+   * it follows the row's corner radius, and is a second, non-color-only cue.
    * @default "fill"
    */
   marker?: NavListMarker;
@@ -337,7 +337,7 @@ export interface NavListLinkProps
   /**
    * Whether this row is where the reader currently is. Publishes
    * `data-active` for styling and `aria-current="page"`, so the cue is never
-   * colour alone. For a same-page target — a table of contents — pass your
+   * color alone. For a same-page target — a table of contents — pass your
    * own `aria-current="location"` alongside it; an explicit value wins over
    * the derived one.
    * @default false

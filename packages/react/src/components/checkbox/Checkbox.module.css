@@ -3,14 +3,14 @@
  *
  * Two axes, same shape as Button:
  *   data-size   how big the painted box is (sm/md/lg)
- *   data-tone   which semantic colour set the checked fill draws from
+ *   data-tone   which semantic color set the checked fill draws from
  *
  * The tick is drawn on, not faded in: the SVG paths carry `pathLength="1"`,
  * so `stroke-dashoffset` runs 1 → 0 over a DURATION token. That distinction
  * matters. A mark animated with `--forte-travel-*` or `--forte-scale-*` would
  * collapse to nothing under reduced motion, and the tick is information, not
  * decoration — it is the only thing separating "on" from "off" for anyone who
- * cannot rely on the fill colour. Durations are only shortened, never removed,
+ * cannot rely on the fill color. Durations are only shortened, never removed,
  * so the mark still draws (in ~120ms) when motion is reduced.
  *
  * There is deliberately no `prefers-reduced-motion` block here; the tokens
@@ -42,26 +42,26 @@
      * box instead of thinning out at larger sizes. `size` retunes it: `2.25`
      * for `sm`, `1.75` for `lg`. */
     --forte-checkbox-mark-width: 2;
-    /** Colour transitions on the box and the fade of the indicator. */
+    /** Color transitions on the box and the fade of the indicator. */
     --forte-checkbox-duration: var(--forte-duration-fast);
     /* The draw-in. A duration, never a travel/scale token. */
     /** How long the mark takes to draw in and out. */
     --forte-checkbox-draw-duration: var(--forte-duration-normal);
 
-    /* Colour slots, filled in per tone below. */
+    /* Color slots, filled in per tone below. */
     /** Fill while unchecked. */
     --forte-checkbox-bg: var(--forte-color-background);
     /** Fill on hover while unchecked. */
     --forte-checkbox-bg-hover: var(--forte-color-panel-hover);
-    /** Border colour while unchecked. */
+    /** Border color while unchecked. */
     --forte-checkbox-border-color: var(--forte-color-border);
-    /** Border colour on hover while unchecked. */
+    /** Border color on hover while unchecked. */
     --forte-checkbox-border-color-hover: var(--forte-color-border-strong);
     /** Fill while checked or indeterminate. */
     --forte-checkbox-fill: var(--forte-color-primary);
     /** Fill on hover while checked or indeterminate. */
     --forte-checkbox-fill-hover: var(--forte-color-primary-hover);
-    /** Colour of the tick and dash — it becomes the root's `color`, and the
+    /** Color of the tick and dash — it becomes the root's `color`, and the
      * marks stroke with `currentColor`. */
     --forte-checkbox-mark-color: var(--forte-color-on-primary);
 
@@ -79,7 +79,7 @@
       var(--forte-checkbox-border-color);
     border-radius: var(--forte-checkbox-radius);
     background-color: var(--forte-checkbox-bg);
-    /* The marks stroke with currentColor, so this is the tick colour. */
+    /* The marks stroke with currentColor, so this is the tick color. */
     color: var(--forte-checkbox-mark-color);
 
     -webkit-user-select: none;
@@ -164,7 +164,7 @@
 
   /* Validity -------------------------------------------------------------- */
   /* Inside a Field.Root, an invalid field outranks the tone: a validation
-   * failure must not be able to look like a brand-coloured success. Equal
+   * failure must not be able to look like a brand-colored success. Equal
    * specificity to the tone rules, so this block has to stay after them. */
   .root[data-invalid] {
     --forte-checkbox-border-color: var(--forte-color-danger-border);
@@ -268,17 +268,17 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 /* Top-level `forte.a11y`, which is ordered after `forte.components`, so
  * everything here beats the rules above by layer alone — no `!important`, no
  * padded selectors. Specificity still decides between rules *inside* this
  * block, including against the global forced-colors rules in patterns.css.
  *
- * The UA derives system colours from native element semantics, and the root is
+ * The UA derives system colors from native element semantics, and the root is
  * a <span> with role="checkbox" — it gets nothing automatically, so the
  * keywords are assigned here. The generic `[data-disabled]` remedy in
  * patterns.css (GrayText + opacity: 1) applies through `:where()`, i.e. at zero
- * specificity, so the `.root` rules below would outrank its colours; the ones
+ * specificity, so the `.root` rules below would outrank its colors; the ones
  * this component actually needs are restated, and `opacity: 1` — which nothing
  * here competes with — is left to the global rule. */
 @layer forte.a11y {
@@ -311,9 +311,9 @@
       border-color: GrayText;
     }
 
-    /* Indeterminate is not one of the states patterns.css recognises
+    /* Indeterminate is not one of the states patterns.css recognizes
      * (aria-checked is "mixed", and there is no [data-indeterminate] there), so
-     * the mark colour for the mixed state has to be set here. */
+     * the mark color for the mixed state has to be set here. */
     .indicator {
       color: HighlightText;
     }

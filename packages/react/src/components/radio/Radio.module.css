@@ -4,9 +4,9 @@
  * Same two axes as Checkbox, and deliberately the same painted geometry, so a
  * form mixing the two lines up:
  *   data-size   how big the painted circle is (sm/md/lg)
- *   data-tone   which semantic colour set the selected fill draws from
+ *   data-tone   which semantic color set the selected fill draws from
  *
- * The dot is the state. Colour alone cannot carry "selected" here — a group of
+ * The dot is the state. Color alone cannot carry "selected" here — a group of
  * radios differs from a group of checkboxes only in that exactly one is filled
  * — so the dot scales 0 -> 1 over a DURATION token rather than riding a
  * `--forte-scale-*` token. A scale token collapses to 1 under reduced motion,
@@ -55,7 +55,7 @@
     --forte-radio-dot-size: calc(
       var(--forte-radio-size) * var(--forte-radio-dot-ratio)
     );
-    /** Colour transitions on the circle, the dot's fade, and the un-select. */
+    /** Color transitions on the circle, the dot's fade, and the un-select. */
     --forte-radio-duration: var(--forte-duration-fast);
     /* The dot's pop. A spring, paired with its matching duration token (a
      * shorter one would truncate the bounce and look broken). */
@@ -65,20 +65,20 @@
      * spring truncated by a shorter duration looks broken. */
     --forte-radio-pop-ease: var(--forte-ease-spring-snappy);
 
-    /* Colour slots, filled in per tone below. */
+    /* Color slots, filled in per tone below. */
     /** Fill while unselected. */
     --forte-radio-bg: var(--forte-color-background);
     /** Fill on hover while unselected. */
     --forte-radio-bg-hover: var(--forte-color-panel-hover);
-    /** Border colour while unselected. */
+    /** Border color while unselected. */
     --forte-radio-border-color: var(--forte-color-border);
-    /** Border colour on hover while unselected. */
+    /** Border color on hover while unselected. */
     --forte-radio-border-color-hover: var(--forte-color-border-strong);
     /** Fill while selected. */
     --forte-radio-fill: var(--forte-color-primary);
     /** Fill on hover while selected. */
     --forte-radio-fill-hover: var(--forte-color-primary-hover);
-    /** Colour of the dot — it becomes the root's `color`, and the dot paints
+    /** Color of the dot — it becomes the root's `color`, and the dot paints
      * with `currentColor`. */
     --forte-radio-dot-color: var(--forte-color-on-primary);
 
@@ -95,7 +95,7 @@
     border: var(--forte-radio-border-width) solid var(--forte-radio-border-color);
     border-radius: var(--forte-radio-radius);
     background-color: var(--forte-radio-bg);
-    /* The dot paints with currentColor, so this is the dot colour. */
+    /* The dot paints with currentColor, so this is the dot color. */
     color: var(--forte-radio-dot-color);
 
     -webkit-user-select: none;
@@ -144,7 +144,7 @@
   .root[data-size="sm"] {
     --forte-radio-size: 0.875rem;
     /* Proportionally larger at 14px: a dot under ~5px stops reading as a dot
-     * and starts reading as a rendering artefact. */
+     * and starts reading as a rendering artifact. */
     --forte-radio-dot-ratio: 0.4;
   }
 
@@ -179,7 +179,7 @@
 
   /* Validity -------------------------------------------------------------- */
   /* Inside a Field.Root, an invalid field outranks the tone: a validation
-   * failure must not be able to look like a brand-coloured success. Equal
+   * failure must not be able to look like a brand-colored success. Equal
    * specificity to the tone rules, so this block has to stay after them. */
   .root[data-invalid] {
     --forte-radio-border-color: var(--forte-color-danger-border);
@@ -255,17 +255,17 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 /* Top-level `forte.a11y`, which is ordered after `forte.components`, so
  * everything here beats the rules above by layer alone — no `!important`, no
  * padded selectors. Specificity still decides between rules *inside* this
  * block, including against the global forced-colors rules in patterns.css.
  *
- * The UA derives system colours from native element semantics, and the root is
+ * The UA derives system colors from native element semantics, and the root is
  * a <span> with role="radio" — it gets nothing automatically, so the keywords
  * are assigned here. The generic `[data-disabled]` remedy in patterns.css
  * (GrayText + opacity: 1) applies through `:where()`, i.e. at zero specificity,
- * so the `.root` rules below would outrank its colours; the ones this component
+ * so the `.root` rules below would outrank its colors; the ones this component
  * actually needs are restated, and `opacity: 1` — which nothing here competes
  * with — is left to the global rule. */
 @layer forte.a11y {

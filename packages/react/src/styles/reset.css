@@ -20,7 +20,7 @@
    * parts the library renders and can vouch for, since each has a press state
    * of its own. This is the same fix for everything ELSE in the app, and it is
    * opt-in rather than automatic because that vouching is what runs out: a
-   * plain <button> with no `:active` rule has the grey box as its only touch
+   * plain <button> with no `:active` rule has the gray box as its only touch
    * feedback, and taking it away leaves the control feeling dead with nothing
    * pointing at us as the cause. Opt in once you have your own press states.
    * --------------------------------------------------------------------- */

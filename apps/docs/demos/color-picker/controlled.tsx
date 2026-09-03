@@ -43,7 +43,7 @@ export default function ColorPickerControlled() {
         </Button>
       </div>
 
-      {/* The colour goes straight into a custom property, which is how a live
+      {/* The color goes straight into a custom property, which is how a live
         * preview stays one declaration rather than a re-render of a theme. */}
       <div
         className="rounded-surface border border-border p-4 text-2"

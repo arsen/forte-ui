@@ -194,7 +194,7 @@ export interface ToolbarButtonProps
    */
   variant?: ButtonVariant;
   /**
-   * Which semantic colour set the button draws from. `neutral` by default, for
+   * Which semantic color set the button draws from. `neutral` by default, for
    * the same reason `variant` is `ghost`.
    *
    * Ignored when `render` is set.
@@ -265,7 +265,7 @@ export interface ToolbarButtonProps
  * A button that is part of the toolbar's roving focus. Renders a `<button>`.
  *
  * Left alone it is a [`Button`](/components/button) — every variant, tone and
- * size, and the same `iconOnly` and `loading` behaviour — that happens to be
+ * size, and the same `iconOnly` and `loading` behavior — that happens to be
  * reachable with the arrow keys. Given `render`, it is whatever you passed,
  * still reachable with the arrow keys and nothing else changed.
  */

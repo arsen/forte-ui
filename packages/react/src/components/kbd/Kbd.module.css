@@ -6,9 +6,9 @@
  * 1. The chrome is DERIVED from `currentColor`, not looked up. A cap has no
  *    surface of its own to be measured against: it sits on the page, on
  *    Tooltip's inverted gray-12 popup, on a Button's solid fill, on a menu
- *    row that just went Highlight-coloured — and no token pair covers all of
+ *    row that just went Highlight-colored — and no token pair covers all of
  *    those, so a looked-up gray would be a guess at SC 1.4.3 on every surface
- *    but one. Mixing a translucent fill and edge out of the text's own colour
+ *    but one. Mixing a translucent fill and edge out of the text's own color
  *    keeps the glyphs at whatever contrast the surrounding text already has,
  *    and survives a re-skin unchanged.
  *
@@ -105,7 +105,7 @@
  * In `forte.a11y`, ordered after `forte.components`, so it wins by layer alone.
  *
  * The cap's translucent fill is replaced with Canvas either way; what this
- * block pins is the TEXT. The cap inherits its colour, and on a highlighted
+ * block pins is the TEXT. The cap inherits its color, and on a highlighted
  * menu row that inheritance delivers HighlightText — painted onto the cap's
  * forced Canvas fill, where nothing guarantees it is visible. Naming the pair
  * makes the cap a miniature surface: Canvas under CanvasText, readable

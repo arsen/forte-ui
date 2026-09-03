@@ -13,7 +13,7 @@ const REPOS: Repo[] = [
   {
     id: "ramp",
     name: "ramp.mjs",
-    summary: "The colour curve. Every ramp in the library is generated here.",
+    summary: "The color curve. Every ramp in the library is generated here.",
     topics: ["oklch", "generated"],
   },
   {

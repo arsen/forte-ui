@@ -447,7 +447,7 @@ export interface DrawerContentProps
  * finds from a gesture started in the body, so "swipe only once the scroll
  * has bottomed out" holds in both.
  *
- * On a `top`/`bottom` drawer it caps and centres its own width through
+ * On a `top`/`bottom` drawer it caps and centers its own width through
  * `--forte-drawer-content-max-inline-size`, which is what keeps a full-width
  * bottom sheet from running its text to both edges of a wide screen.
  */
@@ -479,7 +479,7 @@ export const DrawerContent = React.forwardRef<
          * stop only while it can actually scroll, which is SC 2.1.1 for a body
          * whose content is all static text. And it splits the scroller from
          * the measure box, which is what lets the track ride the drawer's edge
-         * while the text inside stays capped and centred — one box cannot be
+         * while the text inside stays capped and centered — one box cannot be
          * both.
          *
          * No `ScrollArea.Scrollbar`, deliberately, matching Tabs and
@@ -509,7 +509,7 @@ export const DrawerContent = React.forwardRef<
           <ScrollArea.Viewport>
             {/* The measure box: the popup's padding, re-applied inside the
               * scrollport so the track stays outside it, plus the width cap
-              * and centring that used to live on `.content`. */}
+              * and centering that used to live on `.content`. */}
             <ScrollArea.Content className={styles.measure}>
               {children}
             </ScrollArea.Content>
@@ -770,7 +770,7 @@ export function DrawerVirtualKeyboardProvider(
  * reach for `Dialog`.
  *
  * @summary A panel that slides in from any screen edge, with drag-to-dismiss
- *   and snap points; for a centred modal use Dialog.
+ *   and snap points; for a centered modal use Dialog.
  * @category Overlays
  */
 export const Drawer = {

@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 export const metadata: Metadata = {
   title: "Theme Studio",
   description:
-    "Pick a brand colour and watch the entire design system rebuild around it — twelve accent steps, tinted neutrals and a readable text colour, derived in pure CSS.",
+    "Pick a brand color and watch the entire design system rebuild around it — twelve accent steps, tinted neutrals and a readable text color, derived in pure CSS.",
 };
 
 export default function ThemePage() {
@@ -17,10 +17,10 @@ export default function ThemePage() {
         * one on every component page. */}
       <h1 className={cn(PROSE_H1, "mb-3")}>Theme Studio</h1>
       <p className={cn(LEAD, "mb-4")}>
-        One variable re-skins everything. Pick a colour and the whole ramp
-        rebuilds — twelve accent steps, brand-tinted neutrals, and a text colour
+        One variable re-skins everything. Pick a color and the whole ramp
+        rebuilds — twelve accent steps, brand-tinted neutrals, and a text color
         chosen to stay readable on top of your fill. No JavaScript runs in the
-        library to make this happen; it is relative colour syntax in plain CSS.
+        library to make this happen; it is relative color syntax in plain CSS.
       </p>
       <ThemeStudio />
     </div>

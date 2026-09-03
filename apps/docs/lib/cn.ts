@@ -6,8 +6,8 @@ import { createCn } from "@forte-ui/react/cn";
  * The package's `createCn` already knows every scale the Tailwind bridge
  * renames — see the header of `@forte-ui/react/cn` for why tailwind-merge
  * needs configuring at all (short version: the bridge renamed most of the
- * theme, and an unrecognised class is silently never merged; `text-2` even
- * parses as a COLOUR without it). Listed here is only what the DOCS added to
+ * theme, and an unrecognized class is silently never merged; `text-2` even
+ * parses as a COLOR without it). Listed here is only what the DOCS added to
  * the theme in `app/tailwind.css`: the hero measure and the one animation.
  * The extension APPENDS to the library's scales, so `container` gains `hero`
  * beside `lg` and friends rather than replacing them.

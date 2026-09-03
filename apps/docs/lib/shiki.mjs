@@ -10,7 +10,7 @@
  * WASM binary, and importing five grammars explicitly keeps the full language
  * set out of the build. `ts` is loaded alongside `tsx` because a fence with a
  * grammar this list is missing is not an error — the rehype plugin leaves the
- * block as a plain unstyled <pre>, with no `shiki` class, no colours and no
+ * block as a plain unstyled <pre>, with no `shiki` class, no colors and no
  * padding — and ```ts is the miss authors actually write.
  */
 import { createHighlighterCore } from "shiki/core";
@@ -31,7 +31,7 @@ export const highlighter = await createHighlighterCore({
 
 /**
  * `defaultColor: false` makes Shiki emit BOTH themes as CSS custom properties
- * rather than inlining one theme's colours. The stylesheet picks between them,
+ * rather than inlining one theme's colors. The stylesheet picks between them,
  * so highlighting follows the site's light/dark toggle with no re-render and
  * no flash of the wrong palette.
  */

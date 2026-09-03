@@ -24,7 +24,7 @@ const RELEASES = [
 export default function PreviewCardControlled() {
   // Two pieces of state, because a multi-trigger card has two questions:
   // whether it is open, and which link it is anchored to. `triggerId` is what
-  // anchors the popup, so it has to be set before `open` is honoured.
+  // anchors the popup, so it has to be set before `open` is honored.
   const [open, setOpen] = React.useState(false);
   const [triggerId, setTriggerId] = React.useState<string | null>(
     RELEASES[0].id,

@@ -5,7 +5,7 @@ import { Progress, ProgressCircle } from "@forte-ui/react";
 /* `data-forte-motion` is the same switch the demo frame's reduced-motion toggle
  * flips, and it works on any element — so the right-hand column is genuinely
  * running under reduced motion while the left-hand one is not, on the same
- * page at the same time. `full` on the left pins that column to base behaviour
+ * page at the same time. `full` on the left pins that column to base behavior
  * even for a reader whose OS already asks for less motion. */
 const COLUMNS = [
   { motion: "full", title: "Full motion" },
@@ -18,7 +18,7 @@ export default function ProgressReducedMotion() {
       {COLUMNS.map(({ motion, title }) => (
         <div key={motion} data-forte-motion={motion} className="grid w-3xs gap-4">
           <span className="text-1 font-medium text-foreground-muted">{title}</span>
-          {/* The segment does not merely stop travelling on the right — it
+          {/* The segment does not merely stop traveling on the right — it
             * grows to the full rail, and the ring's arc closes into a complete
             * circle. A 35% segment frozen against the start edge is
             * pixel-for-pixel a determinate bar stuck at 35%, which is the one

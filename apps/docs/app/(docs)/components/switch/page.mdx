@@ -127,11 +127,11 @@ change. `disabled` takes the control out of the tab order instead — as `aria-d
 `tabindex="-1"` on the default span, or the native `disabled` attribute when you set `nativeButton`.
 
 The unchecked track border and thumb are drawn with `--forte-color-foreground-subtle`, measured at
-3.73:1 against the page — above the 3:1 that SC 1.4.11 asks of non-text controls. In forced-colours
+3.73:1 against the page — above the 3:1 that SC 1.4.11 asks of non-text controls. In forced-colors
 mode the two states are separated on three axes at once (track fill, track border, and the thumb's
 own fill plus its checkmark), all from system keywords, because a `<span role="switch">` gets no
-automatic system colours from the UA. The disabled state overrides its own opacity there and uses
-`GrayText` instead, since forced colours does not touch `opacity` and a 55% control would otherwise
+automatic system colors from the UA. The disabled state overrides its own opacity there and uses
+`GrayText` instead, since forced colors does not touch `opacity` and a 55% control would otherwise
 keep full system contrast and read as enabled.
 
 ### Motion under `prefers-reduced-motion`
@@ -139,7 +139,7 @@ keep full system contrast and read as enabled.
 The thumb still moves when reduced motion is requested, and that is deliberate. Everywhere else in
 this library a positional animation is decoration and collapses to zero distance under the motion
 tokens. Here the thumb's position **is** the state — a switch whose thumb never moves is a switch
-with no visible on/off difference except colour. So the travel is never multiplied by
+with no visible on/off difference except color. So the travel is never multiplied by
 `--forte-motion-ok`. What changes is the feel: the transition rides `--forte-duration-spring-snappy`,
 which drops from 400ms to 120ms, flattening the spring's overshoot into what reads as an instant
 jump rather than a glide.
@@ -148,7 +148,7 @@ Movement is never the only signal either. The track fill, the thumb fill and the
 change with the state, and each identifies it on its own — which is what makes it safe to shorten
 the animation without losing information. The checkmark's opacity in particular is not gated on any
 motion token, so it survives intact when the pop that accompanies it has collapsed. Setting
-`stateIcon={false}` removes that cue and leaves colour as the only non-positional one; the state
+`stateIcon={false}` removes that cue and leaves color as the only non-positional one; the state
 still reaches assistive technology, but sighted users lose a fallback. Use the **Reduced motion**
 control under any demo above to see the difference.
 

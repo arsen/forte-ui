@@ -157,7 +157,7 @@ export interface InputGroupInputProps
  * Like `Input`, this is Base UI's `Input` — which *is* `Field.Control` — so a
  * group inside a `Field.Root` picks up the label, the description, the error
  * message, `name` and the validity attributes with no wiring, and the group's
- * boundary recolours from the `data-invalid` this element carries.
+ * boundary recolors from the `data-invalid` this element carries.
  */
 export const InputGroupInput = React.forwardRef<
   HTMLElement,
@@ -204,7 +204,7 @@ export interface InputGroupTextareaProps extends TextareaElementProps {
   maxRows?: number;
   /**
    * Grow with the content as the user types, between `rows` and `maxRows` —
-   * the same behaviour, and the same `field-sizing` implementation with the
+   * the same behavior, and the same `field-sizing` implementation with the
    * same fallback, as `Textarea`'s `autoResize`.
    * @default false
    */

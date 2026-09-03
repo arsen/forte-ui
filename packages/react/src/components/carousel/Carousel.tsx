@@ -22,7 +22,7 @@ import styles from "./Carousel.module.css";
  *     at pointerdown.
  *
  * 2 — Moves are CSS transitions of `translate`, so a click on Next while the
- *     track is still travelling retargets from wherever it has got to instead
+ *     track is still traveling retargets from wherever it has got to instead
  *     of snapping back and restarting. During a drag the transition is off
  *     and the same variable is written straight to the DOM every frame,
  *     bypassing React; the release is one state update that puts the
@@ -115,7 +115,7 @@ function clonesFor(count: number, perView: number, loop: boolean) {
 
 /** The last index the track can rest on without looping. Start-aligned, with
  * more than one slide in view, the last position is the one that still fills
- * the view, so a row of three never scrolls to show two and a blank. Centred,
+ * the view, so a row of three never scrolls to show two and a blank. Centered,
  * every slide can take the middle — the last one with blank track after it,
  * the mirror of the first one's blank track before it. */
 function maxIndexFor(count: number, perView: number, align: CarouselAlign) {
@@ -124,7 +124,7 @@ function maxIndexFor(count: number, perView: number, align: CarouselAlign) {
 }
 
 /** How far, in slides, the view's start edge sits before the active slide.
- * Zero at the start; half the room beside the active slide when centred. */
+ * Zero at the start; half the room beside the active slide when centered. */
 function alignOffset(perView: number, align: CarouselAlign) {
   return align === "center" ? (perView - 1) / 2 : 0;
 }
@@ -287,7 +287,7 @@ export interface CarouselRootProps
    * Where the active slide sits when more than one fits. `"start"` parks it
    * at the start edge and fills the view with the slides after it — a row of
    * cards. `"center"` puts it in the middle with its neighbours peeking on
-   * both sides — a gallery. Centred, every slide can take the middle: with
+   * both sides — a gallery. Centered, every slide can take the middle: with
    * `loop` the last slides show before the first one, without it the first
    * and last sit beside blank track.
    * @default "start"
@@ -727,7 +727,7 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
     };
 
     /* Where the track IS, read off its computed `translate`, rather than
-     * where it was told to go. Grabbing a track that is still travelling
+     * where it was told to go. Grabbing a track that is still traveling
      * should pick it up mid-flight, not snap it to its destination first. */
     const currentPosition = (step: number, sign: number) => {
       const track = trackRef.current;
@@ -849,7 +849,7 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
       });
     };
 
-    const endDrag = (event: React.PointerEvent<HTMLDivElement>, cancelled: boolean) => {
+    const endDrag = (event: React.PointerEvent<HTMLDivElement>, canceled: boolean) => {
       const state = drag.current;
       if (!state || state.pointerId !== event.pointerId) return;
       drag.current = null;
@@ -867,7 +867,7 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
 
       const moved = state.position - state.base;
       let steps = 0;
-      if (!cancelled) {
+      if (!canceled) {
         const now = performance.now();
         const oldest = state.samples[0];
         const velocity =
@@ -1506,9 +1506,9 @@ const CarouselPlayPause = React.forwardRef<HTMLButtonElement, CarouselPlayPauseP
 /**
  * The carousel namespace — the viewport, its controls and its pagination.
  *
- * The catalogue tags sit HERE rather than on `CarouselRoot`, which is what
+ * The catalog tags sit HERE rather than on `CarouselRoot`, which is what
  * every other compound does (see `ButtonGroup`). docgen names the entry after
- * whatever carries them, so tagging the Root published a catalogue entry
+ * whatever carries them, so tagging the Root published a catalog entry
  * called "CarouselRoot" — a name no consumer writes, and one that does not
  * kebab to this component's docs route.
  *

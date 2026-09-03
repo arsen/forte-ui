@@ -7,7 +7,7 @@
  *   determinate     inline-start: 0 · height: inherit · width: <percent>%
  *   indeterminate   nothing at all
  *
- * So the determinate rules below add colour and a radius to geometry that is
+ * So the determinate rules below add color and a radius to geometry that is
  * already correct, and the indeterminate rules — which only match when there
  * is no inline geometry to fight — are free to position the same element
  * absolutely and animate it. Two consequences to respect:
@@ -45,7 +45,7 @@
  * are tokens that move together with the seed. It is not the only channel the
  * value travels on — `Progress.Value` prints the number as text, and the
  * accessible tree carries `aria-valuenow` — so the bar is readable even where
- * the two colours are close.
+ * the two colors are close.
  */
 @layer forte.components {
   .root {
@@ -69,18 +69,18 @@
     /** Gap between the label/value row and the rail. */
     --forte-progress-gap: var(--forte-space-2);
 
-    /* Colour slots, swapped wholesale by [data-tone] below. */
+    /* Color slots, swapped wholesale by [data-tone] below. */
     /** Rail fill — the part that has not happened yet. Stays neutral in every
      * tone. */
     --forte-progress-track-bg: var(--forte-color-border-muted);
     /** The fill itself. Swapped per `tone`. Consumed through the `background`
      * shorthand rather than `background-color`, so a gradient is a legal value
-     * here as well as a colour — at the cost of the colour transition, which a
+     * here as well as a color — at the cost of the color transition, which a
      * gradient cannot have. */
     --forte-progress-indicator-bg: var(--forte-color-primary);
-    /** Colour of the label. */
+    /** Color of the label. */
     --forte-progress-label-color: var(--forte-color-foreground);
-    /** Colour of the readout. */
+    /** Color of the readout. */
     --forte-progress-value-color: var(--forte-color-foreground-muted);
     /** Font size of the label and the readout together. Retuned by `size`. */
     --forte-progress-label-size: var(--forte-font-size-2);
@@ -219,7 +219,7 @@
   .indicator {
     border-radius: var(--forte-progress-radius);
     /* The shorthand, so the knob above accepts a gradient as readily as a
-     * colour. It resets `background-image` on the way past, which is what
+     * color. It resets `background-image` on the way past, which is what
      * keeps a tone change from leaving a previous gradient underneath. */
     background: var(--forte-progress-indicator-bg);
     /* `width` is a layout-triggering property, and animating one is normally
@@ -286,7 +286,7 @@
  * Accessibility overrides — see layers.css for why these cannot live in the
  * components layer.
  *
- * A `<div>` gets no system colours from the UA the way a native `<progress>`
+ * A `<div>` gets no system colors from the UA the way a native `<progress>`
  * would, so the rail and the fill have to be separated by hand. The rail's
  * boundary is drawn with `outline` rather than `border`, because a border
  * would change the box and throw the fill's `height: inherit` off by its width
@@ -299,9 +299,9 @@
       outline: 1px solid CanvasText;
     }
 
-    /* `background-image` is one of the things forced colours does NOT remap, so
+    /* `background-image` is one of the things forced colors does NOT remap, so
      * a gradient fill would keep its brand hues and paint straight over the
-     * system colour below it. */
+     * system color below it. */
     .indicator {
       background-color: Highlight;
       background-image: none;

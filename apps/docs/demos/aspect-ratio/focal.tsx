@@ -3,7 +3,7 @@
 import { AspectRatio } from "@forte-ui/react";
 
 /* `cover` has to throw something away; `--forte-aspect-position` is how you say
- * WHICH something. The default centres the crop, which is the one choice
+ * WHICH something. The default centers the crop, which is the one choice
  * guaranteed to behead a portrait. */
 const CROPS = [
   { label: "50% 0%", position: "50% 0%" },

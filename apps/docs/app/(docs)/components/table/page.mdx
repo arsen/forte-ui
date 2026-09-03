@@ -71,7 +71,7 @@ The frame is drawn on the `<table>` itself, not on a wrapper, so a framed table 
 
 <DemoBlock id="table/striped" />
 
-Both are off by default. Stripes help the eye hold a row across a wide table and are noise on a narrow one; a hover fill says "you can click this", and most rows cannot be clicked. The tints are a few percent of the foreground mixed over transparent rather than a grey step, so they read as one shade darker on any surface — the page, a panel, a dialog — in either theme.
+Both are off by default. Stripes help the eye hold a row across a wide table and are noise on a narrow one; a hover fill says "you can click this", and most rows cannot be clicked. The tints are a few percent of the foreground mixed over transparent rather than a gray step, so they read as one shade darker on any surface — the page, a panel, a dialog — in either theme.
 
 ### Selection
 
@@ -101,7 +101,7 @@ The unsorted state shows a faint arrow rather than none — an invisible control
 
 `stickyHeader` pins the header cells to the top of the nearest scrollport. That has to be a `Table.Container` with a height cap: a sticky element sticks to the nearest scrolling ancestor, and the page is a poor one. Because the container is what scrolls, the frame and the radius go on **it** here — a frame on the table would scroll away with the rows.
 
-The header fill flips to an opaque surface colour when sticky, since that is the point at which a transparent header turns into rows visible through it.
+The header fill flips to an opaque surface color when sticky, since that is the point at which a transparent header turns into rows visible through it.
 
 ### Horizontal scrolling
 
@@ -137,7 +137,7 @@ The parts are the HTML table elements, which is most of the accessibility work d
 
 **Keep state on controls.** A sortable column is a `<button>` inside the header; a selected row is a `Checkbox` inside the row. The table's `sort` and `selected` props drive `aria-sort` and a tint respectively, and neither is a substitute for the control.
 
-The sort button reaches the 24px minimum target (SC 2.5.8) at every size through a negative block margin rather than by growing the row. Under forced colours the fills are stripped and the rules are the whole grid, painted in the system ink; a selected row takes the system highlight, and the faint unsorted arrow — which is `opacity`, untouched by forced colours — is redrawn in `GrayText` so it does not claim every sortable column is sorted.
+The sort button reaches the 24px minimum target (SC 2.5.8) at every size through a negative block margin rather than by growing the row. Under forced colors the fills are stripped and the rules are the whole grid, painted in the system ink; a selected row takes the system highlight, and the faint unsorted arrow — which is `opacity`, untouched by forced colors — is redrawn in `GrayText` so it does not claim every sortable column is sorted.
 
 ## Theming
 

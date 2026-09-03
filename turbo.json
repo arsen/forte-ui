@@ -31,7 +31,7 @@
     // build-catalog.mjs: that script reads the library's docs-data/components.json
     // to resolve every component page, so running the pair in parallel -- which
     // is what this task did before, and the comment here used to promise -- would
-    // let a run that ADDS a component read the previous run's catalogue and emit
+    // let a run that ADDS a component read the previous run's catalog and emit
     // a site index missing the very page that run created. Depending on
     // `generate` rather than `docgen` is what keeps the library's own chain from
     // running its slowest script twice.

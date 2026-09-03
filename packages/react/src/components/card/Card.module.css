@@ -35,10 +35,10 @@
  * The border is reserved on every variant
  * ---------------------------------------------------------------------------
  * `soft` has no visible edge, but its border-width stays 1px with a
- * transparent colour (the Toolbar arrangement). Two bugs this prevents:
+ * transparent color (the Toolbar arrangement). Two bugs this prevents:
  * switching variants at runtime would move every pixel of content by the
  * border it gained or lost, and forced-colors mode — which strips backgrounds
- * and shadows but REPLACES border colours rather than removing them — would
+ * and shadows but REPLACES border colors rather than removing them — would
  * leave a soft card with no boundary at all.
  */
 @layer forte.components {
@@ -71,7 +71,7 @@
     /* Filled in per variant below; this is the `outline` set. */
     /** Fill behind the card. Set by `variant`. */
     --forte-card-bg: var(--forte-color-panel);
-    /** Edge colour. Set by `variant`. `border-muted`, not `border` — a card
+    /** Edge color. Set by `variant`. `border-muted`, not `border` — a card
      * is a grouping, not a control, and the louder hairline next to real
      * inputs makes the box compete with the form inside it. */
     --forte-card-border-color: var(--forte-color-border-muted);
@@ -168,7 +168,7 @@
   /* Action ------------------------------------------------------------------
    * Pinned to the corner when the header has both text rows — a badge or an
    * icon button belongs beside the title, not floated between the lines. With
-   * a title alone it centres on that one line instead, so a 24px control does
+   * a title alone it centers on that one line instead, so a 24px control does
    * not sit visibly high against 20px of text. The `:has` guard is Alert's:
    * an unconditional `span 2` would open an empty implicit row on a
    * title-only header, and `row-gap` would then pad it with nothing in it.

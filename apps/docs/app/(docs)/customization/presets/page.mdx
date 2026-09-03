@@ -44,7 +44,7 @@ Omit the attribute for the default scale. `none` squares everything including th
 - **`full`** is an explicit opt back in that overrides the OS preference — for a subtree where motion *is* the content, like a demo of the motion system itself. Do not reach for it just because an app prefers its animations; the OS setting is the user talking.
 
 <Callout kind="note">
-  Durations never reach `0s`, even under `off` — at exactly zero the browser creates no transition object, `transitionend` never fires, and code awaiting it deadlocks. The floor is `1ms`. Spinner and pulse loops keep their real durations everywhere: a 1ms loop would be a flashing hazard (WCAG SC 2.3.1), so loading indicators stay visible, they just stop travelling.
+  Durations never reach `0s`, even under `off` — at exactly zero the browser creates no transition object, `transitionend` never fires, and code awaiting it deadlocks. The floor is `1ms`. Spinner and pulse loops keep their real durations everywhere: a 1ms loop would be a flashing hazard (WCAG SC 2.3.1), so loading indicators stay visible, they just stop traveling.
 </Callout>
 
 ## How presets and scoped themes interact

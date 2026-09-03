@@ -81,11 +81,11 @@ const DEFAULT_LABELS: Required<CalendarLabels> = {
  * lands an hour short or long on the two days a year a DST boundary is
  * crossed, and the visible failure is a grid that repeats or skips a date —
  * in one timezone, twice a year, which is the bug nobody reproduces. The
- * constructor also normalises overflow (month 12 is next January, day 0 is
+ * constructor also normalizes overflow (month 12 is next January, day 0 is
  * last month's last day), so the same three lines cover every unit.
  *
  * Everything is local time on purpose. A calendar shows the user's civil
- * date; normalising to UTC to "be safe" is what makes the 1st of the month
+ * date; normalizing to UTC to "be safe" is what makes the 1st of the month
  * render as the 31st for everyone west of Greenwich.
  * ---------------------------------------------------------------------- */
 
@@ -272,7 +272,7 @@ function matchesDay(date: Date, matcher: CalendarMatcher | undefined): boolean {
  * How a click folds into an existing range. Clicking the pending start again
  * clears it (unless `required`), clicking before it swaps the ends rather
  * than throwing the pick away, and clicking with a complete range starts a
- * new one — the behaviour every date-range picker has trained users into.
+ * new one — the behavior every date-range picker has trained users into.
  */
 function addToRange(day: Date, range: CalendarRange | null, required: boolean): CalendarRange | null {
   if (!range?.from) {

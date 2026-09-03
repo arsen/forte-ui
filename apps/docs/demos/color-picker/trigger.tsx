@@ -26,12 +26,12 @@ export default function ColorPickerTrigger() {
       <Picker>Accent</Picker>
 
       {/* Swatch only. It still has a name: the trigger announces the current
-        * colour after its children, so a trigger with none is named by the
+        * color after its children, so a trigger with none is named by the
         * value itself. An `aria-label` is better wherever the button means
-        * something more specific than "a colour". */}
-      <Picker aria-label="Accent colour" />
+        * something more specific than "a color". */}
+      <Picker aria-label="Accent color" />
 
-      {/* Label only, for a row that already shows the colour elsewhere. */}
+      {/* Label only, for a row that already shows the color elsewhere. */}
       <Picker hideSwatch>Choose accent…</Picker>
     </div>
   );

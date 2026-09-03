@@ -63,7 +63,7 @@ All three variants occupy identical space: the border is reserved even where `so
 
 <DemoBlock id="card/action" />
 
-`Card.Action` sits against the inline-end edge of the header — pinned to the top corner when the header has both text rows, centred on the title's line when the title is alone. It is a slot and not a control: a badge, an icon button and a `Menu` trigger are all real components with their own props, and the card wraps none of them.
+`Card.Action` sits against the inline-end edge of the header — pinned to the top corner when the header has both text rows, centered on the title's line when the title is alone. It is a slot and not a control: a badge, an icon button and a `Menu` trigger are all real components with their own props, and the card wraps none of them.
 
 A header with no action has no action *column*: the track is `auto`, so with nothing in it the track is zero wide and the text runs the full width. The gap beside it is a margin on the action itself rather than a `column-gap` on the grid, which is what makes the collapse complete.
 
@@ -99,7 +99,7 @@ A heading placed there takes the card's typography rather than the UA's — marg
 
 **Interactivity.** If the whole card should navigate, put a real `<a>` inside and stretch it, rather than making the surface clickable — a `<div onClick>` is invisible to the keyboard and to assistive technology, and it also breaks text selection for everyone else. The card deliberately has no `interactive` prop to make that mistake convenient.
 
-Under forced colours the fill and the shadow are stripped and the border is the whole card. Every variant keeps its reserved 1px and paints it in the system ink — including `soft`, whose transparent edge would otherwise leave the grouping invisible.
+Under forced colors the fill and the shadow are stripped and the border is the whole card. Every variant keeps its reserved 1px and paints it in the system ink — including `soft`, whose transparent edge would otherwise leave the grouping invisible.
 
 ## Theming
 

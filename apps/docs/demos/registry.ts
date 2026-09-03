@@ -207,8 +207,8 @@ import d_checkbox_group_disabled from "./checkbox-group/disabled";
 import d_checkbox_group_disabled_src from "./checkbox-group/disabled?raw";
 import d_checkbox_group_form from "./checkbox-group/form";
 import d_checkbox_group_form_src from "./checkbox-group/form?raw";
-import d_checkbox_group_labelling from "./checkbox-group/labelling";
-import d_checkbox_group_labelling_src from "./checkbox-group/labelling?raw";
+import d_checkbox_group_labeling from "./checkbox-group/labeling";
+import d_checkbox_group_labeling_src from "./checkbox-group/labeling?raw";
 import d_checkbox_group_native_button from "./checkbox-group/native-button";
 import d_checkbox_group_native_button_src from "./checkbox-group/native-button?raw";
 import d_checkbox_group_nested from "./checkbox-group/nested";
@@ -595,8 +595,8 @@ import d_radio_disabled from "./radio/disabled";
 import d_radio_disabled_src from "./radio/disabled?raw";
 import d_radio_form from "./radio/form";
 import d_radio_form_src from "./radio/form?raw";
-import d_radio_labelling from "./radio/labelling";
-import d_radio_labelling_src from "./radio/labelling?raw";
+import d_radio_labeling from "./radio/labeling";
+import d_radio_labeling_src from "./radio/labeling?raw";
 import d_radio_native_button from "./radio/native-button";
 import d_radio_native_button_src from "./radio/native-button?raw";
 import d_radio_orientation from "./radio/orientation";
@@ -980,7 +980,7 @@ export type DemoId =
   | "checkbox-group/controlled"
   | "checkbox-group/disabled"
   | "checkbox-group/form"
-  | "checkbox-group/labelling"
+  | "checkbox-group/labeling"
   | "checkbox-group/native-button"
   | "checkbox-group/nested"
   | "checkbox-group/orientation"
@@ -1174,7 +1174,7 @@ export type DemoId =
   | "radio/descriptions"
   | "radio/disabled"
   | "radio/form"
-  | "radio/labelling"
+  | "radio/labeling"
   | "radio/native-button"
   | "radio/orientation"
   | "radio/sizes"
@@ -1419,7 +1419,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "checkbox-group/controlled": { Component: d_checkbox_group_controlled, source: d_checkbox_group_controlled_src, file: "checkbox-group/controlled.tsx" },
   "checkbox-group/disabled": { Component: d_checkbox_group_disabled, source: d_checkbox_group_disabled_src, file: "checkbox-group/disabled.tsx" },
   "checkbox-group/form": { Component: d_checkbox_group_form, source: d_checkbox_group_form_src, file: "checkbox-group/form.tsx" },
-  "checkbox-group/labelling": { Component: d_checkbox_group_labelling, source: d_checkbox_group_labelling_src, file: "checkbox-group/labelling.tsx" },
+  "checkbox-group/labeling": { Component: d_checkbox_group_labeling, source: d_checkbox_group_labeling_src, file: "checkbox-group/labeling.tsx" },
   "checkbox-group/native-button": { Component: d_checkbox_group_native_button, source: d_checkbox_group_native_button_src, file: "checkbox-group/native-button.tsx" },
   "checkbox-group/nested": { Component: d_checkbox_group_nested, source: d_checkbox_group_nested_src, file: "checkbox-group/nested.tsx" },
   "checkbox-group/orientation": { Component: d_checkbox_group_orientation, source: d_checkbox_group_orientation_src, file: "checkbox-group/orientation.tsx" },
@@ -1613,7 +1613,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "radio/descriptions": { Component: d_radio_descriptions, source: d_radio_descriptions_src, file: "radio/descriptions.tsx" },
   "radio/disabled": { Component: d_radio_disabled, source: d_radio_disabled_src, file: "radio/disabled.tsx" },
   "radio/form": { Component: d_radio_form, source: d_radio_form_src, file: "radio/form.tsx" },
-  "radio/labelling": { Component: d_radio_labelling, source: d_radio_labelling_src, file: "radio/labelling.tsx" },
+  "radio/labeling": { Component: d_radio_labeling, source: d_radio_labeling_src, file: "radio/labeling.tsx" },
   "radio/native-button": { Component: d_radio_native_button, source: d_radio_native_button_src, file: "radio/native-button.tsx" },
   "radio/orientation": { Component: d_radio_orientation, source: d_radio_orientation_src, file: "radio/orientation.tsx" },
   "radio/sizes": { Component: d_radio_sizes, source: d_radio_sizes_src, file: "radio/sizes.tsx" },

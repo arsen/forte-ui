@@ -17,7 +17,7 @@ export default function SliderTones() {
       {tones.map(({ tone, label, value }) => (
         // `tone` swaps the indicator fill, the thumb's ring and its halo in
         // one move. The rail stays neutral in every tone — it is the empty
-        // part of the range, and colouring it would compete with the fill it
+        // part of the range, and coloring it would compete with the fill it
         // exists to contrast against.
         <Slider.Root key={tone} tone={tone} defaultValue={value}>
           <Slider.Label>{label}</Slider.Label>

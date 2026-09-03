@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 // Two things are restored: the light/dark mode, and whatever the Theme Studio
 // was last set to — the studio always themes the whole site. It stores its
 // resolved variables alongside the config precisely so this stays a dumb replay
-// with no colour maths in the critical path.
+// with no color maths in the critical path.
 //
 // `data-theme` is always written, resolved against the OS when nothing is
 // stored, rather than left off to let the media query decide. It is what the
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 // The font links are replayed here too — a stored `--forte-font-sans` without
 // its stylesheet would silently fall back to the system stack on every page
 // except the studio's. Unlike a var value, a link can fetch from anywhere, and
-// storage is user-editable, so only Google Fonts URLs are honoured.
+// storage is user-editable, so only Google Fonts URLs are honored.
 const noFlashScript = `(function(){try{var r=document.documentElement;var s=null;try{s=JSON.parse(localStorage.getItem('forte-studio')||'null');}catch(e){}var c=s&&s.config&&s.config.scheme;var t=(c==='light'||c==='dark')?c:localStorage.getItem('forte-theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}r.setAttribute('data-theme',t);if(s&&s.root){for(var k in s.root.vars){r.style.setProperty(k,s.root.vars[k]);}for(var d in s.root.data){r.setAttribute('data-forte-'+d,s.root.data[d]);}var f=s.root.fonts;if(f&&f.length){for(var i=0;i<f.length;i++){if(typeof f[i]==='string'&&f[i].indexOf('https://fonts.googleapis.com/')===0){var l=document.createElement('link');l.rel='stylesheet';l.href=f[i];document.head.appendChild(l);}}}}}catch(e){}})();`;
 
 // Visible only on focus. WCAG SC 2.4.1 Bypass Blocks — without it a keyboard

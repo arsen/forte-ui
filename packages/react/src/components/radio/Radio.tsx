@@ -30,7 +30,7 @@ export interface RadioProps<Value = unknown>
    */
   size?: RadioSize;
   /**
-   * Which semantic colour set the selected fill draws from. Inside a
+   * Which semantic color set the selected fill draws from. Inside a
    * `Field.Root` an invalid field overrides this with the danger palette, so
    * a validation error always reads as an error.
    * @default "primary"
@@ -188,7 +188,7 @@ export interface RadioGroupProps<Value = unknown>
  * Unlike `CheckboxGroup`, this is a keyboard mode as well as a state
  * container: the whole group is a single tab stop, and the arrow keys move
  * between options — selecting as they go, which is the native radio
- * behaviour and the reason a radio group must never be used for choices that
+ * behavior and the reason a radio group must never be used for choices that
  * trigger an expensive side effect on selection.
  *
  * The group has no implicit accessible name — give it `aria-labelledby`

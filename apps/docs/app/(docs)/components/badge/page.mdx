@@ -13,8 +13,8 @@ export const metadata = {
 
 The chip that annotates something else: a status beside a row, a count on a
 tab, a category under a title. Two axes decide how it looks — `variant` for how
-loud it is, `tone` for which semantic colour set it draws from — and every
-pairing of the two is a complete colour set, so there is no combination that
+loud it is, `tone` for which semantic color set it draws from — and every
+pairing of the two is a complete color set, so there is no combination that
 needs a special case.
 
 <DemoBlock id="badge/basic" />
@@ -66,7 +66,7 @@ status.
 
 <Callout kind="a11y">
   Never let the dot be the whole message. A row of chips distinguished only by
-  colour fails SC 1.4.1 for anyone who cannot separate amber from green, and it
+  color fails SC 1.4.1 for anyone who cannot separate amber from green, and it
   reaches a screen reader as five identical badges. Keep the word.
 </Callout>
 
@@ -157,7 +157,7 @@ target exists to prevent.
 <DemoBlock id="badge/links" />
 
 <Callout kind="note">
-  The hit target is an invisible pseudo-element centred on the badge, so a
+  The hit target is an invisible pseudo-element centered on the badge, so a
   `sm` tag link is 24px to the pointer while still being 16px on screen.
   Leave room for it: two interactive badges closer together than the target
   overlap, and the top one wins the click.
@@ -179,7 +179,7 @@ into four live regions.
 
 Three things are worth doing at the call site:
 
-- **Say it in words.** Colour and a dot are reinforcement. The label is the
+- **Say it in words.** Color and a dot are reinforcement. The label is the
   message — see the callout above.
 - **Give a bare count a name.** `<Badge count={12} />` next to an inbox icon
   reads as "twelve" and nothing else. Put the noun somewhere: visible text, an
@@ -189,11 +189,11 @@ Three things are worth doing at the call site:
   open changes silently; if the change matters, wrap it in your own live
   region rather than making every badge one.
 
-Under forced colours the four variants converge on a single outlined chip, and
+Under forced colors the four variants converge on a single outlined chip, and
 that is correct rather than a compromise: author backgrounds are replaced by
-system colours, so the fill can no longer carry the difference. Each variant
+system colors, so the fill can no longer carry the difference. Each variant
 reserves its 1px border whether or not it paints one, and `transparent` becomes
-a real system-coloured edge in that mode — the same trick `.forte-hc-surface`
+a real system-colored edge in that mode — the same trick `.forte-hc-surface`
 plays, applied to every variant at once. The dot is repainted as `CanvasText`,
 since a background would otherwise go to `Canvas` and disappear.
 
@@ -217,7 +217,7 @@ Two of the knobs are worth reading twice:
 - `--forte-badge-border-width` is reserved by *every* variant, not only
   `outline`. Changing it moves all four together, which is the point — a
   variant swap must not resize the badge, and the reserved edge is what keeps
-  the chip visible under forced colours.
+  the chip visible under forced colors.
 - `--forte-badge-min-inline-size` is what `count` re-points, and its value
   restates the badge's own height in a `calc()` because CSS has nothing to
   measure that height with. Override the padding or the line height on a count
@@ -230,7 +230,7 @@ ramps carry steps 2, 3, 7, 9 and 11 and no step 4 or 10, so there is no
 authored hover shade to name for `success`, `warning` and `info` — those tones
 derive one with `color-mix()` instead: solid mixes 8% toward black, which is
 how the accent ramp defines its own step 10 and the only direction that cannot
-cost the label contrast, and soft mixes 8% toward the tone's own text colour.
+cost the label contrast, and soft mixes 8% toward the tone's own text color.
 Tones that *do* ship a hover token re-point the slot to it, so nothing is
 approximated where an authored value exists.
 

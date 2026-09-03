@@ -57,7 +57,7 @@ export interface MenubarProps extends Omit<BaseMenubarProps, "className"> {
   /**
    * Replaces the rendered `<div>` with another element or component — a
    * `<header>` for an application chrome bar, say. Base UI still applies
-   * `role="menubar"` and the keyboard behaviour to whatever comes back.
+   * `role="menubar"` and the keyboard behavior to whatever comes back.
    */
   render?: BaseMenubarProps["render"];
   /**
@@ -95,7 +95,7 @@ export interface MenubarProps extends Omit<BaseMenubarProps, "className"> {
  * </Menubar>
  * ```
  *
- * Being in the bar is what changes the menus' behaviour, and Base UI does all
+ * Being in the bar is what changes the menus' behavior, and Base UI does all
  * of it: `Tab` reaches the bar once and the arrow keys move between triggers
  * from there, and once one menu is open the others take over on hover, so the
  * whole row reads as a single control rather than a line of buttons. The
@@ -128,7 +128,7 @@ export const Menubar = React.forwardRef<HTMLDivElement, MenubarProps>(
          * and `data-has-submenu-open` — there is no `data-disabled` among
          * them, because the prop is handed to the triggers rather than
          * marking the bar. Adding it keeps the house rule true (state lives on
-         * `data-*`) and is the only way a consumer can grey the strip itself. */
+         * `data-*`) and is the only way a consumer can gray the strip itself. */
         data-disabled={disabled ? "" : undefined}
         {...props}
       />

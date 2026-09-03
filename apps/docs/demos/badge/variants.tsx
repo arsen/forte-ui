@@ -21,7 +21,7 @@ export default function BadgeVariants() {
           <code className="w-[7ch] font-mono text-1 text-foreground-muted">{variant}</code>
           {TONES.map((tone) => (
             /* The label is the tone, so every cell measures the same thing:
-             * the fill, the label colour and the edge — not the wording. */
+             * the fill, the label color and the edge — not the wording. */
             <Badge key={tone} variant={variant} tone={tone}>
               {tone}
             </Badge>

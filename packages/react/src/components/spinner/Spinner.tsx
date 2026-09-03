@@ -49,7 +49,7 @@ export interface SpinnerProps extends Omit<React.ComponentPropsWithoutRef<"span"
    */
   size?: SpinnerSize;
   /**
-   * Which semantic colour set the indicator draws from. `current` takes
+   * Which semantic color set the indicator draws from. `current` takes
    * `currentColor` instead, which is what makes a spinner dropped inside a
    * button or a link match the text beside it.
    * @default "primary"

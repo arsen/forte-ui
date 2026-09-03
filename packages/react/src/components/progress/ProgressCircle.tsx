@@ -53,7 +53,7 @@ export interface ProgressCircleRootProps extends Omit<BaseRootProps, "className"
    */
   size?: ProgressCircleSize;
   /**
-   * Which semantic colour set the arc draws from. The rail behind it stays
+   * Which semantic color set the arc draws from. The rail behind it stays
    * neutral in every tone.
    * @default "primary"
    */
@@ -68,7 +68,7 @@ export interface ProgressCircleRootProps extends Omit<BaseRootProps, "className"
 /**
  * Groups every part of the ring and owns its value. Renders a
  * `<div role="progressbar">` laid out as a grid where `Track` and `Value`
- * share one cell — which is what centres the readout inside the ring — and
+ * share one cell — which is what centers the readout inside the ring — and
  * `Label` sits in a second row that only exists if you render one.
  *
  * `value` is required and `null` means indeterminate: the readout disappears
@@ -211,7 +211,7 @@ export interface ProgressCircleIndicatorProps
 }
 
 /**
- * The arc. A `<circle>` with `pathLength="100"`, which renormalises its
+ * The arc. A `<circle>` with `pathLength="100"`, which renormalizes its
  * circumference to 100 units so `stroke-dashoffset` can be driven straight
  * from the percentage without anyone computing 2πr — including when
  * `--forte-progress-circle-thickness` changes the radius out from under it.
@@ -258,7 +258,7 @@ export interface ProgressCircleValueProps extends Omit<BaseValueProps, "classNam
 }
 
 /**
- * The readout, centred inside the ring. Renders an `aria-hidden` `<span>` —
+ * The readout, centered inside the ring. Renders an `aria-hidden` `<span>` —
  * the root already publishes the number through `aria-valuenow`.
  *
  * It renders nothing while the ring is indeterminate. Pass a function child to

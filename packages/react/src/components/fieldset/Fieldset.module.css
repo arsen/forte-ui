@@ -42,7 +42,7 @@
    * A <div>, not a <legend> — see Fieldset.tsx for why — so it needs no UA
    * reset of its own and lays out as an ordinary block. */
   .legend {
-    /** Legend colour */
+    /** Legend color */
     --forte-fieldset-legend-fg: var(--forte-color-foreground);
     /** Legend font size */
     --forte-fieldset-legend-font-size: var(--forte-font-size-3);
@@ -69,11 +69,11 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 @layer forte.a11y {
   @media (forced-colors: active) {
     /* The generic `[data-disabled]` remedy in patterns.css applies through
-     * `:where()`, at zero specificity, so the (0,2,0) colour above would
+     * `:where()`, at zero specificity, so the (0,2,0) color above would
      * outrank its GrayText. Restated at matching specificity. */
     .legend[data-disabled] {
       color: GrayText;

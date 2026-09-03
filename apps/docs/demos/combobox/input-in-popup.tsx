@@ -39,7 +39,7 @@ export default function ComboboxInputInPopup() {
     <div className="w-[16rem]">
       <Combobox.Root items={countries}>
         {/* Here the TRIGGER is the form control, so Combobox.Label is the
-            right labelling part — it focuses the trigger on click. */}
+            right labeling part — it focuses the trigger on click. */}
         <Combobox.Label>Country</Combobox.Label>
         <Combobox.Trigger fullWidth>
           <Combobox.Value placeholder="Select country" />

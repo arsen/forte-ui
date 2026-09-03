@@ -25,7 +25,7 @@ export default function ContextMenuDisabled() {
           <ContextMenu.Item>Duplicate</ContextMenu.Item>
           {/* A disabled row stays in the list, stays announced, and is still
             * reached by the arrow keys — so it says in its own text why it
-            * cannot run, rather than relying on being grey. */}
+            * cannot run, rather than relying on being gray. */}
           <ContextMenu.Item disabled>Publish (needs review)</ContextMenu.Item>
           <ContextMenu.Separator />
           <ContextMenu.Item tone="danger" disabled>

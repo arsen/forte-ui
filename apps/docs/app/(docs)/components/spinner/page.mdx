@@ -63,7 +63,7 @@ The label scales too, dropping to `--forte-font-size-1` at `sm` and rising to
 
 ### Tones
 
-`tone` picks the colour set. Four are semantic; `current` is the composable one
+`tone` picks the color set. Four are semantic; `current` is the composable one
 — it takes `currentColor`, so a spinner dropped inside a button, a link or a
 status message matches the text around it and keeps matching it through hover,
 disabled and theme changes.
@@ -165,20 +165,20 @@ add `aria-hidden` to the root, so a label you asked to *show* stays in the
 accessibility tree as ordinary text — visible text that assistive technology
 cannot reach is a bug in its own right, not a feature of a decorative flag.
 
-Under forced colours the dots, bars and halo fill with `currentColor`, which the
+Under forced colors the dots, bars and halo fill with `currentColor`, which the
 UA remaps to `CanvasText` along with the rest of the page. The ring is the
-exception and needs help: forced colours remaps `background-color`, `color` and
+exception and needs help: forced colors remaps `background-color`, `color` and
 `border-color` but leaves `background-image` alone, so the conic gradient would
-keep its brand hue against a system-coloured page — and can vanish outright on a
+keep its brand hue against a system-colored page — and can vanish outright on a
 dark system theme. The `a11y` layer drops the gradient there and redraws the
 ring as a `CanvasText` border with one edge painted `Canvas`. The gap has to be
-an explicit system colour rather than
-`transparent`, which forced colours does not preserve either; a fully coloured
+an explicit system color rather than
+`transparent`, which forced colors does not preserve either; a fully colored
 ring looks static however fast it turns.
 
-The dimmed dots and bars keep their partial opacity under forced colours, which
+The dimmed dots and bars keep their partial opacity under forced colors, which
 elsewhere in the library is a trap — `opacity` is one of the few properties
-forced colours does not override, so a 55% disabled control keeps full contrast
+forced colors does not override, so a 55% disabled control keeps full contrast
 and still reads as enabled. Here it is the mechanism rather than a bug: those
 parts are mid-animation, not disabled, and every one of them reaches full
 opacity in turn.
@@ -198,12 +198,12 @@ element, and an element's own declaration beats an inherited value.
 <Callout kind="note">
   `--forte-spinner-track` derives from `--forte-spinner-color`, and a `var()` inside
   an unregistered custom property is substituted where the property is
-  *declared* — on the spinner root. Re-point the colour on an ancestor and the
+  *declared* — on the spinner root. Re-point the color on an ancestor and the
   track keeps the old default. Set both on the spinner, or set neither.
 </Callout>
 
 Two more values are written by the component rather than by you, and are listed
-here only so a `var()` typo is recognisable: `--forte-spinner-count` is the number
+here only so a `var()` typo is recognizable: `--forte-spinner-count` is the number
 of animated children the current variant renders, set on the root, and
 `--forte-spinner-i` is a child's index, set on each part. Every piece of per-child
 geometry is derived from the pair — a bar's angle is `i / count` of a turn, a

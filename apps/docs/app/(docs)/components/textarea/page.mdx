@@ -125,7 +125,7 @@ scrolls instead of pushing Post out of reach, and a modifier shortcut to send.
 Disabled and read-only are not the same thing and do not look the same.
 Disabled drops to 55% opacity, takes `cursor: not-allowed`, and loses the
 resize handle — a control that cannot be edited must not offer a drag that does
-nothing. Read-only keeps full contrast, a panel-coloured background, the text
+nothing. Read-only keeps full contrast, a panel-colored background, the text
 cursor **and** the handle: selecting, copying and reading a long value is the
 point of the state, and a taller box makes all three easier.
 
@@ -135,7 +135,7 @@ point of the state, and a taller box makes all three easier.
 
 Validity arrives on `data-invalid` from `Field.Control`, whether the rule is
 `required`, a native constraint like `minLength`, or a custom `validate` on the
-field. Only the boundary and the caret recolour — turning the value text danger
+field. Only the boundary and the caret recolor — turning the value text danger
 red as well would make the user's own answer look like the error message, and
 on a textarea that is a whole paragraph of it.
 
@@ -155,7 +155,7 @@ usual case — `aria-label` on the textarea is the fallback.
   is not reliably announced.
 </Callout>
 
-Placeholder text is coloured `--forte-color-foreground-muted` (5.82:1) rather
+Placeholder text is colored `--forte-color-foreground-muted` (5.82:1) rather
 than `--forte-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
 placeholders in an enabled control, and Firefox's own 0.54 `::placeholder`
 opacity is reset for the same reason.
@@ -166,7 +166,7 @@ under 24px, and the shortest box this component can produce — `size="sm"`,
 
 In forced-colors mode the control paints `Field` / `FieldText` with a
 `FieldText` boundary. That last part matters for `soft` and `ghost`, whose
-border is `transparent` — a value forced-colors replaces with a system colour
+border is `transparent` — a value forced-colors replaces with a system color
 of its choosing rather than leaving invisible, so without the restatement the
 three variants would stop looking like the same control.
 

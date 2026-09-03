@@ -8,7 +8,7 @@ import { Radio, RadioGroup } from "@forte-ui/react";
 // for wrapping a control.
 const row = "flex cursor-pointer items-center gap-(--forte-control-gap)";
 
-export default function RadioLabelling() {
+export default function RadioLabeling() {
   const groupLabelId = React.useId();
 
   return (

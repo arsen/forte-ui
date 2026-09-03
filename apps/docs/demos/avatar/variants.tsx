@@ -14,7 +14,7 @@ export default function AvatarVariants() {
           {TONES.map((tone) => (
             <Avatar.Root key={tone} variant={variant} tone={tone} size="lg">
               {/* Two letters, so every cell is measuring the same thing: the
-                * fill, the text colour and the edge — not the initials. */}
+                * fill, the text color and the edge — not the initials. */}
               <Avatar.Fallback label={`${variant}, ${tone}`}>AA</Avatar.Fallback>
             </Avatar.Root>
           ))}

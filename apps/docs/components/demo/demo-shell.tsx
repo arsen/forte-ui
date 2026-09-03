@@ -33,7 +33,7 @@ export function DemoShell({
       {/* The rail is off because the HEADER draws it instead, one row out. The
         * strip shares that row with the filename, so a `line` variant's own
         * rail spans the two tabs and stops — a 155px stub sitting one pixel
-        * above the header's full-width border, in the same colour. A knob
+        * above the header's full-width border, in the same color. A knob
         * rather than a class: it is a custom property, which a utility cannot
         * set, and it has to land on Tabs.Root, which is where it is declared. */}
       <Tabs.Root

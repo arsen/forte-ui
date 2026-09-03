@@ -194,7 +194,7 @@ where something else already owns the movement.
 <DemoBlock id="skeleton/reduced-motion" />
 
 Neither animation switches off, and that is deliberate. A skeleton that stops
-moving entirely reads as content that **failed** — a dead grey box is a worse
+moving entirely reads as content that **failed** — a dead gray box is a worse
 message than the one it replaced. So both reduce instead:
 
 - **`pulse`** gets shallower. The dip is
@@ -247,14 +247,14 @@ region — a table of forty invoices announced in full the moment it lands.
 Confined to the message, it says one sentence and stops; `aria-busy` on the
 wrapper covers the rest.
 
-Under forced colours a placeholder is painted `Canvas` with a `GrayText`
-outline. Left alone, the fill is remapped to a system colour that is not ours
+Under forced colors a placeholder is painted `Canvas` with a `GrayText`
+outline. Left alone, the fill is remapped to a system color that is not ours
 to choose — either invisible against the page or a solid black brick — and
 neither is a placeholder. `.forte-hc-decorative` is the wrong tool even though a
 skeleton *is* decorative: it is `display: none`, and a placeholder that stops
 occupying space has abandoned its only job. The shimmer band is dropped there
-too, because forced colours does not remap `background-image` and it would keep
-its own colour against a system-coloured page.
+too, because forced colors does not remap `background-image` and it would keep
+its own color against a system-colored page.
 
 There is nothing to focus and nothing to press, so a skeleton is not in the tab
 order, takes `cursor: default` per the pointer rules, and sets `pointer-events:
@@ -276,7 +276,7 @@ re-point the global tokens in the Default column to move every skeleton at once.
 
 `--forte-skeleton-highlight` is the one token here that is not a plain semantic
 reference, and the reason is worth knowing: "brighter" is not a direction on
-this scale. `--forte-gray-4` is a light grey in light mode and a dark one in
+this scale. `--forte-gray-4` is a light gray in light mode and a dark one in
 dark, so a single ramp step would shimmer *darker* in one of the two — which
 looks broken rather than subtle. It is a `light-dark()` pair instead, each
 branch a step of lightness away from the fill in its own mode, resolved against

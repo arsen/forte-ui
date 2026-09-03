@@ -49,7 +49,7 @@ if it fails, find the directory under `node_modules/@forte-ui/react`). Inside:
 | File | What it holds |
 | :-- | :-- |
 | `package.json` | the installed version |
-| `docs-data/components.md` | the component catalogue — every component with a one-line *when to use this* and the exact `props.json` / `theming.json` keys to look up next. Small enough to read whole; **start here when choosing a component** |
+| `docs-data/components.md` | the component catalog — every component with a one-line *when to use this* and the exact `props.json` / `theming.json` keys to look up next. Small enough to read whole; **start here when choosing a component** |
 | `docs-data/props.json` | every component part's props — keyed by part name (`ButtonProps` lives under `Button`, `SelectTrigger` under `SelectTrigger`), with descriptions, types, defaults |
 | `docs-data/theming.json` | every per-component theming knob — keyed by component, each knob with its name, default, the part it lives on, and every variant/size selector that reassigns it |
 | `docs-data/tokens.json` | every global `--forte-*` token — keyed by name, with its family, default value, and every declaration (including dark-mode and preset rewrites) |
@@ -129,7 +129,7 @@ is silent:
 :root {
   --forte-accent-seed: #7c3aed;   /* required: the brand color */
   --forte-secondary-seed: #0e7490; /* optional: drives tone="secondary" */
-  --forte-neutral-tint: 0.5;       /* optional: 0 pure grey … 1 brand-tinted greys */
+  --forte-neutral-tint: 0.5;       /* optional: 0 pure gray … 1 brand-tinted grays */
 }
 ```
 

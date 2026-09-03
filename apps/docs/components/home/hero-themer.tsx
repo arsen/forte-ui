@@ -6,7 +6,7 @@ import { PRESETS, useThemeConfig } from "@/components/theme-studio/theme-config"
 
 /* The five the hero offers, resolved from the studio's own list rather than
  * restated here. The two are one control seen twice now that a swatch writes
- * the shared theme record, so a colour that drifted between two copies of the
+ * the shared theme record, so a color that drifted between two copies of the
  * list would theme the page and light nothing up at either end. */
 const HERO_PRESETS = ["Ocean", "Violet", "Forest", "Ember", "Rose"].flatMap((name) =>
   PRESETS.filter((p) => p.name === name),
@@ -14,14 +14,14 @@ const HERO_PRESETS = ["Ocean", "Violet", "Forest", "Ember", "Rose"].flatMap((nam
 
 /* One swatch.
  *
- * Colour IS the content of this control, so it opts out of forced-colors
+ * Color IS the content of this control, so it opts out of forced-colors
  * substitution and supplies its own boundary — otherwise five identical system
- * -coloured pills.
+ * -colored pills.
  *
  * The transition is written as an arbitrary property rather than as
  * `transition-[scale,border-color]` because the two halves run on different
  * clocks: the scale is a spring and must be paired with its own duration token,
- * while the border is a plain colour change. One shared duration would truncate
+ * while the border is a plain color change. One shared duration would truncate
  * the spring mid-bounce.
  *
  * The hover scale is gated on `--forte-motion-ok` by hand, which is the rule for
@@ -43,7 +43,7 @@ const SWATCH = [
  *  `--forte-motion-ok` is `1` normally and `0` under BOTH the OS preference
  *  and a `data-forte-motion="reduce"` set in the studio, so asking it is the
  *  only way the fade below stays in step with a reader who asked for less
- *  motion either way — and a whole-page colour wash is exactly the kind of
+ *  motion either way — and a whole-page color wash is exactly the kind of
  *  large-area change that guidance asks us to drop, so under `0` the palette
  *  simply snaps. */
 function motionOk(root: HTMLElement) {
@@ -65,10 +65,10 @@ function motionOk(root: HTMLElement) {
  * screen recording showed what the frames in between actually held. In the
  * desktop app's Chromium (148) every `border: 1px solid var(--…)` shorthand
  * on the page painted its edge in `currentColor` for the length of the fade:
- * near-white on every entry card, the label colour on the outline Button.
+ * near-white on every entry card, the label color on the outline Button.
  * Longhand `border-color: var(--…)` declarations feeding on the SAME token —
  * the swatches here, the divider under the hero — held, so the ramp was
- * fine and the shorthand's colour was what dropped. It does not reproduce
+ * fine and the shorthand's color was what dropped. It does not reproduce
  * on a forced style read mid-fade, nor in headless Chrome 152, which is why
  * it survived for as long as it did. The per-frame cost was the other half:
  * every element re-resolves every token on every frame, which measured at
@@ -81,14 +81,14 @@ function motionOk(root: HTMLElement) {
  * things came of the shortcut: the palette was never persisted, so it was gone
  * on the next navigation while one picked in the theme drawer survived; the
  * measured `--forte-color-on-primary` was left behind on the old seed, so the
- * auto-contrast guarantee held for a colour that was no longer on screen; and
+ * auto-contrast guarantee held for a color that was no longer on screen; and
  * the drawer's preset grid went on showing whatever it last set. Sharing the
  * record makes a hero swatch and a preset toggle the same control.
  */
 export function HeroThemer() {
   const [cfg, setThemeConfig] = useThemeConfig();
 
-  /* Matched on both colours, the way the studio's preset grid is: change
+  /* Matched on both colors, the way the studio's preset grid is: change
    * either one there and no swatch here is current any more — a state this row
    * can genuinely be in now that it reads a shared record rather than
    * remembering its own last click. `findIndex` returning -1 leaves every

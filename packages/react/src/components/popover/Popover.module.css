@@ -19,7 +19,7 @@
  *     and `--forte-scale-enter` to exactly 1, so the gesture degrades to a
  *     plain opacity fade without this file knowing reduced motion exists.
  *   - Enter/exit runs on TRANSITIONS keyed off [data-starting-style] /
- *     [data-ending-style], never keyframes. A transition can be cancelled
+ *     [data-ending-style], never keyframes. A transition can be canceled
  *     mid-flight, so a popover dismissed while it is still opening reverses
  *     smoothly instead of snapping.
  *   - Nothing animates `infinite`. Base UI awaits
@@ -40,7 +40,7 @@
    * Trigger
    *
    * A modest neutral button, so an unstyled `<Popover.Trigger>Open</...>` does
-   * not fall back to the UA's grey chrome. Dropped entirely when the consumer
+   * not fall back to the UA's gray chrome. Dropped entirely when the consumer
    * passes `render` (typically our own `<Button>`), because two full button
    * styles on one element resolve by source order inside the same cascade
    * layer — which is not something a consumer can predict or fix.
@@ -111,7 +111,7 @@
    * with `modal`, where the rest of the document is already inert and the
    * scrim is what says so.
    *
-   * `.forte-scrim` supplies position/inset, the colour, the optional blur, the
+   * `.forte-scrim` supplies position/inset, the color, the optional blur, the
    * fade and the forced-colors treatment. Only stacking is component-local.
    * --------------------------------------------------------------------- */
   .backdrop {
@@ -164,9 +164,9 @@
      * Consumers set them on the popup itself (`className` on `Popover.Popup`,
      * whose rule is unlayered and so beats this layer) or re-point the global
      * tokens below, which this file only ever reads. */
-    /** Popup surface colour */
+    /** Popup surface color */
     --forte-popover-bg: var(--forte-color-overlay);
-    /** Popup text colour */
+    /** Popup text color */
     --forte-popover-fg: var(--forte-color-foreground);
     /** Corner radius */
     --forte-popover-radius: var(--forte-radius-surface);
@@ -181,13 +181,13 @@
      * Dialog and Drawer can lean on a shadow alone because a scrim has already
      * darkened everything behind them; a popover floats over undimmed content,
      * and at overlay-on-background the two surfaces are within a step of each
-     * other on the grey ramp — in dark mode the shadow is nearly the only
+     * other on the gray ramp — in dark mode the shadow is nearly the only
      * thing separating them, and it is the first casualty of a bright
      * backdrop. `.forte-hc-surface` already reserves a 1px transparent border on
      * this element, so painting it costs no layout. */
     /** Width of the hairline that separates the popup from the page */
     --forte-popover-border-width: 1px;
-    /** Colour of that hairline. The arrow's outline follows it. */
+    /** Color of that hairline. The arrow's outline follows it. */
     --forte-popover-border-color: var(--forte-color-border);
     /** Base font size inside the popup */
     --forte-popover-font-size: var(--forte-font-size-2);
@@ -293,7 +293,7 @@
     letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
-    /* Grow out of the trigger rather than out of the popup's own centre.
+    /* Grow out of the trigger rather than out of the popup's own center.
      * `--transform-origin` is published by the Positioner and points back at
      * the anchor. */
     transform-origin: var(--transform-origin);

@@ -449,7 +449,7 @@ export function TocList({
 }) {
   return (
     /* `render={<div />}`: both callers already own the landmark — the column
-     * wraps this in a labelled <nav>, and the drawer is a dialog with its own
+     * wraps this in a labeled <nav>, and the drawer is a dialog with its own
      * title — so the default <nav> here would put a second, unnamed one in
      * the tree. */
     <NavList.Root
@@ -460,7 +460,7 @@ export function TocList({
        * shunts every row under it down — the outline appears to twitch as you
        * read. Weight is the only active declaration that takes part in layout,
        * so equalising it is what makes the list a fixed height; the fill and
-       * the accent colour still carry the state. */
+       * the accent color still carry the state. */
       style={{
         "--forte-nav-list-item-font-weight-active": "var(--forte-nav-list-item-font-weight)",
       } as CSSProperties}
@@ -491,7 +491,7 @@ export function Toc() {
 
   /* One entry is not a table of contents, it is a link to where you already
    * are. The grid track is a fixed width, so dropping out here leaves the
-   * centre column exactly where it was on every other page. */
+   * center column exactly where it was on every other page. */
   if (headings.length < 2) return null;
 
   return (

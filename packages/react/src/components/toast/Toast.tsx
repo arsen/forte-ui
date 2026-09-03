@@ -94,7 +94,7 @@ export interface ToastOptions {
   /** A second line under the title. Becomes the accessible description. */
   description?: React.ReactNode;
   /**
-   * Which glyph and accent colour to use, and what lands on `data-type`.
+   * Which glyph and accent color to use, and what lands on `data-type`.
    * The named methods on `useToast()` set this for you.
    */
   type?: ToastType | (string & {});
@@ -351,7 +351,7 @@ function createToastApi(base: {
       // Base UI stamps the type on each phase itself, so none is set here.
       // A function is passed for `success` / `error` even when the consumer
       // gave a plain message, because that is the only form that receives the
-      // resolved value — and normalising both branches to it keeps the two
+      // resolved value — and normalizing both branches to it keeps the two
       // call shapes from needing separate code paths.
       return base.promise(promise, {
         loading: toBaseOptions(normalize(options.loading)),
@@ -515,10 +515,10 @@ function swipeFor(position: ToastPosition): ToastSwipeDirection[] {
  *
  * Drawn here rather than pulled from an icon package: the library ships no
  * icon dependency, and these four are the only ones it needs. Each is a
- * distinct SHAPE as well as a distinct colour — a tick, a cross, a triangle,
- * an "i" — because colour alone would leave the type invisible to a
- * colour-blind reader and to forced-colors mode, where every glyph repaints in
- * one system colour (WCAG SC 1.4.1).
+ * distinct SHAPE as well as a distinct color — a tick, a cross, a triangle,
+ * an "i" — because color alone would leave the type invisible to a
+ * color-blind reader and to forced-colors mode, where every glyph repaints in
+ * one system color (WCAG SC 1.4.1).
  *
  * `stroke` rather than `fill`, at a weight that stays legible at 16px, and
  * `aria-hidden` on all of them: the type is already carried by the toast's
@@ -596,7 +596,7 @@ export interface ToastViewportProps
    *
    * The usual reason to reach for it is a preview or an embedded surface that
    * has its own theme scope — a portal to `<body>` escapes the scope, and the
-   * toasts come out in the page's colours.
+   * toasts come out in the page's colors.
    */
   container?: BaseToastPortalProps["container"];
   /**
@@ -850,7 +850,7 @@ export interface ToastIconProps
 }
 
 /**
- * The status glyph, coloured by the toast's type.
+ * The status glyph, colored by the toast's type.
  *
  * A `loading` toast gets a `Spinner` instead of a static glyph. The spinner is
  * a child of the toast root rather than the root itself, which is load-bearing

@@ -143,20 +143,20 @@
         "type": "AlertTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the alert draws from, and which glyph\n`Alert.Icon` picks when you do not give it one.\n\nThe four status tones are the ones with a glyph — `success`, `warning`,\n`danger`, `info`. `neutral`, `primary` and `secondary` are emphasis\nrather than status and deliberately have none."
+        "description": "Which semantic color set the alert draws from, and which glyph\n`Alert.Icon` picks when you do not give it one.\n\nThe four status tones are the ones with a glyph — `success`, `warning`,\n`danger`, `info`. `neutral`, `primary` and `secondary` are emphasis\nrather than status and deliberately have none."
       },
       {
         "name": "variant",
         "type": "AlertVariant",
         "required": false,
         "defaultValue": "soft",
-        "description": "How loud the card is. `soft` tints the whole surface in the tone and\npaints the message in it; `outline` is a neutral panel with a hairline,\nwhere the tone survives only in the glyph.\n\nReach for `outline` when several alerts share a screen, or when the alert\nsits inside a form beside other bordered controls — a page of tinted\nfields has nothing left to emphasise with."
+        "description": "How loud the card is. `soft` tints the whole surface in the tone and\npaints the message in it; `outline` is a neutral panel with a hairline,\nwhere the tone survives only in the glyph.\n\nReach for `outline` when several alerts share a screen, or when the alert\nsits inside a form beside other bordered controls — a page of tinted\nfields has nothing left to emphasize with."
       }
     ]
   },
   "AlertIcon": {
     "name": "AlertIcon",
-    "description": "The glyph, coloured by the alert's tone.\n\nRenders nothing when there is nothing to draw — no children and a tone with\nno standard glyph — so `<Alert.Icon />` is safe to leave in a component that\ntakes its tone from a prop. The icon column collapses rather than opening a\ngap where a glyph would be.\n\nIt is centred on the TITLE's line box rather than on the card, so the glyph\nlines up with the first line of text whether the description runs to one\nline or five.",
+    "description": "The glyph, colored by the alert's tone.\n\nRenders nothing when there is nothing to draw — no children and a tone with\nno standard glyph — so `<Alert.Icon />` is safe to leave in a component that\ntakes its tone from a prop. The icon column collapses rather than opening a\ngap where a glyph would be.\n\nIt is centered on the TITLE's line box rather than on the card, so the glyph\nlines up with the first line of text whether the description runs to one\nline or five.",
     "props": [
       {
         "name": "children",
@@ -176,7 +176,7 @@
   },
   "AlertTitle": {
     "name": "AlertTitle",
-    "description": "The one-line summary, in the tone's own colour on `soft` and in the plain\nforeground on `outline`.\n\nIt renders a `<div>`, not a heading, and that is deliberate: an alert is a\nmessage about the state of the page rather than a section of it, and an\n`<h3>` here lands in the document outline between two real sections — which\nis what a screen-reader user navigating by heading has to wade through. If\nthe alert genuinely opens a region, name the region instead.\n\nA long title wraps. It is not truncated, because the summary is the part a\nreader who skips the description still has to be able to read.",
+    "description": "The one-line summary, in the tone's own color on `soft` and in the plain\nforeground on `outline`.\n\nIt renders a `<div>`, not a heading, and that is deliberate: an alert is a\nmessage about the state of the page rather than a section of it, and an\n`<h3>` here lands in the document outline between two real sections — which\nis what a screen-reader user navigating by heading has to wade through. If\nthe alert genuinely opens a region, name the region instead.\n\nA long title wraps. It is not truncated, because the summary is the part a\nreader who skips the description still has to be able to read.",
     "props": [
       {
         "name": "className",
@@ -202,7 +202,7 @@
   },
   "AlertAction": {
     "name": "AlertAction",
-    "description": "The trailing slot for whatever the message asks the reader to do — usually\none `Button`, occasionally two.\n\nIt is a slot and not a button: an alert's action is a real control with its\nown variant, tone, loading state and href, and wrapping `Button` would mean\nre-exposing all of it. Compose instead — `<Alert.Action><Button size=\"sm\"\nvariant=\"outline\">Retry</Button></Alert.Action>`.\n\nIt sits against the inline-end edge, centred on the whole message rather\nthan on the title, so a three-line description does not leave the button\nfloating at the top.",
+    "description": "The trailing slot for whatever the message asks the reader to do — usually\none `Button`, occasionally two.\n\nIt is a slot and not a button: an alert's action is a real control with its\nown variant, tone, loading state and href, and wrapping `Button` would mean\nre-exposing all of it. Compose instead — `<Alert.Action><Button size=\"sm\"\nvariant=\"outline\">Retry</Button></Alert.Action>`.\n\nIt sits against the inline-end edge, centered on the whole message rather\nthan on the title, so a three-line description does not leave the button\nfloating at the top.",
     "props": [
       {
         "name": "className",
@@ -242,7 +242,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Start with no surface at all and gain the variant's fill, hairline and a\nshadow once the page has scrolled under the bar. The Material \"on\nscroll\" behaviour: the bar reads as part of the page at the top and as\na surface over it everywhere else.\n\n`plain` has no surface to reveal, so pair this with another variant."
+        "description": "Start with no surface at all and gain the variant's fill, hairline and a\nshadow once the page has scrolled under the bar. The Material \"on\nscroll\" behavior: the bar reads as part of the page at the top and as\na surface over it everywhere else.\n\n`plain` has no surface to reveal, so pair this with another variant."
       },
       {
         "name": "hideOnScroll",
@@ -284,14 +284,14 @@
         "type": "AppBarTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which colour set the bar draws from. `neutral` is the grey scale;\n`primary` and `secondary` fill the bar with the accent and re-point the\nforeground tokens inside it, so the ghost buttons, links and separators\nyou compose into it recolour themselves for contrast."
+        "description": "Which color set the bar draws from. `neutral` is the gray scale;\n`primary` and `secondary` fill the bar with the accent and re-point the\nforeground tokens inside it, so the ghost buttons, links and separators\nyou compose into it recolor themselves for contrast."
       },
       {
         "name": "variant",
         "type": "AppBarVariant",
         "required": false,
         "defaultValue": "panel",
-        "description": "How much chrome the bar carries. `plain` is a bare row with no surface;\n`panel` fills with the panel colour; `outline` sits on the page\nbackground with a hairline underneath; `frosted` is `outline` made\ntranslucent, with the content behind it blurred.\n\n`frosted` is an enhancement in two directions: where `backdrop-filter`\nis unsupported the bar is simply translucent, and for a reader who has\nasked the OS to reduce transparency it is opaque."
+        "description": "How much chrome the bar carries. `plain` is a bare row with no surface;\n`panel` fills with the panel color; `outline` sits on the page\nbackground with a hairline underneath; `frosted` is `outline` made\ntranslucent, with the content behind it blurred.\n\n`frosted` is an enhancement in two directions: where `backdrop-filter`\nis unsupported the bar is simply translucent, and for a reader who has\nasked the OS to reduce transparency it is opaque."
       }
     ]
   },
@@ -330,7 +330,7 @@
         "type": "AppBarTitleAlign",
         "required": false,
         "defaultValue": "start",
-        "description": "Where the title sits in the space between the leading and trailing\nslots. `center` is the phone convention — the title between a back\nbutton and an action — and it is centred in *that* space, so a bar\nwith controls on only one side puts it off the bar's true middle."
+        "description": "Where the title sits in the space between the leading and trailing\nslots. `center` is the phone convention — the title between a back\nbutton and an action — and it is centered in *that* space, so a bar\nwith controls on only one side puts it off the bar's true middle."
       },
       {
         "name": "className",
@@ -426,14 +426,14 @@
         "type": "AvatarTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the fallback draws from. Rotating the tone\nacross a list is the cheapest way to make initials tell people apart —\nbut colour is never the only cue, since the initials themselves differ."
+        "description": "Which semantic color set the fallback draws from. Rotating the tone\nacross a list is the cheapest way to make initials tell people apart —\nbut color is never the only cue, since the initials themselves differ."
       },
       {
         "name": "variant",
         "type": "AvatarVariant",
         "required": false,
         "defaultValue": "soft",
-        "description": "How loud the fallback is. `soft` is a tinted disc with tone-coloured\ninitials, `solid` fills with the tone itself, `outline` is a ring around\nnothing.\n\nThis only decides what shows while there is no image — a loaded image\ncovers the fill entirely. `outline` is the exception: its border sits\noutside the picture and stays visible either way."
+        "description": "How loud the fallback is. `soft` is a tinted disc with tone-colored\ninitials, `solid` fills with the tone itself, `outline` is a ring around\nnothing.\n\nThis only decides what shows while there is no image — a loaded image\ncovers the fill entirely. `outline` is the exception: its border sits\noutside the picture and stays visible either way."
       }
     ]
   },
@@ -514,7 +514,7 @@
         "type": "AvatarBadgeTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the badge draws from. `success`, `warning` and\n`danger` are the presence set — online, away, do-not-disturb — and the\nbrand tones suit a count or a verification tick.\n\nColour is never the only cue: pass `label`, or write the status out beside\nthe avatar, so the badge is repeating something rather than saying it."
+        "description": "Which semantic color set the badge draws from. `success`, `warning` and\n`danger` are the presence set — online, away, do-not-disturb — and the\nbrand tones suit a count or a verification tick.\n\nColor is never the only cue: pass `label`, or write the status out beside\nthe avatar, so the badge is repeating something rather than saying it."
       }
     ]
   },
@@ -554,7 +554,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Draw a small filled dot before the label — the status-chip convention.\n\nIt is decorative and `aria-hidden`: the status is in the words. A dot\nthat carried meaning on its own would be colour as the sole cue, which is\nthe failure (SC 1.4.1) this component is otherwise careful to avoid."
+        "description": "Draw a small filled dot before the label — the status-chip convention.\n\nIt is decorative and `aria-hidden`: the status is in the words. A dot\nthat carried meaning on its own would be color as the sole cue, which is\nthe failure (SC 1.4.1) this component is otherwise careful to avoid."
       },
       {
         "name": "max",
@@ -589,7 +589,7 @@
         "type": "BadgeTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the badge draws from. Combines freely with\n`variant` — every pairing is a complete colour set, so\n`tone=\"success\" variant=\"outline\"` needs nothing added to work.\n\nThe four status tones are the reason this component has seven rather than\nthe four `Button` has: a badge is where an app says \"Active\", \"Pending\",\n\"Failed\", and an app that has to reach for a hex value to say it has lost\ntheming, dark mode and forced-colors support in one line."
+        "description": "Which semantic color set the badge draws from. Combines freely with\n`variant` — every pairing is a complete color set, so\n`tone=\"success\" variant=\"outline\"` needs nothing added to work.\n\nThe four status tones are the reason this component has seven rather than\nthe four `Button` has: a badge is where an app says \"Active\", \"Pending\",\n\"Failed\", and an app that has to reach for a hex value to say it has lost\ntheming, dark mode and forced-colors support in one line."
       },
       {
         "name": "variant",
@@ -703,7 +703,7 @@
   },
   "BreadcrumbPage": {
     "name": "BreadcrumbPage",
-    "description": "The last crumb: where the reader is. Renders a `<span aria-current=\"page\">`.\n\nDeliberately not a link. A link to the page you are already on is a control\nthat does nothing, and the trail's whole job at this position is to say\n\"here\" — `aria-current` says it in the accessibility tree, and the weight\nand colour change say it on screen, so the cue is never colour alone.",
+    "description": "The last crumb: where the reader is. Renders a `<span aria-current=\"page\">`.\n\nDeliberately not a link. A link to the page you are already on is a control\nthat does nothing, and the trail's whole job at this position is to say\n\"here\" — `aria-current` says it in the accessibility tree, and the weight\nand color change say it on screen, so the cue is never color alone.",
     "props": [
       {
         "name": "className",
@@ -819,7 +819,7 @@
         "type": "ButtonTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
       },
       {
         "name": "variant",
@@ -846,7 +846,7 @@
         "type": "ButtonGroupOrientation",
         "required": false,
         "defaultValue": "horizontal",
-        "description": "Which way the controls fuse — a row or a column. Layout only: unlike\n[`Toolbar`](/components/toolbar), a button group adds no keyboard\nbehaviour, so there is no arrow-key axis to move."
+        "description": "Which way the controls fuse — a row or a column. Layout only: unlike\n[`Toolbar`](/components/toolbar), a button group adds no keyboard\nbehavior, so there is no arrow-key axis to move."
       },
       {
         "name": "render",
@@ -859,7 +859,7 @@
   },
   "ButtonGroupSeparator": {
     "name": "ButtonGroupSeparator",
-    "description": "The seam between two fused controls that have no visible border of their\nown. Renders a `<div role=\"separator\">`.\n\nReach for it between `solid` or `soft` buttons — fused bare they read as\none unbroken slab of colour. `outline` neighbours need none: their own\nborders already draw the seam, and a separator there doubles the line.",
+    "description": "The seam between two fused controls that have no visible border of their\nown. Renders a `<div role=\"separator\">`.\n\nReach for it between `solid` or `soft` buttons — fused bare they read as\none unbroken slab of color. `outline` neighbours need none: their own\nborders already draw the seam, and a separator there doubles the line.",
     "props": [
       {
         "name": "className",
@@ -1146,7 +1146,7 @@
   },
   "CardAction": {
     "name": "CardAction",
-    "description": "The header's trailing slot — a badge, an icon button, a `Menu` trigger. It\nsits against the inline-end edge, pinned to the top corner when the header\nhas both a title and a description, centred on the title's line when the\ntitle is alone.\n\nA slot and not a control: whatever goes here is a real component with its\nown props, and wrapping one would mean re-exposing all of them. Compose\ninstead.",
+    "description": "The header's trailing slot — a badge, an icon button, a `Menu` trigger. It\nsits against the inline-end edge, pinned to the top corner when the header\nhas both a title and a description, centered on the title's line when the\ntitle is alone.\n\nA slot and not a control: whatever goes here is a real component with its\nown props, and wrapping one would mean re-exposing all of them. Compose\ninstead.",
     "props": [
       {
         "name": "className",
@@ -1212,7 +1212,7 @@
         "type": "CarouselAlign",
         "required": false,
         "defaultValue": "start",
-        "description": "Where the active slide sits when more than one fits. `\"start\"` parks it\nat the start edge and fills the view with the slides after it — a row of\ncards. `\"center\"` puts it in the middle with its neighbours peeking on\nboth sides — a gallery. Centred, every slide can take the middle: with\n`loop` the last slides show before the first one, without it the first\nand last sit beside blank track."
+        "description": "Where the active slide sits when more than one fits. `\"start\"` parks it\nat the start edge and fills the view with the slides after it — a row of\ncards. `\"center\"` puts it in the middle with its neighbours peeking on\nboth sides — a gallery. Centered, every slide can take the middle: with\n`loop` the last slides show before the first one, without it the first\nand last sit beside blank track."
       },
       {
         "name": "autoHeight",
@@ -1538,7 +1538,7 @@
         "type": "CheckboxTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the checked fill draws from. Inside a\n`Field.Root` an invalid field overrides this with the danger palette, so\na validation error always reads as an error."
+        "description": "Which semantic color set the checked fill draws from. Inside a\n`Field.Root` an invalid field overrides this with the danger palette, so\na validation error always reads as an error."
       }
     ]
   },
@@ -1606,7 +1606,7 @@
         "type": "CollapsibleVariant",
         "required": false,
         "defaultValue": "plain",
-        "description": "How much visual weight the disclosure carries. `\"plain\"` contributes no\nbox of its own — a bare text button over its panel, for a \"Show more\" that\nlives inside a page. `\"contained\"` turns the pair into a card sized and\ncoloured to match one item of a `contained` Accordion. Both are the same\nthree parts with different knobs — nothing moves."
+        "description": "How much visual weight the disclosure carries. `\"plain\"` contributes no\nbox of its own — a bare text button over its panel, for a \"Show more\" that\nlives inside a page. `\"contained\"` turns the pair into a card sized and\ncolored to match one item of a `contained` Accordion. Both are the same\nthree parts with different knobs — nothing moves."
       }
     ]
   },
@@ -1659,7 +1659,7 @@
   },
   "ColorPickerRoot": {
     "name": "ColorPickerRoot",
-    "description": "Owns the colour and the format, and renders no DOM element of its own — so\nit takes neither `className` nor `ref`.\n\nIt also renders a `Popover.Root`, which is what lets `ColorPicker.Trigger`\nand `ColorPicker.Popup` exist without the consumer wiring a popover by hand.\nA picker built out of `ColorPicker.Panel` alone simply never uses it: the\npopover root renders nothing until a trigger and a popup are present.\n\n```tsx\n<ColorPicker.Root defaultValue=\"#7c3aed\">\n  <ColorPicker.Trigger>Brand colour</ColorPicker.Trigger>\n  <ColorPicker.Popup>\n    <ColorPicker.Area />\n    <ColorPicker.HueSlider />\n    <ColorPicker.Row>\n      <ColorPicker.Format />\n      <ColorPicker.Input />\n    </ColorPicker.Row>\n  </ColorPicker.Popup>\n</ColorPicker.Root>\n```",
+    "description": "Owns the color and the format, and renders no DOM element of its own — so\nit takes neither `className` nor `ref`.\n\nIt also renders a `Popover.Root`, which is what lets `ColorPicker.Trigger`\nand `ColorPicker.Popup` exist without the consumer wiring a popover by hand.\nA picker built out of `ColorPicker.Panel` alone simply never uses it: the\npopover root renders nothing until a trigger and a popup are present.\n\n```tsx\n<ColorPicker.Root defaultValue=\"#7c3aed\">\n  <ColorPicker.Trigger>Brand color</ColorPicker.Trigger>\n  <ColorPicker.Popup>\n    <ColorPicker.Area />\n    <ColorPicker.HueSlider />\n    <ColorPicker.Row>\n      <ColorPicker.Format />\n      <ColorPicker.Input />\n    </ColorPicker.Row>\n  </ColorPicker.Popup>\n</ColorPicker.Root>\n```",
     "props": [
       {
         "name": "children",
@@ -1687,7 +1687,7 @@
         "type": "string",
         "required": false,
         "defaultValue": "#000000",
-        "description": "The colour the picker starts on when it is uncontrolled."
+        "description": "The color the picker starts on when it is uncontrolled."
       },
       {
         "name": "disabled",
@@ -1722,7 +1722,7 @@
         "type": "((format: ColorPickerFormat) => void)",
         "required": false,
         "defaultValue": null,
-        "description": "Called when the format changes. Switching format also re-emits the\ncurrent colour through `onValueChange` with reason `\"format-change\"`, so\na controlled `value` never disagrees with the notation on screen."
+        "description": "Called when the format changes. Switching format also re-emits the\ncurrent color through `onValueChange` with reason `\"format-change\"`, so\na controlled `value` never disagrees with the notation on screen."
       },
       {
         "name": "onOpenChange",
@@ -1736,7 +1736,7 @@
         "type": "((value: string, details: ColorPickerChangeDetails) => void)",
         "required": false,
         "defaultValue": null,
-        "description": "Called on every change, including each frame of a drag. `value` is\nwritten in the current `format`; `details` carries the same colour as\nHSVA and RGBA, plus what moved it."
+        "description": "Called on every change, including each frame of a drag. `value` is\nwritten in the current `format`; `details` carries the same color as\nHSVA and RGBA, plus what moved it."
       },
       {
         "name": "onValueCommitted",
@@ -1757,7 +1757,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "The selected colour, as a CSS colour string. Pass it with\n`onValueChange` to control the picker.\n\nAccepts `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`, `oklch()`,\n`oklab()` and `transparent`, in both the legacy comma form and the modern\nspace form. A string that cannot be read is ignored rather than throwing,\nso a half-typed value in your own state never blanks the picker. Named\ncolours (`rebeccapurple`) are not accepted — see the docs page."
+        "description": "The selected color, as a CSS color string. Pass it with\n`onValueChange` to control the picker.\n\nAccepts `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`, `oklch()`,\n`oklab()` and `transparent`, in both the legacy comma form and the modern\nspace form. A string that cannot be read is ignored rather than throwing,\nso a half-typed value in your own state never blanks the picker. Named\ncolors (`rebeccapurple`) are not accepted — see the docs page."
       }
     ]
   },
@@ -1783,7 +1783,7 @@
   },
   "ColorPickerAlphaSlider": {
     "name": "ColorPickerAlphaSlider",
-    "description": "The opacity rail — 0% to 100% over a checkerboard.\n\nRendering it is what turns alpha on: the picker omits alpha from every\nformat while the colour is fully opaque, so a picker without this rail emits\n`#7c3aed` rather than `#7c3aedff` and needs no prop to say so. A\n`defaultValue` that already carries alpha keeps it either way.",
+    "description": "The opacity rail — 0% to 100% over a checkerboard.\n\nRendering it is what turns alpha on: the picker omits alpha from every\nformat while the color is fully opaque, so a picker without this rail emits\n`#7c3aed` rather than `#7c3aedff` and needs no prop to say so. A\n`defaultValue` that already carries alpha keeps it either way.",
     "props": [
       {
         "name": "className",
@@ -1803,7 +1803,7 @@
   },
   "ColorPickerFormatSelect": {
     "name": "ColorPickerFormatSelect",
-    "description": "Picks the notation the value is written in, from the `formats` allowed on\n`ColorPicker.Root`. Composes this library's own `Select`.\n\nChanging it rewrites the value rather than the colour: the same colour comes\nback out as `#7c3aed`, `rgb(124 58 237)`, `hsl(262.1 83.3% 57.8%)` or\n`oklch(0.5413 0.2466 293.01)` — which is also why HEX rounds and the other\nthree do not.",
+    "description": "Picks the notation the value is written in, from the `formats` allowed on\n`ColorPicker.Root`. Composes this library's own `Select`.\n\nChanging it rewrites the value rather than the color: the same color comes\nback out as `#7c3aed`, `rgb(124 58 237)`, `hsl(262.1 83.3% 57.8%)` or\n`oklch(0.5413 0.2466 293.01)` — which is also why HEX rounds and the other\nthree do not.",
     "props": [
       {
         "name": "className",
@@ -1816,21 +1816,21 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Colour format",
+        "defaultValue": "Color format",
         "description": "Accessible name for the control."
       }
     ]
   },
   "ColorPickerTrigger": {
     "name": "ColorPickerTrigger",
-    "description": "The button that opens the picker. Renders a `<button>` showing the current\ncolour as a swatch, followed by whatever children you give it.\n\nThe colour is also announced, in a visually hidden span: colour is the one\nthing a swatch cannot convey to a screen reader, and a trigger reading only\n\"Brand colour\" leaves out the entire answer.",
+    "description": "The button that opens the picker. Renders a `<button>` showing the current\ncolor as a swatch, followed by whatever children you give it.\n\nThe color is also announced, in a visually hidden span: color is the one\nthing a swatch cannot convey to a screen reader, and a trigger reading only\n\"Brand color\" leaves out the entire answer.",
     "props": [
       {
         "name": "children",
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "The trigger's visible label. The current colour is announced after it, so\na trigger with no children is still named."
+        "description": "The trigger's visible label. The current color is announced after it, so\na trigger with no children is still named."
       },
       {
         "name": "className",
@@ -1844,7 +1844,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Hide the built-in swatch, for a trigger that shows the colour some other\nway — a filled button, an icon that inherits it."
+        "description": "Hide the built-in swatch, for a trigger that shows the color some other\nway — a filled button, an icon that inherits it."
       }
     ]
   },
@@ -1885,7 +1885,7 @@
         "type": "number",
         "required": false,
         "defaultValue": "5",
-        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-center (`data-uncentered`)."
       },
       {
         "name": "backdrop",
@@ -2017,7 +2017,7 @@
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--forte-popover-bg`, so a custom skin usually needs nothing here."
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colors\nthrough `--forte-popover-bg`, so a custom skin usually needs nothing here."
       },
       {
         "name": "className",
@@ -2056,7 +2056,7 @@
   },
   "ColorPickerArea": {
     "name": "ColorPickerArea",
-    "description": "The saturation/brightness canvas — the part that makes this a colour picker\nrather than a swatch list. Renders a `<div>` with a draggable thumb and two\nnested `<input type=\"range\">`.\n\nThe two inputs are the whole accessibility story. A 2D field has no ARIA\nrole of its own, so it is expressed as what it actually is: two ranges that\nhappen to share a thumb. Each is a real slider to assistive technology and\nto the keyboard — arrow keys, Home, End and Page Up/Down all work without\nthis component implementing any of them — and an arrow key across the axes\nmoves focus to the other input, so the value that changes is the value that\ngets announced.\n\nThe canvas does NOT mirror under RTL, and that is deliberate: it is a\npicture of a colour space, not a line of text, and the hue that sits on the\nleft of every other colour tool in the world should not move because the\nsurrounding paragraph runs the other way. The hue and alpha rails DO mirror,\nbecause they are sliders and a slider's start follows the writing direction.",
+    "description": "The saturation/brightness canvas — the part that makes this a color picker\nrather than a swatch list. Renders a `<div>` with a draggable thumb and two\nnested `<input type=\"range\">`.\n\nThe two inputs are the whole accessibility story. A 2D field has no ARIA\nrole of its own, so it is expressed as what it actually is: two ranges that\nhappen to share a thumb. Each is a real slider to assistive technology and\nto the keyboard — arrow keys, Home, End and Page Up/Down all work without\nthis component implementing any of them — and an arrow key across the axes\nmoves focus to the other input, so the value that changes is the value that\ngets announced.\n\nThe canvas does NOT mirror under RTL, and that is deliberate: it is a\npicture of a color space, not a line of text, and the hue that sits on the\nleft of every other color tool in the world should not move because the\nsurrounding paragraph runs the other way. The hue and alpha rails DO mirror,\nbecause they are sliders and a slider's start follows the writing direction.",
     "props": [
       {
         "name": "brightnessLabel",
@@ -2090,7 +2090,7 @@
   },
   "ColorPickerSwatches": {
     "name": "ColorPickerSwatches",
-    "description": "A grid of preset colours. Renders a `<div>` with `role=\"radiogroup\"`.\n\nRadio semantics, not a row of buttons, because that is what the control\nactually is: a set of mutually exclusive options where at most one is\ncurrent. It buys the whole keyboard convention with it — one tab stop for\nthe group, arrow keys between swatches, and selection following focus — so a\ntwenty-four colour palette costs a keyboard user one Tab instead of\ntwenty-four.\n\nThe colours come from `colors`; children are not read. That is what lets the\ngroup know its own order, which is what arrow keys and the single tab stop\nare computed from. For a palette you want to build element by element, use\n`ColorPicker.Swatch` on its own — outside a group each swatch is an\nindependent toggle.",
+    "description": "A grid of preset colors. Renders a `<div>` with `role=\"radiogroup\"`.\n\nRadio semantics, not a row of buttons, because that is what the control\nactually is: a set of mutually exclusive options where at most one is\ncurrent. It buys the whole keyboard convention with it — one tab stop for\nthe group, arrow keys between swatches, and selection following focus — so a\ntwenty-four color palette costs a keyboard user one Tab instead of\ntwenty-four.\n\nThe colors come from `colors`; children are not read. That is what lets the\ngroup know its own order, which is what arrow keys and the single tab stop\nare computed from. For a palette you want to build element by element, use\n`ColorPicker.Swatch` on its own — outside a group each swatch is an\nindependent toggle.",
     "props": [
       {
         "name": "className",
@@ -2104,7 +2104,7 @@
         "type": "readonly string[]",
         "required": false,
         "defaultValue": "[\n  \"#ffffff\", \"#f4f4f5\", \"#d4d4d8\", \"#a1a1aa\", \"#71717a\", \"#3f3f46\", \"#18181b\", \"#000000\",\n  \"#ef4444\", \"#f97316\", \"#f59e0b\", \"#eab308\", \"#84cc16\", \"#22c55e\", \"#10b981\", \"#14b8a6\",\n  \"#06b6d4\", \"#0ea5e9\", \"#3b82f6\", \"#6366f1\", \"#8b5cf6\", \"#a855f7\", \"#d946ef\", \"#ec4899\",\n]",
-        "description": "The palette, as CSS colour strings. Anything `value` accepts works here,\nincluding translucent colours."
+        "description": "The palette, as CSS color strings. Anything `value` accepts works here,\nincluding translucent colors."
       },
       {
         "name": "columns",
@@ -2117,21 +2117,21 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Colour swatches",
+        "defaultValue": "Color swatches",
         "description": "Accessible name for the group."
       }
     ]
   },
   "ColorPickerSwatch": {
     "name": "ColorPickerSwatch",
-    "description": "One preset colour. Renders a `<button>`.\n\nInside `ColorPicker.Swatches` it is a radio in that group. On its own it is\na toggle button carrying `aria-pressed` — a lone `role=\"radio\"` would\npromise a group that does not exist.\n\nSelection is decided by comparing eight-bit colour, not strings, so a swatch\nwritten `#f00` is still shown as current when the value reads\n`rgb(255 0 0)`.",
+    "description": "One preset color. Renders a `<button>`.\n\nInside `ColorPicker.Swatches` it is a radio in that group. On its own it is\na toggle button carrying `aria-pressed` — a lone `role=\"radio\"` would\npromise a group that does not exist.\n\nSelection is decided by comparing eight-bit color, not strings, so a swatch\nwritten `#f00` is still shown as current when the value reads\n`rgb(255 0 0)`.",
     "props": [
       {
         "name": "value",
         "type": "string",
         "required": true,
         "defaultValue": null,
-        "description": "The colour this swatch sets, as a CSS colour string."
+        "description": "The color this swatch sets, as a CSS color string."
       },
       {
         "name": "className",
@@ -2145,13 +2145,13 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Accessible name. Defaults to the colour string, which is the only thing\nthat is reliably true about it — a name of your own (\"Brand primary\") is\nbetter wherever you have one."
+        "description": "Accessible name. Defaults to the color string, which is the only thing\nthat is reliably true about it — a name of your own (\"Brand primary\") is\nbetter wherever you have one."
       }
     ]
   },
   "ColorPickerPreview": {
     "name": "ColorPickerPreview",
-    "description": "A chip filled with the current colour, over a checkerboard so a translucent\nvalue is legible. Renders a `<div>`.\n\nDecorative: `aria-hidden`, because the colour it shows is already announced\nby the trigger and readable in `ColorPicker.Input`, and a third announcement\nof the same value on every drag frame is noise.",
+    "description": "A chip filled with the current color, over a checkerboard so a translucent\nvalue is legible. Renders a `<div>`.\n\nDecorative: `aria-hidden`, because the color it shows is already announced\nby the trigger and readable in `ColorPicker.Input`, and a third announcement\nof the same value on every drag frame is noise.",
     "props": [
       {
         "name": "className",
@@ -2164,7 +2164,7 @@
   },
   "ColorPickerValue": {
     "name": "ColorPickerValue",
-    "description": "The current colour as text, in the current format. Renders a `<span>` in the\nmono face with tabular figures, so the readout does not change width as the\ndigits change under a drag.",
+    "description": "The current color as text, in the current format. Renders a `<span>` in the\nmono face with tabular figures, so the readout does not change width as the\ndigits change under a drag.",
     "props": [
       {
         "name": "className",
@@ -2177,7 +2177,7 @@
   },
   "ColorPickerInput": {
     "name": "ColorPickerInput",
-    "description": "A text field holding the colour in the current format. Renders an `<input>`.\n\nIt is the picker's precision instrument and its paste target — and, for\nanyone who cannot use a canvas at all, the route to an exact colour that the\ncanvas is not.\n\nWhile it has focus the field keeps the text the user is typing, not the\nformatted value: rewriting `#7c3` to `#77cc33` mid-keystroke would move the\ncaret and make the field impossible to type into. Every keystroke that\nparses is applied immediately, so the panel previews as you type; one that\ndoes not is left alone and marked `data-invalid`. Blur restores the\ncanonical text, so an abandoned edit cannot leave the field disagreeing with\nthe colour.",
+    "description": "A text field holding the color in the current format. Renders an `<input>`.\n\nIt is the picker's precision instrument and its paste target — and, for\nanyone who cannot use a canvas at all, the route to an exact color that the\ncanvas is not.\n\nWhile it has focus the field keeps the text the user is typing, not the\nformatted value: rewriting `#7c3` to `#77cc33` mid-keystroke would move the\ncaret and make the field impossible to type into. Every keystroke that\nparses is applied immediately, so the panel previews as you type; one that\ndoes not is left alone and marked `data-invalid`. Blur restores the\ncanonical text, so an abandoned edit cannot leave the field disagreeing with\nthe color.",
     "props": [
       {
         "name": "className",
@@ -2190,14 +2190,14 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Colour value",
+        "defaultValue": "Color value",
         "description": "Accessible name for the field."
       }
     ]
   },
   "ColorPickerEyeDropper": {
     "name": "ColorPickerEyeDropper",
-    "description": "Samples a colour from anywhere on the screen, through the browser's\nEyeDropper API. Renders a `<button>` — or nothing at all where the API is\nmissing, which today is Firefox and every browser on iOS.\n\nRendering nothing is the point: this is a shortcut to a colour the rest of\nthe picker can already reach, so its absence costs a user nothing, while a\nbutton that opens no eyedropper costs them a click and their confidence in\nthe rest of the panel. The detection runs in an effect rather than during\nrender because the server cannot know the answer, and guessing there is what\nproduces a hydration mismatch.",
+    "description": "Samples a color from anywhere on the screen, through the browser's\nEyeDropper API. Renders a `<button>` — or nothing at all where the API is\nmissing, which today is Firefox and every browser on iOS.\n\nRendering nothing is the point: this is a shortcut to a color the rest of\nthe picker can already reach, so its absence costs a user nothing, while a\nbutton that opens no eyedropper costs them a click and their confidence in\nthe rest of the panel. The detection runs in an effect rather than during\nrender because the server cannot know the answer, and guessing there is what\nproduces a hydration mismatch.",
     "props": [
       {
         "name": "className",
@@ -2210,21 +2210,21 @@
         "name": "label",
         "type": "string",
         "required": false,
-        "defaultValue": "Pick a colour from the screen",
+        "defaultValue": "Pick a color from the screen",
         "description": "Accessible name for the button."
       }
     ]
   },
   "ColorPickerHiddenInput": {
     "name": "ColorPickerHiddenInput",
-    "description": "Submits the colour with a form. Renders `<input type=\"hidden\">`.\n\nPlace it next to `ColorPicker.Trigger`, NOT inside `ColorPicker.Popup`. The\npopup is portalled to `<body>` and unmounted while it is closed, so a hidden\ninput in there is outside the form's element tree even when it exists, and\nmissing entirely by the time anything is submitted.",
+    "description": "Submits the color with a form. Renders `<input type=\"hidden\">`.\n\nPlace it next to `ColorPicker.Trigger`, NOT inside `ColorPicker.Popup`. The\npopup is portalled to `<body>` and unmounted while it is closed, so a hidden\ninput in there is outside the form's element tree even when it exists, and\nmissing entirely by the time anything is submitted.",
     "props": [
       {
         "name": "name",
         "type": "string",
         "required": true,
         "defaultValue": null,
-        "description": "The field name the colour is submitted under."
+        "description": "The field name the color is submitted under."
       }
     ]
   },
@@ -2652,7 +2652,7 @@
   },
   "ContextMenuTrigger": {
     "name": "ContextMenuTrigger",
-    "description": "The region that opens the menu on right click or long press. Renders a\n`<div>`.\n\nIt takes no tab stop and carries no ARIA of its own — a region that answers a\nright click is not a button, and saying otherwise would promise keyboard\nbehaviour it does not have. The platform's context-menu key (Shift+F10) does\nreach it when the region happens to wrap something focusable, since the\n`contextmenu` event that key fires bubbles; that is a bonus, not a plan.\n\nSo: **a context menu must never be the only route to an action.** Nothing\nannounces that a region has one. Put the same commands behind a visible\ncontrol — a `<Menu>` button on the card is the usual answer, and the docs\ncarry a worked example.\n\nLeft click does nothing here, so the trigger declares no cursor and lets the\ncontent it wraps keep its own — text stays a caret, an image stays an arrow.",
+    "description": "The region that opens the menu on right click or long press. Renders a\n`<div>`.\n\nIt takes no tab stop and carries no ARIA of its own — a region that answers a\nright click is not a button, and saying otherwise would promise keyboard\nbehavior it does not have. The platform's context-menu key (Shift+F10) does\nreach it when the region happens to wrap something focusable, since the\n`contextmenu` event that key fires bubbles; that is a bonus, not a plan.\n\nSo: **a context menu must never be the only route to an action.** Nothing\nannounces that a region has one. Put the same commands behind a visible\ncontrol — a `<Menu>` button on the card is the usual answer, and the docs\ncarry a worked example.\n\nLeft click does nothing here, so the trigger declares no cursor and lets the\ncontent it wraps keep its own — text stays a caret, an image stays an arrow.",
     "props": [
       {
         "name": "children",
@@ -2686,7 +2686,7 @@
         "type": "Align",
         "required": false,
         "defaultValue": "start",
-        "description": "How the popup aligns along the chosen side. Menus align to the trigger's\nstart edge rather than its centre, which is Base UI's own default — a\ncentred menu drifts left of a wide trigger and right of a narrow one, and\nthe reading edge is what a list of commands should line up on."
+        "description": "How the popup aligns along the chosen side. Menus align to the trigger's\nstart edge rather than its center, which is Base UI's own default — a\ncentered menu drifts left of a wide trigger and right of a narrow one, and\nthe reading edge is what a list of commands should line up on."
       },
       {
         "name": "alignOffset",
@@ -2811,7 +2811,7 @@
         "type": "MenuItemTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the row draws from. `danger` is for an action\nthat destroys something, and is the only alternative offered: the\nhighlight already paints `--forte-color-primary-soft`, so a primary-toned\nrow would be indistinguishable from the row the user is currently on."
+        "description": "Which semantic color set the row draws from. `danger` is for an action\nthat destroys something, and is the only alternative offered: the\nhighlight already paints `--forte-color-primary-soft`, so a primary-toned\nrow would be indistinguishable from the row the user is currently on."
       }
     ]
   },
@@ -2859,7 +2859,7 @@
         "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, MenuLinkItemState>",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/settings\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behaviour."
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/settings\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behavior."
       }
     ]
   },
@@ -3109,7 +3109,7 @@
   },
   "MenuShortcut": {
     "name": "MenuShortcut",
-    "description": "The keyboard shortcut printed at the end of a row. Renders a `<span>` that\nowns the row position — pushed to the trailing edge, never truncated — and\ndraws the keys themselves in a composed `Kbd`, so a menu's caps and a\ntooltip's are the same cap. It is not a Base UI part; it is here for the\nsame reason `Dialog.Footer` is: every second menu grows one, and left to\neach consumer it is re-invented with a different colour and a different gap\neach time.\n\nIt is `aria-hidden`, deliberately. The glyphs menus print are read out as\n\"place of interest sign K\" or \"up arrowhead command P\" — worse than silence.\nPut the shortcut on the item instead, where assistive technology expects to\nfind it and where it is spelled in words:\n\n```tsx\n<Menu.Item aria-keyshortcuts=\"Meta+K\">\n  Search\n  <Menu.Shortcut>⌘K</Menu.Shortcut>\n</Menu.Item>\n```",
+    "description": "The keyboard shortcut printed at the end of a row. Renders a `<span>` that\nowns the row position — pushed to the trailing edge, never truncated — and\ndraws the keys themselves in a composed `Kbd`, so a menu's caps and a\ntooltip's are the same cap. It is not a Base UI part; it is here for the\nsame reason `Dialog.Footer` is: every second menu grows one, and left to\neach consumer it is re-invented with a different color and a different gap\neach time.\n\nIt is `aria-hidden`, deliberately. The glyphs menus print are read out as\n\"place of interest sign K\" or \"up arrowhead command P\" — worse than silence.\nPut the shortcut on the item instead, where assistive technology expects to\nfind it and where it is spelled in words:\n\n```tsx\n<Menu.Item aria-keyshortcuts=\"Meta+K\">\n  Search\n  <Menu.Shortcut>⌘K</Menu.Shortcut>\n</Menu.Item>\n```",
     "props": [
       {
         "name": "children",
@@ -3268,7 +3268,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behaviour the element\ndoes not have natively."
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behavior the element\ndoes not have natively."
       },
       {
         "name": "openOnHover",
@@ -3377,7 +3377,7 @@
         "type": "number",
         "required": false,
         "defaultValue": "5",
-        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-center (`data-uncentered`)."
       },
       {
         "name": "backdrop",
@@ -3703,7 +3703,7 @@
         "type": "ButtonTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
       },
       {
         "name": "variant",
@@ -4032,7 +4032,7 @@
   },
   "DrawerContent": {
     "name": "DrawerContent",
-    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also where the drawer scrolls, which is what keeps a `Drawer.Handle`\nfrom scrolling away and lets a `Drawer.Footer` placed *outside* it pin to\nthe bottom of the drawer. Under the default `scrollArea` the scrolling box\nis the `ScrollArea.Viewport` nested inside this element rather than this\nelement itself; either way it is the first scrollable ancestor Base UI\nfinds from a gesture started in the body, so \"swipe only once the scroll\nhas bottomed out\" holds in both.\n\nOn a `top`/`bottom` drawer it caps and centres its own width through\n`--forte-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
+    "description": "The drawer's body.\n\nRenders a `<div>` that Base UI marks as content, which exempts it from\n*mouse* dragging — a press-and-drag over this region selects text instead\nof pulling the drawer. Touch dragging is unaffected, so the gesture still\nworks where it matters.\n\nIt is also where the drawer scrolls, which is what keeps a `Drawer.Handle`\nfrom scrolling away and lets a `Drawer.Footer` placed *outside* it pin to\nthe bottom of the drawer. Under the default `scrollArea` the scrolling box\nis the `ScrollArea.Viewport` nested inside this element rather than this\nelement itself; either way it is the first scrollable ancestor Base UI\nfinds from a gesture started in the body, so \"swipe only once the scroll\nhas bottomed out\" holds in both.\n\nOn a `top`/`bottom` drawer it caps and centers its own width through\n`--forte-drawer-content-max-inline-size`, which is what keeps a full-width\nbottom sheet from running its text to both edges of a wide screen.",
     "props": [
       {
         "name": "className",
@@ -4144,7 +4144,7 @@
   },
   "FieldLabel": {
     "name": "FieldLabel",
-    "description": "The field's visible label, associated with the control automatically.\nRenders a `<label>` — or a `<div>` when `nativeLabel` is `false`.\n\nBoth labelling shapes work, and the difference is only where the control\nsits:\n\n```tsx\n// Sibling: the label points at the control with htmlFor.\n<Field.Label>Email</Field.Label>\n<Input type=\"email\" />\n\n// Wrapping: the label contains the control. Preferred for a Checkbox or a\n// Switch, which have no text of their own.\n<Field.Label><Checkbox /> Email me about releases</Field.Label>\n```\n\nA wrapping label lays itself out as a row and takes a `pointer` cursor,\nbecause clicking it toggles the control; a sibling label is chrome and keeps\nthe default arrow.",
+    "description": "The field's visible label, associated with the control automatically.\nRenders a `<label>` — or a `<div>` when `nativeLabel` is `false`.\n\nBoth labeling shapes work, and the difference is only where the control\nsits:\n\n```tsx\n// Sibling: the label points at the control with htmlFor.\n<Field.Label>Email</Field.Label>\n<Input type=\"email\" />\n\n// Wrapping: the label contains the control. Preferred for a Checkbox or a\n// Switch, which have no text of their own.\n<Field.Label><Checkbox /> Email me about releases</Field.Label>\n```\n\nA wrapping label lays itself out as a row and takes a `pointer` cursor,\nbecause clicking it toggles the control; a sibling label is chrome and keeps\nthe default arrow.",
     "props": [
       {
         "name": "className",
@@ -4158,7 +4158,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Whether the rendered element is a native `<label>`.\n\nLeave it `true` for `Input`, `Checkbox` and `Switch`. Set it to `false`\nfor a control that is a `<button>` — `Select.Trigger` is the one in this\nlibrary — where native label behaviour is actively wrong: the button would\npick up `:hover` from the label, and clicking the label would fire a click\non the trigger and open the popup. With `false` the association is made\nwith `aria-labelledby` instead, and the element rendered defaults to a\n`<div>` so the pair stays consistent (Base UI logs an error in development\nif a `<label>` is rendered with `nativeLabel={false}`, or vice versa)."
+        "description": "Whether the rendered element is a native `<label>`.\n\nLeave it `true` for `Input`, `Checkbox` and `Switch`. Set it to `false`\nfor a control that is a `<button>` — `Select.Trigger` is the one in this\nlibrary — where native label behavior is actively wrong: the button would\npick up `:hover` from the label, and clicking the label would fire a click\non the trigger and open the popup. With `false` the association is made\nwith `aria-labelledby` instead, and the element rendered defaults to a\n`<div>` so the pair stays consistent (Base UI logs an error in development\nif a `<label>` is rendered with `nativeLabel={false}`, or vice versa)."
       }
     ]
   },
@@ -4238,7 +4238,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Disables every control inside the fieldset. This is the native\n`<fieldset disabled>` behaviour, so it reaches controls the library knows\nnothing about too."
+        "description": "Disables every control inside the fieldset. This is the native\n`<fieldset disabled>` behavior, so it reaches controls the library knows\nnothing about too."
       }
     ]
   },
@@ -4373,7 +4373,7 @@
   },
   "InputGroupInput": {
     "name": "InputGroupInput",
-    "description": "The text control, rendered bare: the group owns the border, the background\nand the height, so this element is transparent and stretches to fill\nwhatever the addons leave.\n\nLike `Input`, this is Base UI's `Input` — which *is* `Field.Control` — so a\ngroup inside a `Field.Root` picks up the label, the description, the error\nmessage, `name` and the validity attributes with no wiring, and the group's\nboundary recolours from the `data-invalid` this element carries.",
+    "description": "The text control, rendered bare: the group owns the border, the background\nand the height, so this element is transparent and stretches to fill\nwhatever the addons leave.\n\nLike `Input`, this is Base UI's `Input` — which *is* `Field.Control` — so a\ngroup inside a `Field.Root` picks up the label, the description, the error\nmessage, `name` and the validity attributes with no wiring, and the group's\nboundary recolors from the `data-invalid` this element carries.",
     "props": [
       {
         "name": "className",
@@ -4393,7 +4393,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Grow with the content as the user types, between `rows` and `maxRows` —\nthe same behaviour, and the same `field-sizing` implementation with the\nsame fallback, as `Textarea`'s `autoResize`."
+        "description": "Grow with the content as the user types, between `rows` and `maxRows` —\nthe same behavior, and the same `field-sizing` implementation with the\nsame fallback, as `Textarea`'s `autoResize`."
       },
       {
         "name": "className",
@@ -4523,7 +4523,7 @@
         "type": "ButtonTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
       },
       {
         "name": "variant",
@@ -4536,7 +4536,7 @@
   },
   "Kbd": {
     "name": "Kbd",
-    "description": "A key cap — the way the interface prints a key it wants pressed.\n\nRenders a real `<kbd>`, which is the element HTML has for exactly this, and\ndraws its fill and edge out of `currentColor`, so the same cap works in\nrunning text, on `Tooltip`'s inverted popup, inside a solid `Button` and on\na highlighted menu row without a colour prop. `Menu.Shortcut` and\n`Tooltip.Shortcut` are built on it; use it directly anywhere else keys\nappear.\n\n```tsx\nPress <Kbd>⌘K</Kbd> to search.\n<KbdGroup><Kbd>Ctrl</Kbd><Kbd>Alt</Kbd><Kbd>Del</Kbd></KbdGroup>\n```\n\nIt is deliberately NOT `aria-hidden`: a cap printing a word — `Ctrl`,\n`Esc`, `Enter` — reads out fine. The modifier glyphs do not (⌘B is\nannounced as \"place of interest sign B\"), so when you print glyphs, put\n`aria-keyshortcuts` on the control the shortcut triggers, spelled in words,\nand hide the caps — which is exactly what `Menu.Shortcut` does for you.",
+    "description": "A key cap — the way the interface prints a key it wants pressed.\n\nRenders a real `<kbd>`, which is the element HTML has for exactly this, and\ndraws its fill and edge out of `currentColor`, so the same cap works in\nrunning text, on `Tooltip`'s inverted popup, inside a solid `Button` and on\na highlighted menu row without a color prop. `Menu.Shortcut` and\n`Tooltip.Shortcut` are built on it; use it directly anywhere else keys\nappear.\n\n```tsx\nPress <Kbd>⌘K</Kbd> to search.\n<KbdGroup><Kbd>Ctrl</Kbd><Kbd>Alt</Kbd><Kbd>Del</Kbd></KbdGroup>\n```\n\nIt is deliberately NOT `aria-hidden`: a cap printing a word — `Ctrl`,\n`Esc`, `Enter` — reads out fine. The modifier glyphs do not (⌘B is\nannounced as \"place of interest sign B\"), so when you print glyphs, put\n`aria-keyshortcuts` on the control the shortcut triggers, spelled in words,\nand hide the caps — which is exactly what `Menu.Shortcut` does for you.",
     "props": [
       {
         "name": "children",
@@ -4625,7 +4625,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behaviour the element\ndoes not have natively."
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behavior the element\ndoes not have natively."
       },
       {
         "name": "openOnHover",
@@ -4652,7 +4652,7 @@
   },
   "Menubar": {
     "name": "Menubar",
-    "description": "A row of menus that behave as one strip, built on Base UI's `Menubar`\nprimitive.\n\nIt has no parts of its own: the menus inside it are ordinary\n[`Menu`](/components/menu) components, which is Base UI's own anatomy and\nis what makes every Menu feature — submenus, checkable rows, shortcuts,\n`render` on the trigger — available here without a second set of\ncomponents to learn.\n\n```tsx\n<Menubar>\n  <Menu.Root>\n    <Menu.Trigger>File</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>New document</Menu.Item>\n      <Menu.Item>Open…</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n  <Menu.Root>\n    <Menu.Trigger>Edit</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>Undo</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n</Menubar>\n```\n\nBeing in the bar is what changes the menus' behaviour, and Base UI does all\nof it: `Tab` reaches the bar once and the arrow keys move between triggers\nfrom there, and once one menu is open the others take over on hover, so the\nwhole row reads as a single control rather than a line of buttons. The\nlibrary's contribution is the look — a `<Menu.Trigger>` inside a `Menubar`\ndrops its standalone button chrome for the flat strip item the bar wants.\nA trigger given `render` keeps whatever it was rendered as.\n\nEvery visual decision is a `--forte-menubar-*` custom property declared on\nthis element, including the ones the triggers read, so a bar can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=contained]:...`) without wrapping.",
+    "description": "A row of menus that behave as one strip, built on Base UI's `Menubar`\nprimitive.\n\nIt has no parts of its own: the menus inside it are ordinary\n[`Menu`](/components/menu) components, which is Base UI's own anatomy and\nis what makes every Menu feature — submenus, checkable rows, shortcuts,\n`render` on the trigger — available here without a second set of\ncomponents to learn.\n\n```tsx\n<Menubar>\n  <Menu.Root>\n    <Menu.Trigger>File</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>New document</Menu.Item>\n      <Menu.Item>Open…</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n  <Menu.Root>\n    <Menu.Trigger>Edit</Menu.Trigger>\n    <Menu.Popup>\n      <Menu.Item>Undo</Menu.Item>\n    </Menu.Popup>\n  </Menu.Root>\n</Menubar>\n```\n\nBeing in the bar is what changes the menus' behavior, and Base UI does all\nof it: `Tab` reaches the bar once and the arrow keys move between triggers\nfrom there, and once one menu is open the others take over on hover, so the\nwhole row reads as a single control rather than a line of buttons. The\nlibrary's contribution is the look — a `<Menu.Trigger>` inside a `Menubar`\ndrops its standalone button chrome for the flat strip item the bar wants.\nA trigger given `render` keeps whatever it was rendered as.\n\nEvery visual decision is a `--forte-menubar-*` custom property declared on\nthis element, including the ones the triggers read, so a bar can be\nre-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[variant=contained]:...`) without wrapping.",
     "props": [
       {
         "name": "children",
@@ -4701,7 +4701,7 @@
         "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, MenubarState>",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the rendered `<div>` with another element or component — a\n`<header>` for an application chrome bar, say. Base UI still applies\n`role=\"menubar\"` and the keyboard behaviour to whatever comes back."
+        "description": "Replaces the rendered `<div>` with another element or component — a\n`<header>` for an application chrome bar, say. Base UI still applies\n`role=\"menubar\"` and the keyboard behavior to whatever comes back."
       },
       {
         "name": "variant",
@@ -4728,7 +4728,7 @@
         "type": "NavListMarker",
         "required": false,
         "defaultValue": "fill",
-        "description": "How the current item is marked. `\"fill\"` is a tinted row. `\"edge\"` adds\nan accent border along the row's inline-start edge on top of the fill —\nit follows the row's corner radius, and is a second, non-colour-only cue."
+        "description": "How the current item is marked. `\"fill\"` is a tinted row. `\"edge\"` adds\nan accent border along the row's inline-start edge on top of the fill —\nit follows the row's corner radius, and is a second, non-color-only cue."
       },
       {
         "name": "render",
@@ -4814,7 +4814,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Whether this row is where the reader currently is. Publishes\n`data-active` for styling and `aria-current=\"page\"`, so the cue is never\ncolour alone. For a same-page target — a table of contents — pass your\nown `aria-current=\"location\"` alongside it; an explicit value wins over\nthe derived one."
+        "description": "Whether this row is where the reader currently is. Publishes\n`data-active` for styling and `aria-current=\"page\"`, so the cue is never\ncolor alone. For a same-page target — a table of contents — pass your\nown `aria-current=\"location\"` alongside it; an explicit value wins over\nthe derived one."
       },
       {
         "name": "className",
@@ -5057,7 +5057,7 @@
   },
   "NavigationMenuTrigger": {
     "name": "NavigationMenuTrigger",
-    "description": "Opens an item's panel. Renders a `<button>`.\n\nIt opens on hover as well as on press, which is the behaviour that separates\na navigation menu from a `Menu` — the bar is a place to browse, so the panel\nfollows the pointer along it once one is open. Base UI wires\n`aria-expanded`, `aria-controls` and the roving focus, so an unnamed trigger\nneeds no extra ARIA beyond its own label.",
+    "description": "Opens an item's panel. Renders a `<button>`.\n\nIt opens on hover as well as on press, which is the behavior that separates\na navigation menu from a `Menu` — the bar is a place to browse, so the panel\nfollows the pointer along it once one is open. Base UI wires\n`aria-expanded`, `aria-controls` and the roving focus, so an unnamed trigger\nneeds no extra ARIA beyond its own label.",
     "props": [
       {
         "name": "children",
@@ -5085,7 +5085,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else, so Base UI supplies the\nkeyboard and role behaviour the element does not have natively."
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else, so Base UI supplies the\nkeyboard and role behavior the element does not have natively."
       },
       {
         "name": "render",
@@ -5146,7 +5146,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Whether this link is the page the user is on. Publishes `data-active` and\n`aria-current=\"page\"`, so the cue is not colour alone."
+        "description": "Whether this link is the page the user is on. Publishes `data-active` and\n`aria-current=\"page\"`, so the cue is not color alone."
       },
       {
         "name": "children",
@@ -5181,7 +5181,7 @@
         "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, NavigationMenuLinkState>",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/pricing\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behaviour."
+        "description": "Replaces the rendered `<a>` with another element or component —\n`render={<Link href=\"/pricing\" />}` is how a framework's router link goes\nin without losing the menu's keyboard behavior."
       },
       {
         "name": "variant",
@@ -5241,7 +5241,7 @@
         "type": "Align",
         "required": false,
         "defaultValue": "center",
-        "description": "How the panel aligns along that side. Centred on the active trigger,\nwhich is the alignment the sliding panel reads best under: it appears to\nhang from whichever trigger is open rather than from one end of the bar."
+        "description": "How the panel aligns along that side. Centered on the active trigger,\nwhich is the alignment the sliding panel reads best under: it appears to\nhang from whichever trigger is open rather than from one end of the bar."
       },
       {
         "name": "alignOffset",
@@ -5418,7 +5418,7 @@
   },
   "NumberFieldDecrement": {
     "name": "NumberFieldDecrement",
-    "description": "The stepper that decreases the value. Renders a `<button>`, labelled\n\"Decrease\" by Base UI and outside the tab order for the same reason\n`Increment` is.\n\nPut it before `Input` in the markup. The order is physical, not logical: it\nis what makes the minus land on the start edge, and it flips with `dir=\"rtl\"`\non its own because the group is a flex row and its corner radii are logical.",
+    "description": "The stepper that decreases the value. Renders a `<button>`, labeled\n\"Decrease\" by Base UI and outside the tab order for the same reason\n`Increment` is.\n\nPut it before `Input` in the markup. The order is physical, not logical: it\nis what makes the minus land on the start edge, and it flips with `dir=\"rtl\"`\non its own because the group is a flex row and its corner radii are logical.",
     "props": [
       {
         "name": "children",
@@ -5629,7 +5629,7 @@
         "type": "PaginationTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which colour marks the current page. `\"primary\"` and `\"secondary\"` are\na solid brand fill; `\"neutral\"` is a quiet grey fill with a stronger\nborder, for a strip that must not compete with the page's real primary\naction."
+        "description": "Which color marks the current page. `\"primary\"` and `\"secondary\"` are\na solid brand fill; `\"neutral\"` is a quiet gray fill with a stronger\nborder, for a strip that must not compete with the page's real primary\naction."
       },
       {
         "name": "variant",
@@ -5682,7 +5682,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Marks this as the page the reader is on. Sets `aria-current=\"page\"` and\ndraws the tone's fill — the only slot in the strip that carries colour."
+        "description": "Marks this as the page the reader is on. Sets `aria-current=\"page\"` and\ndraws the tone's fill — the only slot in the strip that carries color."
       },
       {
         "name": "disabled",
@@ -6011,7 +6011,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behaviour the element\ndoes not have natively."
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\nrow), so Base UI supplies the keyboard and role behavior the element\ndoes not have natively."
       },
       {
         "name": "openOnHover",
@@ -6066,7 +6066,7 @@
         "type": "number",
         "required": false,
         "defaultValue": "5",
-        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+        "description": "Minimum distance, in pixels, the arrow keeps from the popup's corners\nbefore it is allowed to sit off-center (`data-uncentered`)."
       },
       {
         "name": "backdrop",
@@ -6177,14 +6177,14 @@
   },
   "PopoverArrow": {
     "name": "PopoverArrow",
-    "description": "The wedge pointing back at the trigger. Render it as a child of\n`Popover.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
+    "description": "The wedge pointing back at the trigger. Render it as a child of\n`Popover.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border color is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
     "props": [
       {
         "name": "children",
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--forte-popover-bg`, so a custom skin usually needs nothing here."
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colors\nthrough `--forte-popover-bg`, so a custom skin usually needs nothing here."
       },
       {
         "name": "className",
@@ -6449,7 +6449,7 @@
         "type": "number",
         "required": false,
         "defaultValue": "5",
-        "description": "Minimum distance, in pixels, the arrow keeps from the card's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+        "description": "Minimum distance, in pixels, the arrow keeps from the card's corners\nbefore it is allowed to sit off-center (`data-uncentered`)."
       },
       {
         "name": "className",
@@ -6546,14 +6546,14 @@
   },
   "PreviewCardArrow": {
     "name": "PreviewCardArrow",
-    "description": "The wedge pointing back at the link. Render it as a child of\n`PreviewCard.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
+    "description": "The wedge pointing back at the link. Render it as a child of\n`PreviewCard.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border color is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot fail\nthat way.",
     "props": [
       {
         "name": "children",
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the card's colours\nthrough `--forte-preview-card-bg`, so a custom skin usually needs nothing\nhere."
+        "description": "Replaces the built-in wedge. The default SVG inherits the card's colors\nthrough `--forte-preview-card-bg`, so a custom skin usually needs nothing\nhere."
       },
       {
         "name": "className",
@@ -6607,7 +6607,7 @@
         "type": "ProgressTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the fill draws from. The rail stays neutral in\nevery tone — it is the part that has *not* happened yet, and colouring it\nwould compete with the fill it exists to contrast against."
+        "description": "Which semantic color set the fill draws from. The rail stays neutral in\nevery tone — it is the part that has *not* happened yet, and coloring it\nwould compete with the fill it exists to contrast against."
       }
     ]
   },
@@ -6665,7 +6665,7 @@
   },
   "ProgressCircleRoot": {
     "name": "ProgressCircleRoot",
-    "description": "Groups every part of the ring and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a grid where `Track` and `Value`\nshare one cell — which is what centres the readout inside the ring — and\n`Label` sits in a second row that only exists if you render one.\n\n`value` is required and `null` means indeterminate: the readout disappears\nand the arc starts rotating.\n\n```tsx\n<ProgressCircle.Root value={62}>\n  <ProgressCircle.Track>\n    <ProgressCircle.Indicator />\n  </ProgressCircle.Track>\n  <ProgressCircle.Value />\n  <ProgressCircle.Label>Uploading</ProgressCircle.Label>\n</ProgressCircle.Root>\n```",
+    "description": "Groups every part of the ring and owns its value. Renders a\n`<div role=\"progressbar\">` laid out as a grid where `Track` and `Value`\nshare one cell — which is what centers the readout inside the ring — and\n`Label` sits in a second row that only exists if you render one.\n\n`value` is required and `null` means indeterminate: the readout disappears\nand the arc starts rotating.\n\n```tsx\n<ProgressCircle.Root value={62}>\n  <ProgressCircle.Track>\n    <ProgressCircle.Indicator />\n  </ProgressCircle.Track>\n  <ProgressCircle.Value />\n  <ProgressCircle.Label>Uploading</ProgressCircle.Label>\n</ProgressCircle.Root>\n```",
     "props": [
       {
         "name": "className",
@@ -6686,7 +6686,7 @@
         "type": "ProgressTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the arc draws from. The rail behind it stays\nneutral in every tone."
+        "description": "Which semantic color set the arc draws from. The rail behind it stays\nneutral in every tone."
       }
     ]
   },
@@ -6705,7 +6705,7 @@
   },
   "ProgressCircleIndicator": {
     "name": "ProgressCircleIndicator",
-    "description": "The arc. A `<circle>` with `pathLength=\"100\"`, which renormalises its\ncircumference to 100 units so `stroke-dashoffset` can be driven straight\nfrom the percentage without anyone computing 2πr — including when\n`--forte-progress-circle-thickness` changes the radius out from under it.\n\nBase UI still writes its inline `width` / `height` / `inset-inline-start`\nhere while the bar is determinate. None of the three applies to a `<circle>`\nin CSS, so they are inert; the value reaches the arc through\n`--forte-progress-circle-percent` on the root instead.",
+    "description": "The arc. A `<circle>` with `pathLength=\"100\"`, which renormalizes its\ncircumference to 100 units so `stroke-dashoffset` can be driven straight\nfrom the percentage without anyone computing 2πr — including when\n`--forte-progress-circle-thickness` changes the radius out from under it.\n\nBase UI still writes its inline `width` / `height` / `inset-inline-start`\nhere while the bar is determinate. None of the three applies to a `<circle>`\nin CSS, so they are inert; the value reaches the arc through\n`--forte-progress-circle-percent` on the root instead.",
     "props": [
       {
         "name": "className",
@@ -6718,7 +6718,7 @@
   },
   "ProgressCircleValue": {
     "name": "ProgressCircleValue",
-    "description": "The readout, centred inside the ring. Renders an `aria-hidden` `<span>` —\nthe root already publishes the number through `aria-valuenow`.\n\nIt renders nothing while the ring is indeterminate. Pass a function child to\nput something else there, and keep it short: at `sm` the ring's inner\ndiameter is under 30px, and anything longer than three characters will need\n`size=\"lg\"` or a label underneath instead.",
+    "description": "The readout, centered inside the ring. Renders an `aria-hidden` `<span>` —\nthe root already publishes the number through `aria-valuenow`.\n\nIt renders nothing while the ring is indeterminate. Pass a function child to\nput something else there, and keep it short: at `sm` the ring's inner\ndiameter is under 30px, and anything longer than three characters will need\n`size=\"lg\"` or a label underneath instead.",
     "props": [
       {
         "name": "className",
@@ -6793,13 +6793,13 @@
         "type": "RadioTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the selected fill draws from. Inside a\n`Field.Root` an invalid field overrides this with the danger palette, so\na validation error always reads as an error."
+        "description": "Which semantic color set the selected fill draws from. Inside a\n`Field.Root` an invalid field overrides this with the danger palette, so\na validation error always reads as an error."
       }
     ]
   },
   "RadioGroup": {
     "name": "RadioGroup",
-    "description": "Shared state for a series of `Radio`s, built on Base UI's `RadioGroup`\nprimitive. Renders a `<div role=\"radiogroup\">`.\n\nUnlike `CheckboxGroup`, this is a keyboard mode as well as a state\ncontainer: the whole group is a single tab stop, and the arrow keys move\nbetween options — selecting as they go, which is the native radio\nbehaviour and the reason a radio group must never be used for choices that\ntrigger an expensive side effect on selection.\n\nThe group has no implicit accessible name — give it `aria-labelledby`\npointing at a heading, name it with a `Field.Label nativeLabel={false}`, or\nrender it inside a `Fieldset.Root` with a `Fieldset.Legend`.",
+    "description": "Shared state for a series of `Radio`s, built on Base UI's `RadioGroup`\nprimitive. Renders a `<div role=\"radiogroup\">`.\n\nUnlike `CheckboxGroup`, this is a keyboard mode as well as a state\ncontainer: the whole group is a single tab stop, and the arrow keys move\nbetween options — selecting as they go, which is the native radio\nbehavior and the reason a radio group must never be used for choices that\ntrigger an expensive side effect on selection.\n\nThe group has no implicit accessible name — give it `aria-labelledby`\npointing at a heading, name it with a `Field.Label nativeLabel={false}`, or\nrender it inside a `Fieldset.Root` with a `Fieldset.Legend`.",
     "props": [
       {
         "name": "className",
@@ -6986,7 +6986,7 @@
         "type": "ResizableLength",
         "required": false,
         "defaultValue": "0",
-        "description": "Smallest the panel may be dragged to. A `px` string is honoured at every\ncontainer width — `minSize=\"240px\"` is the constraint a sidebar actually\nhas, and the one a percentage cannot express."
+        "description": "Smallest the panel may be dragged to. A `px` string is honored at every\ncontainer width — `minSize=\"240px\"` is the constraint a sidebar actually\nhas, and the one a percentage cannot express."
       },
       {
         "name": "onCollapsedChange",
@@ -7616,7 +7616,7 @@
         "type": "SliderTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the indicator and thumb draw from."
+        "description": "Which semantic color set the indicator and thumb draw from."
       }
     ]
   },
@@ -7742,7 +7742,7 @@
         "type": "SpinnerTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the indicator draws from. `current` takes\n`currentColor` instead, which is what makes a spinner dropped inside a\nbutton or a link match the text beside it."
+        "description": "Which semantic color set the indicator draws from. `current` takes\n`currentColor` instead, which is what makes a spinner dropped inside a\nbutton or a link match the text beside it."
       },
       {
         "name": "variant",
@@ -7776,7 +7776,7 @@
         "type": "StepsLabelPlacement",
         "required": false,
         "defaultValue": "inline",
-        "description": "Where a horizontal step's title sits. `\"inline\"` puts it beside the\nindicator, with the connector filling the space to the next step.\n`\"below\"` centres it under the indicator and gives every step an equal\nshare of the row — the layout for a short wizard whose titles are one or\ntwo words. Ignored when `orientation=\"vertical\"`."
+        "description": "Where a horizontal step's title sits. `\"inline\"` puts it beside the\nindicator, with the connector filling the space to the next step.\n`\"below\"` centers it under the indicator and gives every step an equal\nshare of the row — the layout for a short wizard whose titles are one or\ntwo words. Ignored when `orientation=\"vertical\"`."
       },
       {
         "name": "labels",
@@ -7811,7 +7811,7 @@
         "type": "StepsTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour the active and completed steps draw from. The\nerror state is always `danger`, and the steps not yet reached stay\nneutral in every tone, so the colour only ever says \"this far\"."
+        "description": "Which semantic color the active and completed steps draw from. The\nerror state is always `danger`, and the steps not yet reached stay\nneutral in every tone, so the color only ever says \"this far\"."
       },
       {
         "name": "variant",
@@ -7824,7 +7824,7 @@
   },
   "StepsItem": {
     "name": "StepsItem",
-    "description": "One step's `<li>`. It resolves the step's status — the `status` prop if\ngiven, otherwise its position against the root's `current` — and carries\nit as `data-status` for everything below to style against.\n\nThe item also draws the connector to the next step, as a sibling of the\nstep's content rather than a sibling of the item, so the connector's\ncolour follows THIS step's status: the line after a completed step fills,\nwhich is the only rule that reads the same whether the steps run across\nor down.\n\nPut a `Steps.Trigger` inside to make the step clickable. The item notices\nand leaves the trigger to carry `aria-current`, so the current step is\nannounced when the button takes focus rather than only when the list is\nwalked.",
+    "description": "One step's `<li>`. It resolves the step's status — the `status` prop if\ngiven, otherwise its position against the root's `current` — and carries\nit as `data-status` for everything below to style against.\n\nThe item also draws the connector to the next step, as a sibling of the\nstep's content rather than a sibling of the item, so the connector's\ncolor follows THIS step's status: the line after a completed step fills,\nwhich is the only rule that reads the same whether the steps run across\nor down.\n\nPut a `Steps.Trigger` inside to make the step clickable. The item notices\nand leaves the trigger to carry `aria-current`, so the current step is\nannounced when the button takes focus rather than only when the list is\nwalked.",
     "props": [
       {
         "name": "className",
@@ -7871,7 +7871,7 @@
   },
   "StepsIndicator": {
     "name": "StepsIndicator",
-    "description": "The circle. Empty, it prints the step's number and swaps it for a check\nwhen the step completes or a mark when it errors — the number stays in\nthe DOM underneath, so the swap is a fade and the check can draw itself\non. Give it children — an icon — and they are shown in every state; the\nfill colour still carries the status.\n\nThe two icon states also get a visually hidden word (`labels` on the\nroot), because a check mark has no text of its own and a screen reader\nwould otherwise hear \"1 Account\" for a done step and an undone one alike.",
+    "description": "The circle. Empty, it prints the step's number and swaps it for a check\nwhen the step completes or a mark when it errors — the number stays in\nthe DOM underneath, so the swap is a fade and the check can draw itself\non. Give it children — an icon — and they are shown in every state; the\nfill color still carries the status.\n\nThe two icon states also get a visually hidden word (`labels` on the\nroot), because a check mark has no text of its own and a screen reader\nwould otherwise hear \"1 Account\" for a done step and an undone one alike.",
     "props": [
       {
         "name": "className",
@@ -7924,7 +7924,7 @@
   },
   "Switch": {
     "name": "Switch",
-    "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--forte-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track colour, the thumb colour and the checkmark change\nalongside it so state never rests on movement alone.",
+    "description": "A switch built on Base UI's unstyled `Switch` primitive.\n\nLabeling — a switch has no text of its own, so it needs one of:\n\n```tsx\n// Simplest correct pattern: an enclosing label.\n<label><Switch /> Notifications</label>\n\n// Sibling label. Needs a native button so htmlFor/id resolve; with\n// nativeButton the id lands on the root rather than the hidden input.\n<label htmlFor=\"notify\">Notifications</label>\n<Switch id=\"notify\" nativeButton render={<button />} />\n\n// A native button INSIDE a wrapping label needs the render callback, so\n// the hidden input is placed outside the label and the HTML stays valid.\n<Switch\n  nativeButton\n  render={(buttonProps) => (\n    <label><button {...buttonProps} /> Notifications</label>\n  )}\n/>\n```\n\nMotion — the thumb's position *is* the state, not decoration, so its travel\nis never multiplied by `--forte-motion-ok`. Under reduced motion the thumb\nstill moves; only the spring flattens, because the duration token it rides\non shortens. The track color, the thumb color and the checkmark change\nalongside it so state never rests on movement alone.",
     "props": [
       {
         "name": "className",
@@ -7959,7 +7959,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Draw a checkmark inside the thumb while the switch is on.\n\nThis is the switch's non-positional state cue, and it is why the default\nis `true`: a user who cannot perceive the thumb sliding still gets a\nglyph appearing. Turning it off leaves colour as the only cue that does\nnot depend on noticing movement."
+        "description": "Draw a checkmark inside the thumb while the switch is on.\n\nThis is the switch's non-positional state cue, and it is why the default\nis `true`: a user who cannot perceive the thumb sliding still gets a\nglyph appearing. Turning it off leaves color as the only cue that does\nnot depend on noticing movement."
       },
       {
         "name": "thumbClassName",
@@ -8119,7 +8119,7 @@
         "type": "TableAlign",
         "required": false,
         "defaultValue": "start",
-        "description": "Horizontal alignment of the cell's content. Defaults to the start edge —\nthe UA centres `<th>` text, which lines up with nothing beneath it."
+        "description": "Horizontal alignment of the cell's content. Defaults to the start edge —\nthe UA centers `<th>` text, which lines up with nothing beneath it."
       },
       {
         "name": "className",
@@ -8180,7 +8180,7 @@
   },
   "TabsRoot": {
     "name": "TabsRoot",
-    "description": "Groups the tab strip and its panels.\n\nNote the Base UI default: `defaultValue` is `0`, an *index*, not the first\ntab's string value. With string values and no `defaultValue`, Base UI emits\nan automatic `onValueChange` with reason `'initial'` to correct itself, so\nalways pass `defaultValue` (or `value`) pointing at an **enabled** tab —\nduring server rendering a disabled first tab is not skipped. `null` is a\nlegal \"nothing active\" value and is deliberately not normalised away.",
+    "description": "Groups the tab strip and its panels.\n\nNote the Base UI default: `defaultValue` is `0`, an *index*, not the first\ntab's string value. With string values and no `defaultValue`, Base UI emits\nan automatic `onValueChange` with reason `'initial'` to correct itself, so\nalways pass `defaultValue` (or `value`) pointing at an **enabled** tab —\nduring server rendering a disabled first tab is not skipped. `null` is a\nlegal \"nothing active\" value and is deliberately not normalized away.",
     "props": [
       {
         "name": "autoHeight",
@@ -8432,7 +8432,7 @@
         "type": "ResolvedThemeMode",
         "required": false,
         "defaultValue": null,
-        "description": "Controls the toggle. When set, the button never touches the document —\nclicking only reports the opposite mode through `onThemeChange`, and the\nicon follows this prop instead of the page. This is the hook-up for an\nexternal theme manager (e.g. next-themes: pass its `resolvedTheme` here\nand its `setTheme` to `onThemeChange`). Leave unset for the built-in\nbehaviour: the click writes `data-theme` on `<html>` and persists it to\n`localStorage(\"forte-theme\")`."
+        "description": "Controls the toggle. When set, the button never touches the document —\nclicking only reports the opposite mode through `onThemeChange`, and the\nicon follows this prop instead of the page. This is the hook-up for an\nexternal theme manager (e.g. next-themes: pass its `resolvedTheme` here\nand its `setTheme` to `onThemeChange`). Leave unset for the built-in\nbehavior: the click writes `data-theme` on `<html>` and persists it to\n`localStorage(\"forte-theme\")`."
       },
       {
         "name": "variant",
@@ -8466,7 +8466,7 @@
         "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
         "required": false,
         "defaultValue": null,
-        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colours."
+        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colors."
       },
       {
         "name": "limit",
@@ -8535,7 +8535,7 @@
         "type": "HTMLElement | ShadowRoot | RefObject<HTMLElement | ShadowRoot | null> | null",
         "required": false,
         "defaultValue": null,
-        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colours."
+        "description": "An element to render the stack into instead of `<body>`.\n\nSetting it also switches the viewport from `position: fixed` to\n`position: absolute`, so the stack pins to the container rather than to\nthe screen — give that container `position: relative`. There is no\nseparate prop for that, because a contained viewport that stayed fixed\nwould be a silent bug: the toasts would sit in the screen corner while\nthe container they were scoped to sat somewhere else entirely.\n\nThe usual reason to reach for it is a preview or an embedded surface that\nhas its own theme scope — a portal to `<body>` escapes the scope, and the\ntoasts come out in the page's colors."
       },
       {
         "name": "position",
@@ -8596,7 +8596,7 @@
   },
   "ToastIcon": {
     "name": "ToastIcon",
-    "description": "The status glyph, coloured by the toast's type.\n\nA `loading` toast gets a `Spinner` instead of a static glyph. The spinner is\na child of the toast root rather than the root itself, which is load-bearing\n— Base UI waits on `root.getAnimations()` before removing a dismissed toast,\nand an infinite animation's promise never settles, so a spinning root would\nstay in the DOM for the lifetime of the page. `getAnimations()` is not\ncalled with `subtree: true`, so a descendant is safe.\n\nRenders nothing when there is no glyph to draw, so the icon column collapses\non a typeless toast rather than leaving a gap where an icon would be.",
+    "description": "The status glyph, colored by the toast's type.\n\nA `loading` toast gets a `Spinner` instead of a static glyph. The spinner is\na child of the toast root rather than the root itself, which is load-bearing\n— Base UI waits on `root.getAnimations()` before removing a dismissed toast,\nand an infinite animation's promise never settles, so a spinning root would\nstay in the DOM for the lifetime of the page. `getAnimations()` is not\ncalled with `subtree: true`, so a descendant is safe.\n\nRenders nothing when there is no glyph to draw, so the icon column collapses\non a typeless toast rather than leaving a gap where an icon would be.",
     "props": [
       {
         "name": "children",
@@ -8668,7 +8668,7 @@
   },
   "Toggle": {
     "name": "Toggle",
-    "description": "A two-state button that is either on or off, built on Base UI's unstyled\n`Toggle` primitive. Renders a `<button>` with `aria-pressed`.\n\nReach for it when the button *is* the state — bold, mute, pin, favourite —\nand the effect is immediate and local. If the state is a setting the user\nconfirms later, use [`Switch`](/components/switch) or\n[`Checkbox`](/components/checkbox), which carry a label and a form value; a\ntoggle button has neither.\n\nState is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)\nand every visual decision is a `--forte-toggle-*` custom property, so it can\nbe re-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[pressed]:...`) without wrapping.",
+    "description": "A two-state button that is either on or off, built on Base UI's unstyled\n`Toggle` primitive. Renders a `<button>` with `aria-pressed`.\n\nReach for it when the button *is* the state — bold, mute, pin, favorite —\nand the effect is immediate and local. If the state is a setting the user\nconfirms later, use [`Switch`](/components/switch) or\n[`Checkbox`](/components/checkbox), which carry a label and a form value; a\ntoggle button has neither.\n\nState is exposed on `data-*` attributes (`data-pressed`, `data-disabled`)\nand every visual decision is a `--forte-toggle-*` custom property, so it can\nbe re-skinned from plain CSS or targeted with Tailwind arbitrary variants\n(`data-[pressed]:...`) without wrapping.",
     "props": [
       {
         "name": "className",
@@ -8703,7 +8703,7 @@
         "type": "ToggleTone",
         "required": false,
         "defaultValue": "primary",
-        "description": "Which semantic colour set the pressed state draws from. Combines freely\nwith `variant`. Inherited from an enclosing `ToggleGroup` when left unset."
+        "description": "Which semantic color set the pressed state draws from. Combines freely\nwith `variant`. Inherited from an enclosing `ToggleGroup` when left unset."
       },
       {
         "name": "value",
@@ -8881,7 +8881,7 @@
   },
   "ToolbarButton": {
     "name": "ToolbarButton",
-    "description": "A button that is part of the toolbar's roving focus. Renders a `<button>`.\n\nLeft alone it is a [`Button`](/components/button) — every variant, tone and\nsize, and the same `iconOnly` and `loading` behaviour — that happens to be\nreachable with the arrow keys. Given `render`, it is whatever you passed,\nstill reachable with the arrow keys and nothing else changed.",
+    "description": "A button that is part of the toolbar's roving focus. Renders a `<button>`.\n\nLeft alone it is a [`Button`](/components/button) — every variant, tone and\nsize, and the same `iconOnly` and `loading` behavior — that happens to be\nreachable with the arrow keys. Given `render`, it is whatever you passed,\nstill reachable with the arrow keys and nothing else changed.",
     "props": [
       {
         "name": "className",
@@ -8937,7 +8937,7 @@
         "type": "ButtonTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic colour set the button draws from. `neutral` by default, for\nthe same reason `variant` is `ghost`.\n\nIgnored when `render` is set."
+        "description": "Which semantic color set the button draws from. `neutral` by default, for\nthe same reason `variant` is `ghost`.\n\nIgnored when `render` is set."
       },
       {
         "name": "variant",
@@ -9252,7 +9252,7 @@
         "type": "number",
         "required": false,
         "defaultValue": "5",
-        "description": "Minimum distance, in pixels, the arrow keeps from the tooltip's corners\nbefore it is allowed to sit off-centre (`data-uncentered`)."
+        "description": "Minimum distance, in pixels, the arrow keeps from the tooltip's corners\nbefore it is allowed to sit off-center (`data-uncentered`)."
       },
       {
         "name": "className",
@@ -9342,14 +9342,14 @@
   },
   "TooltipArrow": {
     "name": "TooltipArrow",
-    "description": "The wedge pointing back at the trigger. Render it as the first child of\n`Tooltip.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border colour is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot\nfail that way.",
+    "description": "The wedge pointing back at the trigger. Render it as the first child of\n`Tooltip.Popup`.\n\nIt is an SVG rather than the traditional CSS-border triangle on purpose: in\nforced-colors mode every border color is forced to `CanvasText`, and a\nborder triangle degrades into a filled rectangle. Two flat paths cannot\nfail that way.",
     "props": [
       {
         "name": "children",
         "type": "ReactNode",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colours\nthrough `--forte-tooltip-bg`, so a custom skin usually needs nothing here."
+        "description": "Replaces the built-in wedge. The default SVG inherits the popup's colors\nthrough `--forte-tooltip-bg`, so a custom skin usually needs nothing here."
       },
       {
         "name": "className",

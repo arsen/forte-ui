@@ -12,9 +12,9 @@ export default function ToggleFavorite() {
       // The icon is the whole button, so the button needs a name of its own.
       aria-label="Favorite"
       // The render *callback* gets the toggle's state, which is what lets the
-      // icon itself change with it rather than only its colour. Two shapes —
+      // icon itself change with it rather than only its color. Two shapes —
       // outline and filled — mean the state survives greyscale, a monochrome
-      // theme, and forced colours, none of which a hue swap would.
+      // theme, and forced colors, none of which a hue swap would.
       render={(props, state) =>
         state.pressed ? (
           <button type="button" {...props}>

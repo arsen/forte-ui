@@ -8,13 +8,13 @@
  * the field's rhythm, not of any one line of text, and setting it once via
  * `className` on `Field.Root` has to move all of it.
  *
- * The colour and font knobs stay on the part that paints them, so a consumer
- * can recolour the error without reaching the description.
+ * The color and font knobs stay on the part that paints them, so a consumer
+ * can recolor the error without reaching the description.
  *
  * The field state arrives on every part as `data-*` — `data-invalid`,
  * `data-valid`, `data-dirty`, `data-touched`, `data-filled`, `data-focused`,
  * `data-disabled`. Only `disabled` is styled here. The control itself already
- * answers for validity (its boundary turns danger-coloured), and the error
+ * answers for validity (its boundary turns danger-colored), and the error
  * message only exists while the field is failing, so painting the label red as
  * well would be the third copy of the same fact.
  */
@@ -59,7 +59,7 @@
 
   /* Label ----------------------------------------------------------------- */
   .label {
-    /** Label colour */
+    /** Label color */
     --forte-field-label-fg: var(--forte-color-foreground);
     /** Label font size */
     --forte-field-label-font-size: var(--forte-font-size-2);
@@ -121,7 +121,7 @@
 
   /* Description ----------------------------------------------------------- */
   .description {
-    /** Description colour */
+    /** Description color */
     --forte-field-description-fg: var(--forte-color-foreground-muted);
     /** Description font size */
     --forte-field-description-font-size: var(--forte-font-size-1);
@@ -146,7 +146,7 @@
    * reverses mid-flight instead of snapping, and Base UI keeps the outgoing
    * element mounted (awaiting getAnimations()) until the exit finishes. */
   .error {
-    /** Error colour */
+    /** Error color */
     --forte-field-error-fg: var(--forte-color-danger-text);
     /** Error font size */
     --forte-field-error-font-size: var(--forte-font-size-1);
@@ -193,14 +193,14 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 /* Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone. */
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* Every colour in this file collapses to CanvasText in forced-colors, so
+    /* Every color in this file collapses to CanvasText in forced-colors, so
      * the error message loses the one thing marking it as an error. It cannot
-     * be recovered with colour, and `forced-color-adjust: none` would opt the
+     * be recovered with color, and `forced-color-adjust: none` would opt the
      * text out of the user's palette entirely — so the distinction is redrawn
      * as a boundary, which forced-colors does preserve. */
     .error {
@@ -209,7 +209,7 @@
     }
 
     /* The generic `[data-disabled]` remedy in patterns.css applies through
-     * `:where()`, i.e. at zero specificity, so the (0,2,0) colours above would
+     * `:where()`, i.e. at zero specificity, so the (0,2,0) colors above would
      * outrank its GrayText. Restated at matching specificity here. */
     .label[data-disabled],
     .description[data-disabled] {

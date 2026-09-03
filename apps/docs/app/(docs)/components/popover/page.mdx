@@ -183,7 +183,7 @@ remote: `open(triggerId)` and `close()`.
 <DemoBlock id="popover/detached-trigger" />
 
 Create the handle **outside render**. One made during render is a new object on
-every pass, and the root and its triggers stop recognising each other.
+every pass, and the root and its triggers stop recognizing each other.
 `open()` takes a trigger id rather than a payload — the popup still has to be
 anchored to something — so give each detached trigger an explicit `id`.
 
@@ -242,7 +242,7 @@ the popup's accessible name, and without one a screen reader announces an
 unnamed dialog.
 
 An outside press closes a non-modal popover, and so does focus leaving it. Both
-report through `onOpenChange` with a reason, and the event can be cancelled —
+report through `onOpenChange` with a reason, and the event can be canceled —
 which is how a popover holding an unsaved form asks before it goes.
 
 <Callout kind="a11y">
@@ -256,7 +256,7 @@ announced on its own once it opens.
 </Callout>
 
 In forced-colors mode the popup's shadow is stripped by the browser, so the
-component carries a transparent border that becomes the visible system-coloured
+component carries a transparent border that becomes the visible system-colored
 boundary, and the arrow is drawn as two SVG paths rather than the traditional
 CSS-border triangle, which would degrade into a filled rectangle. Reduced motion
 is handled by the motion tokens: the travel collapses to `0px` and the scale to
@@ -292,7 +292,7 @@ them, so those can only be changed on the element itself.
 The hairline is worth a word, because `Dialog` and `Drawer` do without one.
 Those sit on a scrim that has already darkened the page behind them; a popover
 floats over undimmed content, where the overlay and the page background are a
-single step apart on the grey ramp and the shadow is doing nearly all the
+single step apart on the gray ramp and the shadow is doing nearly all the
 separating — which is not enough in dark mode, and less than that over a bright
 photo. `--forte-popover-border-color: transparent` gives you the shadow-only look
 back, and the arrow follows: its outline is the same token, so the wedge flattens

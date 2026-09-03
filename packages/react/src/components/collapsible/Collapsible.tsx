@@ -67,7 +67,7 @@ export interface CollapsibleRootProps extends Omit<BaseRootProps, "className"> {
    * How much visual weight the disclosure carries. `"plain"` contributes no
    * box of its own — a bare text button over its panel, for a "Show more" that
    * lives inside a page. `"contained"` turns the pair into a card sized and
-   * coloured to match one item of a `contained` Accordion. Both are the same
+   * colored to match one item of a `contained` Accordion. Both are the same
    * three parts with different knobs — nothing moves.
    * @default "plain"
    */

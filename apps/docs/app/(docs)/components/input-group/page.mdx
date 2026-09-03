@@ -118,8 +118,8 @@ The group has no `disabled`, `readOnly` or `invalid` props, and that is the
 point: every state lives on the control (or the [Field](/components/field/)
 above it), and the shell watches it through `:has()` — one source of truth, no
 way for the box and the control to disagree. Disabled dims the whole group;
-read-only tints it; invalid recolours the boundary and the caret, and nothing
-else — recolouring the value or the addons would make the user's own answer
+read-only tints it; invalid recolors the boundary and the caret, and nothing
+else — recoloring the value or the addons would make the user's own answer
 look like the error message.
 
 <DemoBlock id="input-group/states" />
@@ -157,7 +157,7 @@ same way the shell does: `has-[[data-disabled]]:opacity-50`,
 In forced-colors mode the box is restated as `Field` / `FieldText` with a
 `FieldText` boundary — the root is a `<div>`, so the UA assigns it nothing on
 its own, and the `soft` / `ghost` variants' `transparent` border would
-otherwise be replaced with an arbitrary system colour. A disabled group also
+otherwise be replaced with an arbitrary system color. A disabled group also
 restates `opacity: 1` and `GrayText`: opacity is one of the few things
 forced-colors does not override, and the generic remedy keys on a
 `data-disabled` the root deliberately does not carry.

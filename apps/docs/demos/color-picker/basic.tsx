@@ -5,7 +5,7 @@ import { ColorPicker } from "@forte-ui/react";
 export default function ColorPickerBasic() {
   return (
     <ColorPicker.Root defaultValue="#7c3aed">
-      <ColorPicker.Trigger>Brand colour</ColorPicker.Trigger>
+      <ColorPicker.Trigger>Brand color</ColorPicker.Trigger>
       <ColorPicker.Popup>
         <ColorPicker.Area />
         <ColorPicker.HueSlider />

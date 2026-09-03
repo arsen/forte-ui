@@ -6,8 +6,8 @@ import { LEAD } from "../styles";
 import { cn } from "@/lib/cn";
 
 /**
- * The home page hero: the logo, large and centred, and the palette row that
- * recolours it.
+ * The home page hero: the logo, large and centered, and the palette row that
+ * recolors it.
  *
  * The logo is the point. Its gradients read the live `--forte-accent-9` /
  * `--forte-secondary-9` tokens, so the swatches under it re-theme the mark
@@ -21,7 +21,7 @@ import { cn } from "@/lib/cn";
  * pseudo-element on a wrapper rather than a shadow on the SVG: a filter on
  * an element with two gradients repaints both whenever the seed moves, and
  * a blurred backdrop is what a drop shadow on a thin F would never produce
- * anyway. Under forced colours the gradient is stripped and nothing is left
+ * anyway. Under forced colors the gradient is stripped and nothing is left
  * behind, which is right — it carries no information.
  */
 export function Hero() {
@@ -52,7 +52,7 @@ export function Hero() {
       </h1>
       <p className={cn(LEAD, "mb-5 max-w-2xl")}>
         Built on Base UI, styled from a token system that derives its whole
-        palette from a single seed colour — in pure CSS, with contrast that is
+        palette from a single seed color — in pure CSS, with contrast that is
         measured rather than promised, and nothing added to your bundle.
       </p>
       <div className="mb-6 flex flex-wrap justify-center gap-3">

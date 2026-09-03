@@ -46,7 +46,7 @@
    * When the input is the form control, label the input instead — a native
    * <label htmlFor> or a Field.Label — and skip this part. */
   .label {
-    /** Label text colour */
+    /** Label text color */
     --forte-combobox-label-fg: var(--forte-color-foreground);
     /** Label font size */
     --forte-combobox-label-font-size: var(--forte-font-size-2);
@@ -172,16 +172,16 @@
      * group — a chip's own copy cannot reach the padding that pairs with it */
     --forte-combobox-chip-inset: var(--forte-space-2);
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Field background (reset per `variant`) */
     --forte-combobox-field-bg: var(--forte-color-background);
     /** Field background on hover */
     --forte-combobox-field-bg-hover: var(--forte-color-panel-hover);
-    /** Field text colour */
+    /** Field text color */
     --forte-combobox-field-fg: var(--forte-color-foreground);
-    /** Field border colour (reset per `variant`, and by `data-invalid`) */
+    /** Field border color (reset per `variant`, and by `data-invalid`) */
     --forte-combobox-field-border-color: var(--forte-color-border);
-    /** Field border colour on hover */
+    /** Field border color on hover */
     --forte-combobox-field-border-color-hover: var(--forte-color-border-strong);
 
     box-sizing: border-box;
@@ -236,7 +236,7 @@
     cursor: default;
   }
 
-  /* Only the boundary changes. Recolouring the value text as well would make
+  /* Only the boundary changes. Recoloring the value text as well would make
    * the user's own answer look like the error message. */
   .inputGroup[data-invalid] {
     --forte-combobox-field-border-color: var(--forte-color-danger-border);
@@ -381,16 +381,16 @@
     /** Trigger border width (standalone shape only) */
     --forte-combobox-trigger-border-width: 1px;
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Trigger background (reset per `variant`; standalone shape only) */
     --forte-combobox-trigger-bg: var(--forte-color-background);
     /** Trigger background on hover */
     --forte-combobox-trigger-bg-hover: var(--forte-color-panel-hover);
     /** Trigger background while pressed or open */
     --forte-combobox-trigger-bg-active: var(--forte-color-panel-active);
-    /** Trigger text colour */
+    /** Trigger text color */
     --forte-combobox-trigger-fg: var(--forte-color-foreground);
-    /** Trigger border colour (reset per `variant`; standalone shape only) */
+    /** Trigger border color (reset per `variant`; standalone shape only) */
     --forte-combobox-trigger-border-color: var(--forte-color-border);
 
     box-sizing: border-box;
@@ -582,9 +582,9 @@
     /* `block-size` is the LAST word on the height here, and it has to be.
      * `block-size` and `height` are one property, so the `height: auto` that
      * used to follow this line — put there to cancel the standalone trigger's
-     * `height` above — cancelled THIS declaration instead: the button
+     * `height` above — canceled THIS declaration instead: the button
      * collapsed onto its 16px glyph, giving a 28x16 box with no air above or
-     * below the caret and a hit target under the 24x24 floor. Cancelling the
+     * below the caret and a hit target under the 24x24 floor. Canceling the
      * base rule needs no extra declaration, because this one already is that
      * property, at higher specificity. */
     block-size: var(--forte-combobox-button-size);
@@ -626,11 +626,11 @@
   .chip {
     /** Chip background */
     --forte-combobox-chip-bg: var(--forte-color-panel);
-    /** Chip text colour */
+    /** Chip text color */
     --forte-combobox-chip-fg: var(--forte-color-foreground);
     /** Background of the chip keyboard navigation has reached */
     --forte-combobox-chip-bg-highlighted: var(--forte-color-primary-soft);
-    /** Text colour of that chip */
+    /** Text color of that chip */
     --forte-combobox-chip-fg-highlighted: var(--forte-color-primary-text);
     /* Nested inside the field the same way the icon buttons are, and for the
      * same reason: a chip is a filled box parked in the field's corner, so a
@@ -736,9 +736,9 @@
   /* Popup ------------------------------------------------------------------ */
   .popup {
     /* Surface knobs. */
-    /** Popup surface colour */
+    /** Popup surface color */
     --forte-combobox-popup-bg: var(--forte-color-overlay);
-    /** Popup text colour */
+    /** Popup text color */
     --forte-combobox-popup-fg: var(--forte-color-foreground);
     /** Popup corner radius */
     --forte-combobox-popup-radius: var(--forte-radius-surface);
@@ -751,7 +751,7 @@
      * painting it costs no layout. */
     /** Width of the hairline that separates the popup from the page */
     --forte-combobox-popup-border-width: 1px;
-    /** Colour of that hairline */
+    /** Color of that hairline */
     --forte-combobox-popup-border-color: var(--forte-color-border);
 
     /* Motion knobs, broken out so an app can retune the feel — or flatten it
@@ -815,7 +815,7 @@
 
     font-family: var(--forte-font-sans);
 
-    /* Grow out of the anchor rather than out of the popup's own centre.
+    /* Grow out of the anchor rather than out of the popup's own center.
      * `--transform-origin` is published by the Positioner and points back at
      * the anchor. Opacity is deliberately shorter than the transform: the
      * list is legible early and the spring settles behind readable rows. */
@@ -985,13 +985,13 @@
    * while arrow keys move the highlight, and pointer hover sets the same
    * attribute — which is why there is no separate `:hover` rule. */
   .item {
-    /** Item text colour */
+    /** Item text color */
     --forte-combobox-item-fg: var(--forte-color-foreground);
     /** Background of the highlighted item */
     --forte-combobox-item-bg-highlighted: var(--forte-color-primary-soft);
-    /** Text colour of the highlighted item */
+    /** Text color of the highlighted item */
     --forte-combobox-item-fg-highlighted: var(--forte-color-primary-text);
-    /** Text colour of the selected item */
+    /** Text color of the selected item */
     --forte-combobox-item-fg-selected: var(--forte-color-primary-text);
     /** Item font size */
     --forte-combobox-item-font-size: var(--forte-font-size-2);
@@ -1069,7 +1069,7 @@
   }
 
   .groupLabel {
-    /** Group label text colour */
+    /** Group label text color */
     --forte-combobox-group-label-fg: var(--forte-color-foreground-muted);
     /** Group label text size */
     --forte-combobox-group-label-font-size: var(--forte-font-size-1);
@@ -1087,7 +1087,7 @@
     /* At the LIST's text edge, not the item's. Indenting it past the
      * indicator column — which this rule used to do, to line its text up with
      * the item text — is what made it read as one more row: same x, same
-     * rhythm, and only one colour step between them. A heading has to sit a
+     * rhythm, and only one color step between them. A heading has to sit a
      * level UP from the rows it heads, and outdenting is the cue that costs
      * nothing to scan. */
     padding-inline: var(--forte-combobox-item-px);
@@ -1121,7 +1121,7 @@
   /* Separator --------------------------------------------------------------
    * A BORDER, not a `background-color`: under forced-colors a background is
    * replaced with `Canvas` and a hairline drawn that way vanishes for
-   * exactly the users who most need the grouping cue, while border colours
+   * exactly the users who most need the grouping cue, while border colors
    * are forced to `CanvasText` and survive. `block-size: 0` with
    * `border-box` is floored at the border width, so the rule still paints
    * at its full 1px — same shape as `Select.module.css`. */
@@ -1165,9 +1165,9 @@
  * `[data-disabled]` rule restores `opacity: 1` and paints GrayText, and the
  * `[data-highlighted]` rule paints the Highlight/HighlightText pair. What is
  * left is combobox-specific: the group is a <div> wrapping a native <input>,
- * and forced-colors gives the two DIFFERENT system colours (Canvas vs Field)
+ * and forced-colors gives the two DIFFERENT system colors (Canvas vs Field)
  * unless they are aligned by hand — and a descendant that declares its own
- * author colour does not inherit the host's GrayText when disabled, so the
+ * author color does not inherit the host's GrayText when disabled, so the
  * placeholder and the icons are restated. */
 @layer forte.a11y {
   @media (forced-colors: active) {

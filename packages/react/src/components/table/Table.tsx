@@ -312,7 +312,7 @@ export interface TableHeadProps
   extends Omit<React.ComponentPropsWithoutRef<"th">, "className" | "align"> {
   /**
    * Horizontal alignment of the cell's content. Defaults to the start edge —
-   * the UA centres `<th>` text, which lines up with nothing beneath it.
+   * the UA centers `<th>` text, which lines up with nothing beneath it.
    * @default "start"
    */
   align?: TableAlign;

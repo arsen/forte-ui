@@ -4,7 +4,7 @@ import { Spinner } from "@forte-ui/react";
 
 const TONES = ["primary", "secondary", "danger", "neutral"] as const;
 
-/* `current` takes whatever colour it lands in, which is what makes it the one
+/* `current` takes whatever color it lands in, which is what makes it the one
  * to reach for inside another control. Both rows below use the same markup —
  * only the surrounding `color` differs. */
 const CONTEXTS = [

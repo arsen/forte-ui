@@ -9,12 +9,12 @@ import { cn } from "@/lib/cn";
  * pair the old header swatch painted with `linear-gradient(135deg, …)` — so
  * the mark follows the Theme Studio's seed and every scope it sits in, which
  * a file on disk cannot. The wordmark runs from `currentColor` — whatever
- * text colour the parent has, the way the plain "Forte UI" text was — to
- * the secondary text colour, so it too follows the theme.
+ * text color the parent has, the way the plain "Forte UI" text was — to
+ * the secondary text color, so it too follows the theme.
  *
- * Under forced colours the page's tokens go away, so both gradients fall
+ * Under forced colors the page's tokens go away, so both gradients fall
  * back to `currentColor` and the two dots to `Canvas`: a flat,
- * system-coloured F that still reads as the first letter of the name. The old swatch was decorative
+ * system-colored F that still reads as the first letter of the name. The old swatch was decorative
  * and could simply hide; this one IS the F, and hiding it would leave the
  * link reading "orte UI".
  *
@@ -35,7 +35,7 @@ import { cn } from "@/lib/cn";
  * The mark stands in for the F, a fifth taller than the caps, its top arm
  * reaching out to the "o" across a gap of half a bar, which is what makes it
  * a logo rather than an icon beside a word. Taller than that and the F reads
- * as a separate glyph looming over the name — it also drags the box's centre
+ * as a separate glyph looming over the name — it also drags the box's center
  * above the text's, so the wordmark sits high next to the bar's icons.
  */
 
@@ -72,7 +72,7 @@ function Mark({ id }: { id: string }) {
       </defs>
       <path d={MARK} fill={`url("#${id}")`} className="forced-colors:fill-current" />
       {/* White, not a token: the dots are the mark's highlight, and the one
-        * colour that reads on both ends of any in-envelope gradient. */}
+        * color that reads on both ends of any in-envelope gradient. */}
       <path d={DOTS} fill="#fff" className="forced-colors:fill-[Canvas]" />
     </>
   );
@@ -102,11 +102,11 @@ export function Logo({ className, ...props }: LogoProps) {
       <Mark id={id} />
       <defs>
         {/* Left to right across the word, in the text's own box: it starts as
-          * the plain text colour and ends on the SECONDARY TEXT colour — the
+          * the plain text color and ends on the SECONDARY TEXT color — the
           * ramp's step 11, the hue the mark's gradient ends on, at the
           * lightness the ramp already guarantees readable as text on the
           * background. That last part is why it is a ramp step and not a
-          * `color-mix()` of the text colour and the seed: a fixed share of a
+          * `color-mix()` of the text color and the seed: a fixed share of a
           * mid-lightness seed is a visible tint on near-white text and a
           * barely-there one on near-black, so a single ratio cannot look the
           * same in both themes, while step 11 is defined per theme to sit

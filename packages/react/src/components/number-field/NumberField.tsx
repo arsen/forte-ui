@@ -102,11 +102,11 @@ function ScrubGripIcon(props: React.ComponentProps<"svg">) {
 /**
  * The glyph that stands in for the mouse pointer while a scrub is running.
  *
- * It is filled rather than stroked, and painted with a wide background-coloured
+ * It is filled rather than stroked, and painted with a wide background-colored
  * stroke UNDER the fill (`paint-order: stroke`, set in the stylesheet). The
  * cursor is portalled to `<body>` and dragged across whatever the page happens
  * to contain, so a single-tone glyph disappears the moment it crosses something
- * of a similar colour — the halo is what keeps it readable everywhere.
+ * of a similar color — the halo is what keeps it readable everywhere.
  */
 function ScrubCursorIcon(props: React.ComponentProps<"svg">) {
   return (
@@ -454,7 +454,7 @@ export interface NumberFieldDecrementProps
 }
 
 /**
- * The stepper that decreases the value. Renders a `<button>`, labelled
+ * The stepper that decreases the value. Renders a `<button>`, labeled
  * "Decrease" by Base UI and outside the tab order for the same reason
  * `Increment` is.
  *

@@ -3,7 +3,7 @@
 import { Steps } from "@forte-ui/react";
 
 /* Every step takes an equal share of the row and its title sits under the
- * circle. The connector runs from circle centre to circle centre — which is
+ * circle. The connector runs from circle center to circle center — which is
  * what the equal shares are for. */
 export default function StepsLabelBelow() {
   return (

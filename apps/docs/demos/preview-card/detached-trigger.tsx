@@ -13,12 +13,12 @@ const DOCS: Doc[] = [
   {
     id: "doc-axes",
     title: "Two axes, not a variant list",
-    note: "variant is how loud a component is; tone is which colour set it draws from.",
+    note: "variant is how loud a component is; tone is which color set it draws from.",
   },
 ];
 
 // Created once, at module scope. A handle made during render would be a new
-// object on every pass and the root and its triggers would stop recognising
+// object on every pass and the root and its triggers would stop recognizing
 // each other. `React.useState(() => PreviewCard.createHandle())` is the escape
 // hatch when the handle has to be per-instance.
 const handbook = PreviewCard.createHandle<Doc>();

@@ -72,7 +72,7 @@ The demo at the top of the page: five slides, `Prev` and `Next` rendered inside 
 
 <DemoBlock id="carousel/centered" />
 
-Centering is one number: the view's start edge sits `(slidesPerView - 1) / 2` slides before the active one, and that offset is subtracted from the track's position in the same `calc()`. The window that decides which slides are in view — for `inert`, `lazy` and `autoHeight` — centres on the active slide with it, so the two peeking neighbours are mounted but not reachable with Tab.
+Centering is one number: the view's start edge sits `(slidesPerView - 1) / 2` slides before the active one, and that offset is subtracted from the track's position in the same `calc()`. The window that decides which slides are in view — for `inert`, `lazy` and `autoHeight` — centers on the active slide with it, so the two peeking neighbours are mounted but not reachable with Tab.
 
 ### Lazy
 
@@ -120,7 +120,7 @@ Slides out of view are `aria-hidden` and `inert`. That is what keeps a link in t
 
 `Prev` and `Next` use `aria-disabled` rather than `disabled` at the ends of a non-looping carousel, so reaching the last slide with Next leaves focus on the button instead of dropping it to the page. The dots are a single tab stop with the arrow keys moving between them, which is also what moves the carousel.
 
-Under forced colors the controls keep a system-coloured border in place of their shadow, the active dot is painted `Highlight`, and the active thumbnail's ring is `Highlight` while the inactive ones' become invisible — `transparent` is replaced in that mode, so they are set to `Canvas`, the page colour, instead.
+Under forced colors the controls keep a system-colored border in place of their shadow, the active dot is painted `Highlight`, and the active thumbnail's ring is `Highlight` while the inactive ones' become invisible — `transparent` is replaced in that mode, so they are set to `Canvas`, the page color, instead.
 
 ### Motion
 
@@ -136,7 +136,7 @@ The track is moved by one number. `Carousel.Track` carries `--forte-carousel-pos
 
 The percentage is the track's own width, so the resting positions never need measuring: resize the page, switch density, override the gap, and the track is still parked on the same slide. Only a drag needs pixels, to turn the pointer's travel into slides, and those are measured once at pointerdown. `--forte-direction` flips the sign in RTL, where the first slide is on the right — try the demo frame's toggle.
 
-The move is a transition, so pressing Next while the track is still travelling retargets from wherever it is. During a drag the transition is off and the same variable is written straight to the DOM every frame; letting go is one state update that puts the transition back and sets the target, and the browser tweens from under the finger to the slide.
+The move is a transition, so pressing Next while the track is still traveling retargets from wherever it is. During a drag the transition is off and the same variable is written straight to the DOM every frame; letting go is one state update that puts the transition back and sets the target, and the browser tweens from under the finger to the slide.
 
 Looping never waits for a transition to end. A move that would cross the boundary first jumps the track — instantly, with the transition suppressed for that one write — to the copy of the slide that paints the identical picture, and then animates one step onto the real slide. The track always comes to rest on a real slide, so there is nothing to fix up afterwards and nothing that can go wrong when a background tab's transitions never run.
 

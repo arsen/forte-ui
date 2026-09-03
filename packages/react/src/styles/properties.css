@@ -5,7 +5,7 @@
  * by (and cannot be nested inside) `@layer`.
  *
  * Registering `--forte-accent-seed` is the single highest-value declaration in
- * this file. An *unregistered* custom property holding a malformed colour makes
+ * this file. An *unregistered* custom property holding a malformed color makes
  * every token derived from it "invalid at computed-value time": the whole ramp
  * silently falls back to inheriting `color`, with no console error and no
  * visual clue beyond a page that has quietly lost its palette. Registering the
@@ -28,7 +28,7 @@
   initial-value: oklch(0.58 0.15 305);
 }
 
-/* 0 = pure grey, 1 = a hue-matched sliver of the brand in every neutral. */
+/* 0 = pure gray, 1 = a hue-matched sliver of the brand in every neutral. */
 @property --forte-neutral-tint {
   syntax: "<number>";
   inherits: true;

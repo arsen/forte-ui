@@ -53,7 +53,7 @@
       {
         "name": "--forte-accordion-item-border-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of that border",
+        "description": "Color of that border",
         "part": "root",
         "overrides": []
       },
@@ -67,7 +67,7 @@
       {
         "name": "--forte-accordion-divider-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of that hairline",
+        "description": "Color of that hairline",
         "part": "root",
         "overrides": []
       },
@@ -114,7 +114,7 @@
       {
         "name": "--forte-accordion-trigger-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Heading colour",
+        "description": "Heading color",
         "part": "root",
         "overrides": []
       },
@@ -135,14 +135,14 @@
       {
         "name": "--forte-accordion-icon-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Chevron colour when closed",
+        "description": "Chevron color when closed",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-accordion-icon-color-open",
         "value": "var(--forte-color-foreground)",
-        "description": "Chevron colour when open",
+        "description": "Chevron color when open",
         "part": "root",
         "overrides": []
       },
@@ -170,7 +170,7 @@
       {
         "name": "--forte-accordion-panel-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Body text colour",
+        "description": "Body text color",
         "part": "root",
         "overrides": []
       },
@@ -252,7 +252,7 @@
       {
         "name": "--forte-alert-title-font-weight",
         "value": "var(--forte-font-weight-semibold)",
-        "description": "Weight of the title. It is what separates the title from the description on a `soft` card, where both are the same colour.",
+        "description": "Weight of the title. It is what separates the title from the description on a `soft` card, where both are the same color.",
         "part": "root",
         "overrides": []
       },
@@ -359,7 +359,7 @@
       {
         "name": "--forte-alert-tone-title",
         "value": "var(--forte-color-foreground)",
-        "description": "Tone's title colour on that surface",
+        "description": "Tone's title color on that surface",
         "part": "root",
         "overrides": [
           {
@@ -395,7 +395,7 @@
       {
         "name": "--forte-alert-tone-body",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Tone's body colour on that surface. Separate from the title's because `neutral` wants a muted grey here and the coloured tones want their own step 11 — the pair the harness guarantees.",
+        "description": "Tone's body color on that surface. Separate from the title's because `neutral` wants a muted gray here and the colored tones want their own step 11 — the pair the harness guarantees.",
         "part": "root",
         "overrides": [
           {
@@ -431,7 +431,7 @@
       {
         "name": "--forte-alert-tone-accent",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Tone's glyph colour, which is the only tone signal `outline` keeps",
+        "description": "Tone's glyph color, which is the only tone signal `outline` keeps",
         "part": "root",
         "overrides": [
           {
@@ -483,7 +483,7 @@
       {
         "name": "--forte-alert-border-color",
         "value": "var(--forte-alert-tone-border)",
-        "description": "Edge colour. Set by `variant` from the tone.",
+        "description": "Edge color. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
           {
@@ -499,7 +499,7 @@
       {
         "name": "--forte-alert-title-color",
         "value": "var(--forte-alert-tone-title)",
-        "description": "Title colour. Set by `variant` from the tone.",
+        "description": "Title color. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
           {
@@ -515,7 +515,7 @@
       {
         "name": "--forte-alert-body-color",
         "value": "var(--forte-alert-tone-body)",
-        "description": "Description colour. Set by `variant` from the tone.",
+        "description": "Description color. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
           {
@@ -531,7 +531,7 @@
       {
         "name": "--forte-alert-icon-color",
         "value": "var(--forte-alert-tone-accent)",
-        "description": "Glyph colour. Set by `variant` from the tone.",
+        "description": "Glyph color. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
           {
@@ -626,7 +626,7 @@
       {
         "name": "--forte-app-bar-max-inline-size",
         "value": "100%",
-        "description": "Width the row is centred within. `100%` is edge to edge; set a measure — `72rem` — for a marketing header whose content should line up with the page column below it. Extra width becomes padding.",
+        "description": "Width the row is centered within. `100%` is edge to edge; set a measure — `72rem` — for a marketing header whose content should line up with the page column below it. Extra width becomes padding.",
         "part": "root",
         "overrides": []
       },
@@ -674,7 +674,7 @@
       {
         "name": "--forte-app-bar-border-width",
         "value": "1px",
-        "description": "Width of the hairline under the bar. Reserved even when the variant paints it transparent, so `elevateOnScroll` gaining an edge moves nothing, and so forced colours have a border to recolour.",
+        "description": "Width of the hairline under the bar. Reserved even when the variant paints it transparent, so `elevateOnScroll` gaining an edge moves nothing, and so forced colors have a border to recolor.",
         "part": "root",
         "overrides": []
       },
@@ -752,7 +752,7 @@
       {
         "name": "--forte-app-bar-fg",
         "value": "var(--forte-app-bar-tone-on-solid)",
-        "description": "Text and icon colour, inherited by everything inside. `variant` and `tone` set it.",
+        "description": "Text and icon color, inherited by everything inside. `variant` and `tone` set it.",
         "part": "root",
         "overrides": [
           {
@@ -764,7 +764,7 @@
       {
         "name": "--forte-app-bar-fg-muted",
         "value": "var(--forte-app-bar-tone-on-solid-muted)",
-        "description": "Muted text colour, handed to descendants as `--forte-color-foreground-muted` on the coloured tones.",
+        "description": "Muted text color, handed to descendants as `--forte-color-foreground-muted` on the colored tones.",
         "part": "root",
         "overrides": [
           {
@@ -776,7 +776,7 @@
       {
         "name": "--forte-app-bar-hover",
         "value": "var(--forte-app-bar-tone-solid-hover)",
-        "description": "Hover fill handed to the ghost controls inside a coloured bar.",
+        "description": "Hover fill handed to the ghost controls inside a colored bar.",
         "part": "root",
         "overrides": [
           {
@@ -788,7 +788,7 @@
       {
         "name": "--forte-app-bar-active",
         "value": "var(--forte-app-bar-tone-solid-active)",
-        "description": "Active fill handed to the ghost controls inside a coloured bar.",
+        "description": "Active fill handed to the ghost controls inside a colored bar.",
         "part": "root",
         "overrides": [
           {
@@ -800,7 +800,7 @@
       {
         "name": "--forte-app-bar-border-color",
         "value": "var(--forte-app-bar-tone-solid-border)",
-        "description": "Colour of the hairline under the bar. `variant` and `tone` set it.",
+        "description": "Color of the hairline under the bar. `variant` and `tone` set it.",
         "part": "root",
         "overrides": [
           {
@@ -820,7 +820,7 @@
       {
         "name": "--forte-app-bar-separator",
         "value": "var(--forte-app-bar-tone-solid-separator)",
-        "description": "Rule colour handed to `Separator`s inside a coloured bar.",
+        "description": "Rule color handed to `Separator`s inside a colored bar.",
         "part": "root",
         "overrides": [
           {
@@ -919,14 +919,14 @@
       {
         "name": "--forte-aspect-border-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Frame colour. Only painted when the width below is non-zero.",
+        "description": "Frame color. Only painted when the width below is non-zero.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-aspect-border-width",
         "value": "0px",
-        "description": "Frame width. `0px` unless `variant=\"outlined\"` — or forced colours are active, where `filled` takes one too so its placeholder does not vanish into the page.",
+        "description": "Frame width. `0px` unless `variant=\"outlined\"` — or forced colors are active, where `filled` takes one too so its placeholder does not vanish into the page.",
         "part": "root",
         "overrides": [
           {
@@ -1035,7 +1035,7 @@
       {
         "name": "--forte-avatar-ring-color",
         "value": "var(--forte-color-background)",
-        "description": "Colour of that ring. It should match whatever the avatar sits on, so the gap it punches reads as background rather than as a stroke.",
+        "description": "Color of that ring. It should match whatever the avatar sits on, so the gap it punches reads as background rather than as a stroke.",
         "part": "root",
         "overrides": [
           {
@@ -1071,7 +1071,7 @@
       {
         "name": "--forte-avatar-tone-on-solid",
         "value": "var(--forte-gray-1)",
-        "description": "Text colour on the solid fill",
+        "description": "Text color on the solid fill",
         "part": "root",
         "overrides": [
           {
@@ -1119,7 +1119,7 @@
       {
         "name": "--forte-avatar-tone-text",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour on the tinted fill, and for `outline`",
+        "description": "Text color on the tinted fill, and for `outline`",
         "part": "root",
         "overrides": [
           {
@@ -1143,7 +1143,7 @@
       {
         "name": "--forte-avatar-tone-border",
         "value": "var(--forte-color-border)",
-        "description": "Edge colour for `outline`",
+        "description": "Edge color for `outline`",
         "part": "root",
         "overrides": [
           {
@@ -1187,7 +1187,7 @@
       {
         "name": "--forte-avatar-fg",
         "value": "var(--forte-avatar-tone-text)",
-        "description": "Colour of the initials or icon. Set by `variant` from the tone.",
+        "description": "Color of the initials or icon. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
           {
@@ -1219,7 +1219,7 @@
       {
         "name": "--forte-avatar-border-color",
         "value": "transparent",
-        "description": "Border colour. The tone's border for `variant=\"outline\"`.",
+        "description": "Border color. The tone's border for `variant=\"outline\"`.",
         "part": "root",
         "overrides": [
           {
@@ -1238,7 +1238,7 @@
       {
         "name": "--forte-avatar-badge-inset",
         "value": "calc(0.2929 * var(--forte-avatar-radius))",
-        "description": "How far the badge's CENTRE sits in from the corner of the box. The default puts it on the avatar's own outline, whatever `shape` is; `0` hangs it on the box corner, and a larger value pulls it inside.",
+        "description": "How far the badge's CENTER sits in from the corner of the box. The default puts it on the avatar's own outline, whatever `shape` is; `0` hangs it on the box corner, and a larger value pulls it inside.",
         "part": "badge",
         "overrides": []
       },
@@ -1252,7 +1252,7 @@
       {
         "name": "--forte-avatar-badge-ring-color",
         "value": "var(--forte-avatar-ring-color)",
-        "description": "Colour of that ring. Follows the avatar's own ring by default, so a badge inside a group picks up the group's ring colour for free and a lone avatar falls back to the page background.",
+        "description": "Color of that ring. Follows the avatar's own ring by default, so a badge inside a group picks up the group's ring color for free and a lone avatar falls back to the page background.",
         "part": "badge",
         "overrides": []
       },
@@ -1312,7 +1312,7 @@
       {
         "name": "--forte-avatar-badge-fg",
         "value": "var(--forte-gray-1)",
-        "description": "Colour of the content. Set by `tone`, and paired with the fill so a count or a tick clears AA on every one of them.",
+        "description": "Color of the content. Set by `tone`, and paired with the fill so a count or a tick clears AA on every one of them.",
         "part": "badge",
         "overrides": [
           {
@@ -1358,7 +1358,7 @@
       {
         "name": "--forte-avatar-group-ring-color",
         "value": "var(--forte-color-background)",
-        "description": "Colour of that ring. Change it to the surface the group sits on — the default assumes the page background.",
+        "description": "Color of that ring. Change it to the surface the group sits on — the default assumes the page background.",
         "part": "group",
         "overrides": []
       }
@@ -1460,7 +1460,7 @@
       {
         "name": "--forte-badge-border-width",
         "value": "1px",
-        "description": "Border thickness. Reserved by every variant; only `outline` colours it.",
+        "description": "Border thickness. Reserved by every variant; only `outline` colors it.",
         "part": "root",
         "overrides": []
       },
@@ -1481,7 +1481,7 @@
       {
         "name": "--forte-badge-dot-color",
         "value": "currentColor",
-        "description": "Colour of that dot. `currentColor` by default, so it matches the label through every variant and tone without a slot of its own.",
+        "description": "Color of that dot. `currentColor` by default, so it matches the label through every variant and tone without a slot of its own.",
         "part": "root",
         "overrides": []
       },
@@ -1563,7 +1563,7 @@
       {
         "name": "--forte-badge-tone-on-solid",
         "value": "var(--forte-color-on-primary)",
-        "description": "Text colour on the solid fill",
+        "description": "Text color on the solid fill",
         "part": "root",
         "overrides": [
           {
@@ -1647,7 +1647,7 @@
       {
         "name": "--forte-badge-tone-text",
         "value": "var(--forte-color-primary-text)",
-        "description": "Label colour for `soft`, `outline` and `ghost`",
+        "description": "Label color for `soft`, `outline` and `ghost`",
         "part": "root",
         "overrides": [
           {
@@ -1679,7 +1679,7 @@
       {
         "name": "--forte-badge-tone-border",
         "value": "var(--forte-color-primary-border)",
-        "description": "Border colour for `outline`",
+        "description": "Border color for `outline`",
         "part": "root",
         "overrides": [
           {
@@ -1763,7 +1763,7 @@
       {
         "name": "--forte-badge-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Label and icon colour",
+        "description": "Label and icon color",
         "part": "root",
         "overrides": [
           {
@@ -1787,7 +1787,7 @@
       {
         "name": "--forte-badge-border-color",
         "value": "transparent",
-        "description": "Border colour",
+        "description": "Border color",
         "part": "root",
         "overrides": [
           {
@@ -1850,21 +1850,21 @@
       {
         "name": "--forte-breadcrumb-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of an ancestor crumb",
+        "description": "Color of an ancestor crumb",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-breadcrumb-color-hover",
         "value": "var(--forte-color-foreground)",
-        "description": "Colour of an ancestor crumb under the pointer",
+        "description": "Color of an ancestor crumb under the pointer",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-breadcrumb-color-current",
         "value": "var(--forte-color-foreground)",
-        "description": "Colour of the current page's crumb",
+        "description": "Color of the current page's crumb",
         "part": "root",
         "overrides": []
       },
@@ -1885,7 +1885,7 @@
       {
         "name": "--forte-breadcrumb-separator-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Colour of the separator",
+        "description": "Color of the separator",
         "part": "root",
         "overrides": []
       },
@@ -1986,7 +1986,7 @@
       {
         "name": "--forte-button-border-width",
         "value": "1px",
-        "description": "Border thickness (only `outline` gives it a colour)",
+        "description": "Border thickness (only `outline` gives it a color)",
         "part": "root",
         "overrides": []
       },
@@ -2185,7 +2185,7 @@
       {
         "name": "--forte-button-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Label and icon colour",
+        "description": "Label and icon color",
         "part": "root",
         "overrides": [
           {
@@ -2209,7 +2209,7 @@
       {
         "name": "--forte-button-border-color",
         "value": "transparent",
-        "description": "Border colour",
+        "description": "Border color",
         "part": "root",
         "overrides": [
           {
@@ -2281,7 +2281,7 @@
       {
         "name": "--forte-button-tone-on-solid",
         "value": "var(--forte-color-on-primary)",
-        "description": "Text colour on the solid fill",
+        "description": "Text color on the solid fill",
         "part": "root",
         "overrides": [
           {
@@ -2361,7 +2361,7 @@
       {
         "name": "--forte-button-tone-text",
         "value": "var(--forte-color-primary-text)",
-        "description": "Label colour for `soft`, `outline` and `ghost`",
+        "description": "Label color for `soft`, `outline` and `ghost`",
         "part": "root",
         "overrides": [
           {
@@ -2381,7 +2381,7 @@
       {
         "name": "--forte-button-tone-border",
         "value": "var(--forte-color-primary-border)",
-        "description": "Border colour for `outline`",
+        "description": "Border color for `outline`",
         "part": "root",
         "overrides": [
           {
@@ -2427,7 +2427,7 @@
       {
         "name": "--forte-button-group-separator-color",
         "value": "var(--forte-color-border)",
-        "description": "Line colour. Re-point it when the separator sits between `solid` fills — `--forte-color-border` is tuned against the page background, not against a colour fill.",
+        "description": "Line color. Re-point it when the separator sits between `solid` fills — `--forte-color-border` is tuned against the page background, not against a color fill.",
         "part": "separator",
         "overrides": []
       },
@@ -2441,14 +2441,14 @@
       {
         "name": "--forte-button-group-text-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Text colour. Muted on purpose — the cell is context for the action beside it, not the action.",
+        "description": "Text color. Muted on purpose — the cell is context for the action beside it, not the action.",
         "part": "text",
         "overrides": []
       },
       {
         "name": "--forte-button-group-text-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour.",
+        "description": "Border color.",
         "part": "text",
         "overrides": []
       },
@@ -2553,7 +2553,7 @@
       {
         "name": "--forte-calendar-caption-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Month and year colour",
+        "description": "Month and year color",
         "part": "root",
         "overrides": []
       },
@@ -2572,14 +2572,14 @@
       {
         "name": "--forte-calendar-weekday-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Weekday initials colour",
+        "description": "Weekday initials color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-calendar-week-number-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "ISO week-number colour",
+        "description": "ISO week-number color",
         "part": "root",
         "overrides": []
       },
@@ -2609,14 +2609,14 @@
       {
         "name": "--forte-calendar-day-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Day number colour",
+        "description": "Day number color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-calendar-day-color-outside",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Colour of days belonging to the neighbouring month",
+        "description": "Color of days belonging to the neighbouring month",
         "part": "root",
         "overrides": []
       },
@@ -2644,7 +2644,7 @@
       {
         "name": "--forte-calendar-day-selected-color",
         "value": "var(--forte-color-on-primary)",
-        "description": "Text colour on a selected day",
+        "description": "Text color on a selected day",
         "part": "root",
         "overrides": []
       },
@@ -2665,7 +2665,7 @@
       {
         "name": "--forte-calendar-today-color",
         "value": "var(--forte-color-primary-text)",
-        "description": "Colour of today's number",
+        "description": "Color of today's number",
         "part": "root",
         "overrides": []
       },
@@ -2774,7 +2774,7 @@
       {
         "name": "--forte-card-border-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Edge colour. Set by `variant`. `border-muted`, not `border` — a card is a grouping, not a control, and the louder hairline next to real inputs makes the box compete with the form inside it.",
+        "description": "Edge color. Set by `variant`. `border-muted`, not `border` — a card is a grouping, not a control, and the louder hairline next to real inputs makes the box compete with the form inside it.",
         "part": "root",
         "overrides": [
           {
@@ -2889,14 +2889,14 @@
       {
         "name": "--forte-carousel-control-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Icon colour of a control",
+        "description": "Icon color of a control",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-carousel-control-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour of a control",
+        "description": "Border color of a control",
         "part": "root",
         "overrides": []
       },
@@ -2931,21 +2931,21 @@
       {
         "name": "--forte-carousel-dot-color",
         "value": "var(--forte-color-border-strong)",
-        "description": "Colour of an inactive dot",
+        "description": "Color of an inactive dot",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-carousel-dot-color-hover",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Colour of an inactive dot on hover",
+        "description": "Color of an inactive dot on hover",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-carousel-dot-color-active",
         "value": "var(--forte-color-primary)",
-        "description": "Colour of the active dot",
+        "description": "Color of the active dot",
         "part": "root",
         "overrides": []
       },
@@ -2973,7 +2973,7 @@
       {
         "name": "--forte-carousel-thumb-border-color-active",
         "value": "var(--forte-color-primary)",
-        "description": "Ring colour of the active thumbnail",
+        "description": "Ring color of the active thumbnail",
         "part": "root",
         "overrides": []
       },
@@ -3059,7 +3059,7 @@
       {
         "name": "--forte-checkbox-duration",
         "value": "var(--forte-duration-fast)",
-        "description": "Colour transitions on the box and the fade of the indicator.",
+        "description": "Color transitions on the box and the fade of the indicator.",
         "part": "root",
         "overrides": []
       },
@@ -3087,7 +3087,7 @@
       {
         "name": "--forte-checkbox-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour while unchecked.",
+        "description": "Border color while unchecked.",
         "part": "root",
         "overrides": [
           {
@@ -3099,7 +3099,7 @@
       {
         "name": "--forte-checkbox-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Border colour on hover while unchecked.",
+        "description": "Border color on hover while unchecked.",
         "part": "root",
         "overrides": [
           {
@@ -3159,7 +3159,7 @@
       {
         "name": "--forte-checkbox-mark-color",
         "value": "var(--forte-color-on-primary)",
-        "description": "Colour of the tick and dash — it becomes the root's `color`, and the marks stroke with `currentColor`.",
+        "description": "Color of the tick and dash — it becomes the root's `color`, and the marks stroke with `currentColor`.",
         "part": "root",
         "overrides": [
           {
@@ -3236,7 +3236,7 @@
       {
         "name": "--forte-collapsible-border-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of that border",
+        "description": "Color of that border",
         "part": "root",
         "overrides": []
       },
@@ -3298,7 +3298,7 @@
       {
         "name": "--forte-collapsible-trigger-bg-hover",
         "value": "var(--forte-collapsible-trigger-bg)",
-        "description": "Trigger background on hover. Unset in `plain`, where the colour change below is the cue instead",
+        "description": "Trigger background on hover. Unset in `plain`, where the color change below is the cue instead",
         "part": "root",
         "overrides": [
           {
@@ -3310,14 +3310,14 @@
       {
         "name": "--forte-collapsible-trigger-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Label colour",
+        "description": "Label color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-collapsible-trigger-color-hover",
         "value": "var(--forte-color-primary-text)",
-        "description": "Label colour on hover",
+        "description": "Label color on hover",
         "part": "root",
         "overrides": [
           {
@@ -3343,7 +3343,7 @@
       {
         "name": "--forte-collapsible-icon-color",
         "value": "currentColor",
-        "description": "Marker colour when closed",
+        "description": "Marker color when closed",
         "part": "root",
         "overrides": [
           {
@@ -3355,7 +3355,7 @@
       {
         "name": "--forte-collapsible-icon-color-open",
         "value": "currentColor",
-        "description": "Marker colour when open",
+        "description": "Marker color when open",
         "part": "root",
         "overrides": [
           {
@@ -3410,7 +3410,7 @@
       {
         "name": "--forte-collapsible-panel-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Body text colour",
+        "description": "Body text color",
         "part": "root",
         "overrides": []
       },
@@ -3499,7 +3499,7 @@
       {
         "name": "--forte-color-picker-thumb-border",
         "value": "#ffffff",
-        "description": "Ring colour of the rail handles",
+        "description": "Ring color of the rail handles",
         "part": "panel",
         "overrides": []
       },
@@ -3555,7 +3555,7 @@
       {
         "name": "--forte-color-picker-checker-size",
         "value": "8px",
-        "description": "Side of one square of the checkerboard drawn behind translucent colour",
+        "description": "Side of one square of the checkerboard drawn behind translucent color",
         "part": "panel",
         "overrides": [
           {
@@ -3603,7 +3603,7 @@
       {
         "name": "--forte-combobox-label-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Label text colour",
+        "description": "Label text color",
         "part": "label",
         "overrides": []
       },
@@ -3778,14 +3778,14 @@
       {
         "name": "--forte-combobox-field-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Field text colour",
+        "description": "Field text color",
         "part": "inputGroup",
         "overrides": []
       },
       {
         "name": "--forte-combobox-field-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Field border colour (reset per `variant`, and by `data-invalid`)",
+        "description": "Field border color (reset per `variant`, and by `data-invalid`)",
         "part": "inputGroup",
         "overrides": [
           {
@@ -3809,7 +3809,7 @@
       {
         "name": "--forte-combobox-field-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Field border colour on hover",
+        "description": "Field border color on hover",
         "part": "inputGroup",
         "overrides": [
           {
@@ -3940,14 +3940,14 @@
       {
         "name": "--forte-combobox-trigger-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Trigger text colour",
+        "description": "Trigger text color",
         "part": "trigger",
         "overrides": []
       },
       {
         "name": "--forte-combobox-trigger-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Trigger border colour (reset per `variant`; standalone shape only)",
+        "description": "Trigger border color (reset per `variant`; standalone shape only)",
         "part": "trigger",
         "overrides": [
           {
@@ -3978,7 +3978,7 @@
       {
         "name": "--forte-combobox-chip-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Chip text colour",
+        "description": "Chip text color",
         "part": "chip",
         "overrides": []
       },
@@ -3992,7 +3992,7 @@
       {
         "name": "--forte-combobox-chip-fg-highlighted",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of that chip",
+        "description": "Text color of that chip",
         "part": "chip",
         "overrides": []
       },
@@ -4027,14 +4027,14 @@
       {
         "name": "--forte-combobox-popup-bg",
         "value": "var(--forte-color-overlay)",
-        "description": "Popup surface colour",
+        "description": "Popup surface color",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-combobox-popup-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Popup text colour",
+        "description": "Popup text color",
         "part": "popup",
         "overrides": []
       },
@@ -4062,7 +4062,7 @@
       {
         "name": "--forte-combobox-popup-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline",
+        "description": "Color of that hairline",
         "part": "popup",
         "overrides": []
       },
@@ -4139,7 +4139,7 @@
       {
         "name": "--forte-combobox-item-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Item text colour",
+        "description": "Item text color",
         "part": "item",
         "overrides": []
       },
@@ -4153,14 +4153,14 @@
       {
         "name": "--forte-combobox-item-fg-highlighted",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of the highlighted item",
+        "description": "Text color of the highlighted item",
         "part": "item",
         "overrides": []
       },
       {
         "name": "--forte-combobox-item-fg-selected",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of the selected item",
+        "description": "Text color of the selected item",
         "part": "item",
         "overrides": []
       },
@@ -4174,7 +4174,7 @@
       {
         "name": "--forte-combobox-group-label-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Group label text colour",
+        "description": "Group label text color",
         "part": "groupLabel",
         "overrides": []
       },
@@ -4207,7 +4207,7 @@
       {
         "name": "--forte-context-menu-trigger-ring-color",
         "value": "var(--forte-color-primary)",
-        "description": "Colour of the ring that marks the region while its menu is open",
+        "description": "Color of the ring that marks the region while its menu is open",
         "part": "trigger",
         "overrides": []
       },
@@ -4348,14 +4348,14 @@
       {
         "name": "--forte-date-picker-trigger-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Field text colour",
+        "description": "Field text color",
         "part": "trigger",
         "overrides": []
       },
       {
         "name": "--forte-date-picker-trigger-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Field border colour (reset per `variant`)",
+        "description": "Field border color (reset per `variant`)",
         "part": "trigger",
         "overrides": [
           {
@@ -4379,7 +4379,7 @@
       {
         "name": "--forte-date-picker-icon-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Colour of the calendar glyph",
+        "description": "Color of the calendar glyph",
         "part": "trigger",
         "overrides": []
       }
@@ -4424,7 +4424,7 @@
       {
         "name": "--forte-dialog-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Popup text colour",
+        "description": "Popup text color",
         "part": "popup",
         "overrides": []
       },
@@ -4471,7 +4471,7 @@
       {
         "name": "--forte-dialog-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline. `transparent` when `size=\"fullscreen\"`.",
+        "description": "Color of that hairline. `transparent` when `size=\"fullscreen\"`.",
         "part": "popup",
         "overrides": [
           {
@@ -4687,7 +4687,7 @@
       {
         "name": "--forte-drawer-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Popup text colour",
+        "description": "Popup text color",
         "part": "popup",
         "overrides": []
       },
@@ -4729,7 +4729,7 @@
       {
         "name": "--forte-drawer-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline",
+        "description": "Color of that hairline",
         "part": "popup",
         "overrides": []
       },
@@ -4814,7 +4814,7 @@
       {
         "name": "--forte-drawer-nested-scrim",
         "value": "var(--forte-scrim-color)",
-        "description": "Colour the parent dims itself with under a nested drawer",
+        "description": "Color the parent dims itself with under a nested drawer",
         "part": "popup",
         "overrides": []
       },
@@ -4842,7 +4842,7 @@
       {
         "name": "--forte-drawer-handle-color",
         "value": "var(--forte-color-border-strong)",
-        "description": "Grab pill colour",
+        "description": "Grab pill color",
         "part": "handle",
         "overrides": []
       },
@@ -4856,7 +4856,7 @@
       {
         "name": "--forte-drawer-content-max-inline-size",
         "value": "100%",
-        "description": "Maximum width of the drawer's body, which then centres itself. `32rem` on a `top`/`bottom` drawer.",
+        "description": "Maximum width of the drawer's body, which then centers itself. `32rem` on a `top`/`bottom` drawer.",
         "part": "content",
         "overrides": [
           {
@@ -4908,7 +4908,7 @@
       {
         "name": "--forte-field-label-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Label colour",
+        "description": "Label color",
         "part": "label",
         "overrides": []
       },
@@ -4936,7 +4936,7 @@
       {
         "name": "--forte-field-description-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Description colour",
+        "description": "Description color",
         "part": "description",
         "overrides": []
       },
@@ -4950,7 +4950,7 @@
       {
         "name": "--forte-field-error-fg",
         "value": "var(--forte-color-danger-text)",
-        "description": "Error colour",
+        "description": "Error color",
         "part": "error",
         "overrides": []
       },
@@ -4976,7 +4976,7 @@
       {
         "name": "--forte-fieldset-legend-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Legend colour",
+        "description": "Legend color",
         "part": "legend",
         "overrides": []
       },
@@ -5119,21 +5119,21 @@
       {
         "name": "--forte-input-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour",
+        "description": "Text color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-placeholder-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Placeholder colour",
+        "description": "Placeholder color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour (reset per `variant`, and by `data-invalid`)",
+        "description": "Border color (reset per `variant`, and by `data-invalid`)",
         "part": "root",
         "overrides": [
           {
@@ -5157,7 +5157,7 @@
       {
         "name": "--forte-input-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Border colour on hover",
+        "description": "Border color on hover",
         "part": "root",
         "overrides": [
           {
@@ -5169,7 +5169,7 @@
       {
         "name": "--forte-input-caret-color",
         "value": "var(--forte-color-primary)",
-        "description": "Caret colour",
+        "description": "Caret color",
         "part": "root",
         "overrides": [
           {
@@ -5188,7 +5188,7 @@
       {
         "name": "--forte-input-selection-fg",
         "value": "var(--forte-color-primary-text)",
-        "description": "Selection text colour",
+        "description": "Selection text color",
         "part": "root",
         "overrides": []
       }
@@ -5333,28 +5333,28 @@
       {
         "name": "--forte-input-group-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour of the control",
+        "description": "Text color of the control",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-group-addon-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Addon text and icon colour",
+        "description": "Addon text and icon color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-group-placeholder-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Placeholder colour",
+        "description": "Placeholder color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-group-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour (reset per `variant`, and by the control's `data-invalid`)",
+        "description": "Border color (reset per `variant`, and by the control's `data-invalid`)",
         "part": "root",
         "overrides": [
           {
@@ -5378,7 +5378,7 @@
       {
         "name": "--forte-input-group-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Border colour on hover",
+        "description": "Border color on hover",
         "part": "root",
         "overrides": [
           {
@@ -5390,7 +5390,7 @@
       {
         "name": "--forte-input-group-caret-color",
         "value": "var(--forte-color-primary)",
-        "description": "Caret colour",
+        "description": "Caret color",
         "part": "root",
         "overrides": [
           {
@@ -5409,7 +5409,7 @@
       {
         "name": "--forte-input-group-selection-fg",
         "value": "var(--forte-color-primary-text)",
-        "description": "Selection text colour",
+        "description": "Selection text color",
         "part": "root",
         "overrides": []
       }
@@ -5489,14 +5489,14 @@
       {
         "name": "--forte-menu-bg",
         "value": "var(--forte-color-overlay)",
-        "description": "Popup surface colour",
+        "description": "Popup surface color",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-menu-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Popup text colour",
+        "description": "Popup text color",
         "part": "popup",
         "overrides": []
       },
@@ -5524,7 +5524,7 @@
       {
         "name": "--forte-menu-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline",
+        "description": "Color of that hairline",
         "part": "popup",
         "overrides": []
       },
@@ -5622,7 +5622,7 @@
       {
         "name": "--forte-menu-item-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Row text colour",
+        "description": "Row text color",
         "part": "item",
         "overrides": [
           {
@@ -5646,7 +5646,7 @@
       {
         "name": "--forte-menu-item-fg-highlighted",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of the highlighted row",
+        "description": "Text color of the highlighted row",
         "part": "item",
         "overrides": [
           {
@@ -5720,7 +5720,7 @@
       {
         "name": "--forte-menubar-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline",
+        "description": "Color of that hairline",
         "part": "root",
         "overrides": []
       },
@@ -5762,7 +5762,7 @@
       {
         "name": "--forte-menubar-trigger-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Trigger text colour",
+        "description": "Trigger text color",
         "part": "root",
         "overrides": []
       },
@@ -5795,7 +5795,7 @@
       {
         "name": "--forte-menubar-trigger-fg-open",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of the trigger whose menu is open",
+        "description": "Text color of the trigger whose menu is open",
         "part": "root",
         "overrides": []
       }
@@ -5888,21 +5888,21 @@
       {
         "name": "--forte-nav-list-item-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Row text colour at rest",
+        "description": "Row text color at rest",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-nav-list-item-color-hover",
         "value": "var(--forte-color-foreground)",
-        "description": "Row text colour on hover",
+        "description": "Row text color on hover",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-nav-list-item-color-active",
         "value": "var(--forte-color-primary-text)",
-        "description": "Row text colour on the active row",
+        "description": "Row text color on the active row",
         "part": "root",
         "overrides": []
       },
@@ -5944,7 +5944,7 @@
       {
         "name": "--forte-nav-list-label-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Label colour",
+        "description": "Label color",
         "part": "root",
         "overrides": []
       },
@@ -5986,7 +5986,7 @@
       {
         "name": "--forte-nav-list-guide-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of the guide line",
+        "description": "Color of the guide line",
         "part": "root",
         "overrides": []
       },
@@ -6000,21 +6000,21 @@
       {
         "name": "--forte-nav-list-edge-color",
         "value": "var(--forte-color-primary)",
-        "description": "Colour of the active-row edge border",
+        "description": "Color of the active-row edge border",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-nav-list-icon-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Chevron colour while the group is closed",
+        "description": "Chevron color while the group is closed",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-nav-list-icon-color-open",
         "value": "var(--forte-color-foreground)",
-        "description": "Chevron colour while the group is open",
+        "description": "Chevron color while the group is open",
         "part": "root",
         "overrides": []
       },
@@ -6035,7 +6035,7 @@
       {
         "name": "--forte-nav-list-badge-color",
         "value": "var(--forte-color-secondary-text)",
-        "description": "Badge text colour",
+        "description": "Badge text color",
         "part": "root",
         "overrides": []
       },
@@ -6096,7 +6096,7 @@
       {
         "name": "--forte-navigation-menu-row-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour of a `plain` row at rest",
+        "description": "Text color of a `plain` row at rest",
         "part": "root",
         "overrides": []
       },
@@ -6117,7 +6117,7 @@
       {
         "name": "--forte-navigation-menu-row-fg-open",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of those same two rows",
+        "description": "Text color of those same two rows",
         "part": "root",
         "overrides": []
       },
@@ -6180,14 +6180,14 @@
       {
         "name": "--forte-navigation-menu-bg",
         "value": "var(--forte-color-overlay)",
-        "description": "Panel surface colour",
+        "description": "Panel surface color",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-navigation-menu-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Panel text colour",
+        "description": "Panel text color",
         "part": "popup",
         "overrides": []
       },
@@ -6215,7 +6215,7 @@
       {
         "name": "--forte-navigation-menu-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline. The arrow's outline follows it.",
+        "description": "Color of that hairline. The arrow's outline follows it.",
         "part": "popup",
         "overrides": []
       },
@@ -6271,14 +6271,14 @@
       {
         "name": "--forte-navigation-menu-card-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Card text colour at rest",
+        "description": "Card text color at rest",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-navigation-menu-card-fg-muted",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of a card's description line",
+        "description": "Color of a card's description line",
         "part": "popup",
         "overrides": []
       },
@@ -6299,7 +6299,7 @@
       {
         "name": "--forte-navigation-menu-card-fg-active",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of those same two cards",
+        "description": "Text color of those same two cards",
         "part": "popup",
         "overrides": []
       },
@@ -6429,7 +6429,7 @@
       {
         "name": "--forte-number-field-separator-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of the rule between a stepper and the input (reset per `variant`)",
+        "description": "Color of the rule between a stepper and the input (reset per `variant`)",
         "part": "group",
         "overrides": [
           {
@@ -6465,7 +6465,7 @@
       {
         "name": "--forte-number-field-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour (reset per `variant`, by `data-invalid`, and while scrubbing)",
+        "description": "Border color (reset per `variant`, by `data-invalid`, and while scrubbing)",
         "part": "group",
         "overrides": [
           {
@@ -6493,7 +6493,7 @@
       {
         "name": "--forte-number-field-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Border colour on hover",
+        "description": "Border color on hover",
         "part": "group",
         "overrides": [
           {
@@ -6563,21 +6563,21 @@
       {
         "name": "--forte-number-field-input-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour",
+        "description": "Text color",
         "part": "input",
         "overrides": []
       },
       {
         "name": "--forte-number-field-input-placeholder-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Placeholder colour",
+        "description": "Placeholder color",
         "part": "input",
         "overrides": []
       },
       {
         "name": "--forte-number-field-input-caret-color",
         "value": "var(--forte-color-primary)",
-        "description": "Caret colour",
+        "description": "Caret color",
         "part": "input",
         "overrides": []
       },
@@ -6591,7 +6591,7 @@
       {
         "name": "--forte-number-field-input-selection-fg",
         "value": "var(--forte-color-primary-text)",
-        "description": "Selection text colour",
+        "description": "Selection text color",
         "part": "input",
         "overrides": []
       },
@@ -6605,14 +6605,14 @@
       {
         "name": "--forte-number-field-stepper-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Stepper glyph colour",
+        "description": "Stepper glyph color",
         "part": "stepper",
         "overrides": []
       },
       {
         "name": "--forte-number-field-stepper-fg-hover",
         "value": "var(--forte-color-foreground)",
-        "description": "Stepper glyph colour on hover",
+        "description": "Stepper glyph color on hover",
         "part": "stepper",
         "overrides": []
       },
@@ -6684,7 +6684,7 @@
       {
         "name": "--forte-number-field-scrub-grip-fg",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Grip colour (reset while scrubbing)",
+        "description": "Grip color (reset while scrubbing)",
         "part": "scrubArea",
         "overrides": [
           {
@@ -6870,14 +6870,14 @@
       {
         "name": "--forte-otp-field-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Character colour",
+        "description": "Character color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-otp-field-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Slot border colour (reset per `variant`, and again when the value is complete or the field is invalid)",
+        "description": "Slot border color (reset per `variant`, and again when the value is complete or the field is invalid)",
         "part": "root",
         "overrides": [
           {
@@ -6901,7 +6901,7 @@
       {
         "name": "--forte-otp-field-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Slot border colour on hover",
+        "description": "Slot border color on hover",
         "part": "root",
         "overrides": [
           {
@@ -6921,7 +6921,7 @@
       {
         "name": "--forte-otp-field-caret-color",
         "value": "var(--forte-color-primary)",
-        "description": "Caret colour",
+        "description": "Caret color",
         "part": "root",
         "overrides": [
           {
@@ -6940,14 +6940,14 @@
       {
         "name": "--forte-otp-field-selection-fg",
         "value": "var(--forte-color-primary-text)",
-        "description": "Selection text colour",
+        "description": "Selection text color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-otp-field-separator-color",
         "value": "var(--forte-color-border-strong)",
-        "description": "Colour of the dash `OTPField.Separator` draws",
+        "description": "Color of the dash `OTPField.Separator` draws",
         "part": "root",
         "overrides": []
       }
@@ -7072,14 +7072,14 @@
       {
         "name": "--forte-pagination-border-width",
         "value": "1px",
-        "description": "Border thickness. Always reserved so the variants line up; only `outline` and `joined` give it a colour",
+        "description": "Border thickness. Always reserved so the variants line up; only `outline` and `joined` give it a color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-pagination-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour of a page that is not current",
+        "description": "Text color of a page that is not current",
         "part": "root",
         "overrides": []
       },
@@ -7107,7 +7107,7 @@
       {
         "name": "--forte-pagination-border-color",
         "value": "transparent",
-        "description": "Border colour of a page that is not current; filled in by `variant`",
+        "description": "Border color of a page that is not current; filled in by `variant`",
         "part": "root",
         "overrides": [
           {
@@ -7119,7 +7119,7 @@
       {
         "name": "--forte-pagination-ellipsis-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of the ellipsis. Muted, not subtle: it is text-sized punctuation and clears the 4.5:1 floor on its own",
+        "description": "Color of the ellipsis. Muted, not subtle: it is text-sized punctuation and clears the 4.5:1 floor on its own",
         "part": "root",
         "overrides": []
       },
@@ -7158,7 +7158,7 @@
       {
         "name": "--forte-pagination-current-color",
         "value": "var(--forte-color-on-primary)",
-        "description": "Text colour on the current page's fill",
+        "description": "Text color on the current page's fill",
         "part": "root",
         "overrides": [
           {
@@ -7174,7 +7174,7 @@
       {
         "name": "--forte-pagination-current-border-color",
         "value": "var(--forte-color-primary)",
-        "description": "Border colour of the current page",
+        "description": "Border color of the current page",
         "part": "root",
         "overrides": [
           {
@@ -7230,14 +7230,14 @@
       {
         "name": "--forte-popover-bg",
         "value": "var(--forte-color-overlay)",
-        "description": "Popup surface colour",
+        "description": "Popup surface color",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-popover-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Popup text colour",
+        "description": "Popup text color",
         "part": "popup",
         "overrides": []
       },
@@ -7279,7 +7279,7 @@
       {
         "name": "--forte-popover-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline. The arrow's outline follows it.",
+        "description": "Color of that hairline. The arrow's outline follows it.",
         "part": "popup",
         "overrides": []
       },
@@ -7388,14 +7388,14 @@
       {
         "name": "--forte-preview-card-trigger-color",
         "value": "var(--forte-color-primary-text)",
-        "description": "Link colour",
+        "description": "Link color",
         "part": "trigger",
         "overrides": []
       },
       {
         "name": "--forte-preview-card-trigger-underline-color",
         "value": "color-mix( in oklab, currentcolor 45%, transparent )",
-        "description": "Colour of the link's underline. Muted by default so the rule reads as an underline rather than as a second line of text.",
+        "description": "Color of the link's underline. Muted by default so the rule reads as an underline rather than as a second line of text.",
         "part": "trigger",
         "overrides": [
           {
@@ -7425,14 +7425,14 @@
       {
         "name": "--forte-preview-card-bg",
         "value": "var(--forte-color-overlay)",
-        "description": "Card surface colour",
+        "description": "Card surface color",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-preview-card-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Card text colour",
+        "description": "Card text color",
         "part": "popup",
         "overrides": []
       },
@@ -7474,7 +7474,7 @@
       {
         "name": "--forte-preview-card-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline. The arrow's outline follows it.",
+        "description": "Color of that hairline. The arrow's outline follows it.",
         "part": "popup",
         "overrides": []
       },
@@ -7631,7 +7631,7 @@
       {
         "name": "--forte-progress-indicator-bg",
         "value": "var(--forte-color-primary)",
-        "description": "The fill itself. Swapped per `tone`. Consumed through the `background` shorthand rather than `background-color`, so a gradient is a legal value here as well as a colour — at the cost of the colour transition, which a gradient cannot have.",
+        "description": "The fill itself. Swapped per `tone`. Consumed through the `background` shorthand rather than `background-color`, so a gradient is a legal value here as well as a color — at the cost of the color transition, which a gradient cannot have.",
         "part": "root",
         "overrides": [
           {
@@ -7663,14 +7663,14 @@
       {
         "name": "--forte-progress-label-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Colour of the label.",
+        "description": "Color of the label.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-progress-value-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of the readout.",
+        "description": "Color of the readout.",
         "part": "root",
         "overrides": []
       },
@@ -7823,7 +7823,7 @@
       {
         "name": "--forte-progress-circle-value-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Colour of the centred readout.",
+        "description": "Color of the centered readout.",
         "part": "root",
         "overrides": []
       },
@@ -7850,7 +7850,7 @@
       {
         "name": "--forte-progress-circle-label-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of the label under the ring.",
+        "description": "Color of the label under the ring.",
         "part": "root",
         "overrides": []
       },
@@ -7891,7 +7891,7 @@
       {
         "name": "--forte-progress-circle-arc",
         "value": "25",
-        "description": "Length of the indeterminate arc, out of the 100 units `pathLength` normalises the circumference to.",
+        "description": "Length of the indeterminate arc, out of the 100 units `pathLength` normalizes the circumference to.",
         "part": "root",
         "overrides": []
       }
@@ -7964,7 +7964,7 @@
       {
         "name": "--forte-radio-duration",
         "value": "var(--forte-duration-fast)",
-        "description": "Colour transitions on the circle, the dot's fade, and the un-select.",
+        "description": "Color transitions on the circle, the dot's fade, and the un-select.",
         "part": "root",
         "overrides": []
       },
@@ -7999,7 +7999,7 @@
       {
         "name": "--forte-radio-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour while unselected.",
+        "description": "Border color while unselected.",
         "part": "root",
         "overrides": [
           {
@@ -8011,7 +8011,7 @@
       {
         "name": "--forte-radio-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Border colour on hover while unselected.",
+        "description": "Border color on hover while unselected.",
         "part": "root",
         "overrides": [
           {
@@ -8071,7 +8071,7 @@
       {
         "name": "--forte-radio-dot-color",
         "value": "var(--forte-color-on-primary)",
-        "description": "Colour of the dot — it becomes the root's `color`, and the dot paints with `currentColor`.",
+        "description": "Color of the dot — it becomes the root's `color`, and the dot paints with `currentColor`.",
         "part": "root",
         "overrides": [
           {
@@ -8133,14 +8133,14 @@
       {
         "name": "--forte-resizable-line-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of the divider line at rest",
+        "description": "Color of the divider line at rest",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-resizable-line-color-active",
         "value": "var(--forte-color-primary)",
-        "description": "Colour of the divider line while hovered, focused or dragged",
+        "description": "Color of the divider line while hovered, focused or dragged",
         "part": "root",
         "overrides": []
       },
@@ -8175,14 +8175,14 @@
       {
         "name": "--forte-resizable-grip-border",
         "value": "var(--forte-color-border)",
-        "description": "Border colour of the grip chip",
+        "description": "Border color of the grip chip",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-resizable-grip-dot-color",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Colour of the three dots inside the grip",
+        "description": "Color of the three dots inside the grip",
         "part": "root",
         "overrides": []
       },
@@ -8304,7 +8304,7 @@
       {
         "name": "--forte-select-label-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Label text colour",
+        "description": "Label text color",
         "part": "label",
         "overrides": []
       },
@@ -8451,14 +8451,14 @@
       {
         "name": "--forte-select-trigger-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Trigger text colour",
+        "description": "Trigger text color",
         "part": "trigger",
         "overrides": []
       },
       {
         "name": "--forte-select-trigger-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Trigger border colour (reset per `variant`)",
+        "description": "Trigger border color (reset per `variant`)",
         "part": "trigger",
         "overrides": [
           {
@@ -8503,14 +8503,14 @@
       {
         "name": "--forte-select-popup-bg",
         "value": "var(--forte-color-overlay)",
-        "description": "Popup surface colour",
+        "description": "Popup surface color",
         "part": "popup",
         "overrides": []
       },
       {
         "name": "--forte-select-popup-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Popup text colour",
+        "description": "Popup text color",
         "part": "popup",
         "overrides": []
       },
@@ -8538,7 +8538,7 @@
       {
         "name": "--forte-select-popup-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of that hairline",
+        "description": "Color of that hairline",
         "part": "popup",
         "overrides": []
       },
@@ -8587,7 +8587,7 @@
       {
         "name": "--forte-select-item-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Item text colour",
+        "description": "Item text color",
         "part": "item",
         "overrides": []
       },
@@ -8601,14 +8601,14 @@
       {
         "name": "--forte-select-item-fg-highlighted",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of the highlighted item",
+        "description": "Text color of the highlighted item",
         "part": "item",
         "overrides": []
       },
       {
         "name": "--forte-select-item-fg-selected",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour of the selected item",
+        "description": "Text color of the selected item",
         "part": "item",
         "overrides": []
       },
@@ -8627,7 +8627,7 @@
       {
         "name": "--forte-separator-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Line colour",
+        "description": "Line color",
         "part": "root",
         "overrides": []
       },
@@ -8690,7 +8690,7 @@
       {
         "name": "--forte-skeleton-highlight",
         "value": "light-dark(var(--forte-gray-1), var(--forte-gray-7))",
-        "description": "Colour of the band that travels across `animation=\"shimmer\"`.",
+        "description": "Color of the band that travels across `animation=\"shimmer\"`.",
         "part": "root",
         "overrides": []
       },
@@ -8902,7 +8902,7 @@
       {
         "name": "--forte-slider-thumb-border",
         "value": "var(--forte-color-primary)",
-        "description": "Thumb ring colour. Swapped per `tone`, and `var(--forte-color-danger-border)` when invalid inside a field.",
+        "description": "Thumb ring color. Swapped per `tone`, and `var(--forte-color-danger-border)` when invalid inside a field.",
         "part": "root",
         "overrides": [
           {
@@ -8933,7 +8933,7 @@
       {
         "name": "--forte-slider-thumb-halo-color",
         "value": "var(--forte-color-primary)",
-        "description": "Base colour the halo is mixed from. Swapped per `tone`.",
+        "description": "Base color the halo is mixed from. Swapped per `tone`.",
         "part": "root",
         "overrides": [
           {
@@ -8953,7 +8953,7 @@
       {
         "name": "--forte-slider-thumb-halo-strength",
         "value": "48%",
-        "description": "How much of that colour survives the mix toward `transparent`. `30%` for `tone=\"neutral\"`.",
+        "description": "How much of that color survives the mix toward `transparent`. `30%` for `tone=\"neutral\"`.",
         "part": "root",
         "overrides": [
           {
@@ -8965,7 +8965,7 @@
       {
         "name": "--forte-slider-thumb-halo",
         "value": "color-mix( in oklab, var(--forte-slider-thumb-halo-color) var(--forte-slider-thumb-halo-strength), transparent )",
-        "description": "The resolved halo colour. Derived from the two above; set it directly to bypass them.",
+        "description": "The resolved halo color. Derived from the two above; set it directly to bypass them.",
         "part": "root",
         "overrides": []
       },
@@ -9066,7 +9066,7 @@
       {
         "name": "--forte-spinner-color",
         "value": "var(--forte-color-primary)",
-        "description": "The indicator's colour. Becomes the indicator's `color`, and every part fills with `currentColor`.",
+        "description": "The indicator's color. Becomes the indicator's `color`, and every part fills with `currentColor`.",
         "part": "root",
         "overrides": [
           {
@@ -9101,7 +9101,7 @@
       {
         "name": "--forte-spinner-label-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of a visible label.",
+        "description": "Color of a visible label.",
         "part": "root",
         "overrides": []
       },
@@ -9195,7 +9195,7 @@
       {
         "name": "--forte-steps-tone-on-solid",
         "value": "var(--forte-color-on-primary)",
-        "description": "Text and icon colour on that fill",
+        "description": "Text and icon color on that fill",
         "part": "root",
         "overrides": [
           {
@@ -9235,7 +9235,7 @@
       {
         "name": "--forte-steps-tone-text",
         "value": "var(--forte-color-primary-text)",
-        "description": "Text colour on the soft fill",
+        "description": "Text color on the soft fill",
         "part": "root",
         "overrides": [
           {
@@ -9291,7 +9291,7 @@
       {
         "name": "--forte-steps-indicator-border-width",
         "value": "2px",
-        "description": "Width of the indicator's ring. Painted in the indicator's own colour in `solid`, so it only shows in `outline`.",
+        "description": "Width of the indicator's ring. Painted in the indicator's own color in `solid`, so it only shows in `outline`.",
         "part": "root",
         "overrides": []
       },
@@ -9365,28 +9365,28 @@
       {
         "name": "--forte-steps-track-color",
         "value": "var(--forte-color-border)",
-        "description": "Colour of a connector that has not been reached",
+        "description": "Color of a connector that has not been reached",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-steps-fill-color",
         "value": "var(--forte-steps-tone-solid)",
-        "description": "Colour of a connector after a completed step",
+        "description": "Color of a connector after a completed step",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-steps-title-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of a title on a step not yet reached",
+        "description": "Color of a title on a step not yet reached",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-steps-title-color-active",
         "value": "var(--forte-color-foreground)",
-        "description": "Colour of the active and completed steps' titles",
+        "description": "Color of the active and completed steps' titles",
         "part": "root",
         "overrides": []
       },
@@ -9423,7 +9423,7 @@
       {
         "name": "--forte-steps-description-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of the description",
+        "description": "Color of the description",
         "part": "root",
         "overrides": []
       },
@@ -9509,7 +9509,7 @@
       {
         "name": "--forte-steps-indicator-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Colour of the number or icon inside the indicator",
+        "description": "Color of the number or icon inside the indicator",
         "part": "indicator",
         "overrides": [
           {
@@ -9537,7 +9537,7 @@
       {
         "name": "--forte-steps-indicator-border-color",
         "value": "var(--forte-steps-indicator-bg)",
-        "description": "Colour of the indicator's ring",
+        "description": "Color of the indicator's ring",
         "part": "indicator",
         "overrides": [
           {
@@ -9671,7 +9671,7 @@
       {
         "name": "--forte-switch-track-border",
         "value": "var(--forte-color-foreground-subtle)",
-        "description": "Track border colour. `var(--forte-color-primary)` when checked; `var(--forte-color-danger-border)` when invalid inside a field.",
+        "description": "Track border color. `var(--forte-color-primary)` when checked; `var(--forte-color-danger-border)` when invalid inside a field.",
         "part": "root",
         "overrides": [
           {
@@ -9699,7 +9699,7 @@
       {
         "name": "--forte-switch-thumb-fg",
         "value": "var(--forte-color-panel)",
-        "description": "Checkmark colour. Swapped to `var(--forte-color-primary)` when checked.",
+        "description": "Checkmark color. Swapped to `var(--forte-color-primary)` when checked.",
         "part": "root",
         "overrides": [
           {
@@ -9785,7 +9785,7 @@
       {
         "name": "--forte-table-border-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of the rules between rows and columns, and of the frame.",
+        "description": "Color of the rules between rows and columns, and of the frame.",
         "part": "root",
         "overrides": [
           {
@@ -9832,7 +9832,7 @@
       {
         "name": "--forte-table-header-color",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour of the header cells.",
+        "description": "Text color of the header cells.",
         "part": "root",
         "overrides": []
       },
@@ -9874,7 +9874,7 @@
       {
         "name": "--forte-table-caption-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Text colour of the caption.",
+        "description": "Text color of the caption.",
         "part": "root",
         "overrides": []
       }
@@ -9992,35 +9992,35 @@
       {
         "name": "--forte-tabs-rail-color",
         "value": "var(--forte-color-border-muted)",
-        "description": "Colour of the rail (line variant only)",
+        "description": "Color of the rail (line variant only)",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-tabs-tab-color",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Label colour of an inactive tab",
+        "description": "Label color of an inactive tab",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-tabs-tab-color-hover",
         "value": "var(--forte-color-foreground)",
-        "description": "Label colour on hover",
+        "description": "Label color on hover",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-tabs-tab-color-active",
         "value": "var(--forte-color-primary-text)",
-        "description": "Label colour of the active tab",
+        "description": "Label color of the active tab",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-tabs-tab-bg-hover",
         "value": "transparent",
-        "description": "Tab background on hover — `transparent` in both variants, since hover is carried by the label colour alone; set it to opt a fill back in",
+        "description": "Tab background on hover — `transparent` in both variants, since hover is carried by the label color alone; set it to opt a fill back in",
         "part": "root",
         "overrides": []
       },
@@ -10183,21 +10183,21 @@
       {
         "name": "--forte-textarea-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Text colour",
+        "description": "Text color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-textarea-placeholder-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Placeholder colour",
+        "description": "Placeholder color",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-textarea-border-color",
         "value": "var(--forte-color-border)",
-        "description": "Border colour (reset per `variant`, and by `data-invalid`)",
+        "description": "Border color (reset per `variant`, and by `data-invalid`)",
         "part": "root",
         "overrides": [
           {
@@ -10221,7 +10221,7 @@
       {
         "name": "--forte-textarea-border-color-hover",
         "value": "var(--forte-color-border-strong)",
-        "description": "Border colour on hover",
+        "description": "Border color on hover",
         "part": "root",
         "overrides": [
           {
@@ -10233,7 +10233,7 @@
       {
         "name": "--forte-textarea-caret-color",
         "value": "var(--forte-color-primary)",
-        "description": "Caret colour",
+        "description": "Caret color",
         "part": "root",
         "overrides": [
           {
@@ -10252,7 +10252,7 @@
       {
         "name": "--forte-textarea-selection-fg",
         "value": "var(--forte-color-primary-text)",
-        "description": "Selection text colour",
+        "description": "Selection text color",
         "part": "root",
         "overrides": []
       }
@@ -10317,28 +10317,28 @@
       {
         "name": "--forte-theme-toggle-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Icon colour at rest.",
+        "description": "Icon color at rest.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-theme-toggle-fg-hover",
         "value": "var(--forte-color-foreground)",
-        "description": "Icon colour on hover.",
+        "description": "Icon color on hover.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-theme-toggle-border-width",
         "value": "1px",
-        "description": "Border width, drawn in every variant — `outline` is the only one that gives it a colour.",
+        "description": "Border width, drawn in every variant — `outline` is the only one that gives it a color.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-theme-toggle-border-color",
         "value": "transparent",
-        "description": "Border colour. `var(--forte-color-border)` for `variant=\"outline\"`.",
+        "description": "Border color. `var(--forte-color-border)` for `variant=\"outline\"`.",
         "part": "root",
         "overrides": [
           {
@@ -10350,7 +10350,7 @@
       {
         "name": "--forte-theme-toggle-duration",
         "value": "var(--forte-duration-fast)",
-        "description": "Colour transitions between states, and the icon cross-fade.",
+        "description": "Color transitions between states, and the icon cross-fade.",
         "part": "root",
         "overrides": []
       },
@@ -10425,7 +10425,7 @@
       {
         "name": "--forte-toast-fg",
         "value": "var(--forte-color-foreground)",
-        "description": "Card text colour",
+        "description": "Card text color",
         "part": "root",
         "overrides": []
       },
@@ -10467,7 +10467,7 @@
       {
         "name": "--forte-toast-accent",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Icon colour. `data-type` re-points it per status.",
+        "description": "Icon color. `data-type` re-points it per status.",
         "part": "root",
         "overrides": [
           {
@@ -10637,14 +10637,14 @@
       {
         "name": "--forte-toggle-border-width",
         "value": "1px",
-        "description": "Border width, drawn in every variant — `outline` is the only one that gives it a colour.",
+        "description": "Border width, drawn in every variant — `outline` is the only one that gives it a color.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-toggle-duration",
         "value": "var(--forte-duration-fast)",
-        "description": "Colour transitions between states.",
+        "description": "Color transitions between states.",
         "part": "root",
         "overrides": []
       },
@@ -10672,21 +10672,21 @@
       {
         "name": "--forte-toggle-fg",
         "value": "var(--forte-color-foreground-muted)",
-        "description": "Label colour while unpressed.",
+        "description": "Label color while unpressed.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-toggle-fg-hover",
         "value": "var(--forte-color-foreground)",
-        "description": "Label colour on hover while unpressed.",
+        "description": "Label color on hover while unpressed.",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-toggle-border-color",
         "value": "transparent",
-        "description": "Border colour while unpressed. `var(--forte-color-border)` for `variant=\"outline\"`.",
+        "description": "Border color while unpressed. `var(--forte-color-border)` for `variant=\"outline\"`.",
         "part": "root",
         "overrides": [
           {
@@ -10738,7 +10738,7 @@
       {
         "name": "--forte-toggle-fg-pressed",
         "value": "var(--forte-toggle-tone-text)",
-        "description": "Label colour while pressed. Set by `variant` from the tone.",
+        "description": "Label color while pressed. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
           {
@@ -10758,7 +10758,7 @@
       {
         "name": "--forte-toggle-border-color-pressed",
         "value": "transparent",
-        "description": "Border colour while pressed. The tone's border for `variant=\"outline\"`.",
+        "description": "Border color while pressed. The tone's border for `variant=\"outline\"`.",
         "part": "root",
         "overrides": [
           {
@@ -10840,7 +10840,7 @@
       {
         "name": "--forte-toggle-group-border-color",
         "value": "transparent",
-        "description": "Border colour of the strip.",
+        "description": "Border color of the strip.",
         "part": "group",
         "overrides": []
       }
@@ -10935,7 +10935,7 @@
       {
         "name": "--forte-toolbar-border-color",
         "value": "transparent",
-        "description": "Border colour. `variant` sets it.",
+        "description": "Border color. `variant` sets it.",
         "part": "root",
         "overrides": [
           {
@@ -10980,7 +10980,7 @@
       {
         "name": "--forte-toolbar-separator-color",
         "value": "var(--forte-color-border)",
-        "description": "Line colour.",
+        "description": "Line color.",
         "part": "separator",
         "overrides": []
       },
@@ -11055,7 +11055,7 @@
       {
         "name": "--forte-toolbar-link-color",
         "value": "var(--forte-color-primary-text)",
-        "description": "Label colour.",
+        "description": "Label color.",
         "part": "link",
         "overrides": []
       },
@@ -11069,7 +11069,7 @@
       {
         "name": "--forte-toolbar-link-underline-color",
         "value": "color-mix( in oklab, currentcolor 45%, transparent )",
-        "description": "Underline colour.",
+        "description": "Underline color.",
         "part": "link",
         "overrides": [
           {
@@ -11088,7 +11088,7 @@
       {
         "name": "--forte-toolbar-link-duration",
         "value": "var(--forte-duration-fast)",
-        "description": "Colour transitions between states.",
+        "description": "Color transitions between states.",
         "part": "link",
         "overrides": []
       }
@@ -11114,7 +11114,7 @@
       {
         "name": "--forte-tooltip-fg",
         "value": "var(--forte-gray-1)",
-        "description": "Text colour",
+        "description": "Text color",
         "part": "popup",
         "overrides": []
       },

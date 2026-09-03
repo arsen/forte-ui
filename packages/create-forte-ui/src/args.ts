@@ -45,7 +45,7 @@ export class UsageError extends Error {}
 function normalizeHex(flag: string, value: string): string {
   const hex = value.startsWith("#") ? value : `#${value}`;
   if (!hexToOklch(hex)) {
-    throw new UsageError(`--${flag} expects a hex colour like "#6d43d4", got "${value}"`);
+    throw new UsageError(`--${flag} expects a hex color like "#6d43d4", got "${value}"`);
   }
   return hex.toLowerCase();
 }
@@ -62,7 +62,7 @@ function fontByName(flag: string, value: string, list: readonly FontOption[]): s
   const match = list.find((f) => f.name.toLowerCase() === value.toLowerCase());
   if (!match) {
     throw new UsageError(
-      `--${flag}: "${value}" is not in the catalogue. Choices: ${list.map((f) => f.name).join(", ")}`,
+      `--${flag}: "${value}" is not in the catalog. Choices: ${list.map((f) => f.name).join(", ")}`,
     );
   }
   return match.name;
@@ -177,7 +177,7 @@ Theme — every skipped value keeps the library default and writes NOTHING,
 so the app keeps following the library when defaults are tuned.
   --seed, --accent       accent seed, hex ("#6d43d4")
   --secondary            secondary seed, hex
-  --tint                 neutral tint, 0 (pure grey) to 1 (default)
+  --tint                 neutral tint, 0 (pure gray) to 1 (default)
   --radius               none | soft | pill
   --density              compact | spacious
   --motion               system (default) | reduce | full
@@ -186,8 +186,8 @@ so the app keeps following the library when defaults are tuned.
   --scheme               system (default) | light | dark
                          "light" / "dark" pin one palette on <html> and
                          leave the theme toggle and its replay script out.
-  --font-sans           a catalogue name ("Inter", "DM Sans", ...)
-  --font-mono            a catalogue name ("JetBrains Mono", ...)
+  --font-sans           a catalog name ("Inter", "DM Sans", ...)
+  --font-mono            a catalog name ("JetBrains Mono", ...)
 
 Design the theme visually instead: https://forte-ui.com/theme
 `;

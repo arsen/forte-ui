@@ -50,18 +50,18 @@
      * `--forte-duration-loop-pulse`. */
     --forte-spinner-duration: var(--forte-duration-loop-spin);
 
-    /** The indicator's colour. Becomes the indicator's `color`, and every part
+    /** The indicator's color. Becomes the indicator's `color`, and every part
      * fills with `currentColor`. */
     --forte-spinner-color: var(--forte-color-primary);
     /* Derives from `--forte-spinner-color`, and `var()` inside an unregistered
      * custom property is substituted where the property is DECLARED — so
-     * overriding the colour on an ancestor leaves this stale. Override on
+     * overriding the color on an ancestor leaves this stale. Override on
      * the spinner itself, where both declarations meet, and it re-derives. */
     /** The faint full ring the comet travels along. Set it to `transparent` for
      * a bare arc. */
     --forte-spinner-track: color-mix(in oklab, var(--forte-spinner-color) 18%, transparent);
 
-    /** Colour of a visible label. */
+    /** Color of a visible label. */
     --forte-spinner-label-color: var(--forte-color-foreground-muted);
     /** Font size of a visible label. Retuned by `size`. */
     --forte-spinner-label-size: var(--forte-font-size-2);
@@ -155,9 +155,9 @@
   }
 
   /* Tones ------------------------------------------------------------------
-   * A spinner paints one colour, so a tone is one slot rather than the six a
+   * A spinner paints one color, so a tone is one slot rather than the six a
    * Button needs. `current` is the composable one — dropped inside a button, a
-   * link or a badge it inherits whatever that thing's text colour is, and
+   * link or a badge it inherits whatever that thing's text color is, and
    * keeps matching it through hover and disabled states. */
   .root[data-tone="primary"] {
     --forte-spinner-color: var(--forte-color-primary);
@@ -181,7 +181,7 @@
 
   /* Ring -------------------------------------------------------------------
    * A conic gradient tapering from transparent to full, punched into a ring by
-   * a radial mask. The gradient's discontinuity — full colour meeting
+   * a radial mask. The gradient's discontinuity — full color meeting
    * transparent at 0deg — is the comet's head, so the sharp edge leads and the
    * tail fades behind it as the whole thing rotates.
    *
@@ -381,8 +381,8 @@
      * `CanvasText` border with one edge painted `Canvas`, so the gap still
      * reads as a gap.
      *
-     * The gap has to be an explicit system colour for the same reason:
-     * `transparent` is not preserved here either, and a fully coloured ring
+     * The gap has to be an explicit system color for the same reason:
+     * `transparent` is not preserved here either, and a fully colored ring
      * would look static however fast it rotated. */
     .root[data-variant="ring"] .indicator {
       background-image: none;

@@ -14,7 +14,7 @@ export const metadata = {
 
 A drawer is a panel attached to an edge of the screen. Reach for it when the content belongs *beside* the page rather than on top of it — navigation, filters, a detail panel, a mobile action sheet. When the task needs the user's whole attention and has nothing to do with a screen edge, use [Dialog](/components/dialog/) instead.
 
-The difference is not decorative. A drawer's edge is what makes the drag gesture legible: it comes from somewhere and it goes back there, so pulling it that way to dismiss it is a guess anyone can make. A centred dialog has no such direction, which is why it has no such gesture.
+The difference is not decorative. A drawer's edge is what makes the drag gesture legible: it comes from somewhere and it goes back there, so pulling it that way to dismiss it is a guess anyone can make. A centered dialog has no such direction, which is why it has no such gesture.
 
 <DemoBlock id="drawer/basic" />
 
@@ -70,7 +70,7 @@ Both variants work non-modally, and they say different things: `edge` reads as a
 
 `Drawer.Content` is where the drawer scrolls — not the viewport around the popup, the way `Dialog` does it, and not the popup itself. Base UI walks up from wherever the finger landed and takes the first scrollable ancestor, so a drag only takes over once that scroll has bottomed out. A scrolled-down drawer therefore swipes only at the end of its list, which is what every native sheet does, and `overscroll-behavior: contain` keeps a scroll that reaches the end from chaining to the page behind it.
 
-That placement decides two other things. A `Drawer.Handle` on a `left`/`right` drawer holds its position instead of scrolling away, and **`Drawer.Footer` pins to the bottom of the drawer when it sits outside `Drawer.Content`**, or scrolls with the list when it sits inside. Put it outside for a long drawer, where an action row you have to scroll to reach is a nuisance; inside for a short one, or for a bottom sheet where it should stay within the centred content column.
+That placement decides two other things. A `Drawer.Handle` on a `left`/`right` drawer holds its position instead of scrolling away, and **`Drawer.Footer` pins to the bottom of the drawer when it sits outside `Drawer.Content`**, or scrolls with the list when it sits inside. Put it outside for a long drawer, where an action row you have to scroll to reach is a nuisance; inside for a short one, or for a bottom sheet where it should stay within the centered content column.
 
 By default the body scrolls inside a [ScrollArea](/components/scroll-area/), which buys three things a bare scroll container cannot give it. The content fades out at any edge it can still be scrolled past — the "there is more below" cue a drawer's hard, fixed edge otherwise swallows. That fade and the scroll track sit against the drawer's **own** edge rather than inset over the text, because the scroller runs the full width of the popup while a box inside it carries the padding and the width cap. And the scrollport becomes a tab stop exactly while it can scroll, so a body of static text is reachable by keyboard.
 
@@ -88,7 +88,7 @@ Pass `open` and `onOpenChange` to `Drawer.Root` to own the state yourself, and `
 
 Two things are easy to get wrong here, and both are particular to drawers.
 
-**Accept every close.** `onOpenChange` fires for the swipe as well as for Escape, an outside press and `Drawer.Close`. Filter one out and the drawer slides back into place after the finger has already thrown it off the screen — the gesture ran, your state disagreed, and the state wins. `eventDetails.reason` tells them apart if you need it (`'swipe'`, `'escape-key'`, `'outside-press'`, `'close-press'`, `'trigger-press'`), but the default is to honour all of them.
+**Accept every close.** `onOpenChange` fires for the swipe as well as for Escape, an outside press and `Drawer.Close`. Filter one out and the drawer slides back into place after the finger has already thrown it off the screen — the gesture ran, your state disagreed, and the state wins. `eventDetails.reason` tells them apart if you need it (`'swipe'`, `'escape-key'`, `'outside-press'`, `'close-press'`, `'trigger-press'`), but the default is to honor all of them.
 
 **Let the content outlive the `false`.** Base UI keeps the popup mounted until the closing slide finishes, so state the drawer *reads* cannot be cleared at the same moment the drawer is told to close — the title and body would empty out in full view of the animation. Clear it in `onOpenChangeComplete`, which runs once the transition has ended.
 
@@ -156,7 +156,7 @@ Leave it on for anything that reaches a touch screen. A drag toward the edge is 
 
 That is the whole reason this part stayed separate instead of being folded into `Drawer.Popup` the way the portal and viewport were. Folding it in would have made every drawer text-selectable and left `Drawer.Handle` — which has to be draggable with a mouse — with nowhere to live. Keep the handle outside `Drawer.Content`, and the body inside it.
 
-It also caps its width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so the body stops at `32rem` and centres itself there. Under the default `scrollArea` the cap sits on the box *inside* the scrollport rather than on the scroller, which is what lets the fade and the track reach the sheet's edges while the text stays in a centred column. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--forte-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
+It also caps its width. On a `top` or `bottom` drawer the surface is as wide as the screen, and body text set across a whole desktop viewport is genuinely hard to read — so the body stops at `32rem` and centers itself there. Under the default `scrollArea` the cap sits on the box *inside* the scrollport rather than on the scroller, which is what lets the fade and the track reach the sheet's edges while the text stays in a centered column. That is the default rather than something to opt into, because the unreadable version is what you get by simply putting text in a sheet. Raise `--forte-drawer-content-max-inline-size` to `100%` for a drawer whose content is a grid or a toolbar and wants the full width.
 
 ## Accessibility
 
@@ -214,7 +214,7 @@ The exit accelerates on `--forte-ease-exit`, which is where a drawer parts compa
 
 The slide is 100% of the drawer's own size, which no travel token can express, so it is literal geometry — gated on `--forte-motion-ok` and collapsing to nothing on its own. What takes its place is a fade, faded *in* by `--forte-motion-off` so it costs nothing when motion is allowed. A drawer that slides has no business also dissolving; a drawer that cannot slide would otherwise just be switched on.
 
-Neither behaviour needs a `prefers-reduced-motion` query in this component, and there isn't one.
+Neither behavior needs a `prefers-reduced-motion` query in this component, and there isn't one.
 
 ### One rule set, four sides
 
@@ -242,7 +242,7 @@ While a drag is in progress the scrim tracks it directly — half-dragging the d
 
 Two things happen to a parent when a child opens, and both are needed. It shrinks toward its own outer edge — the transform origin sits there, so it recedes straight backward instead of sliding away from the edge it is attached to — and it fades a scrim over itself.
 
-The scale alone is not enough, and bottom sheets are where that shows. Two of them arrive from the same edge in the same surface colour, so a 4% size difference reads as one continuous panel with a seam across it rather than as two separate surfaces. The dim is what separates the layers; the scale is what gives the movement a direction.
+The scale alone is not enough, and bottom sheets are where that shows. Two of them arrive from the same edge in the same surface color, so a 4% size difference reads as one continuous panel with a seam across it rather than as two separate surfaces. The dim is what separates the layers; the scale is what gives the movement a direction.
 
 Both of these depend on the popup not being a scroll container. An out-of-flow child of a scroll container — the dim overlay, and the grip of a `left`/`right` `Drawer.Handle` — is anchored to the scroll *origin* rather than to the scrollport, so it slides out of position the moment the drawer is scrolled. `position: fixed` is no escape: the popup's own transform makes it the containing block and the same anchoring applies. Putting the scroll on `Drawer.Content` is what keeps both of them still.
 
@@ -272,7 +272,7 @@ Pass `render={<Button />}` to compose the trigger with a styled button. Its own 
 
 <PropTable component="DrawerHandle" />
 
-A decorative `<div>`, so it takes every ordinary `<div>` prop. It orients itself from the drawer's side: a horizontal pill in flow above the content on a `top`/`bottom` drawer, and on a `left`/`right` drawer a vertical grip centred down the edge that faces into the page, taken out of the column flow so it does not occupy a row of its own.
+A decorative `<div>`, so it takes every ordinary `<div>` prop. It orients itself from the drawer's side: a horizontal pill in flow above the content on a `top`/`bottom` drawer, and on a `left`/`right` drawer a vertical grip centered down the edge that faces into the page, taken out of the column flow so it does not occupy a row of its own.
 
 ### Drawer.Content
 

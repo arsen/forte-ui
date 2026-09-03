@@ -82,7 +82,7 @@ as one set, so the numbers have to agree.
    `NOTES` as suspected drift instead of writing an entry for it.
 5. **Write entries for consumers.** One bullet per change, plain prose,
    describing the observable difference: a new prop, a renamed token, a fixed
-   behaviour. Fold a change plus its follow-up fixes within the range into one
+   behavior. Fold a change plus its follow-up fixes within the range into one
    entry. Prefix genuinely breaking entries with `**Breaking:**` — removed or
    renamed exports, props, `--forte-*` tokens, or `data-forte` part names all
    qualify (the `data-forte` markers are documented public API).

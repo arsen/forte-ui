@@ -121,7 +121,7 @@ export interface PopoverTriggerProps<Payload = unknown>
   /**
    * Whether the rendered element is a real `<button>`. Set it to `false` when
    * `render` replaces the button with something else (a `<div>`, a table
-   * row), so Base UI supplies the keyboard and role behaviour the element
+   * row), so Base UI supplies the keyboard and role behavior the element
    * does not have natively.
    * @default true
    */
@@ -240,7 +240,7 @@ export interface PopoverPopupProps
   alignOffset?: PositionerProps["alignOffset"];
   /**
    * Minimum distance, in pixels, the arrow keeps from the popup's corners
-   * before it is allowed to sit off-centre (`data-uncentered`).
+   * before it is allowed to sit off-center (`data-uncentered`).
    * @default 5
    */
   arrowPadding?: PositionerProps["arrowPadding"];
@@ -393,7 +393,7 @@ const PopoverPopup = React.forwardRef<HTMLDivElement, PopoverPopupProps>(
             * keyboard — so it needs a real ring, not the UA default.
             * `.forte-hc-surface` carries a transparent border, and `transparent`
             * is not preserved in forced-colors mode, so it becomes the
-            * visible system-coloured boundary that replaces the stripped
+            * visible system-colored boundary that replaces the stripped
             * shadow. */}
           <BasePopover.Popup
             ref={ref}
@@ -422,7 +422,7 @@ const PopoverPopup = React.forwardRef<HTMLDivElement, PopoverPopupProps>(
 export interface PopoverArrowProps
   extends Omit<BasePopover.Arrow.Props, "className"> {
   /**
-   * Replaces the built-in wedge. The default SVG inherits the popup's colours
+   * Replaces the built-in wedge. The default SVG inherits the popup's colors
    * through `--forte-popover-bg`, so a custom skin usually needs nothing here.
    */
   children?: React.ReactNode;
@@ -442,7 +442,7 @@ export interface PopoverArrowProps
  * `Popover.Popup`.
  *
  * It is an SVG rather than the traditional CSS-border triangle on purpose: in
- * forced-colors mode every border colour is forced to `CanvasText`, and a
+ * forced-colors mode every border color is forced to `CanvasText`, and a
  * border triangle degrades into a filled rectangle. Two flat paths cannot fail
  * that way.
  */

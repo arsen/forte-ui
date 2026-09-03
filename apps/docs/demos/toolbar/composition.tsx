@@ -36,7 +36,7 @@ export default function ToolbarComposition() {
       {/* A standalone Toggle — one outside a ToggleGroup — is not a composite
         * item on its own, so it needs the same wrapper to join the arrow-key
         * order. */}
-      <Toolbar.Button render={<Toggle aria-label="Favourite" iconOnly />}>
+      <Toolbar.Button render={<Toggle aria-label="Favorite" iconOnly />}>
         <Star className={ICON} />
       </Toolbar.Button>
 

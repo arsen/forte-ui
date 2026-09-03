@@ -9,7 +9,7 @@ import { DURATIONS, GEOMETRY, EASINGS, SPRING_DURATIONS } from "./motion.mjs";
 const OUT = fileURLToPath(new URL("../src/styles/motion.css", import.meta.url));
 
 /** The defaults are declared on `:root` ALONE — deliberately not on
- *  `.forte-theme` / `[data-forte-theme]` the way the colour ramps are.
+ *  `.forte-theme` / `[data-forte-theme]` the way the color ramps are.
  *
  *  A ramp has to be restated on every scope selector because it is derived
  *  from a seed the scope may override. Motion tokens are literals, so a scope
@@ -50,7 +50,7 @@ const css = `/**
  *
  * This is the ONLY prefers-reduced-motion block in the library. Component
  * stylesheets must never write their own — they consume the tokens below and
- * get correct behaviour for free.
+ * get correct behavior for free.
  *
  * Two rules worth knowing before you use these:
  *
@@ -64,7 +64,7 @@ const css = `/**
  *    never settles — the popup would stay in the DOM forever. Put spinners on
  *    an inner child instead.
  *
- * The defaults below sit on ':root' alone, unlike the colour ramps, which are
+ * The defaults below sit on ':root' alone, unlike the color ramps, which are
  * restated on '.forte-theme' / '[data-forte-theme]'. A ramp must be restated
  * because it is DERIVED from a seed a scope can override; these are literals,
  * so a scope has nothing to re-derive — and restating them would let every

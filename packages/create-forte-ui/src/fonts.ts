@@ -1,4 +1,4 @@
-/* The font catalogue — the ten most-used Google Fonts of each kind, plus the
+/* The font catalog — the ten most-used Google Fonts of each kind, plus the
  * library's own default stack as "System". This is the module of record: the
  * docs' Theme Studio re-exports it from here, so the CLI's font prompt and
  * the studio's pickers cannot drift apart. Everything a consumer of

@@ -6,8 +6,8 @@ const TONES: PaginationTone[] = ["primary", "secondary", "neutral"];
 
 /* Only the current page draws from the tone; the rest of the strip is
  * neutral in all three, so changing the tone changes one cell. `neutral`
- * swaps the brand fill for a grey one with a stronger border — the border
- * is what keeps "here" apart from "hovered" once both are grey. */
+ * swaps the brand fill for a gray one with a stronger border — the border
+ * is what keeps "here" apart from "hovered" once both are gray. */
 export default function PaginationTones() {
   return (
     <div className="grid gap-5">

@@ -13,7 +13,7 @@ export default function ThemeToggleUseTheme() {
   return (
     <div className="grid justify-items-center gap-3">
       <ToggleGroup
-        aria-label="Colour mode"
+        aria-label="Color mode"
         segmented
         variant="solid"
         value={[theme]}

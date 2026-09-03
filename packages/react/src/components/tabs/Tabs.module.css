@@ -16,7 +16,7 @@
  *
  * Movement is a transition on `translate` + size rather than a keyframe
  * animation: a transition can be interrupted, so clicking a third tab while
- * the indicator is still travelling to the second retargets smoothly instead
+ * the indicator is still traveling to the second retargets smoothly instead
  * of snapping. --forte-duration-move exists for exactly this kind of positional
  * move that has no travel-token equivalent; it collapses to 1ms (never 0s)
  * under reduced motion, so there is deliberately no prefers-reduced-motion
@@ -93,24 +93,24 @@
     --forte-tabs-list-radius: 0px;
     /** Thickness of the rail (line variant only) */
     --forte-tabs-rail-width: 1px;
-    /** Colour of the rail (line variant only) */
+    /** Color of the rail (line variant only) */
     --forte-tabs-rail-color: var(--forte-color-border-muted);
 
     /* Tab label */
-    /** Label colour of an inactive tab */
+    /** Label color of an inactive tab */
     --forte-tabs-tab-color: var(--forte-color-foreground-muted);
-    /** Label colour on hover */
+    /** Label color on hover */
     --forte-tabs-tab-color-hover: var(--forte-color-foreground);
-    /** Label colour of the active tab */
+    /** Label color of the active tab */
     --forte-tabs-tab-color-active: var(--forte-color-primary-text);
-    /* Hover is a colour change on the label and its icon, in BOTH variants:
+    /* Hover is a color change on the label and its icon, in BOTH variants:
      * the tabs are the only interactive thing in the strip, so a fill adds no
-     * information the text colour has not already given — and in the line
+     * information the text color has not already given — and in the line
      * variant it also puts a second, differently-shaped box behind a tab that
      * the indicator is already about to underline. Left as a token rather than
      * dropped so a consumer who does want a fill can set it back. */
     /** Tab background on hover — `transparent` in both variants, since hover is
-     * carried by the label colour alone; set it to opt a fill back in */
+     * carried by the label color alone; set it to opt a fill back in */
     --forte-tabs-tab-bg-hover: transparent;
 
     /* Indicator */
@@ -687,7 +687,7 @@
  *   - `.forte-focus-ring:focus-visible` becomes a Highlight outline.
  *
  * What is tab-specific:
- *   - The indicator's background would be replaced with a system colour and
+ *   - The indicator's background would be replaced with a system color and
  *     vanish, so it opts out and paints Highlight explicitly — matching the
  *     tab's own Highlight, which is what keeps a pill and its label one pair
  *     even though the tab (z-index: 1) paints over the indicator (z-index: 0).
@@ -695,14 +695,14 @@
  *     not `aria-selected`, so an icon inside the active tab needs pairing. Bare
  *     `svg` rather than `.forte-icon`: this is a CSS Module, so a global pattern
  *     class written here would be hashed into a local one and match nothing —
- *     and `.forte-icon` already paints `currentColor`, which is the paired colour
+ *     and `.forte-icon` already paints `currentColor`, which is the paired color
  *     the tab itself carries. The rule exists for icons that declare their own
  *     fill/stroke, which forced-colors would otherwise push to CanvasText.
  *   - variant="line" must NOT become a filled Highlight block: the underline is
  *     the cue, and an opaque tab background — forced or authored — would cover
  *     the 2px bar it sits on top of. Opting the active line tab out keeps its
  *     background genuinely transparent (`transparent` is otherwise replaced
- *     with a system colour) and pins its own contrast to CanvasText on Canvas.
+ *     with a system color) and pins its own contrast to CanvasText on Canvas.
  *     HighlightText is wrong there: with no Highlight behind it, it collapses
  *     into Canvas in High Contrast Black.
  * ------------------------------------------------------------------------- */

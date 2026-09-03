@@ -11,7 +11,7 @@ const ALIGNS: { align: DialogFooterAlign; blurb: string }[] = [
   {
     align: "center",
     blurb:
-      "One action, centred. Reads as an acknowledgement rather than a choice.",
+      "One action, centered. Reads as an acknowledgement rather than a choice.",
   },
   {
     align: "end",

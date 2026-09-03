@@ -3,17 +3,17 @@
  * ---------------------------------------------------------------------------
  * tailwind-merge ships knowing Tailwind's DEFAULT theme, and
  * `@forte-ui/react/tailwind.css` replaced most of it. A class it does not
- * recognise is not an error — it is simply never merged, so two competing
+ * recognize is not an error — it is simply never merged, so two competing
  * values both survive and the cascade decides. Its stock validators expect
  * t-shirt sizes (`rounded-md`) or bare numbers (`p-4`), and the bridge says
  * `rounded-control` and `p-surface` — hence one entry per scale whose names it
  * cannot guess.
  *
- * `text` and `shadow` are here for a second reason: tailwind-merge's colour
+ * `text` and `shadow` are here for a second reason: tailwind-merge's color
  * scale matches ANY value, so `text-2` (a font size under the bridge) parses
- * as a text COLOUR, and `twMerge("text-2", "text-foreground-muted")` silently
- * returns only the colour. Listing the steps makes them sizes again. That
- * same match-anything colour scale is why colours need no entry at all —
+ * as a text COLOR, and `twMerge("text-2", "text-foreground-muted")` silently
+ * returns only the color. Listing the steps makes them sizes again. That
+ * same match-anything color scale is why colors need no entry at all —
  * `bg-primary-soft` and the ramps merge for free — and neither do `font-*`,
  * `font-weight-*`, `leading-*` or `tracking-*`, whose names are Tailwind's
  * own.
@@ -51,7 +51,7 @@ const DURATIONS = [
 export const tailwindMergeConfig = {
   extend: {
     theme: {
-      /* The eight numbered steps are already recognised (bare numbers); the
+      /* The eight numbered steps are already recognized (bare numbers); the
        * named, density-aware surface padding is not. */
       spacing: ["surface"],
       text: ["1", "2", "3", "4", "5", "6"],

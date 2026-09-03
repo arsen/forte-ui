@@ -7,13 +7,13 @@
  *   data-size="sm|md|lg"                control height, text and padding
  *   data-variant="ghost|outline|joined" bare numbers, boxed numbers, or one
  *                                       fused strip
- *   data-tone="primary|secondary|neutral" the colour of the CURRENT page —
- *                                       the only slot that carries colour
+ *   data-tone="primary|secondary|neutral" the color of the CURRENT page —
+ *                                       the only slot that carries color
  *
  * Every slot shares one box (`.control` and `.ellipsis`), so the strip keeps
  * a single height and rhythm whether a slot is a page, a chevron or a gap.
  *
- * Motion is a colour change on hover and the library's press squash; the
+ * Motion is a color change on hover and the library's press squash; the
  * squash reads `--forte-scale-press`, which collapses to 1 under reduced
  * motion on its own. No prefers-reduced-motion block, here or in any
  * component file.
@@ -56,13 +56,13 @@
     /** Corner radius of every slot */
     --forte-pagination-radius: var(--forte-radius-control);
     /** Border thickness. Always reserved so the variants line up; only
-     * `outline` and `joined` give it a colour */
+     * `outline` and `joined` give it a color */
     --forte-pagination-border-width: 1px;
 
     /* Resting slots. Full foreground on the numbers — they are the reader's
      * targets, not chrome — and a panel wash on hover so the cue is the
      * same in every variant. */
-    /** Text colour of a page that is not current */
+    /** Text color of a page that is not current */
     --forte-pagination-color: var(--forte-color-foreground);
     /** Resting fill of a page that is not current */
     --forte-pagination-bg: transparent;
@@ -70,9 +70,9 @@
     --forte-pagination-bg-hover: var(--forte-color-panel-hover);
     /** Fill of a page while pressed */
     --forte-pagination-bg-active: var(--forte-color-panel-active);
-    /** Border colour of a page that is not current; filled in by `variant` */
+    /** Border color of a page that is not current; filled in by `variant` */
     --forte-pagination-border-color: transparent;
-    /** Colour of the ellipsis. Muted, not subtle: it is text-sized
+    /** Color of the ellipsis. Muted, not subtle: it is text-sized
      * punctuation and clears the 4.5:1 floor on its own */
     --forte-pagination-ellipsis-color: var(--forte-color-foreground-muted);
 
@@ -81,16 +81,16 @@
     --forte-pagination-current-bg: var(--forte-color-primary);
     /** Fill of the current page under the pointer */
     --forte-pagination-current-bg-hover: var(--forte-color-primary-hover);
-    /** Text colour on the current page's fill */
+    /** Text color on the current page's fill */
     --forte-pagination-current-color: var(--forte-color-on-primary);
-    /** Border colour of the current page */
+    /** Border color of the current page */
     --forte-pagination-current-border-color: var(--forte-color-primary);
 
     /* The shift — the slide the list plays when the window around the
      * current page moves. Read by the TSX at runtime, since the distance is
      * measured, and gated there on `--forte-motion-ok`; the durations still
      * shorten under reduced motion on their own. The hold is the length of
-     * the fill's own colour transition, so the current page is seen to land
+     * the fill's own color transition, so the current page is seen to land
      * before anything moves. The move pairs the duration and easing the Tabs
      * indicator uses for the same kind of measured positional move. */
     /** How long the strip holds still after the current page changes,
@@ -135,9 +135,9 @@
     --forte-pagination-current-border-color: var(--forte-color-secondary);
   }
 
-  /* A grey fill on its own is the resting hover colour, so the current page
+  /* A gray fill on its own is the resting hover color, so the current page
    * would read as "the one the pointer is on". The stronger border is what
-   * separates "here" from "hovered" when both are grey. */
+   * separates "here" from "hovered" when both are gray. */
   .root[data-tone="neutral"] {
     --forte-pagination-current-bg: var(--forte-color-panel-active);
     --forte-pagination-current-bg-hover: var(--forte-color-panel-active);
@@ -185,7 +185,7 @@
   /* Slots -------------------------------------------------------------------
    * `.control` (a page, or a Previous/Next/First/Last) and `.ellipsis` share
    * the box so the strip keeps one height whether a slot is a number, a
-   * chevron or a gap; only colour and interactivity separate them. A page
+   * chevron or a gap; only color and interactivity separate them. A page
    * is at least as wide as it is tall, so single digits sit in squares and
    * the strip reads as a row of equal cells, while "10" or "Previous" grows
    * past the floor on its padding. */
@@ -261,9 +261,9 @@
     background-color: var(--forte-pagination-bg-active);
   }
 
-  /* The current page. Its border takes the fill's colour so the box reads
+  /* The current page. Its border takes the fill's color so the box reads
    * as one solid cell in the boxed variants rather than a fill inside a
-   * grey frame; the neutral tone re-points it to a stronger grey instead. */
+   * gray frame; the neutral tone re-points it to a stronger gray instead. */
   .control[data-current] {
     background-color: var(--forte-pagination-current-bg);
     border-color: var(--forte-pagination-current-border-color);
@@ -328,11 +328,11 @@
    * The seam is made by OVERLAP — each slot after the first is pulled back
    * over its neighbour's border by exactly one border width — rather than
    * by stripping the shared edge the way ButtonGroup does. ButtonGroup
-   * rejected overlap because its seam colour would flip with hover order;
-   * here no slot changes its border colour on hover, and the one slot with
+   * rejected overlap because its seam color would flip with hover order;
+   * here no slot changes its border color on hover, and the one slot with
    * a different border — the current page — is raised above its neighbours
-   * on purpose, so its fill is framed in its own colour on all four sides
-   * instead of borrowing a grey edge from the page before it. Logical
+   * on purpose, so its fill is framed in its own color on all four sides
+   * instead of borrowing a gray edge from the page before it. Logical
    * properties throughout, so RTL flips the squared corners and the overlap
    * together. */
   .root[data-variant="joined"] .item:not(:first-child) {
@@ -368,7 +368,7 @@
  * In `forte.a11y`, ordered after `forte.components`, so it wins by layer
  * alone. patterns.css already handles the focus ring and the disabled
  * state, and every slot's border — transparent or not — is forced to a
- * system colour, so the boxes stay visible.
+ * system color, so the boxes stay visible.
  *
  * What is Pagination-specific: the current page is marked by a FILL, and
  * forced-colors discards fills. patterns.css restores that for

@@ -2,8 +2,8 @@
  *
  * The record mirrors the Theme Studio's `ThemeConfig` — same keys, same value
  * sets — so a studio-exported command line maps onto the CLI's flags with no
- * translation. It differs in one deliberate way: the colour fields are
- * nullable. The studio always shows a concrete colour because its controls
+ * translation. It differs in one deliberate way: the color fields are
+ * nullable. The studio always shows a concrete color because its controls
  * need something to display; the CLI's contract is "only serialise
  * deviations", so an unanswered prompt stays `null` and writes NOTHING. A
  * scaffolded default would be a frozen default — an app that restates
@@ -33,7 +33,7 @@ export type ThemeAnswers = {
   /** Accent seed hex, or null to keep the library default (write nothing). */
   seed: string | null;
   secondary: string | null;
-  /** 0 = pure grey neutrals, 1 = full brand tint. 1 is the shipped default. */
+  /** 0 = pure gray neutrals, 1 = full brand tint. 1 is the shipped default. */
   tint: number;
   radius: Radius;
   density: Density;
@@ -41,7 +41,7 @@ export type ThemeAnswers = {
   /** "system" follows the OS and scaffolds the toggle; "light" / "dark" pin
    *  one palette on `<html>` and leave the toggle and its replay script out. */
   scheme: Scheme;
-  /** Catalogue names. "System" writes nothing. */
+  /** Catalog names. "System" writes nothing. */
   fontSans: string;
   fontMono: string;
 };
@@ -87,7 +87,7 @@ export function rootDeclarations(a: ThemeAnswers, fontMode: FontMode): string[] 
     if (mono.stack) lines.push(`--forte-font-mono: var(--font-mono), ${MONO_FALLBACK};`);
   }
 
-  /* Same emission as the studio's copied CSS: the on-colour is measured here
+  /* Same emission as the studio's copied CSS: the on-color is measured here
    * rather than left to the CSS fallback's fitted lightness threshold, so it
    * is exact in every browser — including those without contrast-color(). */
   const on = a.seed ? bestOnColor(hexToOklch(a.seed)!) : null;
@@ -120,7 +120,7 @@ export function fontImports(a: ThemeAnswers): string[] {
 
 /** ` data-forte-radius="pill" ...` — leading space included, "" when all
  *  defaults. Default modes stay UNSET so the app keeps following the OS
- *  (motion, colour scheme) and the library's own defaults. */
+ *  (motion, color scheme) and the library's own defaults. */
 export function htmlAttrs(a: ThemeAnswers): string {
   const attrs = [
     a.radius !== "default" && `data-forte-radius="${a.radius}"`,
@@ -147,7 +147,7 @@ export type NextFontSetup = {
   fontVars: string[];
 };
 
-/** The axes string in the catalogue is the truth about what a family can
+/** The axes string in the catalog is the truth about what a family can
  *  serve: `400..700` is a variable font (no `weight` needed), `400;500;700`
  *  is static and next/font requires the explicit list. */
 function weightsFromAxes(css: string): string[] | null {
@@ -186,7 +186,7 @@ export function nextFontSetup(a: ThemeAnswers): NextFontSetup {
  *  `forte-reset` is unconditional: it is what switches on
  *  `@forte-ui/react/styles/reset.css`, which the starter imports. A scaffolded
  *  app is the one place the blanket reset is unambiguously right — there is no
- *  existing markup for it to change behaviour under, and it becomes the
+ *  existing markup for it to change behavior under, and it becomes the
  *  baseline everything the author writes next is built against. The library
  *  itself stays scoped to `[data-forte]` for exactly the opposite reason. */
 export function htmlClassAttr(fontVars: string[]): string {

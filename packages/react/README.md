@@ -6,9 +6,9 @@ user preference, and nothing ships a runtime: theming, dark mode, density,
 radius presets and reduced motion are all resolved by the browser from plain
 CSS custom properties.
 
-- **One seed, whole palette.** Set `--forte-accent-seed` and every colour — all
+- **One seed, whole palette.** Set `--forte-accent-seed` and every color — all
   twelve accent steps, brand-tinted neutrals, readable text on solid fills, in
-  light and dark — is derived from it with CSS relative colour syntax. The
+  light and dark — is derived from it with CSS relative color syntax. The
   derived pairs are contrast-checked against WCAG floors across ~119k seeds in
   CI.
 - **Your CSS always wins.** Everything ships inside `@layer forte.*`,
@@ -55,8 +55,8 @@ Also available:
 
 | Control | Values | What it does |
 | :-- | :-- | :-- |
-| `--forte-secondary-seed` | any in-gamut colour | second brand colour, same derivation |
-| `--forte-neutral-tint` | `0` … `1` | pure grey → brand-tinted greys |
+| `--forte-secondary-seed` | any in-gamut color | second brand color, same derivation |
+| `--forte-neutral-tint` | `0` … `1` | pure gray → brand-tinted grays |
 | `data-theme` | `"light"` / `"dark"` | otherwise follows the OS |
 | `data-forte-radius` | `"none"` / `"soft"` / `"pill"` | radius preset |
 | `data-forte-density` | `"compact"` / `"spacious"` | control heights and padding |
@@ -123,7 +123,7 @@ every instance:
 }
 ```
 
-**Everything else is a token.** Colour, spacing, radius, control geometry,
+**Everything else is a token.** Color, spacing, radius, control geometry,
 shadows, durations, easings — the full inventory is in
 [CONTRIBUTING.md](./CONTRIBUTING.md). Consume them in your own CSS freely;
 they are the same values the components use, so the two stay in step through
@@ -154,7 +154,7 @@ With the bridge in place, utilities and components are one system:
 
 | Write | Get |
 | :-- | :-- |
-| `bg-primary`, `text-foreground-muted`, `border-border` | the semantic colour slots the components use |
+| `bg-primary`, `text-foreground-muted`, `border-border` | the semantic color slots the components use |
 | `bg-accent-9`, `bg-gray-3` | the raw 12-step ramps |
 | `gap-5`, `p-4` | the eight `--forte-space-*` steps (`gap-5` is 1.5rem — steps, not a multiplier) |
 | `p-surface` | density-aware surface padding |
@@ -183,9 +183,9 @@ Component state composes as arbitrary variants, no wrappers needed:
 ### If you use `tailwind-merge`
 
 `tailwind-merge` ships knowing Tailwind's default theme, and the bridge
-replaced most of it. Unrecognised classes are not merged — both survive and
-the cascade decides — and, worse, the stock colour scale matches *any* name,
-so `text-2` (a font size here) parses as a text colour and
+replaced most of it. Unrecognized classes are not merged — both survive and
+the cascade decides — and, worse, the stock color scale matches *any* name,
+so `text-2` (a font size here) parses as a text color and
 `twMerge("text-2", "text-foreground-muted")` silently drops one. The package
 ships a `cn` already configured for the bridge:
 
@@ -219,7 +219,7 @@ For setups that are not `cn`-shaped at all, the underlying
 `tailwindMergeConfig` stays exported from `@forte-ui/react/tailwind-merge`
 as a plain data object.
 
-Colours need no entry — the colour scale already matches any name — and
+Colors need no entry — the color scale already matches any name — and
 neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
 are Tailwind's own. A missed name does not error, it just stops overriding
 its own family.

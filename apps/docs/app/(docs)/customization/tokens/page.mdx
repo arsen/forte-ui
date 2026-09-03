@@ -4,12 +4,12 @@ import { TokenTable } from "@/components/token-table";
 export const metadata = {
   title: "Design tokens",
   description:
-    "The complete reference of forte-ui's global CSS variables — colour, spacing, typography, radius, elevation and motion — generated from the shipped stylesheets.",
+    "The complete reference of forte-ui's global CSS variables — color, spacing, typography, radius, elevation and motion — generated from the shipped stylesheets.",
 };
 
 # Design tokens
 
-Everything visual in forte-ui resolves through a CSS custom property. Components never contain a hardcoded colour, size or duration — which is why re-pointing a token restyles every component at once, coherently. This page is the global token reference; the tables are generated from the shipped stylesheets at build time, so they cannot drift from what actually renders. Per-component knobs (`--forte-button-*`, `--forte-dialog-*`, …) are a separate mechanism documented on [Styling components](/customization/styling/) and on each component's own page.
+Everything visual in forte-ui resolves through a CSS custom property. Components never contain a hardcoded color, size or duration — which is why re-pointing a token restyles every component at once, coherently. This page is the global token reference; the tables are generated from the shipped stylesheets at build time, so they cannot drift from what actually renders. Per-component knobs (`--forte-button-*`, `--forte-dialog-*`, …) are a separate mechanism documented on [Styling components](/customization/styling/) and on each component's own page.
 
 ## How to override a token
 
@@ -29,7 +29,7 @@ Two things to know before overriding:
 - **A typo fails silently.** `var(--forte-color-pannel)` is not an error — the declaration simply becomes invalid at computed-value time and the element inherits instead. Check names against these tables.
 - **Preset-owned tokens live on `:root` alone.** Tokens marked *rewritten by presets* below are what `data-forte-radius` and `data-forte-density` rewrite. Overriding one on `:root` moves the default, but any [preset](/customization/presets/) attribute on an ancestor still wins for its subtree.
 
-## Colour
+## Color
 
 The accent, secondary and gray ramps — `--forte-accent-1…12`, `--forte-secondary-1…12`, `--forte-gray-1…12` — are **derived** from the seeds described on the [Theming](/customization/theming/) page, in both light and dark mode. Prefer changing the seed over overriding ramp steps: the derivation is what keeps the palette coherent and the contrast pairs certified.
 
@@ -45,7 +45,7 @@ Components consume the ramps through semantic aliases, which are the right level
     "--forte-color-foreground",
     "--forte-color-border",
   ]}
-  label="Surface, text and border colour tokens"
+  label="Surface, text and border color tokens"
 />
 
 ### Brand
@@ -57,12 +57,12 @@ Components consume the ramps through semantic aliases, which are the right level
     "--forte-color-on-primary",
     "--forte-color-on-secondary",
   ]}
-  label="Brand colour tokens"
+  label="Brand color tokens"
 />
 
 ### Status
 
-Status hues are fixed rather than seed-derived — a brand colour must not be able to make an error look reassuring. The aliases below are what components read; behind them sit fixed ramp steps (`--forte-danger-2…11`, `--forte-success-*`, `--forte-warning-*`, `--forte-info-*`) you can retune if your palette needs different alarm colours.
+Status hues are fixed rather than seed-derived — a brand color must not be able to make an error look reassuring. The aliases below are what components read; behind them sit fixed ramp steps (`--forte-danger-2…11`, `--forte-success-*`, `--forte-warning-*`, `--forte-info-*`) you can retune if your palette needs different alarm colors.
 
 <TokenTable
   prefixes={[
@@ -75,12 +75,12 @@ Status hues are fixed rather than seed-derived — a brand colour must not be ab
     "--forte-color-on-warning",
     "--forte-color-on-info",
   ]}
-  label="Status colour tokens"
+  label="Status color tokens"
 />
 
 ### Focus ring
 
-The ring is two tones that contrast with *each other*, so one boundary always clears 3:1 against whatever sits behind the control (WCAG SC 1.4.11) — a single accent-coloured ring cannot promise that.
+The ring is two tones that contrast with *each other*, so one boundary always clears 3:1 against whatever sits behind the control (WCAG SC 1.4.11) — a single accent-colored ring cannot promise that.
 
 <TokenTable
   prefixes={["--forte-focus-ring", "--forte-color-focus-ring"]}
@@ -88,7 +88,7 @@ The ring is two tones that contrast with *each other*, so one boundary always cl
 />
 
 <Callout kind="warn">
-  Colour overrides leave the certified path. The shipped derivation is swept against ~119,000 seeds and every promised pair holds AA; the moment you assign a semantic colour token by hand, that guarantee is yours to re-verify. Non-colour tokens — spacing, radius, typography, elevation, motion — carry no such caveat.
+  Color overrides leave the certified path. The shipped derivation is swept against ~119,000 seeds and every promised pair holds AA; the moment you assign a semantic color token by hand, that guarantee is yours to re-verify. Non-color tokens — spacing, radius, typography, elevation, motion — carry no such caveat.
 </Callout>
 
 ## Spacing
@@ -123,7 +123,7 @@ Control heights, padding and the surface metrics — the group the [density pres
 
 ## Motion
 
-Durations, travels and scales. The reduced-motion behaviour is built into the tokens themselves — under the OS preference or a `data-forte-motion` attribute, travels collapse to `0px` and scales to `1` while durations only shorten — so consuming these tokens gives you correct reduced-motion handling without writing a media query. The spring easings (`--forte-ease-spring-*`) are sampled damped-oscillator curves; each pairs with its matching `--forte-duration-spring-*`, and truncating a spring with a shorter duration looks broken.
+Durations, travels and scales. The reduced-motion behavior is built into the tokens themselves — under the OS preference or a `data-forte-motion` attribute, travels collapse to `0px` and scales to `1` while durations only shorten — so consuming these tokens gives you correct reduced-motion handling without writing a media query. The spring easings (`--forte-ease-spring-*`) are sampled damped-oscillator curves; each pairs with its matching `--forte-duration-spring-*`, and truncating a spring with a shorter duration looks broken.
 
 <TokenTable
   families={["duration", "travel", "scale", "spin", "pulse"]}

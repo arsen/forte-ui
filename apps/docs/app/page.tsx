@@ -27,11 +27,11 @@ import { cn } from "@/lib/cn";
 const FEATURES = [
   {
     title: "One variable, whole system",
-    body: "Set a seed colour and twelve accent steps, brand-tinted neutrals, and a readable text colour derive themselves — in both light and dark mode, in pure CSS.",
+    body: "Set a seed color and twelve accent steps, brand-tinted neutrals, and a readable text color derive themselves — in both light and dark mode, in pure CSS.",
   },
   {
     title: "Contrast that is measured",
-    body: "The ramp is verified against 119,108 in-gamut seeds. Text on a solid fill never drops below 4.5:1, whichever brand colour you pick.",
+    body: "The ramp is verified against 119,108 in-gamut seeds. Text on a solid fill never drops below 4.5:1, whichever brand color you pick.",
   },
   {
     title: "Motion that listens",
@@ -39,7 +39,7 @@ const FEATURES = [
   },
   {
     title: "Built on Base UI",
-    body: "Keyboard behaviour, focus management and ARIA come from primitives that are tested across browsers, platforms and screen readers.",
+    body: "Keyboard behavior, focus management and ARIA come from primitives that are tested across browsers, platforms and screen readers.",
   },
   {
     title: "Yours to override",
@@ -88,8 +88,8 @@ export default function HomePage() {
       <Hero />
 
       <section className={cn(SECTION, REVEAL)} aria-labelledby="start">
-        {/* Centred, like the hero above it, so the page turns from the
-          * centred landing into the left-aligned sections one row later
+        {/* Centered, like the hero above it, so the page turns from the
+          * centered landing into the left-aligned sections one row later
           * than the first border line — the cards under it are a symmetric
           * grid, and a left-set heading over them reads as misaligned. */}
         <h2 id="start" className={cn(H2, "text-center")}>Start here</h2>

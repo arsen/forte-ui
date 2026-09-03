@@ -27,7 +27,7 @@ export default function SliderThumbAlignment() {
         <Slider.Control>
           <Slider.Track>
             <Slider.Indicator />
-            <Slider.Thumb aria-label="Centre-aligned example" />
+            <Slider.Thumb aria-label="Center-aligned example" />
           </Slider.Track>
         </Slider.Control>
       </Slider.Root>

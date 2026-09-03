@@ -141,7 +141,7 @@ export interface AppBarRootProps
   extends Omit<React.ComponentPropsWithoutRef<"header">, "className"> {
   /**
    * How much chrome the bar carries. `plain` is a bare row with no surface;
-   * `panel` fills with the panel colour; `outline` sits on the page
+   * `panel` fills with the panel color; `outline` sits on the page
    * background with a hairline underneath; `frosted` is `outline` made
    * translucent, with the content behind it blurred.
    *
@@ -152,10 +152,10 @@ export interface AppBarRootProps
    */
   variant?: AppBarVariant;
   /**
-   * Which colour set the bar draws from. `neutral` is the grey scale;
+   * Which color set the bar draws from. `neutral` is the gray scale;
    * `primary` and `secondary` fill the bar with the accent and re-point the
    * foreground tokens inside it, so the ghost buttons, links and separators
-   * you compose into it recolour themselves for contrast.
+   * you compose into it recolor themselves for contrast.
    * @default "neutral"
    */
   tone?: AppBarTone;
@@ -187,7 +187,7 @@ export interface AppBarRootProps
   /**
    * Start with no surface at all and gain the variant's fill, hairline and a
    * shadow once the page has scrolled under the bar. The Material "on
-   * scroll" behaviour: the bar reads as part of the page at the top and as
+   * scroll" behavior: the bar reads as part of the page at the top and as
    * a surface over it everywhere else.
    *
    * `plain` has no surface to reveal, so pair this with another variant.
@@ -396,7 +396,7 @@ export interface AppBarTitleProps
   /**
    * Where the title sits in the space between the leading and trailing
    * slots. `center` is the phone convention — the title between a back
-   * button and an action — and it is centred in *that* space, so a bar
+   * button and an action — and it is centered in *that* space, so a bar
    * with controls on only one side puts it off the bar's true middle.
    * @default "start"
    */

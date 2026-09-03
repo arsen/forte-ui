@@ -52,7 +52,7 @@ export default function NumberFieldStates() {
       {/* `invalid` on the Field is the deterministic way to show the state —
         * a `validate` callback would only fire once something changed, so the
         * demo would render valid and stay that way until touched. Only the
-        * group's boundary moves; the digits keep their own colour so the
+        * group's boundary moves; the digits keep their own color so the
         * user's answer never looks like the error message. */}
       <Field.Root name="invalid" invalid>
         <NumberField.Root defaultValue={7}>

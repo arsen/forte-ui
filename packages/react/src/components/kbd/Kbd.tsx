@@ -32,7 +32,7 @@ export interface KbdProps
  * Renders a real `<kbd>`, which is the element HTML has for exactly this, and
  * draws its fill and edge out of `currentColor`, so the same cap works in
  * running text, on `Tooltip`'s inverted popup, inside a solid `Button` and on
- * a highlighted menu row without a colour prop. `Menu.Shortcut` and
+ * a highlighted menu row without a color prop. `Menu.Shortcut` and
  * `Tooltip.Shortcut` are built on it; use it directly anywhere else keys
  * appear.
  *

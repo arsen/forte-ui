@@ -110,7 +110,7 @@ Escape closes the topmost dialog only, so a nested dialog steps back to its pare
 
 This is the default. Scrolling happens on the viewport that wraps the popup, not inside the popup. A tall dialog therefore scrolls as a whole, its top edge stays reachable, and a press in the empty space around it still counts as an outside press — so pointer dismissal keeps working. `overscroll-behavior: contain` stops a scroll that reaches the end of the dialog from chaining to the page behind it.
 
-Style that scroll container with `viewportClassName` — for example to pin a dialog to the top of a tall screen instead of centring it.
+Style that scroll container with `viewportClassName` — for example to pin a dialog to the top of a tall screen instead of centering it.
 
 <DemoBlock id="dialog/scrollable" />
 
@@ -226,7 +226,7 @@ Four details are decided for you, and each is a decision the composed API leaves
 
 **All three are `AlertDialog`s.** They interrupt to ask something, so they are always modal and never dismissed by a press outside them. Escape still closes them — which resolves `confirm()` to `false`, the same as Cancel.
 
-**`tone` is the only styling axis.** It colours the answering button, and `"danger"` also moves the footer to `align="between"`, pushing the safe answer away from the destructive one. There is no `severity` prop: `variant` and `tone` are the library's two axes and a third would be a third vocabulary for the same idea.
+**`tone` is the only styling axis.** It colors the answering button, and `"danger"` also moves the footer to `align="between"`, pushing the safe answer away from the destructive one. There is no `severity` prop: `variant` and `tone` are the library's two axes and a third would be a third vocabulary for the same idea.
 
 **Focus lands on the safe answer.** Cancel comes first in the DOM, so it is the first tabbable element in the popup and takes focus when the dialog opens. In `confirmWithInput()` the input comes first instead, which is where the user has to go anyway.
 

@@ -15,7 +15,7 @@
  * margin. The `.panel` inside is the part that belongs to this component.
  *
  * No prefers-reduced-motion block, here or in any component file: the only
- * motion is a colour crossfade, and its duration token shortens itself.
+ * motion is a color crossfade, and its duration token shortens itself.
  */
 @layer forte.components {
   /* Trigger ---------------------------------------------------------------- */
@@ -38,18 +38,18 @@
     /** Field border width */
     --forte-date-picker-trigger-border-width: 1px;
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Field background (reset per `variant`) */
     --forte-date-picker-trigger-bg: var(--forte-color-background);
     /** Field background on hover */
     --forte-date-picker-trigger-bg-hover: var(--forte-color-panel-hover);
     /** Field background while pressed or open */
     --forte-date-picker-trigger-bg-active: var(--forte-color-panel-active);
-    /** Field text colour */
+    /** Field text color */
     --forte-date-picker-trigger-fg: var(--forte-color-foreground);
-    /** Field border colour (reset per `variant`) */
+    /** Field border color (reset per `variant`) */
     --forte-date-picker-trigger-border-color: var(--forte-color-border);
-    /** Colour of the calendar glyph */
+    /** Color of the calendar glyph */
     --forte-date-picker-icon-color: var(--forte-color-foreground-subtle);
 
     box-sizing: border-box;
@@ -108,7 +108,7 @@
     opacity: 0.55;
   }
 
-  /* Only the boundary changes. Recolouring the value as well would make the
+  /* Only the boundary changes. Recoloring the value as well would make the
    * user's own answer look like the error message. */
   .trigger[data-invalid] {
     --forte-date-picker-trigger-border-color: var(--forte-color-danger-border);

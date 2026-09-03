@@ -255,7 +255,7 @@ export interface TooltipPopupProps
   alignOffset?: PositionerProps["alignOffset"];
   /**
    * Minimum distance, in pixels, the arrow keeps from the tooltip's corners
-   * before it is allowed to sit off-centre (`data-uncentered`).
+   * before it is allowed to sit off-center (`data-uncentered`).
    * @default 5
    */
   arrowPadding?: PositionerProps["arrowPadding"];
@@ -375,7 +375,7 @@ const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
         >
           {/* .forte-hc-surface carries a transparent border. `transparent` is
            * not preserved in forced-colors mode, so it becomes the visible
-           * system-coloured boundary that replaces the stripped shadow. */}
+           * system-colored boundary that replaces the stripped shadow. */}
           <BaseTooltip.Popup
             ref={ref}
             className={clsx(styles.popup, "forte-hc-surface", className)}
@@ -397,7 +397,7 @@ const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
 export interface TooltipArrowProps
   extends Omit<BaseTooltip.Arrow.Props, "className"> {
   /**
-   * Replaces the built-in wedge. The default SVG inherits the popup's colours
+   * Replaces the built-in wedge. The default SVG inherits the popup's colors
    * through `--forte-tooltip-bg`, so a custom skin usually needs nothing here.
    */
   children?: React.ReactNode;
@@ -417,7 +417,7 @@ export interface TooltipArrowProps
  * `Tooltip.Popup`.
  *
  * It is an SVG rather than the traditional CSS-border triangle on purpose: in
- * forced-colors mode every border colour is forced to `CanvasText`, and a
+ * forced-colors mode every border color is forced to `CanvasText`, and a
  * border triangle degrades into a filled rectangle. Two flat paths cannot
  * fail that way.
  */

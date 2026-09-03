@@ -231,7 +231,7 @@ export const SelectTrigger = React.forwardRef<
 
   const warnedRef = React.useRef(false);
 
-  // Dev-only: this is a lint, not behaviour. Three details are load-bearing.
+  // Dev-only: this is a lint, not behavior. Three details are load-bearing.
   //
   // No dependency array, so the timer is cleared and re-armed on every commit
   // and the check only runs once renders have settled. That is the fix for a
@@ -239,7 +239,7 @@ export const SelectTrigger = React.forwardRef<
   // from its OWN effect, effects run child-first, so on the mounting commit
   // the trigger legitimately has no `aria-labelledby` yet — it arrives on the
   // re-render the label's setState schedules. Reading the attribute in the
-  // effect body warned about every correctly labelled select, loudest about
+  // effect body warned about every correctly labeled select, loudest about
   // `<Field.Label nativeLabel={false}>`, which is the pattern the docs
   // recommend.
   //
@@ -513,7 +513,7 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
           collisionPadding={collisionPadding}
         >
           {/* `forte-hc-surface` carries a transparent border that becomes a
-            * system-coloured boundary in forced-colors mode, where the
+            * system-colored boundary in forced-colors mode, where the
             * box-shadow below is stripped and the popup would otherwise
             * dissolve into the page. */}
           <BaseSelect.Popup

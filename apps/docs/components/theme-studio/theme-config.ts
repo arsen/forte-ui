@@ -10,7 +10,7 @@ import { readerTheme } from "@/components/theme-mode";
  * point — the header drawer — because two `useState` copies of this record
  * would drift the moment both were on screen: change the seed in the drawer
  * while the studio page is open and the studio's controls would keep showing
- * the old colour, then clobber the new one on their next interaction. One
+ * the old color, then clobber the new one on their next interaction. One
  * module-level store, subscribed to with `useSyncExternalStore`, means every
  * mounted configurator is looking at the same record. */
 
@@ -32,7 +32,7 @@ export type Scheme = (typeof SCHEME)[number];
  *  Shared rather than owned by the configurator, because the home page's hero
  *  offers five of them too and the two are now one control seen twice: a hero
  *  swatch writes this same record, so the panel renders the palette it picked
- *  as the pressed preset. A colour that drifted between two copies of this
+ *  as the pressed preset. A color that drifted between two copies of this
  *  list would theme the page without lighting anything up at either end. */
 export const PRESETS: { name: string; seed: string; secondary: string }[] = [
   { name: "Ocean", seed: "#0e76be", secondary: "#8f5fc0" },
@@ -69,7 +69,7 @@ export type ThemeConfig = {
    * stops following the reader's `forte-theme` record. */
   scheme: Scheme;
   /* Stored by NAME, not by stack: the name is what the picker shows and what
-   * readStored() can validate against the catalogue, while the stack and the
+   * readStored() can validate against the catalog, while the stack and the
    * stylesheet URL are derived from it in fonts.ts — one source of truth. */
   fontSans: string;
   fontMono: string;
@@ -89,14 +89,14 @@ export const THEME_DEFAULTS: ThemeConfig = {
 
 /** Shape written to localStorage. `root` duplicates what `configToAttrs`
  *  derives, because the pre-paint script in the root layout has to apply it
- *  without loading the colour maths — see `noFlashScript`. */
+ *  without loading the color maths — see `noFlashScript`. */
 type StoredStudio = {
   config: ThemeConfig;
   root: {
     vars: Record<string, string>;
     data: Record<string, string>;
     /* Google Fonts stylesheet URLs for the chosen fonts, so the pre-paint
-     * script can `<link>` them without knowing the catalogue. The script
+     * script can `<link>` them without knowing the catalog. The script
      * still checks the origin before appending — storage is user-editable,
      * and a var value cannot pull a foreign stylesheet but a link can. */
     fonts: string[];
@@ -149,7 +149,7 @@ function readStored(): ThemeConfig | null {
   };
 }
 
-/** Style + attributes that realise a config. Applied both to the studio's
+/** Style + attributes that realize a config. Applied both to the studio's
  *  scoped preview and to the document root, which every edit re-themes. */
 export function configToAttrs(cfg: ThemeConfig) {
   const seedO = hexToOklch(cfg.seed);
@@ -202,7 +202,7 @@ export type ScaffoldOptions = {
 
 /* How each manager runs a `create-*` package, in the form its own docs give.
  *
- * `@latest` wherever the manager honours it, because pnpm and npm otherwise
+ * `@latest` wherever the manager honors it, because pnpm and npm otherwise
  * reuse whichever `create-forte-ui` is already cached — a reader who
  * scaffolded once keeps getting that version, and a flag the studio started
  * emitting later is rejected as unknown by a CLI that predates it. Yarn's

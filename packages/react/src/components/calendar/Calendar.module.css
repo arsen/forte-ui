@@ -23,7 +23,7 @@
  * button inside keeps its own radius for the two ends.
  *
  * No prefers-reduced-motion block, here or in any component file: the only
- * motion is a colour transition, and its duration token shortens itself.
+ * motion is a color transition, and its duration token shortens itself.
  */
 @layer forte.components {
   .root {
@@ -57,7 +57,7 @@
     --forte-calendar-caption-font-size: var(--forte-font-size-2);
     /** Month and year text weight */
     --forte-calendar-caption-font-weight: var(--forte-font-weight-semibold);
-    /** Month and year colour */
+    /** Month and year color */
     --forte-calendar-caption-color: var(--forte-color-foreground);
 
     /* Column headers and the week-number gutter. `-subtle` is below the text
@@ -65,9 +65,9 @@
      * content says the same thing, and neither is ever the only cue. */
     /** Weekday initials text size */
     --forte-calendar-weekday-font-size: var(--forte-font-size-1);
-    /** Weekday initials colour */
+    /** Weekday initials color */
     --forte-calendar-weekday-color: var(--forte-color-foreground-subtle);
-    /** ISO week-number colour */
+    /** ISO week-number color */
     --forte-calendar-week-number-color: var(--forte-color-foreground-subtle);
 
     /* Days. */
@@ -80,9 +80,9 @@
      * the three radius presets and answered only to `none`. */
     /** Corner radius of a day */
     --forte-calendar-day-radius: var(--forte-radius-control);
-    /** Day number colour */
+    /** Day number color */
     --forte-calendar-day-color: var(--forte-color-foreground);
-    /** Colour of days belonging to the neighbouring month */
+    /** Color of days belonging to the neighbouring month */
     --forte-calendar-day-color-outside: var(--forte-color-foreground-subtle);
     /** Day fill on hover */
     --forte-calendar-day-bg-hover: var(--forte-color-panel-hover);
@@ -90,7 +90,7 @@
     --forte-calendar-day-selected-bg: var(--forte-color-primary);
     /** Fill of a selected day on hover */
     --forte-calendar-day-selected-bg-hover: var(--forte-color-primary-hover);
-    /** Text colour on a selected day */
+    /** Text color on a selected day */
     --forte-calendar-day-selected-color: var(--forte-color-on-primary);
 
     /* Range. The band sits on the cell, the ends on the button. */
@@ -99,15 +99,15 @@
     /** Fill of the band a half-picked range shows under the pointer */
     --forte-calendar-preview-bg: var(--forte-color-panel-hover);
 
-    /* Today. The dot is a second, non-colour cue: `aria-current="date"` says
+    /* Today. The dot is a second, non-color cue: `aria-current="date"` says
      * it to a screen reader, the dot says it to everyone else, and neither
      * depends on telling the accent hue from the foreground. */
-    /** Colour of today's number */
+    /** Color of today's number */
     --forte-calendar-today-color: var(--forte-color-primary-text);
     /** Diameter of the dot under today's number. `0px` removes it */
     --forte-calendar-today-dot-size: 3px;
 
-    /* Colour only ever crossfades — see the note about hover geometry in the
+    /* Color only ever crossfades — see the note about hover geometry in the
      * motion principles: a day that lifts under the pointer moves its own hit
      * box, and in a grid this dense that oscillates. */
     /** Length of a day's hover and selection crossfade */
@@ -355,7 +355,7 @@
   }
 
   /* Hover excludes a selected day, which has its own stronger pair below —
-   * swapping its fill for the hover grey would read as the day DESELECTING
+   * swapping its fill for the hover gray would read as the day DESELECTING
    * under the pointer. */
   @media (hover: hover) {
     .day:hover:not([data-selected], [aria-disabled="true"]) {
@@ -397,9 +397,9 @@
     color: var(--forte-calendar-today-color);
   }
 
-  /* Centred with `inset-inline: 0` and an auto margin rather than a
+  /* Centered with `inset-inline: 0` and an auto margin rather than a
    * percentage translate: `translate` is physical, so the usual
-   * `inset-inline-start: 50%; translate: -50%` centres in LTR and lands half
+   * `inset-inline-start: 50%; translate: -50%` centers in LTR and lands half
    * a dot to the outside in RTL. */
   .day[data-today]::after {
     content: "";
@@ -410,7 +410,7 @@
     block-size: var(--forte-calendar-today-dot-size);
     margin-inline: auto;
     border-radius: var(--forte-radius-full);
-    /* Rides the number's colour through selection, hover and every tone a
+    /* Rides the number's color through selection, hover and every tone a
      * consumer re-points, so it never needs a palette of its own. */
     background-color: currentColor;
   }
@@ -436,10 +436,10 @@
  * What is Calendar-specific:
  *
  *   - Author backgrounds are stripped, and `currentColor` on the today dot
- *     resolves against a forced text colour that may now equal the cell's —
+ *     resolves against a forced text color that may now equal the cell's —
  *     so the dot is repainted from the system keywords, in both the ordinary
  *     and the selected case.
- *   - Outside days lose their muted colour and become indistinguishable from
+ *   - Outside days lose their muted color and become indistinguishable from
  *     the month's own. GrayText is the only "this is secondary" the mode has.
  *
  * The hover preview band is deliberately left unstyled here. It is a pointer

@@ -178,7 +178,7 @@ export function resolvedDocumentTheme(): ResolvedThemeMode {
 }
 
 /**
- * Read and write the page's colour mode.
+ * Read and write the page's color mode.
  *
  * `theme` is the stated preference (`"system"` when the page follows the OS),
  * `resolvedTheme` is what that currently amounts to on screen, and `setTheme`

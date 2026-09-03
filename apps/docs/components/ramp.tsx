@@ -2,11 +2,11 @@ import { EYEBROW } from "./styles";
 import { cn } from "@/lib/cn";
 
 /**
- * One twelve-step colour ramp, as a strip of swatches.
+ * One twelve-step color ramp, as a strip of swatches.
  *
  * `name` is the token family — `accent`, `secondary`, `gray` — and each cell
  * paints `var(--forte-<name>-<n>)`, so the strip is a live readout of the
- * ramp as the page currently resolves it: change the seed and it recolours.
+ * ramp as the page currently resolves it: change the seed and it recolors.
  * It is a `role="img"` with one label rather than twelve, because the
  * information is the gradient, not any single step.
  */
@@ -20,7 +20,7 @@ export function Ramp({ name, label }: { name: string; label: string }) {
         aria-label={`${label}: twelve steps`}
       >
         {Array.from({ length: 12 }, (_, i) => (
-          // Colour is the entire content of a swatch — keep it in forced-colors.
+          // Color is the entire content of a swatch — keep it in forced-colors.
           <span
             key={i}
             className="block [forced-color-adjust:none]"

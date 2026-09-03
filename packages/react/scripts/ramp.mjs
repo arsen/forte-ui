@@ -1,5 +1,5 @@
 /**
- * The forte-ui colour curve — the single source of truth for every ramp.
+ * The forte-ui color curve — the single source of truth for every ramp.
  *
  * Step semantics follow the Radix Colors convention:
  *   1-2   app / subtle background
@@ -12,7 +12,7 @@
  * Two rules that are easy to get wrong and fail *silently*:
  *
  *   1. Inside `oklch(from ...)`, `l` is 0-1 and `c` is 0-0.4 — NOT the 0-100
- *      range of `lch()`. MDN teaches relative-colour maths with `lch()`
+ *      range of `lch()`. MDN teaches relative-color maths with `lch()`
  *      examples; copying those numbers here yields values ~100x too large,
  *      which clamp to L=1 and produce an all-white ramp with no error.
  *
@@ -22,8 +22,8 @@
  *      back to inheriting `color`.
  *
  * Chroma is expressed as `min(<absolute cap>, calc(c * <ratio>))` so that a
- * neon seed cannot blow out the subtle steps, while a nearly-grey seed still
- * degrades to a clean grey ramp instead of a muddy one.
+ * neon seed cannot blow out the subtle steps, while a nearly-gray seed still
+ * degrades to a clean gray ramp instead of a muddy one.
  */
 
 /** @type {{step:number, light:string, dark:string}[]} */
@@ -36,7 +36,7 @@ export const ACCENT_CURVE = [
   { step: 6,  light: "0.860 min(0.092, calc(c * 0.42))", dark: "0.424 min(0.104, calc(c * 0.56))" },
   { step: 7,  light: "0.810 min(0.110, calc(c * 0.52))", dark: "0.503 min(0.112, calc(c * 0.60))" },
   { step: 8,  light: "0.745 min(0.140, calc(c * 0.66))", dark: "0.606 min(0.130, calc(c * 0.70))" },
-  // 9 is the seed itself — handled separately so the brand colour is exact.
+  // 9 is the seed itself — handled separately so the brand color is exact.
   { step: 10, light: "clamp(0.30, calc(l - 0.035), 0.95) c",
               dark:  "clamp(0.30, calc(l + 0.05), 0.93) min(0.17, calc(c * 0.90))" },
   // The light cap of 0.490 is tuned, not guessed: at 0.53 the worst case
@@ -48,10 +48,10 @@ export const ACCENT_CURVE = [
 ];
 
 /**
- * Neutral curve. Lightness values are the existing, measured forte-ui greys —
+ * Neutral curve. Lightness values are the existing, measured forte-ui grays —
  * only a hue-matched sliver of chroma is added, scaled by --forte-neutral-tint.
  * The tint cap rises through the mid steps and falls again at the text tiers so
- * body copy never reads as coloured. ChromaΔ is small enough that lightness —
+ * body copy never reads as colored. ChromaΔ is small enough that lightness —
  * and therefore the measured contrast of every neutral pair — is unchanged.
  */
 export const GRAY_CURVE = [
@@ -69,7 +69,7 @@ export const GRAY_CURVE = [
   { step: 12, l: { light: "0.242", dark: "0.949" }, t: { light: 0.004, dark: 0.005 }, r: { light: 0.03, dark: 0.03 } },
 ];
 
-/** Percentages for the no-relative-colour fallback ramp (mix toward white/black). */
+/** Percentages for the no-relative-color fallback ramp (mix toward white/black). */
 export const FALLBACK_MIX = [
   { step: 1,  light: 3,  dark: 8  }, { step: 2,  light: 6,  dark: 12 },
   { step: 3,  light: 12, dark: 22 }, { step: 4,  light: 18, dark: 30 },

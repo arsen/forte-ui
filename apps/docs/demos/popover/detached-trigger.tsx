@@ -23,7 +23,7 @@ const VIEWS: View[] = [
 ];
 
 // Created once, at module scope. A handle made during render would be a new
-// object on every pass and the root and its triggers would stop recognising
+// object on every pass and the root and its triggers would stop recognizing
 // each other. `React.useState(() => Popover.createHandle())` is the escape
 // hatch when the handle has to be per-instance.
 const savedViews = Popover.createHandle<View>();

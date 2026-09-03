@@ -60,7 +60,7 @@ the same three the select trigger has.
 
 Disabled and read-only are not the same thing and do not look the same.
 Disabled drops to 55% opacity and takes `cursor: not-allowed`. Read-only keeps
-full contrast, a panel-coloured background, and the text cursor — everywhere
+full contrast, a panel-colored background, and the text cursor — everywhere
 else in this library a read-only control falls back to the default arrow, but
 selecting and copying the value is the point of the state, so the text cursor
 stays.
@@ -70,7 +70,7 @@ stays.
 ### Multi-line
 
 Use [Textarea](/components/textarea/). It is the same `Field.Control` rendered
-as a `<textarea>`, wearing the same variants, sizes and colour slots, and it
+as a `<textarea>`, wearing the same variants, sizes and color slots, and it
 adds the things a paragraph needs that a control height cannot express — a
 height counted in rows, a growth ceiling, and `autoResize`.
 
@@ -88,14 +88,14 @@ the design has no visible label, `aria-label` on the input is the fallback.
   is not reliably announced.
 </Callout>
 
-Placeholder text is coloured `--forte-color-foreground-muted` (5.82:1) rather
+Placeholder text is colored `--forte-color-foreground-muted` (5.82:1) rather
 than `--forte-color-foreground-subtle` (3.73:1). SC 1.4.3 has no exemption for
 placeholders in an enabled control, and Firefox's own 0.54 `::placeholder`
 opacity is reset for the same reason.
 
 In forced-colors mode the control paints `Field` / `FieldText` with a
 `FieldText` boundary. That last part matters for `soft` and `ghost`, whose
-border is `transparent` — a value forced-colors replaces with a system colour
+border is `transparent` — a value forced-colors replaces with a system color
 of its choosing rather than leaving invisible, so without the restatement the
 three variants would stop looking like the same control.
 

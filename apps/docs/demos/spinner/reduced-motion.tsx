@@ -8,7 +8,7 @@ const VARIANTS = ["ring", "dots", "bars", "pulse"] as const;
  * flips, and it works on any element — so the right-hand column below is
  * genuinely running under reduced motion while the left-hand one is not, on
  * the same page at the same time. `full` on the left is not decoration either:
- * it pins that column to base behaviour even for a reader whose OS already
+ * it pins that column to base behavior even for a reader whose OS already
  * asks for less motion, so the comparison holds for everyone. */
 const COLUMNS = [
   { motion: "full", title: "Full motion" },

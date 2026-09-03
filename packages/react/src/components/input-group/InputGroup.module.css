@@ -31,7 +31,7 @@
  *   3. Focus is drawn once, by the root, via `.forte-focus-ring-within` — which
  *      also silences the UA ring on the bare control. Buttons inside addons
  *      carry `.forte-focus-ring` and ring themselves, so the root's ring is
- *      cancelled while one of them holds focus: `:has(:focus-visible)` is
+ *      canceled while one of them holds focus: `:has(:focus-visible)` is
  *      true for a focused addon button too, and without the cancellation the
  *      field wears two rings. Restated in the a11y layer, where the
  *      forced-colors ring lives — same as NumberField.
@@ -41,7 +41,7 @@
  *      under `data-forte-radius="pill"` an uncapped radius would curve the
  *      corners of a two-row group right through its own content.
  *
- *   5. There is deliberately no `prefers-reduced-motion` block. Only colours
+ *   5. There is deliberately no `prefers-reduced-motion` block. Only colors
  *      transition here, which reduced motion keeps.
  */
 @layer forte.components {
@@ -99,27 +99,27 @@
      * the field */
     --forte-input-group-button-size: var(--forte-input-group-inner-h);
 
-    /* Colour slots, filled in per variant below — the same set Input has,
+    /* Color slots, filled in per variant below — the same set Input has,
      * because the group is the same control wearing more parts. */
     /** Background (reset per `variant`) */
     --forte-input-group-bg: var(--forte-color-background);
     /** Background on hover */
     --forte-input-group-bg-hover: var(--forte-color-panel-hover);
-    /** Text colour of the control */
+    /** Text color of the control */
     --forte-input-group-fg: var(--forte-color-foreground);
-    /** Addon text and icon colour */
+    /** Addon text and icon color */
     --forte-input-group-addon-fg: var(--forte-color-foreground-muted);
-    /** Placeholder colour */
+    /** Placeholder color */
     --forte-input-group-placeholder-fg: var(--forte-color-foreground-muted);
-    /** Border colour (reset per `variant`, and by the control's `data-invalid`) */
+    /** Border color (reset per `variant`, and by the control's `data-invalid`) */
     --forte-input-group-border-color: var(--forte-color-border);
-    /** Border colour on hover */
+    /** Border color on hover */
     --forte-input-group-border-color-hover: var(--forte-color-border-strong);
-    /** Caret colour */
+    /** Caret color */
     --forte-input-group-caret-color: var(--forte-color-primary);
     /** Selection background */
     --forte-input-group-selection-bg: var(--forte-color-primary-soft);
-    /** Selection text colour */
+    /** Selection text color */
     --forte-input-group-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
@@ -186,7 +186,7 @@
     --forte-input-group-bg: var(--forte-color-panel);
   }
 
-  /* Only the boundary and the caret change. Recolouring the value or the
+  /* Only the boundary and the caret change. Recoloring the value or the
    * addons as well would make the user's own answer look like the error
    * message. */
   .root:has(:is(.input, .textarea)[data-invalid]) {
@@ -307,11 +307,11 @@
 
   /* Textarea ---------------------------------------------------------------
    * Textarea's row maths, restated against the group's metrics: the block
-   * padding centres the FIRST line on the group's one-row inner height, so a
+   * padding centers the FIRST line on the group's one-row inner height, so a
    * one-row textarea sits exactly where the single-line input would — and so
    * does the icon of an inline addon pinned to `flex-start` beside it.
    * `1lh` resolves against this element's own line height, which is the term
-   * that keeps the centring true at every size and density. `calc()` clamps
+   * that keeps the centering true at every size and density. `calc()` clamps
    * a negative result to 0 (compact density can make one row taller than the
    * inner height), so this never turns into an invalid padding. */
   .textarea {
@@ -337,7 +337,7 @@
     resize: none;
   }
 
-  /* Engines without `field-sizing` get the same behaviour from the resize
+  /* Engines without `field-sizing` get the same behavior from the resize
    * observer fallback in the component — see Textarea's `useAutoSize`. */
   .textarea[data-auto-resize] {
     field-sizing: content;
@@ -389,10 +389,10 @@
     order: 2;
   }
 
-  /* Beside a textarea an inline addon must not centre against the whole tall
+  /* Beside a textarea an inline addon must not center against the whole tall
    * box — a search icon floating beside line three reads as decoration, not
    * as part of the field. Pin it to the top at the one-row inner height and
-   * its centre lands exactly on the textarea's first line, which is what the
+   * its center lands exactly on the textarea's first line, which is what the
    * block padding above arranged. */
   .root:has(.textarea) .addon[data-align="inline-start"],
   .root:has(.textarea) .addon[data-align="inline-end"] {
@@ -468,13 +468,13 @@
   }
 }
 
-/* Forced colours -----------------------------------------------------------
+/* Forced colors -----------------------------------------------------------
  * Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * The root is a <div>, not a field, so the UA assigns it nothing; and the
  * `soft`/`ghost` variants' `transparent` border is replaced with a system
- * colour of the engine's choosing rather than left invisible. Both are why
+ * color of the engine's choosing rather than left invisible. Both are why
  * the box is restated. */
 @layer forte.a11y {
   @media (forced-colors: active) {
@@ -487,7 +487,7 @@
     /* `opacity` is one of the few properties forced-colors does NOT
      * override, and the generic remedy in patterns.css keys on a
      * `[data-disabled]` the root does not carry — the control inside does.
-     * Without this the group keeps 55% opacity against system colours and
+     * Without this the group keeps 55% opacity against system colors and
      * reads as enabled. */
     .root:has(:is(.input, .textarea)[data-disabled]) {
       opacity: 1;
@@ -495,7 +495,7 @@
       border-color: GrayText;
     }
 
-    /* Forced colours picks each element's `color` on its own, so the addon
+    /* Forced colors picks each element's `color` on its own, so the addon
      * and the control would stay CanvasText inside a greyed group. */
     .root:has(:is(.input, .textarea)[data-disabled])
       :is(.input, .textarea, .addon) {

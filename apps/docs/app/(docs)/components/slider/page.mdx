@@ -56,7 +56,7 @@ An array value is what makes a slider a range — there is no `range` prop. Plac
 
 At `min` and `max` the thumb is wider than the rail, so something has to give. `thumbAlignment` decides what:
 
-- `center` (the default) puts the thumb's centre on the control's edge, so half of it hangs outside.
+- `center` (the default) puts the thumb's center on the control's edge, so half of it hangs outside.
 - `edge` insets the thumb so its outer edge lands on the control's edge instead. Base UI measures the control's border and padding to work this out, which means it re-measures if you change `--forte-slider-control-padding`.
 - `edge-client-only` behaves like `edge` but drops the pre-hydration script, trading a first paint with no thumb for a smaller bundle.
 
@@ -66,7 +66,7 @@ The red guides in the demo mark the control's edges.
 
 ### Thumb collision
 
-On a range slider, `thumbCollisionBehavior` decides what happens when a dragged thumb reaches its neighbour. `minStepsBetweenValues` is the companion knob — it holds a gap open whichever behaviour is in use.
+On a range slider, `thumbCollisionBehavior` decides what happens when a dragged thumb reaches its neighbour. `minStepsBetweenValues` is the companion knob — it holds a gap open whichever behavior is in use.
 
 <DemoBlock id="slider/collision" />
 
@@ -78,13 +78,13 @@ On a range slider, `thumbCollisionBehavior` decides what happens when a dragged 
 
 ### Tones
 
-`tone` swaps the indicator fill, the thumb's ring and its halo in one move. The rail stays neutral in every tone: it is the *empty* part of the range, and colouring it would compete with the fill it exists to contrast against.
+`tone` swaps the indicator fill, the thumb's ring and its halo in one move. The rail stays neutral in every tone: it is the *empty* part of the range, and coloring it would compete with the fill it exists to contrast against.
 
 <DemoBlock id="slider/tones" />
 
 ### Vertical
 
-`orientation="vertical"` turns the same parts 90°. The root becomes a single centred column and `--forte-slider-length` now describes the block axis, defaulting to `10rem`.
+`orientation="vertical"` turns the same parts 90°. The root becomes a single centered column and `--forte-slider-length` now describes the block axis, defaulting to `10rem`.
 
 <Callout kind="note">
 
@@ -173,13 +173,13 @@ The thumb's elevation and halo are painted by a `::before` rather than by the th
 
 The control is padded well past the painted rail, and that padding is what carries the 24×24 minimum target of SC 2.5.8 — a press anywhere inside the strip moves the nearest thumb, so the target is the whole strip rather than the handle. The padding is derived from the rail thickness and the thumb size, so it cannot fall below the minimum when either is retuned.
 
-In forced-colours mode the rail, the fill and the handle are separated with system keywords, because Base UI builds every part out of `<div>`s and the UA assigns system colours from *native* element semantics — a `<div role="slider">` gets nothing. The rail's boundary there is drawn with `outline` rather than `border`, since a border would change the box and throw the indicator's `height: inherit` off by its own width in that one mode. The disabled state overrides its own opacity and uses `GrayText`, because forced colours does not touch `opacity` and a 55% control would otherwise keep full system contrast and read as enabled.
+In forced-colors mode the rail, the fill and the handle are separated with system keywords, because Base UI builds every part out of `<div>`s and the UA assigns system colors from *native* element semantics — a `<div role="slider">` gets nothing. The rail's boundary there is drawn with `outline` rather than `border`, since a border would change the box and throw the indicator's `height: inherit` off by its own width in that one mode. The disabled state overrides its own opacity and uses `GrayText`, because forced colors does not touch `opacity` and a 55% control would otherwise keep full system contrast and read as enabled.
 
 ### Contrast
 
 The thumb's ring is `--forte-color-primary` and the rail is `--forte-color-border-muted`. The value is legible from three independent places — the indicator's length against the rail, the thumb's position, and the `Slider.Value` text — so no single pair is load-bearing on its own. If your accent seed lands pale against your page, re-point `--forte-slider-thumb-border` at `--forte-color-foreground-subtle`, which is measured at 3.73:1.
 
-The hover halo is a **translucent** mix of the tone's colour rather than its `-soft` step, and that matters. `--forte-color-primary-soft` is accent-3, which is built to sit *on* the page — 12% of the seed mixed into white in light mode, 22% into near-black in dark — so against the page it is very nearly the page itself, and the halo was effectively invisible in both modes (measured 1.12:1 in light, 1.25:1 in dark). Mixing toward `transparent` composites the accent over whatever is actually behind the control, which brings every tone to between 1.6:1 and 2.5:1 against the page in both modes and keeps it working over a panel or a card as well.
+The hover halo is a **translucent** mix of the tone's color rather than its `-soft` step, and that matters. `--forte-color-primary-soft` is accent-3, which is built to sit *on* the page — 12% of the seed mixed into white in light mode, 22% into near-black in dark — so against the page it is very nearly the page itself, and the halo was effectively invisible in both modes (measured 1.12:1 in light, 1.25:1 in dark). Mixing toward `transparent` composites the accent over whatever is actually behind the control, which brings every tone to between 1.6:1 and 2.5:1 against the page in both modes and keeps it working over a panel or a card as well.
 
 ### Motion
 
@@ -189,7 +189,7 @@ Base UI rewrites the indicator's `width` and the thumb's `inset-inline-start` on
 
 A keyboard-only glide is tempting and also wrong: holding an arrow key repeats at roughly 30/s and restarts the same transition each time, which reproduces the lag on a smaller scale, while a single arrow step moves the handle two or three pixels and has nothing worth animating. Native `input[type="range"]` does not animate either.
 
-What does animate is colour, and the halo around the handle on hover and while dragging — state changes with a start and an end, which is what a transition is for. There is consequently no `prefers-reduced-motion` block in this component: no geometry moves, so there is nothing for the motion tokens to collapse, and the halo is a colour cue that reduced-motion users keep in full.
+What does animate is color, and the halo around the handle on hover and while dragging — state changes with a start and an end, which is what a transition is for. There is consequently no `prefers-reduced-motion` block in this component: no geometry moves, so there is nothing for the motion tokens to collapse, and the halo is a color cue that reduced-motion users keep in full.
 
 ## Theming
 

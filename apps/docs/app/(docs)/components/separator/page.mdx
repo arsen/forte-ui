@@ -114,14 +114,14 @@ it visually — a screen reader then reads the page's decoration out loud. Pass
 ## Theming
 
 The line is painted with a **border**, never `background-color`. Under
-forced-colors a background is replaced with a system colour — for a plain box
+forced-colors a background is replaced with a system color — for a plain box
 that is `Canvas`, the page's own backdrop — so a hairline drawn that way
-disappears for exactly the users who most need the grouping cue. Border colours
+disappears for exactly the users who most need the grouping cue. Border colors
 are forced to `CanvasText` instead, so the rule survives with no forced-colors
 rule in the stylesheet at all.
 
 Nothing here transitions. A separator has no states, so there is nothing to
-animate, and a colour transition would only make it lag behind the rest of the
+animate, and a color transition would only make it lag behind the rest of the
 page on a theme switch.
 
 <ThemingTable component="Separator" />

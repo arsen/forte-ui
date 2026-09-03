@@ -12,23 +12,23 @@
  *   Panel is also usable on its own, for a picker that lives in the page.
  *
  * The one thing that makes this file different from every other component
- * stylesheet here: SOME COLOURS ARE NOT TOKENS, and must not become tokens.
+ * stylesheet here: SOME COLORS ARE NOT TOKENS, and must not become tokens.
  *
  * The area's two gradients, the hue rail's seven stops and the checkerboard's
- * intent are not design decisions — they are the colour space itself. `white`
+ * intent are not design decisions — they are the color space itself. `white`
  * at the left of the saturation axis is what saturation 0 MEANS; re-pointing
  * it at `--forte-color-panel` would not re-skin the picker, it would make it
- * lie. The same goes for the handles: they sit on colour the user chose, about
+ * lie. The same goes for the handles: they sit on color the user chose, about
  * which nothing is known, so they take a white ring and a dark hairline —
- * the pair that stays visible on all of it — rather than a theme colour that
+ * the pair that stays visible on all of it — rather than a theme color that
  * is free to land on exactly the hue underneath it. Everything that IS a
  * design decision (the surface, the radii, the gaps, the focus treatment) goes
  * through tokens as usual.
  *
- * Colour is also the whole information content of a swatch, a rail and the
+ * Color is also the whole information content of a swatch, a rail and the
  * canvas, so those parts opt out of forced-colors substitution — otherwise the
- * picker becomes four identical system-coloured rectangles — and take a
- * system-coloured hairline as the boundary the substitution would have given
+ * picker becomes four identical system-colored rectangles — and take a
+ * system-colored hairline as the boundary the substitution would have given
  * them. That is what `.forte-preserve-color` does, and it is deliberately NOT
  * used here: its border is unconditional, so a twenty-four swatch grid would
  * carry a pure CanvasText line around every cell in ordinary rendering too,
@@ -36,7 +36,7 @@
  * instead — a `--forte-color-border` hairline below, the opt-out and the system
  * hairline in the `forte.a11y` block at the foot of this file.
  *
- * Motion is colour and scale only. Neither the area's thumb nor a rail's is
+ * Motion is color and scale only. Neither the area's thumb nor a rail's is
  * ever transitioned on position: Base UI (and this component's own pointer
  * handler) rewrite those on every pointermove, and a transition there makes
  * the handle chase the pointer instead of following it — the same finding
@@ -46,7 +46,7 @@
   /* ------------------------------------------------------------------------
    * Popup
    *
-   * The popover surface keeps its own colours, shadow and radius; only its
+   * The popover surface keeps its own colors, shadow and radius; only its
    * padding is handed over, because the panel inside owns the layout and a
    * second ring of padding around it would push the swatch grid off its own
    * measure.
@@ -97,13 +97,13 @@
     --forte-color-picker-thumb-size: 0.875rem;
     /** Thickness of the ring around both kinds of handle */
     --forte-color-picker-thumb-ring: 2px;
-    /* Not a theme colour, and it must not become one: this ring is drawn on
-     * whatever colour the user picked, so a token would be free to resolve to
-     * that same colour and disappear. The canvas handle takes the computed
+    /* Not a theme color, and it must not become one: this ring is drawn on
+     * whatever color the user picked, so a token would be free to resolve to
+     * that same color and disappear. The canvas handle takes the computed
      * black-or-white contrast instead (see `--forte-color-picker-on-color`
-     * below); the rail handles cannot, because the colour under them changes
+     * below); the rail handles cannot, because the color under them changes
      * along the rail. */
-    /** Ring colour of the rail handles */
+    /** Ring color of the rail handles */
     --forte-color-picker-thumb-border: #ffffff;
     /** The hairline outside that ring, which is what keeps a white handle
      * visible on a pale yellow */
@@ -121,7 +121,7 @@
     --forte-color-picker-swatch-gap: var(--forte-space-2);
     /** Corner radius of one swatch */
     --forte-color-picker-swatch-radius: var(--forte-radius-1);
-    /** Side of one square of the checkerboard drawn behind translucent colour */
+    /** Side of one square of the checkerboard drawn behind translucent color */
     --forte-color-picker-checker-size: 8px;
     /** The checkerboard's light square */
     --forte-color-picker-checker-light: var(--forte-color-background);
@@ -130,8 +130,8 @@
 
     /* Written as inline styles by the component, and listed here so a reader
      * of this file knows where they come from:
-     *   --forte-color-picker-color       the current colour, alpha included
-     *   --forte-color-picker-solid       the same colour at full alpha
+     *   --forte-color-picker-color       the current color, alpha included
+     *   --forte-color-picker-solid       the same color at full alpha
      *   --forte-color-picker-hue         its hue in degrees, unitless
      *   --forte-color-picker-on-color    `black` or `white`, whichever reads on it
      * They carry live state, not theme, which is why they are not knobs. */
@@ -194,13 +194,13 @@
    *
    * Two gradients, in the order CSS paints them: black-to-nothing on TOP
    * (brightness, falling downward) over white-to-hue underneath (saturation,
-   * rising rightward). Together they are every colour of one hue, which is
+   * rising rightward). Together they are every color of one hue, which is
    * exactly the slice the hue rail selects.
    *
    * The transparent end is written `rgb(0 0 0 / 0)` rather than `transparent`
    * for the same reason it is everywhere else: the keyword is fine in a
    * gradient today, since browsers interpolate premultiplied, but it is also
-   * the one colour keyword forced-colors replaces — and this element opts out
+   * the one color keyword forced-colors replaces — and this element opts out
    * of that substitution, so being explicit costs nothing and removes the
    * question.
    * --------------------------------------------------------------------- */
@@ -209,7 +209,7 @@
     box-sizing: border-box;
     inline-size: 100%;
     block-size: var(--forte-color-picker-area-height);
-    /* Every colour surface here takes the same hairline: white at saturation
+    /* Every color surface here takes the same hairline: white at saturation
      * zero is indistinguishable from the panel behind it, and the boundary is
      * what says where the control ends. */
     border: 1px solid var(--forte-color-border);
@@ -253,7 +253,7 @@
     border: var(--forte-color-picker-thumb-ring) solid
       var(--forte-color-picker-on-color, #ffffff);
     border-radius: var(--forte-radius-full);
-    /* The colour shows THROUGH the handle rather than being painted into it,
+    /* The color shows THROUGH the handle rather than being painted into it,
      * so the handle never disagrees with the pixel it is sitting on. */
     background-color: transparent;
     /* The area below takes the whole gesture, so the handle must not intercept
@@ -266,7 +266,7 @@
   }
 
   /* The hairline that keeps the handle legible where its ring matches what is
-   * under it — mid-grey against mid-grey. On ::before rather than the handle
+   * under it — mid-gray against mid-gray. On ::before rather than the handle
    * itself, because `.forte-focus-ring-within` paints its outer tone with a
    * box-shadow from an EARLIER layer, and a box-shadow declared here would
    * beat it on layer order and silently delete half the ring. */
@@ -350,7 +350,7 @@
    * without it drops the whole declaration and paints no rail at all. */
   /* The gradient runs along the same axis Base UI puts the slider's minimum
    * on, so both rails flip under RTL and the handle keeps standing on the
-   * colour it names.
+   * color it names.
    *
    * The angle is computed from `--forte-direction` — `90deg` is exactly
    * `to right`, and `-90deg` exactly `to left` — rather than written as
@@ -377,9 +377,9 @@
   }
 
   /* Two layers: the ramp on top, the checkerboard beneath it. The ramp's
-   * transparent end is the CURRENT colour at zero alpha, not `transparent` —
-   * `transparent` is transparent BLACK, and a gradient toward it drags a grey
-   * cast through the middle of every light colour. */
+   * transparent end is the CURRENT color at zero alpha, not `transparent` —
+   * `transparent` is transparent BLACK, and a gradient toward it drags a gray
+   * cast through the middle of every light color. */
   .alphaTrack {
     background-image:
       linear-gradient(
@@ -426,11 +426,11 @@
     background-color: hsl(var(--forte-color-picker-hue, 0) 100% 50%);
   }
 
-  /* The colour is a flat GRADIENT rather than a background-color, and that is
+  /* The color is a flat GRADIENT rather than a background-color, and that is
    * the whole trick behind every checkerboard here: background-color is
    * painted below every background-image, so a checkerboard image would sit on
    * top of the translucent fill it is supposed to show through. As a gradient
-   * layer the colour stacks above it, which is the way round the eye expects. */
+   * layer the color stacks above it, which is the way round the eye expects. */
   .alphaTrack .railThumb {
     background-image:
       linear-gradient(
@@ -468,7 +468,7 @@
     align-items: center;
     justify-content: center;
     /* Square, and sized by the grid column rather than by a width, so a
-     * palette of five colours fills the panel the way a palette of eight
+     * palette of five colors fills the panel the way a palette of eight
      * does. */
     aspect-ratio: 1;
     inline-size: 100%;
@@ -477,7 +477,7 @@
     border: 1px solid var(--forte-color-border);
     border-radius: var(--forte-color-picker-swatch-radius);
 
-    /* Colour above checkerboard, both as image layers — see the alpha handle. */
+    /* Color above checkerboard, both as image layers — see the alpha handle. */
     background-image:
       linear-gradient(
         var(--forte-color-picker-swatch, transparent),
@@ -753,11 +753,11 @@
   @media (forced-colors: active) {
     /* The opt-out, and the hairline that replaces the boundary the
      * substitution would have drawn. Written here rather than through
-     * `.forte-preserve-color` so the border is system-coloured ONLY under forced
-     * colours — see the note at the top of this file.
+     * `.forte-preserve-color` so the border is system-colored ONLY under forced
+     * colors — see the note at the top of this file.
      *
-     * The handles are on the list because their white ring is a real colour
-     * too: forced back to system colours they would match the rail they are
+     * The handles are on the list because their white ring is a real color
+     * too: forced back to system colors they would match the rail they are
      * standing on and disappear. */
     .area,
     .hueTrack,
@@ -777,7 +777,7 @@
     }
 
     /* `opacity` survives forced-colors untouched, so a disabled picker would
-     * otherwise keep full system-colour contrast and read as enabled. */
+     * otherwise keep full system-color contrast and read as enabled. */
     .panel[data-disabled],
     .trigger[data-disabled] {
       opacity: 1;

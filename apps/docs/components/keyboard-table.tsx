@@ -7,7 +7,7 @@ export type KeyRow = { keys: string[]; description: string };
 /**
  * Keyboard interaction reference.
  *
- * Every interactive component gets one of these. Keyboard behaviour is the
+ * Every interactive component gets one of these. Keyboard behavior is the
  * part of an accessible component that is easiest to implement and easiest to
  * forget to document, and a reader cannot discover it by looking at a demo.
  */
@@ -19,7 +19,7 @@ export function KeyboardTable({ rows }: { rows: KeyRow[] }) {
         <thead>
           <tr>
             <th scope="col" className={TABLE_HEAD}>Key</th>
-            <th scope="col" className={TABLE_HEAD}>Behaviour</th>
+            <th scope="col" className={TABLE_HEAD}>Behavior</th>
           </tr>
         </thead>
         <tbody>

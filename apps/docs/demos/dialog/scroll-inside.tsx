@@ -24,7 +24,7 @@ const CLAUSES = [
 // Caps the popup at the height the viewport gives it — the viewport is
 // `position: fixed; inset: 0` with its own padding, so 100% is the screen less
 // that padding. Without a cap the popup grows to fit its content and the
-// viewport scrolls instead, which is the default behaviour this demo replaces.
+// viewport scrolls instead, which is the default behavior this demo replaces.
 const popup = "max-h-full";
 
 // `flex: 1 1 auto` gives the scroll region every pixel the title and footer do

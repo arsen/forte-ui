@@ -82,8 +82,8 @@ export interface PaginationRootProps
    */
   variant?: PaginationVariant;
   /**
-   * Which colour marks the current page. `"primary"` and `"secondary"` are
-   * a solid brand fill; `"neutral"` is a quiet grey fill with a stronger
+   * Which color marks the current page. `"primary"` and `"secondary"` are
+   * a solid brand fill; `"neutral"` is a quiet gray fill with a stronger
    * border, for a strip that must not compete with the page's real primary
    * action.
    * @default "primary"
@@ -168,7 +168,7 @@ export interface PaginationListProps
 /* -------------------------------------------------------------------------
  * The shift
  *
- * A centred window re-labels every slot when the current page moves by one:
+ * A centered window re-labels every slot when the current page moves by one:
  * the cell the reader just pressed reads "27" a frame later and the fill
  * appears one cell to its left. Nothing visibly moves, so the eye reads a
  * glitch rather than "the window scrolled". The list animates what actually
@@ -435,7 +435,7 @@ export interface PaginationLinkProps
   extends Omit<React.ComponentPropsWithoutRef<"a">, "className"> {
   /**
    * Marks this as the page the reader is on. Sets `aria-current="page"` and
-   * draws the tone's fill — the only slot in the strip that carries colour.
+   * draws the tone's fill — the only slot in the strip that carries color.
    * @default false
    */
   current?: boolean;

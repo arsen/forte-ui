@@ -2,7 +2,7 @@
 
 An accessible React component library built on [Base UI](https://base-ui.com),
 styled with CSS Modules and a design system that rebuilds itself around a single
-colour.
+color.
 
 ```bash
 npm install @forte-ui/react
@@ -40,7 +40,7 @@ import "@forte-ui/react/theme.css";
 import "./globals.css";
 ```
 
-Set your brand colour in `app/globals.css`:
+Set your brand color in `app/globals.css`:
 
 ```css
 :root {
@@ -81,7 +81,7 @@ order, so it must come before `tailwindcss` (or utilities lose to component
 CSS) *and* before `theme.css` (or Tailwind's Preflight blanks the components).
 The bridge re-points Tailwind's theme at the forte-ui tokens — `bg-primary`,
 `gap-5`, `rounded-control` — and deletes the stock scales, so `bg-slate-800`
-fails at build time instead of shipping a colour that ignores your theme.
+fails at build time instead of shipping a color that ignores your theme.
 
 ### Vite
 
@@ -143,16 +143,16 @@ One variable re-skins everything:
 }
 ```
 
-All twelve accent steps, the brand-tinted neutrals, and a readable text colour
+All twelve accent steps, the brand-tinted neutrals, and a readable text color
 for solid fills derive from it — in both light and dark mode, with no JavaScript
-and no build step. It works through CSS relative colour syntax:
+and no build step. It works through CSS relative color syntax:
 
 ```css
 --forte-accent-3: oklch(from var(--forte-accent-seed) 0.954 min(0.043, calc(c * 0.17)) h);
 ```
 
 Also available: `--forte-secondary-seed`, `--forte-neutral-tint` (how much brand hue
-bleeds into the greys), and `data-forte-radius` / `data-forte-density` /
+bleeds into the grays), and `data-forte-radius` / `data-forte-density` /
 `data-forte-motion` / `data-theme` attributes.
 
 Scoping works too — put `.forte-theme` or `data-forte-theme` on any element to
@@ -180,7 +180,7 @@ falls for greens. A first-order hue correction tracks it closely enough to clear
 AA on its own, and `contrast-color()` supersedes it where supported.
 
 Supported seed envelope: lightness 0.45–0.90, chroma 0.02–0.30, inside sRGB.
-The Theme Studio warns when a colour falls outside it.
+The Theme Studio warns when a color falls outside it.
 
 ## Motion
 

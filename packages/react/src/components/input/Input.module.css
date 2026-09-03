@@ -15,7 +15,7 @@
  * field state on `data-*` — `data-invalid`, `data-valid`, `data-dirty`,
  * `data-touched`, `data-filled`, `data-focused`, `data-disabled` — whether or
  * not there is a `Field.Root` above it. Only `data-invalid` is styled: the
- * others describe where the user is in the interaction, and recolouring a
+ * others describe where the user is in the interaction, and recoloring a
  * control the moment it is merely *touched* is noise.
  */
 @layer forte.components {
@@ -37,24 +37,24 @@
     /** Border width */
     --forte-input-border-width: 1px;
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Background (reset per `variant`) */
     --forte-input-bg: var(--forte-color-background);
     /** Background on hover */
     --forte-input-bg-hover: var(--forte-color-panel-hover);
-    /** Text colour */
+    /** Text color */
     --forte-input-fg: var(--forte-color-foreground);
-    /** Placeholder colour */
+    /** Placeholder color */
     --forte-input-placeholder-fg: var(--forte-color-foreground-muted);
-    /** Border colour (reset per `variant`, and by `data-invalid`) */
+    /** Border color (reset per `variant`, and by `data-invalid`) */
     --forte-input-border-color: var(--forte-color-border);
-    /** Border colour on hover */
+    /** Border color on hover */
     --forte-input-border-color-hover: var(--forte-color-border-strong);
-    /** Caret colour */
+    /** Caret color */
     --forte-input-caret-color: var(--forte-color-primary);
     /** Selection background */
     --forte-input-selection-bg: var(--forte-color-primary-soft);
-    /** Selection text colour */
+    /** Selection text color */
     --forte-input-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
@@ -170,7 +170,7 @@
   }
 
   /* Validity -------------------------------------------------------------- */
-  /* Only the boundary and the caret change. Recolouring the value text as well
+  /* Only the boundary and the caret change. Recoloring the value text as well
    * would make the user's own answer look like the error message.
    *
    * This block has to stay AFTER the variants: `.root[data-invalid]` and
@@ -184,14 +184,14 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 /* Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * Unlike Checkbox and Switch, this really is a native <input>, so the UA does
- * assign it system colours. What it does not do is undo the `soft`/`ghost`
+ * assign it system colors. What it does not do is undo the `soft`/`ghost`
  * variants' `transparent` border, which forced-colors resolves to a system
- * colour of its own choosing rather than to the field boundary. Restating the
+ * color of its own choosing rather than to the field boundary. Restating the
  * pair here keeps every variant looking like the same control. */
 @layer forte.a11y {
   @media (forced-colors: active) {
@@ -203,7 +203,7 @@
 
     /* `opacity: 1` comes from the generic `[data-disabled]` remedy in
      * patterns.css, which applies at zero specificity through `:where()`; the
-     * colours it also sets would lose to the (0,1,0) rule above, so the ones
+     * colors it also sets would lose to the (0,1,0) rule above, so the ones
      * this component needs are restated. */
     .root[data-disabled] {
       background-color: Canvas;

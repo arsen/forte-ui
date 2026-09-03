@@ -41,7 +41,7 @@ export default function MenubarVariants() {
 
       {/* A panel and a hairline, for a page busy enough that a bare row of
         * words would not read as a bar. The hover fill steps one further along
-        * the grey ramp here, because the strip has already taken the first
+        * the gray ramp here, because the strip has already taken the first
         * step. */}
       <Menubar variant="contained">
         <Menus />

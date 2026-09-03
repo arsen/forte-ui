@@ -5,7 +5,7 @@ import { NavigationMenu } from "@forte-ui/react";
 const links = [
   { title: "Quick start", description: "Install the package and render a button." },
   { title: "Accessibility", description: "What the library measures, and what it asserts." },
-  { title: "Theming", description: "One seed colour, rebuilt with relative colour syntax." },
+  { title: "Theming", description: "One seed color, rebuilt with relative color syntax." },
   { title: "Motion", description: "Springs sampled into linear() easings, no runtime." },
   { title: "Tokens", description: "The whole inventory, generated from the stylesheets." },
   { title: "Releases", description: "What changed, and what broke." },

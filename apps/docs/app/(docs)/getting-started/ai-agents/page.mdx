@@ -48,7 +48,7 @@ The skill carries the stable concepts, the ones that hold across releases:
 ## Why it never goes stale
 
 The skill deliberately contains **no inventories** — no token list, no prop
-tables, no knob catalogues. Those change with every release, and a copy frozen
+tables, no knob catalogs. Those change with every release, and a copy frozen
 into a skill would drift the moment a consumer runs on any version but the one
 it was written against.
 
@@ -57,15 +57,15 @@ files, and the skill instructs the agent to read them from the consumer's
 own `node_modules` — so the facts always match the installed version exactly:
 
 ```ts
-// docs-data/components.md — the catalogue: every component, a one-line
+// docs-data/components.md — the catalog: every component, a one-line
 // when-to-use, and the props.json / theming.json keys to look up next
-import catalogue from "@forte-ui/react/docs-data/components.json"; // the same, as data
+import catalog from "@forte-ui/react/docs-data/components.json"; // the same, as data
 import props from "@forte-ui/react/docs-data/props.json";     // every part's props
 import theming from "@forte-ui/react/docs-data/theming.json"; // every theming knob
 import tokens from "@forte-ui/react/docs-data/tokens.json";   // every global token
 ```
 
-The catalogue is the entry point: it is small enough to read whole, so an
+The catalog is the entry point: it is small enough to read whole, so an
 agent deciding *which* component to reach for picks from what this version
 actually ships — the summaries are `@summary` doc comments in the component
 source, and the build fails if a component is missing one. The JSON files then

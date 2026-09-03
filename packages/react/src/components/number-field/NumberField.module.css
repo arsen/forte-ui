@@ -30,7 +30,7 @@
  *      control — and since Base UI keeps both steppers out of the tab order,
  *      that is the only ring anyone sees by default. The steppers still carry
  *      an inset ring for the app that puts them back with `tabIndex={0}`, and
- *      the group's ring is cancelled in that case, because
+ *      the group's ring is canceled in that case, because
  *      `:has(:focus-visible)` is true for a focused stepper too. The
  *      cancellation is written twice — here and in the a11y layer — because the
  *      forced-colors ring lives there and would otherwise put it straight back.
@@ -38,7 +38,7 @@
  *   3. Nothing animates the value or the parts that carry it. A scrub rewrites
  *      the number every couple of pixels of pointer movement, so a transition
  *      on the digits would spend the whole gesture interpolating toward a value
- *      that has already moved. Colour transitions are fine: those have an end.
+ *      that has already moved. Color transitions are fine: those have an end.
  *
  *   4. There is deliberately no `prefers-reduced-motion` block. The motion
  *      tokens collapse their own geometry — `--forte-scale-press` becomes exactly
@@ -75,7 +75,7 @@
   /* One row, the label before the control. `center` rather than `baseline`:
    * the scrub area is an inline-flex box whose grip has no baseline of its
    * own, so aligning on the text would leave the label sitting a few pixels
-   * high against a `lg` group. Centring on the group's height is what an
+   * high against a `lg` group. Centering on the group's height is what an
    * inspector row does, and it holds at every size. The row flips on its own
    * in RTL, since flex order is logical. */
   .root[data-orientation="horizontal"] {
@@ -99,15 +99,15 @@
     --forte-number-field-border-width: 1px;
     /** Rule between a stepper and the input */
     --forte-number-field-separator-width: 1px;
-    /** Colour of the rule between a stepper and the input (reset per `variant`) */
+    /** Color of the rule between a stepper and the input (reset per `variant`) */
     --forte-number-field-separator-color: var(--forte-color-border-muted);
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Background (reset per `variant`) */
     --forte-number-field-bg: var(--forte-color-background);
-    /** Border colour (reset per `variant`, by `data-invalid`, and while scrubbing) */
+    /** Border color (reset per `variant`, by `data-invalid`, and while scrubbing) */
     --forte-number-field-border-color: var(--forte-color-border);
-    /** Border colour on hover */
+    /** Border color on hover */
     --forte-number-field-border-color-hover: var(--forte-color-border-strong);
 
     box-sizing: border-box;
@@ -207,7 +207,7 @@
   }
 
   /* Validity ---------------------------------------------------------------
-   * Only the boundary moves. Recolouring the digits as well would make the
+   * Only the boundary moves. Recoloring the digits as well would make the
    * user's own answer look like the error message.
    *
    * After the variants on purpose: `[data-invalid]` and `[data-variant="soft"]`
@@ -232,15 +232,15 @@
     /** Where the digits sit. `center` because the field is flanked by two
      * steppers; `end` reads better in a table of figures */
     --forte-number-field-input-text-align: center;
-    /** Text colour */
+    /** Text color */
     --forte-number-field-input-fg: var(--forte-color-foreground);
-    /** Placeholder colour */
+    /** Placeholder color */
     --forte-number-field-input-placeholder-fg: var(--forte-color-foreground-muted);
-    /** Caret colour */
+    /** Caret color */
     --forte-number-field-input-caret-color: var(--forte-color-primary);
     /** Selection background */
     --forte-number-field-input-selection-bg: var(--forte-color-primary-soft);
-    /** Selection text colour */
+    /** Selection text color */
     --forte-number-field-input-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
@@ -348,9 +348,9 @@
   .stepper {
     /** Stepper glyph size (reset per `size`) */
     --forte-number-field-stepper-icon-size: var(--forte-font-size-3);
-    /** Stepper glyph colour */
+    /** Stepper glyph color */
     --forte-number-field-stepper-fg: var(--forte-color-foreground-muted);
-    /** Stepper glyph colour on hover */
+    /** Stepper glyph color on hover */
     --forte-number-field-stepper-fg-hover: var(--forte-color-foreground);
     /** Stepper background on hover */
     --forte-number-field-stepper-bg-hover: var(--forte-color-panel-hover);
@@ -466,7 +466,7 @@
     --forte-number-field-scrub-bg: transparent;
     /** Background of the drag surface on hover */
     --forte-number-field-scrub-bg-hover: var(--forte-color-panel-hover);
-    /** Grip colour (reset while scrubbing) */
+    /** Grip color (reset while scrubbing) */
     --forte-number-field-scrub-grip-fg: var(--forte-color-foreground-subtle);
     /** How present the grip is at rest. It has to read as an affordance
      * without competing with the label it sits beside */
@@ -509,7 +509,7 @@
     transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
-  /* On a row the root centres it, so `flex-start` (the column's "hug the
+  /* On a row the root centers it, so `flex-start` (the column's "hug the
    * label, do not stretch") would pin it to the top of a taller group. The
    * start margin still cancels the padding so the label's first letter sits on
    * the root's edge, but the END margin would eat into the gap before the
@@ -620,13 +620,13 @@
   }
 }
 
-/* Forced colours -----------------------------------------------------------
+/* Forced colors -----------------------------------------------------------
  * Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
  * The group is a <div>, not a field, so the UA assigns it nothing; and the
  * `soft` and `ghost` variants' `transparent` border is replaced with a system
- * colour of the engine's choosing rather than left invisible. Both are why the
+ * color of the engine's choosing rather than left invisible. Both are why the
  * whole box has to be restated here. */
 @layer forte.a11y {
   @media (forced-colors: active) {
@@ -638,7 +638,7 @@
 
     /* `opacity: 1` comes from the generic `[data-disabled]` remedy in
      * patterns.css, which applies at zero specificity through `:where()`; the
-     * colours it also sets would lose to the (0,1,0) rule above, so the ones
+     * colors it also sets would lose to the (0,1,0) rule above, so the ones
      * this component needs are restated. */
     .group[data-disabled] {
       background-color: Canvas;
@@ -656,7 +656,7 @@
 
     /* A real <button>, so the UA does hand it ButtonFace/ButtonText — but the
      * `transparent` background above is replaced rather than preserved, which
-     * fills the button with a colour the engine picked. */
+     * fills the button with a color the engine picked. */
     .stepper {
       background-color: ButtonFace;
       color: ButtonText;
@@ -670,7 +670,7 @@
 
     /* `opacity` is one of the few properties forced-colors does NOT override,
      * so the 0.7 resting grip would keep being 30% transparent against system
-     * colours and read as disabled chrome. */
+     * colors and read as disabled chrome. */
     .scrubGrip {
       color: CanvasText;
       opacity: 1;
@@ -685,7 +685,7 @@
       color: HighlightText;
     }
 
-    /* The halo is a theme colour, which forced-colors leaves alone — so it
+    /* The halo is a theme color, which forced-colors leaves alone — so it
      * stops contrasting with anything the moment the palette is replaced. */
     .scrubAreaCursor svg {
       fill: CanvasText;

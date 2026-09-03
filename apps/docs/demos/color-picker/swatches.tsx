@@ -4,7 +4,7 @@ import { ColorPicker } from "@forte-ui/react";
 
 /* A brand palette, in the order it is documented rather than by hue — the
  * swatch grid keeps the order it is given, which is what makes it a palette
- * and not a colour wheel. */
+ * and not a color wheel. */
 const BRAND = [
   "#0f172a",
   "#1e293b",
@@ -20,12 +20,12 @@ const BRAND = [
 export default function ColorPickerSwatches() {
   return (
     <ColorPicker.Root defaultValue="#7c3aed">
-      <ColorPicker.Trigger>Label colour</ColorPicker.Trigger>
+      <ColorPicker.Trigger>Label color</ColorPicker.Trigger>
       {/* A picker with no canvas and no rails: the palette IS the whole set of
         * choices, which is what you want wherever the answer has to stay on
         * brand. */}
       <ColorPicker.Popup>
-        <ColorPicker.Swatches colors={BRAND} columns={3} label="Brand colours" />
+        <ColorPicker.Swatches colors={BRAND} columns={3} label="Brand colors" />
       </ColorPicker.Popup>
     </ColorPicker.Root>
   );

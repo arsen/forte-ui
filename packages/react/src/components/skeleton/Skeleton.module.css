@@ -22,14 +22,14 @@
  *
  * There is no `prefers-reduced-motion` block here, and there must not be one.
  * Both animations are built so that what survives the token collapse is still
- * a "this is coming" cue rather than a dead grey box — a skeleton that stops
+ * a "this is coming" cue rather than a dead gray box — a skeleton that stops
  * animating entirely reads as content that FAILED, which is a worse message
  * than the one it replaced:
  *
  *   pulse    the dip is `calc(0.55 + 0.25 * --forte-motion-off)`, so it goes
  *            from a 45% swing to a 20% one. Shallower, never absent. There is
  *            nothing moving to collapse — it is opacity from end to end.
- *   shimmer  the travelling band's distance is gated on `--forte-motion-ok` and
+ *   shimmer  the traveling band's distance is gated on `--forte-motion-ok` and
  *            the band itself is faded out by `--forte-motion-off`; a highlight
  *            frozen mid-sweep reads as a rendering defect, not as restraint.
  *            A second animation on the root — a no-op at full motion, and
@@ -59,14 +59,14 @@
     /** The placeholder fill. */
     --forte-skeleton-color: var(--forte-color-panel-active);
     /* `light-dark()` rather than one ramp step, because "brighter" is not a
-     * direction on this scale: `--forte-gray-4` is a light grey in light mode
+     * direction on this scale: `--forte-gray-4` is a light gray in light mode
      * and a dark one in dark mode, and a shimmer that darkens is a shimmer
      * that looks broken. The two branches are each a step of lightness AWAY
      * from the fill in their own mode. It resolves against the inherited
      * `color-scheme`, which `tokens.css` sets on `:root` and on every
      * `data-theme` scope — so a demo frame flipped to dark gets the dark
      * branch even on a light page. */
-    /** Colour of the band that travels across `animation="shimmer"`. */
+    /** Color of the band that travels across `animation="shimmer"`. */
     --forte-skeleton-highlight: light-dark(var(--forte-gray-1), var(--forte-gray-7));
     /** Corner radius. `variant="text"` drops to `--forte-radius-2`, `circle` is
      * a literal circle and ignores this. */
@@ -301,7 +301,7 @@
  */
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* Forced colours remaps `background-color` to a system colour, and which
+    /* Forced colors remaps `background-color` to a system color, and which
      * one it picks is not ours to choose: the fill lands on either `Canvas`
      * (invisible) or something near `CanvasText` (a page of solid black
      * bricks). Neither is a placeholder. Paint it as `Canvas` deliberately and
@@ -316,8 +316,8 @@
       border: 1px solid GrayText;
     }
 
-    /* The band is a `background-image`, which forced colours does NOT remap —
-     * it would keep its own colour against a system-coloured page. There is
+    /* The band is a `background-image`, which forced colors does NOT remap —
+     * it would keep its own color against a system-colored page. There is
      * nothing to preserve: the outline above already says "content pending",
      * and the root's breathe keeps carrying the fact that it is pending. */
     .root[data-animation="shimmer"]::after {

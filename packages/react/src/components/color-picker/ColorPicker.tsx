@@ -22,7 +22,7 @@ import {
 export type { ColorPickerFormat, Hsva, Rgba };
 export { DEFAULT_SWATCHES };
 
-/** What moved the colour. Handed to `onValueChange` and `onValueCommitted` so
+/** What moved the color. Handed to `onValueChange` and `onValueCommitted` so
  * a consumer can tell a drag from a paste without watching the DOM. */
 export type ColorPickerChangeReason =
   | "area"
@@ -35,10 +35,10 @@ export type ColorPickerChangeReason =
   | "none";
 
 export interface ColorPickerChangeDetails {
-  /** The colour in the picker's internal model — hue survives here at zero
+  /** The color in the picker's internal model — hue survives here at zero
    * saturation, where the string cannot carry it. */
   hsva: Hsva;
-  /** The same colour as eight-bit sRGB, so a consumer never has to re-parse
+  /** The same color as eight-bit sRGB, so a consumer never has to re-parse
    * the string it was just handed. */
   rgba: Rgba;
   /** The notation `value` is written in. */
@@ -68,9 +68,9 @@ interface ColorPickerContextValue {
   rgba: Rgba;
   /** `rgb()` with alpha — every gradient stop and preview fill reads this. */
   css: string;
-  /** The same colour at full alpha, for the alpha rail's own gradient. */
+  /** The same color at full alpha, for the alpha rail's own gradient. */
   solid: string;
-  /** The colour written out in the current format; what `value` would be. */
+  /** The color written out in the current format; what `value` would be. */
   text: string;
   format: ColorPickerFormat;
   formats: readonly ColorPickerFormat[];
@@ -134,24 +134,24 @@ type PopoverRootProps = React.ComponentProps<typeof Popover.Root>;
 
 export interface ColorPickerRootProps {
   /**
-   * The selected colour, as a CSS colour string. Pass it with
+   * The selected color, as a CSS color string. Pass it with
    * `onValueChange` to control the picker.
    *
    * Accepts `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`, `oklch()`,
    * `oklab()` and `transparent`, in both the legacy comma form and the modern
    * space form. A string that cannot be read is ignored rather than throwing,
    * so a half-typed value in your own state never blanks the picker. Named
-   * colours (`rebeccapurple`) are not accepted — see the docs page.
+   * colors (`rebeccapurple`) are not accepted — see the docs page.
    */
   value?: string;
   /**
-   * The colour the picker starts on when it is uncontrolled.
+   * The color the picker starts on when it is uncontrolled.
    * @default "#000000"
    */
   defaultValue?: string;
   /**
    * Called on every change, including each frame of a drag. `value` is
-   * written in the current `format`; `details` carries the same colour as
+   * written in the current `format`; `details` carries the same color as
    * HSVA and RGBA, plus what moved it.
    */
   onValueChange?: (value: string, details: ColorPickerChangeDetails) => void;
@@ -173,7 +173,7 @@ export interface ColorPickerRootProps {
   defaultFormat?: ColorPickerFormat;
   /**
    * Called when the format changes. Switching format also re-emits the
-   * current colour through `onValueChange` with reason `"format-change"`, so
+   * current color through `onValueChange` with reason `"format-change"`, so
    * a controlled `value` never disagrees with the notation on screen.
    */
   onFormatChange?: (format: ColorPickerFormat) => void;
@@ -217,7 +217,7 @@ export interface ColorPickerRootProps {
 }
 
 /**
- * Owns the colour and the format, and renders no DOM element of its own — so
+ * Owns the color and the format, and renders no DOM element of its own — so
  * it takes neither `className` nor `ref`.
  *
  * It also renders a `Popover.Root`, which is what lets `ColorPicker.Trigger`
@@ -227,7 +227,7 @@ export interface ColorPickerRootProps {
  *
  * ```tsx
  * <ColorPicker.Root defaultValue="#7c3aed">
- *   <ColorPicker.Trigger>Brand colour</ColorPicker.Trigger>
+ *   <ColorPicker.Trigger>Brand color</ColorPicker.Trigger>
  *   <ColorPicker.Popup>
  *     <ColorPicker.Area />
  *     <ColorPicker.HueSlider />
@@ -266,17 +266,17 @@ export function ColorPickerRoot({
    *
    * It is what makes a controlled picker stable, and the reason is worth
    * stating: `hsl` and `oklch` are lossy at the precision they are printed
-   * to, so `parse(format(colour))` can land an eight-bit step away from where
+   * to, so `parse(format(color))` can land an eight-bit step away from where
    * it started. Re-parsing our own output on every render would then nudge
    * the model on every frame of a drag, and the area's thumb would crawl.
    * Comparing STRINGS instead means a `value` that came back unchanged from
-   * the consumer is recognised as ours and ignored — only a value they
+   * the consumer is recognized as ours and ignored — only a value they
    * actually changed is parsed and adopted. */
   const emittedRef = React.useRef<string | null>(null);
 
   /* The sanctioned "adjust state when a prop changes" pattern: cheaper than an
    * effect, and it lands before paint rather than after, so a controlled
-   * picker never shows one frame of the old colour. */
+   * picker never shows one frame of the old color. */
   const [previousValue, setPreviousValue] = React.useState(value);
   if (value !== previousValue) {
     setPreviousValue(value);
@@ -285,7 +285,7 @@ export function ColorPickerRoot({
       if (parsed) {
         setHsva((current) => ({
           ...parsed,
-          /* A colour string cannot say which hue a black or a grey is, so
+          /* A color string cannot say which hue a black or a gray is, so
            * `parseColor` reports 0. Adopting that would swing the hue rail to
            * red the moment a consumer set the value to `#000`, and the user
            * would have lost the hue they were working in. */
@@ -303,8 +303,8 @@ export function ColorPickerRoot({
 
   /* Every emit reads the CURRENT model out of a ref rather than the render's
    * closure. A pointer drag calls `update` many times between renders, and a
-   * closure would hand each of those the colour from the last committed
-   * paint — so a fast drag would emit stale colours and `commit` would report
+   * closure would hand each of those the color from the last committed
+   * paint — so a fast drag would emit stale colors and `commit` would report
    * the second-to-last one. */
   const stateRef = React.useRef({ hsva, format });
   stateRef.current = { hsva, format };
@@ -353,7 +353,7 @@ export function ColorPickerRoot({
       stateRef.current = { ...stateRef.current, format: next };
       if (formatProp === undefined) setUncontrolledFormat(next);
       onFormatChange?.(next);
-      /* The colour did not move, but the string that describes it did. A
+      /* The color did not move, but the string that describes it did. A
        * controlled `value` left in the old notation would be parsed back on
        * the next render and shown in the old one, so the format switch would
        * appear not to work. */
@@ -411,13 +411,13 @@ export function ColorPickerRoot({
 export interface ColorPickerTriggerProps
   extends Omit<React.ComponentPropsWithoutRef<"button">, "className" | "color"> {
   /**
-   * Hide the built-in swatch, for a trigger that shows the colour some other
+   * Hide the built-in swatch, for a trigger that shows the color some other
    * way — a filled button, an icon that inherits it.
    * @default false
    */
   hideSwatch?: boolean;
   /**
-   * The trigger's visible label. The current colour is announced after it, so
+   * The trigger's visible label. The current color is announced after it, so
    * a trigger with no children is still named.
    */
   children?: React.ReactNode;
@@ -430,11 +430,11 @@ export interface ColorPickerTriggerProps
 
 /**
  * The button that opens the picker. Renders a `<button>` showing the current
- * colour as a swatch, followed by whatever children you give it.
+ * color as a swatch, followed by whatever children you give it.
  *
- * The colour is also announced, in a visually hidden span: colour is the one
+ * The color is also announced, in a visually hidden span: color is the one
  * thing a swatch cannot convey to a screen reader, and a trigger reading only
- * "Brand colour" leaves out the entire answer.
+ * "Brand color" leaves out the entire answer.
  */
 export const ColorPickerTrigger = React.forwardRef<
   HTMLButtonElement,
@@ -455,7 +455,7 @@ export const ColorPickerTrigger = React.forwardRef<
       render={<button type="button" />}
       className={clsx(styles.trigger, className)}
       disabled={context.disabled || disabled}
-      /* The picker's live colour merged UNDER any style the caller passed, so
+      /* The picker's live color merged UNDER any style the caller passed, so
        * a consumer setting `style` on a part does not silently blank the
        * custom properties every gradient in it reads. Same everywhere below. */
       style={{ ...vars, ...style }}
@@ -639,7 +639,7 @@ export interface ColorPickerAreaProps
 }
 
 /**
- * The saturation/brightness canvas — the part that makes this a colour picker
+ * The saturation/brightness canvas — the part that makes this a color picker
  * rather than a swatch list. Renders a `<div>` with a draggable thumb and two
  * nested `<input type="range">`.
  *
@@ -652,8 +652,8 @@ export interface ColorPickerAreaProps
  * gets announced.
  *
  * The canvas does NOT mirror under RTL, and that is deliberate: it is a
- * picture of a colour space, not a line of text, and the hue that sits on the
- * left of every other colour tool in the world should not move because the
+ * picture of a color space, not a line of text, and the hue that sits on the
+ * left of every other color tool in the world should not move because the
  * surrounding paragraph runs the other way. The hue and alpha rails DO mirror,
  * because they are sliders and a slider's start follows the writing direction.
  */
@@ -667,7 +667,7 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
       style,
       /* Destructured rather than left in the rest object: the spread below
        * runs AFTER these attributes, so a consumer's `onPointerDown` would
-       * replace the one that moves the colour instead of running beside it. */
+       * replace the one that moves the color instead of running beside it. */
       onPointerDown,
       onPointerMove,
       onPointerUp,
@@ -748,7 +748,7 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
      * unchanged saturation while brightness went up is worse than saying
      * nothing. And `Shift` means ten steps on every arrow: left to the native
      * range control, the same-axis arrows would ignore it while the cross-axis
-     * ones honoured it, so the canvas would accelerate in one direction and
+     * ones honored it, so the canvas would accelerate in one direction and
      * not the other.
      *
      * Home, End, Page Up and Page Down are deliberately left to the input,
@@ -885,7 +885,7 @@ function Rail({ channel, label, className, style, rest }: RailProps) {
       disabled={disabled}
       /* The handle stays inside the rail at either end instead of hanging half
        * off it. On an ordinary slider that is cosmetic; here the rail is the
-       * only thing saying which colour is selected, and a handle centred on
+       * only thing saying which color is selected, and a handle centered on
        * the edge at hue 0 sits half over the panel with red behind only one
        * side of it. */
       thumbAlignment="edge"
@@ -967,7 +967,7 @@ export interface ColorPickerAlphaSliderProps
  * The opacity rail — 0% to 100% over a checkerboard.
  *
  * Rendering it is what turns alpha on: the picker omits alpha from every
- * format while the colour is fully opaque, so a picker without this rail emits
+ * format while the color is fully opaque, so a picker without this rail emits
  * `#7c3aed` rather than `#7c3aedff` and needs no prop to say so. A
  * `defaultValue` that already carries alpha keeps it either way.
  */
@@ -996,8 +996,8 @@ const SwatchesContext = React.createContext<SwatchesContextValue | null>(null);
 export interface ColorPickerSwatchesProps
   extends Omit<React.ComponentPropsWithoutRef<"div">, "className" | "color"> {
   /**
-   * The palette, as CSS colour strings. Anything `value` accepts works here,
-   * including translucent colours.
+   * The palette, as CSS color strings. Anything `value` accepts works here,
+   * including translucent colors.
    * @default DEFAULT_SWATCHES
    */
   colors?: readonly string[];
@@ -1009,7 +1009,7 @@ export interface ColorPickerSwatchesProps
   columns?: number;
   /**
    * Accessible name for the group.
-   * @default "Colour swatches"
+   * @default "Color swatches"
    */
   label?: string;
   /**
@@ -1020,16 +1020,16 @@ export interface ColorPickerSwatchesProps
 }
 
 /**
- * A grid of preset colours. Renders a `<div>` with `role="radiogroup"`.
+ * A grid of preset colors. Renders a `<div>` with `role="radiogroup"`.
  *
  * Radio semantics, not a row of buttons, because that is what the control
  * actually is: a set of mutually exclusive options where at most one is
  * current. It buys the whole keyboard convention with it — one tab stop for
  * the group, arrow keys between swatches, and selection following focus — so a
- * twenty-four colour palette costs a keyboard user one Tab instead of
+ * twenty-four color palette costs a keyboard user one Tab instead of
  * twenty-four.
  *
- * The colours come from `colors`; children are not read. That is what lets the
+ * The colors come from `colors`; children are not read. That is what lets the
  * group know its own order, which is what arrow keys and the single tab stop
  * are computed from. For a palette you want to build element by element, use
  * `ColorPicker.Swatch` on its own — outside a group each swatch is an
@@ -1042,7 +1042,7 @@ export const ColorPickerSwatches = React.forwardRef<
   {
     colors = DEFAULT_SWATCHES,
     columns = 8,
-    label = "Colour swatches",
+    label = "Color swatches",
     className,
     style,
     onKeyDown,
@@ -1148,11 +1148,11 @@ export const ColorPickerSwatches = React.forwardRef<
 export interface ColorPickerSwatchProps
   extends Omit<React.ComponentPropsWithoutRef<"button">, "className" | "value" | "color"> {
   /**
-   * The colour this swatch sets, as a CSS colour string.
+   * The color this swatch sets, as a CSS color string.
    */
   value: string;
   /**
-   * Accessible name. Defaults to the colour string, which is the only thing
+   * Accessible name. Defaults to the color string, which is the only thing
    * that is reliably true about it — a name of your own ("Brand primary") is
    * better wherever you have one.
    */
@@ -1165,13 +1165,13 @@ export interface ColorPickerSwatchProps
 }
 
 /**
- * One preset colour. Renders a `<button>`.
+ * One preset color. Renders a `<button>`.
  *
  * Inside `ColorPicker.Swatches` it is a radio in that group. On its own it is
  * a toggle button carrying `aria-pressed` — a lone `role="radio"` would
  * promise a group that does not exist.
  *
- * Selection is decided by comparing eight-bit colour, not strings, so a swatch
+ * Selection is decided by comparing eight-bit color, not strings, so a swatch
  * written `#f00` is still shown as current when the value reads
  * `rgb(255 0 0)`.
  */
@@ -1255,10 +1255,10 @@ export interface ColorPickerPreviewProps
 }
 
 /**
- * A chip filled with the current colour, over a checkerboard so a translucent
+ * A chip filled with the current color, over a checkerboard so a translucent
  * value is legible. Renders a `<div>`.
  *
- * Decorative: `aria-hidden`, because the colour it shows is already announced
+ * Decorative: `aria-hidden`, because the color it shows is already announced
  * by the trigger and readable in `ColorPicker.Input`, and a third announcement
  * of the same value on every drag frame is noise.
  */
@@ -1291,7 +1291,7 @@ export interface ColorPickerValueProps
 }
 
 /**
- * The current colour as text, in the current format. Renders a `<span>` in the
+ * The current color as text, in the current format. Renders a `<span>` in the
  * mono face with tabular figures, so the readout does not change width as the
  * digits change under a drag.
  */
@@ -1320,7 +1320,7 @@ export const ColorPickerValue = React.forwardRef<
 export interface ColorPickerFormatProps {
   /**
    * Accessible name for the control.
-   * @default "Colour format"
+   * @default "Color format"
    */
   label?: string;
   /**
@@ -1335,13 +1335,13 @@ export interface ColorPickerFormatProps {
  * Picks the notation the value is written in, from the `formats` allowed on
  * `ColorPicker.Root`. Composes this library's own `Select`.
  *
- * Changing it rewrites the value rather than the colour: the same colour comes
+ * Changing it rewrites the value rather than the color: the same color comes
  * back out as `#7c3aed`, `rgb(124 58 237)`, `hsl(262.1 83.3% 57.8%)` or
  * `oklch(0.5413 0.2466 293.01)` — which is also why HEX rounds and the other
  * three do not.
  */
 export function ColorPickerFormatSelect({
-  label = "Colour format",
+  label = "Color format",
   className,
 }: ColorPickerFormatProps) {
   const { format, formats, setFormat, disabled } = useColorPicker("Format");
@@ -1391,7 +1391,7 @@ export interface ColorPickerInputProps
   > {
   /**
    * Accessible name for the field.
-   * @default "Colour value"
+   * @default "Color value"
    */
   label?: string;
   /**
@@ -1402,10 +1402,10 @@ export interface ColorPickerInputProps
 }
 
 /**
- * A text field holding the colour in the current format. Renders an `<input>`.
+ * A text field holding the color in the current format. Renders an `<input>`.
  *
  * It is the picker's precision instrument and its paste target — and, for
- * anyone who cannot use a canvas at all, the route to an exact colour that the
+ * anyone who cannot use a canvas at all, the route to an exact color that the
  * canvas is not.
  *
  * While it has focus the field keeps the text the user is typing, not the
@@ -1414,13 +1414,13 @@ export interface ColorPickerInputProps
  * parses is applied immediately, so the panel previews as you type; one that
  * does not is left alone and marked `data-invalid`. Blur restores the
  * canonical text, so an abandoned edit cannot leave the field disagreeing with
- * the colour.
+ * the color.
  */
 export const ColorPickerInput = React.forwardRef<
   HTMLInputElement,
   ColorPickerInputProps
 >(function ColorPickerInput(
-  { label = "Colour value", className, onKeyDown, onBlur, ...props },
+  { label = "Color value", className, onKeyDown, onBlur, ...props },
   ref,
 ) {
   const { text, disabled, update, commit } = useColorPicker("Input");
@@ -1431,7 +1431,7 @@ export const ColorPickerInput = React.forwardRef<
     <input
       ref={ref}
       type="text"
-      /* Off, all of it: a colour string is not a word, and a keyboard that
+      /* Off, all of it: a color string is not a word, and a keyboard that
         * capitalises the first letter turns `#ff0000` into something the
         * parser rejects on the way in. */
       spellCheck={false}
@@ -1492,7 +1492,7 @@ export interface ColorPickerEyeDropperProps
   extends Omit<React.ComponentPropsWithoutRef<"button">, "className"> {
   /**
    * Accessible name for the button.
-   * @default "Pick a colour from the screen"
+   * @default "Pick a color from the screen"
    */
   label?: string;
   /**
@@ -1503,11 +1503,11 @@ export interface ColorPickerEyeDropperProps
 }
 
 /**
- * Samples a colour from anywhere on the screen, through the browser's
+ * Samples a color from anywhere on the screen, through the browser's
  * EyeDropper API. Renders a `<button>` — or nothing at all where the API is
  * missing, which today is Firefox and every browser on iOS.
  *
- * Rendering nothing is the point: this is a shortcut to a colour the rest of
+ * Rendering nothing is the point: this is a shortcut to a color the rest of
  * the picker can already reach, so its absence costs a user nothing, while a
  * button that opens no eyedropper costs them a click and their confidence in
  * the rest of the panel. The detection runs in an effect rather than during
@@ -1518,7 +1518,7 @@ export const ColorPickerEyeDropper = React.forwardRef<
   HTMLButtonElement,
   ColorPickerEyeDropperProps
 >(function ColorPickerEyeDropper(
-  { label = "Pick a colour from the screen", disabled: disabledProp, className, onClick, ...props },
+  { label = "Pick a color from the screen", disabled: disabledProp, className, onClick, ...props },
   ref,
 ) {
   const { disabled, update, commit } = useColorPicker("EyeDropper");
@@ -1539,7 +1539,7 @@ export const ColorPickerEyeDropper = React.forwardRef<
       const parsed = parseColor(sRGBHex);
       if (parsed) {
         /* The API reports no alpha, so the current one is kept rather than
-          * reset — sampling a colour should not also clear a transparency the
+          * reset — sampling a color should not also clear a transparency the
           * user set on purpose. */
         update({ h: parsed.h, s: parsed.s, v: parsed.v }, "eye-dropper");
         commit("eye-dropper");
@@ -1585,13 +1585,13 @@ export const ColorPickerEyeDropper = React.forwardRef<
 export interface ColorPickerHiddenInputProps
   extends Omit<React.ComponentPropsWithoutRef<"input">, "type" | "value" | "onChange"> {
   /**
-   * The field name the colour is submitted under.
+   * The field name the color is submitted under.
    */
   name: string;
 }
 
 /**
- * Submits the colour with a form. Renders `<input type="hidden">`.
+ * Submits the color with a form. Renders `<input type="hidden">`.
  *
  * Place it next to `ColorPicker.Trigger`, NOT inside `ColorPicker.Popup`. The
  * popup is portalled to `<body>` and unmounted while it is closed, so a hidden
@@ -1622,18 +1622,18 @@ export const ColorPickerHiddenInput = React.forwardRef<
  * ---------------------------------------------------------------------- */
 
 /**
- * A colour picker: a saturation/brightness canvas, hue and opacity rails, a
+ * A color picker: a saturation/brightness canvas, hue and opacity rails, a
  * preset palette, an eyedropper and a text field that reads and writes four
  * CSS notations.
  *
- * Base UI has no colour-picker primitive, so this one is built here — on
+ * Base UI has no color-picker primitive, so this one is built here — on
  * `Popover` for the anchored surface and on Base UI's `Slider` for the two
  * rails, which is where the keyboard, the pointer capture and the RTL flip
  * come from.
  *
  * ```tsx
  * <ColorPicker.Root defaultValue="#7c3aed">
- *   <ColorPicker.Trigger>Brand colour</ColorPicker.Trigger>
+ *   <ColorPicker.Trigger>Brand color</ColorPicker.Trigger>
  *   <ColorPicker.Popup>
  *     <ColorPicker.Area />
  *     <ColorPicker.HueSlider />
@@ -1656,7 +1656,7 @@ export const ColorPickerHiddenInput = React.forwardRef<
  * properties, so it can be re-skinned from plain CSS or targeted with Tailwind
  * arbitrary variants (`data-[selected]:...`) without wrapping.
  *
- * @summary Full colour selection — saturation/brightness canvas, hue and alpha
+ * @summary Full color selection — saturation/brightness canvas, hue and alpha
  *   rails, preset swatches, and a text field that speaks four CSS notations.
  * @category Forms
  */

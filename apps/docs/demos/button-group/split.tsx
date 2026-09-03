@@ -10,9 +10,9 @@ export default function ButtonGroupSplit() {
   return (
     <ButtonGroup.Root
       aria-label="Merge"
-      // The separator's default colour is tuned against the page background;
+      // The separator's default color is tuned against the page background;
       // between two solid fills it needs re-pointing at the fill's own text
-      // colour. A component knob, so it goes in a `style` object — a utility
+      // color. A component knob, so it goes in a `style` object — a utility
       // class cannot set an arbitrary custom property.
       style={
         {

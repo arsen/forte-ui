@@ -5,10 +5,10 @@
  * ways an empty box misbehaves, both of which have a fix here.
  *
  * The line is painted with a BORDER, never `background-color`. Under
- * forced-colors a background is replaced with a system colour — for a plain
+ * forced-colors a background is replaced with a system color — for a plain
  * box that is `Canvas`, the page's own backdrop — so a hairline drawn that way
  * vanishes for exactly the users who most need the grouping cue. Border
- * colours are forced to `CanvasText` instead, so the rule survives and this
+ * colors are forced to `CanvasText` instead, so the rule survives and this
  * file needs no `@media (forced-colors: active)` block at all.
  *
  * The other half is flex. A separator has no content, so its size along both
@@ -37,7 +37,7 @@
      * beats `@layer forte.components` at any specificity) or an inline
      * `style`; to move every rule at once, re-point the global tokens on the
      * right-hand side, which this file only reads and never re-declares. */
-    /** Line colour */
+    /** Line color */
     --forte-separator-color: var(--forte-color-border-muted);
     /** Line thickness */
     --forte-separator-thickness: 1px;
@@ -82,7 +82,7 @@
 
     /* No transition anywhere in this file on purpose. A separator has no
      * states — no hover, no focus, no open/closed — so there is nothing to
-     * animate, and adding a colour transition would only make a theme switch
+     * animate, and adding a color transition would only make a theme switch
      * lag behind the rest of the page. */
   }
 
@@ -115,7 +115,7 @@
     inline-size: 0;
     block-size: auto;
     min-block-size: var(--forte-separator-min-length);
-    /* Centres the rule on the text baseline's line box when it IS inline.
+    /* Centers the rule on the text baseline's line box when it IS inline.
      * Without it the default `baseline` alignment sits an empty box's bottom
      * edge on the baseline, so the rule hangs above the text it divides. */
     vertical-align: middle;

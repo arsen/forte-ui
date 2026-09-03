@@ -137,7 +137,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <th className={cn(TABLE_HEAD, "whitespace-nowrap", className)} {...props} />
     ),
     /* The descendant variants beat the `code` mapping above on specificity, so
-     * a code span in a table cell drops to the smaller, coloured form rather
+     * a code span in a table cell drops to the smaller, colored form rather
      * than carrying the inline chip's own size. */
     td: ({ className, ...props }: El<"td">) => (
       <td

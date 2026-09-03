@@ -12,7 +12,7 @@ const RELEASES = [
   ["4.0.3", "Disabled controls paint GrayText under forced colors."],
   ["4.0.2", "Dialog exit transitions can be interrupted."],
   ["4.0.1", "Contrast harness widened to 119,108 seeds."],
-  ["4.0.0", "Every colour now derives from one seed."],
+  ["4.0.0", "Every color now derives from one seed."],
 ];
 
 export default function ScrollAreaBasic() {

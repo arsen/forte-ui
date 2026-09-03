@@ -56,7 +56,7 @@ function findPages(dir, segments = []) {
     } else if (entry === "page.mdx") {
       // Keyed WITH the trailing slash, because that is what the rail looks up
       // with. `trailingSlash: true` in next.config makes every URL end in one,
-      // the app router does not normalise `usePathname()` against that setting,
+      // the app router does not normalize `usePathname()` against that setting,
       // and a key that disagrees by one character just misses — silently, since
       // the rail then falls back to reading the DOM a frame after hydration.
       const route = segments.length ? `/${segments.join("/")}/` : "/";

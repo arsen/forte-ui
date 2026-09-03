@@ -5,7 +5,7 @@
  *   data-size      inline padding, block padding and font size (sm/md/lg)
  *   data-variant   how much weight the control carries (outline/soft/ghost)
  *
- * The colour slots and the metrics are Input's, read from the same
+ * The color slots and the metrics are Input's, read from the same
  * `--forte-control-*` tokens, so a textarea stacked under an input in a form
  * shares its boundary, its optical inset and its invalid state at every
  * density. That alignment is the reason not to invent a private scale here.
@@ -23,7 +23,7 @@
  * `data-dirty`, `data-touched`, `data-filled`, `data-focused`,
  * `data-disabled` — with or without a `Field.Root` above it. Only
  * `data-invalid` is styled, for Input's reason: the rest describe where the
- * user is in the interaction, and recolouring a control the moment it is
+ * user is in the interaction, and recoloring a control the moment it is
  * merely *touched* is noise.
  */
 @layer forte.components {
@@ -67,7 +67,7 @@
      * its top and bottom rows sliced off mid-glyph.
      *
      * The cap is half the height of a ONE-ROW box — the tallest corner that
-     * still puts the first line's centre on the widest part of the arc, which
+     * still puts the first line's center on the widest part of the arc, which
      * is exactly where an Input's text sits. So a pill textarea comes out as
      * round as it can be without losing a row, and derives itself at every
      * size and density from the same `1lh` the row bounds use.
@@ -89,24 +89,24 @@
     /** Border width */
     --forte-textarea-border-width: 1px;
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Background (reset per `variant`) */
     --forte-textarea-bg: var(--forte-color-background);
     /** Background on hover */
     --forte-textarea-bg-hover: var(--forte-color-panel-hover);
-    /** Text colour */
+    /** Text color */
     --forte-textarea-fg: var(--forte-color-foreground);
-    /** Placeholder colour */
+    /** Placeholder color */
     --forte-textarea-placeholder-fg: var(--forte-color-foreground-muted);
-    /** Border colour (reset per `variant`, and by `data-invalid`) */
+    /** Border color (reset per `variant`, and by `data-invalid`) */
     --forte-textarea-border-color: var(--forte-color-border);
-    /** Border colour on hover */
+    /** Border color on hover */
     --forte-textarea-border-color-hover: var(--forte-color-border-strong);
-    /** Caret colour */
+    /** Caret color */
     --forte-textarea-caret-color: var(--forte-color-primary);
     /** Selection background */
     --forte-textarea-selection-bg: var(--forte-color-primary-soft);
-    /** Selection text colour */
+    /** Selection text color */
     --forte-textarea-selection-fg: var(--forte-color-primary-text);
 
     box-sizing: border-box;
@@ -266,7 +266,7 @@
   }
 
   /* Validity -------------------------------------------------------------- */
-  /* Only the boundary and the caret change. Recolouring the value text as well
+  /* Only the boundary and the caret change. Recoloring the value text as well
    * would make the user's own answer look like the error message — and on a
    * textarea that is a whole paragraph of it.
    *
@@ -281,13 +281,13 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 /* Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
- * This really is a native <textarea>, so the UA does assign it system colours.
+ * This really is a native <textarea>, so the UA does assign it system colors.
  * What it does not do is undo the `soft`/`ghost` variants' `transparent`
- * border, which forced-colors resolves to a system colour of its own choosing
+ * border, which forced-colors resolves to a system color of its own choosing
  * rather than to the field boundary. Restating the pair here keeps every
  * variant looking like the same control. */
 @layer forte.a11y {
@@ -300,7 +300,7 @@
 
     /* `opacity: 1` comes from the generic `[data-disabled]` remedy in
      * patterns.css, which applies at zero specificity through `:where()`; the
-     * colours it also sets would lose to the (0,1,0) rule above, so the ones
+     * colors it also sets would lose to the (0,1,0) rule above, so the ones
      * this component needs are restated. */
     .root[data-disabled] {
       background-color: Canvas;

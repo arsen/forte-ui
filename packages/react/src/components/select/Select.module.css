@@ -21,7 +21,7 @@
  *      from.
  *
  *   2. Enter/exit is transitions on [data-starting-style]/[data-ending-style],
- *      never keyframes. A transition can be cancelled mid-flight, so reopening
+ *      never keyframes. A transition can be canceled mid-flight, so reopening
  *      while closing reverses instead of snapping. There is also no `infinite`
  *      animation anywhere on the Popup or Positioner elements: Base UI awaits
  *      getAnimations() on those exact elements to decide when to unmount, and
@@ -52,7 +52,7 @@
    * Renders a <div>, not a <label>; Base UI wires it to the trigger with
    * aria-labelledby, so clicking it focuses the trigger without opening. */
   .label {
-    /** Label text colour */
+    /** Label text color */
     --forte-select-label-fg: var(--forte-color-foreground);
     /** Label font size */
     --forte-select-label-font-size: var(--forte-font-size-2);
@@ -97,16 +97,16 @@
     /** Trigger border width */
     --forte-select-trigger-border-width: 1px;
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Trigger background (reset per `variant`) */
     --forte-select-trigger-bg: var(--forte-color-background);
     /** Trigger background on hover */
     --forte-select-trigger-bg-hover: var(--forte-color-panel-hover);
     /** Trigger background while pressed or open */
     --forte-select-trigger-bg-active: var(--forte-color-panel-active);
-    /** Trigger text colour */
+    /** Trigger text color */
     --forte-select-trigger-fg: var(--forte-color-foreground);
-    /** Trigger border colour (reset per `variant`) */
+    /** Trigger border color (reset per `variant`) */
     --forte-select-trigger-border-color: var(--forte-color-border);
 
     box-sizing: border-box;
@@ -177,7 +177,7 @@
     cursor: default;
   }
 
-  /* Only the boundary changes. Recolouring the value text as well would make
+  /* Only the boundary changes. Recoloring the value text as well would make
    * the user's own answer look like the error message. */
   .trigger[data-invalid] {
     --forte-select-trigger-border-color: var(--forte-color-danger-border);
@@ -259,7 +259,7 @@
   /* The two carets of the default icon spread apart while the popup is open,
    * which is the one bit of the trigger that reads as "expanded" from across
    * the page. Only the built-in icon carries these classes — a caller's own
-   * icon is left alone, and only inherits the colour change above.
+   * icon is left alone, and only inherits the color change above.
    *
    * `transform` rather than the `translate` property: this is an SVG child,
    * and the shorthand has the wider baseline there. Half of `--forte-travel-xs`
@@ -323,9 +323,9 @@
   /* Popup ------------------------------------------------------------------ */
   .popup {
     /* Surface knobs. */
-    /** Popup surface colour */
+    /** Popup surface color */
     --forte-select-popup-bg: var(--forte-color-overlay);
-    /** Popup text colour */
+    /** Popup text color */
     --forte-select-popup-fg: var(--forte-color-foreground);
     /** Popup corner radius */
     --forte-select-popup-radius: var(--forte-radius-surface);
@@ -338,7 +338,7 @@
      * painting it costs no layout. */
     /** Width of the hairline that separates the popup from the page */
     --forte-select-popup-border-width: 1px;
-    /** Colour of that hairline */
+    /** Color of that hairline */
     --forte-select-popup-border-color: var(--forte-color-border);
     /* Extra width claimed in alignItemWithTrigger mode, so the item text can
      * sit over the trigger's value text while the check indicator and the
@@ -414,7 +414,7 @@
     background-clip: padding-box;
     color: var(--forte-select-popup-fg);
     box-shadow: var(--forte-select-popup-shadow);
-    /* Grow out of the anchor rather than out of the popup's own centre.
+    /* Grow out of the anchor rather than out of the popup's own center.
      * `--transform-origin` is published by the Positioner and points back at
      * the trigger — and in aligned mode Base UI re-points it at the selected
      * item's text, which is what makes the unfurl below work. */
@@ -674,13 +674,13 @@
    * `[data-highlighted]` (fill) at once. Pointer hover sets the same
    * attribute, which is why there is no separate `:hover` rule. */
   .item {
-    /** Item text colour */
+    /** Item text color */
     --forte-select-item-fg: var(--forte-color-foreground);
     /** Background of the highlighted item */
     --forte-select-item-bg-highlighted: var(--forte-color-primary-soft);
-    /** Text colour of the highlighted item */
+    /** Text color of the highlighted item */
     --forte-select-item-fg-highlighted: var(--forte-color-primary-text);
-    /** Text colour of the selected item */
+    /** Text color of the selected item */
     --forte-select-item-fg-selected: var(--forte-color-primary-text);
     /** Item font size */
     --forte-select-item-font-size: var(--forte-font-size-2);
@@ -779,9 +779,9 @@
 
   /* Separator --------------------------------------------------------------
    * The line is a BORDER, not a `background-color`. Under forced-colors a
-   * background is replaced with a system colour — for a plain box that is
+   * background is replaced with a system color — for a plain box that is
    * `Canvas`, the page's own backdrop — so a hairline drawn that way vanishes
-   * for exactly the users who most need the grouping cue. Border colours are
+   * for exactly the users who most need the grouping cue. Border colors are
    * forced to `CanvasText` instead, so the rule survives on its own and needs
    * no entry in the forced-colors block at the bottom of this file.
    *
@@ -826,7 +826,7 @@
  * default. Do not restate either of those here.
  *
  * What is left is select-specific: a DESCENDANT that declares its own author
- * colour does not inherit the trigger's GrayText — its own declaration wins
+ * color does not inherit the trigger's GrayText — its own declaration wins
  * and is then forced to CanvasText, i.e. full contrast, i.e. it reads as
  * enabled. The trigger's icon and its placeholder are exactly that case.
  * ------------------------------------------------------------------------ */

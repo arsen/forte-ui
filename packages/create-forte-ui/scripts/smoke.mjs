@@ -25,7 +25,7 @@ const reactPkg = path.resolve(pkgRoot, "../react");
 
 const MATRIX = {
   "vite-tw": ["--framework", "vite", "--seed", "#e11d48", "--radius", "pill", "--font-sans", "Inter"],
-  /* The two plain paths pin a colour scheme, so the toggle-less variant of
+  /* The two plain paths pin a color scheme, so the toggle-less variant of
    * each framework's starter builds too; the Tailwind paths keep the toggle. */
   "vite-plain": ["--framework", "vite", "--no-tailwind", "--seed", "#0e7490", "--scheme", "light"],
   "next-tw": ["--framework", "next", "--seed", "#6d43d4", "--font-sans", "Poppins", "--motion", "reduce"],

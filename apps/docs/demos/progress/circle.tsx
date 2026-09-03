@@ -12,7 +12,7 @@ export default function ProgressCircleBasic() {
   return (
     <div className="flex flex-wrap gap-7">
       {RINGS.map(({ value, tone, label }) => (
-        // Track and Value share one grid cell, which is what centres the
+        // Track and Value share one grid cell, which is what centers the
         // readout inside the ring; Label is placed into a second row that only
         // exists because it is rendered.
         <ProgressCircle.Root key={label} value={value} tone={tone}>

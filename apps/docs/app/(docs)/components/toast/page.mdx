@@ -199,7 +199,7 @@ It has everything `useToast()` has except `toasts` — a plain object has nothin
   { keys: ["Esc"], description: "Closes the focused toast." },
 ]} />
 
-The viewport is a polite live region, so a toast is announced when it appears without interrupting whatever the screen reader was saying. Each toast is a `dialog` labelled by its `Toast.Title` and described by its `Toast.Description` — which is why a bare message becomes the title rather than the description.
+The viewport is a polite live region, so a toast is announced when it appears without interrupting whatever the screen reader was saying. Each toast is a `dialog` labeled by its `Toast.Title` and described by its `Toast.Description` — which is why a bare message becomes the title rather than the description.
 
 `priority: "high"` promotes one toast to an assertive announcement and an `alertdialog`. Reserve it for something that has to be heard now; a routine confirmation announced assertively cuts off whatever the user was reading.
 
@@ -211,7 +211,7 @@ Nothing that matters should exist **only** in a toast. It is announced once, it 
 Timers pause on hover, on focus, and while the window is in the background, but they still run. Anything with a deadline that a slow reader would miss needs a permanent home as well (WCAG SC 2.2.1). Setting `timeout={0}` on the provider turns the timer off entirely and is a reasonable default for an app whose messages are all consequential.
 </Callout>
 
-The four status glyphs are four distinct **shapes** — a tick, a cross, a triangle, an "i" — and not four colourings of one dot. Colour alone would carry no information for a colour-blind reader, and none at all in forced-colors mode, where every glyph repaints in one system colour (WCAG SC 1.4.1). The text carries the meaning in any case; the glyph is `aria-hidden`.
+The four status glyphs are four distinct **shapes** — a tick, a cross, a triangle, an "i" — and not four colorings of one dot. Color alone would carry no information for a color-blind reader, and none at all in forced-colors mode, where every glyph repaints in one system color (WCAG SC 1.4.1). The text carries the meaning in any case; the glyph is `aria-hidden`.
 
 `Toast.Close` is hidden from assistive technology while the deck is collapsed and revealed once the stack is hovered or focused, so it is announced exactly when it is reachable. Moving focus into the stack expands it, which is what makes that work for a keyboard user.
 
@@ -223,9 +223,9 @@ Set the viewport's through `className` on `Toast.Provider` (which forwards it to
 
 The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every toast.
 
-`--forte-toast-border` is the hairline around the card, and it is the one place a toast parts company with the library's other floating surfaces, which rely on a shadow and nothing else. A dialog has a scrim behind it and a select popup visibly grew out of its trigger; a toast arrives unannounced over whatever the page happens to be showing, and `--forte-color-overlay` is the same value as `--forte-color-background`. It matters twice over for the deck, whose cards behind the front one show as ~12px strips of exactly that colour — without an edge the stack reads as one card rather than three.
+`--forte-toast-border` is the hairline around the card, and it is the one place a toast parts company with the library's other floating surfaces, which rely on a shadow and nothing else. A dialog has a scrim behind it and a select popup visibly grew out of its trigger; a toast arrives unannounced over whatever the page happens to be showing, and `--forte-color-overlay` is the same value as `--forte-color-background`. It matters twice over for the deck, whose cards behind the front one show as ~12px strips of exactly that color — without an edge the stack reads as one card rather than three.
 
-The card stays neutral in all five types, and only the glyph is coloured. Tinting five surfaces would need five new soft tokens and would still leave the type carried by colour alone; the glyph shapes and the text do that job instead. `--forte-toast-accent` is the one knob to re-point if you want a type to read louder — or set `--forte-toast-bg` under a `[data-type=...]` selector of your own.
+The card stays neutral in all five types, and only the glyph is colored. Tinting five surfaces would need five new soft tokens and would still leave the type carried by color alone; the glyph shapes and the text do that job instead. `--forte-toast-accent` is the one knob to re-point if you want a type to read louder — or set `--forte-toast-bg` under a `[data-type=...]` selector of your own.
 
 <ThemingTable component="Toast" />
 

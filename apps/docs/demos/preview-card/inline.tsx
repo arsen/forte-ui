@@ -5,7 +5,7 @@ import { PreviewCard } from "@forte-ui/react";
 /**
  * A link long enough to wrap. Narrow the frame until it breaks across two
  * lines, then hover each line in turn: the card follows the line the pointer
- * is on rather than centring itself over the whole two-line block.
+ * is on rather than centering itself over the whole two-line block.
  */
 export default function PreviewCardInline() {
   return (
@@ -22,7 +22,7 @@ export default function PreviewCardInline() {
             <span className="text-1 text-foreground-muted">base-ui.com</span>
           </div>
           <p className="text-2 text-foreground-muted">
-            Unstyled React components with the accessibility behaviour already
+            Unstyled React components with the accessibility behavior already
             wired up.
           </p>
         </PreviewCard.Popup>

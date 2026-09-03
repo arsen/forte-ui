@@ -52,7 +52,7 @@ import {
  * lives in `theme-config.ts`, shared across mounts, so the two never
  * disagree about what the current theme is. */
 
-/* The same twenty colours again, as the two flat lists `ColorPicker.Swatches`
+/* The same twenty colors again, as the two flat lists `ColorPicker.Swatches`
  * wants. Built from the shared PRESETS rather than written out, so the
  * picker's palette cannot drift from the preset grid below. */
 const PRESET_SEEDS = PRESETS.map((p) => p.seed);
@@ -66,14 +66,14 @@ const GROUP = "grid gap-2";
 const GROUP_TITLE = cn(EYEBROW, "m-0 flex items-baseline justify-between");
 
 /* A secondary note, and the slider's own readout — which is why it sets a size
- * rather than only a colour: `Slider.Value` comes in at `text-2` and has to
+ * rather than only a color: `Slider.Value` comes in at `text-2` and has to
  * come down to match the eyebrow it shares a row with. */
 const HINT = "m-0 text-1 text-foreground-muted";
 
 /* The swatch IS the information here, so it opts out of forced-colors
  * substitution and supplies its own boundary. `border-[color:...]` rather than
  * plain brackets: `CanvasText` is a bare keyword, and Tailwind would otherwise
- * have to guess whether it is a colour or a width. */
+ * have to guess whether it is a color or a width. */
 const PRESET_SWATCH = [
   "size-[1.1rem] flex-none rounded-(--forte-radius-full)",
   "bg-[linear-gradient(135deg,var(--swatch)_50%,var(--swatch2)_50%)]",
@@ -105,8 +105,8 @@ const PRESET_SWATCH = [
  * far end of the scale in both modes, near-white on light and near-black on
  * dark, which is the one pairing that reads the same way in each. The accent
  * is not lost with it: `--forte-tabs-tab-color-active` already puts the active
- * label in `--forte-color-primary-text`, so the colour lands on the word instead
- * of the box behind it. Under forced colours none of this applies — the a11y
+ * label in `--forte-color-primary-text`, so the color lands on the word instead
+ * of the box behind it. Under forced colors none of this applies — the a11y
  * block paints the indicator `Highlight` outright.
  *
  * The rest is fit. The narrowest column this panel ships in is the studio's
@@ -126,7 +126,7 @@ const TAB_VARS = {
 /* The lift. A neutral thumb needs an edge the tinted default did not, and
  * there is no `--forte-tabs-indicator-shadow` knob to set — but the Indicator
  * takes a `className`, and the utilities layer beats the component's own.
- * Dropped under forced colours anyway, where box-shadow is forced to `none`. */
+ * Dropped under forced colors anyway, where box-shadow is forced to `none`. */
 const TAB_INDICATOR = "shadow-1";
 
 /* `flex-1 min-w-0` rather than the strip's own `flex: 0 0 auto`: these are
@@ -177,14 +177,14 @@ export function ThemeConfigurator({ className }: { className?: string }) {
   const set = <K extends keyof ThemeConfig>(k: K, v: ThemeConfig[K]) =>
     setThemeConfig({ ...cfg, [k]: v });
 
-  // Matched on both colours, because a preset sets both: change the secondary
+  // Matched on both colors, because a preset sets both: change the secondary
   // by hand and the preset it came from is no longer what is on screen.
   const preset = PRESETS.find((p) => p.seed === cfg.seed && p.secondary === cfg.secondary);
 
   const seedO = hexToOklch(cfg.seed);
   const warnings = seedO
     ? validateSeed(seedO)
-    : [{ level: "warn" as const, message: "Not a valid hex colour." }];
+    : [{ level: "warn" as const, message: "Not a valid hex color." }];
   const on = seedO ? bestOnColor(seedO) : null;
 
   // Contrast of the low-contrast text step against the app background, which
@@ -221,11 +221,11 @@ export function ThemeConfigurator({ className }: { className?: string }) {
           * toggle group moves focus and waits for Enter or Space.
           *
           * It also allows "nothing pressed", which is a state this control
-          * genuinely has — edit either colour by hand and no preset is
+          * genuinely has — edit either color by hand and no preset is
           * current any more. A radio group has no way to express that. */}
         <ToggleGroup
           className="grid w-full grid-cols-2 gap-1"
-          aria-label="Colour presets"
+          aria-label="Color presets"
           value={preset ? [preset.name] : []}
           onValueChange={(names) => {
             // Pressing the pressed toggle empties the group. There is no
@@ -239,7 +239,7 @@ export function ThemeConfigurator({ className }: { className?: string }) {
               key={p.name}
               value={p.name}
               size="sm"
-              // The toggle centres its content; a grid of them wants the
+              // The toggle centers its content; a grid of them wants the
               // swatches lined up down the column instead.
               className="justify-start"
               style={{ "--swatch": p.seed, "--swatch2": p.secondary } as React.CSSProperties}
@@ -252,7 +252,7 @@ export function ThemeConfigurator({ className }: { className?: string }) {
       </section>
 
       <section className={GROUP}>
-        <h3 className={GROUP_TITLE}>Brand colours</h3>
+        <h3 className={GROUP_TITLE}>Brand colors</h3>
         <ColorField
           label="Primary"
           value={cfg.seed}
@@ -278,7 +278,7 @@ export function ThemeConfigurator({ className }: { className?: string }) {
           // The default 16rem would stop short of the panel's edge. This is
           // the knob the component documents for exactly that.
           style={{ "--forte-slider-length": "100%" } as React.CSSProperties}
-          /* A full-length track plus a centre-aligned thumb means the thumb
+          /* A full-length track plus a center-aligned thumb means the thumb
            * overhangs the control by half its width at either end — fine in
            * the studio's padded panel, sliced off in the drawer, where the
            * clipping edge is `Drawer.Content`'s scroll container. `edge`
@@ -308,7 +308,7 @@ export function ThemeConfigurator({ className }: { className?: string }) {
             </Slider.Track>
           </Slider.Control>
         </Slider.Root>
-        <p className={HINT}>How much of the brand hue bleeds into the greys. 0 is pure neutral.</p>
+        <p className={HINT}>How much of the brand hue bleeds into the grays. 0 is pure neutral.</p>
       </section>
 
       <Choice label="Radius" options={RADIUS} value={cfg.radius} onChange={(v) => set("radius", v)} />
@@ -574,7 +574,7 @@ function ColorField({
         {/* The trigger carries the label, so there is no separate <label> to
           * pair with it, and the swatch it draws is the value. The hex sits
           * beside the button rather than inside it: the trigger already
-          * announces the colour in a visually hidden span, and a second copy
+          * announces the color in a visually hidden span, and a second copy
           * within the button would land in its accessible name twice. */}
         <ColorPicker.Trigger className="justify-start">{label}</ColorPicker.Trigger>
         <ColorPicker.Value />
@@ -583,7 +583,7 @@ function ColorField({
         <ColorPicker.Area />
         <ColorPicker.HueSlider />
         {/* The preset palette again, so the preset themes are reachable one
-          * colour at a time — which is the whole point of opening this popup
+          * color at a time — which is the whole point of opening this popup
           * on a panel that already has a preset grid. */}
         <ColorPicker.Swatches colors={swatches} label={`${label} presets`} />
         <ColorPicker.Row>
@@ -696,7 +696,7 @@ function Appearance({ scheme, onChange }: { scheme: Scheme; onChange: (v: Scheme
     <section className={GROUP}>
       <h3 className={GROUP_TITLE}>Appearance</h3>
       <Segmented
-        label="Colour scheme"
+        label="Color scheme"
         options={SCHEME}
         value={scheme}
         onChange={onChange}

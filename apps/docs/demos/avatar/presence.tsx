@@ -24,7 +24,7 @@ export default function AvatarPresence() {
           </Avatar.Root>
           <div className="grid">
             <span className="text-2 font-medium">{person.name}</span>
-            {/* The status is text, not a colour: SC 1.4.1. */}
+            {/* The status is text, not a color: SC 1.4.1. */}
             <span className="text-1 text-foreground-muted">{person.status}</span>
           </div>
         </div>

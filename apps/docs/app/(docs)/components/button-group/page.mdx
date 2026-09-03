@@ -21,7 +21,7 @@ neighbours, outer corners kept. Renders a `<div role="group">`.
 The children stay ordinary components. A [`Button`](/components/button/) keeps
 every variant, tone and size; an [`Input`](/components/input/) keeps its props;
 the group never reaches past their shared edge. And it is purely visual and
-semantic — there is no keyboard behaviour, so every control keeps its own tab
+semantic — there is no keyboard behavior, so every control keeps its own tab
 stop. When the set should cost one Tab press instead, reach for
 [`Toolbar`](/components/toolbar/).
 
@@ -69,9 +69,9 @@ children the seam is transparent, the group reads as one unbroken slab, and
 ### Split button
 
 The commonest fused pair: the action, and a menu of its variations. The
-separator's default colour is tuned against the page background, so between two
+separator's default color is tuned against the page background, so between two
 `solid` fills re-point `--forte-button-group-separator-color` towards the fill's
-own text colour, as the demo does.
+own text color, as the demo does.
 
 <DemoBlock id="button-group/split" />
 
@@ -149,8 +149,8 @@ pixel belongs to a child.
 <ThemingTable component="ButtonGroup" part="separator" />
 
 The line is painted with a **border**, never a `background-color`. A background
-is replaced with a system colour under forced colours, so a hairline drawn that
-way vanishes for exactly the users who most need the boundary; border colours
+is replaced with a system color under forced colors, so a hairline drawn that
+way vanishes for exactly the users who most need the boundary; border colors
 are forced to `CanvasText` and survive.
 
 ### Text

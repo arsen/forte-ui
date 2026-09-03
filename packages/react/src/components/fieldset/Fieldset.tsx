@@ -14,7 +14,7 @@ type BaseRootProps = React.ComponentPropsWithoutRef<typeof BaseFieldset.Root>;
 export interface FieldsetRootProps extends Omit<BaseRootProps, "className"> {
   /**
    * Disables every control inside the fieldset. This is the native
-   * `<fieldset disabled>` behaviour, so it reaches controls the library knows
+   * `<fieldset disabled>` behavior, so it reaches controls the library knows
    * nothing about too.
    * @default false
    */

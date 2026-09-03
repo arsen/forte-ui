@@ -4,7 +4,7 @@
  * The same Base UI primitive as the bar, drawn as two concentric strokes on a
  * `0 0 100 100` viewBox. Three decisions carry the whole file:
  *
- * 1. `pathLength="100"` on the arc renormalises its circumference to 100
+ * 1. `pathLength="100"` on the arc renormalizes its circumference to 100
  *    units, so `stroke-dashoffset: calc(100 - <percent>)` is the value and
  *    nobody has to compute 2πr — including when the thickness below changes
  *    the radius out from under it.
@@ -63,11 +63,11 @@
     --forte-progress-circle-rail: var(--forte-color-border-muted);
     /** The arc itself. Swapped per `tone`. */
     --forte-progress-circle-color: var(--forte-color-primary);
-    /** Colour of the centred readout. */
+    /** Color of the centered readout. */
     --forte-progress-circle-value-color: var(--forte-color-foreground);
     /** Font size of the readout. Retuned by `size`. */
     --forte-progress-circle-value-size: var(--forte-font-size-2);
-    /** Colour of the label under the ring. */
+    /** Color of the label under the ring. */
     --forte-progress-circle-label-color: var(--forte-color-foreground-muted);
     /** Font size of that label. Retuned by `size`. */
     --forte-progress-circle-label-size: var(--forte-font-size-2);
@@ -79,7 +79,7 @@
      * motion state — a loop driven to 1ms is a WCAG 2.3.1 flashing hazard. */
     --forte-progress-circle-loop-duration: var(--forte-duration-loop-spin);
     /** Length of the indeterminate arc, out of the 100 units
-     * `pathLength` normalises the circumference to. */
+     * `pathLength` normalizes the circumference to. */
     --forte-progress-circle-arc: 25;
 
     /* The percentage, written on this element as an inline style by
@@ -97,7 +97,7 @@
     );
 
     box-sizing: border-box;
-    /* One column. Track and Value share row 1, which is what centres the
+    /* One column. Track and Value share row 1, which is what centers the
      * readout in the ring; Label is placed into row 2 explicitly, so the row —
      * and the gap above it — only exist when a Label is rendered. Base UI's
      * hidden `role="presentation"` span is `position: fixed` and so creates no
@@ -174,7 +174,7 @@
     inline-size: var(--forte-progress-circle-size);
     block-size: var(--forte-progress-circle-size);
     rotate: -90deg;
-    /* The stroke is centred on `r`, so half of it always sits outside the
+    /* The stroke is centered on `r`, so half of it always sits outside the
      * radius. `r` is derived below to keep that half inside the viewBox, and
      * this is the belt to that braces: a consumer who sets the thickness past
      * what the derivation allows gets an overflowing ring rather than a
@@ -186,11 +186,11 @@
    * Shared geometry. `r` is the mean radius: half the viewBox minus half the
    * stroke, so the outer edge of the stroke lands exactly on the viewBox edge.
    *
-   * Both strokes are painted with `currentColor` and take their colour from
+   * Both strokes are painted with `currentColor` and take their color from
    * `color` on the element instead of a `stroke` of their own. That is what
-   * gets forced colours right: the UA remaps `color`, and does NOT remap
+   * gets forced colors right: the UA remaps `color`, and does NOT remap
    * `fill` or `stroke`, so a literal `stroke: var(--…)` would keep its brand
-   * hue against a system-coloured page. */
+   * hue against a system-colored page. */
   .rail,
   .indicator {
     r: calc(50px - var(--forte-progress-circle-thickness) / 2);
@@ -204,7 +204,7 @@
   }
 
   /* Indicator ---------------------------------------------------------------
-   * One dash of `percent` units out of the 100 `pathLength` normalises the
+   * One dash of `percent` units out of the 100 `pathLength` normalizes the
    * circumference to, and a gap long enough that it never repeats. The
    * transition interpolates the computed `stroke-dashoffset`, which is what
    * makes a value change sweep round rather than snap — a custom property
@@ -223,7 +223,7 @@
   /* Indeterminate ----------------------------------------------------------
    * A fixed arc that rotates. `transform-box: view-box` pins the origin to the
    * viewBox rather than the circle's own bounding box, so 50% 50% is the
-   * ring's centre and not something that shifts as the dash pattern changes.
+   * ring's center and not something that shifts as the dash pattern changes.
    *
    * Both animations always run; the tokens decide which one is VISIBLE.
    * Normally `--forte-spin-turn` is 1turn and `--forte-pulse-dip` is 1, so it
@@ -245,7 +245,7 @@
 
   /* Value and label --------------------------------------------------------- */
   .value {
-    /* Same cell as the ring, centred in it. */
+    /* Same cell as the ring, centered in it. */
     grid-area: 1 / 1;
     place-self: center;
     font-size: var(--forte-progress-circle-value-size);
@@ -253,7 +253,7 @@
     line-height: var(--forte-line-height-tight);
     color: var(--forte-progress-circle-value-color);
     /* Without tabular figures the readout changes width as the digits change,
-     * which makes a centred number twitch left and right as it counts up. */
+     * which makes a centered number twitch left and right as it counts up. */
     font-variant-numeric: tabular-nums;
   }
 
@@ -288,7 +288,7 @@
   @media (forced-colors: active) {
     /* `color` is remapped for us, so the arc and the rail would both arrive as
      * CanvasText and the ring would read as a plain circle at every value.
-     * Naming the two system colours separately is what keeps them apart. */
+     * Naming the two system colors separately is what keeps them apart. */
     .rail {
       color: GrayText;
     }

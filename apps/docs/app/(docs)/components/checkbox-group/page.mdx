@@ -36,14 +36,14 @@ standalone checkbox holding its own state.
 
 ## Examples
 
-### Labelling
+### Labeling
 
 The group has no name of its own, and it cannot be given one with a `<label>` —
 a `<label>` resolves to a single control, and `role="group"` is not a labelable
 element. Point `aria-labelledby` at a heading you render yourself, and name each
 checkbox with an enclosing `<label>`.
 
-<DemoBlock id="checkbox-group/labelling" />
+<DemoBlock id="checkbox-group/labeling" />
 
 The enclosing label works because `Checkbox` renders a `<span>` with a hidden
 `<input>` beside it, and the input is what the label resolves to. Inside a
@@ -206,7 +206,7 @@ beside a greyed-out control. One row at a time is `disabled` on that row's
 Each checkbox still needs its own name too — an enclosing `<label>`, a
 `Field.Item` with a `Field.Label`, or a sibling `<label htmlFor>` paired with
 `nativeButton`. See [`Checkbox`](/components/checkbox/) for the rest: the mark,
-the mixed state, forced colours and motion all belong to the individual control.
+the mixed state, forced colors and motion all belong to the individual control.
 
 ## Theming
 

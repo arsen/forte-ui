@@ -53,7 +53,7 @@ export default function DialogForm() {
               <Field.Label>Key name</Field.Label>
               <Input required placeholder="CI deploy" />
               <Field.Error match="valueMissing">
-                Give the key a name you will recognise in six months.
+                Give the key a name you will recognize in six months.
               </Field.Error>
             </Field.Root>
 

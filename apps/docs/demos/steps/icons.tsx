@@ -4,7 +4,7 @@ import { Steps } from "@forte-ui/react";
 import { CreditCard, MapPin, PackageCheck, User } from "lucide-react";
 
 /* Children of the indicator replace the number in every state — the fill
- * colour still carries the status, and the completed step still gets its
+ * color still carries the status, and the completed step still gets its
  * visually hidden "Completed" for a screen reader. A direct-child svg is
  * sized off the circle's text, so it follows the size preset. */
 export default function StepsIcons() {

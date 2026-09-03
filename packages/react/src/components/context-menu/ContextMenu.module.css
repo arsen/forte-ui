@@ -39,7 +39,7 @@
    * selection is the thing the commands act on.
    * --------------------------------------------------------------------- */
   .trigger {
-    /** Colour of the ring that marks the region while its menu is open */
+    /** Color of the ring that marks the region while its menu is open */
     --forte-context-menu-trigger-ring-color: var(--forte-color-primary);
     /** Width of that ring. Set it to 0 to leave the region unmarked */
     --forte-context-menu-trigger-ring-width: 2px;
@@ -64,7 +64,7 @@
    * already draws instead of replacing it. There is no transition, and that is
    * not an oversight — `outline-style` goes from `none` to `solid` and is not
    * interpolatable, so the alternative is a permanently declared transparent
-   * outline, which forced-colors mode would repaint as a system colour and
+   * outline, which forced-colors mode would repaint as a system color and
    * leave ringing every trigger on the page at all times. */
   .trigger[data-popup-open] {
     outline: var(--forte-context-menu-trigger-ring-width) solid

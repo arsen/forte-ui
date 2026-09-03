@@ -41,9 +41,9 @@ import "@forte-ui/react/styles/reset.css";
 import "./globals.css";
 ```
 
-`theme.css` carries the whole system — the tokens, the colour ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
+`theme.css` carries the whole system — the tokens, the color ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
 
-`reset.css` is the second one, and it is opt-in twice over: importing it does nothing until `forte-reset` appears on an element. It sets `box-sizing: border-box` and suppresses the platform tap highlight — the grey box Safari and Chrome paint over whatever a touch lands on, which ignores `border-radius` and lingers after your finger lifts. The library already suppresses it on its own components; this extends the same treatment to the markup you write. Drop both lines if you would rather keep the platform default — see [the tap highlight on touch](/customization/styling/#the-tap-highlight-on-touch) for the trade-off.
+`reset.css` is the second one, and it is opt-in twice over: importing it does nothing until `forte-reset` appears on an element. It sets `box-sizing: border-box` and suppresses the platform tap highlight — the gray box Safari and Chrome paint over whatever a touch lands on, which ignores `border-radius` and lingers after your finger lifts. The library already suppresses it on its own components; this extends the same treatment to the markup you write. Drop both lines if you would rather keep the platform default — see [the tap highlight on touch](/customization/styling/#the-tap-highlight-on-touch) for the trade-off.
 
 The class is what switches it on. On the same file's `<html>`:
 
@@ -53,7 +53,7 @@ The class is what switches it on. On the same file's `<html>`:
 
 ### 4. Seed the theme
 
-Replace `app/globals.css`. The scaffold's `--background` / `--foreground` pair hardcodes exactly the two colours the theme should own:
+Replace `app/globals.css`. The scaffold's `--background` / `--foreground` pair hardcodes exactly the two colors the theme should own:
 
 ```css
 :root {
@@ -68,7 +68,7 @@ body {
 }
 ```
 
-The seed is the theme: all twelve accent steps, the brand-tinted neutrals, and a readable text colour for solid fills derive from it — in both light and dark mode, with no JavaScript and no build step. The `body` rule is yours to keep or change; the library styles its components, never your page.
+The seed is the theme: all twelve accent steps, the brand-tinted neutrals, and a readable text color for solid fills derive from it — in both light and dark mode, with no JavaScript and no build step. The `body` rule is yours to keep or change; the library styles its components, never your page.
 
 <Callout kind="warn">
   Replace, don't merge. The scaffold's `* { box-sizing: border-box; padding: 0; margin: 0 }`
@@ -151,7 +151,7 @@ reason `Button` does not in step 5: it is a flat export, so the layout stays a
 server component. On the Tailwind path below the placement is
 `className="fixed top-4 right-4"` instead, reading the same two space tokens.
 
-Every derived colour re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control. If you already use next-themes, [it drives the same attribute directly](#dark-mode-with-next-themes).
+Every derived color re-resolves; there is no second stylesheet to load. The same attribute (and `.forte-theme` / `data-forte-theme` scoping for islands) is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control. If you already use next-themes, [it drives the same attribute directly](#dark-mode-with-next-themes).
 
 ## With Tailwind
 
@@ -182,7 +182,7 @@ Replace `app/globals.css` entirely:
 }
 ```
 
-Everything the scaffold put there goes — its `@theme inline` block and `--background` / `--foreground` pair are precisely the hardcoded colours the seed replaces.
+Everything the scaffold put there goes — its `@theme inline` block and `--background` / `--foreground` pair are precisely the hardcoded colors the seed replaces.
 
 Two orderings in that file are load-bearing:
 
@@ -193,7 +193,7 @@ Two orderings in that file are load-bearing:
 
 ### 3. Style with token utilities
 
-Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. That is deliberate: a hardcoded colour would survive review and then ignore the seed, dark mode and every theme scope. Every utility that does compile responds to all of them:
+Tailwind's stock scales are **deleted and rebuilt** from the tokens, not extended — `bg-slate-800`, `p-13` and `text-white` do not compile. That is deliberate: a hardcoded color would survive review and then ignore the seed, dark mode and every theme scope. Every utility that does compile responds to all of them:
 
 ```tsx
 "use client";
@@ -237,7 +237,7 @@ import { cn } from "@forte-ui/react/cn";
 cn("p-4", isWide && "p-6"); // -> "p-6" when isWide holds
 ```
 
-A stock `twMerge` does not know the bridge's renamed scales — it parses `text-2` as a text *colour* and silently drops sizes. The shipped `cn` (and `createCn`, for apps that add their own theme keys) is covered on the [Tailwind](/customization/tailwind/#merging-classes-cn) page.
+A stock `twMerge` does not know the bridge's renamed scales — it parses `text-2` as a text *color* and silently drops sizes. The shipped `cn` (and `createCn`, for apps that add their own theme keys) is covered on the [Tailwind](/customization/tailwind/#merging-classes-cn) page.
 
 ## Dark mode with next-themes
 
@@ -263,7 +263,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-`attribute="data-theme"` is the one setting that matters: next-themes' default is a `class="dark"` on the root element, which forte-ui does not read. The defaults you are *not* overriding already match — `defaultTheme="system"` mirrors what forte-ui does with no attribute at all, so adding the provider changes nothing until someone actually toggles. `disableTransitionOnChange` is optional but worth keeping: without it, every colour transition in the page fires at once on switch.
+`attribute="data-theme"` is the one setting that matters: next-themes' default is a `class="dark"` on the root element, which forte-ui does not read. The defaults you are *not* overriding already match — `defaultTheme="system"` mirrors what forte-ui does with no attribute at all, so adding the provider changes nothing until someone actually toggles. `disableTransitionOnChange` is optional but worth keeping: without it, every color transition in the page fires at once on switch.
 
 Wrap the app in `app/layout.tsx`, and put `suppressHydrationWarning` on `<html>` — next-themes sets the attribute from its pre-hydration script, so the server HTML legitimately differs on that one element:
 
@@ -300,7 +300,7 @@ export function ModeSwitch() {
   gate).
 </Callout>
 
-On the Tailwind path, nothing more is needed for colours: every token utility resolves through `light-dark()`, so `bg-panel` follows the toggle by itself and you will rarely write a `dark:` variant at all. If you do want one — for a non-colour tweak that differs per theme — note that Tailwind v4's stock `dark` variant keys on `prefers-color-scheme`, which ignores the toggle. Re-key it on the attribute, after the bridge import:
+On the Tailwind path, nothing more is needed for colors: every token utility resolves through `light-dark()`, so `bg-panel` follows the toggle by itself and you will rarely write a `dark:` variant at all. If you do want one — for a non-color tweak that differs per theme — note that Tailwind v4's stock `dark` variant keys on `prefers-color-scheme`, which ignores the toggle. Re-key it on the attribute, after the bridge import:
 
 ```css
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
