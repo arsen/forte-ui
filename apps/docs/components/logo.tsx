@@ -57,6 +57,27 @@ const WIDTH = 216.66;
 const HEIGHT = 48.5;
 
 /**
+ * The geometry, for the one kind of consumer that cannot render `<Logo />`:
+ * the share cards, one `opengraph-image.tsx` per section of the site.
+ *
+ * They are drawn by satori, which has no CSS pipeline — no stylesheets, no
+ * custom properties — so it can use the path data but not the gradients above,
+ * and it needs literal colors instead (`lib/og-palette.ts` bakes those). This
+ * is exported rather than copied so a card does not become a FOURTH drawing to
+ * keep in step: the note at the top of this file says the mark lives here and
+ * that `app/icon.svg` and `public/brand/forte-ui.svg` are re-baked from it,
+ * and an inlined copy in an OG route would quietly make that three-way rule a
+ * four-way one that nobody wrote down.
+ */
+export const LOGO = {
+  mark: MARK,
+  dots: DOTS,
+  word: WORD,
+  width: WIDTH,
+  height: HEIGHT,
+} as const;
+
+/**
  * The gradient and the mark, shared by both exports. The gradient is in user
  * space over the mark's own box, corner to corner, which is what CSS's
  * `135deg` means on a square swatch — so the header keeps the diagonal it had.

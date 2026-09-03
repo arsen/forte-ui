@@ -57,6 +57,12 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   components/component-index.tsx   the index page's cards, grouped by category
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   lib/env.ts                       the ONLY `process.env` reads — typed exports, nothing else touches the env
+  lib/site.ts                      the site's ORIGIN and name — metadata, sitemap and cards all read it
+  app/opengraph-image.tsx          the share card; four more, one per section, inherited by their pages
+  components/og-card.tsx           the card renderer — satori, so no tokens, no CSS and no components
+  lib/og-palette.ts                the cards' palette, derived from the seed defaults at build time
+  app/robots.ts · app/sitemap.ts   the crawler files; the sitemap walks `app/` rather than trusting a list
+  firebase.json                    hosting — and the one header rule the share cards cannot ship without
   mdx-components.tsx               the prose typography, per element
   demos/<name>/<demo>.tsx          runnable demos, rendered AND shown as source
 ```
@@ -826,3 +832,38 @@ drafts a section in exactly this shape.
   style recalc per frame, ~100ms each. The palette cross-fade is a view
   transition now (`hero-themer.tsx`): one recalc, then a compositor fade
   between two snapshots.
+- A generated `opengraph-image.tsx` emits a file with **no extension** —
+  `out/opengraph-image`, and `out/components/opengraph-image-1pqg0z` for a
+  nested one, where the suffix changes with the content. Firebase Hosting
+  types a response from its extension, so those ship as
+  `application/octet-stream`, and X, Discord, Slack and Facebook all reject a
+  non-image content-type: the card silently does not render, which looks
+  exactly like having no card at all. The fix is the `headers` block in
+  `apps/docs/firebase.json`, matching `**/opengraph-image*` and
+  `**/apple-icon*` — a PREFIX match, because of that content hash. Verify it
+  the way it was verified the first time, against the real thing rather than
+  against a guess about globs:
+
+  ```bash
+  cd apps/docs && pnpm build && firebase emulators:start --only hosting
+  ```
+
+  then `curl -sI` each image route and read the `Content-Type`. Note the
+  emulator falls back off port 5000 on macOS, where AirPlay Receiver holds it
+  — read the port out of its own banner.
+- The root layout's `openGraph` deliberately carries **no `title` and no
+  `description`**, and adding either quietly breaks every other page. Next
+  REPLACES `openGraph` rather than merging it, and no `page.mdx` declares one,
+  so whatever is written there wins on all sixty-eight routes — every
+  component page would share as "Forte UI". Left unset, Next's own
+  `inheritFromMetadata` fills them at the end of resolution from the page's
+  own resolved title and description, which is what gives `/components/dialog/`
+  its real title for free. `twitter` is the same, one level on: it auto-fills
+  from the resolved `openGraph`, so it only carries the card type and the
+  account.
+- Every metadata image route needs `export const dynamic = "force-static"`.
+  Under `output: "export"` Next refuses to collect page data for a route
+  handler that has not declared itself static, and an `opengraph-image`
+  compiles to one — in an error naming `dynamic` and `revalidate` that reads
+  as though the image were request-dependent. It cannot be re-exported from a
+  shared module: route segment config is read off the route module itself.

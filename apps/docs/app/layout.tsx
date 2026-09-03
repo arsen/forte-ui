@@ -17,11 +17,70 @@ import { TooltipProvider } from "@/components/tooltip-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Analytics } from "@/components/analytics";
+import { SITE_NAME, SITE_TAGLINE, SITE_URL, X_HANDLE } from "@/lib/site";
 
+/**
+ * The site's metadata, and the shape of it that makes every page's share card
+ * correct without touching a single `page.mdx`.
+ *
+ * ---------------------------------------------------------------------------
+ * Why `openGraph` carries no title and no description
+ * ---------------------------------------------------------------------------
+ * That omission is the whole mechanism, and filling either field in would
+ * quietly break sixty-five pages.
+ *
+ * Next merges metadata down the tree, but `openGraph` is REPLACED rather than
+ * merged: a page that declares one gets only its own, and a page that declares
+ * none inherits this object entire. Every route here is the second kind — the
+ * MDX pages export `title` and `description` and nothing else. So an
+ * `openGraph.title` written here would win on all of them, and `/components/dialog/`
+ * would share as "Forte UI" with the site's own blurb under it.
+ *
+ * Leaving both unset hands the job to `postProcessMetadata`, which runs
+ * `inheritFromMetadata(openGraph, metadata)` at the very end of resolution and
+ * fills them from the page's OWN resolved title and description — resolved,
+ * so the `%s · Forte UI` template above has already been applied. The result
+ * is that each page's `og:title` is its real title and its `og:description` is
+ * the sentence its author wrote, for free.
+ *
+ * `twitter` is the same trick one level on: Next auto-fills its title,
+ * description and images from the resolved `openGraph`, so this block only has
+ * to carry what has no Open Graph equivalent — the card type and the account.
+ *
+ * ---------------------------------------------------------------------------
+ * `metadataBase`
+ * ---------------------------------------------------------------------------
+ * Required, not optional. A crawler fetching `og:image` has no page to resolve
+ * a relative URL against, so Next drops the tag rather than emit one — which
+ * is silent, and looks exactly like having no card at all.
+ */
 export const metadata: Metadata = {
-  title: { default: "Forte UI", template: "%s · Forte UI" },
-  description:
-    "An accessible React component library built on Base UI. One CSS variable re-themes the entire system, motion respects every user preference, and nothing ships a runtime.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  description: SITE_TAGLINE,
+  applicationName: SITE_NAME,
+  // The name the site already puts on itself, in the footer's credit line and
+  // in the X account's own label — not a personal one. These tags are read by
+  // aggregators and shown next to the card, so an author here who appears
+  // nowhere on the page would be the only place the project is called that.
+  authors: [{ name: "DoForTech", url: "https://dofortech.com" }],
+  creator: "DoForTech",
+  publisher: "DoForTech",
+  // `"./"` rather than an absolute URL: the resolver reads it against the
+  // route being rendered, so one declaration gives all sixty-six pages their
+  // own canonical instead of pointing every one of them at the home page.
+  alternates: { canonical: "./" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: "./",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: X_HANDLE,
+    creator: X_HANDLE,
+  },
 };
 
 // Runs before first paint so the page never flashes the wrong theme. Kept
