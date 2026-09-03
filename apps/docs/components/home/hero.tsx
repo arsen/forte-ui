@@ -11,18 +11,18 @@ import { cn } from "@/lib/cn";
  *
  * The logo is the point. Its gradients read the live `--forte-accent-9` /
  * `--forte-secondary-9` tokens, so the swatches under it re-theme the mark
- * on the spot — and because the seeds are registered `<color>` properties,
- * the change is a cross-fade rather than a cut. That is the library's whole
- * pitch in one interaction, which is why the palette row sits in the hero
- * and not further down the page.
+ * on the spot — and the change is a cross-fade rather than a cut, a view
+ * transition `hero-themer.tsx` starts around the write. That is the
+ * library's whole pitch in one interaction, which is why the palette row
+ * sits in the hero and not further down the page.
  *
  * The glow behind the mark is a radial gradient of the accent at low
  * opacity, mixed with `color-mix()` so it follows the seed too. It is a
  * pseudo-element on a wrapper rather than a shadow on the SVG: a filter on
- * an element with two gradients repaints both on every frame of the
- * cross-fade, and a blurred backdrop is what a drop shadow on a thin F
- * would never produce anyway. Under forced colours the gradient is stripped
- * and nothing is left behind, which is right — it carries no information.
+ * an element with two gradients repaints both whenever the seed moves, and
+ * a blurred backdrop is what a drop shadow on a thin F would never produce
+ * anyway. Under forced colours the gradient is stripped and nothing is left
+ * behind, which is right — it carries no information.
  */
 export function Hero() {
   return (

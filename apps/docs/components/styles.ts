@@ -89,9 +89,10 @@ export const PROSE_H2 = `${HEADING} mt-8 mb-3 text-6 tracking-tight`;
  * `transition` on `.themeTransition *` and the card's border would otherwise
  * restart a 400ms one every frame of the fade — chasing a target that had
  * moved again before it arrived, so the edge lagged everything it sits
- * against. That rule is now two properties on `:root` alone (globals.css
- * says why at length), `Card` declares no transition of its own, and the
- * border simply follows the seed.
+ * against. The palette change is a view transition now (globals.css says
+ * why at length): the seed moves once, in one style recalc, and the fade is
+ * between two snapshots — so `Card` declares no transition of its own, and
+ * the border simply follows the seed.
  *
  * No geometry on hover either — motion rule 7 in AGENTS.md: hover is a colour
  * cue, lift is opt-in.
