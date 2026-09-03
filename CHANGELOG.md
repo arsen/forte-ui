@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0-beta.2] - 2026-09-02
+
+### General
+
+- Added `homepage` and `repository` fields to `@forte-ui/react`'s `package.json`.
+
 ## [1.0.0-beta.0] - 2026-09-02
 
 ### AppBar
@@ -307,7 +313,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...HEAD
+[1.0.0-beta.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...v1.0.0-beta.2
 [1.0.0-beta.0]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.9...v1.0.0-beta.0
 [1.0.0-alpha.9]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...v1.0.0-alpha.9
 [1.0.0-alpha.8]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8
