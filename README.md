@@ -257,4 +257,4 @@ specific, usually silent, bug.
 
 ## License
 
-MIT
+[MIT](LICENSE) © DO FOR TECH Inc.
