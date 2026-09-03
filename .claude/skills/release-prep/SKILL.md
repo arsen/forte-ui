@@ -55,8 +55,8 @@ send it back. Do not analyze the diff or edit the release files yourself.
    ```
 
 7. **Report the outcome**: the files written, the new version — naming every
-   package it now applies to, and pointing out any that moved with no changes
-   of their own so the user is not surprised by the diff — and a one-line
+   package it now applies to, the docs app included, and pointing out any
+   that moved with no changes of their own so the user is not surprised by the diff — and a one-line
    reminder that nothing is committed — reviewing, committing, tagging and
    publishing stay in the user's hands. Do not commit for them, even if the
    diff looks perfect.
@@ -74,6 +74,11 @@ send it back. Do not analyze the diff or edit the release files yourself.
   section for the unchanged ones. If the report's `CURRENT_VERSION` shows the
   packages already out of step, tell the user before the version question;
   APPLY realigns them.
+- **The docs app moves with them.** `apps/docs/package.json` is private and
+  never published, but it carries the same version — the site is a snapshot
+  of one library release, and `pnpm release` refuses to run if it lags. APPLY
+  bumps it with the publishable set; it never gets a changelog section, and
+  its diff never contributes an entry.
 - If the user pre-supplied the version in the arguments, still show the draft
   (step 4), but skip the version question — forward their version straight to
   APPLY.

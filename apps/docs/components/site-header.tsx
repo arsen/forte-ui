@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { AppBar, Button } from "@forte-ui/react";
+import { AppBar, Badge, Button } from "@forte-ui/react";
 import { SiGithub } from "react-icons/si";
 import { ICON } from "./styles";
 import { Logo } from "./logo";
@@ -10,6 +10,7 @@ import { NavDrawer, TocDrawer } from "./shell-drawers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { routeKey } from "@/lib/route";
+import { LIBRARY_VERSION, RELEASE_URL } from "@/lib/version";
 import { cn } from "@/lib/cn";
 
 /**
@@ -96,6 +97,28 @@ export function SiteHeader() {
         </Link>
       </AppBar.Leading>
       <AppBar.Trailing>
+        {/* The library version, as a pill that links to its GitHub release.
+          * The number is the one baked in at build time from the library's
+          * own manifest — see `lib/version.ts`. A `Badge` and not a `Button`
+          * because it is a label first and a link second: it should read as
+          * a status beside the controls, not as a fourth control. `neutral`
+          * so it does not compete with the accent on the mark beside it.
+          *
+          * Hidden below the nav breakpoint. On a phone the bar already
+          * holds the drawer trigger, the wordmark and three icon buttons,
+          * and a fourth item is the one that pushes the wordmark off; the
+          * home page hero shows the same number, and a reader on a phone
+          * has it a scroll away. */}
+        <Badge
+          tone="neutral"
+          variant="outline"
+          shape="pill"
+          className="max-nav:hidden font-mono"
+          title={`Release ${LIBRARY_VERSION} on GitHub`}
+          render={<a href={RELEASE_URL} target="_blank" rel="noreferrer" />}
+        >
+          v{LIBRARY_VERSION}
+        </Badge>
         {/* A link, rendered as a button, so the three controls on this side
           * share one shape — the alternative is a bare `<a>` whose icon sits
           * at a different optical size and hovers differently from the two

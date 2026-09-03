@@ -88,6 +88,20 @@ if (versions.size > 1) {
 }
 const [version] = versions;
 
+// The docs app is private and never published, but it carries the same
+// number: the site is a snapshot of one library version — it prints that
+// version on the home page and in the app bar, read from the library's own
+// package.json at build time — and its `package.json` says which.
+// /release-prep bumps it alongside the publishable set; refusing here is
+// what keeps the mirror from silently drifting.
+const docsPkg = JSON.parse(readFileSync(join(root, "apps", "docs", "package.json"), "utf8"));
+if (docsPkg.version !== version) {
+  fail(
+    `apps/docs is at ${docsPkg.version}, the packages at ${version} — the docs app mirrors the release version.\n` +
+      `  Run /release-prep, or set its "version" to ${version}.`,
+  );
+}
+
 // A prerelease publishes under its identifier (`1.0.0-alpha.6` → `alpha`),
 // a stable version under `latest`. Publishing a prerelease as `latest` would
 // hand `npm install @forte-ui/react` an alpha, which is the one thing a

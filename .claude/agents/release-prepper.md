@@ -32,6 +32,15 @@ release that moved `create-forte-ui` and left `@forte-ui/react` behind is the
 drift this rule exists to prevent: the packages are documented and consumed
 as one set, so the numbers have to agree.
 
+**`apps/docs/package.json` mirrors that number too.** The docs app is private
+and is never published, and nothing under `apps/docs` ever reaches the
+changelog — but the site is a snapshot of one library version and its
+`package.json` says which. `pnpm release` refuses to run if it disagrees with
+the packages, so APPLY bumps it along with them. It is a mirror, not a member
+of the publishable set: it does not count toward `nothing-to-release`, it
+gets no section, and it is not what the site displays (that is read from
+`@forte-ui/react`'s own `package.json` at build time).
+
 ## Phase ANALYZE
 
 0. **Require a clean tree.** `git status --porcelain=v1` first; if it prints
@@ -53,6 +62,9 @@ as one set, so the numbers have to agree.
      should all be equal; if they are not, the set has drifted — report each
      one in `CURRENT_VERSION`, say so in `NOTES`, and base the proposal on
      the highest of them. APPLY brings the rest back into line.
+   - the `"version"` in `apps/docs/package.json`. It should equal the
+     packages'; if it does not, say so in `NOTES` (it never drives the
+     proposal — APPLY realigns it).
    - If no commit touches any publishable path, return
      `STATUS: nothing-to-release`. One package changing is enough for a
      release of all of them.
@@ -131,8 +143,10 @@ the draft. Then:
    this for a package with no change in the range too; "nothing changed
    here" is not a reason to leave one behind, it is how the set drifts. Leave
    the `workspace:^` dependency alone; pnpm rewrites it at publish.
-4. Verify: grep every publishable package.json for the new version and
-   confirm none still carries the old one, and confirm the new changelog
+   Then set `apps/docs/package.json` to the same version — the mirror
+   described above. Touch nothing else in that file.
+4. Verify: grep every publishable package.json **and** `apps/docs/package.json`
+   for the new version and confirm none still carries the old one, and confirm the new changelog
    section sits between `## [Unreleased]` and the previous version's heading
    — not at the bottom of the file.
 5. Do not run generators, tests, or git commands that mutate anything. The
@@ -162,6 +176,6 @@ CHANGELOG:
 QUESTIONS: none | <one line per genuine ambiguity — an entry you could not
   classify, a change you could not tell was breaking, a commit whose intent
   the diff does not reveal>
-FILES: <files written, or "none">   # applied: CHANGELOG.md plus every publishable package.json
+FILES: <files written, or "none">   # applied: CHANGELOG.md, every publishable package.json, apps/docs/package.json
 NOTES: <suspected generated-file drift, abort reason, or "none">
 ```

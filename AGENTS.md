@@ -751,7 +751,12 @@ carry **one version number and move in lockstep**: a release bumps every one
 of them, including a package nothing in the range touched. An unchanged
 package gets no changelog section, but it still gets the bump; a release that
 moves one and leaves the others behind is drift, and the next one has to
-repair it.
+repair it. `apps/docs/package.json` mirrors the same number even though the
+docs app is private and never published: the site is a snapshot of one
+library version, and `pnpm release` refuses to run if the two disagree. The
+version the site *shows* — the pill in the app bar and in the home page hero,
+both from `apps/docs/lib/version.ts` — is read from `@forte-ui/react`'s own
+`package.json` at build time, never from the docs' copy.
 
 Publishing is `pnpm release` — [`scripts/release.mjs`](scripts/release.mjs),
 a plain script rather than a turbo task because the unit of work is the whole
