@@ -37,7 +37,7 @@ export type Scheme = (typeof SCHEME)[number];
 export const PRESETS: { name: string; seed: string; secondary: string }[] = [
   { name: "Ocean", seed: "#0e76be", secondary: "#8f5fc0" },
   { name: "Violet", seed: "#6d43d4", secondary: "#c2410c" },
-  { name: "Forest", seed: "#0f7a52", secondary: "#a16207" },
+  { name: "Sky", seed: "#0284c7", secondary: "#b45309" },
   { name: "Ember", seed: "#c2410c", secondary: "#0369a1" },
   { name: "Rose", seed: "#b6155f", secondary: "#0f766e" },
   { name: "Slate", seed: "#475569", secondary: "#0e7490" },
@@ -75,9 +75,12 @@ export type ThemeConfig = {
   fontMono: string;
 };
 
+/* The seeds are the hex twins of the `initial-value`s registered in the
+ * library's `properties.css` — the shipped palette, restated so the studio
+ * can tell "untouched" from "chosen". Change one and change the other. */
 export const THEME_DEFAULTS: ThemeConfig = {
-  seed: "#0e76be",
-  secondary: "#8f5fc0",
+  seed: "#0f7a52",
+  secondary: "#a16207",
   tint: 1,
   radius: "default",
   density: "default",
@@ -360,6 +363,37 @@ export function setThemeConfig(next: ThemeConfig) {
   }
 
   emit();
+}
+
+/** Back to the shipped theme. Everything `setThemeConfig` put on the root
+ *  comes off again — the inline vars, the preset attributes, a pinned
+ *  scheme — and the stored record is DELETED rather than rewritten as the
+ *  defaults: a reader who resets is a reader who never touched a control,
+ *  and the pre-paint script should find nothing to replay for them. Font
+ *  stylesheets a previous choice loaded stay in the head; without the var
+ *  pointing at them they cost nothing and paint nothing. */
+export function resetThemeConfig() {
+  cfg = THEME_DEFAULTS;
+  const root = document.documentElement;
+  for (const k of ROOT_VARS) root.style.removeProperty(k);
+  delete root.dataset.forteRadius;
+  delete root.dataset.forteDensity;
+  delete root.dataset.forteMotion;
+  root.dataset.theme = readerTheme();
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* storage disabled: the document is already reset */
+  }
+  emit();
+}
+
+/** True while nothing differs from the shipped theme — what disables the
+ *  reset control, so it never offers to undo nothing. */
+export function isDefaultTheme(c: ThemeConfig) {
+  return (Object.keys(THEME_DEFAULTS) as (keyof ThemeConfig)[]).every(
+    (k) => c[k] === THEME_DEFAULTS[k],
+  );
 }
 
 /**

@@ -38,6 +38,8 @@ import {
   PRESETS,
   RADIUS,
   SCHEME,
+  isDefaultTheme,
+  resetThemeConfig,
   toScaffoldCommand,
   useThemeConfig,
   type PackageManager,
@@ -209,6 +211,19 @@ export function ThemeConfigurator({ className }: { className?: string }) {
         * groups, so announcing a boundary here would only read decoration
         * aloud. */}
       <Scaffold cfg={cfg} />
+      {/* The way back. Disabled rather than hidden while the theme IS the
+        * shipped one, so the control stays where the reader learned it is;
+        * it clears the stored record too, which the presets cannot — pressing
+        * the default preset writes a record that happens to equal the defaults. */}
+      <Button
+        variant="ghost"
+        tone="neutral"
+        fullWidth
+        disabled={isDefaultTheme(cfg)}
+        onClick={resetThemeConfig}
+      >
+        Reset to defaults
+      </Button>
       <Separator decorative />
 
       <Appearance scheme={cfg.scheme} onChange={(v) => set("scheme", v)} />

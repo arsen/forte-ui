@@ -5,8 +5,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216.66 48.5" width="216.66" height="48.5" role="img" aria-label="Forte UI">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="36" y2="48" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0e76be"/>
-      <stop offset="1" stop-color="#8f5fc0"/>
+      <stop offset="0" stop-color="#0f7a52"/>
+      <stop offset="1" stop-color="#a16207"/>
     </linearGradient>
     <!-- The wordmark: the text color easing to the secondary TEXT color,
          step 11 of the ramp — the hue the mark ends on, at a lightness that

@@ -8,7 +8,7 @@ import { PRESETS, useThemeConfig } from "@/components/theme-studio/theme-config"
  * restated here. The two are one control seen twice now that a swatch writes
  * the shared theme record, so a color that drifted between two copies of the
  * list would theme the page and light nothing up at either end. */
-const HERO_PRESETS = ["Ocean", "Violet", "Forest", "Ember", "Rose"].flatMap((name) =>
+const HERO_PRESETS = ["Ocean", "Violet", "Sky", "Ember", "Rose"].flatMap((name) =>
   PRESETS.filter((p) => p.name === name),
 );
 
