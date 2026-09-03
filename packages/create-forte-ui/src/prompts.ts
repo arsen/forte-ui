@@ -16,7 +16,7 @@ import type { Framework, ProjectPlan } from "./overlay.js";
 
 function accept<T>(value: T | symbol): T {
   if (p.isCancel(value)) {
-    p.cancel("Cancelled — nothing was written.");
+    p.cancel("Canceled — nothing was written.");
     process.exit(1);
   }
   return value;
@@ -41,7 +41,7 @@ const hexPrompt = (message: string) => async (): Promise<string | null> => {
       placeholder: "Enter to keep the library default",
       validate: (v) => {
         if (!v) return undefined;
-        return hexToOklch(v.startsWith("#") ? v : `#${v}`) ? undefined : "Expected a hex colour like #6d43d4.";
+        return hexToOklch(v.startsWith("#") ? v : `#${v}`) ? undefined : "Expected a hex color like #6d43d4.";
       },
     }),
   );
@@ -134,7 +134,7 @@ export async function collectPlan(opts: CliOptions): Promise<ProjectPlan> {
     if (remaining.includes("tint")) {
       const tint = accept(
         await p.text({
-          message: "Neutral tint — 0 (pure grey) to 1 (full brand tint)",
+          message: "Neutral tint — 0 (pure gray) to 1 (full brand tint)",
           placeholder: "1",
           validate: (v) => {
             if (!v) return undefined;

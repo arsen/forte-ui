@@ -74,7 +74,7 @@ Disable `Previous` on the first page and `Next` on the last rather than leaving 
 
 <DemoBlock id="pagination/variants" />
 
-In the `joined` variant the slots overlap by one border width rather than dropping their shared edge, and the current page is raised above its neighbours. That is what frames its fill in its own colour on all four sides instead of borrowing a grey edge from the page before it.
+In the `joined` variant the slots overlap by one border width rather than dropping their shared edge, and the current page is raised above its neighbours. That is what frames its fill in its own color on all four sides instead of borrowing a gray edge from the page before it.
 
 ### Tones
 
@@ -82,7 +82,7 @@ Only the current page draws from the tone. Everything else in the strip is neutr
 
 <DemoBlock id="pagination/tones" />
 
-`neutral` swaps the brand fill for a grey one with a stronger border. A grey fill on its own is the resting hover colour, so without the border the current page would read as "the one the pointer is on".
+`neutral` swaps the brand fill for a gray one with a stronger border. A gray fill on its own is the resting hover color, so without the border the current page would read as "the one the pointer is on".
 
 ### Sizes
 
@@ -100,7 +100,7 @@ The slot count is **constant** for a given count, siblings and boundaries. An el
 
 The two ellipses come back as `"start-ellipsis"` and `"end-ellipsis"`, so they are React keys as they are — a range never holds the same item twice.
 
-Those keys are also what the strip animates by. A centred window re-labels every slot when the current page moves by one, so without motion the cell you just pressed reads "27" a frame later and the fill appears one cell to its left — nothing visibly moves, and the eye reads a glitch. `Pagination.List` plays what actually happened instead: the fill lands on the pressed page, the strip holds for the length of that colour change, then the numbers slide one cell over while the page that left fades out at the edge and the one that arrived fades in. A click that lands mid-slide continues from wherever the row visually is. Give each `Pagination.Item` a stable `key` and it happens by itself; the three `--forte-pagination-shift-*` knobs set the hold, the duration and the easing, and under reduced motion the swap stays instant.
+Those keys are also what the strip animates by. A centered window re-labels every slot when the current page moves by one, so without motion the cell you just pressed reads "27" a frame later and the fill appears one cell to its left — nothing visibly moves, and the eye reads a glitch. `Pagination.List` plays what actually happened instead: the fill lands on the pressed page, the strip holds for the length of that color change, then the numbers slide one cell over while the page that left fades out at the edge and the one that arrived fades in. A click that lands mid-slide continues from wherever the row visually is. Give each `Pagination.Item` a stable `key` and it happens by itself; the three `--forte-pagination-shift-*` knobs set the hold, the duration and the easing, and under reduced motion the swap stays instant.
 
 ### Compact
 
@@ -191,7 +191,7 @@ Everything else the component does by default:
 
 - **`Root` is a named landmark.** It renders `<nav aria-label="Pagination">` without being asked, because a page routinely carries several navigation landmarks and an unnamed one cannot be told from the others in a screen reader's landmark list. Override the label when the page carries two strips.
 - **`List` is a `<ul>`.** A screen reader announces how many controls there are before the reader walks them, and each page is one item rather than one word in a run of numbers.
-- **The current page is `aria-current="page"`.** It is a link, not a static span — unlike a breadcrumb, reloading the page you are on is a reasonable thing to ask a strip for. The cue is never colour alone: `aria-current` carries it in the tree, and the tone's fill plus a border change carry it on screen.
+- **The current page is `aria-current="page"`.** It is a link, not a static span — unlike a breadcrumb, reloading the page you are on is a reasonable thing to ask a strip for. The cue is never color alone: `aria-current` carries it in the tree, and the tone's fill plus a border change carry it on screen.
 - **Page numbers get a name.** A bare "3" is announced as "link, 3", which is ambiguous next to "link, 30". Pass an `aria-label` of "Page 3" from the map, the way every example above does.
 - **Icon-only controls keep their label.** `iconOnly` hides the text with `.forte-visually-hidden` rather than dropping it, so `Previous` is still "Previous" to a screen reader. The `Ellipsis` carries "More pages" the same way.
 - **Disabled slots are announced as disabled** on both element forms — the native attribute on a button, `aria-disabled` on a link — and a disabled link also leaves the tab order, so <Kbd>Tab</Kbd> does not land on a control that does nothing.

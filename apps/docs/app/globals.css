@@ -56,7 +56,7 @@
    * `text-decoration: underline` that `Toolbar.Link` and
    * `PreviewCard.Trigger` declare in `forte.components` — and the
    * underline is the only cue separating those two from the buttons and prose
-   * around them once the colour is gone, which is SC 1.4.1. `.forte-link` is
+   * around them once the color is gone, which is SC 1.4.1. `.forte-link` is
    * the library's marker for exactly the parts that mean to look like links,
    * so a Button rendered as an <a> and a `Menu.LinkItem` — neither of which
    * carries it — still get the reset. */
@@ -64,7 +64,7 @@
     text-decoration: none;
   }
 
-  /* The colour half has to skip the library's own parts. This layer sits after
+  /* The color half has to skip the library's own parts. This layer sits after
    * every `forte.*` layer and layer order outranks specificity completely,
    * so a flat `a { color: inherit }` beats `.root { color: var(--forte-button-fg) }`
    * in `forte.components` — a solid Button handed `render={<Link/>}` paints
@@ -143,7 +143,7 @@
     font-size: var(--forte-font-size-2);
     line-height: 1.65;
     /* Shiki may inline a theme background on the <pre>; an inline style loses
-     * to `!important` and to nothing else. The panel colour underneath is the
+     * to `!important` and to nothing else. The panel color underneath is the
      * one that should show. */
     background-color: transparent !important;
   }
@@ -208,20 +208,20 @@
    *
    * It used to be a `transition` on the two registered seeds, on `:root` —
    * one animatable property, re-deriving every ramp step per frame with
-   * relative colour syntax, no JavaScript in the animation path. Two things
+   * relative color syntax, no JavaScript in the animation path. Two things
    * were wrong with it, and only one was visible from here:
    *
    * - In the desktop app's Chromium (148) every `border: 1px solid var(--…)`
    *   SHORTHAND on the page painted its edge in `currentColor` for the length
-   *   of the fade — near-white on the entry cards, the label colour on the
+   *   of the fade — near-white on the entry cards, the label color on the
    *   outline Button — while longhand `border-color: var(--…)` declarations
    *   on the same tokens (the swatches, the divider under the hero) held. The
-   *   ramp was fine; the shorthand's colour was what dropped. A forced style
+   *   ramp was fine; the shorthand's color was what dropped. A forced style
    *   read mid-fade resolves it correctly, and headless Chrome 152 paints it
    *   correctly, so a screen recording of a live fade is the only place it
    *   shows. `styles.ts` records the earlier sighting of the same fallback,
    *   when it was lavender because the card's anchor still had the UA link
-   *   colour.
+   *   color.
    * - The whole page re-resolved every token on every frame of the fade,
    *   measured at ~100ms of style recalc each — so a 400ms fade was three or
    *   four frames, whatever the border did.

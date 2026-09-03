@@ -48,14 +48,14 @@
     /** Strip background */
     --forte-menubar-bg: transparent;
     /* 0px rather than the transparent hairline a `contained` variant could
-     * then merely re-colour: `transparent` is NOT preserved in forced-colors
-     * mode — it is replaced with a system colour — so a plain bar would grow
+     * then merely re-color: `transparent` is NOT preserved in forced-colors
+     * mode — it is replaced with a system color — so a plain bar would grow
      * a box around itself for exactly the users who did not ask for one. The
      * 2px of inline size the two variants differ by is invisible, since a bar
      * is one variant for its whole life. */
     /** Width of the hairline around the strip */
     --forte-menubar-border-width: 0px;
-    /** Colour of that hairline */
+    /** Color of that hairline */
     --forte-menubar-border-color: var(--forte-color-border);
 
     /* The triggers ---------------------------------------------------------
@@ -74,7 +74,7 @@
     --forte-menubar-trigger-font-size: var(--forte-font-size-2);
     /** Trigger font weight */
     --forte-menubar-trigger-font-weight: var(--forte-font-weight-medium);
-    /** Trigger text colour */
+    /** Trigger text color */
     --forte-menubar-trigger-fg: var(--forte-color-foreground);
     /** Trigger background at rest */
     --forte-menubar-trigger-bg: transparent;
@@ -86,7 +86,7 @@
      * neighbours. */
     /** Background of the trigger whose menu is open */
     --forte-menubar-trigger-bg-open: var(--forte-color-primary-soft);
-    /** Text colour of the trigger whose menu is open */
+    /** Text color of the trigger whose menu is open */
     --forte-menubar-trigger-fg-open: var(--forte-color-primary-text);
 
     box-sizing: border-box;
@@ -149,9 +149,9 @@
 @layer forte.a11y {
   @media (forced-colors: active) {
     /* `--forte-menubar-bg` is a background, and a background is replaced with a
-     * system colour here — the contained bar's panel becomes Canvas and the
+     * system color here — the contained bar's panel becomes Canvas and the
      * strip dissolves into the page. The border is already occupying the
-     * space; this only gives it a colour it will keep. */
+     * space; this only gives it a color it will keep. */
     .root[data-variant="contained"] {
       border-color: CanvasText;
     }

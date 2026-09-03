@@ -146,7 +146,7 @@ function useAutoHeight(
        * of the transition, and an unclipped panel spills its content over
        * whatever the page puts under the tabs. A shrinking one never does: the
        * incoming panel is already the smaller height before the track starts
-       * travelling, and the outgoing panel is out of flow and at `opacity: 0`
+       * traveling, and the outgoing panel is out of flow and at `opacity: 0`
        * within a millisecond.
        *
        * Permanent would be the easy version and it is the wrong one. The panel
@@ -276,7 +276,7 @@ export interface TabsRootProps extends Omit<BaseRootProps, "className"> {
  * an automatic `onValueChange` with reason `'initial'` to correct itself, so
  * always pass `defaultValue` (or `value`) pointing at an **enabled** tab —
  * during server rendering a disabled first tab is not skipped. `null` is a
- * legal "nothing active" value and is deliberately not normalised away.
+ * legal "nothing active" value and is deliberately not normalized away.
  */
 const TabsRoot = React.forwardRef<HTMLDivElement, TabsRootProps>(function TabsRoot(
   { variant = "line", overflow = "scroll", autoHeight = false, className, children, ...props },

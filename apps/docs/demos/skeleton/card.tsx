@@ -7,9 +7,9 @@ const ARTICLE = {
   author: "Adaobi Okonkwo",
   initials: "AO",
   meta: "Design systems · 6 min read",
-  title: "One variable, every colour",
+  title: "One variable, every color",
   body: `The palette is rebuilt from a single seed
-with relative colour syntax: no JavaScript,
+with relative color syntax: no JavaScript,
 no build step, no runtime theming layer.`,
 };
 

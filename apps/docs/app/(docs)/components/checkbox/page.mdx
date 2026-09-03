@@ -129,21 +129,21 @@ and `form` behave as they would on a native checkbox.
   - wrap it in a plain `<label>`, which works because the root renders a `<span>`; or
   - pair it with a sibling `<label htmlFor>` and pass `nativeButton render={<button />}` so the `id` lands on a real button.
 
-  A bare `<Checkbox />` with visible text next to it is not labelled — screen
+  A bare `<Checkbox />` with visible text next to it is not labeled — screen
   readers announce it as an unnamed checkbox.
 </Callout>
 
 **Motion.** The mark is drawn on rather than faded in: both paths carry
 `pathLength="1"`, and the stylesheet animates `stroke-dashoffset` from `1` to
 `0` over `--forte-checkbox-draw-duration`. That choice matters for reduced
-motion. The tick is information — for anyone who cannot rely on the fill colour
+motion. The tick is information — for anyone who cannot rely on the fill color
 it is the only thing separating on from off — so it must never be animated with
 a travel or scale token that collapses to zero. Under
 `prefers-reduced-motion: reduce` the library only shortens the durations
 (`--forte-duration-normal` drops from 240ms to 120ms), so the mark still appears;
 it just draws faster.
 
-Under forced colours, the box paints with `Canvas`/`CanvasText`, a checked or
+Under forced colors, the box paints with `Canvas`/`CanvasText`, a checked or
 mixed box with `Highlight`, and a disabled one with `GrayText` on `Canvas` —
 the tick stays visible in every state.
 
@@ -157,12 +157,12 @@ element, and an element's own declaration beats an inherited value.
 <ThemingTable component="Checkbox" part="root" />
 
 The three `-hover` values only ever apply on devices that report hover support,
-so a touch device never sticks in a hover colour after a tap.
+so a touch device never sticks in a hover color after a tap.
 
 `tone` reassigns `--forte-checkbox-fill`, `--forte-checkbox-fill-hover` and
 `--forte-checkbox-mark-color`. Inside a `Field.Root`, an invalid field overrides
-those and the border colours with the danger palette, so a validation failure
-never renders in a brand colour.
+those and the border colors with the danger palette, so a validation failure
+never renders in a brand color.
 
 ## API reference
 

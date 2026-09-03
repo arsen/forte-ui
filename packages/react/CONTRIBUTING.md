@@ -17,7 +17,7 @@ Register the component in `src/index.ts`. Every file that renders is
 
 ## The rules
 
-**1. Consume tokens; never hardcode a value.** No hex colours, no `px`
+**1. Consume tokens; never hardcode a value.** No hex colors, no `px`
 durations, no literal radii. If a value is missing from the inventory below,
 add it to `scripts/ramp.mjs` or `scripts/motion.mjs` and regenerate — do not
 inline it. Component-level knobs are exposed as `--forte-<component>-*` custom
@@ -32,13 +32,13 @@ stay private.
 **2. Never write `@media (prefers-reduced-motion)` in a component file.** The
 motion tokens already collapse their own geometry: `--forte-travel-md` becomes
 `0px` and `--forte-scale-enter` becomes `1`. A component that consumes them gets
-correct behaviour without knowing reduced motion exists. Writing the query
+correct behavior without knowing reduced motion exists. Writing the query
 locally also tends to produce a hard `transition: none`, which removes the
 opacity fade that reduced-motion users actually benefit from.
 
 **3. Animate with transitions, not keyframes, for enter/exit.** Use Base UI's
 `[data-starting-style]` and `[data-ending-style]`. A transition can be
-cancelled mid-flight, so closing a dialog while it is still opening reverses
+canceled mid-flight, so closing a dialog while it is still opening reverses
 smoothly instead of snapping. Keyframe animations cannot do this.
 
 **4. Never put an `infinite` animation on a Popup or Positioner part.** Base UI
@@ -70,7 +70,7 @@ layer.** Layer order outranks specificity entirely, and `a11y` is ordered after
 forte.components` block competes with your own ordinary rules on
 specificity and usually loses — most visibly with `opacity`, which forced-colors
 does not override, so `[data-disabled] { opacity: 0.55 }` survives and a
-disabled control keeps full system-colour contrast. Close the components layer
+disabled control keeps full system-color contrast. Close the components layer
 and open a second block:
 
 ```css
@@ -85,7 +85,7 @@ and open a second block:
 
 **5c. Do not write `-webkit-tap-highlight-color` in a component.**
 `patterns.css` sets it to `transparent` once, on `[data-forte]`, which is the
-touch counterpart of rule 5: the platform's grey tap box ignores
+touch counterpart of rule 5: the platform's gray tap box ignores
 `border-radius`, covers the whole element rather than the pressed part, and
 lingers after the finger lifts. The property INHERITS, so the one rule reaches
 every part and everything inside it — nine components each carried their own
@@ -95,7 +95,7 @@ own, since suppressing the platform's leaves nothing else: an `:active` fill, a
 written under `@media (hover: hover)` is not one — it never matches on touch.
 
 **6. Floating surfaces get `.forte-hc-surface`.** It carries a transparent border
-that is invisible normally but becomes a system-coloured boundary in forced-
+that is invisible normally but becomes a system-colored boundary in forced-
 colors mode, where all shadows are stripped and an unbordered popup would
 otherwise dissolve into the page.
 
@@ -173,7 +173,7 @@ element inherits instead.
 This list is hand-maintained prose and can drift. The generated, authoritative
 inventory is [`docs-data/tokens.json`](docs-data/tokens.json) — every `--forte-*`
 declaration in `src/styles/*.css` with its default, every overriding selector
-(presets, dark mode, forced colours), and its `@property` registration where
+(presets, dark mode, forced colors), and its `@property` registration where
 one exists. `pnpm --filter @forte-ui/react docgen` rebuilds it. When this
 list and that file disagree, the file is right; fix the list.
 

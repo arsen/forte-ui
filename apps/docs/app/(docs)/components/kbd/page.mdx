@@ -15,7 +15,7 @@ The way the interface prints a key it wants pressed. It renders a real
 `<kbd>` — the element HTML has for exactly this — and draws its fill and edge
 out of `currentColor`, so the same cap sits in running text, on a tooltip's
 inverted popup, inside a solid button and on a highlighted menu row without a
-colour prop.
+color prop.
 
 <DemoBlock id="kbd/basic" />
 
@@ -51,7 +51,7 @@ in — help text, a table cell, a footnote — the way an inline code chip does.
 
 Because the chrome derives from `currentColor`, composing a cap into a
 component costs nothing: on a solid button it draws itself out of the
-button's own label colour.
+button's own label color.
 
 <DemoBlock id="kbd/composed" />
 
@@ -97,9 +97,9 @@ with `[data-forte="kbd"]` to catch every cap — including the ones
 
 <ThemingTable component="Kbd" />
 
-The two colour knobs default to `color-mix()` expressions over `currentColor`
+The two color knobs default to `color-mix()` expressions over `currentColor`
 rather than to tokens, and that is the load-bearing decision: a cap has no
-surface of its own to be measured against, so a looked-up grey would be a
+surface of its own to be measured against, so a looked-up gray would be a
 contrast guess everywhere but the page — deriving from the text it sits with
 keeps the glyphs at whatever contrast that text already has, on any surface
 and in any re-skin.

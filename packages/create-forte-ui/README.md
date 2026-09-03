@@ -37,7 +37,7 @@ are tuned.
 
 - The starter files live in `src/templates.ts`; when a guide step changes,
   change the matching builder in the same commit.
-- The font catalogue (`src/fonts.ts`) and colour maths (`src/color.ts`) are
+- The font catalog (`src/fonts.ts`) and color maths (`src/color.ts`) are
   the modules of record — the docs' Theme Studio re-exports them from this
   package.
 - `pnpm --filter create-forte-ui smoke` scaffolds and builds all four

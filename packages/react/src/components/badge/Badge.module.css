@@ -3,7 +3,7 @@
  *
  * The same two axes as everything else in the library:
  *   data-variant  how loud the chip is (solid/soft/outline/ghost)
- *   data-tone     which semantic colour set it draws from
+ *   data-tone     which semantic color set it draws from
  * plus two that describe the box rather than the paint — `data-size` and
  * `data-shape`.
  *
@@ -17,9 +17,9 @@
  *    how tightly CONTROLS pack, and this is not one.
  *
  * 2. The border is always reserved and usually transparent. Only `outline`
- *    gives it a colour, but every variant keeps its 1px, so swapping variants
- *    cannot move a badge by a pixel — and under forced colours, where
- *    `transparent` is replaced by a system colour, that reserved edge is the
+ *    gives it a color, but every variant keeps its 1px, so swapping variants
+ *    cannot move a badge by a pixel — and under forced colors, where
+ *    `transparent` is replaced by a system color, that reserved edge is the
  *    whole reason a solid or soft chip does not dissolve into the page. It is
  *    the same trick `.forte-hc-surface` plays, applied to every variant at once.
  *
@@ -38,7 +38,7 @@
  *    authored value exists.
  *
  * As everywhere else, there is no `prefers-reduced-motion` block here: the
- * only thing that moves is colour, and the duration tokens shorten themselves.
+ * only thing that moves is color, and the duration tokens shorten themselves.
  */
 @layer forte.components {
   .root {
@@ -60,7 +60,7 @@
     --forte-badge-padding-y: var(--forte-space-1);
     /** Inline padding; reassigned by `size`. */
     --forte-badge-padding-x: var(--forte-space-2);
-    /** Border thickness. Reserved by every variant; only `outline` colours it. */
+    /** Border thickness. Reserved by every variant; only `outline` colors it. */
     --forte-badge-border-width: 1px;
     /** Size of an `svg` child. `1em`, so it tracks `--forte-badge-font-size`
      * and needs no rule per size — and stays in proportion if a consumer
@@ -68,7 +68,7 @@
     --forte-badge-icon-size: 1em;
     /** Diameter of the leading dot. */
     --forte-badge-dot-size: 0.5em;
-    /** Colour of that dot. `currentColor` by default, so it matches the label
+    /** Color of that dot. `currentColor` by default, so it matches the label
      * through every variant and tone without a slot of its own. */
     --forte-badge-dot-color: currentColor;
     /** Smallest inline size. `count` re-points it at the badge's own height,
@@ -84,26 +84,26 @@
      * button. The three tones with no authored hover step derive one further
      * down. */
     --forte-badge-tone-solid-hover: var(--forte-color-primary-hover);
-    /** Text colour on the solid fill */
+    /** Text color on the solid fill */
     --forte-badge-tone-on-solid: var(--forte-color-on-primary);
     /** Tone's tinted fill, and the hover wash for `outline` and `ghost` */
     --forte-badge-tone-soft: var(--forte-color-primary-soft);
     /** Tinted fill under the pointer. The four tones with no authored
      * soft-hover step derive one further down. */
     --forte-badge-tone-soft-hover: var(--forte-color-primary-soft-hover);
-    /** Label colour for `soft`, `outline` and `ghost` */
+    /** Label color for `soft`, `outline` and `ghost` */
     --forte-badge-tone-text: var(--forte-color-primary-text);
-    /** Border colour for `outline` */
+    /** Border color for `outline` */
     --forte-badge-tone-border: var(--forte-color-primary-border);
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Resting background; filled in by `variant` */
     --forte-badge-bg: transparent;
     /** Background under the pointer, for an interactive badge only */
     --forte-badge-bg-hover: transparent;
-    /** Label and icon colour */
+    /** Label and icon color */
     --forte-badge-fg: var(--forte-color-foreground);
-    /** Border colour */
+    /** Border color */
     --forte-badge-border-color: transparent;
 
     box-sizing: border-box;
@@ -282,7 +282,7 @@
    * Solid mixes toward black — which is exactly how the accent ramp derives
    * its own step 10 — and that direction is the safe one: darkening a solid
    * fill can only raise its contrast with the near-white label on top of it.
-   * Soft moves 8% toward the tone's own text colour, deepening the tint in
+   * Soft moves 8% toward the tone's own text color, deepening the tint in
    * light mode and lifting it in dark, in both cases away from the page.
    *
    * They sit AFTER the tone blocks on purpose, and select by exclusion: a
@@ -396,14 +396,14 @@
  * layer alone rather than by out-specifying the rules above.
  *
  * Most of the badge survives on its own: author backgrounds are replaced, and
- * the border every variant reserves is transparent — which forced colours
- * turns into a real system-coloured edge, so all four variants converge on the
+ * the border every variant reserves is transparent — which forced colors
+ * turns into a real system-colored edge, so all four variants converge on the
  * same outlined chip. Two things do not survive.
  * ------------------------------------------------------------------------- */
 @layer forte.a11y {
   @media (forced-colors: active) {
     /* The dot is painted with a background, and backgrounds go to `Canvas`.
-     * A system colour keyword is preserved, so name one. */
+     * A system color keyword is preserved, so name one. */
     .dot {
       background-color: CanvasText;
     }

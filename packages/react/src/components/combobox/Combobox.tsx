@@ -105,7 +105,7 @@ export type ComboboxRootProps<
  * type of a single item, and `Multiple` flips the value between `Value` and
  * `Value[]`. Passing `multiple` alone is enough for `Multiple` to infer.
  *
- * One behaviour is added on top of the primitive: a `multiple` combobox never
+ * One behavior is added on top of the primitive: a `multiple` combobox never
  * closes because an item was pressed. Base UI closes it only when a filter had
  * been typed and the input lives outside the popup, which makes picking from a
  * short list and picking from a searched list two different gestures — and an
@@ -125,7 +125,7 @@ export function ComboboxRoot<
 
   const handleOpenChange = React.useCallback(
     (open: boolean, eventDetails: BaseCombobox.Root.ChangeEventDetails) => {
-      // Cancelled BEFORE the consumer's handler runs, not after: the popup
+      // Canceled BEFORE the consumer's handler runs, not after: the popup
       // stays open, so there is no open-change to report and calling their
       // handler would tell them about a close that never happened.
       if (multiple && !open && eventDetails.reason === "item-press") {
@@ -373,7 +373,7 @@ export interface ComboboxValueProps extends BaseValueProps {}
  * Renders no DOM element of its own — pass a function as `children` to
  * format the value, or `placeholder` for the empty state. The trigger carries
  * `data-placeholder` while there is no value, which is what the muted
- * placeholder colour keys off.
+ * placeholder color keys off.
  */
 export function ComboboxValue(props: ComboboxValueProps): React.JSX.Element {
   return <BaseCombobox.Value {...props} />;
@@ -680,7 +680,7 @@ export const ComboboxPopup = React.forwardRef<HTMLDivElement, ComboboxPopupProps
           collisionPadding={collisionPadding}
         >
           {/* `forte-hc-surface` carries a transparent border that becomes a
-            * system-coloured boundary in forced-colors mode, where the
+            * system-colored boundary in forced-colors mode, where the
             * box-shadow below is stripped and the popup would otherwise
             * dissolve into the page. */}
           <BaseCombobox.Popup

@@ -68,9 +68,9 @@ const banner = `/**
 const css = `${banner}
 @layer forte.tokens {
   /* -----------------------------------------------------------------------
-   * Layer 0 — fallback for engines without relative colour syntax.
+   * Layer 0 — fallback for engines without relative color syntax.
    * Hue cannot be extracted without it, so we mix toward white/black instead.
-   * Degraded but coherent, and it keeps a brand seed recognisable.
+   * Degraded but coherent, and it keeps a brand seed recognizable.
    * --------------------------------------------------------------------- */
 ${indent(fallbackRamp("accent", "--forte-accent-seed"))}
 ${indent(fallbackRamp("secondary", "--forte-secondary-seed"))}
@@ -78,9 +78,9 @@ ${indent(gray.plain)}
 
   /* -----------------------------------------------------------------------
    * Layer 1 — the real ramps.
-   * The @supports test uses a LITERAL colour on purpose: a test containing
+   * The @supports test uses a LITERAL color on purpose: a test containing
    * var() reports true unconditionally and would never guard anything.
-   * light-dark() needs no separate guard — relative colour syntax shipped
+   * light-dark() needs no separate guard — relative color syntax shipped
    * later than light-dark() in every engine, so passing this test implies it.
    * --------------------------------------------------------------------- */
   @supports (color: oklch(from red l c h)) {

@@ -12,7 +12,7 @@
  * `ScrollArea` rather than scrolling itself:
  *   Content  →  .scroller (ScrollArea.Root)
  *            →    viewport   — the scrollport: full-bleed, fades, tab stop
- *            →      .measure — the padding, the width cap, the centring
+ *            →      .measure — the padding, the width cap, the centering
  * `.scroller` and `.measure` are the only rules here that style a composed
  * component's parts; the viewport is left alone deliberately, since this
  * file's own `.viewport` is the drawer's fixed overlay and would pin the
@@ -84,7 +84,7 @@
  */
 @layer forte.components {
   /* Backdrop ---------------------------------------------------------------
-   * `.forte-scrim` already supplies position/inset, the scrim colour, the
+   * `.forte-scrim` already supplies position/inset, the scrim color, the
    * optional blur and the forced-colors treatment. The opacity is taken over
    * here so the scrim can track the drag.
    * ---------------------------------------------------------------------- */
@@ -255,7 +255,7 @@
      * list — see the note on `.viewport`. */
     /** Popup background */
     --forte-drawer-bg: var(--forte-color-overlay);
-    /** Popup text colour */
+    /** Popup text color */
     --forte-drawer-fg: var(--forte-color-foreground);
     /** Corner radius — two corners for `edge`, four for `floating` */
     --forte-drawer-radius: var(--forte-radius-surface);
@@ -267,13 +267,13 @@
     --forte-drawer-shadow: var(--forte-shadow-4);
     /* Painted only on a scrimless drawer — see the `data-no-backdrop` rule
      * below. Without a dimmed page behind it the shadow is the only boundary,
-     * and overlay-on-background sits within a step on the grey ramp, so in
+     * and overlay-on-background sits within a step on the gray ramp, so in
      * dark mode the edge simply vanishes. `.forte-hc-surface` already
      * reserves a 1px transparent border on this element, so painting it
      * costs no layout. */
     /** Width of the hairline drawn when `backdrop={false}` */
     --forte-drawer-border-width: 1px;
-    /** Colour of that hairline */
+    /** Color of that hairline */
     --forte-drawer-border-color: var(--forte-color-border);
     /** Base font size inside the popup */
     --forte-drawer-font-size: var(--forte-font-size-2);
@@ -306,12 +306,12 @@
      *
      * Scale alone is not enough of a cue, and bottom sheets are where that
      * shows: two of them arrive from the same edge in the same surface
-     * colour, so a 4% size difference reads as one continuous panel with a
+     * color, so a 4% size difference reads as one continuous panel with a
      * seam across it rather than as two. The dim is what separates the
      * layers. */
     /** How much each nested drawer shrinks its parent */
     --forte-drawer-nested-scale-step: 0.04;
-    /** Colour the parent dims itself with under a nested drawer */
+    /** Color the parent dims itself with under a nested drawer */
     --forte-drawer-nested-scrim: var(--forte-scrim-color);
     /** How long the parent takes to recede under a child */
     --forte-drawer-nested-duration: var(--forte-duration-spring-precise);
@@ -353,7 +353,7 @@
     color: var(--forte-drawer-fg);
 
     /* First shadow is the skirt — zero blur, zero spread, offset along the
-     * axis vector, painted in the drawer's own background colour, so it reads
+     * axis vector, painted in the drawer's own background color, so it reads
      * as the surface continuing past the edge of the screen rather than as a
      * shadow. It collapses to an invisible no-op when the bleed is 0, which is
      * how the floating variant switches it off without a second rule. The
@@ -458,7 +458,7 @@
   /* A scrimless drawer draws its own boundary. With a backdrop the dimmed
    * page is what tells the surface and the content behind it apart; a drawer
    * rendered with `backdrop={false}` sits directly on an undimmed page in
-   * its own surface colour, so it gets the hairline `.forte-hc-surface`
+   * its own surface color, so it gets the hairline `.forte-hc-surface`
    * reserved the space for. Keyed on the backdrop rather than on `modal`
    * because the missing scrim IS the visibility problem — a non-modal drawer
    * that keeps its backdrop still has the dim doing this job. */
@@ -601,12 +601,12 @@
     content: "";
     position: absolute;
     /* Drawn at the padding edge, with a one-border-width spread shadow in
-     * the same colour reaching past it. A box at `inset: 0` with
+     * the same color reaching past it. A box at `inset: 0` with
      * `border-radius: inherit` traces the wrong arc on its own: the padding
      * edge is the border edge's arc with the border width taken off the
      * radius, and painting the outer radius there leaves a sub-pixel
      * crescent of undimmed background at every rounded corner — a bright
-     * fleck in light mode, where the surface is far from the scrim's colour.
+     * fleck in light mode, where the surface is far from the scrim's color.
      * `Dialog` corrects the radius instead; that is not an option here, where
      * the radius is per side and set through four shorthands. The spread
      * shadow's outer arc is one border width wider than the box's, which
@@ -644,10 +644,10 @@
    * parent that is supposed to have receded — the one part of it still at
    * full strength, and the most visible part, because it is the silhouette.
    *
-   * Painting the ring in the scrim colour composites it over that same
+   * Painting the ring in the scrim color composites it over that same
    * background, which is exactly what the overlay does to the rest of the
    * surface — so the two agree by construction rather than by a matched pair
-   * of hand-picked colours. The overlay's spread shadow does not reach the
+   * of hand-picked colors. The overlay's spread shadow does not reach the
    * ring for the same reason it is there at all: the popup's `overflow` clips
    * it straight back to the padding box.
    *
@@ -667,7 +667,7 @@
     --forte-drawer-handle-length: 2.25rem;
     /** Short edge of the grab pill */
     --forte-drawer-handle-thickness: 0.25rem;
-    /** Grab pill colour */
+    /** Grab pill color */
     --forte-drawer-handle-color: var(--forte-color-border-strong);
     /* How far a side drawer's grip sits from the edge it hugs. Small enough to
      * stay inside the popup's padding, so it never collides with content. */
@@ -691,12 +691,12 @@
   }
 
   /* A side drawer's pill turns to face the direction it is dragged, hugs the
-   * edge that faces into the page, and centres itself down that edge — the
+   * edge that faces into the page, and centers itself down that edge — the
    * shape of a grip on a panel you can pull.
    *
    * It is taken OUT of the column flow to get there. Left in flow it lands in
    * the top corner with the whole drawer below it, where a 4px stroke reads as
-   * a stray mark — a text caret, a rendering artefact — rather than as
+   * a stray mark — a text caret, a rendering artifact — rather than as
    * something to grab.
    *
    * Taking it out of flow is only safe because the popup does not scroll —
@@ -734,7 +734,7 @@
    * The reason for the split is that ONE box cannot be both things this
    * element used to be. A scroll container's track and its edge fade sit at
    * its own edge, so for them to reach the drawer's edge the scroller has to
-   * run the full width of the popup; but the body's text is capped and centred
+   * run the full width of the popup; but the body's text is capped and centered
    * (see the `top`/`bottom` rule below), so the box holding it must be
    * narrower and inset. Written as one box, whichever job you pick the other
    * one is wrong: keep the cap and the scrollbar floats in from the edge over
@@ -760,7 +760,7 @@
    * pins to the bottom of the drawer instead of scrolling away. */
   .content {
     /* Side drawers are already narrow, so there is nothing to cap. */
-    /** Maximum width of the drawer's body, which then centres itself. `32rem`
+    /** Maximum width of the drawer's body, which then centers itself. `32rem`
      * on a `top`/`bottom` drawer. */
     --forte-drawer-content-max-inline-size: 100%;
 
@@ -795,13 +795,13 @@
    * So it cancels that padding with a negative margin and `.measure` re-applies
    * the same value INSIDE the scrollport, where padding does not move the
    * track. The two are stated once each, per edge, through the pair of
-   * properties below — one number, cancelled and restored, so they cannot
+   * properties below — one number, canceled and restored, so they cannot
    * drift into a body that is double-padded or flush against the surface.
    *
    * The block axis is per-edge because the popup is a flex COLUMN: the inline
    * padding is always the scroller's to cancel, but the block padding is only
    * its own where it actually touches it. With a `Drawer.Footer` below it the
-   * bottom padding belongs to the footer, and cancelling it there would pull
+   * bottom padding belongs to the footer, and canceling it there would pull
    * the two into each other. Hence the two selectors below rather than a
    * blanket `margin: calc(-1 * ...)`. */
   .content[data-scroll-area] {
@@ -847,10 +847,10 @@
   }
 
   /* The measure box: the popup's padding put back inside the scrollport, plus
-   * the cap and the centring the content element used to carry.
+   * the cap and the centering the content element used to carry.
    *
    * The block padding mirrors the bleed above per edge — where the scroller
-   * cancelled nothing, this adds nothing, or a body following a
+   * canceled nothing, this adds nothing, or a body following a
    * `Drawer.Title` would be pushed off by a padding that was never removed.
    *
    * Two class selectors deep on purpose. `ScrollArea.Content` styles itself in
@@ -881,7 +881,7 @@
 
   /* A top or bottom drawer is as wide as the screen, and body text set across
    * a whole desktop viewport is genuinely hard to read — the eye loses the
-   * line on the way back. Capping and centring is the default rather than
+   * line on the way back. Capping and centering is the default rather than
    * something to opt into, because the bad version is what you get by simply
    * putting text in a sheet. Raise it to `100%` for a drawer whose content is
    * a grid or a toolbar and wants the full width. */
@@ -990,7 +990,7 @@
 
   /* Trigger and Close ------------------------------------------------------
    * A modest neutral button so an unstyled `<Drawer.Trigger>Open</...>` does
-   * not fall back to the UA's grey chrome. Both parts drop these styles
+   * not fall back to the UA's gray chrome. Both parts drop these styles
    * entirely when the consumer passes `render` (typically our own `<Button>`),
    * because two full button styles on one element resolve by source order
    * inside the same cascade layer — which is not something a consumer can
@@ -1073,7 +1073,7 @@
  */
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* Every background-color collapses to a system colour here, so the pill
+    /* Every background-color collapses to a system color here, so the pill
      * would be painted in the same Canvas as the surface behind it and
      * disappear. `.forte-hc-surface` has already given the popup `Canvas`, so
      * `CanvasText` is the one value guaranteed to contrast with it. */
@@ -1091,7 +1091,7 @@
     }
 
     /* The nested dim is a translucent black overlay, and forced-colors
-     * repaints every background in an OPAQUE system colour while leaving
+     * repaints every background in an OPAQUE system color while leaving
      * `opacity` alone — so at full opacity it stops being a dim and becomes a
      * blank panel covering the parent completely. Drop it. The separation it
      * provides is already carried here by the `CanvasText` border

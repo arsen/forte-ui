@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   // there is no route handler, no middleware, no `next/image` and no dynamic
   // segment -- so nothing is given up by dropping the server. Adding any of
   // those later fails the BUILD rather than silently degrading, which is the
-  // behaviour we want.
+  // behavior we want.
   output: "export",
   // Emit `about/index.html` rather than `about.html`, so a static host serves
   // the same URLs (`/components/button`, no extension, no redirect) that

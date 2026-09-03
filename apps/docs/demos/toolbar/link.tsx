@@ -13,9 +13,9 @@ export default function ToolbarLink() {
       <Toolbar.Separator />
 
       {/* Drawn as a link and not as a button on purpose: it navigates, and the
-        * underline is the only cue that says so before it is clicked — colour
+        * underline is the only cue that says so before it is clicked — color
         * alone would fail SC 1.4.1 against the buttons beside it, which share
-        * the bar's text colour. */}
+        * the bar's text color. */}
       <Toolbar.Link href="#toolbar-link">Files changed</Toolbar.Link>
       <Toolbar.Link href="#toolbar-link">Checks</Toolbar.Link>
     </Toolbar.Root>

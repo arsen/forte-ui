@@ -8,7 +8,7 @@ import { Checkbox, CheckboxGroup } from "@forte-ui/react";
 // for wrapping a control.
 const row = "flex cursor-pointer items-center gap-(--forte-control-gap)";
 
-export default function CheckboxGroupLabelling() {
+export default function CheckboxGroupLabeling() {
   const groupLabelId = React.useId();
 
   return (

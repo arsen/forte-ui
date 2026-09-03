@@ -25,7 +25,7 @@
  *     and `--forte-scale-enter` to exactly 1, so the gesture degrades to a
  *     plain opacity fade without this file knowing reduced motion exists.
  *   - Enter/exit runs on TRANSITIONS keyed off [data-starting-style] /
- *     [data-ending-style], never keyframes. A transition can be cancelled
+ *     [data-ending-style], never keyframes. A transition can be canceled
  *     mid-flight, so a card dismissed while it is still opening reverses
  *     smoothly instead of snapping — which happens constantly here, because
  *     a pointer sweeping across a paragraph of links opens and abandons one
@@ -60,9 +60,9 @@
    * one would push the surrounding text apart.
    * --------------------------------------------------------------------- */
   .trigger {
-    /** Link colour */
+    /** Link color */
     --forte-preview-card-trigger-color: var(--forte-color-primary-text);
-    /** Colour of the link's underline. Muted by default so the rule reads as
+    /** Color of the link's underline. Muted by default so the rule reads as
      * an underline rather than as a second line of text. */
     --forte-preview-card-trigger-underline-color: color-mix(
       in oklab,
@@ -124,9 +124,9 @@
      * Consumers set them on the popup itself (`className` on
      * `PreviewCard.Popup`, whose rule is unlayered and so beats this layer) or
      * re-point the global tokens below, which this file only ever reads. */
-    /** Card surface colour */
+    /** Card surface color */
     --forte-preview-card-bg: var(--forte-color-overlay);
-    /** Card text colour */
+    /** Card text color */
     --forte-preview-card-fg: var(--forte-color-foreground);
     /** Corner radius */
     --forte-preview-card-radius: var(--forte-radius-surface);
@@ -139,12 +139,12 @@
     --forte-preview-card-shadow: var(--forte-shadow-4);
     /* A hairline, for the same reason Popover has one: this surface floats
      * over undimmed content, where overlay and background are a single step
-     * apart on the grey ramp and the shadow is doing nearly all the
+     * apart on the gray ramp and the shadow is doing nearly all the
      * separating. `.forte-hc-surface` already reserves a 1px transparent border
      * on this element, so painting it costs no layout. */
     /** Width of the hairline that separates the card from the page */
     --forte-preview-card-border-width: 1px;
-    /** Colour of that hairline. The arrow's outline follows it. */
+    /** Color of that hairline. The arrow's outline follows it. */
     --forte-preview-card-border-color: var(--forte-color-border);
     /** Base font size inside the card */
     --forte-preview-card-font-size: var(--forte-font-size-2);
@@ -249,7 +249,7 @@
     letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
-    /* Grow out of the link rather than out of the card's own centre.
+    /* Grow out of the link rather than out of the card's own center.
      * `--transform-origin` is published by the Positioner and points back at
      * the anchor. */
     transform-origin: var(--transform-origin);

@@ -5,10 +5,10 @@ import { Button, Select, Toast, useToast, type ToastPosition } from "@forte-ui/r
 
 const POSITIONS: Record<ToastPosition, string> = {
   "top-start": "Top start",
-  top: "Top centre",
+  top: "Top center",
   "top-end": "Top end",
   "bottom-start": "Bottom start",
-  bottom: "Bottom centre",
+  bottom: "Bottom center",
   "bottom-end": "Bottom end (default)",
 };
 
@@ -29,7 +29,7 @@ export default function ToastPositions() {
   return (
     <div ref={setStage} className="relative min-h-[19rem] w-full">
       <Toast.Provider container={stage} position={position}>
-        {/* Centred in the box so a top-anchored stack and a bottom-anchored
+        {/* Centered in the box so a top-anchored stack and a bottom-anchored
           * one both have room to land without covering the controls. */}
         <div className="absolute inset-0 flex flex-wrap items-center justify-center gap-3">
           <Select.Root

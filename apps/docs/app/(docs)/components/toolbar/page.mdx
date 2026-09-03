@@ -160,9 +160,9 @@ tab stop the toolbar exists to save.
 ### Links
 
 `Toolbar.Link` is drawn as a link and not as a button on purpose: it navigates,
-and the underline is the only cue that says so before it is clicked. Colour
+and the underline is the only cue that says so before it is clicked. Color
 alone would fail SC 1.4.1 against the buttons beside it, which share the bar's
-text colour.
+text color.
 
 <DemoBlock id="toolbar/link" />
 
@@ -251,8 +251,8 @@ name — and `iconOnly` holds the 24×24 minimum hit target from SC 2.5.8 for yo
 
 <ThemingTable component="Toolbar" part="root" />
 
-The bar always draws a 1px border, even when it has no colour. `transparent` is
-not preserved under forced colours — it is replaced with a system colour — so
+The bar always draws a 1px border, even when it has no color. `transparent` is
+not preserved under forced colors — it is replaced with a system color — so
 declaring the border up front is what lets a `panel` bar keep a visible edge in
 high contrast, where its fill disappears, without the accessibility rules having
 to add a border and shift every item in the bar.
@@ -266,9 +266,9 @@ to add a border and shift every item in the bar.
 <ThemingTable component="Toolbar" part="separator" />
 
 The rule is painted with a **border**, never a `background-color`. A background
-is replaced with a system colour under forced colours, so a hairline drawn that
+is replaced with a system color under forced colors, so a hairline drawn that
 way vanishes for exactly the users who most need the grouping cue; border
-colours are forced to `CanvasText` instead.
+colors are forced to `CanvasText` instead.
 
 ### Link
 

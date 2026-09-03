@@ -24,7 +24,7 @@ export interface StepsLabels {
   complete?: string;
   /**
    * Read for a step in an error state, where the visual cue is the mark and
-   * the danger colour.
+   * the danger color.
    * @default "Has an error"
    */
   error?: string;
@@ -61,7 +61,7 @@ const StepItemContext = React.createContext<{
  * `stroke-dashoffset` from 1 to 0 over a DURATION token — the check draws
  * itself in rather than fading. A duration, not a travel or scale token, on
  * purpose: those collapse under reduced motion, and the mark is information
- * (it is what separates "done" from "here" once the fill colours match).
+ * (it is what separates "done" from "here" once the fill colors match).
  * ---------------------------------------------------------------------- */
 
 function CheckIcon(props: React.ComponentProps<"svg">) {
@@ -117,7 +117,7 @@ export interface StepsRootProps
   /**
    * Where a horizontal step's title sits. `"inline"` puts it beside the
    * indicator, with the connector filling the space to the next step.
-   * `"below"` centres it under the indicator and gives every step an equal
+   * `"below"` centers it under the indicator and gives every step an equal
    * share of the row — the layout for a short wizard whose titles are one or
    * two words. Ignored when `orientation="vertical"`.
    * @default "inline"
@@ -137,9 +137,9 @@ export interface StepsRootProps
    */
   variant?: StepsVariant;
   /**
-   * Which semantic colour the active and completed steps draw from. The
+   * Which semantic color the active and completed steps draw from. The
    * error state is always `danger`, and the steps not yet reached stay
-   * neutral in every tone, so the colour only ever says "this far".
+   * neutral in every tone, so the color only ever says "this far".
    * @default "primary"
    */
   tone?: StepsTone;
@@ -278,7 +278,7 @@ export interface StepsItemProps
  *
  * The item also draws the connector to the next step, as a sibling of the
  * step's content rather than a sibling of the item, so the connector's
- * colour follows THIS step's status: the line after a completed step fills,
+ * color follows THIS step's status: the line after a completed step fills,
  * which is the only rule that reads the same whether the steps run across
  * or down.
  *
@@ -426,7 +426,7 @@ export interface StepsIndicatorProps
  * when the step completes or a mark when it errors — the number stays in
  * the DOM underneath, so the swap is a fade and the check can draw itself
  * on. Give it children — an icon — and they are shown in every state; the
- * fill colour still carries the status.
+ * fill color still carries the status.
  *
  * The two icon states also get a visually hidden word (`labels` on the
  * root), because a check mark has no text of its own and a screen reader

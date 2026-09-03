@@ -32,7 +32,7 @@ export interface ButtonGroupRootProps
   /**
    * Which way the controls fuse — a row or a column. Layout only: unlike
    * [`Toolbar`](/components/toolbar), a button group adds no keyboard
-   * behaviour, so there is no arrow-key axis to move.
+   * behavior, so there is no arrow-key axis to move.
    * @default "horizontal"
    */
   orientation?: ButtonGroupOrientation;
@@ -119,7 +119,7 @@ export interface ButtonGroupSeparatorProps
  * own. Renders a `<div role="separator">`.
  *
  * Reach for it between `solid` or `soft` buttons — fused bare they read as
- * one unbroken slab of colour. `outline` neighbours need none: their own
+ * one unbroken slab of color. `outline` neighbours need none: their own
  * borders already draw the seam, and a separator there doubles the line.
  */
 export const ButtonGroupSeparator = React.forwardRef<
@@ -196,7 +196,7 @@ export const ButtonGroupText = React.forwardRef<HTMLDivElement, ButtonGroupTextP
  * ```
  *
  * Purely visual and semantic — it adds `role="group"` and the fused styling,
- * and no keyboard behaviour: every control keeps its own tab stop. When the
+ * and no keyboard behavior: every control keeps its own tab stop. When the
  * set should cost one Tab press instead, reach for
  * [`Toolbar`](/components/toolbar).
  *

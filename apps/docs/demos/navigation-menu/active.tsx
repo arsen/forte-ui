@@ -21,7 +21,7 @@ export default function NavigationMenuActive() {
           <NavigationMenu.Content>
             {guides.map((item) => (
               /* `active` publishes `data-active` AND `aria-current="page"`, so
-               * the cue is not colour alone — which is what SC 1.4.1 asks for
+               * the cue is not color alone — which is what SC 1.4.1 asks for
                * and what a screen reader announces as "current page". */
               <NavigationMenu.Link
                 key={item.href}

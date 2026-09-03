@@ -14,7 +14,7 @@
  * Two Base UI constraints are load-bearing in this file:
  *
  *  - Enter/exit runs on TRANSITIONS keyed off [data-starting-style] /
- *    [data-ending-style], never on keyframes. A transition can be cancelled
+ *    [data-ending-style], never on keyframes. A transition can be canceled
  *    mid-flight, so a tooltip that closes while it is still opening reverses
  *    smoothly instead of snapping.
  *
@@ -71,7 +71,7 @@
      * which the popup only reads and never re-declares. */
     /** Popup and arrow fill */
     --forte-tooltip-bg: var(--forte-gray-12);
-    /** Text colour */
+    /** Text color */
     --forte-tooltip-fg: var(--forte-gray-1);
     /** Corner radius */
     --forte-tooltip-radius: var(--forte-radius-2);
@@ -125,7 +125,7 @@
      * consumer themes are the `--forte-tooltip-*` properties above, and this
      * mapping is how a re-pointed knob reaches the shared geometry — the
      * arrow is a child of this element and inherits the resolved values.
-     * No border-colour mapping: the pattern's `transparent` fallback IS this
+     * No border-color mapping: the pattern's `transparent` fallback IS this
      * component's outline-less wedge, and forced-colors paints its own.
      * Internal on purpose (plain comments): theming-docgen must publish the
      * knobs, not the plumbing. */
@@ -166,7 +166,7 @@
     letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
-    /* Grow out of the trigger rather than out of the popup's own centre.
+    /* Grow out of the trigger rather than out of the popup's own center.
      * --transform-origin is published by the Positioner and points back at
      * the anchor. */
     transform-origin: var(--transform-origin);
@@ -240,14 +240,14 @@
    * Menu uses to decide its label column.
    *
    * `baseline`, not `center`: the cap is taller than the text it sits beside,
-   * and centring it against a label that has wrapped to two lines floats it
+   * and centering it against a label that has wrapped to two lines floats it
    * halfway down the popup instead of beside the first line.
    *
    * The Arrow is not a flex item and is unaffected — Base UI positions it with
    * an inline `position: absolute`, so it is out of flow either way.
    *
    * In forced-colors mode the cap's fill is replaced with Canvas, the same
-   * colour .forte-hc-surface gives the popup, so the fill stops being the thing
+   * color .forte-hc-surface gives the popup, so the fill stops being the thing
    * that separates the keys from the label. The border is what survives: it is
    * forced to CanvasText, which is why the cap carries one at all rather than
    * relying on the fill alone.
@@ -270,7 +270,7 @@
    * gray-1 ON gray-12 — and no mid-gray on it is covered by the contrast
    * harness, so dimming here would be a guess at SC 1.4.3. The fill runs
    * heavier than Kbd's default (16% against 7%) for the same reason: a
-   * translucent wash needs more of a light colour than of a dark one to read
+   * translucent wash needs more of a light color than of a dark one to read
    * at all.
    *
    * `.popup .shortcut`, not `.shortcut`: Kbd declares the same knobs on its

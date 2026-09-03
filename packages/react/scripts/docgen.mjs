@@ -1,6 +1,6 @@
 /**
  * Extracts prop documentation from the TypeScript source into docs-data/props.json,
- * and the component catalogue into docs-data/components.md and components.json.
+ * and the component catalog into docs-data/components.md and components.json.
  *
  * Generated at build time in THIS package (not in the docs app) so the docs
  * build never pays the cost of constructing a TypeScript program, and so turbo
@@ -8,18 +8,18 @@
  *
  *   pnpm --filter @forte-ui/react docgen
  *
- * The catalogue is the discovery layer the JSON files cannot be: props.json is
+ * The catalog is the discovery layer the JSON files cannot be: props.json is
  * a 255-key lookup table, useless for "which component do I reach for?". Each
  * user-facing component carries `@summary` (a one-line when-to-use) and
  * `@category` in its doc comment; this script assembles them into one small
  * markdown file an agent can read whole, with each entry pointing at the exact
  * props.json / theming.json keys for the follow-up lookup. Both tags are
- * REQUIRED on every catalogue root — the build fails on a missing one, so a
- * new component cannot ship uncatalogued (the drift that killed the skill's
+ * REQUIRED on every catalog root — the build fails on a missing one, so a
+ * new component cannot ship uncatalogd (the drift that killed the skill's
  * hand-written index). react-docgen-typescript strips block tags from the
  * description it returns, so the tags never leak into props.json.
  *
- * components.json is the same catalogue as machine-readable data. The docs
+ * components.json is the same catalog as machine-readable data. The docs
  * site builds its component index and its sidebar from it, so the pages a
  * reader can reach are derived from the tags rather than typed out a second
  * time; `@partOf` is what tells that build which entries head a page of their
@@ -46,7 +46,7 @@ import ts from "typescript";
  * code-based default beats the prop's correct `@default` JSDoc tag, so the tag
  * could not repair it. Scope the extraction to the statement that actually
  * declares the component; anything this simpler walk cannot resolve (classes,
- * `X.defaultProps = ...`) falls back to the library's own behaviour.
+ * `X.defaultProps = ...`) falls back to the library's own behavior.
  */
 const extractDefaults = Parser.prototype.extractDefaultPropsFromComponent;
 Parser.prototype.extractDefaultPropsFromComponent = function (symbol, source) {
@@ -118,7 +118,7 @@ console.log(`docgen: ${Object.keys(out).length} components`);
 for (const [k, v] of Object.entries(out)) console.log(`  ${k}: ${v.props.length} props`);
 
 /* -------------------------------------------------------------------------
- * docs-data/components.md — the component catalogue
+ * docs-data/components.md — the component catalog
  * ---------------------------------------------------------------------- */
 
 // The fixed bucket list, validated exactly: a typo'd @category must be a build
@@ -127,7 +127,7 @@ for (const [k, v] of Object.entries(out)) console.log(`  ${k}: ${v.props.length}
 const CATEGORIES = ["Actions", "Forms", "Overlays", "Navigation", "Content & layout", "Feedback"];
 
 // Group every parsed component by its directory under src/components. The
-// directory is the unit of enforcement: a dir may hold several catalogue
+// directory is the unit of enforcement: a dir may hold several catalog
 // roots (checkbox/ ships Checkbox AND CheckboxGroup), but a dir with none is
 // a component that would be invisible to agents — fail on it.
 const byDir = new Map();
@@ -168,7 +168,7 @@ for (const [dir, comps] of byDir) {
     });
   }
 
-  // Attach every part to the catalogue root whose name is its longest prefix
+  // Attach every part to the catalog root whose name is its longest prefix
   // (CheckboxGroupLabel → CheckboxGroup, not Checkbox). A part matching no
   // root (theme-toggle's ThemeScript) goes to the dir's shortest-named root —
   // the one entry a reader of that dir's docs would start from. Only names
@@ -187,7 +187,7 @@ for (const [dir, comps] of byDir) {
 }
 
 // Hooks are not components, so the parser never sees them — read them off the
-// barrel instead: every value export named use* belongs to the catalogue
+// barrel instead: every value export named use* belongs to the catalog
 // entry it is named after (useDialog → Dialog), else to the dir's root entry.
 const indexSrc = ts.createSourceFile(
   "index.ts",
@@ -227,7 +227,7 @@ for (const e of entries) {
   if (!e.partOf) continue;
   const target = entries.find((x) => x.name === e.partOf);
   if (!target) {
-    errors.push(`${e.name}: @partOf "${e.partOf}" is not a catalogue entry`);
+    errors.push(`${e.name}: @partOf "${e.partOf}" is not a catalog entry`);
   } else if (target.dir !== e.dir) {
     errors.push(
       `${e.name}: @partOf "${e.partOf}" lives in src/components/${target.dir}, not ${e.dir} — ` +
@@ -239,7 +239,7 @@ for (const e of entries) {
 }
 
 if (errors.length) {
-  console.error("\ndocgen: the catalogue cannot be generated:");
+  console.error("\ndocgen: the catalog cannot be generated:");
   for (const e of errors) console.error(`  ✗ ${e}`);
   process.exit(1);
 }
@@ -249,7 +249,7 @@ if (errors.length) {
 const themingKeys = new Set(Object.keys(JSON.parse(readFileSync(join(dest, "theming.json"), "utf8"))));
 
 const lines = [
-  "# @forte-ui/react — component catalogue",
+  "# @forte-ui/react — component catalog",
   "",
   "<!-- GENERATED by scripts/docgen.mjs — do not edit by hand. The entries are",
   "     the @summary/@category doc comments in src/components/**/*.tsx; edit",
@@ -276,7 +276,7 @@ const lines = [
  * Category order first, because that is the order the file is scanned in, then
  * name within it.
  */
-const catalogue = CATEGORIES.flatMap((cat) =>
+const catalog = CATEGORIES.flatMap((cat) =>
   entries
     .filter((e) => e.category === cat)
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -297,7 +297,7 @@ const catalogue = CATEGORIES.flatMap((cat) =>
 );
 
 for (const cat of CATEGORIES) {
-  const inCat = catalogue.filter((e) => e.category === cat);
+  const inCat = catalog.filter((e) => e.category === cat);
   if (!inCat.length) continue;
   lines.push("", `## ${cat}`, "");
   for (const e of inCat) {
@@ -317,9 +317,9 @@ for (const cat of CATEGORIES) {
 lines.push("");
 
 writeFileSync(join(dest, "components.md"), lines.join("\n"));
-writeFileSync(join(dest, "components.json"), JSON.stringify(catalogue, null, 2) + "\n");
-const hosted = catalogue.filter((e) => e.partOf).length;
+writeFileSync(join(dest, "components.json"), JSON.stringify(catalog, null, 2) + "\n");
+const hosted = catalog.filter((e) => e.partOf).length;
 console.log(
-  `docgen: catalogue — ${catalogue.length} entries across ${byDir.size} directories` +
+  `docgen: catalog — ${catalog.length} entries across ${byDir.size} directories` +
     ` (${hosted} documented with a sibling)`,
 );

@@ -12,7 +12,7 @@ const STEPS = [
   {
     id: "step-configure",
     name: "Configure",
-    body: "Pick a seed colour; the rest of the palette derives from it.",
+    body: "Pick a seed color; the rest of the palette derives from it.",
   },
   {
     id: "step-ship",
@@ -24,7 +24,7 @@ const STEPS = [
 export default function PopoverControlled() {
   // Two pieces of state, because a multi-trigger popover has two questions:
   // whether it is open, and which trigger it is attached to. `triggerId` is
-  // what anchors the popup, so it has to be set before `open` is honoured.
+  // what anchors the popup, so it has to be set before `open` is honored.
   const [open, setOpen] = React.useState(false);
   const [triggerId, setTriggerId] = React.useState<string | null>(
     STEPS[0].id,

@@ -61,7 +61,7 @@ export default function DialogHeader() {
 
               The negative margins pull it back into the popup's padding so the
               × sits in the corner rather than indented from it, and `-mt-1`
-              lines its centre up with the title's first line rather than with
+              lines its center up with the title's first line rather than with
               the top of the text box. */}
           <Dialog.Close
             iconOnly

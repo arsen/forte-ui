@@ -81,7 +81,7 @@ The track keeps following the panel after the switch, so height that arrives lat
 Two things change while it is on, and both follow from the panel being the thing that now decides the height:
 
 - The panel is aligned to the start of its track rather than stretched to it, so a `Tabs.Root` you have given a `height` of your own no longer has its panel fill that height.
-- A *growing* panel is taller than the track carrying it until the transition lands, so the component clips itself for exactly those frames. Anything a panel paints outside its own box — a shadow under a flush card, a focus ring against the edge — is cut off while the height is travelling and whole again as soon as it arrives. A shrinking panel never overflows, so it is never clipped.
+- A *growing* panel is taller than the track carrying it until the transition lands, so the component clips itself for exactly those frames. Anything a panel paints outside its own box — a shadow under a flush card, a focus ring against the edge — is cut off while the height is traveling and whole again as soon as it arrives. A shrinking panel never overflows, so it is never clipped.
 
 <Callout kind="a11y">
   Under reduced motion the height simply changes: `--forte-tabs-auto-height-duration` resolves to `--forte-duration-move`, which collapses to `1ms`. That is the right answer rather than a compromise — resizing the panel area moves everything below the tabs, which is the largest layout movement this component makes and exactly the kind the preference is asking to be spared.
@@ -119,7 +119,7 @@ A tab lays out its children in a row with `--forte-control-gap` between them, so
 
 Arrow keys move focus only. Activation is a separate, explicit act — `activateOnFocus` on `Tabs.List` defaults to `false`. Automatic activation would mount every panel the user arrows past, which is hostile when a panel fetches data on mount. Set `activateOnFocus` to `true` only when the panels are cheap and already loaded. Wrapping can be turned off with `loopFocus={false}`.
 
-The parts carry their own roles and relationships: `Tabs.List` is a `tablist`, each `Tabs.Tab` is a `tab` with `aria-selected` and an `aria-controls` pointing at its panel, and each `Tabs.Panel` is a `tabpanel` labelled by its tab. Panels are focusable — Base UI gives the visible panel `tabIndex={0}` — so a keyboard user presses Tab once more from the strip to reach the content, and a panel containing only non-interactive text can still be scrolled and read.
+The parts carry their own roles and relationships: `Tabs.List` is a `tablist`, each `Tabs.Tab` is a `tab` with `aria-selected` and an `aria-controls` pointing at its panel, and each `Tabs.Panel` is a `tabpanel` labeled by its tab. Panels are focusable — Base UI gives the visible panel `tabIndex={0}` — so a keyboard user presses Tab once more from the strip to reach the content, and a panel containing only non-interactive text can still be scrolled and read.
 
 <Callout kind="a11y">
   Give every `Tabs.List` an `aria-label` (or `aria-labelledby` pointing at a visible heading). Nothing else names the `tablist`, so without it a screen reader announces an unnamed group of tabs — and a page with two tab strips gives no way to tell them apart. All the demos on this page do this.
@@ -127,7 +127,7 @@ The parts carry their own roles and relationships: `Tabs.List` is a `tablist`, e
 
 Hidden panels are removed from the DOM by default. `keepMounted` on `Tabs.Panel` keeps them mounted instead — set it when a panel holds scroll position or an uncommitted form that should survive a round trip. A kept-mounted panel is given the `hidden` attribute and `display: none`, and its tab index drops to `-1`, so its content stays out of the tab order and out of the accessibility tree while it is not the active panel.
 
-Under forced colors the indicator paints `Highlight` explicitly rather than letting its background be replaced, so a pill and its label stay a matched pair; a `line` active tab instead keeps a transparent background and `CanvasText` text, because an opaque fill would cover the 2px bar that is the cue. The rail becomes `CanvasText`, and disabled tabs are painted `GrayText` rather than relying on opacity, which is not honoured in that mode.
+Under forced colors the indicator paints `Highlight` explicitly rather than letting its background be replaced, so a pill and its label stay a matched pair; a `line` active tab instead keeps a transparent background and `CanvasText` text, because an opaque fill would cover the 2px bar that is the cue. The rail becomes `CanvasText`, and disabled tabs are painted `GrayText` rather than relying on opacity, which is not honored in that mode.
 
 ### Motion
 
@@ -145,7 +145,7 @@ The indicator slides without a single frame of JavaScript. Base UI measures the 
 
 The measurement runs once per change (and on resize, via a `ResizeObserver`); the movement itself is a CSS transition, so no JavaScript runs per frame and there is no animation library in the bundle. Both variants and both orientations are the same element carrying the same transition — only the geometry differs, so switching variant cannot desynchronise the motion.
 
-It is a `transition` rather than a keyframe animation on purpose. A transition can be interrupted: clicking a third tab while the indicator is still travelling to the second retargets smoothly from wherever it is, instead of snapping back and restarting.
+It is a `transition` rather than a keyframe animation on purpose. A transition can be interrupted: clicking a third tab while the indicator is still traveling to the second retargets smoothly from wherever it is, instead of snapping back and restarting.
 
 Scrolling the active tab into view is the one movement that is not a CSS transition — a scroll position cannot be one. It runs on the browser's own `scrollBy({ behavior: "smooth" })`, and is switched to an instant jump by reading `--forte-motion-ok` off the viewport rather than by asking `matchMedia`, so the in-page reduced-motion toggle and a subtree `data-forte-motion="reduce"` turn it off along with everything else. Alignment forced by a container resize is always instant: it fires on every frame of a drag, and animating each one would leave the strip chasing the pointer.
 
@@ -155,7 +155,7 @@ The panel area's own height is animated only if you ask for it. With `autoHeight
 
 Only ever one panel is readable. `Tabs.Root` is a grid and every `Tabs.Panel` is placed in the same cell, so the outgoing panel — which Base UI keeps mounted until its exit transition ends — overlaps the incoming one instead of being laid out beneath it, and the component never grows to fit both and snaps back. The outgoing panel is also taken out of flow for those frames, so the cell is sized by the incoming panel alone. Its exit is a cut rather than a fade: a panel has no background of its own, so two panels fading past each other would leave both sets of text legible at once.
 
-Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--forte-duration-move` collapses to `1ms` and `--forte-travel-md` to `0px`, so the indicator jumps to the new tab and the panel fades in place without travelling. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
+Under `prefers-reduced-motion` there is no separate code path, and no `prefers-reduced-motion` block in the tabs stylesheet at all. The tokens do the work: `--forte-duration-move` collapses to `1ms` and `--forte-travel-md` to `0px`, so the indicator jumps to the new tab and the panel fades in place without traveling. Durations are shortened rather than set to `0s`, so the transitions still run — they are simply imperceptible.
 
 ## Theming
 

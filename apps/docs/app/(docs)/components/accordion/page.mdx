@@ -94,7 +94,7 @@ Pass `value` and `onValueChange` to own the state — which is what "expand all"
 
 There are deliberately no arrow-key semantics. The APG [dropped roving focus for accordions](https://github.com/w3c/aria-practices/pull/3434) — a heading followed by its content is document structure, not a composite widget, and making Tab skip past the triggers cost more than the arrow keys gained. Base UI still accepts `orientation` and `loopFocus` for compatibility, but neither does anything any more, so this component does not forward them.
 
-Each `Accordion.Header` renders an `<h3>` carrying a `<button>` with `aria-expanded` and an `aria-controls` pointing at its panel; the panel is a `role="region"` labelled by its trigger. `<h3>` is right only if the accordion sits under an `<h2>` — pass `render={<h2 />}` (or whichever level fits) to keep the outline ordered:
+Each `Accordion.Header` renders an `<h3>` carrying a `<button>` with `aria-expanded` and an `aria-controls` pointing at its panel; the panel is a `role="region"` labeled by its trigger. `<h3>` is right only if the accordion sits under an `<h2>` — pass `render={<h2 />}` (or whichever level fits) to keep the outline ordered:
 
 ```tsx
 <Accordion.Header render={<h2 />}>
@@ -111,7 +111,7 @@ A closed panel is removed from the DOM. Two props change that, and they answer d
 - `keepMounted` on `Accordion.Root` or `Accordion.Panel` leaves it mounted and hidden, which is what you want when a panel holds scroll position or a half-filled form that should survive being closed.
 - `hiddenUntilFound` hides it with `hidden="until-found"` instead, so the browser's own find-in-page can search the text and open the panel when it matches. It implies `keepMounted`. Use it for reference content — documentation, terms, a long FAQ — where a reader hunting for a phrase reasonably expects `⌘F` to find it.
 
-Under forced colors both dividing lines are pinned to `CanvasText`, since a card whose border was replaced by a system colour is the only thing still holding the shape once shadows and backgrounds are stripped. Nothing paints `Highlight`: an open row is not a selected row, and the chevron's rotation is geometry, so it survives that mode untouched and goes on saying which rows are open. Disabled items are painted `GrayText` rather than relying on opacity, which forced colors does not honour.
+Under forced colors both dividing lines are pinned to `CanvasText`, since a card whose border was replaced by a system color is the only thing still holding the shape once shadows and backgrounds are stripped. Nothing paints `Highlight`: an open row is not a selected row, and the chevron's rotation is geometry, so it survives that mode untouched and goes on saying which rows are open. Disabled items are painted `GrayText` rather than relying on opacity, which forced colors does not honor.
 
 ### Motion
 
@@ -132,11 +132,11 @@ The height animation runs without a frame of JavaScript. Base UI measures the pa
 
 It is a transition rather than a keyframe animation on purpose: closing a panel while it is still opening reverses from wherever it has got to instead of snapping back to full height first. Base UI works out which of the two it is dealing with by reading the panel's *computed* `transition-duration` — a duration of exactly `0s` reads as "no transition" and the measure-and-animate path is skipped entirely, which is one more reason the library's duration tokens bottom out at `1ms` and never at zero.
 
-The panel's padding is not on the panel. A padding box survives a zero content box, so padding on the collapsing element would leave a band of empty space under every closed row; it lives on an inner element instead, which is also what gives the content something of its own to move on. It starts a little high and at zero opacity and settles as the panel grows — travelling *downward*, because the panel clips from below and that is the direction that reads as being uncovered.
+The panel's padding is not on the panel. A padding box survives a zero content box, so padding on the collapsing element would leave a band of empty space under every closed row; it lives on an inner element instead, which is also what gives the content something of its own to move on. It starts a little high and at zero opacity and settles as the panel grows — traveling *downward*, because the panel clips from below and that is the direction that reads as being uncovered.
 
 The chevron flips on a spring (`--forte-ease-spring-snappy`, paired with its own duration token — a shorter one truncates the curve mid-bounce). Its angle is not gated on `--forte-motion-ok`: under reduced motion the chevron must still end up pointing the other way, because that is the state, and only the trip between the two states is motion.
 
-There is no `prefers-reduced-motion` block in the accordion stylesheet, and none anywhere else in a component file. The tokens do it: `--forte-duration-normal` collapses from 240ms to 120ms and `--forte-travel-sm` to `0px`, so the panel snaps open and the content fades in place without travelling. Durations shorten rather than reaching `0s`, so every transition still fires.
+There is no `prefers-reduced-motion` block in the accordion stylesheet, and none anywhere else in a component file. The tokens do it: `--forte-duration-normal` collapses from 240ms to 120ms and `--forte-travel-sm` to `0px`, so the panel snaps open and the content fades in place without traveling. Durations shorten rather than reaching `0s`, so every transition still fires.
 
 ## Theming
 

@@ -83,7 +83,7 @@
 
 @theme inline {
   /* ------------------------------------------------------------------------
-   * Colour — semantic slots first. These are the names the components
+   * Color — semantic slots first. These are the names the components
    * themselves consume, so anything built out of them re-themes with the
    * library rather than beside it.
    * --------------------------------------------------------------------- */

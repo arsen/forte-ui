@@ -34,7 +34,7 @@ const ENTRIES: { title: string; body: string; href: string; icon: LucideIcon }[]
   },
   {
     title: "AI agents",
-    body: "Point a coding agent at the component catalogue the package ships, so it picks the right part first time.",
+    body: "Point a coding agent at the component catalog the package ships, so it picks the right part first time.",
     href: "/getting-started/ai-agents/",
     icon: Bot,
   },
@@ -46,7 +46,7 @@ const ENTRIES: { title: string; body: string; href: string; icon: LucideIcon }[]
   },
   {
     title: "Theme Studio",
-    body: "Pick a colour, a font and a radius, watch the site rebuild, and export the CSS.",
+    body: "Pick a color, a font and a radius, watch the site rebuild, and export the CSS.",
     href: "/theme/",
     icon: Palette,
   },

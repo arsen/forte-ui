@@ -8,7 +8,7 @@
  *   Indicator  position + width/height  (+ an offset from the start edge for
  *              a range), and `height: inherit` on the cross axis — `width`
  *              when vertical
- *   Thumb      position: absolute, inset-inline-start / bottom, a centring
+ *   Thumb      position: absolute, inset-inline-start / bottom, a centering
  *              `translate`, and a z-index that raises the active handle
  *
  * Three consequences, each of which has to be respected here:
@@ -17,7 +17,7 @@
  *    it (`height: inherit`), so an `auto`-sized track leaves the indicator
  *    with nothing to inherit and it collapses to zero.
  * 2. Nothing in this file may set `translate` on the thumb — the inline style
- *    would win, and the centring offset is not something to fight anyway.
+ *    would win, and the centering offset is not something to fight anyway.
  * 3. Nothing may set the indicator's width or the thumb's position, and
  *    nothing may TRANSITION them either. They are rewritten on every value
  *    change, which during a drag means every pointermove; see Motion below.
@@ -47,7 +47,7 @@
  * the handle a couple of pixels and has nothing worth animating. So there is
  * no positional animation at any time — which is what native `input[type=range]`
  * does too — and no `prefers-reduced-motion` block, because there is no
- * geometry left for it to collapse. What still animates is colour and the
+ * geometry left for it to collapse. What still animates is color and the
  * halo: state changes with discrete start and end points, which is the kind of
  * thing a transition is actually for.
  *
@@ -84,27 +84,27 @@
     /** Gap between the label/value row and the control. */
     --forte-slider-gap: var(--forte-space-2);
 
-    /* Colour slots, swapped wholesale by [data-tone] below. */
+    /* Color slots, swapped wholesale by [data-tone] below. */
     /** Rail fill — the empty part of the range. */
     --forte-slider-track-bg: var(--forte-color-border-muted);
     /** Fill of the selected part. Swapped per `tone`. */
     --forte-slider-indicator-bg: var(--forte-color-primary);
     /** Thumb fill. */
     --forte-slider-thumb-bg: var(--forte-color-background);
-    /** Thumb ring colour. Swapped per `tone`, and
+    /** Thumb ring color. Swapped per `tone`, and
      * `var(--forte-color-danger-border)` when invalid inside a field. */
     --forte-slider-thumb-border: var(--forte-color-primary);
     /** Thumb shadow. */
     --forte-slider-thumb-shadow: var(--forte-shadow-1);
-    /** Base colour the halo is mixed from. Swapped per `tone`. */
+    /** Base color the halo is mixed from. Swapped per `tone`. */
     --forte-slider-thumb-halo-color: var(--forte-color-primary);
-    /** How much of that colour survives the mix toward `transparent`. `30%` for
+    /** How much of that color survives the mix toward `transparent`. `30%` for
      * `tone="neutral"`. */
     --forte-slider-thumb-halo-strength: 48%;
     /* The halo is a soft ring that fades in around the handle on hover and
      * while dragging. It is a box-shadow on the thumb's ::before rather than a
      * sized element, so it adds no box and cannot move the hit target (motion
-     * principle 7) — and because it is a colour cue rather than a
+     * principle 7) — and because it is a color cue rather than a
      * displacement, it survives reduced motion intact. */
     /* Translucent accent, NOT the `-soft` step. `--forte-color-primary-soft` is
      * accent-3, which is built to sit *on* the page — 12% of the seed mixed
@@ -118,8 +118,8 @@
      * Derived here, on the same element as the two inputs it reads, because a
      * var() inside an unregistered custom property is substituted where it is
      * DECLARED — which is also what lets the [data-tone] blocks below rewrite
-     * only the colour and get the mix recomputed for free. */
-    /** The resolved halo colour. Derived from the two above; set it directly to
+     * only the color and get the mix recomputed for free. */
+    /** The resolved halo color. Derived from the two above; set it directly to
      * bypass them. */
     --forte-slider-thumb-halo: color-mix(
       in oklab,
@@ -168,7 +168,7 @@
     color: var(--forte-color-foreground);
   }
 
-  /* Vertical is the same parts turned 90°: one centred column, and the length
+  /* Vertical is the same parts turned 90°: one centered column, and the length
    * token now describes the block axis. `inline-size: auto` undoes the
    * horizontal width so the slider is only as wide as its widest part. */
   .root[data-orientation="vertical"] {
@@ -218,7 +218,7 @@
     --forte-slider-indicator-bg: var(--forte-color-foreground);
     --forte-slider-thumb-border: var(--forte-color-foreground);
     --forte-slider-thumb-halo-color: var(--forte-color-foreground);
-    /* The neutral halo is a grey, and grey at the accent's strength reads as a
+    /* The neutral halo is a gray, and gray at the accent's strength reads as a
      * smudge rather than a glow, so it is pulled back. */
     --forte-slider-thumb-halo-strength: 30%;
   }
@@ -358,7 +358,7 @@
      * `inset-inline-start` and `bottom` are absent from the transition below
      * for the reason given at the top of this file: Base UI rewrites them on
      * every pointermove, so animating them makes the handle trail the pointer.
-     * Only colour is transitioned here, and the halo on ::before. */
+     * Only color is transitioned here, and the halo on ::before. */
     transition:
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
       background-color var(--forte-duration-fast) var(--forte-ease-standard);
@@ -418,8 +418,8 @@
  * `forte.a11y` is ordered AFTER `forte.components`, so these win by
  * layer alone.
  *
- * Under forced colours the rail, the fill and the handle have to be separated
- * without any author colour surviving, and a `<div>` gets no system colours
+ * Under forced colors the rail, the fill and the handle have to be separated
+ * without any author color surviving, and a `<div>` gets no system colors
  * from the UA the way a native `<input type=range>` would — Base UI builds
  * every part out of divs, so the keywords are assigned here. The track's
  * boundary is drawn with `outline` rather than `border`, because a border
@@ -443,7 +443,7 @@
     }
 
     /* Both shadows go: forced-colors strips the elevation anyway, and the halo
-     * would paint as an opaque system-coloured ring around the handle. */
+     * would paint as an opaque system-colored ring around the handle. */
     .thumb::before {
       box-shadow: none;
     }

@@ -202,7 +202,7 @@ imperative remote: `open(triggerId)` and `close()`.
 <DemoBlock id="preview-card/detached-trigger" />
 
 Create the handle **outside render**. One made during render is a new object on
-every pass, and the root and its triggers stop recognising each other. `open()`
+every pass, and the root and its triggers stop recognizing each other. `open()`
 takes a trigger id rather than a payload — the card still has to be anchored to
 something — so give each detached trigger an explicit `id`.
 
@@ -228,7 +228,7 @@ something — so give each detached trigger an explicit `id`.
 
 The card carries no `role`, no `aria-haspopup` and no `aria-describedby`, and
 Base UI leaves it that way on purpose. A screen reader announces the link as an
-ordinary link and the card never interrupts — which is the correct behaviour for
+ordinary link and the card never interrupts — which is the correct behavior for
 a surface holding a summary of the page the link already names, and the reason
 the content rule at the top of this page is absolute.
 
@@ -251,7 +251,7 @@ alone on the screen.
 </Callout>
 
 In forced-colors mode the card's shadow is stripped by the browser, so the
-component carries a transparent border that becomes the visible system-coloured
+component carries a transparent border that becomes the visible system-colored
 boundary, and the arrow is drawn as two SVG paths rather than the traditional
 CSS-border triangle, which would degrade into a filled rectangle. The trigger
 carries `.forte-link`, so it repaints as `LinkText` with an underline. Reduced
@@ -287,7 +287,7 @@ nobody asked for. The entrance runs on `--forte-ease-emphasized` rather than a
 spring: a popover answers a press and can afford some snap, while an overshoot
 on something that appeared because the reader held still reads as the page
 twitching. And the trigger's underline is a muted `color-mix` of its own text
-colour, so a paragraph with six mentions in it does not turn into six rules of
+color, so a paragraph with six mentions in it does not turn into six rules of
 solid accent.
 
 The stylesheet also computes `--forte-preview-card-enter-x` /

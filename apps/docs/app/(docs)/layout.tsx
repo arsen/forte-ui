@@ -23,7 +23,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
    * empty gutter opens up between the page and the section rail.
    *
    * `justify-center`, not `mx-auto`: the grid is `w-full` and has no
-   * maximum of its own, so what needs centring is the column set
+   * maximum of its own, so what needs centering is the column set
    * inside it, which is `justify-content` rather than a margin.
    *
    * Nothing else caps the reading measure any more, so this cap IS
@@ -36,7 +36,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       <main className="min-w-0 pt-7 pb-8" id="main">{children}</main>
       {/* The section rail. It renders nothing on a page with fewer than
         * two headings, and the track is a fixed width either way, so
-        * the centre column does not shift between pages. */}
+        * the center column does not shift between pages. */}
       <Toc />
     </div>
   );

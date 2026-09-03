@@ -2,10 +2,10 @@
  * ScrollArea
  *
  * A scroll container with overlay scrollbars and a gradient edge fade. Four
- * decisions carry the file; the rest is colour.
+ * decisions carry the file; the rest is color.
  *
  * 1 — The fade is a MASK on the viewport, not a gradient overlay on the root.
- *     An overlay has to be painted in the colour of whatever is behind the
+ *     An overlay has to be painted in the color of whatever is behind the
  *     content, so it is wrong the moment the scroll area sits on a card, an
  *     image, or a themed surface — and it has to be re-set by hand every time
  *     the surface under it changes. A mask fades the content itself to
@@ -14,7 +14,7 @@
  *     It is also driven straight off scroll position. Base UI publishes the
  *     distance from each edge on the viewport element as
  *     --scroll-area-overflow-{x,y}-{start,end} — px lengths, already
- *     normalised for RTL and for the browsers that report a negative
+ *     normalized for RTL and for the browsers that report a negative
  *     scrollLeft there — so `min(fade-size, that distance)` is a fade that
  *     grows out of an edge as you scroll away from it and is exactly 0px while
  *     you are resting against it. Nothing runs per frame, and there is
@@ -117,7 +117,7 @@
     min-width: 0;
     min-height: 0;
     /* Stops a scroll that has hit the end here from continuing in the page
-     * behind it — the standard behaviour for a self-contained scroll region,
+     * behind it — the standard behavior for a self-contained scroll region,
      * and what keeps a horizontal tab strip from dragging the page sideways. */
     overscroll-behavior: contain;
     /* The viewport is the box with `overflow`, so it is the box that clips.
@@ -183,17 +183,17 @@
    * area that fits its content — and `[data-has-overflow-*]` is exactly the
    * question being asked.
    *
-   * `black` and `transparent` here are mask alpha, not colour: for a gradient
+   * `black` and `transparent` here are mask alpha, not color: for a gradient
    * the default `mask-mode: match-source` reads the alpha channel, so these
    * are the numbers 1 and 0. Both are pure black, so the interpolation between
-   * them cannot introduce a grey fringe.
+   * them cannot introduce a gray fringe.
    *
    * The vertical layer is written physically (`to bottom`) because the block
    * axis has no direction to answer for. The horizontal one cannot be: a
    * gradient's direction is physical, so the ANGLE carries the sign —
    * `calc(90deg * var(--forte-direction))` is 90deg (to right) in LTR and -90deg
    * (to left) in RTL, which makes the gradient's first stop the inline-START
-   * edge either way, matching the axis Base UI already normalised the overflow
+   * edge either way, matching the axis Base UI already normalized the overflow
    * distances onto. Writing `to right` and swapping the two variables in an
    * `[dir="rtl"]` descendant rule would break an LTR island inside an RTL
    * page, which is the whole reason --forte-direction is inherited. */
@@ -315,7 +315,7 @@
     opacity: 1;
   }
 
-  /* `always` is an opt out of the overlay behaviour, not a state. Kept as its
+  /* `always` is an opt out of the overlay behavior, not a state. Kept as its
    * own rule rather than folded into the one above — they happen to declare
    * the same thing today, but one describes a transient state and the other a
    * setting, and a change to either should not silently move the other.
@@ -410,7 +410,7 @@
   }
 
   @media (forced-colors: active) {
-    /* System colours, assigned by hand: the UA derives them from native
+    /* System colors, assigned by hand: the UA derives them from native
      * element semantics, and these parts are all divs. The border is what
      * separates the track from the content beside it once every background
      * collapses to Canvas. */

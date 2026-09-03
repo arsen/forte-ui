@@ -341,7 +341,7 @@ export interface NavigationMenuTriggerProps
   /**
    * Whether the rendered element is a real `<button>`. Set it to `false` when
    * `render` replaces the button with something else, so Base UI supplies the
-   * keyboard and role behaviour the element does not have natively.
+   * keyboard and role behavior the element does not have natively.
    * @default true
    */
   nativeButton?: BaseNavigationMenu.Trigger.Props["nativeButton"];
@@ -359,7 +359,7 @@ export interface NavigationMenuTriggerProps
 /**
  * Opens an item's panel. Renders a `<button>`.
  *
- * It opens on hover as well as on press, which is the behaviour that separates
+ * It opens on hover as well as on press, which is the behavior that separates
  * a navigation menu from a `Menu` — the bar is a place to browse, so the panel
  * follows the pointer along it once one is open. Base UI wires
  * `aria-expanded`, `aria-controls` and the roving focus, so an unnamed trigger
@@ -475,7 +475,7 @@ export interface NavigationMenuLinkProps
   variant?: NavigationMenuVariant;
   /**
    * Whether this link is the page the user is on. Publishes `data-active` and
-   * `aria-current="page"`, so the cue is not colour alone.
+   * `aria-current="page"`, so the cue is not color alone.
    * @default false
    */
   active?: BaseNavigationMenu.Link.Props["active"];
@@ -490,7 +490,7 @@ export interface NavigationMenuLinkProps
   /**
    * Replaces the rendered `<a>` with another element or component —
    * `render={<Link href="/pricing" />}` is how a framework's router link goes
-   * in without losing the menu's keyboard behaviour.
+   * in without losing the menu's keyboard behavior.
    */
   render?: BaseNavigationMenu.Link.Props["render"];
   /**
@@ -532,7 +532,7 @@ export const NavigationMenuLink = React.forwardRef<
  * LinkTitle / LinkDescription
  *
  * The two parts Base UI does not have. They are presentation only — no state,
- * no behaviour — and they exist because the alternative is every consumer
+ * no behavior — and they exist because the alternative is every consumer
  * inventing the same `<h3>` / `<p>` pair with the same four declarations, and
  * getting the heading level wrong: a panel is not a document section, and an
  * `<h3>` inside one lands in the heading outline of whatever page the bar
@@ -630,7 +630,7 @@ export interface NavigationMenuPopupProps
    */
   side?: PositionerProps["side"];
   /**
-   * How the panel aligns along that side. Centred on the active trigger,
+   * How the panel aligns along that side. Centered on the active trigger,
    * which is the alignment the sliding panel reads best under: it appears to
    * hang from whichever trigger is open rather than from one end of the bar.
    * @default "center"
@@ -760,7 +760,7 @@ export const NavigationMenuPopup = React.forwardRef<
         anchor={anchor}
       >
         {/* `forte-hc-surface` carries a transparent border that becomes a
-          * system-coloured boundary in forced-colors mode, where the box-shadow
+          * system-colored boundary in forced-colors mode, where the box-shadow
           * is stripped and the panel would otherwise dissolve into the page
           * behind it. */}
         <BaseNavigationMenu.Popup
@@ -796,7 +796,7 @@ export const NavigationMenuPopup = React.forwardRef<
  * and gives forced-colors mode an outline to paint.
  *
  * An SVG rather than the traditional CSS-border triangle, because in
- * forced-colors mode every border colour is forced to `CanvasText` and a
+ * forced-colors mode every border color is forced to `CanvasText` and a
  * border triangle degrades into a filled rectangle.
  */
 function ArrowSvg() {
@@ -856,7 +856,7 @@ function ArrowSvg() {
  *
  * All panels share ONE popup, which slides and resizes between triggers rather
  * than each item owning a surface that opens and closes. That is the whole
- * behaviour of the component, and it is why `Content` lives up in the list
+ * behavior of the component, and it is why `Content` lives up in the list
  * while `Popup` is a single sibling of the `List`.
  *
  * Styling is driven by `data-*` attributes and `--forte-navigation-menu-*`

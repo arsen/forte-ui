@@ -19,7 +19,7 @@ export interface ButtonProps extends Omit<BaseButtonProps, "className"> {
    */
   variant?: ButtonVariant;
   /**
-   * Which semantic colour set the button draws from. Combines freely with
+   * Which semantic color set the button draws from. Combines freely with
    * `variant` — `tone="danger" variant="outline"` is a low-emphasis
    * destructive action.
    * @default "primary"
@@ -133,7 +133,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <Spinner
               className={styles.spinner}
               // `current` is the tone that composes: the ring takes the
-              // button's own text colour, so it keeps matching through every
+              // button's own text color, so it keeps matching through every
               // variant, tone and hover state without Button having to hand it
               // a palette.
               tone="current"

@@ -14,7 +14,7 @@ npx skills add arsen/forte-ui
 ## Design notes
 
 `forte-ui/SKILL.md` is hand-written and deliberately contains **no inventories**
-— no component index, no token lists, no prop tables, no knob catalogues.
+— no component index, no token lists, no prop tables, no knob catalogs.
 Those live in the installed package itself (`@forte-ui/react/docs-data/`:
 `components.md` for choosing a component, the `*.json` files for exact APIs —
 all generated at build time), and the skill instructs the agent to read them

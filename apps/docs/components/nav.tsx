@@ -56,7 +56,7 @@ const NAV: NavGroup[] = [
   {
     title: "Components",
     /* Every row below the first is GENERATED — `COMPONENT_PAGES` comes from
-     * `scripts/build-catalog.mjs`, which resolves the library's own catalogue
+     * `scripts/build-catalog.mjs`, which resolves the library's own catalog
      * to the pages on this site and fails the build if the two disagree in
      * either direction. These fifty-six titles were typed out here until then,
      * and the derived ones came out identical to the last character, which is

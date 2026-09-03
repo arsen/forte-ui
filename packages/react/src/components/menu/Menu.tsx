@@ -209,7 +209,7 @@ export interface MenuTriggerProps<Payload = unknown>
   /**
    * Whether the rendered element is a real `<button>`. Set it to `false` when
    * `render` replaces the button with something else (a `<div>`, a table
-   * row), so Base UI supplies the keyboard and role behaviour the element
+   * row), so Base UI supplies the keyboard and role behavior the element
    * does not have natively.
    * @default true
    */
@@ -306,8 +306,8 @@ export interface MenuPopupProps extends Omit<BasePopupProps, "className"> {
   side?: PositionerProps["side"];
   /**
    * How the popup aligns along the chosen side. Menus align to the trigger's
-   * start edge rather than its centre, which is Base UI's own default — a
-   * centred menu drifts left of a wide trigger and right of a narrow one, and
+   * start edge rather than its center, which is Base UI's own default — a
+   * centered menu drifts left of a wide trigger and right of a narrow one, and
    * the reading edge is what a list of commands should line up on.
    * @default "start"
    */
@@ -419,7 +419,7 @@ export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
           anchor={anchor}
         >
           {/* `forte-hc-surface` carries a transparent border that becomes a
-            * system-coloured boundary in forced-colors mode, where the
+            * system-colored boundary in forced-colors mode, where the
             * box-shadow is stripped and the popup would otherwise dissolve
             * into the page behind it. */}
           <BaseMenu.Popup
@@ -447,7 +447,7 @@ export interface MenuItemProps extends Omit<BaseMenu.Item.Props, "className"> {
    */
   children?: React.ReactNode;
   /**
-   * Which semantic colour set the row draws from. `danger` is for an action
+   * Which semantic color set the row draws from. `danger` is for an action
    * that destroys something, and is the only alternative offered: the
    * highlight already paints `--forte-color-primary-soft`, so a primary-toned
    * row would be indistinguishable from the row the user is currently on.
@@ -532,7 +532,7 @@ export interface MenuLinkItemProps
   /**
    * Replaces the rendered `<a>` with another element or component —
    * `render={<Link href="/settings" />}` is how a framework's router link goes
-   * in without losing the menu's keyboard behaviour.
+   * in without losing the menu's keyboard behavior.
    */
   render?: BaseMenu.LinkItem.Props["render"];
   /**
@@ -991,7 +991,7 @@ export interface MenuShortcutProps
  * draws the keys themselves in a composed `Kbd`, so a menu's caps and a
  * tooltip's are the same cap. It is not a Base UI part; it is here for the
  * same reason `Dialog.Footer` is: every second menu grows one, and left to
- * each consumer it is re-invented with a different colour and a different gap
+ * each consumer it is re-invented with a different color and a different gap
  * each time.
  *
  * It is `aria-hidden`, deliberately. The glyphs menus print are read out as

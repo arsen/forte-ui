@@ -4,14 +4,14 @@ import { Alert } from "@forte-ui/react";
 
 export default function AlertBasic() {
   return (
-    /* `w-full` because the demo frame centres its children: an alert is a
+    /* `w-full` because the demo frame centers its children: an alert is a
       * block in the page, and one shrink-wrapped to its text would not be the
       * component under discussion. */
     <div className="grid w-full gap-3">
       {/* `<Alert.Icon />` with no children draws the standard glyph for the
         * tone — a tick for success, a cross for danger, a triangle for
         * warning, an "i" for info. Four shapes, not one shape in four
-        * colours. */}
+        * colors. */}
       <Alert.Root tone="success">
         <Alert.Icon />
         <Alert.Title>Account updated</Alert.Title>

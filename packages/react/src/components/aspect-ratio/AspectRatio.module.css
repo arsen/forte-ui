@@ -90,9 +90,9 @@
     /** What sits behind the content. `variant="filled"` sets it — which is
      * what makes the box its own placeholder while an image loads. */
     --forte-aspect-background: transparent;
-    /** Frame colour. Only painted when the width below is non-zero. */
+    /** Frame color. Only painted when the width below is non-zero. */
     --forte-aspect-border-color: var(--forte-color-border-muted);
-    /** Frame width. `0px` unless `variant="outlined"` — or forced colours are
+    /** Frame width. `0px` unless `variant="outlined"` — or forced colors are
      * active, where `filled` takes one too so its placeholder does not vanish
      * into the page. */
     --forte-aspect-border-width: 0px;
@@ -127,7 +127,7 @@
      */
 
     /* Nothing here transitions. The box has no states — no hover, no focus,
-     * no open/closed — and a colour transition on the placeholder would only
+     * no open/closed — and a color transition on the placeholder would only
      * make it lag the rest of the page on a theme switch. */
   }
 
@@ -251,7 +251,7 @@
 
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* Backgrounds are replaced with a system colour under forced colours, so
+    /* Backgrounds are replaced with a system color under forced colors, so
      * `filled`'s panel flattens into the page and the placeholder — the one
      * variant whose entire job is to be visible while empty — becomes
      * invisible. Borders are forced to `CanvasText` instead, so a frame is the

@@ -90,7 +90,7 @@ need a different one.
 
 Disabled goes on the `Field.Root` rather than on the field, so the label and the
 description dim with the slots instead of sitting at full contrast beside a
-greyed-out row. Read-only keeps full contrast, a panel-coloured background and
+greyed-out row. Read-only keeps full contrast, a panel-colored background and
 the text cursor.
 
 `invalid` is the interesting one: a rejected code is complete **and** wrong, so
@@ -180,13 +180,13 @@ autofill writes into.
 </Callout>
 
 Focusing a slot selects the character in it, so the next keypress replaces it
-rather than being rejected by a full slot. That is also why the selection colour
+rather than being rejected by a full slot. That is also why the selection color
 is a documented knob: it is visible on every single focus, not only when someone
 drags across text.
 
-Under forced colours every variant paints a full 1px `FieldText` box, including
+Under forced colors every variant paints a full 1px `FieldText` box, including
 `soft` (whose border is `transparent`, a value forced-colors replaces with a
-system colour of its own choosing) and `underline` (which has no border on three
+system color of its own choosing) and `underline` (which has no border on three
 sides at all). Keeping the slots countable is the whole job there — a user who
 cannot see how many characters the code has cannot tell whether they have
 finished typing it.
@@ -194,7 +194,7 @@ finished typing it.
 **Motion.** There is none, and that is a decision rather than an omission. The
 only thing that changes as the user types is which slot holds a character, and a
 slot that grew or flashed on fill would do it six times in two seconds, right
-next to the caret they are watching. What does transition is colour: the
+next to the caret they are watching. What does transition is color: the
 boundary on hover, on completion, and on failure.
 
 ## Theming

@@ -114,8 +114,8 @@ it from plain CSS or a Tailwind arbitrary variant (`data-[invalid]:...`):
 | `data-disabled` | From `Field.Root`, or from an enclosing `Fieldset.Root`. |
 
 The library styles only two of them. `data-invalid` turns the control's boundary
-danger-coloured, and `data-disabled` dims the whole field. The rest describe
-where the user is in the interaction, and recolouring a control the moment it is
+danger-colored, and `data-disabled` dims the whole field. The rest describe
+where the user is in the interaction, and recoloring a control the moment it is
 merely *touched* is noise — they are exposed for you to use, not used by
 default.
 
@@ -140,8 +140,8 @@ quickly reverses mid-flight instead of snapping. Base UI keeps the outgoing
 element mounted until the exit finishes, which is what lets the old text fade
 out instead of being replaced by the new one.
 
-In forced-colors mode every colour in the field collapses to `CanvasText`, so
-the error message loses the one thing marking it as an error. Colour cannot
+In forced-colors mode every color in the field collapses to `CanvasText`, so
+the error message loses the one thing marking it as an error. Color cannot
 recover it and `forced-color-adjust: none` would opt the text out of the user's
 palette entirely — so the distinction is redrawn as an inline-start border,
 which forced-colors does preserve.
@@ -150,7 +150,7 @@ which forced-colors does preserve.
 
 `--forte-field-gap` and `--forte-field-indent` are declared on `Field.Root` and read
 by the parts below it, so one value on the root moves the whole field. The
-colour and font knobs stay on the part that paints them, so recolouring the
+color and font knobs stay on the part that paints them, so recoloring the
 error does not reach the description.
 
 <ThemingTable component="Field" declaredOn />

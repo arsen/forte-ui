@@ -5,7 +5,7 @@ import { FileText, Folder, House } from "lucide-react";
 
 /* Crumbs are flex, so an svg goes in as a plain child. The stylesheet sizes a
  * direct-child svg at `1em` and it rides `currentColor`, so an icon follows
- * the size preset and the hover colour without a class.
+ * the size preset and the hover color without a class.
  *
  * The first crumb is icon-only, so it needs a name of its own — the visually
  * hidden span is what a screen reader reads, and the title is what a pointer

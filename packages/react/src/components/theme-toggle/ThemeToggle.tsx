@@ -44,7 +44,7 @@ export interface ThemeToggleProps
    * icon follows this prop instead of the page. This is the hook-up for an
    * external theme manager (e.g. next-themes: pass its `resolvedTheme` here
    * and its `setTheme` to `onThemeChange`). Leave unset for the built-in
-   * behaviour: the click writes `data-theme` on `<html>` and persists it to
+   * behavior: the click writes `data-theme` on `<html>` and persists it to
    * `localStorage("forte-theme")`.
    */
   theme?: ResolvedThemeMode;
@@ -80,7 +80,7 @@ export interface ThemeToggleProps
 
 /* The default artwork. Hand-drawn on the same 24-unit grid as the library's
  * other inline glyphs, stroked in `currentColor` so tone changes, forced
- * colours and the hover colour all reach it with no extra rules. Decorative by
+ * colors and the hover color all reach it with no extra rules. Decorative by
  * contract — the state lives in the visually-hidden label beside it. */
 function SunIcon(): React.JSX.Element {
   return (

@@ -22,7 +22,7 @@ export default function AvatarBadge() {
         ))}
       </div>
 
-      {/* Same expression for all three shapes: the badge's centre lands where
+      {/* Same expression for all three shapes: the badge's center lands where
         * the 45° diagonal crosses the corner, whatever the corner is. */}
       <div className="flex flex-wrap items-end gap-4">
         {SHAPES.map((shape) => (

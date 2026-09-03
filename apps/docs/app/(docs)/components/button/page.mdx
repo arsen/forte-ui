@@ -12,7 +12,7 @@ export const metadata = {
 
 # Button
 
-Use a Button for anything that happens in the page — submitting a form, opening a dialog, starting a request. Its appearance is set by two independent props: `variant` is how loud the button is, `tone` is which colour set it draws from. Everything else the component adds on top of Base UI is about states you would otherwise have to wire yourself: a loading state that blocks double submits without losing focus, and square icon-only sizing that holds a 24px hit target.
+Use a Button for anything that happens in the page — submitting a form, opening a dialog, starting a request. Its appearance is set by two independent props: `variant` is how loud the button is, `tone` is which color set it draws from. Everything else the component adds on top of Base UI is about states you would otherwise have to wire yourself: a loading state that blocks double submits without losing focus, and square icon-only sizing that holds a 24px hit target.
 
 <DemoBlock id="button/variants" />
 
@@ -40,7 +40,7 @@ import { Button } from "@forte-ui/react";
 
 `loading` shows a spinner, hides the label from paint while keeping its width so the button cannot resize under the pointer, sets `aria-busy`, and blocks activation. Use it for the span of one request, and pair it with a `loadingLabel` that names the operation.
 
-The indicator is [`Spinner`](/components/spinner/)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text colour, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--forte-button-spinner-size`.
+The indicator is [`Spinner`](/components/spinner/)'s `ring`, rendered `decorative` and at `tone="current"` — it takes the button's own text color, so it stays legible through every variant and tone, and it leaves the announcement to `aria-busy` and `loadingLabel` rather than opening a second live region for the same wait. Size it with `--forte-button-spinner-size`.
 
 <DemoBlock id="button/loading" />
 
@@ -66,7 +66,7 @@ You do not have to size the glyph. Button sizes a direct `svg` child of its cont
 
 ### Rendering as another element
 
-`render` replaces the rendered tag, and `nativeButton={false}` tells Base UI the replacement is not a `<button>` so it supplies button semantics itself — `role="button"` plus Enter and Space activation. For an anchor that genuinely navigates, pass `role="link"` back so the element keeps the semantics its behaviour actually matches.
+`render` replaces the rendered tag, and `nativeButton={false}` tells Base UI the replacement is not a `<button>` so it supplies button semantics itself — `role="button"` plus Enter and Space activation. For an anchor that genuinely navigates, pass `role="link"` back so the element keeps the semantics its behavior actually matches.
 
 <DemoBlock id="button/as-link" />
 
@@ -91,7 +91,7 @@ You do not have to size the glyph. Button sizes a direct `svg` child of its cont
     {
       keys: ["Space"],
       description:
-        "Activates the button on release, matching native button behaviour.",
+        "Activates the button on release, matching native button behavior.",
     },
   ]}
 />
@@ -101,7 +101,7 @@ The focus ring is an `outline`, not a `box-shadow`, so it follows the button's b
 Two disabled states behave differently, and the difference matters. A plain `disabled` button is removed from the tab order: a keyboard or screen reader user tabbing through the page never lands on it, so any explanation of why it is unavailable has to live somewhere they will actually reach. A `loading` button keeps `focusableWhenDisabled` on for the duration, which is what stops the browser from blurring it — focus stays put, and `aria-busy` and `loadingLabel` stay on the element the user is still on. You can pass `focusableWhenDisabled` explicitly to get the same reachability for an ordinary disabled button.
 
 <Callout kind="a11y">
-  `tone` is colour, and colour alone is not a message (WCAG SC 1.4.1). A red button and a grey button must still be distinguishable by their labels — "Delete project" and "Cancel", not two buttons both labelled "OK".
+  `tone` is color, and color alone is not a message (WCAG SC 1.4.1). A red button and a gray button must still be distinguishable by their labels — "Delete project" and "Cancel", not two buttons both labeled "OK".
 </Callout>
 
 <Callout kind="a11y">

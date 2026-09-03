@@ -59,9 +59,9 @@
     --forte-resizable-line-size: 1px;
     /** Thickness of the painted divider line while hovered, focused or dragged */
     --forte-resizable-line-size-active: 3px;
-    /** Colour of the divider line at rest */
+    /** Color of the divider line at rest */
     --forte-resizable-line-color: var(--forte-color-border);
-    /** Colour of the divider line while hovered, focused or dragged */
+    /** Color of the divider line while hovered, focused or dragged */
     --forte-resizable-line-color-active: var(--forte-color-primary);
 
     /* The grip, drawn only when `grip` is set. A chip rather than a bare bar
@@ -74,9 +74,9 @@
     --forte-resizable-grip-radius: var(--forte-radius-1);
     /** Fill of the grip chip */
     --forte-resizable-grip-bg: var(--forte-color-panel);
-    /** Border colour of the grip chip */
+    /** Border color of the grip chip */
     --forte-resizable-grip-border: var(--forte-color-border);
-    /** Colour of the three dots inside the grip */
+    /** Color of the three dots inside the grip */
     --forte-resizable-grip-dot-color: var(--forte-color-foreground-subtle);
     /** Size of one grip dot */
     --forte-resizable-grip-dot-size: 2px;
@@ -201,7 +201,7 @@
    * the pointerdown is `preventDefault`ed (or the drag becomes a text
    * selection), which hides the pointer modality from the browser, and the
    * programmatic `focus()` that follows is then treated as provenance-unknown
-   * — which on a page's first interaction resolves in favour of showing the
+   * — which on a page's first interaction resolves in favor of showing the
    * ring. The result is a ring that appears on the first drag of a fresh page
    * and never again. The component tracks the modality itself instead, and
    * this rule is the half of `:focus-visible` it has to reimplement.
@@ -227,7 +227,7 @@
   }
 
   /* The line. Absolutely positioned so it can thicken on hover without
-   * reflowing the panels either side of it, and centred on the hairline the
+   * reflowing the panels either side of it, and centered on the hairline the
    * layout actually reserved so the growth is symmetric. */
   .handle::before {
     content: "";
@@ -371,7 +371,7 @@
 @layer forte.a11y {
   @media (forced-colors: active) {
     /* Every fill is repainted by the system, so the line survives only if it
-     * is a system colour. `CanvasText` rather than `ButtonBorder`: this is a
+     * is a system color. `CanvasText` rather than `ButtonBorder`: this is a
      * structural divider first and a control second, and it has to read as a
      * line between two regions even when nothing is focused. */
     .handle::before {
@@ -400,8 +400,8 @@
       color: GrayText;
     }
 
-    /* `transparent` is not preserved under forced colours — it is replaced
-     * with a system colour — so an overlay that is invisible everywhere else
+    /* `transparent` is not preserved under forced colors — it is replaced
+     * with a system color — so an overlay that is invisible everywhere else
      * would paint a full-viewport block here for the length of the drag. */
     .dragOverlay {
       display: none;

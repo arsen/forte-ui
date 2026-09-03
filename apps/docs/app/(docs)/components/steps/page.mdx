@@ -52,7 +52,7 @@ The shape a real form takes: `current` in state, and two buttons that move it. S
 
 ### Labels below
 
-`labelPlacement="below"` centres each title under its circle and gives every step an equal share of the row. The connector then runs from one circle's centre to the next — which is what the equal shares are for. It suits a short wizard whose titles are a word or two; a title that needs a description reads better beside the circle.
+`labelPlacement="below"` centers each title under its circle and gives every step an equal share of the row. The connector then runs from one circle's center to the next — which is what the equal shares are for. It suits a short wizard whose titles are a word or two; a title that needs a description reads better beside the circle.
 
 <DemoBlock id="steps/label-below" />
 
@@ -76,13 +76,13 @@ The shape a real form takes: `current` in state, and two buttons that move it. S
 
 ### Tones
 
-`tone` colours "done" and "here" and nothing else. A step not yet reached stays neutral in every tone, so the colour only ever says "this far" — and the error state is always `danger`, whatever the tone.
+`tone` colors "done" and "here" and nothing else. A step not yet reached stays neutral in every tone, so the color only ever says "this far" — and the error state is always `danger`, whatever the tone.
 
 <DemoBlock id="steps/tones" />
 
 ### Icons
 
-Children of `Steps.Indicator` replace the number, in every state. The fill colour still carries the status, and a completed step still gets its visually hidden "Completed" for a screen reader — the icon is not asked to mean "done" on its own.
+Children of `Steps.Indicator` replace the number, in every state. The fill color still carries the status, and a completed step still gets its visually hidden "Completed" for a screen reader — the icon is not asked to mean "done" on its own.
 
 <DemoBlock id="steps/icons" />
 
@@ -124,12 +124,12 @@ Everything else the component does by default:
 - **The active step carries `aria-current="step"`.** On the `<li>` in a static list, and on the `Trigger` in a clickable one, so it is announced when the button takes focus.
 - **The two icon states get a word.** A check mark has no text of its own; without one, a done step and an undone one would both be heard as "1 Account". `Indicator` adds a visually hidden "Completed" or "Has an error" after the number — `labels` on the root localises both.
 - **The connector is `aria-hidden`.** It repeats what the list's order already says.
-- **State is never colour alone.** Active and complete share a fill; what tells them apart is the check, the halo and the title's weight. Under forced colors, where every fill goes to `Canvas`, the reached steps are named `Highlight` and the rest get a `CanvasText` ring so they stay circles at all.
+- **State is never color alone.** Active and complete share a fill; what tells them apart is the check, the halo and the title's weight. Under forced colors, where every fill goes to `Canvas`, the reached steps are named `Highlight` and the rest get a `CanvasText` ring so they stay circles at all.
 - **A disabled step dims to `opacity: 0.55`,** and to `GrayText` at full opacity under forced colors — `opacity` is one of the few properties that mode does not override, so left alone a dimmed step would keep full contrast and read as enabled.
 
 ## Theming
 
-Every property below is declared on `Steps.Root`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The presets work the same way: `size`, `variant` and `tone` re-point a few of these knobs and nothing else. The three `--forte-steps-indicator-*` colour slots are the exception: they sit on each `Indicator`, set per status, and are the thing to re-point for one step rather than all of them.
+Every property below is declared on `Steps.Root`, so override them there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The presets work the same way: `size`, `variant` and `tone` re-point a few of these knobs and nothing else. The three `--forte-steps-indicator-*` color slots are the exception: they sit on each `Indicator`, set per status, and are the thing to re-point for one step rather than all of them.
 
 <ThemingTable component="Steps" />
 

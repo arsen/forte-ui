@@ -43,7 +43,7 @@ Deleting rather than extending is deliberate, with teeth: a hardcoded `bg-slate-
 
 <DemoBlock id="tailwind/utilities" />
 
-The bridge's theme is declared `@theme inline`, which is why utilities work inside theme scopes: the token reference is substituted into the utility itself and resolves at the element, instead of freezing to whatever `:root` resolved. `bg-panel` inside a dark `data-forte-theme` island paints the island's panel colour, not the page's.
+The bridge's theme is declared `@theme inline`, which is why utilities work inside theme scopes: the token reference is substituted into the utility itself and resolves at the element, instead of freezing to whatever `:root` resolved. `bg-panel` inside a dark `data-forte-theme` island paints the island's panel color, not the page's.
 
 ## Targeting component state
 
@@ -66,7 +66,7 @@ import { cn } from "@forte-ui/react/cn";
 cn("p-4", isWide && "p-6"); // -> "p-6" when isWide holds
 ```
 
-A stock `twMerge` mishandles the bridge's renamed scales — it does not know `p-surface` is spacing, and it parses `text-2` as a text *colour*, so `cn("text-2", "text-foreground-muted")` would silently drop the size. The shipped `cn` is configured for every renamed scale. It is also why `tailwind-merge` is an *optional* peer dependency: install it if you import this subpath; apps without Tailwind never pay for it.
+A stock `twMerge` mishandles the bridge's renamed scales — it does not know `p-surface` is spacing, and it parses `text-2` as a text *color*, so `cn("text-2", "text-foreground-muted")` would silently drop the size. The shipped `cn` is configured for every renamed scale. It is also why `tailwind-merge` is an *optional* peer dependency: install it if you import this subpath; apps without Tailwind never pay for it.
 
 If your app adds its own `@theme` keys, extend rather than rebuild — `createCn` appends your names beside the library's instead of replacing them:
 

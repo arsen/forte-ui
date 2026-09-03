@@ -5,7 +5,7 @@ import { Skeleton } from "@forte-ui/react";
 /* Explicit newlines rather than natural wrapping, so this is provably three
  * lines at every viewport width — which is what makes the overlay below a
  * measurement rather than a coincidence. */
-const COPY = `Base UI ships the behaviour.
+const COPY = `Base UI ships the behavior.
 forte-ui ships the pixels.
 Nothing here is hardcoded.`;
 

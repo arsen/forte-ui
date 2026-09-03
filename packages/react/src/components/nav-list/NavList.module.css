@@ -68,11 +68,11 @@
     --forte-nav-list-item-font-weight: var(--forte-font-weight-normal);
     /** Row text weight on the active row */
     --forte-nav-list-item-font-weight-active: var(--forte-font-weight-medium);
-    /** Row text colour at rest */
+    /** Row text color at rest */
     --forte-nav-list-item-color: var(--forte-color-foreground-muted);
-    /** Row text colour on hover */
+    /** Row text color on hover */
     --forte-nav-list-item-color-hover: var(--forte-color-foreground);
-    /** Row text colour on the active row */
+    /** Row text color on the active row */
     --forte-nav-list-item-color-active: var(--forte-color-primary-text);
     /** Row fill at rest */
     --forte-nav-list-item-bg: transparent;
@@ -92,7 +92,7 @@
     /* Section labels. */
     /** Label text size */
     --forte-nav-list-label-font-size: var(--forte-font-size-1);
-    /** Label colour */
+    /** Label color */
     --forte-nav-list-label-color: var(--forte-color-foreground-subtle);
     /** Label letter-spacing. Tracking has to come back at this size or a
      * short uppercase phrase closes up and reads as one word */
@@ -108,21 +108,21 @@
     --forte-nav-list-indent-gap: var(--forte-space-2);
     /** Width of the guide line along a nested list. `0px` removes it */
     --forte-nav-list-guide-width: 1px;
-    /** Colour of the guide line */
+    /** Color of the guide line */
     --forte-nav-list-guide-color: var(--forte-color-border-muted);
 
     /* The edge — only painted under data-marker="edge". */
     /** Width of the active-row edge border */
     --forte-nav-list-edge-width: 2px;
-    /** Colour of the active-row edge border */
+    /** Color of the active-row edge border */
     --forte-nav-list-edge-color: var(--forte-color-primary);
 
     /* The group chevron. `-subtle` is below the text floor and fine for a
      * non-text indicator (SC 1.4.11) — and it is never the only cue:
      * `aria-expanded` and the panel itself say the same thing. */
-    /** Chevron colour while the group is closed */
+    /** Chevron color while the group is closed */
     --forte-nav-list-icon-color: var(--forte-color-foreground-subtle);
-    /** Chevron colour while the group is open */
+    /** Chevron color while the group is open */
     --forte-nav-list-icon-color-open: var(--forte-color-foreground);
     /** How far the chevron turns as the panel opens */
     --forte-nav-list-icon-rotate: 180deg;
@@ -131,7 +131,7 @@
      * a badge drawn from the same ramp would dissolve into it. */
     /** Badge fill */
     --forte-nav-list-badge-bg: var(--forte-color-secondary-soft);
-    /** Badge text colour */
+    /** Badge text color */
     --forte-nav-list-badge-color: var(--forte-color-secondary-text);
 
     /* One duration and one curve for the panel's height and its content's
@@ -252,7 +252,7 @@
   }
 
   /* An svg placed straight into a row is an icon: it must not squash when
-   * the label wraps, and its colour rides `currentColor` through rest, hover
+   * the label wraps, and its color rides `currentColor` through rest, hover
    * and active without tokens of its own. Direct child only, so an
    * illustration inside something the consumer nests deeper is left alone. */
   .link > svg,
@@ -261,7 +261,7 @@
   }
 
   /* Hover excludes the active row: it already wears the stronger fill, and
-   * swapping it for the hover grey would read as the row DEACTIVATING under
+   * swapping it for the hover gray would read as the row DEACTIVATING under
    * the pointer. */
   @media (hover: hover) {
     .link:hover:not([data-active], [data-disabled]),
@@ -295,10 +295,10 @@
    * zeroing its width.
    *
    * Every row wears the border TRANSPARENT, not just the active one:
-   * activation changes only the colour, so the text never shifts by the
+   * activation changes only the color, so the text never shifts by the
    * border's width when a row lights up. That transparent carrier is also
    * why the forced-colors block below zeroes the width — HCM repaints
-   * `transparent` with a real system colour. */
+   * `transparent` with a real system color. */
   .root[data-marker="edge"] .link,
   .root[data-marker="edge"] .groupTrigger {
     border-inline-start: var(--forte-nav-list-edge-width) solid transparent;
@@ -378,7 +378,7 @@
   }
 
   /* The rows settle while the panel is still growing. They start slightly
-   * high and drop back: the panel clips from below, so travelling downward
+   * high and drop back: the panel clips from below, so traveling downward
    * is the direction that reads as being uncovered. --forte-travel-sm is 0px
    * under reduced motion, leaving the fade — the part that helps there. */
   .groupContent {
@@ -426,12 +426,12 @@
  *     list, so the Highlight pair is restated here for `data-active`. The
  *     edge border is redundant with the fill it sits on — and worse than
  *     redundant on the REST of the rows: they carry it `transparent`, HCM
- *     repaints `transparent` with a real system colour, and every row grows
+ *     repaints `transparent` with a real system color, and every row grows
  *     a start edge that reads as chrome. Width zero on all rows alike, so
  *     nothing shifts relative to its neighbours.
  *   - The badge's fill goes the same way, leaving its text floating in the
  *     row; a border keeps it a chip. `transparent` is replaced with a system
- *     colour in HCM, which is exactly the trick .forte-hc-surface uses.
+ *     color in HCM, which is exactly the trick .forte-hc-surface uses.
  * ------------------------------------------------------------------------- */
 @layer forte.a11y {
   @media (forced-colors: active) {

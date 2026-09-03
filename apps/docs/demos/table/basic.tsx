@@ -11,7 +11,7 @@ const INVOICES = [
 
 export default function TableBasic() {
   return (
-    /* A width cap, because the demo frame centres its children and a table
+    /* A width cap, because the demo frame centers its children and a table
      * at the frame's full width is wider than four columns need. */
     <Table.Root className="max-w-xl">
       <Table.Caption placement="bottom">A list of your recent invoices.</Table.Caption>

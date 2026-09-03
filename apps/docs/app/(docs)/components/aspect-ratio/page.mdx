@@ -178,7 +178,7 @@ all, precisely so that a linked frame keeps the pointer the anchor already
 earns. Both are cases of doing less rather than more.
 
 The UA's own defaults are left alone for the same reason: `<figure>` keeps its
-margin and `<a>` its colour, because a box that quietly stripped the element it
+margin and `<a>` its color, because a box that quietly stripped the element it
 was handed would be the harder thing to work around. Set them where you use
 them.
 
@@ -194,15 +194,15 @@ Two things are still yours:
   already says it; real text where the picture carries information nothing else
   does. A decorative frame does not make its contents decorative.
 - **Contrast for anything laid over media.** Text on a photograph has no
-  guaranteed background, so SC 1.4.3 cannot be met by the text colour alone.
+  guaranteed background, so SC 1.4.3 cannot be met by the text color alone.
   Put it on a band or a scrim, as the overlay example does, rather than trusting
   the image to stay dark where the words are.
 
 <Callout kind="a11y">
-  Under forced colours, `filled`'s background is replaced by a system colour and
+  Under forced colors, `filled`'s background is replaced by a system color and
   flattens into the page — so the one variant whose whole job is to be visible
   while empty would disappear. It grows a `CanvasText` border there instead.
-  `outlined` needs nothing: border colours survive forced colours, which is why
+  `outlined` needs nothing: border colors survive forced colors, which is why
   the frame is a border and not a `box-shadow`.
 </Callout>
 
@@ -213,7 +213,7 @@ Every visual decision is a `--forte-aspect-*` custom property.
 <ThemingTable component="AspectRatio" />
 
 Nothing in the file transitions. The box has no states — no hover, no focus, no
-open or closed — so there is nothing to animate, and a colour transition on the
+open or closed — so there is nothing to animate, and a color transition on the
 placeholder would only make it lag the rest of the page on a theme switch.
 
 State is on `data-variant`, `data-fit`, `data-basis` and `data-clip`, so a

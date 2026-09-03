@@ -26,7 +26,7 @@
  * a `Field.Root` above. Only `data-complete` and `data-invalid` are styled.
  * `data-focused` is on EVERY slot whenever any one of them has focus, so it
  * cannot mark the active slot — `:focus-visible` and the ring do that — and
- * recolouring a control the moment it is merely touched is noise.
+ * recoloring a control the moment it is merely touched is noise.
  */
 @layer forte.components {
   .root {
@@ -55,26 +55,26 @@
     /** Slot border width (reset per `variant`) */
     --forte-otp-field-border-width: 1px;
 
-    /* Colour slots, filled in per variant below. */
+    /* Color slots, filled in per variant below. */
     /** Slot background (reset per `variant`) */
     --forte-otp-field-bg: var(--forte-color-background);
     /** Slot background on hover */
     --forte-otp-field-bg-hover: var(--forte-color-panel-hover);
-    /** Character colour */
+    /** Character color */
     --forte-otp-field-fg: var(--forte-color-foreground);
-    /** Slot border colour (reset per `variant`, and again when the value is
+    /** Slot border color (reset per `variant`, and again when the value is
      * complete or the field is invalid) */
     --forte-otp-field-border-color: var(--forte-color-border);
-    /** Slot border colour on hover */
+    /** Slot border color on hover */
     --forte-otp-field-border-color-hover: var(--forte-color-border-strong);
-    /** Caret colour */
+    /** Caret color */
     --forte-otp-field-caret-color: var(--forte-color-primary);
     /** Selection background — visible on every focus, because Base UI selects
      * a slot's character when you land on it so the next keypress replaces it */
     --forte-otp-field-selection-bg: var(--forte-color-primary-soft);
-    /** Selection text colour */
+    /** Selection text color */
     --forte-otp-field-selection-fg: var(--forte-color-primary-text);
-    /** Colour of the dash `OTPField.Separator` draws */
+    /** Color of the dash `OTPField.Separator` draws */
     --forte-otp-field-separator-color: var(--forte-color-border-strong);
 
     display: flex;
@@ -100,7 +100,7 @@
     inline-size: var(--forte-otp-field-slot-size);
     block-size: var(--forte-otp-field-slot-size);
     /* A native <input> has an intrinsic min-content width of roughly 20
-     * characters, which flexbox honours — without this every slot is 20
+     * characters, which flexbox honors — without this every slot is 20
      * characters wide and the row overflows on the first render. */
     min-inline-size: 0;
     /* The other half of the same problem: `flex-shrink` defaults to 1, so a
@@ -197,7 +197,7 @@
     --forte-otp-field-bg: var(--forte-color-panel);
     /* Not `none`: `transparent` is NOT preserved under forced-colors, so this
      * keeps the slots outlined there while staying invisible normally. The
-     * hover colour goes with it, or hovering a soft field would draw a
+     * hover color goes with it, or hovering a soft field would draw a
      * boundary that is not part of the design. */
     --forte-otp-field-border-color: transparent;
     --forte-otp-field-border-color-hover: transparent;
@@ -212,7 +212,7 @@
     --forte-otp-field-radius: 0px;
   }
 
-  /* Width only. Reassigning the colour here as well would beat the validity
+  /* Width only. Reassigning the color here as well would beat the validity
    * rules below on specificity ((0,2,0) each, and this one matches later), so
    * an invalid underlined field would keep its ordinary rule. */
   .input[data-variant="underline"] {
@@ -223,11 +223,11 @@
   /* The one state worth painting: it is the answer to "did that last keypress
    * land, or did the paste drop a character?", which the row of slots cannot
    * otherwise give at a glance. Complete is not the same as correct, and it
-   * deliberately does not use a success colour — the server has not been asked
+   * deliberately does not use a success color — the server has not been asked
    * yet. */
   .input[data-complete] {
     --forte-otp-field-border-color: var(--forte-color-primary-border);
-    /* The hover colour goes with it. Without this line, running the pointer
+    /* The hover color goes with it. Without this line, running the pointer
      * across a finished code repaints it as an ordinary empty field — the one
      * moment the cue is least welcome to disappear. */
     --forte-otp-field-border-color-hover: var(--forte-color-primary);
@@ -264,14 +264,14 @@
   }
 }
 
-/* Forced colours ---------------------------------------------------------- */
+/* Forced colors ---------------------------------------------------------- */
 /* Top-level `forte.a11y`, ordered after `forte.components`, so these
  * beat the rules above by layer alone — no `!important`, no padded selectors.
  *
- * A slot is a real <input>, so the UA does assign it system colours. What it
+ * A slot is a real <input>, so the UA does assign it system colors. What it
  * does not do is give the `soft` and `underline` variants a boundary: `soft`
  * paints its border `transparent`, which forced-colors replaces with a system
- * colour of its own choosing rather than with the field's edge, and
+ * color of its own choosing rather than with the field's edge, and
  * `underline` has no border on three sides at all. Restating a full 1px box
  * for every variant is what keeps the slots countable, which is the whole
  * job — a user who cannot see how many characters the code has cannot tell
@@ -287,7 +287,7 @@
 
     /* `opacity: 1` comes from the generic `[data-disabled]` remedy in
      * patterns.css, which applies at zero specificity through `:where()`; the
-     * colours it also sets would lose to the (0,1,0) rule above, so the ones
+     * colors it also sets would lose to the (0,1,0) rule above, so the ones
      * this component needs are restated. */
     .input[data-disabled] {
       background-color: Canvas;

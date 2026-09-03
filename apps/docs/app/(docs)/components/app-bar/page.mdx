@@ -50,7 +50,7 @@ The slots are slots, not controls: whatever goes in them is a real component wit
 
 ### Variants
 
-Four levels of chrome. `plain` is a bare row; `panel` fills with the panel colour; `outline` sits on the page background with a hairline underneath; `frosted` is `outline` made translucent, with the content behind it blurred.
+Four levels of chrome. `plain` is a bare row; `panel` fills with the panel color; `outline` sits on the page background with a hairline underneath; `frosted` is `outline` made translucent, with the content behind it blurred.
 
 <DemoBlock id="app-bar/variants" />
 
@@ -58,11 +58,11 @@ Four levels of chrome. `plain` is a bare row; `panel` fills with the panel colou
 
 ### Tones
 
-`tone` is the second axis — which colour set the bar draws from — and it is independent of `variant`: a `panel` bar in `primary` is filled with the accent, an `outline` one sits on the accent's soft step.
+`tone` is the second axis — which color set the bar draws from — and it is independent of `variant`: a `panel` bar in `primary` is filled with the accent, an `outline` one sits on the accent's soft step.
 
 <DemoBlock id="app-bar/tones" />
 
-Nothing inside the bar is told the tone. A coloured bar **re-points the foreground tokens for its subtree** — `--forte-color-foreground`, `-foreground-muted`, `-panel-hover`, `-panel-active` and the two border tokens — so the ghost buttons, the muted caption and the separator you compose into it recolour themselves for contrast, without a prop. Popups opened from the bar are portaled to `<body>` and keep the page's palette, which is what you want from a menu.
+Nothing inside the bar is told the tone. A colored bar **re-points the foreground tokens for its subtree** — `--forte-color-foreground`, `-foreground-muted`, `-panel-hover`, `-panel-active` and the two border tokens — so the ghost buttons, the muted caption and the separator you compose into it recolor themselves for contrast, without a prop. Popups opened from the bar are portaled to `<body>` and keep the page's palette, which is what you want from a menu.
 
 <Callout kind="warn">
   That hand-off covers what reads the foreground tokens: ghost and outline controls, text, links, separators, icons. A control that paints its own surface — a text [`Input`](/components/input/), a solid `primary` button on a `primary` bar — keeps that surface and is your call: give the button `tone="neutral"`, or leave the field for a `neutral` bar.
@@ -80,11 +80,11 @@ Each height is a global density token — `--forte-app-bar-h-sm`, `-md`, `-lg` �
 
 `position="sticky"` pins the bar to the top of its **scroll container** once the page reaches it — the nearest ancestor that scrolls, which is the window for a page bar and the box for a bar at the top of a [`ScrollArea`](/components/scroll-area/), a dialog body or the demo below. It needs no layout compensation: the bar keeps its place in the flow.
 
-`elevateOnScroll` is the Material "on scroll" behaviour: at the top the bar is part of the page, with no fill and no edge, and once content is under it, it is a surface over the page — the variant's fill and hairline, plus a shadow.
+`elevateOnScroll` is the Material "on scroll" behavior: at the top the bar is part of the page, with no fill and no edge, and once content is under it, it is a surface over the page — the variant's fill and hairline, plus a shadow.
 
 <DemoBlock id="app-bar/sticky" />
 
-Only a `neutral` bar drops its fill at rest. On a coloured tone the fill is what carries the text's contrast, so there the surface stays and only the shadow is deferred. And `plain` has no surface to reveal, so pair the prop with one of the other three.
+Only a `neutral` bar drops its fill at rest. On a colored tone the fill is what carries the text's contrast, so there the surface stays and only the shadow is deferred. And `plain` has no surface to reveal, so pair the prop with one of the other three.
 
 By default the bar elevates on the first pixel of scroll. `scrollThreshold` holds it in its at-rest state for longer — useful under a tall hero, where a shadow appearing the moment a finger moves reads as a twitch rather than a state change:
 
@@ -104,7 +104,7 @@ The prop moves `data-scrolled` rather than the elevation, so it is not tied to `
 
 The hide is a move even under reduced motion, and that is a considered exception to the library's rule of collapsing geometry. A bar that faded in place would still cover the content under it and swallow the taps meant for that content; one that also gave up pointer events would have to leave the accessibility tree to be consistent, taking the page's landmark with it. So the bar moves — a state change the page asked for, not an ornament — on a duration that reduced motion shortens rather than removes.
 
-### A centred measure
+### A centered measure
 
 A marketing header wants its content lined up with the page column below it while the surface still runs edge to edge. That is one knob, not a prop:
 
@@ -132,7 +132,7 @@ A heading placed there takes the bar's typography rather than the UA's, so the s
 
 **Focus.** A bar hidden by `hideOnScroll` stays in the tree and focusable; it slides back the moment a control inside it receives focus, so keyboard users reach everything a pointer user can.
 
-**Under forced colours** the fill, the blur and the shadow are stripped, and the hairline is the whole bar: every variant paints it in the system ink, `plain` included. Text and icons take `CanvasText`, and `frosted` is opaque there and under `prefers-contrast: more` alike.
+**Under forced colors** the fill, the blur and the shadow are stripped, and the hairline is the whole bar: every variant paints it in the system ink, `plain` included. Text and icons take `CanvasText`, and `frosted` is opaque there and under `prefers-contrast: more` alike.
 
 ## Theming
 
@@ -140,7 +140,7 @@ Everything below is declared on `AppBar.Root` itself, which is also why an ances
 
 <ThemingTable component="AppBar" part="root" />
 
-The surface slots — `--forte-app-bar-bg`, `-fg`, `-border-color`, `-shadow` — are the whole variant system: `variant` and `tone` fill them in, and a one-off look is those properties on one element. The three hand-off slots — `-fg-muted`, `-hover`, `-active` — plus `-separator` are what a coloured bar passes down to its subtree as the global foreground tokens; on a `neutral` bar they are declared but not handed down, because the neutral slots read those very tokens and a custom property that references itself is a cycle.
+The surface slots — `--forte-app-bar-bg`, `-fg`, `-border-color`, `-shadow` — are the whole variant system: `variant` and `tone` fill them in, and a one-off look is those properties on one element. The three hand-off slots — `-fg-muted`, `-hover`, `-active` — plus `-separator` are what a colored bar passes down to its subtree as the global foreground tokens; on a `neutral` bar they are declared but not handed down, because the neutral slots read those very tokens and a custom property that references itself is a cycle.
 
 <Callout>
   `--forte-app-bar-inset-block-start` is read by the scroll tracking as well as the styles. Set it — rather than `top` directly — when a bar sits below another one, so `data-scrolled` still lands the moment the page moves under it.

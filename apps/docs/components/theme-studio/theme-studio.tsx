@@ -167,7 +167,7 @@ function Ramp({ name }: { name: string }) {
   return (
     <div className={RAMP} role="img" aria-label={`${name} ramp, 12 steps`}>
       {Array.from({ length: 12 }, (_, i) => (
-        // Colour is the entire content — keep it in forced-colors mode.
+        // Color is the entire content — keep it in forced-colors mode.
         <span
           key={i}
           className="block [forced-color-adjust:none]"

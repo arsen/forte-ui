@@ -21,7 +21,7 @@ export default function AlertCustomIcon() {
 
       {/* A custom glyph replaces the tone's standard one rather than sitting
         * beside it, so a success alert can celebrate without losing its
-        * colour. Keep it `aria-hidden`: the text already says what happened. */}
+        * color. Keep it `aria-hidden`: the text already says what happened. */}
       <Alert.Root tone="success">
         <Alert.Icon>
           <PartyPopper className={ICON} aria-hidden />

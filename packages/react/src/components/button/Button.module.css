@@ -3,16 +3,16 @@
  *
  * Two independent axes rather than an exploding variant list:
  *   data-variant  how much the button asserts itself (solid/soft/outline/ghost)
- *   data-tone     which semantic colour set it draws from (primary/secondary/
+ *   data-tone     which semantic color set it draws from (primary/secondary/
  *                 danger/neutral)
- * Every combination works because each tone only has to define six colour
+ * Every combination works because each tone only has to define six color
  * slots; the variants decide which slots become background, text and border.
  *
  * There is deliberately no `prefers-reduced-motion` block here. The motion
  * tokens already collapse their own geometry — `--forte-scale-press` becomes
  * exactly 1 — and the two consumer-facing motion slots are multiplied by
  * `--forte-motion-ok` where they are used, so even a hard-coded override
- * collapses. This file gets correct reduced-motion behaviour without knowing
+ * collapses. This file gets correct reduced-motion behavior without knowing
  * that reduced motion exists.
  */
 @layer forte.components {
@@ -28,7 +28,7 @@
     --forte-button-font-weight: var(--forte-font-weight-medium);
     /** Space between icon and label */
     --forte-button-gap: var(--forte-control-gap);
-    /** Border thickness (only `outline` gives it a colour) */
+    /** Border thickness (only `outline` gives it a color) */
     --forte-button-border-width: 1px;
     /** Button height; reassigned by `size` */
     --forte-button-height: var(--forte-control-h-md);
@@ -56,7 +56,7 @@
     --forte-button-spinner-size: 1em;
 
     /* Motion slots. Hover geometry is identity by default: a button's hover
-     * cue is colour, which is the one channel that cannot move the hit box or
+     * cue is color, which is the one channel that cannot move the hit box or
      * knock the button out of line with the controls beside it.
      *
      * Opt back into geometry on one button by setting `--forte-button-*`, or on
@@ -78,16 +78,16 @@
     /** How far the button squashes while held. */
     --forte-button-press-scale: var(--forte-scale-press);
 
-    /* Colour slots, filled in per tone + variant below. */
+    /* Color slots, filled in per tone + variant below. */
     /** Resting background; filled in by `variant` */
     --forte-button-bg: transparent;
     /** Hover background */
     --forte-button-bg-hover: transparent;
     /** Pressed background */
     --forte-button-bg-active: transparent;
-    /** Label and icon colour */
+    /** Label and icon color */
     --forte-button-fg: var(--forte-color-foreground);
-    /** Border colour */
+    /** Border color */
     --forte-button-border-color: transparent;
 
     /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
@@ -97,7 +97,7 @@
     --forte-button-tone-solid-hover: var(--forte-color-primary-hover);
     /** Tone's solid fill when pressed */
     --forte-button-tone-solid-active: var(--forte-color-primary-active);
-    /** Text colour on the solid fill */
+    /** Text color on the solid fill */
     --forte-button-tone-on-solid: var(--forte-color-on-primary);
     /** Tone's tinted fill, and the hover wash for `outline` and `ghost` */
     --forte-button-tone-soft: var(--forte-color-primary-soft);
@@ -105,9 +105,9 @@
     --forte-button-tone-soft-hover: var(--forte-color-primary-soft-hover);
     /** Tinted fill when pressed */
     --forte-button-tone-soft-active: var(--forte-color-primary-soft-active);
-    /** Label colour for `soft`, `outline` and `ghost` */
+    /** Label color for `soft`, `outline` and `ghost` */
     --forte-button-tone-text: var(--forte-color-primary-text);
-    /** Border colour for `outline` */
+    /** Border color for `outline` */
     --forte-button-tone-border: var(--forte-color-primary-border);
 
     box-sizing: border-box;
@@ -317,7 +317,7 @@
    * draws at 24px — and that default does not just look large, it changes the
    * button's geometry: `iconOnly` derives its square from the icon, so a bare
    * lucide glyph makes a 36px `md` button 42px and it no longer lines up with
-   * the controls beside it. The library ships no icon catalogue, which is the
+   * the controls beside it. The library ships no icon catalog, which is the
    * reason to size whatever arrives rather than a reason not to.
    *
    * DIRECT children of the content span only. A composed forte-ui component
@@ -340,7 +340,7 @@
   }
 
   /* The Spinner itself — this rule only places it. Everything about how the
-   * ring is drawn, including its reduced-motion and forced-colors behaviour,
+   * ring is drawn, including its reduced-motion and forced-colors behavior,
    * belongs to Spinner and is not restated here; that is the point of using
    * it. Note the animation now sits on Spinner's inner indicator rather than
    * on this element, which keeps it clear of the rule that an `infinite`

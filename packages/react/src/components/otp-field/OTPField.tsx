@@ -297,7 +297,7 @@ export const OTPFieldSeparator = React.forwardRef<HTMLDivElement, OTPFieldSepara
  * only thing that changes as the user types is which slot holds a character,
  * and a slot that grew, bounced or flashed on fill would do it up to six times
  * in the two seconds it takes to enter a code, next to the caret the user is
- * watching. What does transition is colour: the boundary on hover, on
+ * watching. What does transition is color: the boundary on hover, on
  * completion and on failure, each of which has a start and an end.
  *
  * @summary A row of single-character slots holding one verification code — one

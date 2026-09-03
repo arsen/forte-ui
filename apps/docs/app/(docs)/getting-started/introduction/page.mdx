@@ -8,21 +8,21 @@ export const metadata = {
 
 # Introduction
 
-Forte UI is a React component library built on [Base UI](https://base-ui.com) primitives, styled with a design system that rebuilds its entire palette from **one colour variable** — in pure CSS, with no build step and no runtime theming layer. Every accessibility claim on this site is one that was measured, and two of them started as bugs found in this library's own code.
+Forte UI is a React component library built on [Base UI](https://base-ui.com) primitives, styled with a design system that rebuilds its entire palette from **one color variable** — in pure CSS, with no build step and no runtime theming layer. Every accessibility claim on this site is one that was measured, and two of them started as bugs found in this library's own code.
 
 ## What makes it different
 
 Three decisions shape everything else in the library.
 
-**Nothing is hardcoded.** Colour, spacing, radius, duration and easing all come from tokens. A seed colour derives twelve accent steps, brand-tinted neutrals and a readable text colour, and the density and radius presets rewrite the rest — so a theme is a handful of declarations, not a fork.
+**Nothing is hardcoded.** Color, spacing, radius, duration and easing all come from tokens. A seed color derives twelve accent steps, brand-tinted neutrals and a readable text color, and the density and radius presets rewrite the rest — so a theme is a handful of declarations, not a fork.
 
-**Accessibility is measured, not asserted.** The colour ramp is verified against 119,108 in-gamut seeds before a release, and text on a solid fill never drops below 4.5:1 whichever brand colour you pick. Keyboard behaviour, focus management and ARIA come from Base UI, and every focusable part carries a two-tone focus ring that stays visible on any background.
+**Accessibility is measured, not asserted.** The color ramp is verified against 119,108 in-gamut seeds before a release, and text on a solid fill never drops below 4.5:1 whichever brand color you pick. Keyboard behavior, focus management and ARIA come from Base UI, and every focusable part carries a two-tone focus ring that stays visible on any background.
 
 **Your CSS always wins.** Everything the library ships sits inside a cascade layer, which loses to unlayered author CSS by definition. Plain stylesheets and utility classes override any component without a single `!important`.
 
 ## Change one line. Change everything.
 
-There is no palette to generate, no build step, and no JavaScript. Relative colour syntax derives the whole ramp from your seed, and a fitted lightness threshold picks black or white text so the contrast holds up whatever you choose.
+There is no palette to generate, no build step, and no JavaScript. Relative color syntax derives the whole ramp from your seed, and a fitted lightness threshold picks black or white text so the contrast holds up whatever you choose.
 
 ```css
 :root {
@@ -36,7 +36,7 @@ There is no palette to generate, no build step, and no JavaScript. Relative colo
   <Ramp name="gray" label="Neutrals, tinted toward your brand" />
 </div>
 
-The strips above are live: pick a palette on the [home page](/) or in the [Theme Studio](/theme/) and they recolour with the rest of the site.
+The strips above are live: pick a palette on the [home page](/) or in the [Theme Studio](/theme/) and they recolor with the rest of the site.
 
 ## Install
 
@@ -62,4 +62,4 @@ Every component ships with `"use client"` already in place, so there is no provi
 - The [Next.js](/getting-started/nextjs/) and [Vite](/getting-started/vite/) guides walk a brand-new project from scaffold to a themed component, with and without Tailwind.
 - [Theming](/customization/theming/) explains the seed, the ramp and the scopes; the [Theme Studio](/theme/) lets you design one and export it.
 - [Design tokens](/customization/tokens/) lists every `--forte-*` variable, and [Styling components](/customization/styling/) covers the `data-*` attributes and per-component knobs.
-- Working with a coding agent? [AI agents](/getting-started/ai-agents/) shows how to point it at the component catalogue the package ships.
+- Working with a coding agent? [AI agents](/getting-started/ai-agents/) shows how to point it at the component catalog the package ships.

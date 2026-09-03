@@ -44,8 +44,8 @@ export interface ProgressRootProps extends Omit<BaseRootProps, "className"> {
    */
   size?: ProgressSize;
   /**
-   * Which semantic colour set the fill draws from. The rail stays neutral in
-   * every tone — it is the part that has *not* happened yet, and colouring it
+   * Which semantic color set the fill draws from. The rail stays neutral in
+   * every tone — it is the part that has *not* happened yet, and coloring it
    * would compete with the fill it exists to contrast against.
    * @default "primary"
    */

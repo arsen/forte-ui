@@ -71,7 +71,7 @@
     --forte-table-cell-py: var(--forte-list-item-py);
     /** Width of every rule and of the frame. */
     --forte-table-border-width: 1px;
-    /** Colour of the rules between rows and columns, and of the frame. */
+    /** Color of the rules between rows and columns, and of the frame. */
     --forte-table-border-color: var(--forte-color-border-muted);
     /** Corner radius of the frame. `0` on `line`, which has no frame to
      * round; the surface radius on `outline` and `grid`. */
@@ -82,7 +82,7 @@
     /** Fill behind the header row. Transparent unless the header is sticky,
      * where it must hide the rows scrolling under it. */
     --forte-table-header-bg: transparent;
-    /** Text colour of the header cells. */
+    /** Text color of the header cells. */
     --forte-table-header-color: var(--forte-color-foreground);
     /** Weight of the header cells. */
     --forte-table-header-font-weight: var(--forte-font-weight-semibold);
@@ -94,7 +94,7 @@
     --forte-table-row-bg-hover: color-mix(in oklab, var(--forte-color-foreground) 7%, transparent);
     /** Fill on a body row with `selected`. */
     --forte-table-row-bg-selected: var(--forte-color-primary-soft);
-    /** Text colour of the caption. */
+    /** Text color of the caption. */
     --forte-table-caption-color: var(--forte-color-foreground-muted);
 
     box-sizing: border-box;
@@ -102,7 +102,7 @@
     border-collapse: separate;
     border-spacing: 0;
     /* The frame. Zero-width on `line` — declared here all the same so that
-     * switching variants at runtime changes a colour and a width, not the
+     * switching variants at runtime changes a color and a width, not the
      * box model. */
     border: 0 solid var(--forte-table-border-color);
     border-radius: var(--forte-table-radius);
@@ -159,7 +159,7 @@
     padding-block: var(--forte-table-cell-py);
     padding-inline: var(--forte-table-cell-px);
     color: var(--forte-table-caption-color);
-    /* The UA centres captions; nothing else in the table is centred. */
+    /* The UA centers captions; nothing else in the table is centered. */
     text-align: start;
   }
 
@@ -169,7 +169,7 @@
 
   /* Cells ------------------------------------------------------------------
    * `.head` and `.cell` share one box so a column keeps one edge from its
-   * header to its last row; only weight, colour and the sort control
+   * header to its last row; only weight, color and the sort control
    * separate them.
    * ---------------------------------------------------------------------- */
   .head,
@@ -260,12 +260,12 @@
   }
 
   /* Sticky header ---------------------------------------------------------
-   * On the CELLS: `position: sticky` on a `<thead>` or a `<tr>` is honoured
+   * On the CELLS: `position: sticky` on a `<thead>` or a `<tr>` is honored
    * by some engines and ignored by others, and on a cell it works in all of
    * them. The fill moves onto the cell for the same reason — the row's own
    * background would stay behind while the cell scrolls on top of the body,
    * and the body would show through. The knob flips to an opaque surface
-   * colour here because that is the point at which transparency turns into
+   * color here because that is the point at which transparency turns into
    * rows visible through the header.
    * ---------------------------------------------------------------------- */
   .root[data-sticky-header] {
@@ -365,7 +365,7 @@
       background-color: Canvas;
     }
 
-    /* The faint unsorted arrow is `opacity`, which forced colours does not
+    /* The faint unsorted arrow is `opacity`, which forced colors does not
      * touch; at full strength it would claim every sortable column is
      * sorted, so it is drawn as an outline instead. */
     .sortIcon {

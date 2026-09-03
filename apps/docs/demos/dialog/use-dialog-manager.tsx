@@ -20,7 +20,7 @@ async function publish(): Promise<string> {
   });
 
   if (!confirmed) {
-    return "cancelled";
+    return "canceled";
   }
 
   await dialogs.alert({

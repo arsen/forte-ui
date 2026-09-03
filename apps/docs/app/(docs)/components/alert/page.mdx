@@ -15,7 +15,7 @@ An alert is the message you cannot afford to have scroll past. It sits in the fl
 
 <DemoBlock id="alert/basic" />
 
-There is no Base UI primitive underneath, because there is almost no state to model — no focus to manage, nothing to position. What it does have is a layout that has to survive any subset of its six parts, two colour axes, one accessibility decision that is easy to get wrong in both directions, and exactly one bit of state: whether it is still in the page. It owns that last one only because React unmounts an element the frame it stops being rendered, so an alert dismissed by a plain conditional could never animate out.
+There is no Base UI primitive underneath, because there is almost no state to model — no focus to manage, nothing to position. What it does have is a layout that has to survive any subset of its six parts, two color axes, one accessibility decision that is easy to get wrong in both directions, and exactly one bit of state: whether it is still in the page. It owns that last one only because React unmounts an element the frame it stops being rendered, so an alert dismissed by a plain conditional could never animate out.
 
 ## Import
 
@@ -51,11 +51,11 @@ Seven, and they split into two groups. `success`, `warning`, `danger` and `info`
 
 ### Variants
 
-`variant` is how loud the card is; `tone` is which colour set it draws from. Two variants rather than the usual three: there is no `solid`, because a solid fill puts body copy on a saturated field, and the paragraph — not the label — is the part an alert exists to have read.
+`variant` is how loud the card is; `tone` is which color set it draws from. Two variants rather than the usual three: there is no `solid`, because a solid fill puts body copy on a saturated field, and the paragraph — not the label — is the part an alert exists to have read.
 
 <DemoBlock id="alert/variants" />
 
-`soft` tints the whole surface, its edge and its type in the tone. `outline` is a neutral panel with a hairline, where the tone survives only in the glyph — the arrangement `Toast` uses, and for the same reason: several alerts on one screen have to stay distinguishable from each other, and a page of tinted cards has nothing left to emphasise with. Reach for `outline` when the alert sits inside a form beside other bordered controls.
+`soft` tints the whole surface, its edge and its type in the tone. `outline` is a neutral panel with a hairline, where the tone survives only in the glyph — the arrangement `Toast` uses, and for the same reason: several alerts on one screen have to stay distinguishable from each other, and a page of tinted cards has nothing left to emphasize with. Reach for `outline` when the alert sits inside a form beside other bordered controls.
 
 <Callout kind="note">
   The default is `soft`, which is the opposite way round from most of the library. It is deliberate: someone writing `<Alert.Root tone="danger">` and nothing else is asking for something that looks dangerous, and a quiet neutral card with a small red tick is not that.
@@ -65,7 +65,7 @@ Seven, and they split into two groups. `success`, `warning`, `danger` and `info`
 
 <DemoBlock id="alert/parts" />
 
-A title on its own is one line tall — the icon is centred on the title's line box, not on the card, so it lines up with the first line whether the description runs to one line or five. A description on its own lands on the first row rather than leaving an empty one above it. And an alert with no icon has no icon *column*: the track is `auto`, so with nothing in it the track is zero wide.
+A title on its own is one line tall — the icon is centered on the title's line box, not on the card, so it lines up with the first line whether the description runs to one line or five. A description on its own lands on the first row rather than leaving an empty one above it. And an alert with no icon has no icon *column*: the track is `auto`, so with nothing in it the track is zero wide.
 
 That last one is why the horizontal gaps are margins on the parts rather than a `column-gap` on the grid. A grid keeps its gaps whether or not the tracks have anything in them, so an alert with no icon and no action would carry two gaps' worth of dead space hard against its own padding. A margin only exists when its element does.
 
@@ -77,7 +77,7 @@ That last one is why the horizontal gaps are margins on the parts rather than a 
 
 `Alert.Action` is a slot and not a button. An alert's action is a real control with its own variant, tone, size, loading state and `href`; wrapping `Button` would mean re-exposing all of it and then falling behind. Compose instead.
 
-It sits against the inline-end edge, centred on the whole message rather than on the title, so a three-line description does not leave the button floating at the top. Two controls fit as well — they share a flex row, so the pair reads as one decision.
+It sits against the inline-end edge, centered on the whole message rather than on the title, so a three-line description does not leave the button floating at the top. Two controls fit as well — they share a flex row, so the pair reads as one decision.
 
 ### Dismissing
 
@@ -101,7 +101,7 @@ Children of `Alert.Icon` replace the tone's standard glyph rather than sitting b
 
 ## Accessibility
 
-The interesting decision here is not the colour. It is whether the alert should announce itself, and the answer is usually **no**.
+The interesting decision here is not the color. It is whether the alert should announce itself, and the answer is usually **no**.
 
 <DemoBlock id="alert/live" />
 
@@ -111,9 +111,9 @@ The interesting decision here is not the colour. It is whether the alert should 
   `polite` renders `role="status"` and waits for a pause in whatever is being read. It is right for almost everything — a saved confirmation, a background job finishing. `assertive` renders `role="alert"` and interrupts mid-sentence, so keep it for failures the user has to act on: a payment that did not go through, work that is about to be lost. An interruption that turns out to be a "changes saved" is how people learn to ignore them.
 </Callout>
 
-Colour is never the only cue. The four status glyphs are four different **shapes** — a tick, a cross, a triangle, an "i" — rather than one shape in four colours, which is what keeps the kind of message readable to a colour-blind reader and under forced colours, where every glyph repaints in a single system colour (SC 1.4.1). The title says it in words as well.
+Color is never the only cue. The four status glyphs are four different **shapes** — a tick, a cross, a triangle, an "i" — rather than one shape in four colors, which is what keeps the kind of message readable to a color-blind reader and under forced colors, where every glyph repaints in a single system color (SC 1.4.1). The title says it in words as well.
 
-Every text pair the component can produce clears AA, and the harness now asserts it. `soft` paints its message in the tone's step 11 on the tone's step 3 — `danger-11 on -3`, `success-11 on -3`, `warning-11 on -3`, `info-11 on -3` in both light and dark, plus `gray-11 on gray-3` for `neutral`, which is swept across the same ~119k seeds as the rest of the ramp. That is why the title and the description are the *same colour* on a coloured tone, with weight doing the separating: a second, lighter tint of the same hue is not a colour the ramp promises anything about.
+Every text pair the component can produce clears AA, and the harness now asserts it. `soft` paints its message in the tone's step 11 on the tone's step 3 — `danger-11 on -3`, `success-11 on -3`, `warning-11 on -3`, `info-11 on -3` in both light and dark, plus `gray-11 on gray-3` for `neutral`, which is swept across the same ~119k seeds as the rest of the ramp. That is why the title and the description are the *same color* on a colored tone, with weight doing the separating: a second, lighter tint of the same hue is not a color the ramp promises anything about.
 
 `Alert.Title` renders a `<div>`, not a heading. An alert is a message about the state of the page rather than a section of it, and an `<h3>` here lands in the document outline between two real sections — which is what someone navigating by heading has to wade through. If the alert genuinely opens a region, name the region instead.
 
@@ -121,7 +121,7 @@ Every text pair the component can produce clears AA, and the harness now asserts
 
 Dismissing it does leave focus on `<body>`, because the element holding focus is the one that goes away. The exit transition delays that by 160ms rather than fixing it, and the component does not guess where focus should land — only the page knows whether the right answer is the control that raised the alert, the next alert in a stack, or the heading above it. If the alert was reached by keyboard, move focus somewhere deliberate in `onExitComplete`.
 
-Under forced colours the card keeps its border and loses its tint: backgrounds are replaced with system colours, so `soft` and `outline` become the same card and the tone stops being visible at all. The glyph shapes carry it from there.
+Under forced colors the card keeps its border and loses its tint: backgrounds are replaced with system colors, so `soft` and `outline` become the same card and the tone stops being visible at all. The glyph shapes carry it from there.
 
 ### Motion
 
@@ -135,7 +135,7 @@ It is a transition rather than a keyframe animation, for the reason the rest of 
 
 Nothing here needs a `prefers-reduced-motion` block, and there is none. `--forte-alert-exit-travel` is a `--forte-travel-*` token, so the slide collapses to `0px` on its own and the fade is left to carry the dismissal; the duration shortens itself and never reaches `0s`, which matters more than usual here — at exactly zero no transition object is created, `finished` never resolves, and the card waiting on it would stay in the DOM for good.
 
-The one other transition in the file is the close button's hover, on colour alone.
+The one other transition in the file is the close button's hover, on color alone.
 
 ## Theming
 
@@ -143,7 +143,7 @@ Everything below is declared on `Alert.Root` itself, which is also why an ancest
 
 <ThemingTable component="Alert" part="root" />
 
-The five `--forte-alert-tone-*` slots are the whole colour system: `tone` fills them in, and `variant` decides which of them reach the surface. A one-off tone is those five properties on one element, with no new variant and no wrapper.
+The five `--forte-alert-tone-*` slots are the whole color system: `tone` fills them in, and `variant` decides which of them reach the surface. A one-off tone is those five properties on one element, with no new variant and no wrapper.
 
 State is on `data-variant` and `data-tone`, both reachable from plain CSS or a Tailwind arbitrary variant — `data-[tone=danger]:...` — without a wrapper element.
 

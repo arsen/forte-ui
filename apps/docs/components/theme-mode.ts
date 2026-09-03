@@ -9,7 +9,7 @@ import type { Scheme } from "./theme-studio/theme-config";
  * `forte-theme` record together — so the helpers that used to do that here
  * are gone. What is left is the one thing the library does not do: keep the
  * attribute following the OS, since this site always writes it (the
- * pre-paint script resolves the preference) rather than modelling "system"
+ * pre-paint script resolves the preference) rather than modeling "system"
  * as its absence the way the library does.
  *
  * `import type` on purpose: theme-config imports `readerTheme` from here,

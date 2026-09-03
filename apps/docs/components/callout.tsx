@@ -9,7 +9,7 @@ const META: Record<Kind, { label: string; icon: string }> = {
   warn: { label: "Careful", icon: "!" },
 };
 
-/* The kind is two coordinated colour changes — the surface and the badge — so
+/* The kind is two coordinated color changes — the surface and the badge — so
  * they are declared together rather than as two lookups that could drift. */
 const TONE: Record<Kind, { surface: string; badge: string }> = {
   note: { surface: "", badge: "bg-panel-active" },
@@ -24,9 +24,9 @@ const TONE: Record<Kind, { surface: string; badge: string }> = {
 };
 
 /**
- * A labelled aside.
+ * A labeled aside.
  *
- * The kind is announced as text rather than carried only by colour and an
+ * The kind is announced as text rather than carried only by color and an
  * icon — WCAG SC 1.4.1 (Use of Color). The glyph itself is aria-hidden.
  */
 export function Callout({ kind = "note", children }: { kind?: Kind; children: ReactNode }) {

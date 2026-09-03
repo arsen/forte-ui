@@ -158,7 +158,7 @@ export interface CardActionProps
 /**
  * The header's trailing slot — a badge, an icon button, a `Menu` trigger. It
  * sits against the inline-end edge, pinned to the top corner when the header
- * has both a title and a description, centred on the title's line when the
+ * has both a title and a description, centered on the title's line when the
  * title is alone.
  *
  * A slot and not a control: whatever goes here is a real component with its

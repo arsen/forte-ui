@@ -12,7 +12,7 @@ export default function SkeletonSizing() {
     /* A definite width, for the same reason as the card demo: under
      * `justify-items-start` this block would be sized to its own max-content,
      * so the Guessed row growing would resize the whole thing — and the demo
-     * frame centres it, so BOTH rows would slide sideways and the Sized row
+     * frame centers it, so BOTH rows would slide sideways and the Sized row
      * would appear to shift too. */
     <div className="grid w-full max-w-sm gap-4">
       <Button variant="soft" className="justify-self-start" onClick={() => setLoading((v) => !v)}>

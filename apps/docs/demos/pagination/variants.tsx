@@ -7,7 +7,7 @@ const VARIANTS: PaginationVariant[] = ["ghost", "outline", "joined"];
 /* One strip per variant, same markup throughout: the axis is a single prop
  * on the root. `joined` is the boxed look with the gaps closed — the slots
  * overlap by one border width and the current page is raised so its fill is
- * framed in its own colour on all four sides. */
+ * framed in its own color on all four sides. */
 export default function PaginationVariants() {
   return (
     <div className="grid gap-5">

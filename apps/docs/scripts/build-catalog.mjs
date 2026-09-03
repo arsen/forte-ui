@@ -1,12 +1,12 @@
 /**
  * Generates components/component-catalog.ts — the component index and the
- * sidebar's Components group — from the library's own catalogue.
+ * sidebar's Components group — from the library's own catalog.
  *
  * The list used to be typed out in `nav.tsx`: fifty-six rows, kept in step with
  * `src/components/` by hand and by memory. This reads
  * `@forte-ui/react/docs-data/components.json`, which docgen builds from the
  * `@summary` / `@category` doc comments it already refuses to build without —
- * so a component cannot reach npm uncatalogued, and now cannot reach the site
+ * so a component cannot reach npm uncatalogd, and now cannot reach the site
  * unlisted either.
  *
  * ---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ const componentsDir = join(root, "app/(docs)/components");
 // the workspace: this is the same file a consumer gets, and pointing at
 // `../../packages/react/...` would work here and nowhere else.
 const require = createRequire(import.meta.url);
-const catalogue = require("@forte-ui/react/docs-data/components.json");
+const catalog = require("@forte-ui/react/docs-data/components.json");
 
 /** `NavList` → `nav-list`, `OTPField` → `otp-field`. */
 const kebab = (name) =>
@@ -94,10 +94,10 @@ const headingIds = async (route) => {
 };
 
 const errors = [];
-const byName = new Map(catalogue.map((entry) => [entry.name, entry]));
+const byName = new Map(catalog.map((entry) => [entry.name, entry]));
 const resolved = [];
 
-for (const entry of catalogue) {
+for (const entry of catalog) {
   const own = kebab(entry.name);
 
   if (!entry.partOf) {
@@ -131,7 +131,7 @@ for (const entry of catalogue) {
 // site looks wrong — this is the only place that notices.
 for (const page of pages) {
   if (!resolved.some((entry) => entry.route === page && !entry.partOf)) {
-    errors.push(`app/(docs)/components/${page}/: no catalogue entry resolves to it`);
+    errors.push(`app/(docs)/components/${page}/: no catalog entry resolves to it`);
   }
 }
 
@@ -144,13 +144,13 @@ if (errors.length) {
 const href = (entry) => `/components/${entry.route}/${entry.anchor ? `#${entry.anchor}` : ""}`;
 const lit = (value) => JSON.stringify(value);
 
-const CATEGORIES = [...new Set(catalogue.map((entry) => entry.category))];
+const CATEGORIES = [...new Set(catalog.map((entry) => entry.category))];
 
 const out = `/**
  * GENERATED FILE — do not edit by hand.
  * Regenerate with:  pnpm --filter @forte-ui/docs catalog
  *
- * The library's component catalogue, resolved to routes on this site. Both the
+ * The library's component catalog, resolved to routes on this site. Both the
  * index page and the sidebar's Components group render from it, so neither can
  * drift from what \`@forte-ui/react\` actually exports.
  */

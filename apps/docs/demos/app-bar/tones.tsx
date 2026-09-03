@@ -12,7 +12,7 @@ export default function AppBarTones() {
       {TONES.map((tone) => (
         /* Nothing inside is told the tone. The ghost buttons, the muted
          * caption and the separator all read the foreground tokens, and a
-         * coloured bar re-points those for its subtree. */
+         * colored bar re-points those for its subtree. */
         <AppBar.Root key={tone} tone={tone}>
           <AppBar.Leading>
             <Button variant="ghost" tone="neutral" iconOnly aria-label="Open navigation">

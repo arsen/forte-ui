@@ -48,16 +48,16 @@
     --forte-theme-toggle-bg: transparent;
     /** Fill on hover. */
     --forte-theme-toggle-bg-hover: var(--forte-color-panel-hover);
-    /** Icon colour at rest. */
+    /** Icon color at rest. */
     --forte-theme-toggle-fg: var(--forte-color-foreground-muted);
-    /** Icon colour on hover. */
+    /** Icon color on hover. */
     --forte-theme-toggle-fg-hover: var(--forte-color-foreground);
     /** Border width, drawn in every variant — `outline` is the only one that
-     * gives it a colour. */
+     * gives it a color. */
     --forte-theme-toggle-border-width: 1px;
-    /** Border colour. `var(--forte-color-border)` for `variant="outline"`. */
+    /** Border color. `var(--forte-color-border)` for `variant="outline"`. */
     --forte-theme-toggle-border-color: transparent;
-    /** Colour transitions between states, and the icon cross-fade. */
+    /** Color transitions between states, and the icon cross-fade. */
     --forte-theme-toggle-duration: var(--forte-duration-fast);
     /** How far the leaving icon rotates on its way out (the entering one
      * arrives from the other side). Multiplied by `--forte-motion-ok`, so it
@@ -85,7 +85,7 @@
      * border. A toggle beside a long heading in a `justify-between` header
      * row came out 20px wide and 36px tall, a squeezed pill, with no rule in
      * this file overridden. An explicit `min-inline-size` is a bound flexbox
-     * (and grid) cannot cross, which is the same defence Button's `iconOnly`
+     * (and grid) cannot cross, which is the same defense Button's `iconOnly`
      * square uses. */
     inline-size: var(--forte-theme-toggle-size);
     block-size: var(--forte-theme-toggle-size);
@@ -286,7 +286,7 @@
   }
 }
 
-/* Forced colours -------------------------------------------------------------
+/* Forced colors -------------------------------------------------------------
  * Top-level `forte.a11y`, ordered after `forte.components`, so everything here
  * beats the rules above by layer alone. The icon visibility matrix needs no
  * help: `visibility` is not a forced-colors casualty, and the glyphs stroke
@@ -294,8 +294,8 @@
  * ------------------------------------------------------------------------- */
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* The background is `transparent`, which forced colours replaces with a
-     * system colour of its choosing — pinning the pair keeps the button
+    /* The background is `transparent`, which forced colors replaces with a
+     * system color of its choosing — pinning the pair keeps the button
      * legible on any Canvas. */
     .root {
       background-color: Canvas;
@@ -306,10 +306,10 @@
       border-color: CanvasText;
     }
 
-    /* `opacity: 0.55` survives forced colours (opacity is not overridden), so
+    /* `opacity: 0.55` survives forced colors (opacity is not overridden), so
      * without this a disabled toggle would keep full-contrast CanvasText and
      * read as enabled. `opacity: 1` itself comes from the global remedy in
-     * patterns.css; colours are restated because that rule is `:where()` and
+     * patterns.css; colors are restated because that rule is `:where()` and
      * the bare `.root` rule above would beat it. */
     .root[data-disabled] {
       color: GrayText;

@@ -26,7 +26,7 @@
  *      around the tick marks.
  *
  *   2. Enter/exit is transitions on [data-starting-style]/[data-ending-style],
- *      never keyframes. A transition can be cancelled mid-flight, so a menu
+ *      never keyframes. A transition can be canceled mid-flight, so a menu
  *      dismissed while it is still opening reverses instead of snapping. There
  *      is also no `infinite` animation on the Popup or Positioner: Base UI
  *      awaits `Promise.all(el.getAnimations().map(a => a.finished))` before it
@@ -46,7 +46,7 @@
    * Trigger
    *
    * A modest neutral button, so an unstyled `<Menu.Trigger>Actions</...>` does
-   * not fall back to the UA's grey chrome. Dropped entirely when the consumer
+   * not fall back to the UA's gray chrome. Dropped entirely when the consumer
    * passes `render` (typically our own `<Button>`), because two full button
    * styles on one element resolve by source order inside the same cascade
    * layer — which is not something a consumer can predict or fix.
@@ -149,7 +149,7 @@
   }
 
   /* A vertical bar stretches its triggers to the strip's width, so the labels
-   * need to start at the reading edge — centred, they would sit in a ragged
+   * need to start at the reading edge — centered, they would sit in a ragged
    * column with nothing lining up. */
   [data-forte="menubar"][data-orientation="vertical"] .trigger {
     justify-content: flex-start;
@@ -178,7 +178,7 @@
    * interruption than it is. It earns its keep on a phone, where the popup
    * covers most of the viewport anyway.
    *
-   * `.forte-scrim` supplies position/inset, the colour, the optional blur, the
+   * `.forte-scrim` supplies position/inset, the color, the optional blur, the
    * fade and the forced-colors treatment. Only stacking is component-local.
    * --------------------------------------------------------------------- */
   .backdrop {
@@ -231,9 +231,9 @@
      * Consumers set them on the popup itself (`className` on `Menu.Popup`,
      * whose rule is unlayered and so beats this layer) or re-point the global
      * tokens below, which this file only ever reads. */
-    /** Popup surface colour */
+    /** Popup surface color */
     --forte-menu-bg: var(--forte-color-overlay);
-    /** Popup text colour */
+    /** Popup text color */
     --forte-menu-fg: var(--forte-color-foreground);
     /** Corner radius */
     --forte-menu-radius: var(--forte-radius-surface);
@@ -242,13 +242,13 @@
     --forte-menu-shadow: var(--forte-shadow-4);
     /* A hairline, and not the redundancy it looks like next to the shadow. A
      * menu floats over undimmed content, and at overlay-on-background the two
-     * surfaces are within a step of each other on the grey ramp — in dark mode
+     * surfaces are within a step of each other on the gray ramp — in dark mode
      * the shadow is nearly the only thing separating them, and it is the first
      * casualty of a bright page behind it. `.forte-hc-surface` already reserves a
      * 1px transparent border on this element, so painting it costs no layout. */
     /** Width of the hairline that separates the popup from the page */
     --forte-menu-border-width: 1px;
-    /** Colour of that hairline */
+    /** Color of that hairline */
     --forte-menu-border-color: var(--forte-color-border);
     /** Block padding above the first row and below the last */
     --forte-menu-padding-y: var(--forte-space-1);
@@ -358,7 +358,7 @@
     letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
-    /* Grow out of the trigger rather than out of the popup's own centre.
+    /* Grow out of the trigger rather than out of the popup's own center.
      * `--transform-origin` is published by the Positioner and points back at
      * the anchor. */
     transform-origin: var(--transform-origin);
@@ -460,11 +460,11 @@
    * `[data-highlighted]`, or keyboard users get no highlight at all.
    * --------------------------------------------------------------------- */
   .item {
-    /** Row text colour */
+    /** Row text color */
     --forte-menu-item-fg: var(--forte-color-foreground);
     /** Background of the highlighted row */
     --forte-menu-item-bg-highlighted: var(--forte-color-primary-soft);
-    /** Text colour of the highlighted row */
+    /** Text color of the highlighted row */
     --forte-menu-item-fg-highlighted: var(--forte-color-primary-text);
     /** Row font size */
     --forte-menu-item-font-size: var(--forte-font-size-2);
@@ -539,7 +539,7 @@
   }
 
   /* LinkItem ---------------------------------------------------------------
-   * A real <a>, so the UA gives it a colour and an underline that have
+   * A real <a>, so the UA gives it a color and an underline that have
    * nothing to do with the row it is sitting in. */
   .linkItem {
     text-decoration: none;
@@ -600,7 +600,7 @@
     scale: var(--forte-direction) 1;
   }
 
-  /* Inside a highlighted row the chevron has to leave the muted grey behind,
+  /* Inside a highlighted row the chevron has to leave the muted gray behind,
    * or it stays a low-contrast smudge on the soft primary fill. */
   .item[data-highlighted] .submenuIcon,
   .item[data-popup-open] .submenuIcon {
@@ -637,7 +637,7 @@
     /* -muted, not -subtle: this is permanently visible text, so SC 1.4.3
      * applies and -subtle is 3.73:1. The cap inherits it and derives its
      * fill and edge from it, so the whole cap dims and highlights with the
-     * row — no colour of its own to fall out of step. */
+     * row — no color of its own to fall out of step. */
     color: var(--forte-color-foreground-muted);
   }
 
@@ -672,9 +672,9 @@
   }
 
   /* The line is a BORDER, not a `background-color`. Under forced-colors a
-   * background is replaced with a system colour — for a plain box that is
+   * background is replaced with a system color — for a plain box that is
    * `Canvas`, the page's own backdrop — so a hairline drawn that way vanishes
-   * for exactly the users who most need the grouping cue. Border colours are
+   * for exactly the users who most need the grouping cue. Border colors are
    * forced to `CanvasText` instead, so the rule survives on its own and needs
    * no entry in the forced-colors block at the bottom of this file.
    *
@@ -716,7 +716,7 @@
  * `opacity: 1` and paints GrayText. Do not restate either.
  *
  * What is left is menu-specific: a DESCENDANT that declares its own author
- * colour does not inherit its row's forced colour — its own declaration wins
+ * color does not inherit its row's forced color — its own declaration wins
  * and is then forced to CanvasText, i.e. full contrast. The shortcut and the
  * submenu chevron are exactly that case, in both directions.
  */
@@ -745,7 +745,7 @@
       border-color: GrayText;
     }
 
-    /* An open submenu's parent row is filled above with an author colour that
+    /* An open submenu's parent row is filled above with an author color that
      * forced-colors would flatten to Canvas, losing the trail back. The same
      * system pair the generic `[data-highlighted]` rule uses puts it back. */
     .item[data-popup-open]:not([data-disabled]) {

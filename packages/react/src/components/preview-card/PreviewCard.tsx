@@ -226,7 +226,7 @@ export interface PreviewCardPopupProps
   alignOffset?: PositionerProps["alignOffset"];
   /**
    * Minimum distance, in pixels, the arrow keeps from the card's corners
-   * before it is allowed to sit off-centre (`data-uncentered`).
+   * before it is allowed to sit off-center (`data-uncentered`).
    * @default 5
    */
   arrowPadding?: PositionerProps["arrowPadding"];
@@ -360,7 +360,7 @@ const PreviewCardPopup = React.forwardRef<
           * focuses this element, so a ring on it could only be a lie.
           * `.forte-hc-surface` carries a transparent border, and `transparent`
           * is not preserved in forced-colors mode, so it becomes the visible
-          * system-coloured boundary that replaces the stripped shadow. */}
+          * system-colored boundary that replaces the stripped shadow. */}
         <BasePreviewCard.Popup
           ref={ref}
           className={clsx(styles.popup, "forte-hc-surface", className)}
@@ -382,7 +382,7 @@ const PreviewCardPopup = React.forwardRef<
 export interface PreviewCardArrowProps
   extends Omit<BasePreviewCard.Arrow.Props, "className"> {
   /**
-   * Replaces the built-in wedge. The default SVG inherits the card's colours
+   * Replaces the built-in wedge. The default SVG inherits the card's colors
    * through `--forte-preview-card-bg`, so a custom skin usually needs nothing
    * here.
    */
@@ -403,7 +403,7 @@ export interface PreviewCardArrowProps
  * `PreviewCard.Popup`.
  *
  * It is an SVG rather than the traditional CSS-border triangle on purpose: in
- * forced-colors mode every border colour is forced to `CanvasText`, and a
+ * forced-colors mode every border color is forced to `CanvasText`, and a
  * border triangle degrades into a filled rectangle. Two flat paths cannot fail
  * that way.
  */

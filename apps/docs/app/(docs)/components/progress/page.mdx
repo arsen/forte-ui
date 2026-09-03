@@ -104,9 +104,9 @@ it would compete with the thing it exists to contrast against.
 
 <Callout kind="note">
   `success` on completion is the one tone change worth an extra prop. A full bar
-  and a nearly-full bar look alike at a glance, so the colour is what marks the
+  and a nearly-full bar look alike at a glance, so the color is what marks the
   end state — see the demo at the top of the page, which flips to it at 100%.
-  Everything else should pick one tone and keep it: a bar that changes colour as
+  Everything else should pick one tone and keep it: a bar that changes color as
   it fills reads as a warning that never arrives.
 </Callout>
 
@@ -130,7 +130,7 @@ because they have different audiences:
 
 <DemoBlock id="progress/reduced-motion" />
 
-Under `prefers-reduced-motion: reduce` the indeterminate sweep stops travelling
+Under `prefers-reduced-motion: reduce` the indeterminate sweep stops traveling
 and the ring stops rotating — the travel is gated on `--forte-motion-ok`, and the
 rotation is `--forte-spin-turn`, which collapses to `0turn`. A second animation
 that is always running, and is a no-op at full motion because `--forte-pulse-dip`
@@ -188,16 +188,16 @@ through `aria-valuenow` and announcing it twice is worse than announcing it once
   the top of this page does.
 </Callout>
 
-Under forced colours the bar's rail is redrawn as `Canvas` with a `CanvasText`
+Under forced colors the bar's rail is redrawn as `Canvas` with a `CanvasText`
 outline and the fill becomes `Highlight`. The rail's boundary is an `outline`
 rather than a `border` on purpose: a border would change the box, and the fill
 sizes its cross axis with `height: inherit`.
 
-The ring needs a different fix for the same problem. Forced colours remaps
+The ring needs a different fix for the same problem. Forced colors remaps
 `color`, `background-color` and `border-color` but leaves SVG `fill` and
 `stroke` alone, so a literal `stroke: var(--…)` would keep its brand hue against
-a system-coloured page. Both circles therefore paint with `currentColor` and
-take their colour from `color`, which the UA does remap — and because that would
+a system-colored page. Both circles therefore paint with `currentColor` and
+take their color from `color`, which the UA does remap — and because that would
 land both of them on `CanvasText` and flatten the ring into a plain circle, the
 `a11y` layer names `GrayText` and `Highlight` separately.
 

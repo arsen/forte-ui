@@ -53,7 +53,7 @@ export default function BadgeOnAButton() {
         </span>
 
         {/* The same thing over a filled button, where the badge would
-          * otherwise sit on a colour close to its own. The ring is the page
+          * otherwise sit on a color close to its own. The ring is the page
           * behind it, punched back through — the trick `Avatar.Group` uses to
           * separate overlapping avatars. */}
         <span className="relative inline-flex">

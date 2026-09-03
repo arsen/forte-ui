@@ -76,10 +76,10 @@ export const PROSE_H2 = `${HEADING} mt-8 mb-3 text-6 tracking-tight`;
  * `text-foreground` on the anchor is not cosmetic. The site's link reset in
  * globals.css is `a:not(.forte-focus-ring) { color: inherit }` — it skips
  * anything carrying the ring class, on the assumption that such a link is a
- * library part painting its own colour. This one is not, so without the
- * class it kept the browser's default link colour, a lavender blue in dark
+ * library part painting its own color. This one is not, so without the
+ * class it kept the browser's default link color, a lavender blue in dark
  * mode. Nothing visible reads it directly, but it IS the anchor's
- * `currentColor`, which is what any descendant's colour or border falls
+ * `currentColor`, which is what any descendant's color or border falls
  * back to the moment its own value fails to resolve — and that is exactly
  * what a palette switch showed: a lavender border on the cards for the
  * length of the cross-fade.
@@ -94,7 +94,7 @@ export const PROSE_H2 = `${HEADING} mt-8 mb-3 text-6 tracking-tight`;
  * between two snapshots — so `Card` declares no transition of its own, and
  * the border simply follows the seed.
  *
- * No geometry on hover either — motion rule 7 in AGENTS.md: hover is a colour
+ * No geometry on hover either — motion rule 7 in AGENTS.md: hover is a color
  * cue, lift is opt-in.
  */
 export const LINK_CARD = "group block h-full rounded-surface text-foreground forte-focus-ring";

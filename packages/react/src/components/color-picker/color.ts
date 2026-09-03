@@ -1,19 +1,19 @@
 /*
- * Colour maths for ColorPicker.
+ * Color maths for ColorPicker.
  *
  * No React, no DOM: this file is pure functions, so it can be unit-reasoned
- * about and so the component never has to think in more than one colour space
+ * about and so the component never has to think in more than one color space
  * at a time.
  *
  * HSVA is the INTERNAL model, and that choice is load-bearing rather than
- * traditional. A colour string cannot carry hue once saturation or value
+ * traditional. A color string cannot carry hue once saturation or value
  * reaches zero — `#000000` is every hue at once — so a picker that kept only
  * the string would snap its hue slider back to red the moment the user dragged
  * the area into the black corner, and lose the hue again on the way out. HSV
  * keeps the three axes independent, which is exactly what a canvas plus a hue
  * rail is a direct manipulation of.
  *
- * sRGB is the gamut. Every colour the picker can produce is expressible as
+ * sRGB is the gamut. Every color the picker can produce is expressible as
  * eight-bit RGB, which is what makes `hex` an honest output format and what
  * lets the area's two gradients be a complete picture of the space. An
  * `oklch()` input outside that gamut is mapped INTO it (see `oklchToRgba`)
@@ -123,7 +123,7 @@ export function hslToHsv(h: number, s: number, l: number, a: number): Hsva {
  * The matrices are Björn Ottosson's original OKLab derivation. Two traps:
  *
  *   1. The transfer function is the sRGB one, not a plain 2.2 gamma. Using
- *      gamma alone shifts every dark colour by a visible amount that looks
+ *      gamma alone shifts every dark color by a visible amount that looks
  *      like a rounding bug rather than a wrong formula.
  *   2. Inside CSS's `oklch()`, `l` is 0-1 and `c` is roughly 0-0.4 — NOT the
  *      0-100 of `lch()`. The same warning is in `scripts/ramp.mjs`, and it is
@@ -173,7 +173,7 @@ export function rgbaToOklch({ r, g, b, a }: Rgba): {
     toLinear(b / 255),
   );
   const c = Math.hypot(A, B);
-  /* Below this the hue is numerical noise — two greys a rounding error apart
+  /* Below this the hue is numerical noise — two grays a rounding error apart
    * would print hues 180° apart. CSS says `none` for an undefined hue; 0 is
    * the value `none` computes to and the one that round-trips. */
   const h = c < 1e-6 ? 0 : wrapHue((Math.atan2(B, A) * 180) / Math.PI);
@@ -198,9 +198,9 @@ function inSrgbGamut(L: number, C: number, H: number) {
 /**
  * OKLCH to sRGB, gamut-mapped rather than clipped.
  *
- * `oklch(0.7 0.4 30)` names a colour no screen in this gamut can show. Clipping
+ * `oklch(0.7 0.4 30)` names a color no screen in this gamut can show. Clipping
  * each channel at 0 and 1 — the obvious one-liner — changes the hue as well as
- * the chroma, so an author's out-of-gamut orange arrives as a different colour
+ * the chroma, so an author's out-of-gamut orange arrives as a different color
  * family. Reducing chroma toward the achromatic axis at constant L and H keeps
  * the hue the author asked for and gives up only the saturation the display
  * could not have shown anyway. Sixteen bisection steps put the answer within
@@ -225,7 +225,7 @@ export function oklchToRgba(l: number, c: number, h: number, a: number): Rgba {
   const linear = oklabToLinearSrgb(L, C * Math.cos(rad), C * Math.sin(rad));
 
   /* The bisection lands just inside the boundary, so this clamp is only
-   * mopping up float error — never a colour decision. */
+   * mopping up float error — never a color decision. */
   return {
     r: clamp(toGamma(linear.r), 0, 1) * 255,
     g: clamp(toGamma(linear.g), 0, 1) * 255,
@@ -239,9 +239,9 @@ export function oklchToRgba(l: number, c: number, h: number, a: number): Rgba {
  * ---------------------------------------------------------------------- */
 
 /**
- * Whether black or white reads better ON this colour — for the tick drawn
+ * Whether black or white reads better ON this color — for the tick drawn
  * inside a selected swatch and the ring around the area's thumb, both of which
- * sit on colour the user chose and nothing else can be known about.
+ * sit on color the user chose and nothing else can be known about.
  *
  * Alpha is ignored on purpose: what a translucent swatch is composited over is
  * whatever the checkerboard and the panel happen to be, which is not something
@@ -320,12 +320,12 @@ function hexToRgba(hex: string): Rgba | null {
 }
 
 /**
- * Reads a CSS colour string into the picker's model.
+ * Reads a CSS color string into the picker's model.
  *
  * Accepts `#hex` (3, 4, 6 or 8 digits), `rgb()`/`rgba()`, `hsl()`/`hsla()`,
  * `oklch()`, `oklab()` and the keyword `transparent`, in both the legacy
  * comma-separated and the modern space-separated forms. Returns `null` for
- * anything else — including named colours, which would need the full 148-entry
+ * anything else — including named colors, which would need the full 148-entry
  * CSS table to be shipped in every bundle that touches the picker, for input
  * the picker itself never produces.
  *
@@ -336,7 +336,7 @@ export function parseColor(input: string): Hsva | null {
   const text = input.trim().toLowerCase();
   if (text === "") return null;
 
-  /* Not a colour so much as the absence of one, but it is what an author
+  /* Not a color so much as the absence of one, but it is what an author
    * writes for a cleared swatch, and it round-trips to `#00000000`. */
   if (text === "transparent") return { h: 0, s: 0, v: 0, a: 0 };
 
@@ -350,7 +350,7 @@ export function parseColor(input: string): Hsva | null {
 
   const name = fn[1] ?? "";
   /* The slash form separates alpha from the channels; the legacy form uses a
-   * fourth comma instead, which falls out of the comma-to-space normalisation
+   * fourth comma instead, which falls out of the comma-to-space normalization
    * below as a fourth token. */
   const slash = (fn[2] ?? "").split("/");
   if (slash.length > 2) return null;
@@ -426,9 +426,9 @@ const hexPair = (n: number) =>
     .padStart(2, "0");
 
 /**
- * The picker's model as a CSS colour string.
+ * The picker's model as a CSS color string.
  *
- * Alpha is omitted when the colour is fully opaque, in every format. That is
+ * Alpha is omitted when the color is fully opaque, in every format. That is
  * the one rule worth stating out loud: it means a picker whose alpha rail was
  * never touched — or never rendered — emits `#7c3aed` and not `#7c3aedff`, so
  * an author who does not want alpha simply never gets any, without a prop
@@ -437,7 +437,7 @@ const hexPair = (n: number) =>
  *
  * Precision is set by what each notation can hold, not by taste: `hex` is
  * eight-bit and exact, while `hsl` and `oklch` are rounded to the point where
- * re-parsing lands on the same eight-bit colour. It is not what makes the
+ * re-parsing lands on the same eight-bit color. It is not what makes the
  * picker's own round trip stable, though — see the note on `emittedRef` in
  * ColorPicker.tsx.
  */
@@ -480,7 +480,7 @@ export function toCssColor(hsva: Hsva): string {
   return a >= 1 ? `rgb(${body})` : `rgb(${body} / ${a})`;
 }
 
-/** Two colours are the same swatch when they are the same eight-bit colour.
+/** Two colors are the same swatch when they are the same eight-bit color.
  * Comparing the model instead would call `#000` and `hsl(200 0% 0%)` different,
  * and neither the eye nor the output string can tell them apart. */
 export function sameColor(a: Rgba, b: Rgba): boolean {
@@ -498,8 +498,8 @@ export function sameColor(a: Rgba, b: Rgba): boolean {
  *
  * Deliberately NOT built from the forte-ui ramp. Those tokens are `var()`
  * references that resolve differently per theme scope and per light/dark, and a
- * picker has to hand back a concrete colour the consumer can store — a swatch
- * that means one thing in dark mode and another in light is not a colour, it is
+ * picker has to hand back a concrete color the consumer can store — a swatch
+ * that means one thing in dark mode and another in light is not a color, it is
  * a variable. An app with a brand palette passes its own `colors`.
  */
 export const DEFAULT_SWATCHES: readonly string[] = [

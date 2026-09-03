@@ -22,7 +22,7 @@ export interface SwitchProps
    *
    * This is the switch's non-positional state cue, and it is why the default
    * is `true`: a user who cannot perceive the thumb sliding still gets a
-   * glyph appearing. Turning it off leaves colour as the only cue that does
+   * glyph appearing. Turning it off leaves color as the only cue that does
    * not depend on noticing movement.
    * @default true
    */
@@ -82,7 +82,7 @@ export interface SwitchProps
  * Motion — the thumb's position *is* the state, not decoration, so its travel
  * is never multiplied by `--forte-motion-ok`. Under reduced motion the thumb
  * still moves; only the spring flattens, because the duration token it rides
- * on shortens. The track colour, the thumb colour and the checkmark change
+ * on shortens. The track color, the thumb color and the checkmark change
  * alongside it so state never rests on movement alone.
  *
  * @summary An on/off control whose change applies immediately — no submit
@@ -116,7 +116,7 @@ export const Switch = React.forwardRef<HTMLElement, SwitchProps>(function Switch
           >
             {/* `stroke="currentColor"` rather than a class, so forced-colors
              * follows the thumb's forced `color` instead of painting a
-             * system-coloured block. `fill="none"` is a presentation
+             * system-colored block. `fill="none"` is a presentation
              * attribute and still beats the inherited fill from
              * `.forte-icon`. */}
             <path

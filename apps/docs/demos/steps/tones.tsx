@@ -4,8 +4,8 @@ import { Steps, type StepsTone } from "@forte-ui/react";
 
 const TONES: StepsTone[] = ["primary", "secondary", "success", "neutral"];
 
-/* `tone` colours "done" and "here" and nothing else. A step not yet reached
- * stays neutral in every tone, so the colour only ever says "this far". */
+/* `tone` colors "done" and "here" and nothing else. A step not yet reached
+ * stays neutral in every tone, so the color only ever says "this far". */
 export default function StepsTones() {
   return (
     <div className="flex w-full max-w-2xl flex-col gap-6">

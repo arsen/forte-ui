@@ -11,13 +11,13 @@ until git checkouts on Windows proved that does not travel. Edit this file;
 
 `@forte-ui/react` is an accessible React component library built on
 [Base UI](https://base-ui.com) primitives, styled with CSS Modules and a design
-system that rebuilds its entire palette from **one colour variable** using CSS
-relative colour syntax — no JavaScript, no build step, no runtime theming layer.
+system that rebuilds its entire palette from **one color variable** using CSS
+relative color syntax — no JavaScript, no build step, no runtime theming layer.
 
 Three things make it different from the usual component library, and every
 decision in the repo follows from them:
 
-1. **Nothing is hardcoded.** Colour, spacing, radius, duration and easing all
+1. **Nothing is hardcoded.** Color, spacing, radius, duration and easing all
    come from tokens. A component that inlines `8px` or `#7c3aed` has broken
    theming, density, radius presets and reduced motion in one line.
 2. **Accessibility is measured, not asserted.** The contrast harness sweeps
@@ -35,13 +35,13 @@ packages/react             the library
   scripts/                ramp.mjs · motion.mjs (source of truth) + generators
 packages/create-forte-ui   the scaffolding CLI (`pnpm create forte-ui`)
   src/templates.ts        the starter files — the getting-started GUIDES are its spec
-  src/fonts.ts            the font catalogue, MODULE OF RECORD (docs re-export it)
-  src/color.ts            the colour maths, MODULE OF RECORD (docs re-export it)
+  src/fonts.ts            the font catalog, MODULE OF RECORD (docs re-export it)
+  src/color.ts            the color maths, MODULE OF RECORD (docs re-export it)
   scripts/smoke.mjs       scaffold+build all four paths — run before releasing it
 apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/page.tsx                     the home page — the one route outside the docs shell
   app/(docs)/layout.tsx            the docs shell: sidebar · page column · section rail
-  app/(docs)/components/page.mdx          the component index — cards, from the catalogue
+  app/(docs)/components/page.mdx          the component index — cards, from the catalog
   app/(docs)/components/<name>/page.mdx   the written page
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
@@ -52,7 +52,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   components/toc.tsx               the section rail — the shell's right column
   components/shell-drawers.tsx     both columns again, for screens without room
   components/toc-registry.ts       GENERATED — the rail's server-rendered seed
-  components/component-catalog.ts  GENERATED — the library's catalogue, resolved to routes
+  components/component-catalog.ts  GENERATED — the library's catalog, resolved to routes
   components/component-index.tsx   the index page's cards, grouped by category
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   mdx-components.tsx               the prose typography, per element
@@ -76,7 +76,7 @@ the dev server is already running — it fans out to `generate` in both packages
 The two used to run in parallel. They no longer can: `build-catalog.mjs` reads
 the library's `docs-data/components.json` to resolve every component page, so
 turbo orders the docs behind the library with `^generate` — otherwise a run that
-adds a component reads the PREVIOUS run's catalogue and emits a site index
+adds a component reads the PREVIOUS run's catalog and emits a site index
 missing the page that same run just created. A couple of seconds, and it is
 deliberately **not** turbo-cached: these scripts write
 checked-in files, so a cache hit on an unchanged input set would leave a hand
@@ -116,7 +116,7 @@ catch things.
 | `packages/react/src/styles/motion.css` | `scripts/motion.mjs` | `tokens` |
 | `packages/react/docs-data/props.json` | component TSX doc comments | `docgen` |
 | `packages/react/docs-data/components.md` | `@summary` / `@category` / `@partOf` tags on component-root doc comments | `docgen` |
-| `packages/react/docs-data/components.json` | the same tags — the catalogue as data | `docgen` |
+| `packages/react/docs-data/components.json` | the same tags — the catalog as data | `docgen` |
 | `packages/react/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
 | `packages/react/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
@@ -137,7 +137,7 @@ blocks carry **equalities that must hold and that CSS cannot express**:
 accent ramp            ≡ secondary ramp                (one shared curve)
 ```
 
-`full` means "explicitly opt into base behaviour", so it must equal `:root`; the
+`full` means "explicitly opt into base behavior", so it must equal `:root`; the
 in-page reduce control must match the OS preference exactly, or the motion
 toggle and the user's system setting silently disagree. Hand-editing one side
 and missing the other produces a bug visible only under a subtree
@@ -186,7 +186,7 @@ stale seed costs a re-render nobody sees, not a wrong rail. Run it anyway
 before committing, or the file lands in the diff on somebody else's next build.
 
 `catalog` is the opposite of `toc`, and worth knowing before it stops a build.
-It is a GATE as much as a generator: it resolves every catalogue entry to a page
+It is a GATE as much as a generator: it resolves every catalog entry to a page
 under `app/(docs)/components/` and fails if the two disagree in either
 direction — a component with no page, or a page no component resolves to. There
 is deliberately no fallback. An earlier draft resolved a missing page to the
@@ -238,7 +238,7 @@ preset block, since each preset is a complete statement rather than a patch.
 No → all three selectors.
 
 Register it in `properties.css` when it is an input consumed inside `calc()` or a
-colour function — where one malformed value would poison everything derived from
+color function — where one malformed value would poison everything derived from
 it — or when it must animate, or needs a guaranteed fallback if no rule matched
 (that is `--forte-direction`).
 
@@ -277,8 +277,8 @@ read it for orientation, not as proof a token does or does not exist. It is
 currently missing `--forte-direction`, which `Switch` relies on for RTL.
 
 **Two independent axes, not an exploding variant list.** `variant` is how loud
-a component is; `tone` is which semantic colour set it draws from. Each tone
-defines a handful of colour slots and each variant decides which slots become
+a component is; `tone` is which semantic color set it draws from. Each tone
+defines a handful of color slots and each variant decides which slots become
 background, text and border. Every combination then works for free. Resist
 adding a third axis or a bespoke one-off variant.
 
@@ -396,14 +396,14 @@ consumer's bundle. Springs are real damped-harmonic-oscillator solutions
 sampled into `linear()` easings and resolved at author time.
 
 **1 — Transitions, not keyframes, for enter and exit.** Use Base UI's
-`[data-starting-style]` / `[data-ending-style]`. A transition can be cancelled
+`[data-starting-style]` / `[data-ending-style]`. A transition can be canceled
 mid-flight, so closing a dialog while it is still opening reverses smoothly
 instead of snapping. Keyframes cannot do this.
 
 **2 — Never write `@media (prefers-reduced-motion)` in a component file.**
 `motion.css` is the only place it exists. The tokens collapse their own
 geometry: `--forte-travel-md` becomes `0px`, `--forte-scale-enter` becomes `1`. A
-component that consumes tokens gets correct behaviour without knowing reduced
+component that consumes tokens gets correct behavior without knowing reduced
 motion exists. Writing the query locally also tends to produce a hard
 `transition: none`, which removes the opacity fade reduced-motion users
 actually benefit from.
@@ -424,12 +424,12 @@ durations only *shorten*. Scales interpolate toward `1`, never toward `0` —
 
 **6 — Motion that carries information keeps working.** The Switch thumb's
 position and the Checkbox tick are the only signal separating on from off for
-someone who cannot rely on fill colour, so they animate on a *duration* (the
+someone who cannot rely on fill color, so they animate on a *duration* (the
 tick draws via `stroke-dashoffset` over `pathLength="1"`), not on a travel or
 scale token that would collapse. Where motion *is* suppressed, a non-positional
 cue fades in — that is what `--forte-motion-off` and `--forte-pulse-dip` are for.
 
-**7 — Hover is a colour cue by default; geometry is opt-in.** A hover lift moves
+**7 — Hover is a color cue by default; geometry is opt-in.** A hover lift moves
 the hit box: with the pointer resting on the button's edge, the lift can hover
 the element out from under the cursor and oscillate. Hence
 `--forte-button-hover-lift` defaults to `0px`, with `--forte-control-hover-lift` /
@@ -461,7 +461,7 @@ Test RTL — the demo frame has a toggle for it.
 | Token | Use it for |
 | :-- | :-- |
 | `--forte-duration-instant` (1ms) | press feedback, anything that must feel immediate |
-| `--forte-duration-fast` (160ms) | hover, colour changes, small fades, popup enter/exit |
+| `--forte-duration-fast` (160ms) | hover, color changes, small fades, popup enter/exit |
 | `--forte-duration-normal` (240ms) | dialog enter, larger surfaces |
 | `--forte-duration-slow` (400ms) | rare; page-level transitions |
 | `--forte-duration-move` (220ms) | positional moves measured at runtime (the Tabs indicator) |
@@ -505,7 +505,7 @@ the site's chrome measures. Three things about the setup are load-bearing:
 *that* — which freezes the value at `:root`, because a `var()` inside an
 unregistered custom property is substituted where it is declared. Every demo
 renders inside `DemoFrame`, a `.forte-theme` scope carrying `data-theme` and
-`data-forte-motion`, so `bg-panel` would keep the page's colour when the frame's
+`data-forte-motion`, so `bg-panel` would keep the page's color when the frame's
 light/dark toggle is flipped. `inline` substitutes the token into the utility
 itself (`background-color: var(--forte-color-panel)`), which resolves at the
 element and makes scopes, `data-forte-density` and `data-forte-radius` all work.
@@ -541,7 +541,7 @@ Two named `@custom-variant`s exist because their guard is one the bracket
 syntax can express only as a class name nobody reads twice — and the half
 that would get dropped in the shortening is always the accessibility half:
 `scroll-driven:` (a view timeline exists), `gradient-text:`
-(`background-clip: text` will actually paint, so not under forced colours).
+(`background-clip: text` will actually paint, so not under forced colors).
 There is no `frosted:` any more: the site header is the library's `AppBar`
 with `variant="frosted"`, and the blur guard lives in the component.
 
@@ -560,7 +560,7 @@ Three things stay in a `style` object, and are not oversights:
 The docs site draws its icons from **lucide-react**, with the one GitHub mark
 coming from **react-icons** (`SiGithub`) because lucide dropped its brand set
 and a brand mark should be the owner's own. Both are DOCS dependencies: the
-library ships no icon catalogue today, and when it grows one these imports are
+library ships no icon catalog today, and when it grows one these imports are
 what changes.
 
 Size them with the `ICON` string from `components/styles.ts`
@@ -574,14 +574,14 @@ components draw and turns a stroked outline into a solid blob.
 [`apps/docs/lib/cn.ts`](apps/docs/lib/cn.ts) is the usual
 `twMerge(clsx(inputs))` plus an `extend` block, which is not optional.
 tailwind-merge ships knowing Tailwind's DEFAULT theme, and the bridge replaced
-most of it. A class it does not recognise is not an error — it is simply never
+most of it. A class it does not recognize is not an error — it is simply never
 merged, so two competing values both survive and the cascade decides. Its stock
 validators expect t-shirt sizes (`rounded-md`) or bare numbers (`p-4`), so
 every renamed scale needs its actual names listed — and `text` / `shadow` for
-a second reason: tailwind-merge's colour scale matches *any* value, so
-`text-2` parses as a text *colour* and `cn("text-2", "text-foreground-muted")`
-silently returns only the colour. Listing the steps makes them sizes again.
-That same match-anything colour scale is why colours need no entry at all, and
+a second reason: tailwind-merge's color scale matches *any* value, so
+`text-2` parses as a text *color* and `cn("text-2", "text-foreground-muted")`
+silently returns only the color. Listing the steps makes them sizes again.
+That same match-anything color scale is why colors need no entry at all, and
 neither do `font-*`, `font-weight-*`, `leading-*` or `tracking-*`, whose names
 are Tailwind's own.
 
@@ -610,7 +610,7 @@ not error, it just stops overriding its own family.
 [`globals.css`](apps/docs/app/globals.css) holds four blocks, each of which
 targets something no class can reach:
 
-- **A Preflight substitute** — `box-sizing` on every element, the `a` colour and
+- **A Preflight substitute** — `box-sizing` on every element, the `a` color and
   underline reset, and the global `:focus-visible` ring. Preflight itself is
   deliberately not imported: it would strip the UA list markers and heading
   sizes the MDX prose builds on.
@@ -671,13 +671,13 @@ base rules without a single `!important`.
    The root's doc comment additionally carries `@summary` (a one-line
    when-to-use, naming the nearest alternative where one is confusable) and
    `@category` (one of the six buckets in `docgen.mjs`) — `docgen` assembles
-   them into `docs-data/components.md`, the catalogue agents pick components
+   them into `docs-data/components.md`, the catalog agents pick components
    from, and `components.json`, the same data, which the docs site builds its
    component index and its sidebar out of. It **fails the build** if either tag
    is missing, so this step cannot be skipped. A third tag, `@partOf <Component>`,
    is for the exception: an entry documented on a sibling's page rather than one
    of its own — `AlertDialog` on Dialog's, `KbdGroup` on Kbd's. It must name a
-   catalogue entry in the same directory, and it is what keeps a component with
+   catalog entry in the same directory, and it is what keeps a component with
    a genuinely missing page from being mistaken for one of these.
 9. Add demos in `apps/docs/demos/<name>/`, regenerate the registry, and write
    the MDX page. Demos are imported twice from the same file (once to render,
@@ -787,7 +787,7 @@ drafts a section in exactly this shape.
   re-declare the whole ramp, and why setting `--forte-accent-seed` on an arbitrary
   element does nothing.
 - `transparent` is **not** preserved under forced-colors — it is replaced with a
-  system colour. That is a feature (`.forte-hc-surface` relies on it) and a trap
+  system color. That is a feature (`.forte-hc-surface` relies on it) and a trap
   (the gap in `Spinner`'s ring would fill in).
 - `opacity` is one of the few properties forced-colors does **not** override, so
   a `0.55` disabled control keeps full contrast and reads as enabled. `GrayText`

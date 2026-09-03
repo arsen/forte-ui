@@ -7,7 +7,7 @@ export default function AlertAction() {
     <div className="grid w-full gap-3">
       {/* The action is a slot, not a button: whatever goes in keeps its own
         * variant, tone, size and loading state. It sits against the
-        * inline-end edge, centred on the whole message. */}
+        * inline-end edge, centered on the whole message. */}
       <Alert.Root tone="info">
         <Alert.Icon />
         <Alert.Title>Dark mode is now available</Alert.Title>

@@ -51,14 +51,14 @@ Five presets, `xs` through `xl`, spanning `1.5rem` to `4rem`. Only one property 
 
 ### Variants and tones
 
-The two axes the rest of the library uses. `variant` is how loud the fallback is — `soft` is a tinted disc, `solid` fills with the tone itself, `outline` is a ring around nothing — and `tone` is which semantic colour set it draws from.
+The two axes the rest of the library uses. `variant` is how loud the fallback is — `soft` is a tinted disc, `solid` fills with the tone itself, `outline` is a ring around nothing — and `tone` is which semantic color set it draws from.
 
 <DemoBlock id="avatar/variants" />
 
 Both only decide what shows while there is **no image**: a loaded photo covers the fill entirely. `outline` is the exception and the reason it exists — its edge sits outside the picture, so it is the one treatment that survives the photo arriving.
 
 <Callout kind="note">
-  Rotating the tone across a list is the cheapest way to make initials tell people apart, and it is safe here because colour is never carrying the difference on its own — the initials already differ. Deriving the tone from a hash of the name keeps it stable between sessions, which matters more than the hue itself.
+  Rotating the tone across a list is the cheapest way to make initials tell people apart, and it is safe here because color is never carrying the difference on its own — the initials already differ. Deriving the tone from a hash of the name keeps it stable between sessions, which matters more than the hue itself.
 </Callout>
 
 ### When the image is missing
@@ -77,7 +77,7 @@ The middle avatar's `src` points at a file that does not exist. Nothing torn eve
 
 <DemoBlock id="avatar/group" />
 
-It is layout and nothing else — no state, no context, no props. Every avatar keeps its own `size`, `shape`, `variant` and `tone`; the group only pulls each child back by `--forte-avatar-group-overlap` and pushes a ring onto every descendant `Avatar.Root`. That ring is a real border on a pseudo-element rather than a `box-shadow`, so it is still there under forced colours, where shadows are stripped and a stack of avatars would otherwise fuse into one blob.
+It is layout and nothing else — no state, no context, no props. Every avatar keeps its own `size`, `shape`, `variant` and `tone`; the group only pulls each child back by `--forte-avatar-group-overlap` and pushes a ring onto every descendant `Avatar.Root`. That ring is a real border on a pseudo-element rather than a `box-shadow`, so it is still there under forced colors, where shadows are stripped and a stack of avatars would otherwise fuse into one blob.
 
 Children paint in DOM order, so the last one is on top. Put an overflow counter there — it is where the eye finishes, and it is the element most likely to be a link.
 
@@ -91,11 +91,11 @@ The overlap is a **length**, not a fraction of the avatar's size. The avatar's s
 
 The part earns its place on the arithmetic, which is the half a hand-rolled `<span>` gets wrong. A dot at `inset: 0` sits on the corner of the **box**, and the corner of the box is not on the avatar's outline unless the avatar is a square. The point where the 45° diagonal crosses a corner of radius `r` is `0.2929r` in from the box corner — `14.645%` for a circle, `0` for `square`, and whatever `data-forte-radius` currently makes the corner for `rounded`. One expression covers all three shapes, and it stays right when you override `--forte-avatar-radius` by hand.
 
-Sizing is the other half, and the two are the same bug. `--forte-avatar-badge-size` is a fraction of `--forte-avatar-size`, so the offset that centres the dot on the outline moves with the avatar. A fixed length looks correct at exactly one `size`: at `xl` the dot floats off the disc, and at `xs` it is half the avatar.
+Sizing is the other half, and the two are the same bug. `--forte-avatar-badge-size` is a fraction of `--forte-avatar-size`, so the offset that centers the dot on the outline moves with the avatar. A fixed length looks correct at exactly one `size`: at `xl` the dot floats off the disc, and at `xs` it is half the avatar.
 
 <DemoBlock id="avatar/badge" />
 
-Content widens the badge into a pill, growing inward from the pinned edge — `--forte-avatar-badge-size` becomes its `min-inline-size` rather than its width, so `4` stays a disc and `12` does not become an ellipse. `--forte-avatar-badge-ring-color` follows `--forte-avatar-ring-color` by default, so a badge inside a group picks up the group's ring colour without being told and a lone avatar falls back to the page background.
+Content widens the badge into a pill, growing inward from the pinned edge — `--forte-avatar-badge-size` becomes its `min-inline-size` rather than its width, so `4` stays a disc and `12` does not become an ellipse. `--forte-avatar-badge-ring-color` follows `--forte-avatar-ring-color` by default, so a badge inside a group picks up the group's ring color without being told and a lone avatar falls back to the page background.
 
 `placement` matters most in a group. Avatars overlap toward the inline-start, so every avatar but the last has its inline-end corner painted over by the next one — put the dots on `bottom-start` there, or badge only the last avatar.
 
@@ -119,11 +119,11 @@ Decorative icons inside a fallback take `aria-hidden="true"`, and a bare `Avatar
 
 A badge with visible content is never decoration, so it stays in the tree whether or not you name it — hiding a `+3` on the absence of a prop would be a silent deletion. `label` then does what it does on `Avatar.Fallback`: it replaces what is announced, so `4` can read as "4 unread messages" instead of as the number four.
 
-Under forced colours the badge needs more help than the fallback does, because both of its colours are backgrounds as far as that mode is concerned — the fill and the ring are each remapped to `Canvas`, and the dot disappears into the avatar rather than merely losing its tone. A bare dot is repainted as a `CanvasText` disc with a `Canvas` ring around it; a badge with content keeps a `Canvas` fill so its text stays legible. Every tone looks identical there, which is correct rather than a compromise — colour was never allowed to be the only cue.
+Under forced colors the badge needs more help than the fallback does, because both of its colors are backgrounds as far as that mode is concerned — the fill and the ring are each remapped to `Canvas`, and the dot disappears into the avatar rather than merely losing its tone. A bare dot is repainted as a `CanvasText` disc with a `Canvas` ring around it; a badge with content keeps a `Canvas` fill so its text stays legible. Every tone looks identical there, which is correct rather than a compromise — color was never allowed to be the only cue.
 
-Every text pair the component can produce clears AA. The tones draw the same slots the rest of the library does — `-11` on `-3` for `soft`, `-11` on `-1` for `outline`, `on-primary` on `-9` for `solid` — and those are the pairs the contrast harness sweeps across ~119k seeds, so initials stay legible whatever the brand colour is.
+Every text pair the component can produce clears AA. The tones draw the same slots the rest of the library does — `-11` on `-3` for `soft`, `-11` on `-1` for `outline`, `on-primary` on `-9` for `solid` — and those are the pairs the contrast harness sweeps across ~119k seeds, so initials stay legible whatever the brand color is.
 
-Under forced colours the fallback gains a `CanvasText` border. Backgrounds are replaced with system colours in that mode, so every variant's fill would otherwise collapse to `Canvas` and the avatar would dissolve into the page — while an image avatar survives untouched, because bitmaps are left alone. The group's ring needs no such rule: it is already a border, and `border-color` is remapped rather than stripped.
+Under forced colors the fallback gains a `CanvasText` border. Backgrounds are replaced with system colors in that mode, so every variant's fill would otherwise collapse to `Canvas` and the avatar would dissolve into the page — while an image avatar survives untouched, because bitmaps are left alone. The group's ring needs no such rule: it is already a border, and `border-color` is remapped rather than stripped.
 
 ### Motion
 

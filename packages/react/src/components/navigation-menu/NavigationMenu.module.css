@@ -18,7 +18,7 @@
  *
  * The Content parts are written up in the list and MOVED into the viewport
  * when their item opens — one popup serves every item, sliding and resizing
- * between them. That is the behaviour this file exists to draw, and five
+ * between them. That is the behavior this file exists to draw, and five
  * things in it are load-bearing:
  *
  *   1. The popup is sized from `--popup-width` / `--popup-height`, which Base
@@ -44,7 +44,7 @@
  *
  *   5. No `prefers-reduced-motion` block. `--forte-travel-*` collapses to 0px,
  *      `--forte-scale-enter` to exactly 1, and `--forte-duration-move` to 1ms, so
- *      the panel appears and swaps without travelling and without this file
+ *      the panel appears and swaps without traveling and without this file
  *      knowing reduced motion exists.
  */
 
@@ -74,7 +74,7 @@
     --forte-navigation-menu-row-gap: var(--forte-control-gap);
     /** Corner radius of a `plain` row */
     --forte-navigation-menu-row-radius: var(--forte-radius-control);
-    /** Text colour of a `plain` row at rest */
+    /** Text color of a `plain` row at rest */
     --forte-navigation-menu-row-fg: var(--forte-color-foreground);
     /** Background of a hovered `plain` row */
     --forte-navigation-menu-row-bg-hover: var(--forte-color-panel-hover);
@@ -83,7 +83,7 @@
      * two would leave a bar with both showing two kinds of emphasis at once. */
     /** Background of the row whose panel is open, and of the current page's row */
     --forte-navigation-menu-row-bg-open: var(--forte-color-primary-soft);
-    /** Text colour of those same two rows */
+    /** Text color of those same two rows */
     --forte-navigation-menu-row-fg-open: var(--forte-color-primary-text);
     /** Font size of a `plain` row */
     --forte-navigation-menu-row-font-size: var(--forte-font-size-2);
@@ -278,7 +278,7 @@
     text-wrap: pretty;
   }
 
-  /* A descendant that declares its own colour does not follow its row's, so
+  /* A descendant that declares its own color does not follow its row's, so
    * the muted line has to be told to join in when the row is the current page
    * or has its own menu open. */
   .trigger[data-variant="card"][data-popup-open] .linkDescription,
@@ -315,7 +315,7 @@
   }
 
   /* `translate` and `scale` as independent properties rather than one
-   * `transform`, so the centring and the RTL mirror do not fight over it. The
+   * `transform`, so the centering and the RTL mirror do not fight over it. The
    * mirror is the rule about the inline axis having no logical form: the glyph
    * is drawn pointing right, and `--forte-direction` is -1 in RTL. */
   .trigger[data-variant="card"] .icon {
@@ -334,7 +334,7 @@
    * to look at it reads as a far bigger interruption than it is. It earns its
    * keep on a phone, where the panel covers most of the viewport anyway.
    *
-   * `.forte-scrim` supplies position/inset, the colour, the optional blur, the
+   * `.forte-scrim` supplies position/inset, the color, the optional blur, the
    * fade and the forced-colors treatment. Only stacking is component-local.
    * --------------------------------------------------------------------- */
   .backdrop {
@@ -466,9 +466,9 @@
      * redeclare the knobs they read: every one of them is a descendant of this
      * element once it is open, which is what lets a single `className` on
      * `NavigationMenu.Popup` retune a whole panel. */
-    /** Panel surface colour */
+    /** Panel surface color */
     --forte-navigation-menu-bg: var(--forte-color-overlay);
-    /** Panel text colour */
+    /** Panel text color */
     --forte-navigation-menu-fg: var(--forte-color-foreground);
     /** Corner radius */
     --forte-navigation-menu-radius: var(--forte-radius-surface);
@@ -477,13 +477,13 @@
     --forte-navigation-menu-shadow: var(--forte-shadow-4);
     /* A hairline, and not the redundancy it looks like next to the shadow. The
      * panel floats over undimmed content, and at overlay-on-background the two
-     * surfaces are within a step of each other on the grey ramp — in dark mode
+     * surfaces are within a step of each other on the gray ramp — in dark mode
      * the shadow is nearly the only thing separating them, and it is the first
      * casualty of a bright page behind it. `.forte-hc-surface` already reserves a
      * 1px transparent border on this element, so painting it costs no layout. */
     /** Width of the hairline that separates the panel from the page */
     --forte-navigation-menu-border-width: 1px;
-    /** Colour of that hairline. The arrow's outline follows it. */
+    /** Color of that hairline. The arrow's outline follows it. */
     --forte-navigation-menu-border-color: var(--forte-color-border);
 
     /* Panel layout. No width token exists in the inventory — widths are
@@ -509,16 +509,16 @@
     --forte-navigation-menu-card-gap: var(--forte-space-1);
     /** Corner radius of a card */
     --forte-navigation-menu-card-radius: var(--forte-radius-control);
-    /** Card text colour at rest */
+    /** Card text color at rest */
     --forte-navigation-menu-card-fg: var(--forte-color-foreground);
-    /** Colour of a card's description line */
+    /** Color of a card's description line */
     --forte-navigation-menu-card-fg-muted: var(--forte-color-foreground-muted);
     /** Background of a hovered card */
     --forte-navigation-menu-card-bg-hover: var(--forte-color-panel-hover);
     /** Background of the current page's card, and of a card whose nested menu
      * is open */
     --forte-navigation-menu-card-bg-active: var(--forte-color-primary-soft);
-    /** Text colour of those same two cards */
+    /** Text color of those same two cards */
     --forte-navigation-menu-card-fg-active: var(--forte-color-primary-text);
     /** Base font size inside a card */
     --forte-navigation-menu-card-font-size: var(--forte-font-size-2);
@@ -614,7 +614,7 @@
     letter-spacing: var(--forte-letter-spacing-normal);
     text-align: start;
 
-    /* Grow out of the trigger rather than out of the panel's own centre.
+    /* Grow out of the trigger rather than out of the panel's own center.
      * `--transform-origin` is published by the positioner and points back at
      * the anchor. */
     transform-origin: var(--transform-origin);
@@ -850,10 +850,10 @@
  *
  * The generic rules in patterns.css cover `[data-disabled]` and
  * `[data-highlighted]`; neither appears in this component. What is left is the
- * two states this file paints with an author colour, which forced-colors would
+ * two states this file paints with an author color, which forced-colors would
  * otherwise flatten to `Canvas` — losing the only cue saying which item is
  * open and which page you are on — plus the descendant that declares its own
- * colour and so does not inherit its row's.
+ * color and so does not inherit its row's.
  */
 @layer forte.a11y {
   @media (forced-colors: active) {

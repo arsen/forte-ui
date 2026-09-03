@@ -11,9 +11,9 @@
  * always reserved), so a joined pair would double the seam to 2px. The group
  * removes the shared edge's border from the SECOND of the pair and lets the
  * first one's border be the seam. The alternative — negative margins pulling
- * the pair together — was rejected because it makes the seam's colour depend
+ * the pair together — was rejected because it makes the seam's color depend
  * on paint order: the later sibling wins the overlapped pixel, so the seam
- * flips colour depending on which side of it is hovered.
+ * flips color depending on which side of it is hovered.
  *
  * Children are matched with `>` and `*` rather than by part marker, so
  * anything dropped in — a Button, an Input, a Select trigger, a consumer's
@@ -22,7 +22,7 @@
  * it), and a nested group (fused by its own rules, spaced by its parent).
  *
  * There is no forced-colors block in this file, and none is needed: every
- * seam in a fused group is somebody's real border, and border colours are
+ * seam in a fused group is somebody's real border, and border colors are
  * forced to `CanvasText` rather than discarded.
  */
 @layer forte.components {
@@ -124,12 +124,12 @@
 
   /* Separator ---------------------------------------------------------------
    * The seam for neighbours with no visible border of their own — `solid` and
-   * `soft` buttons fused bare are one unbroken slab of colour. `outline`
+   * `soft` buttons fused bare are one unbroken slab of color. `outline`
    * neighbours need none: their own borders already draw the seam, and adding
    * a separator doubles the line.
    *
    * The line is a BORDER, never a `background-color`. A background is
-   * replaced with a system colour under forced colours — for a plain box that
+   * replaced with a system color under forced colors — for a plain box that
    * is `Canvas`, the page's own backdrop — so a hairline drawn that way
    * vanishes for exactly the users who most need the boundary.
    */
@@ -137,9 +137,9 @@
     /** Line thickness. Matches the 1px border every control draws, so a
      * separated seam and a fused one carry the same weight. */
     --forte-button-group-separator-thickness: 1px;
-    /** Line colour. Re-point it when the separator sits between `solid`
+    /** Line color. Re-point it when the separator sits between `solid`
      * fills — `--forte-color-border` is tuned against the page background, not
-     * against a colour fill. */
+     * against a color fill. */
     --forte-button-group-separator-color: var(--forte-color-border);
 
     box-sizing: border-box;
@@ -188,8 +188,8 @@
   /* Text --------------------------------------------------------------------
    * A non-interactive cell fused in with the controls: a unit, a prefix, a
    * count. It draws the same 1px border a control does, so the fusing rules
-   * treat it identically — and the border is a REAL colour, not transparent,
-   * which is what keeps the cell's edge visible under forced colours when its
+   * treat it identically — and the border is a REAL color, not transparent,
+   * which is what keeps the cell's edge visible under forced colors when its
    * fill is discarded.
    *
    * No height of its own, deliberately: `stretch` on the group squares it up
@@ -198,10 +198,10 @@
   .text {
     /** Fill behind the text. */
     --forte-button-group-text-bg: var(--forte-color-panel);
-    /** Text colour. Muted on purpose — the cell is context for the action
+    /** Text color. Muted on purpose — the cell is context for the action
      * beside it, not the action. */
     --forte-button-group-text-color: var(--forte-color-foreground-muted);
-    /** Border colour. */
+    /** Border color. */
     --forte-button-group-text-border-color: var(--forte-color-border);
     /** Corner radius. The group squares off whichever corners are fused. */
     --forte-button-group-text-radius: var(--forte-radius-control);

@@ -12,7 +12,7 @@ export const metadata = {
 
 # Toggle
 
-Use a toggle when the button *is* the state — bold, mute, pin, favourite — and
+Use a toggle when the button *is* the state — bold, mute, pin, favorite — and
 the effect is immediate and local. It is a `<button>` with `aria-pressed`, not a
 form control: it has no label of its own and submits nothing.
 
@@ -50,7 +50,7 @@ with it, `outline` tints and keeps a border that is drawn while unpressed too.
 
 ### Tones
 
-`tone` picks the semantic colour set the pressed state draws from, and combines
+`tone` picks the semantic color set the pressed state draws from, and combines
 freely with `variant`. It only reaches the pressed state: an unpressed toggle
 looks the same in all four tones.
 
@@ -83,13 +83,13 @@ big for that floor grows the button instead of crowding the corners.
 ### Swapping the icon with the state
 
 The `render` **callback** receives the toggle's state, which is what lets the
-icon itself change rather than only its colour. This is Base UI's own example,
+icon itself change rather than only its color. This is Base UI's own example,
 styled with our tokens.
 
 <DemoBlock id="toggle/favorite" />
 
 Two different shapes — outline and filled — mean the state survives greyscale, a
-monochrome theme and forced colours, none of which a hue swap would. Reach for
+monochrome theme and forced colors, none of which a hue swap would. Reach for
 the callback form whenever a toggle's meaning is carried by an icon.
 
 ### Controlled
@@ -142,7 +142,7 @@ changes: the name stays stable and only the state moves.
   not a form value, and there is no input behind it to point at.
 </Callout>
 
-Under forced colours a pressed toggle paints `Highlight` with `HighlightText`,
+Under forced colors a pressed toggle paints `Highlight` with `HighlightText`,
 an unpressed one `Canvas` with `CanvasText`, and a disabled one `GrayText` on
 `Canvas` whichever state it holds. This needs a rule of its own in the component
 rather than the library-wide one in `patterns.css`: that rule covers
@@ -173,7 +173,7 @@ from, so overriding one of those re-skins every variant at once, while
 overriding a `-pressed` slot changes only the variant in play.
 
 The three `-hover` values only ever apply on devices that report hover support,
-so a touch device never sticks in a hover colour after a tap.
+so a touch device never sticks in a hover color after a tap.
 
 <Callout kind="note">
   `tone="danger"` is the one tone whose pressed fill does not brighten on hover.

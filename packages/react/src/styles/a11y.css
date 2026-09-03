@@ -3,7 +3,7 @@
  *
  * Everything here retunes TOKENS rather than restyling components, so a
  * component stylesheet never needs its own `@media` block and cannot forget
- * one. Adding a component gets this behaviour for free.
+ * one. Adding a component gets this behavior for free.
  *
  * Covered: focus appearance, prefers-contrast, prefers-reduced-transparency,
  * forced-colors, and the parts of reduced motion that tokens provably cannot
@@ -19,7 +19,7 @@
     /* Two tones that contrast with EACH OTHER, not with the page. That is the
      * whole trick: whatever sits behind the control, one of the ring's two
      * boundaries still clears the 3:1 that SC 1.4.11 requires. A single-tone
-     * accent-coloured ring cannot promise that — the previous
+     * accent-colored ring cannot promise that — the previous
      * `--forte-color-focus-ring: var(--forte-accent-9)` measured 2.61:1 on a light
      * background and failed outright, while passing comfortably in dark mode,
      * which is exactly how it went unnoticed. */

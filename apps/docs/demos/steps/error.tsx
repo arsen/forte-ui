@@ -16,7 +16,7 @@ export default function StepsError() {
       <Steps.Item status="error">
         <Steps.Indicator />
         <Steps.Title>Address</Steps.Title>
-        <Steps.Description>Postcode not recognised</Steps.Description>
+        <Steps.Description>Postcode not recognized</Steps.Description>
       </Steps.Item>
       <Steps.Item>
         <Steps.Indicator />

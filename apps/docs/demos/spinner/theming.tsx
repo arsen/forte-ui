@@ -7,7 +7,7 @@ import { Spinner } from "@forte-ui/react";
  * restyle is a `style` object rather than a new variant. Note that all three
  * of these set their tokens ON the spinner: `--forte-spinner-track` derives from
  * `--forte-spinner-color`, and a derived custom property is resolved where it is
- * declared — set the colour on an ancestor and the track would keep the
+ * declared — set the color on an ancestor and the track would keep the
  * default. That is also why these stay a `style` object rather than becoming
  * utility classes: they are the component's own knobs, not layout. */
 const RECIPES: { label: string; style: CSSProperties }[] = [

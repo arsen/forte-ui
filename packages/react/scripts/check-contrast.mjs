@@ -10,7 +10,7 @@
  */
 import { ACCENT_CURVE, GRAY_CURVE } from "./ramp.mjs";
 
-/* ---- colour maths ------------------------------------------------------- */
+/* ---- color maths ------------------------------------------------------- */
 function oklchToLinear(L, C, Hdeg) {
   const h = (Hdeg * Math.PI) / 180;
   const a = C * Math.cos(h), b = C * Math.sin(h);
@@ -25,7 +25,7 @@ function oklchToLinear(L, C, Hdeg) {
   // Browsers naive-clip out-of-gamut values rather than gamut-mapping, so we do too.
   return raw.map((v) => Math.min(1, Math.max(0, v)));
 }
-/** True when sRGB cannot represent the colour, so the browser naive-clips it.
+/** True when sRGB cannot represent the color, so the browser naive-clips it.
  *  Clipping distorts lightness badly, which is why out-of-gamut seeds are
  *  excluded below rather than silently dragging the worst case down. */
 function outOfGamut(L, C, Hdeg) {
@@ -89,7 +89,7 @@ const WHITE = [1, 1, 1], BLACK = [0, 0, 0];
  * agree. The harness measures each against its own realistic floor:
  *
  *  exact      what contrast-color() computes (it judges the actually-painted,
- *             gamut-mapped colour) and what the Theme Studio emits as a literal
+ *             gamut-mapped color) and what the Theme Studio emits as a literal
  *             after computing real WCAG maths in JS. Must clear AA.
  *
  *  threshold  the pure-CSS fallback for engines without contrast-color().
@@ -130,7 +130,7 @@ const CHECKS = [
 ];
 
 /* --------------------------------------------------------------------------
- * Fixed pairs — the status colours.
+ * Fixed pairs — the status colors.
  *
  * These hues are pinned in tokens.css and do not move with the seed, so they
  * are checked once rather than swept: there is no grid to sweep. They are here
@@ -158,7 +158,7 @@ const FIXED = [
   { id: "on-info vs info-9",       min: 4.5, fg: NEAR_WHITE, bg: [0.550, 0.158, 250] },
   /* Step 11 on step 3 — the pair every tinted status surface is built from,
    * and the one an Alert with `variant="soft"` paints its whole message in.
-   * `light-dark()` makes each of these two colours, so each is two checks;
+   * `light-dark()` makes each of these two colors, so each is two checks;
    * writing them out is the same duplication the block header admits to, for
    * the same reason — this file re-implements what the CSS declares. */
   { id: "danger-11 on -3 light",  min: 4.5, fg: [0.485, 0.196, 24],  bg: [0.944, 0.033, 17] },
@@ -183,7 +183,7 @@ for (const mode of ["light", "dark"]) {
       for (const L of (FINE ? fineL : [0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.80, 0.90])) {
         // The seed IS accent-9, painted as-is. If sRGB cannot represent it the
         // browser clips, lightness shifts, and the pure-CSS threshold (which
-        // can only see the *specified* L) may pick the wrong text colour.
+        // can only see the *specified* L) may pick the wrong text color.
         // Such seeds are outside the supported envelope by definition.
         if (outOfGamut(L, C, H)) { skipped++; continue; }
         n++;
@@ -206,7 +206,7 @@ for (const mode of ["light", "dark"]) {
     console.log(`  ${ok ? "PASS" : "FAIL"}  ${chk.id.padEnd(19)} min ${cr.toFixed(2).padStart(6)}  (need ${chk.min})   worst: ${seed}`);
   }
 }
-console.log("\nFIXED — status colours (seed-independent)");
+console.log("\nFIXED — status colors (seed-independent)");
 for (const chk of FIXED) {
   const cr = CR(oklchToLinear(...chk.fg), oklchToLinear(...chk.bg));
   const ok = cr >= chk.min;

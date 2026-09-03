@@ -109,7 +109,7 @@ export interface ContextMenuTriggerProps
  *
  * It takes no tab stop and carries no ARIA of its own — a region that answers a
  * right click is not a button, and saying otherwise would promise keyboard
- * behaviour it does not have. The platform's context-menu key (Shift+F10) does
+ * behavior it does not have. The platform's context-menu key (Shift+F10) does
  * reach it when the region happens to wrap something focusable, since the
  * `contextmenu` event that key fires bubbles; that is a bonus, not a plan.
  *

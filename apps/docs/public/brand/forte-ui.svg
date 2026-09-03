@@ -1,16 +1,16 @@
 <!-- The Forte UI logo, standalone. Same drawing as components/logo.tsx, the
      wordmark's filleted corners included; the gradient is baked from the
-     registered seed defaults and the wordmark's colours follow the viewer's
-     colour scheme, since an <img> has no tokens to read. -->
+     registered seed defaults and the wordmark's colors follow the viewer's
+     color scheme, since an <img> has no tokens to read. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 216.66 48.5" width="216.66" height="48.5" role="img" aria-label="Forte UI">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="36" y2="48" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#0e76be"/>
       <stop offset="1" stop-color="#8f5fc0"/>
     </linearGradient>
-    <!-- The wordmark: the text colour easing to the secondary TEXT colour,
+    <!-- The wordmark: the text color easing to the secondary TEXT color,
          step 11 of the ramp — the hue the mark ends on, at a lightness that
-         reads as text on the background. Two stop pairs, one per colour
+         reads as text on the background. Two stop pairs, one per color
          scheme; the media query picks. -->
     <linearGradient id="w" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" class="w0"/>

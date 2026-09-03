@@ -4,7 +4,7 @@
  *   import "@forte-ui/react/theme.css";
  *
  * Import it ONCE, at the root of your app, before any component. It brings in
- * the cascade-layer declaration, the registered custom properties, the colour
+ * the cascade-layer declaration, the registered custom properties, the color
  * ramps, the semantic tokens, the motion system, the accessibility responses,
  * and the shared pattern classes.
  *
@@ -16,11 +16,11 @@
  *   :root { --forte-accent-seed: #7c3aed; }
  *
  * All twelve accent steps, the brand-tinted neutrals, and a readable text
- * colour for solid fills are derived from it, in both light and dark mode,
+ * color for solid fills are derived from it, in both light and dark mode,
  * with no JavaScript. Also available:
  *
- *   --forte-secondary-seed   second brand colour, same treatment
- *   --forte-neutral-tint     0 = pure grey ... 1 = brand-tinted greys
+ *   --forte-secondary-seed   second brand color, same treatment
+ *   --forte-neutral-tint     0 = pure gray ... 1 = brand-tinted grays
  *   data-forte-radius        "none" | "soft" | "pill"
  *   data-forte-density       "compact" | "spacious"
  *   data-forte-motion        "reduce" | "off" | "full"

@@ -59,7 +59,7 @@ export default function NavigationMenuNested() {
             <NavigationMenu.Link href="/customization/theming" closeOnClick>
               <NavigationMenu.LinkTitle>Theming</NavigationMenu.LinkTitle>
               <NavigationMenu.LinkDescription>
-                One seed colour rebuilds the whole palette.
+                One seed color rebuilds the whole palette.
               </NavigationMenu.LinkDescription>
             </NavigationMenu.Link>
           </NavigationMenu.Content>

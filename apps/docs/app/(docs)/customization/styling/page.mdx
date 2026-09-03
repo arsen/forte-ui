@@ -51,11 +51,11 @@ Write your values as tokens (`var(--forte-shadow-2)`, not a literal) and your cu
 
 ## The tap highlight on touch
 
-Safari and Chrome paint a translucent grey box over whatever a touch lands on. It ignores `border-radius`, so it squares off a pill button and a rounded card; it covers the whole element rather than the part you pressed; and it lingers after your finger lifts, so a tapped control sits greyed while the next screen is already arriving.
+Safari and Chrome paint a translucent gray box over whatever a touch lands on. It ignores `border-radius`, so it squares off a pill button and a rounded card; it covers the whole element rather than the part you pressed; and it lingers after your finger lifts, so a tapped control sits greyed while the next screen is already arriving.
 
 The library suppresses it on every part it renders — the rule is one line in `patterns.css`, keyed off the `data-forte` marker, and the property inherits so it reaches the icons and labels inside each part too. Nothing to configure, and no per-component opt-in.
 
-It stops there on purpose. Suppressing the highlight is only safe where something else signals the press, and the library can promise that for its own parts — Button's `:active` fill, the Tabs indicator, the Switch thumb, the highlighted row in every menu — but not for markup it did not write. So your own buttons, cards and links keep the platform behaviour until you ask for otherwise.
+It stops there on purpose. Suppressing the highlight is only safe where something else signals the press, and the library can promise that for its own parts — Button's `:active` fill, the Tabs indicator, the Switch thumb, the highlighted row in every menu — but not for markup it did not write. So your own buttons, cards and links keep the platform behavior until you ask for otherwise.
 
 To take the same treatment app-wide, import the optional reset and switch it on with a class:
 

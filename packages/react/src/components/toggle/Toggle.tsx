@@ -59,7 +59,7 @@ export interface ToggleProps<Value extends string = string>
    */
   variant?: ToggleVariant;
   /**
-   * Which semantic colour set the pressed state draws from. Combines freely
+   * Which semantic color set the pressed state draws from. Combines freely
    * with `variant`. Inherited from an enclosing `ToggleGroup` when left unset.
    * @default "primary"
    */
@@ -101,7 +101,7 @@ export interface ToggleProps<Value extends string = string>
  * A two-state button that is either on or off, built on Base UI's unstyled
  * `Toggle` primitive. Renders a `<button>` with `aria-pressed`.
  *
- * Reach for it when the button *is* the state — bold, mute, pin, favourite —
+ * Reach for it when the button *is* the state — bold, mute, pin, favorite —
  * and the effect is immediate and local. If the state is a setting the user
  * confirms later, use [`Switch`](/components/switch) or
  * [`Checkbox`](/components/checkbox), which carry a label and a form value; a

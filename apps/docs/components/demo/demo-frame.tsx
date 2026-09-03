@@ -16,11 +16,11 @@ export type DemoScope = {
  * wrapper, so the demo itself never becomes a client component just to gain a
  * light/dark toggle.
  *
- * The theme scoping works because the library re-declares its colour ramps on
+ * The theme scoping works because the library re-declares its color ramps on
  * `.forte-theme` and `[data-forte-theme]`, not only on `:root`. A custom property
  * containing `var()` is substituted at the element where it is DECLARED, so
  * setting a seed on a descendant of `:root` alone would change nothing. It is
- * also why the frame's colours are written as `bg-background` rather than a
+ * also why the frame's colors are written as `bg-background` rather than a
  * hardcoded value: `@theme inline` puts the token reference in the utility, so
  * it resolves here, under the scope, and not at `:root`.
  */
@@ -38,7 +38,7 @@ export function DemoFrame({
       className={cn(
         // `@container` lets demos respond to the frame rather than the
         // viewport, so a preview narrowed by the controls strip still shows its
-        // true responsive behaviour.
+        // true responsive behavior.
         "@container flex min-h-[8rem] flex-wrap items-center justify-center gap-3 p-6",
         "bg-background text-foreground",
         // The shell clips the frame, so the frame never rounds its own corners.

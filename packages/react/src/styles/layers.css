@@ -8,7 +8,7 @@
  * Every layer here loses to *unlayered* author CSS. That is the point: a
  * consumer can override anything we ship without `!important`.
  *
- *   reset       optional box-sizing normalisation
+ *   reset       optional box-sizing normalization
  *   tokens      design tokens, and the media queries that retune them
  *   patterns    reusable global classes (.forte-focus-ring, .forte-hc-surface, ...)
  *   components  per-component CSS Modules
@@ -27,7 +27,7 @@
  * properties forced-colors does NOT override, so a component's
  * `[data-disabled] { opacity: 0.55 }` survives, and if the `GrayText` remedy
  * sits in an earlier layer it is discarded — leaving a disabled control at
- * full system-colour contrast, reading as enabled.
+ * full system-color contrast, reading as enabled.
  *
  * Putting those overrides in `a11y` makes them win by layer order alone, with
  * no specificity games, while the whole library still yields to the app.

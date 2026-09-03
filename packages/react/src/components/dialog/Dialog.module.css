@@ -54,12 +54,12 @@
  *     unmounting the popup, and an infinite animation never settles.
  *   - Dialog has no positioner, so Base UI exposes no `--transform-origin`
  *     here (that variable belongs to anchored popups like Select and
- *     Tooltip). The scale therefore grows from the popup's centre, which is
- *     the right origin for a centred surface anyway.
+ *     Tooltip). The scale therefore grows from the popup's center, which is
+ *     the right origin for a centered surface anyway.
  */
 @layer forte.components {
   /* Backdrop ---------------------------------------------------------------
-   * `.forte-scrim` already supplies position/inset, the scrim colour, the
+   * `.forte-scrim` already supplies position/inset, the scrim color, the
    * optional blur, the fade transition and the starting/ending opacity, plus
    * the forced-colors treatment. Only the iOS correction is component-local.
    * ---------------------------------------------------------------------- */
@@ -107,7 +107,7 @@
 
   /* Viewport ---------------------------------------------------------------
    * A fixed, scrollable container. Owning the scroll here rather than on the
-   * popup gives "outside scroll" behaviour: a tall dialog scrolls as a whole
+   * popup gives "outside scroll" behavior: a tall dialog scrolls as a whole
    * instead of trapping its own body, and a press anywhere in the empty space
    * is still an outside press, so pointer dismissal keeps working.
    * ---------------------------------------------------------------------- */
@@ -160,7 +160,7 @@
      * tokens below, which this file only ever reads. */
     /** Popup background */
     --forte-dialog-bg: var(--forte-color-overlay);
-    /** Popup text colour */
+    /** Popup text color */
     --forte-dialog-fg: var(--forte-color-foreground);
     /** Corner radius. `size="fullscreen"` squares it off to `0px`. */
     --forte-dialog-radius: var(--forte-radius-surface);
@@ -171,7 +171,7 @@
     /** Popup shadow */
     --forte-dialog-shadow: var(--forte-shadow-4);
     /* A hairline, and not the redundancy it looks like next to the shadow and
-     * the scrim. Overlay-on-background sits within a step on the grey ramp,
+     * the scrim. Overlay-on-background sits within a step on the gray ramp,
      * and the scrim dims the page by a fraction rather than to black, so a
      * dialog over a dark page in dark mode — or a light one over a bright
      * page under a light scrim — has only its shadow to mark where it ends,
@@ -182,7 +182,7 @@
      * costs no layout. */
     /** Width of the hairline that separates the popup from the page */
     --forte-dialog-border-width: 1px;
-    /** Colour of that hairline. `transparent` when `size="fullscreen"`. */
+    /** Color of that hairline. `transparent` when `size="fullscreen"`. */
     --forte-dialog-border-color: var(--forte-color-border);
     /** Base font size inside the popup */
     --forte-dialog-font-size: var(--forte-font-size-2);
@@ -250,7 +250,7 @@
     box-sizing: border-box;
     position: relative;
     /* `margin: auto` rather than the viewport's `align-items: center`: a
-     * centred flex item that outgrows its scroll container gets its top edge
+     * centered flex item that outgrows its scroll container gets its top edge
      * clipped and unreachable, auto margins do not. */
     margin: auto;
     display: flex;
@@ -341,10 +341,10 @@
      * popup's padding edge, and a rounded corner does not survive the trip
      * inward unchanged: the padding edge is the same arc with the border
      * width taken off the radius. Painting the outer radius here draws an
-     * arc one pixel off-centre from the edge it is meant to cover, and the
+     * arc one pixel off-center from the edge it is meant to cover, and the
      * sliver between the two — under a pixel, anti-aliased into a soft
      * crescent — is the popup's own undimmed background. Invisible in dark
-     * mode, where the surface is nearly the scrim's colour already; in light
+     * mode, where the surface is nearly the scrim's color already; in light
      * mode a bright white fleck at every corner of a parent that is supposed
      * to have receded. `max()` keeps a fullscreen popup's `0px` radius from
      * going negative and invalidating the declaration. */
@@ -375,10 +375,10 @@
    * part, because it is the silhouette. Barely readable in dark mode, glaring
    * in light, where it reads as a white hairline frame.
    *
-   * Painting the ring in the scrim colour composites it over that same
+   * Painting the ring in the scrim color composites it over that same
    * background, which is exactly what the overlay does to the rest of the
    * surface — so the two agree by construction rather than by a matched pair
-   * of hand-picked colours. `Drawer` carries the identical pair for the
+   * of hand-picked colors. `Drawer` carries the identical pair for the
    * identical reason; keep them in step.
    *
    * Forced-colors mode reassigns this to CanvasText from the `a11y` layer,
@@ -433,7 +433,7 @@
   }
 
   /* The nested-dialog ring painted below would trace the *container* — a
-   * scrim-coloured rounded rectangle drawn through empty backdrop around
+   * scrim-colored rounded rectangle drawn through empty backdrop around
    * everything placed outside the panel. There is no undimmed background
    * showing through here for it to correct, because the container has no
    * background; the `::after` overlay covers the surface and its border
@@ -488,7 +488,7 @@
    * shrinking it just pulls the content away from a screen it is supposed to
    * fill — so it travels further and doesn't scale at all. The hairline
    * goes with the radius: every edge lies on the bezel, where a line buys
-   * nothing, and on a page that is a step off the overlay colour it would
+   * nothing, and on a page that is a step off the overlay color it would
    * read as a stray frame around the screen. Set through the knob rather
    * than `border-color` so the nested-dialog ring below still wins. */
   .popup[data-size="fullscreen"] {
@@ -560,7 +560,7 @@
 
   /* Trigger and Close ------------------------------------------------------
    * A modest neutral button so an unstyled `<Dialog.Trigger>Open</...>` does
-   * not fall back to the UA's grey chrome. Both parts drop these styles
+   * not fall back to the UA's gray chrome. Both parts drop these styles
    * entirely when the consumer passes `render` (typically our own `<Button>`),
    * because two full button styles on one element resolve by source order
    * inside the same cascade layer — which is not something a consumer can

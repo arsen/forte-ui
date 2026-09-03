@@ -53,14 +53,14 @@
     --forte-accordion-item-bg: transparent;
     /** Border around an item (the `contained` card) */
     --forte-accordion-item-border-width: 0px;
-    /** Colour of that border */
+    /** Color of that border */
     --forte-accordion-item-border-color: var(--forte-color-border-muted);
     /* The hairline BETWEEN rows, which is a different line from the card
      * outline above — `divided` has only the first, `contained` only the
      * second, and they are never both visible at once. */
     /** Thickness of the hairline between rows (`divided` only) */
     --forte-accordion-divider-width: 1px;
-    /** Colour of that hairline */
+    /** Color of that hairline */
     --forte-accordion-divider-color: var(--forte-color-border-muted);
 
     /* Trigger */
@@ -76,11 +76,11 @@
     /* One step up from whatever the row sits on: the page (gray-1) in
      * `divided`, the card (gray-2) in `contained` — see the variant block.
      * Unlike Tabs, the fill is not optional here. A row is a click target the
-     * width of the container, and a colour change confined to the label would
+     * width of the container, and a color change confined to the label would
      * claim only the label is pressable. */
     /** Row background on hover — one step up from whatever the row sits on */
     --forte-accordion-trigger-bg-hover: var(--forte-color-panel);
-    /** Heading colour */
+    /** Heading color */
     --forte-accordion-trigger-color: var(--forte-color-foreground);
     /** Heading size */
     --forte-accordion-trigger-font-size: var(--forte-font-size-2);
@@ -91,9 +91,9 @@
      * non-text indicator (SC 1.4.11), and `prefers-contrast: more` promotes
      * it anyway. It is never the only cue: `aria-expanded` and the panel
      * itself say the same thing. */
-    /** Chevron colour when closed */
+    /** Chevron color when closed */
     --forte-accordion-icon-color: var(--forte-color-foreground-subtle);
-    /** Chevron colour when open */
+    /** Chevron color when open */
     --forte-accordion-icon-color-open: var(--forte-color-foreground);
     /** How far the chevron turns when the panel opens */
     --forte-accordion-icon-rotate: 180deg;
@@ -107,7 +107,7 @@
     /** Block-end padding of the panel content. There is no block-start knob —
      * the trigger's own bottom padding already separates the two */
     --forte-accordion-panel-pb: var(--forte-space-4);
-    /** Body text colour */
+    /** Body text color */
     --forte-accordion-panel-color: var(--forte-color-foreground-muted);
     /** Body text size */
     --forte-accordion-panel-font-size: var(--forte-font-size-2);
@@ -307,7 +307,7 @@
   /* The content settles into place while the panel is still growing, which is
    * what stops the text from looking pasted in at full opacity behind a
    * moving edge. It starts slightly high and drops back: the panel clips it
-   * from below, so travelling downward is the direction that reads as being
+   * from below, so traveling downward is the direction that reads as being
    * uncovered. --forte-travel-sm is 0px under reduced motion, leaving the fade
    * — which is the part that helps there. */
   .content {
@@ -333,11 +333,11 @@
  *
  * What patterns.css already handles, and must not be restated here:
  *   - `[data-disabled]` restores `opacity: 1` and paints GrayText, which is
- *     the only reliable disabled cue once opacity stops being honoured.
+ *     the only reliable disabled cue once opacity stops being honored.
  *   - `.forte-focus-ring:focus-visible` becomes a Highlight outline.
  *
  * What is accordion-specific: both of the lines that separate rows. Their
- * colour comes from a token, and a token resolves to a colour forced-colors
+ * color comes from a token, and a token resolves to a color forced-colors
  * then replaces with its own — which is fine for the divider, and not fine
  * for the card, whose border is the only thing left holding the shape once
  * shadows and backgrounds are stripped. Pinning both to CanvasText makes the

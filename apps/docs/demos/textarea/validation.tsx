@@ -13,7 +13,7 @@ export default function TextareaValidation() {
           <Field.Label>What went wrong?</Field.Label>
           {/* Native constraints, so the browser owns the validity and the
             * component only reflects it: the boundary and the caret turn
-            * danger-coloured off `data-invalid`, which arrives from
+            * danger-colored off `data-invalid`, which arrives from
             * Field.Control whether the rule is `required`, `minLength` or a
             * custom `validate`. */}
           <Textarea

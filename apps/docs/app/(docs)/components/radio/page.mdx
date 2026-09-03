@@ -82,7 +82,7 @@ details second.
 <DemoBlock id="radio/controlled" />
 
 <Callout kind="warn">
-  Arrow keys select as they move, which is the native radio behaviour and the
+  Arrow keys select as they move, which is the native radio behavior and the
   reason a radio group is the wrong control for anything expensive. Someone
   arrowing from the first option to the fourth passes through the second and
   third, and each one fires `onValueChange`. Do not kick off a request, a
@@ -109,7 +109,7 @@ of staying at full contrast beside a greyed-out control. `RadioGroup` takes
   arrowable, announce `aria-readonly`, and ignore clicks and Space.
 </Callout>
 
-### Labelling a group
+### Labeling a group
 
 A radio group needs two kinds of name, and they are separate problems. The
 group is named by pointing `aria-labelledby` at a heading — it cannot be a
@@ -118,7 +118,7 @@ group is named by pointing `aria-labelledby` at a heading — it cannot be a
 enclosing `<label>`, which works because the root renders a `<span>` with the
 hidden `<input>` beside it.
 
-<DemoBlock id="radio/labelling" />
+<DemoBlock id="radio/labeling" />
 
 The `Field` pattern used elsewhere on this page does both of these for you:
 `Field.Label nativeLabel={false}` names the group without `htmlFor`, and each
@@ -158,7 +158,7 @@ exactly as it would for a required `<input>`.
   Prefer a `defaultValue` where one is defensible. A group with nothing selected
   has no focusable option to arrow into until the user picks one — they have to
   tab to the group and then press an arrow key to select the first option, which
-  is the native behaviour but is not obvious. Where no default is honest —
+  is the native behavior but is not obvious. Where no default is honest —
   billing period, a survey answer — say so with `required` and an error message
   rather than pre-selecting something the user did not choose.
 </Callout>
@@ -216,7 +216,7 @@ The group renders a `<div role="radiogroup">`; each option exposes
   Each option needs a name too. Put it inside a `Field.Item` with a
   `Field.Label`, wrap it in a plain `<label>`, or pair it with a sibling
   `<label htmlFor>` and `nativeButton render={<button />}`. A bare `<Radio />`
-  with text beside it is not labelled.
+  with text beside it is not labeled.
 </Callout>
 
 **Motion.** The dot scales from `0` to `1` on a duration token, not on a
@@ -224,7 +224,7 @@ The group renders a `<div role="radiogroup">`; each option exposes
 reduced motion. A scale token collapses toward `1` under
 `prefers-reduced-motion: reduce`, which for a mark animating *toward* `1` would
 mean never appearing at all — and the dot is the only thing separating the
-selected option from the rest for anyone who cannot rely on the fill colour.
+selected option from the rest for anyone who cannot rely on the fill color.
 Durations only shorten, so the dot still pops; `--forte-duration-spring-snappy`
 drops from 400ms to 120ms and the spring flattens into what reads as an instant
 appearance.
@@ -233,7 +233,7 @@ The way out is deliberately not the spring. A spring undershoots, so scaling
 `1 → 0` on one would drive the dot through negative values and visibly rebound
 after it had gone; the un-select runs on standard easing instead.
 
-Under forced colours the circle paints with `Canvas`/`CanvasText`, a selected
+Under forced colors the circle paints with `Canvas`/`CanvasText`, a selected
 one with `Highlight` and a `HighlightText` dot, and a disabled one with
 `GrayText` on `Canvas` — the dot stays visible in every state.
 
@@ -251,12 +251,12 @@ element's own declaration beats an inherited value.
 <ThemingTable component="Radio" part="group" />
 
 The three `-hover` values only ever apply on devices that report hover support,
-so a touch device never sticks in a hover colour after a tap.
+so a touch device never sticks in a hover color after a tap.
 
 `tone` reassigns `--forte-radio-fill`, `--forte-radio-fill-hover` and
 `--forte-radio-dot-color` — `primary`, `secondary`, `danger` or `neutral`. Inside
-a `Field.Root`, an invalid field overrides those and the border colours with the
-danger palette, so a validation failure never renders in a brand colour.
+a `Field.Root`, an invalid field overrides those and the border colors with the
+danger palette, so a validation failure never renders in a brand color.
 
 <Callout kind="note">
   A shape opts out of the `data-forte-radius` presets when its roundness is

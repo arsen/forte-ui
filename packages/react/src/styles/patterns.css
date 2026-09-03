@@ -10,7 +10,7 @@
    * Focus ring
    *
    * `outline` carries the ring rather than `box-shadow` because outline
-   * follows border-radius, honours outline-offset, is not clipped by an
+   * follows border-radius, honors outline-offset, is not clipped by an
    * ancestor's overflow:hidden, and — decisively — survives forced-colors
    * mode, where box-shadow is forced to `none`. The box-shadow here only
    * fills the offset gap with the contrasting second tone.
@@ -59,7 +59,7 @@
   /* ------------------------------------------------------------------------
    * Tap highlight
    *
-   * WebKit and Blink paint a translucent grey box over whatever a touch lands
+   * WebKit and Blink paint a translucent gray box over whatever a touch lands
    * on. It ignores border-radius, so it squares off every pill Button and
    * rounded Tab; it covers the whole element rather than the pressed part;
    * and it lingers after the finger lifts, so a tapped control stays greyed
@@ -131,7 +131,7 @@
    * Floating surface
    *
    * The transparent border is deliberate and load-bearing. `transparent` is
-   * NOT preserved in forced-colors mode — it is replaced with a system colour.
+   * NOT preserved in forced-colors mode — it is replaced with a system color.
    * So a border that is invisible normally becomes the visible boundary that
    * keeps a popup from dissolving into the page once shadows are stripped.
    * --------------------------------------------------------------------- */
@@ -158,10 +158,10 @@
    * catch a popup that maps nothing.
    *
    * An SVG, never a CSS-border triangle. In forced-colors mode all four border
-   * colours are forced to CanvasText, so the classic
+   * colors are forced to CanvasText, so the classic
    * `border: 6px solid transparent` triangle renders as a filled RECTANGLE.
    * Two flat paths cannot fail that way, and they let the outline be given its
-   * own system colour in the a11y layer below.
+   * own system color in the a11y layer below.
    *
    * Offsets follow from the geometry: the unrotated box is width x height, so
    * pushing it out by `height` on the block axis, or by (width + height) / 2
@@ -392,7 +392,7 @@
      * static offset to the SCROLLED ancestor's scrollable overflow instead.
      *
      * One `ColorPicker` low in a `Drawer.Content` was enough: its trigger is
-     * static, so the span announcing the colour resolved against
+     * static, so the span announcing the color resolved against
      * `Drawer.Popup` and landed 22px below the popup's padding edge. That
      * switched on the popup's fallback `overflow: auto` (see `Drawer`) and
      * Android drew a second scrollbar down the popup's inner edge, beside
@@ -418,7 +418,7 @@
     border: 0;
   }
 
-  /* Opt out only where colour IS the information — a swatch, a chart key.
+  /* Opt out only where color IS the information — a swatch, a chart key.
    * This also disables the automatic text backplate, so anything inside must
    * supply its own contrast and its own boundary. */
   .forte-preserve-color {
@@ -438,7 +438,7 @@
   /* ------------------------------------------------------------------------
    * Forced colors (Windows High Contrast)
    *
-   * The UA assigns system colours from NATIVE element semantics, not ARIA — a
+   * The UA assigns system colors from NATIVE element semantics, not ARIA — a
    * <div role="button"> gets no ButtonText. Base UI builds most parts from
    * div/span, so the library has to assign the keywords itself.
    * --------------------------------------------------------------------- */
@@ -475,7 +475,7 @@
     }
 
     /* `opacity` is NOT overridden by forced-colors, so a 55%-opacity disabled
-     * control keeps full system-colour contrast and still reads as enabled.
+     * control keeps full system-color contrast and still reads as enabled.
      * GrayText at full opacity is the only reliable disabled signal. */
     :where([data-disabled], [aria-disabled="true"], :disabled) {
       color: GrayText;
@@ -496,7 +496,7 @@
     }
 
     /* Purely decorative and gradient-dependent — hide rather than show a
-     * meaningless system-coloured block. */
+     * meaningless system-colored block. */
     .forte-hc-decorative {
       display: none;
     }
@@ -507,7 +507,7 @@
       opacity: 1;
     }
 
-    /* System colour keywords survive the forced-colors substitution, so this
+    /* System color keywords survive the forced-colors substitution, so this
      * keeps every anchored popup's arrow reading as a Canvas wedge with a
      * CanvasText outline, matching the CanvasText border `.forte-hc-surface`
      * puts on the popup itself. Ordered after the generic svg fill/stroke

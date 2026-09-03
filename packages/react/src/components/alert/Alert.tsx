@@ -64,8 +64,8 @@ type ExitPhase = null | "measured" | "leaving";
 
 /**
  * The four status glyphs are four distinct SHAPES, not one shape in four
- * colours. That is what keeps the type readable to a colour-blind reader and
- * under forced colours, where every glyph repaints in one system colour
+ * colors. That is what keeps the type readable to a color-blind reader and
+ * under forced colors, where every glyph repaints in one system color
  * (WCAG SC 1.4.1).
  *
  * `stroke` rather than `fill`, at a weight that stays legible at 16px, and
@@ -146,12 +146,12 @@ export interface AlertRootProps
    *
    * Reach for `outline` when several alerts share a screen, or when the alert
    * sits inside a form beside other bordered controls — a page of tinted
-   * fields has nothing left to emphasise with.
+   * fields has nothing left to emphasize with.
    * @default "soft"
    */
   variant?: AlertVariant;
   /**
-   * Which semantic colour set the alert draws from, and which glyph
+   * Which semantic color set the alert draws from, and which glyph
    * `Alert.Icon` picks when you do not give it one.
    *
    * The four status tones are the ones with a glyph — `success`, `warning`,
@@ -271,7 +271,7 @@ const AlertRoot = React.forwardRef<HTMLDivElement, AlertRootProps>(function Aler
     [ref],
   );
 
-  /* Start or cancel the exit. Cancelling matters: an alert reopened while it
+  /* Start or cancel the exit. Canceling matters: an alert reopened while it
    * is still leaving drops `data-ending-style` and the transition reverses
    * from wherever it got to, which is the whole reason this is a transition
    * and not a keyframe animation. */
@@ -325,12 +325,12 @@ const AlertRoot = React.forwardRef<HTMLDivElement, AlertRootProps>(function Aler
       return;
     }
 
-    let cancelled = false;
+    let canceled = false;
     Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
-      if (!cancelled) finish();
+      if (!canceled) finish();
     });
     return () => {
-      cancelled = true;
+      canceled = true;
     };
     // `finish` closes over props that are stable for the length of one exit.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -392,14 +392,14 @@ export interface AlertIconProps
 }
 
 /**
- * The glyph, coloured by the alert's tone.
+ * The glyph, colored by the alert's tone.
  *
  * Renders nothing when there is nothing to draw — no children and a tone with
  * no standard glyph — so `<Alert.Icon />` is safe to leave in a component that
  * takes its tone from a prop. The icon column collapses rather than opening a
  * gap where a glyph would be.
  *
- * It is centred on the TITLE's line box rather than on the card, so the glyph
+ * It is centered on the TITLE's line box rather than on the card, so the glyph
  * lines up with the first line of text whether the description runs to one
  * line or five.
  */
@@ -435,7 +435,7 @@ export interface AlertTitleProps
 }
 
 /**
- * The one-line summary, in the tone's own colour on `soft` and in the plain
+ * The one-line summary, in the tone's own color on `soft` and in the plain
  * foreground on `outline`.
  *
  * It renders a `<div>`, not a heading, and that is deliberate: an alert is a
@@ -512,7 +512,7 @@ export interface AlertActionProps
  * re-exposing all of it. Compose instead — `<Alert.Action><Button size="sm"
  * variant="outline">Retry</Button></Alert.Action>`.
  *
- * It sits against the inline-end edge, centred on the whole message rather
+ * It sits against the inline-end edge, centered on the whole message rather
  * than on the title, so a three-line description does not leave the button
  * floating at the top.
  */
@@ -621,7 +621,7 @@ const AlertClose = React.forwardRef<HTMLButtonElement, AlertCloseProps>(function
  *
  * There is no Base UI primitive under it, because there is almost no state to
  * model — no focus to manage, nothing to position. What it does have is a
- * layout that has to survive any subset of its five parts, a pair of colour
+ * layout that has to survive any subset of its five parts, a pair of color
  * axes, a live-region decision that is easy to get wrong, and exactly one bit
  * of state: whether it is still in the page. That last one is owned here only
  * because React unmounts an element the frame it stops being rendered, so an

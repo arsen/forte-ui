@@ -26,7 +26,7 @@ export interface CheckboxProps
    */
   size?: CheckboxSize;
   /**
-   * Which semantic colour set the checked fill draws from. Inside a
+   * Which semantic color set the checked fill draws from. Inside a
    * `Field.Root` an invalid field overrides this with the danger palette, so
    * a validation error always reads as an error.
    * @default "primary"
@@ -142,7 +142,7 @@ export const Checkbox = React.forwardRef<HTMLElement, CheckboxProps>(
             aria-hidden="true"
             focusable="false"
           >
-            {/* `pathLength={1}` renormalises the path so `stroke-dasharray: 1`
+            {/* `pathLength={1}` renormalizes the path so `stroke-dasharray: 1`
               * covers exactly the whole stroke, whatever the geometry. That is
               * what lets the draw-in be expressed as `stroke-dashoffset: 1 → 0`
               * in the stylesheet without a magic length constant, and what

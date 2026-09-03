@@ -67,7 +67,7 @@ why it is on by default. Turn it off with `grip={false}` when the surrounding
 design carries the affordance some other way — not to tidy the layout.
 
 **On hover — the cursor and a wash.** `ew-resize`, or `ns-resize` when
-`direction="vertical"`, plus a panel-coloured background behind the label and
+`direction="vertical"`, plus a panel-colored background behind the label and
 the grip at full opacity.
 
 <Callout kind="note">
@@ -128,7 +128,7 @@ they take their height from the group rather than declaring one.
 ### Orientation
 
 `orientation="horizontal"` on `Root` puts the scrub area on the same row as the
-group, label first, and centres it on the control's height. It is the shape of
+group, label first, and centers it on the control's height. It is the shape of
 an inspector panel or a toolbar, where stacking the label would double the
 height of every row. Only the layout moves: the scrub area's `direction` is
 still the axis the pointer travels along, and the two are independent.
@@ -181,7 +181,7 @@ answer nobody asked it to round.
 Disabled drops to 55% opacity and takes `cursor: not-allowed`. Read-only keeps
 full contrast — the value is still there to be read and copied — and only stops
 offering to change it. Both hide the grip: an affordance for a gesture that
-cannot happen is worse than none. Invalid recolours the group's boundary and
+cannot happen is worse than none. Invalid recolors the group's boundary and
 nothing else, so the user's own answer never looks like the error message.
 
 <DemoBlock id="number-field/states" />
@@ -280,10 +280,10 @@ the whole drag.
 In forced-colors mode the group paints `Field` / `FieldText` with a `FieldText`
 boundary — it is a `<div>`, so the UA assigns it nothing on its own, and the
 `soft` and `ghost` variants' `transparent` border would otherwise be replaced
-with a colour of the engine's choosing rather than left invisible. The grip's
+with a color of the engine's choosing rather than left invisible. The grip's
 resting opacity is reset to `1` there for the same reason a disabled control's
 is: `opacity` is one of the few properties forced-colors does **not** override,
-so a 0.7 grip would stay 30% transparent against system colours and read as
+so a 0.7 grip would stay 30% transparent against system colors and read as
 disabled chrome.
 
 ## Theming

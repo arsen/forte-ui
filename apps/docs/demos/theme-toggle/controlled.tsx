@@ -12,7 +12,7 @@ export default function ThemeToggleControlled() {
   // props are the hook-up for next-themes (`resolvedTheme` / `setTheme`).
   // `forte-theme` is load-bearing next to `data-theme`: the palette is
   // re-derived only on scope markers, so the attribute alone would flip
-  // `color-scheme` while every colour kept the page's resolved values.
+  // `color-scheme` while every color kept the page's resolved values.
   return (
     <div
       data-theme={theme}

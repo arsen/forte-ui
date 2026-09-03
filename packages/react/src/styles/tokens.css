@@ -1,6 +1,6 @@
 /**
  * forte-ui semantic tokens, geometry, and motion.
- * The colour *ramps* are generated — see tokens.color.css / scripts/ramp.mjs.
+ * The color *ramps* are generated — see tokens.color.css / scripts/ramp.mjs.
  *
  * Most blocks here are declared on `:root, .forte-theme, [data-forte-theme]`, not
  * on `:root` alone. That repetition is load-bearing: a `var()` inside an
@@ -56,7 +56,7 @@
   }
 
   /* ------------------------------------------------------------------------
-   * Status colours. Fixed hues — a brand seed must not be able to make an
+   * Status colors. Fixed hues — a brand seed must not be able to make an
    * error message look reassuring.
    * --------------------------------------------------------------------- */
   :root,
@@ -161,7 +161,7 @@
     }
   }
 
-  /* contrast-color() judges the actually-painted, gamut-mapped colour rather
+  /* contrast-color() judges the actually-painted, gamut-mapped color rather
    * than the specified lightness, so it stays correct even for seeds the
    * fitted threshold can only approximate. Layered second so it wins where
    * supported. */
@@ -243,7 +243,7 @@
      * the brand tones use: those hues are fixed above, so the answer is known
      * at author time and there is nothing for `contrast-color()` to decide.
      *
-     * The two are not the same colour, and that is the point of having them.
+     * The two are not the same color, and that is the point of having them.
      * `--forte-warning-9` is a light amber — white on it measures 1.82:1, a
      * failure a component guessing "solid fill means white text" would ship
      * silently. `--forte-success-9` sits almost exactly on the white/black

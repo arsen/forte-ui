@@ -29,7 +29,7 @@ export type AspectRatioBasis = "inline" | "block";
  * The shapes worth having a name for.
  *
  * Named ratios are not sugar: `ratio="story"` says what the box is for, while
- * `ratio={9 / 16}` says `0.5625` and leaves the next reader to recognise it.
+ * `ratio={9 / 16}` says `0.5625` and leaves the next reader to recognize it.
  * The values stay RATIONAL strings rather than being divided out, because
  * `aspect-ratio: 16 / 9` is exact where `1.7777777777777777` is a rounding
  * that shows up in devtools and in nothing else.

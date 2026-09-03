@@ -6,7 +6,7 @@ import { ChartLine, FlaskConical, Home, Settings, Users } from "lucide-react";
 
 /* `size-4 shrink-0` — sized from the space scale, so icons follow density
  * like every other measure. The svg goes in as a plain child: rows are flex,
- * and icon colour rides `currentColor` through rest, hover and active. */
+ * and icon color rides `currentColor` through rest, hover and active. */
 const icon = "size-4 shrink-0";
 
 export default function NavListIconsAndBadges() {

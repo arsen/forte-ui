@@ -40,14 +40,14 @@
     /** Fill behind the bar. `variant` sets it. */
     --forte-toolbar-bg: transparent;
     /* Declared even when there is nothing to draw, and `transparent` rather
-     * than absent, because `transparent` is NOT preserved under forced colours
-     * — it is replaced with a system colour. Reserving the 1px here is what
+     * than absent, because `transparent` is NOT preserved under forced colors
+     * — it is replaced with a system color. Reserving the 1px here is what
      * lets the a11y block give a panel bar a visible edge in high contrast,
      * where its fill disappears, without adding 2px of border and shifting
      * every item in the bar. */
     /** Border width. */
     --forte-toolbar-border-width: 1px;
-    /** Border colour. `variant` sets it. */
+    /** Border color. `variant` sets it. */
     --forte-toolbar-border-color: transparent;
     /** Drop shadow. Unset by default — a toolbar is part of the page, not a
      * surface floating over it. */
@@ -81,7 +81,7 @@
   }
 
   /* Horizontal only — `wrap` is ignored in a column, where the block axis is
-   * already unbounded. `align-items: center` above would centre each LINE, so
+   * already unbounded. `align-items: center` above would center each LINE, so
    * nothing else has to change. */
   .root[data-orientation="horizontal"][data-wrap] {
     flex-wrap: wrap;
@@ -162,9 +162,9 @@
    * ordinary horizontal bar.
    *
    * The line is a BORDER, never a `background-color`. A background is replaced
-   * with a system colour under forced colours — for a plain box that is
+   * with a system color under forced colors — for a plain box that is
    * `Canvas`, the page's own backdrop — so a hairline drawn that way vanishes
-   * for exactly the users who most need the grouping cue. Border colours are
+   * for exactly the users who most need the grouping cue. Border colors are
    * forced to `CanvasText` instead, which is why this file needs no
    * forced-colors rule for the separator at all.
    *
@@ -179,7 +179,7 @@
   .separator {
     /** Line thickness. */
     --forte-toolbar-separator-thickness: 1px;
-    /** Line colour. */
+    /** Line color. */
     --forte-toolbar-separator-color: var(--forte-color-border);
     /* Not zero, unlike `Separator`'s: a rule running the full height of a
      * padded bar touches the fill's top and bottom edges and reads as a seam
@@ -235,9 +235,9 @@
 
   /* Link -------------------------------------------------------------------
    * Drawn as a link and not as a button, deliberately. It navigates, and the
-   * underline is the only cue that says so before it is clicked — colour alone
+   * underline is the only cue that says so before it is clicked — color alone
    * would fail SC 1.4.1 against the buttons beside it, which share the bar's
-   * text colour.
+   * text color.
    *
    * The height matches the controls it sits between so the bar has one
    * baseline, which also carries the SC 2.5.8 floor: the smallest step is
@@ -252,13 +252,13 @@
     --forte-toolbar-link-radius: var(--forte-radius-control);
     /** Label size. `size` re-points it. */
     --forte-toolbar-link-font-size: var(--forte-font-size-2);
-    /** Label colour. */
+    /** Label color. */
     --forte-toolbar-link-color: var(--forte-color-primary-text);
     /** Fill on hover. */
     --forte-toolbar-link-bg-hover: var(--forte-color-panel-hover);
     /* Muted by default so the rule reads as an underline rather than as a
      * second line of text, then brought to full strength on hover. */
-    /** Underline colour. */
+    /** Underline color. */
     --forte-toolbar-link-underline-color: color-mix(
       in oklab,
       currentcolor 45%,
@@ -266,7 +266,7 @@
     );
     /** Distance between the text baseline and its underline. */
     --forte-toolbar-link-underline-offset: 0.15em;
-    /** Colour transitions between states. */
+    /** Color transitions between states. */
     --forte-toolbar-link-duration: var(--forte-duration-fast);
 
     box-sizing: border-box;
@@ -328,19 +328,19 @@
   }
 }
 
-/* Forced colours -------------------------------------------------------------
+/* Forced colors -------------------------------------------------------------
  * Top-level `forte.a11y`, ordered after `forte.components`, so
  * everything here beats the rules above by layer alone.
  *
  * Only the bar's own fill needs rescuing. `panel` and `outline` both paint a
- * background, and a background is replaced with a system colour here — so a
+ * background, and a background is replaced with a system color here — so a
  * `panel` bar would dissolve into the page and its controls would fall apart
  * into a loose row. The 1px border is already occupying the space (see the
- * knob comment above); this only gives it a colour. `plain` is left alone,
+ * knob comment above); this only gives it a color. `plain` is left alone,
  * which is correct: it never claimed to be a surface.
  *
  * The separator needs nothing — it is drawn with a border, which forced
- * colours keeps — and the link inherits `LinkText` from the `.forte-link` rule
+ * colors keeps — and the link inherits `LinkText` from the `.forte-link` rule
  * in patterns.css.
  * ------------------------------------------------------------------------- */
 @layer forte.a11y {

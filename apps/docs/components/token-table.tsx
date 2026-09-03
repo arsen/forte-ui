@@ -55,7 +55,7 @@ export function TokenTable({
   names?: string[];
   /** Drop these names from whatever the other filters matched. */
   exclude?: string[];
-  /** Accessible caption — "Spacing tokens", "Semantic colour tokens". */
+  /** Accessible caption — "Spacing tokens", "Semantic color tokens". */
   label: string;
 }) {
   let rows: Token[];
@@ -80,7 +80,7 @@ export function TokenTable({
   }
 
   const notes = new Map(rows.map((t) => [t.name, notesFor(t)]));
-  // Families like spacing carry no prose and no preset behaviour; a permanently
+  // Families like spacing carry no prose and no preset behavior; a permanently
   // empty column would just push the values around for nothing.
   const hasNotes = rows.some((t) => notes.get(t.name)?.length);
 
@@ -131,7 +131,7 @@ function notesFor(t: Token): string[] {
   if (some((d) => d.media?.includes("prefers-contrast")))
     notes.push("retuned under `prefers-contrast: more`");
   if (some((d) => d.media?.includes("forced-colors")))
-    notes.push("retuned under forced colours");
+    notes.push("retuned under forced colors");
   if (some((d) => d.media?.includes("prefers-reduced-transparency")))
     notes.push("retuned under `prefers-reduced-transparency`");
   if (some((d) => d.media?.includes("prefers-reduced-motion")))

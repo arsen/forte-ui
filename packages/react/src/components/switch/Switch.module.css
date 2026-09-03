@@ -7,7 +7,7 @@
  *    Everywhere else in the library, positional movement is decoration and
  *    gets collapsed by a travel token. Here the thumb's position IS the
  *    state — a switch whose thumb never moves is a switch with no visible
- *    on/off difference except colour. So the distance stays constant and only
+ *    on/off difference except color. So the distance stays constant and only
  *    the *feel* is reduced: the transition rides `--forte-duration-spring-snappy`,
  *    which drops from 400ms to 120ms under reduced motion, flattening the
  *    spring's overshoot into what reads as an instant jump.
@@ -21,10 +21,10 @@
  *    collapse their own geometry and shorten their own durations; a local
  *    query would only be able to make that worse.
  *
- * Unchecked colours come from `--forte-color-foreground-subtle` (gray-10,
+ * Unchecked colors come from `--forte-color-foreground-subtle` (gray-10,
  * measured 3.73:1 against the page). It is banned for text and exactly right
  * here: it is what gives the track boundary and the thumb their SC 1.4.11
- * non-text contrast. Checked colours ride `--forte-color-on-primary`, which the
+ * non-text contrast. Checked colors ride `--forte-color-on-primary`, which the
  * theme picks for contrast against `--forte-color-primary`, so the thumb and
  * its checkmark stay legible for any accent seed.
  */
@@ -52,18 +52,18 @@
     /** Track corner radius. */
     --forte-switch-radius: var(--forte-radius-pill);
 
-    /* Colour slots, swapped wholesale by [data-checked] below. */
+    /* Color slots, swapped wholesale by [data-checked] below. */
     /** Track fill. Swapped to `var(--forte-color-primary)` when checked. */
     --forte-switch-track-bg: var(--forte-color-panel);
     /** Track fill on hover, on pointer devices only. Swapped to
      * `var(--forte-color-primary-hover)` when checked. */
     --forte-switch-track-bg-hover: var(--forte-color-panel-hover);
-    /** Track border colour. `var(--forte-color-primary)` when checked;
+    /** Track border color. `var(--forte-color-primary)` when checked;
      * `var(--forte-color-danger-border)` when invalid inside a field. */
     --forte-switch-track-border: var(--forte-color-foreground-subtle);
     /** Thumb fill. Swapped to `var(--forte-color-on-primary)` when checked. */
     --forte-switch-thumb-bg: var(--forte-color-foreground-subtle);
-    /** Checkmark colour. Swapped to `var(--forte-color-primary)` when checked. */
+    /** Checkmark color. Swapped to `var(--forte-color-primary)` when checked. */
     --forte-switch-thumb-fg: var(--forte-color-panel);
     /** Thumb shadow. */
     --forte-switch-thumb-shadow: var(--forte-shadow-1);
@@ -223,12 +223,12 @@
     scale: 1;
   }
 
-  /* Forced colours -------------------------------------------------------- */
+  /* Forced colors -------------------------------------------------------- */
   /* Background alone cannot carry the state here: the UA repaints author
-   * colours from system keywords, and it assigns them from NATIVE element
+   * colors from system keywords, and it assigns them from NATIVE element
    * semantics — a <span role="switch"> is given nothing. So the track states
    * are separated on three axes at once (fill, border, and the thumb's own
-   * fill plus its checkmark), and every colour is a system keyword. */
+   * fill plus its checkmark), and every color is a system keyword. */
 }
 
 /**

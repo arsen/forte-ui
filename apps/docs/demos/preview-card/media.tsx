@@ -6,10 +6,10 @@ import { PreviewCard } from "@forte-ui/react";
 export default function PreviewCardMedia() {
   return (
     <p className="max-w-md text-2 leading-normal">
-      The palette in this library is rebuilt from one seed colour using{" "}
+      The palette in this library is rebuilt from one seed color using{" "}
       <PreviewCard.Root>
         <PreviewCard.Trigger href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">
-          CSS relative colour syntax
+          CSS relative color syntax
         </PreviewCard.Trigger>
         {/* The card is a flex column with padding and a gap; a full-bleed
           * banner just wants both off, and the padding put back on the text
@@ -43,9 +43,9 @@ export default function PreviewCardMedia() {
             }
           />
           <div className="flex flex-col gap-2 p-surface">
-            <span className="text-3 font-semibold">Relative colour syntax</span>
+            <span className="text-3 font-semibold">Relative color syntax</span>
             <p className="text-2 text-foreground-muted">
-              One seed colour, one function, and the whole ramp derives in the
+              One seed color, one function, and the whole ramp derives in the
               browser — no build step and no runtime theming layer.
             </p>
           </div>

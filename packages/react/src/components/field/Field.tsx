@@ -57,7 +57,7 @@ export interface FieldLabelProps extends Omit<BaseLabelProps, "className"> {
    *
    * Leave it `true` for `Input`, `Checkbox` and `Switch`. Set it to `false`
    * for a control that is a `<button>` — `Select.Trigger` is the one in this
-   * library — where native label behaviour is actively wrong: the button would
+   * library — where native label behavior is actively wrong: the button would
    * pick up `:hover` from the label, and clicking the label would fire a click
    * on the trigger and open the popup. With `false` the association is made
    * with `aria-labelledby` instead, and the element rendered defaults to a
@@ -77,7 +77,7 @@ export interface FieldLabelProps extends Omit<BaseLabelProps, "className"> {
  * The field's visible label, associated with the control automatically.
  * Renders a `<label>` — or a `<div>` when `nativeLabel` is `false`.
  *
- * Both labelling shapes work, and the difference is only where the control
+ * Both labeling shapes work, and the difference is only where the control
  * sits:
  *
  * ```tsx

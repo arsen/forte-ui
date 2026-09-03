@@ -11,9 +11,9 @@ export default function MenuCheckboxItems() {
     "Assignee",
   ]);
 
-  // Centred, not start-aligned: the caption below is the widest thing in this
+  // Centered, not start-aligned: the caption below is the widest thing in this
   // column and its width changes with the selection, so a start-aligned trigger
-  // would slide sideways every time the demo frame re-centred the column.
+  // would slide sideways every time the demo frame re-centered the column.
   return (
     <div className="flex flex-col items-center gap-3">
       <Menu.Root>

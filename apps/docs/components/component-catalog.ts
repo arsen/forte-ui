@@ -2,7 +2,7 @@
  * GENERATED FILE — do not edit by hand.
  * Regenerate with:  pnpm --filter @forte-ui/docs catalog
  *
- * The library's component catalogue, resolved to routes on this site. Both the
+ * The library's component catalog, resolved to routes on this site. Both the
  * index page and the sidebar's Components group render from it, so neither can
  * drift from what `@forte-ui/react` actually exports.
  */
@@ -46,7 +46,7 @@ export const CATALOG: CatalogEntry[] = [
   { name: "Calendar", title: "Calendar", href: "/components/calendar/", category: "Forms", summary: "An inline month grid for picking one day, several days, or a range; for a form field that opens a calendar on demand, use DatePicker.", partOf: null },
   { name: "Checkbox", title: "Checkbox", href: "/components/checkbox/", category: "Forms", summary: "An independent yes/no option with an optional mixed state; for one-of-many use RadioGroup, for a setting that applies immediately use Switch.", partOf: null },
   { name: "CheckboxGroup", title: "Checkbox Group", href: "/components/checkbox-group/", category: "Forms", summary: "One array value shared by several Checkboxes, with an optional parent checkbox that summarises and toggles the lot.", partOf: null },
-  { name: "ColorPicker", title: "Color Picker", href: "/components/color-picker/", category: "Forms", summary: "Full colour selection — saturation/brightness canvas, hue and alpha rails, preset swatches, and a text field that speaks four CSS notations.", partOf: null },
+  { name: "ColorPicker", title: "Color Picker", href: "/components/color-picker/", category: "Forms", summary: "Full color selection — saturation/brightness canvas, hue and alpha rails, preset swatches, and a text field that speaks four CSS notations.", partOf: null },
   { name: "Combobox", title: "Combobox", href: "/components/combobox/", category: "Forms", summary: "A text input combined with a filterable option list — the Select to reach for once the list is long enough to need typing.", partOf: null },
   { name: "DatePicker", title: "Date Picker", href: "/components/date-picker/", category: "Forms", summary: "A form field that opens a Calendar in a popover — the input-shaped way to pick a day or a range.", partOf: null },
   { name: "Field", title: "Field", href: "/components/field/", category: "Forms", summary: "Wires one control to its label, description and error message, and owns the validation state they all read — the wrapper every form control sits in.", partOf: null },
@@ -65,7 +65,7 @@ export const CATALOG: CatalogEntry[] = [
   { name: "AlertDialog", title: "Alert Dialog", href: "/components/dialog/", category: "Overlays", summary: "A modal for decisions that must be answered — it cannot be dismissed by clicking outside; the shape for destructive confirms. Shares Dialog's parts (see Dialog's props.json keys) under AlertDialog.*.", partOf: "Dialog" },
   { name: "ContextMenu", title: "Context Menu", href: "/components/context-menu/", category: "Overlays", summary: "A Menu that opens at the pointer on right-click or long-press over a region of the page rather than off a button.", partOf: null },
   { name: "Dialog", title: "Dialog", href: "/components/dialog/", category: "Overlays", summary: "A modal surface that takes focus until dismissed; for confirmations that must be answered use AlertDialog, for edge-anchored panels use Drawer.", partOf: null },
-  { name: "Drawer", title: "Drawer", href: "/components/drawer/", category: "Overlays", summary: "A panel that slides in from any screen edge, with drag-to-dismiss and snap points; for a centred modal use Dialog.", partOf: null },
+  { name: "Drawer", title: "Drawer", href: "/components/drawer/", category: "Overlays", summary: "A panel that slides in from any screen edge, with drag-to-dismiss and snap points; for a centered modal use Dialog.", partOf: null },
   { name: "Menu", title: "Menu", href: "/components/menu/", category: "Overlays", summary: "A button-opened list of commands with checkable items, submenus and shortcut hints; for choosing a form value use Select instead.", partOf: null },
   { name: "Menubar", title: "Menubar", href: "/components/menubar/", category: "Overlays", summary: "A row of Menus that behave as one strip — the application menu bar.", partOf: null },
   { name: "Popover", title: "Popover", href: "/components/popover/", category: "Overlays", summary: "An anchored non-modal surface for content the user reads or acts on — tabbable and touch-reachable; for a hover-only hint use Tooltip.", partOf: null },

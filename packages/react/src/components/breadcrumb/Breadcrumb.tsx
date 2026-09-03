@@ -400,7 +400,7 @@ export interface BreadcrumbPageProps
  * Deliberately not a link. A link to the page you are already on is a control
  * that does nothing, and the trail's whole job at this position is to say
  * "here" — `aria-current` says it in the accessibility tree, and the weight
- * and colour change say it on screen, so the cue is never colour alone.
+ * and color change say it on screen, so the cue is never color alone.
  */
 export const BreadcrumbPage = React.forwardRef<HTMLSpanElement, BreadcrumbPageProps>(
   function BreadcrumbPage({ render, className, ...props }, ref) {

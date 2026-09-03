@@ -41,9 +41,9 @@ import "@forte-ui/react/styles/reset.css";
 import "./index.css";
 ```
 
-`theme.css` carries the whole system — the tokens, the colour ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
+`theme.css` carries the whole system — the tokens, the color ramps, the motion system, the accessibility responses. Everything in it sits inside `@layer forte.*`, and a cascade layer loses to unlayered author CSS, so your own stylesheets override the library without `!important` regardless of load order.
 
-`reset.css` is the second one, and it is opt-in twice over: importing it does nothing until `forte-reset` appears on an element. It sets `box-sizing: border-box` and suppresses the platform tap highlight — the grey box Safari and Chrome paint over whatever a touch lands on, which ignores `border-radius` and lingers after your finger lifts. The library already suppresses it on its own components; this extends the same treatment to the markup you write. Drop both lines if you would rather keep the platform default — see [the tap highlight on touch](/customization/styling/#the-tap-highlight-on-touch) for the trade-off.
+`reset.css` is the second one, and it is opt-in twice over: importing it does nothing until `forte-reset` appears on an element. It sets `box-sizing: border-box` and suppresses the platform tap highlight — the gray box Safari and Chrome paint over whatever a touch lands on, which ignores `border-radius` and lingers after your finger lifts. The library already suppresses it on its own components; this extends the same treatment to the markup you write. Drop both lines if you would rather keep the platform default — see [the tap highlight on touch](/customization/styling/#the-tap-highlight-on-touch) for the trade-off.
 
 The class is what switches it on. It goes on `<html>`, which on Vite lives in `index.html`:
 
@@ -68,11 +68,11 @@ body {
 }
 ```
 
-The seed is the theme: all twelve accent steps, the brand-tinted neutrals, and a readable text colour for solid fills derive from it — in both light and dark mode, with no JavaScript and no build step.
+The seed is the theme: all twelve accent steps, the brand-tinted neutrals, and a readable text color for solid fills derive from it — in both light and dark mode, with no JavaScript and no build step.
 
 <Callout kind="warn">
   Replace, don't merge. Vite's scaffold `index.css` styles `button` and `body`
-  directly — dark backgrounds, its own padding and border-radius, a flex-centred
+  directly — dark backgrounds, its own padding and border-radius, a flex-centered
   page — and those rules are *unlayered*, so they beat everything in
   `@layer forte.*` by design. Keep the scaffold's `button` rule and every
   forte-ui Button on the page inherits its background and padding. The same goes
@@ -139,7 +139,7 @@ A click writes the attribute and persists the choice to `localStorage("forte-the
 </script>
 ```
 
-Every derived colour re-resolves; there is no second stylesheet to load. The same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control.
+Every derived color re-resolves; there is no second stylesheet to load. The same attribute, along with `.forte-theme` / `data-forte-theme` scoping for islands, is covered in [Theming](/customization/theming/), and [`useTheme`](/components/theme-toggle/#usetheme) is the hook under the toggle when you want your own control.
 
 ## With Tailwind
 
@@ -196,7 +196,7 @@ One line in `<head>`, before anything that loads CSS:
 <style>@layer theme, base, forte, components, utilities;</style>
 ```
 
-On Next.js the bridge's own `@layer` statement survives the build and this step does not exist. Vite's CSS pipeline is not so gentle: Tailwind's compiler re-slots the statement around its own output, the minifier merges statement rules, and JS-imported component CSS lands in its own chunk — and once `base` first appears *after* `forte`, Preflight beats every component by layer order alone. The symptom is unmistakable: buttons render as bare text on a page whose colours are otherwise right. A `<style>` in the document itself loads ahead of every stylesheet, layer order is fixed at first appearance, and nothing the bundler emits later can unpin it.
+On Next.js the bridge's own `@layer` statement survives the build and this step does not exist. Vite's CSS pipeline is not so gentle: Tailwind's compiler re-slots the statement around its own output, the minifier merges statement rules, and JS-imported component CSS lands in its own chunk — and once `base` first appears *after* `forte`, Preflight beats every component by layer order alone. The symptom is unmistakable: buttons render as bare text on a page whose colors are otherwise right. A `<style>` in the document itself loads ahead of every stylesheet, layer order is fixed at first appearance, and nothing the bundler emits later can unpin it.
 
 ### 5. Style with token utilities
 

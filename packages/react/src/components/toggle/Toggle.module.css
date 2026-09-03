@@ -4,16 +4,16 @@
  * Same two axes as Button, but they mean something slightly different here
  * because a toggle has two resting states rather than one:
  *   data-variant  how loud the PRESSED state is (solid/soft/outline)
- *   data-tone     which semantic colour set that state draws from
+ *   data-tone     which semantic color set that state draws from
  *
  * Unpressed is quiet in every variant — transparent fill, muted label — since
  * that is what makes a toggle read as off at a glance. So the variants only
  * differ in what "on" looks like, and each tone still only has to define its
- * usual handful of colour slots.
+ * usual handful of color slots.
  *
  * Note what the pressed state is NOT allowed to be: a hue change alone. Every
  * variant switches the FILL when it turns on, so the difference survives
- * greyscale, and it survives forced colours too (see the a11y block, which
+ * greyscale, and it survives forced colors too (see the a11y block, which
  * this component needs because `aria-pressed` is not one of the selectors the
  * global rule in patterns.css covers).
  *
@@ -43,9 +43,9 @@
     /** Gap between an icon and its label. */
     --forte-toggle-gap: var(--forte-control-gap);
     /** Border width, drawn in every variant — `outline` is the only one that
-     * gives it a colour. */
+     * gives it a color. */
     --forte-toggle-border-width: 1px;
-    /** Colour transitions between states. */
+    /** Color transitions between states. */
     --forte-toggle-duration: var(--forte-duration-fast);
     /* Press feedback only. There is no hover lift or hover scale slot on a
      * toggle the way there is on Button: a toggle is normally one of several
@@ -71,11 +71,11 @@
     --forte-toggle-bg: transparent;
     /** Fill on hover while unpressed. */
     --forte-toggle-bg-hover: var(--forte-color-panel-hover);
-    /** Label colour while unpressed. */
+    /** Label color while unpressed. */
     --forte-toggle-fg: var(--forte-color-foreground-muted);
-    /** Label colour on hover while unpressed. */
+    /** Label color on hover while unpressed. */
     --forte-toggle-fg-hover: var(--forte-color-foreground);
-    /** Border colour while unpressed. `var(--forte-color-border)` for
+    /** Border color while unpressed. `var(--forte-color-border)` for
      * `variant="outline"`. */
     --forte-toggle-border-color: transparent;
 
@@ -84,9 +84,9 @@
     --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
     /** Fill on hover while pressed. Set by `variant` from the tone. */
     --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
-    /** Label colour while pressed. Set by `variant` from the tone. */
+    /** Label color while pressed. Set by `variant` from the tone. */
     --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
-    /** Border colour while pressed. The tone's border for `variant="outline"`.
+    /** Border color while pressed. The tone's border for `variant="outline"`.
  */
     --forte-toggle-border-color-pressed: transparent;
 
@@ -139,7 +139,7 @@
 
   /* Hover comes after the pressed rule so the pressed hover can win at equal
    * specificity, and is gated on real hover support so a touch device does not
-   * stick in a hover colour after a tap. */
+   * stick in a hover color after a tap. */
   @media (hover: hover) {
     .root:hover:not([data-disabled]) {
       background-color: var(--forte-toggle-bg-hover);
@@ -285,13 +285,13 @@
     /** Fill behind the strip. `var(--forte-color-panel)` when `segmented`. */
     --forte-toggle-group-bg: transparent;
     /* Transparent rather than absent even when there is nothing to draw:
-     * `transparent` is NOT preserved under forced colours — it is replaced
-     * with a system colour — so declaring the border here is what lets the
+     * `transparent` is NOT preserved under forced colors — it is replaced
+     * with a system color — so declaring the border here is what lets the
      * segmented strip keep a visible boundary in high contrast without the
      * a11y block having to add a border and shift the layout by 2px. */
     /** Border width of the strip. */
     --forte-toggle-group-border-width: 1px;
-    /** Border colour of the strip. */
+    /** Border color of the strip. */
     --forte-toggle-group-border-color: transparent;
 
     box-sizing: border-box;
@@ -349,7 +349,7 @@
   }
 }
 
-/* Forced colours -------------------------------------------------------------
+/* Forced colors -------------------------------------------------------------
  * Top-level `forte.a11y`, ordered after `forte.components`, so
  * everything here beats the rules above by layer alone. Specificity still
  * decides between the rules *inside* this block, which is why their order
@@ -360,7 +360,7 @@
  * `[aria-checked="true"]`, `[aria-selected="true"]` and friends — but a toggle
  * button is none of those. It is `aria-pressed`, which that list does not
  * cover, so without the rules here the pressed state would lose its fill in
- * forced colours and on would look exactly like off.
+ * forced colors and on would look exactly like off.
  *
  * The bare `.root` rule below is (0,1,0) and the global disabled remedy in
  * patterns.css is written with `:where()`, i.e. (0,0,0) — so `color` and
@@ -370,9 +370,9 @@
  * ------------------------------------------------------------------------- */
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* The UA derives system colours from native element semantics, and this IS
+    /* The UA derives system colors from native element semantics, and this IS
      * a native <button> — but its background is `transparent`, which forced
-     * colours replaces with a system colour of its choosing. Pinning the pair
+     * colors replaces with a system color of its choosing. Pinning the pair
      * explicitly is what keeps an unpressed toggle legible. */
     .root {
       background-color: Canvas;
@@ -390,7 +390,7 @@
     }
 
     /* `currentColor` icons are already covered by the rule above. This is for
-     * icons that declare their own fill or stroke, which forced colours would
+     * icons that declare their own fill or stroke, which forced colors would
      * otherwise push to CanvasText — invisible on Highlight. A bare `svg`
      * rather than `.forte-icon`: inside a CSS Module that global class name
      * would be hashed into a local one and match nothing. */
@@ -414,7 +414,7 @@
     /* The panel behind a segmented group is a background, so it disappears
      * here and the strip would fall apart into loose buttons. The border
      * declared in the components layer is already occupying the space; this
-     * only gives it a colour. */
+     * only gives it a color. */
     .group[data-segmented] {
       border-color: CanvasText;
     }

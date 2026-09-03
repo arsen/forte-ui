@@ -19,7 +19,7 @@ export default function NavigationMenuCustomLinks() {
             {pages.map((page) => (
               /* `render` hands the element to the router's own link component,
                 * so navigation stays client-side and the menu keeps its
-                * keyboard behaviour. `href` goes on BOTH: Base UI needs it to
+                * keyboard behavior. `href` goes on BOTH: Base UI needs it to
                 * decide the link is a link, next/link needs it to route. */
               <NavigationMenu.Link
                 key={page.href}

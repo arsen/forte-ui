@@ -3,7 +3,7 @@
  *
  * The two axes the rest of the library uses:
  *   data-variant  how loud the card is (soft/outline)
- *   data-tone     which semantic colour set it draws from
+ *   data-tone     which semantic color set it draws from
  *
  * ---------------------------------------------------------------------------
  * The layout, and why the gaps are margins
@@ -41,11 +41,11 @@
  * page sits in.
  *
  * ---------------------------------------------------------------------------
- * Colour
+ * Color
  * ---------------------------------------------------------------------------
  * Two text slots per tone rather than one, because `neutral` is not like the
- * others: its "text colour" is the plain foreground, and body copy in full
- * foreground on a tinted card reads as heavy. The coloured tones point both
+ * others: its "text color" is the plain foreground, and body copy in full
+ * foreground on a tinted card reads as heavy. The colored tones point both
  * slots at step 11 — the pair the contrast harness now asserts against step 3
  * for all four status hues — and let weight do the separating instead.
  *
@@ -53,7 +53,7 @@
  * hairline, and the tone survives only in the glyph — the arrangement `Toast`
  * uses, and for the same reason: several of these on one screen have to stay
  * distinguishable from each other, and a page of tinted cards has nothing left
- * to emphasise with.
+ * to emphasize with.
  *
  * ---------------------------------------------------------------------------
  * The exit, and why it collapses rather than just fades
@@ -102,7 +102,7 @@
     /** Size of the title. */
     --forte-alert-title-font-size: var(--forte-font-size-2);
     /** Weight of the title. It is what separates the title from the
-     * description on a `soft` card, where both are the same colour. */
+     * description on a `soft` card, where both are the same color. */
     --forte-alert-title-font-weight: var(--forte-font-weight-semibold);
     /** Size of the description. */
     --forte-alert-font-size: var(--forte-font-size-2);
@@ -125,25 +125,25 @@
     --forte-alert-tone-soft: var(--forte-gray-3);
     /** Tone's edge */
     --forte-alert-tone-border: var(--forte-color-border);
-    /** Tone's title colour on that surface */
+    /** Tone's title color on that surface */
     --forte-alert-tone-title: var(--forte-color-foreground);
-    /** Tone's body colour on that surface. Separate from the title's because
-     * `neutral` wants a muted grey here and the coloured tones want their own
+    /** Tone's body color on that surface. Separate from the title's because
+     * `neutral` wants a muted gray here and the colored tones want their own
      * step 11 — the pair the harness guarantees. */
     --forte-alert-tone-body: var(--forte-color-foreground-muted);
-    /** Tone's glyph colour, which is the only tone signal `outline` keeps */
+    /** Tone's glyph color, which is the only tone signal `outline` keeps */
     --forte-alert-tone-accent: var(--forte-color-foreground-muted);
 
     /* Filled in per variant below; this is the `soft` set. */
     /** Fill behind the card. Set by `variant` from the tone. */
     --forte-alert-bg: var(--forte-alert-tone-soft);
-    /** Edge colour. Set by `variant` from the tone. */
+    /** Edge color. Set by `variant` from the tone. */
     --forte-alert-border-color: var(--forte-alert-tone-border);
-    /** Title colour. Set by `variant` from the tone. */
+    /** Title color. Set by `variant` from the tone. */
     --forte-alert-title-color: var(--forte-alert-tone-title);
-    /** Description colour. Set by `variant` from the tone. */
+    /** Description color. Set by `variant` from the tone. */
     --forte-alert-body-color: var(--forte-alert-tone-body);
-    /** Glyph colour. Set by `variant` from the tone. */
+    /** Glyph color. Set by `variant` from the tone. */
     --forte-alert-icon-color: var(--forte-alert-tone-accent);
 
     box-sizing: border-box;
@@ -167,9 +167,9 @@
   }
 
   /* Icon -------------------------------------------------------------------
-   * Centred on the TITLE's line box, not on the card and not on the em box of
+   * Centered on the TITLE's line box, not on the card and not on the em box of
    * whatever happens to be first. A glyph aligned to the top of the row sits
-   * visibly high against a line of text; one aligned to the centre of the card
+   * visibly high against a line of text; one aligned to the center of the card
    * drifts down the moment the description runs to three lines.
    *
    * `pointer-events: none` so a click that lands on the glyph still selects
@@ -233,7 +233,7 @@
   }
 
   /* Action -----------------------------------------------------------------
-   * Centred against the whole message rather than against the title — but it
+   * Centered against the whole message rather than against the title — but it
    * can only span both rows when both rows exist. An unconditional
    * `grid-row: 1 / span 2` would open an empty implicit row on a title-only
    * alert, and `row-gap` would then pad the card from the inside with nothing
@@ -265,7 +265,7 @@
     inset-block-start: var(--forte-alert-padding);
     inset-inline-end: var(--forte-alert-padding);
     /* The button is taller than the line it belongs to, so half the overhang
-     * comes back off the top. That centres the "×" on the title's first line
+     * comes back off the top. That centers the "×" on the title's first line
      * rather than leaving it floating above the text. */
     margin-block-start: calc(
       (var(--forte-alert-title-font-size) * var(--forte-line-height-tight) -
@@ -307,7 +307,7 @@
   }
 
   /* `@media (hover: hover)` so a touch device does not leave the button stuck
-   * in its hover colour after a tap. */
+   * in its hover color after a tap. */
   @media (hover: hover) {
     .close:hover {
       background-color: var(--forte-color-panel-hover);
@@ -365,14 +365,14 @@
 
   /* Tones ------------------------------------------------------------------
    * Five slots each. The pairs are the ones the contrast harness guarantees:
-   * step 11 on step 3 for every coloured tone, and gray-11 on gray-3 for
+   * step 11 on step 3 for every colored tone, and gray-11 on gray-3 for
    * neutral — both asserted in check-contrast.mjs, so the message clears AA
    * whatever the brand seed is.
    *
-   * `neutral` is the one tone whose title and body differ: it has a real grey
-   * scale to separate them with. The coloured tones put both in step 11 and
+   * `neutral` is the one tone whose title and body differ: it has a real gray
+   * scale to separate them with. The colored tones put both in step 11 and
    * let `--forte-alert-title-font-weight` do the work, because a second, lighter
-   * tint of the same hue is not a colour the ramp promises anything about.
+   * tint of the same hue is not a color the ramp promises anything about.
    * ---------------------------------------------------------------------- */
   .root[data-tone="neutral"] {
     --forte-alert-tone-soft: var(--forte-gray-3);
@@ -458,12 +458,12 @@
  */
 @layer forte.a11y {
   @media (forced-colors: active) {
-    /* Every background collapses to a system colour here, so `soft` and
+    /* Every background collapses to a system color here, so `soft` and
      * `outline` become the same card and the tone stops being visible at all.
      * The border is what is left — `border-color` IS remapped rather than
      * stripped — so the card keeps its edge and the four glyph SHAPES keep
      * carrying which kind of message it is. That is why they are four shapes
-     * and not one shape in four colours (SC 1.4.1).
+     * and not one shape in four colors (SC 1.4.1).
      *
      * The declarations are explicit rather than left to the UA so that a
      * future tint added to the card cannot quietly take the glyph's contrast
@@ -480,7 +480,7 @@
     }
 
     /* A `<button>` keeps `ButtonText` from the UA sheet, but only while
-     * nothing has set a colour on it — and `.close` sets one. */
+     * nothing has set a color on it — and `.close` sets one. */
     .close {
       color: ButtonText;
     }

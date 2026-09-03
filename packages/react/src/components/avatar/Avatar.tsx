@@ -38,7 +38,7 @@ export interface AvatarRootProps extends Omit<BaseRootProps, "className"> {
    */
   shape?: AvatarShape;
   /**
-   * How loud the fallback is. `soft` is a tinted disc with tone-coloured
+   * How loud the fallback is. `soft` is a tinted disc with tone-colored
    * initials, `solid` fills with the tone itself, `outline` is a ring around
    * nothing.
    *
@@ -49,9 +49,9 @@ export interface AvatarRootProps extends Omit<BaseRootProps, "className"> {
    */
   variant?: AvatarVariant;
   /**
-   * Which semantic colour set the fallback draws from. Rotating the tone
+   * Which semantic color set the fallback draws from. Rotating the tone
    * across a list is the cheapest way to make initials tell people apart —
-   * but colour is never the only cue, since the initials themselves differ.
+   * but color is never the only cue, since the initials themselves differ.
    * @default "neutral"
    */
   tone?: AvatarTone;
@@ -211,11 +211,11 @@ const AvatarFallback = React.forwardRef<HTMLSpanElement, AvatarFallbackProps>(
 
 export interface AvatarBadgeProps extends Omit<React.ComponentPropsWithoutRef<"span">, "className"> {
   /**
-   * Which semantic colour set the badge draws from. `success`, `warning` and
+   * Which semantic color set the badge draws from. `success`, `warning` and
    * `danger` are the presence set — online, away, do-not-disturb — and the
    * brand tones suit a count or a verification tick.
    *
-   * Colour is never the only cue: pass `label`, or write the status out beside
+   * Color is never the only cue: pass `label`, or write the status out beside
    * the avatar, so the badge is repeating something rather than saying it.
    * @default "neutral"
    */

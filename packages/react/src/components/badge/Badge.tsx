@@ -30,8 +30,8 @@ export interface BadgeProps
    */
   variant?: BadgeVariant;
   /**
-   * Which semantic colour set the badge draws from. Combines freely with
-   * `variant` — every pairing is a complete colour set, so
+   * Which semantic color set the badge draws from. Combines freely with
+   * `variant` — every pairing is a complete color set, so
    * `tone="success" variant="outline"` needs nothing added to work.
    *
    * The four status tones are the reason this component has seven rather than
@@ -63,7 +63,7 @@ export interface BadgeProps
    * Draw a small filled dot before the label — the status-chip convention.
    *
    * It is decorative and `aria-hidden`: the status is in the words. A dot
-   * that carried meaning on its own would be colour as the sole cue, which is
+   * that carried meaning on its own would be color as the sole cue, which is
    * the failure (SC 1.4.1) this component is otherwise careful to avoid.
    * @default false
    */

@@ -4,7 +4,7 @@ import { Button, Card } from "@forte-ui/react";
 
 export default function CardBasic() {
   return (
-    /* A width, because the demo frame centres its children and a card
+    /* A width, because the demo frame centers its children and a card
       * shrink-wrapped to its text is not the block-level surface under
       * discussion. */
     <Card.Root className="w-full max-w-[24rem]">

@@ -13,7 +13,7 @@ import * as React from "react";
  * choice. This script closes that gap by replaying it synchronously, before
  * the parser reaches `<body>`.
  *
- * That is also why it is a STRING and not behaviour inside a component: an
+ * That is also why it is a STRING and not behavior inside a component: an
  * effect runs after paint by definition. The component below only exists to
  * put the string somewhere; `themeInitScript` is exported on its own for
  * frameworks that inject head markup as text.

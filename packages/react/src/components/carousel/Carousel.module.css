@@ -10,7 +10,7 @@
  *   track = −direction × (position − offset) × step  where the track sits
  *
  * `offset` is the alignment: zero with the active slide at the start edge,
- * half the spare room when it is centred, so slide 0 centred means the track
+ * half the spare room when it is centered, so slide 0 centered means the track
  * starts part-way into the view.
  *
  * The percentage is the track's own inline size, which is the viewport's, so
@@ -22,7 +22,7 @@
  * Three things about the motion are worth knowing before editing:
  *
  *   - The move is a transition on `translate`, so pressing Next while the
- *     track is still travelling retargets from wherever it is. Under reduced
+ *     track is still traveling retargets from wherever it is. Under reduced
  *     motion the duration token shortens to its floor and the track cuts to
  *     the slide; there is no prefers-reduced-motion block here, and there
  *     must not be one.
@@ -75,9 +75,9 @@
     --forte-carousel-control-bg: var(--forte-color-panel);
     /** Background of a control on hover */
     --forte-carousel-control-bg-hover: var(--forte-color-panel-hover);
-    /** Icon colour of a control */
+    /** Icon color of a control */
     --forte-carousel-control-color: var(--forte-color-foreground);
-    /** Border colour of a control */
+    /** Border color of a control */
     --forte-carousel-control-border-color: var(--forte-color-border);
     /** Corner radius of a control */
     --forte-carousel-control-radius: var(--forte-radius-pill);
@@ -89,11 +89,11 @@
     --forte-carousel-dot-size: var(--forte-space-2);
     /** Space between dots */
     --forte-carousel-dot-gap: var(--forte-space-2);
-    /** Colour of an inactive dot */
+    /** Color of an inactive dot */
     --forte-carousel-dot-color: var(--forte-color-border-strong);
-    /** Colour of an inactive dot on hover */
+    /** Color of an inactive dot on hover */
     --forte-carousel-dot-color-hover: var(--forte-color-foreground-subtle);
-    /** Colour of the active dot */
+    /** Color of the active dot */
     --forte-carousel-dot-color-active: var(--forte-color-primary);
 
     /* Thumbs */
@@ -105,7 +105,7 @@
      * `transparent` on the inactive ones, so the active ring does not move
      * the strip by its own width */
     --forte-carousel-thumb-border-width: 2px;
-    /** Ring colour of the active thumbnail */
+    /** Ring color of the active thumbnail */
     --forte-carousel-thumb-border-color-active: var(--forte-color-primary);
     /** Opacity of an inactive thumbnail */
     --forte-carousel-thumb-opacity: 0.6;
@@ -114,7 +114,7 @@
      * so the calc below has values on the first frame of a root that has not
      * set them. Not theming knobs: the props are the API. The offset is how
      * many slides the view's start edge sits before the active slide — zero
-     * start-aligned, half the spare room when centred. */
+     * start-aligned, half the spare room when centered. */
     --forte-carousel-per-view: 1;
     --forte-carousel-align-offset: 0;
 
@@ -332,7 +332,7 @@
     inset-inline-end: var(--forte-carousel-control-inset);
   }
 
-  /* Centred on the inline axis: `inset-inline-start: 50%` puts the button's
+  /* Centered on the inline axis: `inset-inline-start: 50%` puts the button's
    * START edge at the middle, and the translate pulls it back by half its
    * width — in the direction the start edge is on, hence the product. */
   .viewport > .control[data-orientation="vertical"] {
@@ -382,7 +382,7 @@
     appearance: none;
     /* The stretch is a positional cue with no travel token, so it runs on
      * the move duration like the Tabs indicator; it collapses to its floor
-     * under reduced motion and the colour change carries the state. */
+     * under reduced motion and the color change carries the state. */
     transition:
       inline-size var(--forte-duration-move) var(--forte-ease-spring-snappy),
       block-size var(--forte-duration-move) var(--forte-ease-spring-snappy),
@@ -467,7 +467,7 @@
       box-shadow: none;
     }
 
-    /* Opacity is not overridden under forced colours, so a dimmed control
+    /* Opacity is not overridden under forced colors, so a dimmed control
      * would keep full contrast and read as enabled. */
     .control[data-disabled] {
       opacity: 1;
@@ -476,7 +476,7 @@
     }
 
     /* A dot's fill is stripped; the border is what survives, and the active
-     * one is painted in the one system colour that means "selected". */
+     * one is painted in the one system color that means "selected". */
     .dot {
       border: 1px solid ButtonText;
       background: ButtonFace;
@@ -487,9 +487,9 @@
       border-color: Highlight;
     }
 
-    /* `transparent` is replaced with a system colour under forced colours,
+    /* `transparent` is replaced with a system color under forced colors,
      * so the inactive ring would appear; Canvas is the page and stays
-     * invisible. Opacity is not honoured, so the active ring is the cue. */
+     * invisible. Opacity is not honored, so the active ring is the cue. */
     .thumb {
       opacity: 1;
       border-color: Canvas;

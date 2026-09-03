@@ -435,7 +435,7 @@ export const DatePickerTrigger = React.forwardRef<HTMLButtonElement, DatePickerT
          * `aria-label` and gains no attributes. `name` from the field does
          * land on it, which submits nothing — `type="button"` means this is
          * never a form's submitter. Placed BEFORE the spread, so a consumer's
-         * own `render` still wins (and then owns its own labelling). */
+         * own `render` still wins (and then owns its own labeling). */
         render={<BaseField.Control render={<button type="button" />} />}
         {...props}
       />

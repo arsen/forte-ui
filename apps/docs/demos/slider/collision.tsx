@@ -2,7 +2,7 @@
 
 import { Slider } from "@forte-ui/react";
 
-const behaviours = [
+const behaviors = [
   {
     value: "push",
     label: "push — the default",
@@ -27,10 +27,10 @@ const hint = "m-0 text-1 text-foreground-muted";
 export default function SliderCollision() {
   return (
     <div className={column}>
-      {behaviours.map(({ value, label, hint: text }) => (
+      {behaviors.map(({ value, label, hint: text }) => (
         <div key={value} className="grid gap-1">
           {/* `minStepsBetweenValues` is the companion knob: it keeps a gap
-            * between the two values whichever collision behaviour is in use. */}
+            * between the two values whichever collision behavior is in use. */}
           <Slider.Root
             defaultValue={[35, 55]}
             thumbCollisionBehavior={value}

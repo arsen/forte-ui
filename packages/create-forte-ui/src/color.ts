@@ -1,11 +1,11 @@
 /**
- * Colour maths for the Theme Studio and the create-forte-ui CLI. This is the
+ * Color maths for the Theme Studio and the create-forte-ui CLI. This is the
  * module of record — the docs' `lib/color.ts` re-exports it from here.
  *
  * Mirrors the model the library's CSS uses, so what the studio reports is what
  * the browser will actually paint:
  *  - sRGB is naive-CLIPPED, not gamut-mapped, because that is what browsers do
- *    today. Reporting a gamut-mapped colour here would understate how far an
+ *    today. Reporting a gamut-mapped color here would understate how far an
  *    out-of-range seed drifts.
  *  - Contrast is WCAG 2.x relative luminance, the ratio the success criteria
  *    are actually written against.
@@ -75,7 +75,7 @@ const WHITE: Rgb = [1, 1, 1];
 const BLACK: Rgb = [0, 0, 0];
 
 /**
- * The exact readable text colour for a solid fill, chosen by measuring both
+ * The exact readable text color for a solid fill, chosen by measuring both
  * candidates rather than by the CSS fallback's fitted lightness threshold.
  * Emitting this as a literal is what makes the studio's output correct in
  * every browser, including those without contrast-color().
@@ -100,7 +100,7 @@ export function validateSeed(seed: Oklch): SeedWarning[] {
     out.push({
       level: "warn",
       message:
-        "Outside the sRGB gamut. Browsers clip rather than gamut-map, which shifts the painted lightness — the 9/10 hover step can visually collapse, and the colour will differ between sRGB and P3 displays.",
+        "Outside the sRGB gamut. Browsers clip rather than gamut-map, which shifts the painted lightness — the 9/10 hover step can visually collapse, and the color will differ between sRGB and P3 displays.",
     });
   }
   if (seed.l < ENVELOPE.lMin) {

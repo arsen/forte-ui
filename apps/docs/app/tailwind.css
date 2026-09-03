@@ -67,7 +67,7 @@
 }
 
 /* Gradient-filled text. `background-clip: text` produces NO visible text at all
- * once forced-colors strips the gradient, so the fallback colour is set
+ * once forced-colors strips the gradient, so the fallback color is set
  * unconditionally and the clip is applied only where a gradient will actually
  * paint. Both halves of that guard have to survive together, which is the
  * argument for naming it. */

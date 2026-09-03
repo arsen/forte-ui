@@ -23,7 +23,7 @@ A month grid. It picks one day, a handful of days, or a range across as many mon
 import { Calendar } from "@forte-ui/react";
 ```
 
-One component, not a namespace of parts. A calendar's anatomy is generated from a date rather than composed by hand, so there is nothing useful to hand you the pieces of — what varies is which days are pickable and how they are labelled, and those are props.
+One component, not a namespace of parts. A calendar's anatomy is generated from a date rather than composed by hand, so there is nothing useful to hand you the pieces of — what varies is which days are pickable and how they are labeled, and those are props.
 
 It carries no date library and no locale tables. Month arithmetic goes through the `Date` constructor and every name on screen — months, weekdays, day numbers — comes from `Intl.DateTimeFormat`, which the browser already has. The whole component adds nothing to your bundle beyond itself.
 
@@ -142,7 +142,7 @@ What the grid says about itself:
 - Selected days, and every day between the two ends of a range, sit in cells marked `aria-selected`. A hover preview does not claim to be one: it is a guess, not a decision.
 - The month caption is a live region, so paging with the arrows — which changes nothing else a screen reader can see — is announced.
 - The weekday headers show two letters and announce the whole name. "Mo" is read as a word.
-- Under forced colors the selection repaints from the system `Highlight` pair, and outside days fall back to `GrayText` — they lose their muted colour otherwise and become indistinguishable from the month's own days.
+- Under forced colors the selection repaints from the system `Highlight` pair, and outside days fall back to `GrayText` — they lose their muted color otherwise and become indistinguishable from the month's own days.
 
 `footer` renders inside a `role="status"` region, which is where a summary like "3 nights selected" belongs: it is a consequence of the selection, and it should be announced when it changes without moving focus.
 

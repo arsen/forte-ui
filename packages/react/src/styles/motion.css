@@ -5,7 +5,7 @@
  *
  * This is the ONLY prefers-reduced-motion block in the library. Component
  * stylesheets must never write their own — they consume the tokens below and
- * get correct behaviour for free.
+ * get correct behavior for free.
  *
  * Two rules worth knowing before you use these:
  *
@@ -19,7 +19,7 @@
  *    never settles — the popup would stay in the DOM forever. Put spinners on
  *    an inner child instead.
  *
- * The defaults below sit on ':root' alone, unlike the colour ramps, which are
+ * The defaults below sit on ':root' alone, unlike the color ramps, which are
  * restated on '.forte-theme' / '[data-forte-theme]'. A ramp must be restated
  * because it is DERIVED from a seed a scope can override; these are literals,
  * so a scope has nothing to re-derive — and restating them would let every

@@ -14,7 +14,7 @@ export const metadata = {
 
 A scroll area is a box that scrolls, with the platform's scrollbars replaced by ones you can style — and with the edges of the content fading out towards whatever is still off-screen. Reach for it when a region needs to scroll independently of the page: a list in a panel, a log, a rail of cards, a tab strip too long for its container.
 
-Do not reach for it for the page itself. The document scrollbar is the one place where the platform's own behaviour — the OS overlay setting, scroll anchoring, find-in-page, the browser's own scroll restoration — matters more than a consistent look.
+Do not reach for it for the page itself. The document scrollbar is the one place where the platform's own behavior — the OS overlay setting, scroll anchoring, find-in-page, the browser's own scroll restoration — matters more than a consistent look.
 
 <DemoBlock id="scroll-area/basic" />
 
@@ -88,7 +88,7 @@ Three things are load-bearing in that arrangement, and all three are already han
 - **Arrowing to an off-screen tab scrolls it into view, clear of the fade.** The browser brings a newly focused tab into view on its own; the `scroll-margin` that every `.forte-focus-ring` element carries is what stops it landing right against the edge, half-faded, with its focus ring underneath the gradient.
 
 <Callout kind="a11y">
-  A scrollable strip adds one tab stop *before* the tabs — the viewport itself, which Base UI makes focusable so that a keyboard user can scroll a region that has no other controls in it. That is the correct behaviour, not a stray stop; SC 2.1.1 requires it. It disappears on its own when the strip fits.
+  A scrollable strip adds one tab stop *before* the tabs — the viewport itself, which Base UI makes focusable so that a keyboard user can scroll a region that has no other controls in it. That is the correct behavior, not a stray stop; SC 2.1.1 requires it. It disappears on its own when the strip fits.
 </Callout>
 
 ### Always-visible scrollbars, no fade
@@ -131,13 +131,13 @@ The focus ring is painted on `ScrollArea.Root` rather than on the viewport that 
 
 Keyboard focus anywhere in the region also reveals the scrollbars, so a keyboard user arrowing through a list has the same position feedback a pointer user gets on hover.
 
-Under `forced-colors`, under `prefers-contrast: more` and under `prefers-reduced-transparency`, the fade is dropped entirely and the scrollbars stop hiding. All three users have asked for the opposite of what a fade does — it is, by construction, a loss of contrast achieved by making text translucent — so the cue moves to the scrollbar, which is the half that survives a fixed palette. The tracks paint `Canvas` inside a `CanvasText` border and the thumbs paint `CanvasText`, because the UA assigns system colours from native element semantics and every part here is a `div`.
+Under `forced-colors`, under `prefers-contrast: more` and under `prefers-reduced-transparency`, the fade is dropped entirely and the scrollbars stop hiding. All three users have asked for the opposite of what a fade does — it is, by construction, a loss of contrast achieved by making text translucent — so the cue moves to the scrollbar, which is the half that survives a fixed palette. The tracks paint `Canvas` inside a `CanvasText` border and the thumbs paint `CanvasText`, because the UA assigns system colors from native element semantics and every part here is a `div`.
 
 ## How the fade works
 
 No JavaScript runs per frame, and there is no gradient overlay element anywhere in the DOM.
 
-Base UI publishes the remaining scroll distance on each of the four edges as CSS custom properties on the viewport — `--scroll-area-overflow-y-start`, `--scroll-area-overflow-y-end`, and the two `x` equivalents — as `px` lengths, already normalised for RTL and for the browsers that report a negative `scrollLeft` there. The stylesheet turns them into a mask:
+Base UI publishes the remaining scroll distance on each of the four edges as CSS custom properties on the viewport — `--scroll-area-overflow-y-start`, `--scroll-area-overflow-y-end`, and the two `x` equivalents — as `px` lengths, already normalized for RTL and for the browsers that report a negative `scrollLeft` there. The stylesheet turns them into a mask:
 
 ```css
 .viewport {
@@ -153,7 +153,7 @@ Base UI publishes the remaining scroll distance on each of the four edges as CSS
 
 Three consequences fall out of that shape:
 
-- **It is a mask, not an overlay.** A gradient overlay has to be painted in the colour of whatever sits behind the content, so it is wrong the moment the scroll area moves onto a card, an image or a themed surface, and it has to be re-set by hand each time. A mask fades the content itself to transparency, which is correct on every background including none.
+- **It is a mask, not an overlay.** A gradient overlay has to be painted in the color of whatever sits behind the content, so it is wrong the moment the scroll area moves onto a card, an image or a themed surface, and it has to be re-set by hand each time. A mask fades the content itself to transparency, which is correct on every background including none.
 - **The size *is* the scroll position.** `min()` takes the smaller of the configured fade size and the distance still scrollable, so the fade opens out of an edge as the content moves under it and is exactly `0px` while you are resting against that edge. There is deliberately no transition on it — easing a value that already is the scroll position would only make the fade lag the content it describes.
 - **The horizontal fade is logical.** A gradient's direction is physical, so the angle carries the sign: `calc(90deg * var(--forte-direction))` is `90deg` in LTR and `-90deg` in RTL, which makes the gradient's first stop the inline-start edge either way. Writing `to right` and swapping the two variables under `[dir="rtl"]` would break an LTR island inside an RTL page.
 

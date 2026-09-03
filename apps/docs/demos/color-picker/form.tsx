@@ -16,7 +16,7 @@ export default function ColorPickerForm() {
       }}
     >
       <ColorPicker.Root defaultValue="#22c55e">
-        <ColorPicker.Trigger>Theme colour</ColorPicker.Trigger>
+        <ColorPicker.Trigger>Theme color</ColorPicker.Trigger>
         {/* Next to the trigger, NOT inside the popup: the popup is portalled to
           * <body> and unmounted while it is closed, so a hidden input in there
           * is outside this form even when it exists. */}

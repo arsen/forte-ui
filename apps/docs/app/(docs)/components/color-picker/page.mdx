@@ -12,13 +12,13 @@ export const metadata = {
 
 # Color Picker
 
-Pick a colour from a preset palette, from a canvas, or by typing it — and read
+Pick a color from a preset palette, from a canvas, or by typing it — and read
 it back as HEX, RGB, HSL or OKLCH. Every part is opt-in, so the same component
 covers a nine-swatch brand palette and a full design-tool panel.
 
 <DemoBlock id="color-picker/basic" />
 
-Base UI has no colour-picker primitive, so this one is built here. It stands on
+Base UI has no color-picker primitive, so this one is built here. It stands on
 two that do exist: [`Popover`](/components/popover/) for the anchored surface,
 and Base UI's `Slider` for the hue and opacity rails — which is where their
 keyboard handling, pointer capture and RTL flip come from.
@@ -31,7 +31,7 @@ import { ColorPicker } from "@forte-ui/react";
 
 ## Anatomy
 
-`ColorPicker.Root` owns the colour and renders no element. Everything below it
+`ColorPicker.Root` owns the color and renders no element. Everything below it
 is optional; a picker is whichever parts you render.
 
 ```tsx
@@ -65,8 +65,8 @@ the page instead.
 
 ## The value
 
-`value` and `defaultValue` are CSS colour strings, and what comes back out of
-`onValueChange` is a CSS colour string in the current format. There is no colour
+`value` and `defaultValue` are CSS color strings, and what comes back out of
+`onValueChange` is a CSS color string in the current format. There is no color
 object to learn — the parsed forms are handed to you in the change details when
 you want them.
 
@@ -76,22 +76,22 @@ modern space form. A string that cannot be read is **ignored**, not thrown on,
 so a half-typed value in your own state never blanks the picker.
 
 <Callout kind="note">
-Named colours (`rebeccapurple`, `tomato`) are not accepted. Supporting them
+Named colors (`rebeccapurple`, `tomato`) are not accepted. Supporting them
 means shipping the 148-entry CSS keyword table in every bundle that touches the
 picker, for input the picker itself never produces. Convert once at the edge if
 you have them.
 </Callout>
 
-Colours outside the sRGB gamut — `oklch(0.7 0.4 30)` is a common one — are
+Colors outside the sRGB gamut — `oklch(0.7 0.4 30)` is a common one — are
 **gamut-mapped**, not clipped. Chroma is reduced at constant lightness and hue
-until the colour fits, so the hue you asked for survives; clipping each channel
+until the color fits, so the hue you asked for survives; clipping each channel
 at 0 and 1, which is the one-line version, changes the hue as well and hands
-back a different colour family.
+back a different color family.
 
 ### Formats
 
 `format` picks the notation, out of the four in `formats`. Switching it rewrites
-the *value*, not the colour: the same colour comes back as `#7c3aed`,
+the *value*, not the color: the same color comes back as `#7c3aed`,
 `rgb(124 58 237)`, `hsl(262.1 83.3% 57.8%)` or `oklch(0.5413 0.2466 293.01)`.
 
 That also fires `onValueChange` with reason `"format-change"`, so a controlled
@@ -100,7 +100,7 @@ That also fires `onValueChange` with reason `"format-change"`, so a controlled
 <DemoBlock id="color-picker/formats" />
 
 <Callout kind="note">
-HEX is eight bits a channel and the other three are not, so a colour written to
+HEX is eight bits a channel and the other three are not, so a color written to
 HEX and back is rounded. If your design system stores OKLCH, leave `hex` out of
 `formats` rather than trusting nobody will reach for it.
 </Callout>
@@ -108,7 +108,7 @@ HEX and back is rounded. If your design system stores OKLCH, leave `hex` out of
 ### Opacity
 
 Rendering `ColorPicker.AlphaSlider` is what turns alpha on. There is no prop:
-the picker omits alpha from every format while the colour is fully opaque, so a
+the picker omits alpha from every format while the color is fully opaque, so a
 picker without the rail emits `#7c3aed` and never `#7c3aedff`. A `defaultValue`
 that already carries alpha keeps it either way.
 
@@ -124,7 +124,7 @@ the answer has to stay on brand. `colors` takes any strings `value` accepts, and
 
 <DemoBlock id="color-picker/swatches" />
 
-The colours come from `colors`; children are not read. That is what lets the
+The colors come from `colors`; children are not read. That is what lets the
 group know its own order, which is what the single tab stop and the arrow keys
 are computed from. To build a row element by element — a "recently used" strip,
 say — use `ColorPicker.Swatch` on its own, where each swatch is an independent
@@ -139,19 +139,19 @@ from.
 <DemoBlock id="color-picker/controlled" />
 
 <Callout kind="note">
-A controlled picker still keeps its own hue internally, and it has to: a colour
-string cannot say which hue a black or a grey is, so a picker that re-read only
+A controlled picker still keeps its own hue internally, and it has to: a color
+string cannot say which hue a black or a gray is, so a picker that re-read only
 the string would swing its hue rail to red the moment the value passed through
 `#000`. A `value` that differs from the last string the picker emitted replaces
-the model; one that comes back unchanged is recognised as its own and left
+the model; one that comes back unchanged is recognized as its own and left
 alone.
 </Callout>
 
 ### The eyedropper
 
-`ColorPicker.EyeDropper` samples a colour from anywhere on the screen. Where the
+`ColorPicker.EyeDropper` samples a color from anywhere on the screen. Where the
 browser has no EyeDropper API — Firefox, and everything on iOS — it renders
-**nothing at all**, which is deliberate: it is a shortcut to a colour the rest of
+**nothing at all**, which is deliberate: it is a shortcut to a color the rest of
 the picker can already reach, so its absence costs a user nothing, while a
 button that opens no eyedropper costs them a click and their confidence in the
 rest of the panel.
@@ -160,7 +160,7 @@ rest of the panel.
 
 ### Triggers
 
-The trigger shows a swatch, then its children, then the current colour in a
+The trigger shows a swatch, then its children, then the current color in a
 visually hidden span — so a trigger with no children is still named, by the
 value itself.
 
@@ -168,7 +168,7 @@ value itself.
 
 ### In a form
 
-`ColorPicker.HiddenInput` submits the colour under a `name`.
+`ColorPicker.HiddenInput` submits the color under a `name`.
 
 <DemoBlock id="color-picker/form" />
 
@@ -223,12 +223,12 @@ stay announced as disabled instead of silently vanishing from the keyboard.
     {
       keys: ["Enter"],
       description:
-        "In the text field, applies the typed colour and rewrites it in its canonical form. Elsewhere, activates the control.",
+        "In the text field, applies the typed color and rewrites it in its canonical form. Elsewhere, activates the control.",
     },
     {
       keys: ["Escape"],
       description:
-        "Closes a popover picker. In the text field it also restores the canonical text — though the colour itself is already applied, since every keystroke that parses is.",
+        "Closes a popover picker. In the text field it also restores the canonical text — though the color itself is already applied, since every keystroke that parses is.",
     },
   ]}
 />
@@ -236,10 +236,10 @@ stay announced as disabled instead of silently vanishing from the keyboard.
 ## Accessibility
 
 <Callout kind="a11y">
-A 2D colour field has no ARIA role, so the canvas is expressed as what it
+A 2D color field has no ARIA role, so the canvas is expressed as what it
 actually is: **two sliders that share a thumb**. Each axis is a real
 `<input type="range">` — a genuine slider to assistive technology, with the
-keyboard behaviour built in rather than reimplemented — and an arrow key across
+keyboard behavior built in rather than reimplemented — and an arrow key across
 the axes moves focus to the other input, so the value that changes is the value
 that gets announced.
 </Callout>
@@ -247,23 +247,23 @@ that gets announced.
 The swatch grid is a `radiogroup`, not a row of buttons, because that is what it
 is: a set of mutually exclusive options with at most one current. It brings the
 whole convention with it — one tab stop for the group, arrow keys between
-swatches, and selection following focus — so a twenty-four colour palette costs a
+swatches, and selection following focus — so a twenty-four color palette costs a
 keyboard user one Tab instead of twenty-four.
 
 Two further notes:
 
-- **Colour is announced, not just shown.** `ColorPicker.Trigger` reads out the
+- **Color is announced, not just shown.** `ColorPicker.Trigger` reads out the
   current value after its label; `ColorPicker.Preview` is `aria-hidden`, since a
-  third announcement of the same colour on every drag frame is noise. For anyone
+  third announcement of the same color on every drag frame is noise. For anyone
   who cannot use a canvas at all, `ColorPicker.Input` is the exact route in and
   out, and it is why the text field is not optional in practice.
-- **Under forced colours**, the canvas, the rails, the swatches and the previews
-  opt out of substitution (`.forte-preserve-color`) and take a system-coloured
-  hairline as their boundary — because in this one component the colour *is* the
+- **Under forced colors**, the canvas, the rails, the swatches and the previews
+  opt out of substitution (`.forte-preserve-color`) and take a system-colored
+  hairline as their boundary — because in this one component the color *is* the
   content, and substituting it would leave four identical rectangles.
 
 The canvas deliberately does **not** mirror under RTL: it is a picture of a
-colour space, not a line of text, and the hue on the left of every other colour
+color space, not a line of text, and the hue on the left of every other color
 tool should not move because the surrounding paragraph runs the other way. The
 hue and opacity rails do mirror, because a slider's start follows the writing
 direction, and the gradients follow them.
@@ -284,20 +284,20 @@ would never reach it:
 
 | Property | Holds |
 | :-- | :-- |
-| `--forte-color-picker-color` | the current colour, alpha included |
-| `--forte-color-picker-solid` | the same colour at full alpha |
+| `--forte-color-picker-color` | the current color, alpha included |
+| `--forte-color-picker-solid` | the same color at full alpha |
 | `--forte-color-picker-hue` | its hue in degrees, unitless |
 | `--forte-color-picker-on-color` | `black` or `white`, whichever reads on it |
 
 Read them if you are skinning a part; do not set them.
 
 <Callout kind="note">
-Some colours in this component are deliberately **not** tokens, and should not
+Some colors in this component are deliberately **not** tokens, and should not
 become them. The canvas's two gradients and the hue rail's seven stops are the
-colour space itself — `white` at the left of the saturation axis is what
-saturation 0 *means*, and re-pointing it at a theme colour would not re-skin the
+color space itself — `white` at the left of the saturation axis is what
+saturation 0 *means*, and re-pointing it at a theme color would not re-skin the
 picker, it would make it lie. The handles are the same argument: they sit on
-colour the user chose, about which nothing is known, so they take a white ring
+color the user chose, about which nothing is known, so they take a white ring
 and a dark hairline rather than a token that is free to resolve to exactly the
 hue underneath them.
 </Callout>

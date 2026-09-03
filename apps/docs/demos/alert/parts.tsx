@@ -5,7 +5,7 @@ import { Alert } from "@forte-ui/react";
 export default function AlertParts() {
   return (
     <div className="grid w-full gap-3">
-      {/* Title only. The icon centres on the title's line box, so a one-line
+      {/* Title only. The icon centers on the title's line box, so a one-line
         * alert is exactly one line tall. */}
       <Alert.Root tone="info">
         <Alert.Icon />

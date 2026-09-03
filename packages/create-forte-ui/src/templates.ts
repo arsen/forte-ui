@@ -34,7 +34,7 @@ function joinBlocks(...blocks: string[]): string {
  * flipped without writing a line. Two spellings of the same corner, because
  * the Tailwind paths have utilities and the plain ones do not.
  *
- * `fixed` rather than in flow, so the page still centres the component it is
+ * `fixed` rather than in flow, so the page still centers the component it is
  * there to demonstrate — and the offsets are space tokens rather than `1rem`,
  * because this file is the first thing a new app is copied out of and a
  * hardcoded value here is the habit it teaches. */
@@ -101,7 +101,7 @@ createRoot(document.getElementById("root")!).render(
 `;
 }
 
-/** `toggle` is false when the answers pinned a colour scheme: `data-theme`
+/** `toggle` is false when the answers pinned a color scheme: `data-theme`
  *  then sits statically on `<html>` and a toggle would be a button whose one
  *  job is to fight it. The import goes with the element, so the starter
  *  still compiles clean under `noUnusedLocals`. */

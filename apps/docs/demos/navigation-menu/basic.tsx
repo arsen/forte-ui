@@ -10,7 +10,7 @@ const components = [
 ];
 
 const customization = [
-  { href: "/customization/theming", title: "Theming", description: "One seed colour rebuilds the whole palette." },
+  { href: "/customization/theming", title: "Theming", description: "One seed color rebuilds the whole palette." },
   { href: "/customization/tokens", title: "Design tokens", description: "Every value the library reads, in one table." },
   { href: "/customization/tailwind", title: "Tailwind", description: "The bridge that re-points Tailwind's theme." },
 ];
