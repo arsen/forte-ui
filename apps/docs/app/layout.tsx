@@ -15,6 +15,7 @@ import "./globals.css";
 import "./tailwind.css";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { Analytics } from "@/components/analytics";
 
 export const metadata: Metadata = {
@@ -85,6 +86,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               * is the one route with no columns, and it runs the full width
               * under the same bar. */}
             {children}
+            {/* The credit line and the project's three outbound links, on
+              * every route. Here rather than in the `(docs)` layout for the
+              * same reason as the bar above: the home page is outside that
+              * group, and it is the route a first-time reader lands on. */}
+            <SiteFooter />
           </div>
           {/* Page-view tracking. Inert without a measurement id in the env —
             * see `components/analytics.tsx` and `.env.example`. */}
