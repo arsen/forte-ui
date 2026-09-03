@@ -436,7 +436,7 @@ Pass `render={<Button />}` to compose the trigger with a styled button. Its own 
 
 ### Dialog.Root and AlertDialog.Root
 
-Neither root renders a DOM element, so neither accepts `className`, `style` or `ref`, and neither appears in the generated tables above. `Dialog.Root` forwards Base UI's root props unchanged; `AlertDialog.Root` forwards the same set minus `modal` and `disablePointerDismissal`. Both namespaces also expose `createHandle()` for driving a dialog from triggers rendered outside its `Root`.
+Neither root renders a DOM element, so neither accepts `className`, `style` or `ref`, and neither appears in the generated tables above. `Dialog.Root` forwards [Base UI's root props](https://base-ui.com/react/components/dialog) unchanged; `AlertDialog.Root` forwards the same set minus `modal` and `disablePointerDismissal`. Both namespaces also expose `createHandle()` for driving a dialog from triggers rendered outside its `Root`.
 
 ### useDialog()
 

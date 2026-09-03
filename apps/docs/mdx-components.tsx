@@ -1,4 +1,5 @@
 import type { MDXComponents } from "mdx/types";
+import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
 import { HEADING, PROSE_H1, PROSE_H2, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/components/styles";
@@ -77,15 +78,25 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <li className={cn("mb-1", className)} {...props} />
     ),
 
-    a: ({ className, ...props }: El<"a">) => (
-      <a
-        className={cn(
-          "text-primary-text underline decoration-1 underline-offset-[0.2em]",
-          className,
-        )}
-        {...props}
-      />
-    ),
+    /* An absolute `http(s)` href is another site — base-ui.com, MDN, a spec —
+     * and it opens in a new tab so the reader keeps their place in these docs.
+     * `rel="noreferrer"` also implies `noopener`, so the new page cannot reach
+     * back to this one. Everything else — a `/components/...` route, a
+     * `#section` anchor — is `next/link`, the same element the sidebar and the
+     * index cards use: a client-side transition that keeps the shell mounted,
+     * plus the viewport prefetch a plain `<a>` never gets. Without this the
+     * Tooltip page's link to Toast reloaded the whole document while the
+     * sidebar's link to the same page did not. */
+    a: ({ className, href = "", ...props }: El<"a">) => {
+      const classes = cn(
+        "text-primary-text underline decoration-1 underline-offset-[0.2em]",
+        className,
+      );
+      if (/^https?:\/\//.test(href)) {
+        return <a className={classes} href={href} target="_blank" rel="noreferrer" {...props} />;
+      }
+      return <Link className={classes} href={href} {...props} />;
+    },
 
     /* No `kbd` mapping, and not for lack of trying: a key cap in prose is the
      * library's own `<Kbd>`, but a lowercase element written as literal JSX —

@@ -151,7 +151,7 @@ State is on `data-size`, `data-shape`, `data-variant` and `data-tone`, and on th
 
 ## API reference
 
-`Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` forward every prop they do not consume to their Base UI counterpart, and take `render` for changing the underlying element. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS.
+`Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` forward every prop they do not consume to their [Base UI counterpart](https://base-ui.com/react/components/avatar), and take `render` for changing the underlying element. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS.
 
 `Avatar.Badge` and `Avatar.Group` have no Base UI counterpart to forward to. They are `<span>`s and take the whole span surface, `ref` included, but no `render`.
 

@@ -252,7 +252,7 @@ Both of these depend on the popup not being a scroll container. An out-of-flow c
 
 <PropTable component="DrawerRoot" />
 
-`Root` renders no DOM element, so it takes no `className`, `style` or `ref` — style the popup instead. It forwards every Base UI root prop unchanged: `open`, `defaultOpen`, `onOpenChange`, `onOpenChangeComplete`, `modal`, `disablePointerDismissal`, `actionsRef`, `handle`, `triggerId`, `defaultTriggerId`, `snapPoint`, `defaultSnapPoint`, `onSnapPointChange` and `snapToSequentialPoints`. The one it does not forward is `swipeDirection`, which `side` replaces — the two are the same fact stated twice, and a component that accepted both would let you contradict yourself.
+`Root` renders no DOM element, so it takes no `className`, `style` or `ref` — style the popup instead. It forwards every [Base UI root prop](https://base-ui.com/react/components/drawer) unchanged: `open`, `defaultOpen`, `onOpenChange`, `onOpenChangeComplete`, `modal`, `disablePointerDismissal`, `actionsRef`, `handle`, `triggerId`, `defaultTriggerId`, `snapPoint`, `defaultSnapPoint`, `onSnapPointChange` and `snapToSequentialPoints`. The one it does not forward is `swipeDirection`, which `side` replaces — the two are the same fact stated twice, and a component that accepted both would let you contradict yourself.
 
 `modal="trap-focus"` keeps focus inside the drawer while leaving page scroll and outside pointer interaction alone, which is the setting for a persistent inspector panel.
 
