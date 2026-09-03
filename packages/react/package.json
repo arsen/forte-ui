@@ -3,6 +3,12 @@
   "version": "1.0.0-beta.0",
   "description": "A React UI component library built on Base UI, styled with CSS Modules and a themeable CSS-variable design system.",
   "license": "MIT",
+  "homepage": "https://forte-ui.com",
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arsen/forte-ui.git",
+    "directory": "packages/react"
+  },
   "type": "module",
   "sideEffects": [
     "**/*.css"
