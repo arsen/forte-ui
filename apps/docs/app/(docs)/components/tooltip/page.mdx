@@ -45,8 +45,8 @@ hover-to-reveal feel, while the content stays announced and available on touch.
 If the trigger's purpose is unrelated to the popup, and the popup merely labels
 the control, it is a tooltip.
 
-For transient feedback such as "Copied!", reach for Base UI's `Toast` with its
-anchoring instead — unlike a tooltip, it is announced.
+For transient feedback such as "Copied!", reach for [`Toast`](/components/toast/)
+instead — unlike a tooltip, it is announced.
 
 ## Import
 
@@ -249,7 +249,8 @@ restacking a single tooltip goes through `positionerClassName` rather than
 ### Tooltip.Popup
 
 Renders the portal, the positioner and the popup as one part, so its props are
-drawn from all three.
+drawn from all three. Everything else passes through to the
+[Base UI parts](https://base-ui.com/react/components/tooltip) underneath.
 
 <PropTable component="TooltipPopup" />
 
