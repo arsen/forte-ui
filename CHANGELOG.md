@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-03
+
+### General
+
+- Added an MIT `LICENSE` file to each publishable package (`@forte-ui/react`, `forte-ui`, `create-forte-ui`).
+
 ## [1.0.0-beta.2] - 2026-09-02
 
 ### General
@@ -313,7 +319,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...v1.0.0
 [1.0.0-beta.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...v1.0.0-beta.2
 [1.0.0-beta.0]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.9...v1.0.0-beta.0
 [1.0.0-alpha.9]: https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...v1.0.0-alpha.9
