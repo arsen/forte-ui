@@ -103,7 +103,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <BaseButton
         ref={ref}
-        className={clsx(styles.root, "forte-focus-ring", className)}
+        className={clsx(styles.root, "forte-focus-ring", "forte-pressable", className)}
         data-forte="button"
         data-variant={variant}
         data-tone={tone}
