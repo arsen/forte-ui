@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
 import { CATALOG, CATEGORIES } from "./component-catalog";
 import { LINK_CARD, LINK_CARD_SURFACE, PROSE_H2 } from "./styles";
+import { categorySlug } from "@/lib/category-slug.mjs";
 
 /**
  * Every component in the library, as cards, grouped by category.
@@ -21,27 +22,21 @@ import { LINK_CARD, LINK_CARD_SURFACE, PROSE_H2 } from "./styles";
  * page's MDX, because a category the library adds would then need a hand edit
  * to appear — the drift this whole path exists to remove.
  *
- * The cost is that `build-toc.mjs`, which reads headings out of the MDX AST,
- * sees none, so this route has no seed in `toc-registry.ts` and its rail is
- * assembled from the DOM on mount instead of arriving in the server HTML.
- * `Toc` is built for that case and says so at length; the home page's
- * `<h2 id>`s are the same shape. One route, one frame.
+ * `build-toc.mjs`, which reads headings out of the MDX AST, therefore sees
+ * none here — so it seeds this route from the same `components.json` the
+ * catalog is built from, one heading per category, with the id from
+ * `categorySlug` below. That is what puts the rail in the server HTML for
+ * this page too; before it, the rail and the phone's drawer button were
+ * assembled from the DOM on mount and appeared a frame after everything
+ * else. `Toc` still reconciles against the DOM, as on every page.
  */
-
-/* Not github-slugger's, which is what `rehype-slug` gives the MDX headings, and
- * it does not need to be: nothing links to these from another page, and the
- * rail reads its ids off the DOM. It is the readable answer for the one
- * category with punctuation in it — `content-layout`, where the slugger's
- * literal reading of "Content & layout" would be `content--layout`. */
-const slug = (category: string) =>
-  category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export function ComponentIndex() {
   return (
     <>
       {CATEGORIES.map((category) => (
-        <section key={category} aria-labelledby={slug(category)}>
-          <h2 id={slug(category)} className={PROSE_H2}>
+        <section key={category} aria-labelledby={categorySlug(category)}>
+          <h2 id={categorySlug(category)} className={PROSE_H2}>
             {category}
           </h2>
           {/* `auto-fill`, not `auto-fit`: with a category down to two entries,

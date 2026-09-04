@@ -32,12 +32,14 @@
  *   pnpm --filter @forte-ui/docs toc
  */
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createProcessor } from "@mdx-js/mdx";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import extractToc from "@stefanprobst/rehype-extract-toc";
+import { categorySlug } from "../lib/category-slug.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const appDir = join(root, "app");
@@ -96,6 +98,29 @@ for (const page of pages) {
   // below two. Emitting those rows would only make them flicker away on mount.
   if (headings.length >= 2) entries.push({ route: page.route, headings });
 }
+
+/* The component index is the one page whose headings the MDX walk above
+ * cannot see: its `##`s are the category headings `component-index.tsx`
+ * renders as JSX from the catalog, so that a category the library adds
+ * appears without a hand edit. Without a seed the route rendered with no
+ * rail at all, and on a phone the drawer button popped into the app bar a
+ * frame after the page — the one visible case of the fallback `Toc` is
+ * built for.
+ *
+ * So the seed comes from where the headings come from. This is the same
+ * `components.json` that `build-catalog.mjs` turns into `CATEGORIES`, read
+ * the same way (through the package's exports map) and reduced the same way
+ * (first-seen order, deduplicated), with the id from the same `categorySlug`
+ * the page puts on the `<h2>`. Reading the JSON rather than the generated
+ * `component-catalog.ts` is what keeps this independent of which of the two
+ * generators ran first. */
+const catalog = createRequire(import.meta.url)("@forte-ui/react/docs-data/components.json");
+const categories = [...new Set(catalog.map((entry) => entry.category))];
+entries.push({
+  route: "/components/",
+  headings: categories.map((category) => ({ id: categorySlug(category), text: category, depth: 2 })),
+});
+
 entries.sort((a, b) => a.route.localeCompare(b.route));
 
 const out = `/**
