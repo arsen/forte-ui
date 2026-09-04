@@ -3,7 +3,7 @@ import { Badge, Button } from "@forte-ui/react";
 import { Logo } from "../logo";
 import { HeroThemer } from "./hero-themer";
 import { LEAD } from "../styles";
-import { LIBRARY_VERSION, RELEASE_URL } from "@/lib/version";
+import { LIBRARY_VERSION, PACKAGE_URL } from "@/lib/version";
 import { cn } from "@/lib/cn";
 
 /**
@@ -37,8 +37,8 @@ export function Hero() {
       >
         <Logo className="h-auto w-full" />
       </div>
-      {/* The version, between the mark and the headline, linking to its
-        * GitHub release. It is the same constant the app bar prints — one
+      {/* The version, between the mark and the headline, linking to the
+        * package on npm. It is the same constant the app bar prints — one
         * import, `lib/version.ts` — and the reason the bar can hide its copy
         * on a phone: this one is a scroll away on every screen. `neutral`
         * and `soft`, so it sits under the logo as a caption rather than
@@ -47,7 +47,7 @@ export function Hero() {
         tone="neutral"
         shape="pill"
         className="mb-4 font-mono"
-        render={<a href={RELEASE_URL} target="_blank" rel="noreferrer" />}
+        render={<a href={PACKAGE_URL} target="_blank" rel="noreferrer" />}
       >
         v{LIBRARY_VERSION}
       </Badge>

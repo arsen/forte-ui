@@ -18,5 +18,10 @@ import pkg from "@forte-ui/react/package.json";
  */
 export const LIBRARY_VERSION: string = pkg.version;
 
-/** The GitHub release the version pill links to. */
-export const RELEASE_URL = `https://github.com/arsen/forte-ui/releases/tag/v${LIBRARY_VERSION}`;
+/**
+ * The npm page the version pill links to — the versioned one, so it shows the
+ * release the site was built against rather than whatever is `latest` by the
+ * time somebody clicks. A reader who taps a version number wants the package
+ * they are about to install, not the commit range behind it.
+ */
+export const PACKAGE_URL = `https://www.npmjs.com/package/@forte-ui/react`;

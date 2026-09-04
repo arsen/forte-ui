@@ -10,7 +10,7 @@ import { NavDrawer, TocDrawer } from "./shell-drawers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { routeKey } from "@/lib/route";
-import { LIBRARY_VERSION, RELEASE_URL } from "@/lib/version";
+import { LIBRARY_VERSION, PACKAGE_URL } from "@/lib/version";
 import { cn } from "@/lib/cn";
 
 /**
@@ -114,8 +114,8 @@ export function SiteHeader() {
           variant="outline"
           shape="pill"
           className="max-nav:hidden font-mono"
-          title={`Release ${LIBRARY_VERSION} on GitHub`}
-          render={<a href={RELEASE_URL} target="_blank" rel="noreferrer" />}
+          title={`@forte-ui/react ${LIBRARY_VERSION} on npm`}
+          render={<a href={PACKAGE_URL} target="_blank" rel="noreferrer" />}
         >
           v{LIBRARY_VERSION}
         </Badge>
