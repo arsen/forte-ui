@@ -148,6 +148,8 @@ Components.
   compound · parts (props.json): ProgressRoot, ProgressLabel, ProgressValue, ProgressTrack, ProgressIndicator · knobs: theming.json → Progress
 - **ProgressCircle** — The circular Progress — a ring for tight spaces; same determinate/indeterminate contract as the bar.
   documented with Progress · compound · parts (props.json): ProgressCircleRoot, ProgressCircleTrack, ProgressCircleIndicator, ProgressCircleValue, ProgressCircleLabel · knobs: theming.json → ProgressCircle
+- **Shimmer** — An animated highlight sweeping through text that is itself the status message; for a placeholder standing in for content, use Skeleton.
+  props.json: Shimmer · knobs: theming.json → Shimmer
 - **Skeleton** — A loading placeholder that occupies exactly the space the real content will, so the page doesn't jump when data lands.
   compound · parts (props.json): SkeletonRoot, SkeletonText, SkeletonGroup · knobs: theming.json → Skeleton
 - **Spinner** — An indeterminate busy indicator for waits with no measurable progress; when progress is known, use Progress.

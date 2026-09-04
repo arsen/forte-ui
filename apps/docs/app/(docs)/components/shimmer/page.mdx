@@ -1,0 +1,165 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Shimmer",
+  description:
+    "A band of light sweeping through a run of text — the wait indicator for text that is itself the message.",
+};
+
+# Shimmer
+
+Use a shimmer when the text on screen *is* the status — "Generating
+response…", "Thinking", a title still being written — and a
+[`Spinner`](/components/spinner/) beside it would say the same thing twice.
+It is not a placeholder: a [`Skeleton`](/components/skeleton/) stands in for
+content that has not arrived, while a shimmer plays over words that already
+have. If the wait has a measurable end, show a
+[`Progress`](/components/progress/) bar instead.
+
+<DemoBlock id="shimmer/basic" />
+
+The text stays real text. It is selectable, a screen reader reads it as
+written, and it keeps whatever color it inherited — only the paint changes,
+and only while `active`. The gradient is clipped to the glyphs, so nothing is
+drawn outside the letters and nothing sits on top of them.
+
+## Import
+
+```tsx
+import { Shimmer } from "@forte-ui/react";
+```
+
+## Examples
+
+### Turning it off
+
+`active` is a flag, not a mount. The same `<span>` renders in both states, so a
+label can go from working to done without anything around it moving.
+
+<DemoBlock id="shimmer/active" />
+
+### Speed
+
+Speed is one knob, `--forte-shimmer-duration`: the length of one cycle, from
+the band entering one edge of the text to leaving the other. It defaults to
+`--forte-duration-loop-sweep` (1400ms) and is set in a `style` object, the way
+every component's knobs are.
+
+<DemoBlock id="shimmer/speed" />
+
+### Once
+
+A single pass says *look here*, where a loop says *still waiting*. The band
+holds its last frame off the far edge, so the text ends up plain.
+
+<DemoBlock id="shimmer/once" />
+
+<Callout kind="note">
+  A finished `once` sweep is holding its final keyframe, and changing a prop
+  does not rewind it. To play it again, remount the element — a `key` that
+  changes with each run, as in the demo.
+</Callout>
+
+### Direction
+
+The sweep follows the reading direction, multiplying its travel by
+`--forte-direction`, so it runs right-to-left in RTL without being told. Flip
+the frame above to RTL to see it. `reverse` runs against the reading direction
+in either mode.
+
+<DemoBlock id="shimmer/direction" />
+
+### Reduced motion
+
+<DemoBlock id="shimmer/reduced-motion" />
+
+Under reduced motion the band does not travel, and it is not drawn: the travel
+is gated on `--forte-motion-ok`, and the band's color is mixed back into
+`currentColor` by `--forte-motion-off`, so what is left is the text in its own
+color. There is deliberately no fallback pulse, and that is a departure from
+[`Skeleton`](/components/skeleton/), whose shimmer degrades into a breathe.
+
+The two differ because of what the animation is playing over. A skeleton that
+stops moving reads as content that failed, so it has to keep some cue alive.
+Here the text is the content, and it already carries the message in words.
+Dimming "Generating…" on a loop would spend the reader's contrast to say what
+the word says — the wrong trade for someone who has asked for less.
+
+<Callout kind="a11y">
+  The loop duration is never shortened. `--forte-duration-loop-sweep` is
+  1400ms in every motion state, including `data-forte-motion="off"`. The rest of
+  the system collapses durations toward `1ms`, but a *repeating* animation
+  driven to 1ms flashes at around 1000Hz — a WCAG 2.3.1 seizure hazard, which
+  is the opposite of an accessibility win.
+</Callout>
+
+### Theming
+
+<DemoBlock id="shimmer/theming" />
+
+## Accessibility
+
+There is nothing to announce and nothing to hide. The shimmer is a paint
+effect on text that would be on the page anyway, so the text is in the
+accessibility tree exactly as written, and the effect is not. That is the
+reason it does no `role="status"` of its own: if "Generating response…"
+should be announced when it appears, the live region belongs to the container
+that swaps the message in, the same way the [`Spinner`](/components/spinner/)
+page recommends — and it should not be announced twice.
+
+Under forced colors the fill is put back and the gradient dropped. Forced
+colors remaps `color` to `CanvasText` but does not remap `background-image`
+or the transparent fill the clip relies on, so left alone the glyphs would be
+painted in our gradient — a gray band in a theme whose entire promise is that
+the page uses the user's colors. The text is the message, and it is still
+there.
+
+It is a `<span>`, `display: inline`, so it wraps with the sentence it sits
+in. It is not in the tab order and has no cursor of its own.
+
+## Theming
+
+Everything below is declared on the shimmer itself, which is also why an
+ancestor is the wrong place to set one — the element's own declaration beats
+an inherited value. Override them through `className` or a `style` object.
+
+<ThemingTable component="Shimmer" part="root" />
+
+`--forte-shimmer-color` is not a plain semantic reference, and the reason is
+worth knowing. "A light passing over the ink" is drawn differently against a
+light page and a dark one, so the default is a `light-dark()` pair, each
+branch derived from `currentColor`. In light mode the band is the text at a
+fifth of its alpha: the page shows through the glyphs, which reads as a gleam
+without needing a color lighter than the ink. In dark mode a faded band would
+read as a dip, so the band is lifted toward white and made more opaque
+instead. Either way the same shimmer sits in muted prose, in a solid button
+and on an inverted tooltip without a tone prop.
+
+<Callout kind="note">
+  The dark branch has a floor built in: on text that is already white there
+  is nowhere lighter to go, and the band disappears. The component is tuned
+  for the muted status line it is meant for. On headline-weight text in dark
+  mode, set `--forte-shimmer-color` yourself — the accent recipe above is one
+  answer.
+</Callout>
+
+`--forte-shimmer-spread` is the band's half-width, and it is a length rather
+than a fraction of the text, so a one-word label and a whole sentence get the
+same band instead of one the width of the line. It is part `ch` so it scales
+with the type and part a fixed run so a small label still gets a visible
+gleam.
+
+State is on `data-active`, `data-once` and `data-reverse`, all reachable from
+plain CSS or a Tailwind arbitrary variant — `data-[active]:...` — without a
+wrapper element.
+
+## API reference
+
+There is no Base UI counterpart to forward to. `Shimmer` is a `<span>` and
+takes that element's whole surface — `id`, `style`, `data-*`, `ref` — but no
+`render` prop.
+
+<PropTable component="Shimmer" />

@@ -542,6 +542,9 @@ export type {
   SeparatorVariant,
 } from "./components/separator";
 
+export { Shimmer } from "./components/shimmer";
+export type { ShimmerProps } from "./components/shimmer";
+
 export { Skeleton } from "./components/skeleton";
 export type {
   SkeletonVariant,

@@ -95,6 +95,7 @@ export const CATALOG: CatalogEntry[] = [
   { name: "Table", title: "Table", href: "/components/table/", category: "Content & layout", summary: "Rows and columns of data on a real `<table>` — variants, sizes, striping, selection tint, numeric columns, sortable headers and a sticky header; the data, sorting and selection state stay with the consumer.", partOf: null },
   { name: "Progress", title: "Progress", href: "/components/progress/", category: "Feedback", summary: "A linear progress bar — determinate when passed a number, indeterminate when passed null; the circular form is ProgressCircle.", partOf: null },
   { name: "ProgressCircle", title: "Progress Circle", href: "/components/progress/#progresscircle", category: "Feedback", summary: "The circular Progress — a ring for tight spaces; same determinate/indeterminate contract as the bar.", partOf: "Progress" },
+  { name: "Shimmer", title: "Shimmer", href: "/components/shimmer/", category: "Feedback", summary: "An animated highlight sweeping through text that is itself the status message; for a placeholder standing in for content, use Skeleton.", partOf: null },
   { name: "Skeleton", title: "Skeleton", href: "/components/skeleton/", category: "Feedback", summary: "A loading placeholder that occupies exactly the space the real content will, so the page doesn't jump when data lands.", partOf: null },
   { name: "Spinner", title: "Spinner", href: "/components/spinner/", category: "Feedback", summary: "An indeterminate busy indicator for waits with no measurable progress; when progress is known, use Progress.", partOf: null },
 ];
@@ -151,6 +152,7 @@ export const COMPONENT_PAGES: { title: string; href: string }[] = [
   { title: "Scroll Area", href: "/components/scroll-area/" },
   { title: "Select", href: "/components/select/" },
   { title: "Separator", href: "/components/separator/" },
+  { title: "Shimmer", href: "/components/shimmer/" },
   { title: "Skeleton", href: "/components/skeleton/" },
   { title: "Slider", href: "/components/slider/" },
   { title: "Spinner", href: "/components/spinner/" },
