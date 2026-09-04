@@ -19,6 +19,18 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.1.1
+
+<ReleaseMeta date="2026-09-04" href="https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1" kind="compare" />
+
+### NavList
+
+- Added press feedback to `NavList.Link` rows: the same hover lift and press squash as `Button`, via the new shared `.forte-pressable` pattern, so rows and buttons feel like one control set.
+
+### Design tokens & motion
+
+- Extracted Button's press geometry (hover lift, press squash, spring release) into a shared `.forte-pressable` class in `patterns.css` that any interactive part can compose for the same feel. It reads generic `--forte-press-lift` / `-hover-scale` / `-scale` / `-duration` / `-ease` slots, falling back to Button's own defaults when a component maps nothing onto them.
+
 ## v1.1.0
 
 <ReleaseMeta date="2026-09-04" href="https://github.com/arsen/forte-ui/compare/v1.0.1...v1.1.0" kind="compare" />
@@ -298,33 +310,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 - Fixed `data-icon-only` on `Toggle` being erased when composed via `render`,
   the same class of bug fixed on `Button`.
 
-## v1.0.0-alpha.2
-
-<ReleaseMeta date="2026-08-30" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2" kind="compare" />
-
-### NavList
-
-- **Breaking:** the `marker` prop's `"rail"` option is now `"edge"`. The
-  active-row cue is repainted as the row's own inline-start border (so it now
-  follows the row's corner radius) instead of a separately-inset bar; the
-  theming knobs move with it — `--forte-nav-list-rail-width` /
-  `--forte-nav-list-rail-color` are renamed to `--forte-nav-list-edge-width` /
-  `--forte-nav-list-edge-color`, and `--forte-nav-list-rail-inset` is removed
-  (the border now runs the row's full height, so there is nothing left to
-  inset).
-- Added a `revealActive` prop: when set, the active row scrolls into view on
-  mount or when it becomes active, without moving a container it doesn't own or
-  fighting the browser's own scroll restoration. The landing offset is
-  controlled by the new `--forte-nav-list-reveal-margin` token.
-
-### General
-
-- Added the unscoped `forte-ui` package as a functional alias of
-  `@forte-ui/react`. It re-exports the root entry along with the `cn` and
-  `tailwind-merge` subpaths, and proxies `theme.css` / `tailwind.css` via
-  `@import`. Its version tracks `@forte-ui/react` release-for-release, so
-  `forte-ui@X.Y.Z` always installs `@forte-ui/react@X.Y.Z`.
-
 ## Full history
 
-This page carries the 10 most recent releases. The one release before them — back to v1.0.0-alpha.1 on August 30, 2026 — is in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 2 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

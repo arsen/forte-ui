@@ -12,6 +12,9 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v111", text: "v1.1.1", depth: 2 },
+    { id: "navlist", text: "NavList", depth: 3 },
+    { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
     { id: "v110", text: "v1.1.0", depth: 2 },
     { id: "shimmer", text: "Shimmer", depth: 3 },
     { id: "v101", text: "v1.0.1", depth: 2 },
@@ -25,7 +28,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "drawer", text: "Drawer", depth: 3 },
     { id: "select", text: "Select", depth: 3 },
     { id: "tabs", text: "Tabs", depth: 3 },
-    { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
+    { id: "design-tokens--motion-1", text: "Design tokens & motion", depth: 3 },
     { id: "create-forte-ui-1", text: "create-forte-ui", depth: 3 },
     { id: "general-2", text: "General", depth: 3 },
     { id: "v100-alpha9", text: "v1.0.0-alpha.9", depth: 2 },
@@ -38,7 +41,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "carousel", text: "Carousel", depth: 3 },
     { id: "dialog", text: "Dialog", depth: 3 },
     { id: "drawer-1", text: "Drawer", depth: 3 },
-    { id: "design-tokens--motion-1", text: "Design tokens & motion", depth: 3 },
+    { id: "design-tokens--motion-2", text: "Design tokens & motion", depth: 3 },
     { id: "v100-alpha7", text: "v1.0.0-alpha.7", depth: 2 },
     { id: "button", text: "Button", depth: 3 },
     { id: "calendar", text: "Calendar", depth: 3 },
@@ -50,7 +53,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "themetoggle", text: "ThemeToggle", depth: 3 },
     { id: "tooltip", text: "Tooltip", depth: 3 },
     { id: "create-forte-ui-2", text: "create-forte-ui", depth: 3 },
-    { id: "design-tokens--motion-2", text: "Design tokens & motion", depth: 3 },
+    { id: "design-tokens--motion-3", text: "Design tokens & motion", depth: 3 },
     { id: "general-3", text: "General", depth: 3 },
     { id: "v100-alpha3", text: "v1.0.0-alpha.3", depth: 2 },
     { id: "button-1", text: "Button", depth: 3 },
@@ -60,9 +63,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "scrollarea", text: "ScrollArea", depth: 3 },
     { id: "tabs-2", text: "Tabs", depth: 3 },
     { id: "toggle", text: "Toggle", depth: 3 },
-    { id: "v100-alpha2", text: "v1.0.0-alpha.2", depth: 2 },
-    { id: "navlist", text: "NavList", depth: 3 },
-    { id: "general-4", text: "General", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
