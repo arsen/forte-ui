@@ -157,3 +157,15 @@ export const LEAD = "text-4 leading-[1.6] text-foreground-muted text-pretty";
  */
 export const STICKY_COLUMN =
   "sticky top-(--forte-app-bar-h-md) max-h-[calc(100dvh-var(--forte-app-bar-h-md))] self-start overflow-y-auto py-6 [scrollbar-width:thin]";
+
+/**
+ * A link in running text.
+ *
+ * Two things render one: the `a` mapping in `mdx-components.tsx`, for every
+ * markdown link a page writes, and `ReleaseMeta`, whose link is literal JSX and
+ * so never passes through that mapping. The underline is the second cue beside
+ * color (SC 1.4.1): the site's link reset in globals.css strips
+ * `text-decoration` from every `<a>`, so a link that does not put it back is
+ * told apart from the sentence around it by hue alone.
+ */
+export const PROSE_LINK = "text-primary-text underline decoration-1 underline-offset-[0.2em]";

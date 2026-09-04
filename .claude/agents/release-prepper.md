@@ -149,8 +149,25 @@ the draft. Then:
    for the new version and confirm none still carries the old one, and confirm the new changelog
    section sits between `## [Unreleased]` and the previous version's heading
    — not at the bottom of the file.
-5. Do not run generators, tests, or git commands that mutate anything. The
-   working tree diff is the deliverable — the user reviews and commits it.
+5. **Regenerate the site's changelog page.** The docs' `/changelog/` route
+   is generated from the file you just wrote, and `pnpm release` refuses a
+   tree whose build changes a tracked file — so the page has to move with
+   the changelog, in the same diff. Run, from the repository root:
+
+   ```bash
+   pnpm --filter @forte-ui/docs changelog && pnpm --filter @forte-ui/docs toc
+   ```
+
+   The first writes `apps/docs/app/(docs)/changelog/page.mdx`; the second
+   refreshes `apps/docs/components/toc-registry.ts`, the section rail's seed,
+   which now lists the new release's headings. If `changelog` fails, its
+   error names the `CHANGELOG.md` line at fault — a heading not shaped
+   `## [<version>] - <date>`, a missing link definition, or an entry MDX
+   cannot compile (a bare `<` or `{` outside a code span). Fix that line in
+   `CHANGELOG.md` and re-run; never edit the generated page.
+6. Do not run any other generator, tests, or git commands that mutate
+   anything. The working tree diff is the deliverable — the user reviews
+   and commits it.
 
 ## Abort instead of guessing
 
@@ -176,6 +193,6 @@ CHANGELOG:
 QUESTIONS: none | <one line per genuine ambiguity — an entry you could not
   classify, a change you could not tell was breaking, a commit whose intent
   the diff does not reveal>
-FILES: <files written, or "none">   # applied: CHANGELOG.md, every publishable package.json, apps/docs/package.json
+FILES: <files written, or "none">   # applied: CHANGELOG.md, every publishable package.json, apps/docs/package.json, the two regenerated docs files
 NOTES: <suspected generated-file drift, abort reason, or "none">
 ```
