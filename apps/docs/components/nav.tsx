@@ -41,6 +41,7 @@ const NAV: NavGroup[] = [
       { title: "Vite", href: "/getting-started/vite/" },
       { title: "AI agents", href: "/getting-started/ai-agents/" },
       { title: "Theme Studio", href: "/theme/" },
+      { title: "Changelog", href: "/changelog/" },
     ],
   },
   {

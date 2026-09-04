@@ -43,6 +43,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/(docs)/layout.tsx            the docs shell: sidebar · page column · section rail
   app/(docs)/components/page.mdx          the component index — cards, from the catalog
   app/(docs)/components/<name>/page.mdx   the written page
+  app/(docs)/changelog/page.mdx    GENERATED — the ten most recent releases, from the root CHANGELOG.md
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
@@ -72,7 +73,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
 ```bash
 pnpm dev                                    # docs site at :3000
 pnpm build                                  # everything
-pnpm generate                               # re-run ALL five generators
+pnpm generate                               # re-run ALL six generators
 pnpm typecheck                              # the real gate — there is no linter
 pnpm test                                   # contrast harness (--fine) + popup parity
 pnpm release                                # build packages/*, preview, confirm, publish
@@ -80,7 +81,8 @@ pnpm release                                # build packages/*, preview, confirm
 
 `pnpm generate` is the one to reach for after editing a source of truth while
 the dev server is already running — it fans out to `generate` in both packages
-(`tokens && docgen` in the library, `registry && toc && catalog` in the docs).
+(`tokens && docgen` in the library, `registry && changelog && toc && catalog`
+in the docs).
 The two used to run in parallel. They no longer can: `build-catalog.mjs` reads
 the library's `docs-data/components.json` to resolve every component page, so
 turbo orders the docs behind the library with `^generate` — otherwise a run that
@@ -99,6 +101,7 @@ pnpm --filter @forte-ui/react docgen         # props.json + theming.json
 pnpm --filter @forte-ui/react check:contrast # the ramp gate
 pnpm --filter @forte-ui/react check:parity   # the popup-parity gate
 pnpm --filter @forte-ui/docs registry  # the demo registry
+pnpm --filter @forte-ui/docs changelog # the changelog page
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
 pnpm --filter @forte-ui/docs catalog   # the component index + the sidebar
 ```
@@ -128,6 +131,7 @@ catch things.
 | `packages/react/docs-data/theming.json` | `/** … */` doc comments in component `.module.css` | `docgen` |
 | `packages/react/docs-data/tokens.json` | every `--forte-*` declaration in `src/styles/*.css` | `docgen` |
 | `apps/docs/demos/registry.ts` | the files in `demos/` | `registry` |
+| `apps/docs/app/(docs)/changelog/page.mdx` | the root `CHANGELOG.md` — its ten most recent releases | `changelog` |
 | `apps/docs/components/toc-registry.ts` | the h2/h3 headings in `app/**/page.mdx` | `toc` |
 | `apps/docs/components/component-catalog.ts` | `docs-data/components.json` + the dirs under `app/(docs)/components/` | `catalog` |
 
@@ -155,7 +159,7 @@ the blocks from one table makes that class of mistake impossible. Do not
 
 ### When to run a generator
 
-A cold `pnpm dev` or `pnpm build` runs all five for you: turbo's `dev` depends
+A cold `pnpm dev` or `pnpm build` runs all six for you: turbo's `dev` depends
 on `^build`, and both packages' `build` now starts with their own `generate` —
 `generate && vite build` in the library, `generate && next build` in the docs.
 That chaining is why the per-package `generate` scripts exist at all rather than
@@ -176,6 +180,7 @@ which does not re-run `tokens` or `docgen`.
 | a theming knob in a `.module.css` — added, renamed, its default or its `/** … */` doc comment | `docgen` |
 | any `--forte-*` declaration in `src/styles/*.css` — added, renamed, removed, its value or selector | `docgen` (rebuilds `tokens.json`; after a `ramp.mjs` / `motion.mjs` change run `tokens` first) |
 | the *set* of files in `apps/docs/demos/` — added, renamed, moved, deleted | `registry` |
+| a release section in the root `CHANGELOG.md` — added, or an entry reworded | `changelog`, then `toc` |
 | an `##` / `###` heading in a `page.mdx` — added, renamed, reordered, removed | `toc` |
 
 Nothing to regenerate when you edit the prose of an MDX page, a docs component,
@@ -745,6 +750,18 @@ So: make the change, and stop. If a change genuinely needs a note the diff
 cannot carry — a migration step, a reason a breaking change was worth it — say
 it in the PR body or the commit message, which is where `/release-prep` reads
 from.
+
+The site's `/changelog/` page is GENERATED from the file —
+`apps/docs/scripts/build-changelog.mjs` emits the ten most recent releases as
+an MDX page, verbatim, with a link to the file for the rest — so an entry is
+fixed in `CHANGELOG.md` and nowhere else, and a release edit is not finished
+until `pnpm --filter @forte-ui/docs changelog` and `toc` have run and their
+output is committed alongside it. `/release-prep` does that in its APPLY
+phase; miss it by hand and `pnpm release` refuses the tree, because the
+build's generators change a tracked file. The script is also a gate: a
+heading that is not `## [<version>] - <YYYY-MM-DD>`, a version with no link
+definition at the foot, or an entry MDX cannot compile (a bare `<` or `{`
+outside a code span) fails the build naming the `CHANGELOG.md` line.
 
 `CHANGELOG.md` at the repo root follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and is ordered

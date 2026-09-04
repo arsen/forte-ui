@@ -2,7 +2,16 @@ import type { MDXComponents } from "mdx/types";
 import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
-import { HEADING, PROSE_H1, PROSE_H2, TABLE, TABLE_CELL, TABLE_HEAD, TABLE_WRAP } from "@/components/styles";
+import {
+  HEADING,
+  PROSE_H1,
+  PROSE_H2,
+  PROSE_LINK,
+  TABLE,
+  TABLE_CELL,
+  TABLE_HEAD,
+  TABLE_WRAP,
+} from "@/components/styles";
 
 /**
  * Next looks for this file by convention to resolve MDX element mappings.
@@ -88,10 +97,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
      * Tooltip page's link to Toast reloaded the whole document while the
      * sidebar's link to the same page did not. */
     a: ({ className, href = "", ...props }: El<"a">) => {
-      const classes = cn(
-        "text-primary-text underline decoration-1 underline-offset-[0.2em]",
-        className,
-      );
+      const classes = cn(PROSE_LINK, className);
       if (/^https?:\/\//.test(href)) {
         return <a className={classes} href={href} target="_blank" rel="noreferrer" {...props} />;
       }

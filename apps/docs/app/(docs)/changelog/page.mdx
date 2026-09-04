@@ -1,0 +1,356 @@
+{/*
+ * GENERATED FILE — do not edit by hand.
+ * Regenerate with:  pnpm --filter @forte-ui/docs changelog
+ *
+ * The 10 most recent releases in the repository's CHANGELOG.md, verbatim.
+ * That file is the record — `/release-prep` writes it — and this page is
+ * derived from it, so a fix to an entry belongs there, not here.
+ */}
+
+import { ReleaseMeta } from "@/components/release-meta";
+
+export const metadata = {
+  title: "Changelog",
+  description:
+    "What changed in each release of the forte-ui packages — the 10 most recent releases, newest first, with a link to the full history.",
+};
+
+# Changelog
+
+What changed in each release, newest first. Breaking changes are marked **Breaking**.
+
+## v1.0.1
+
+<ReleaseMeta date="2026-09-03" href="https://github.com/arsen/forte-ui/compare/v1.0.0...v1.0.1" kind="compare" />
+
+### create-forte-ui
+
+- Fixed the Next.js + Tailwind starter layout to import `globals.css` before `@forte-ui/react`, preserving the intended cascade-layer order (`theme, base, forte, components, utilities`) so Preflight no longer wins over the library's components.
+
+## v1.0.0
+
+<ReleaseMeta date="2026-09-03" href="https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...v1.0.0" kind="compare" />
+
+### General
+
+- Added an MIT `LICENSE` file to each publishable package (`@forte-ui/react`, `forte-ui`, `create-forte-ui`).
+
+## v1.0.0-beta.2
+
+<ReleaseMeta date="2026-09-02" href="https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...v1.0.0-beta.2" kind="compare" />
+
+### General
+
+- Added `homepage` and `repository` fields to `@forte-ui/react`'s `package.json`.
+
+## v1.0.0-beta.0
+
+<ReleaseMeta date="2026-09-02" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.9...v1.0.0-beta.0" kind="compare" />
+
+### AppBar
+
+- Added a `scrollThreshold` prop to `AppBar.Root`: how far, in pixels, the scroll container has to move before the bar counts as scrolled. `0` (the previous, and default, behaviour) is the first pixel past the bar's resting position; a larger value holds `data-scrolled` — and everything keyed on it, including `elevateOnScroll` and a consumer's own `[data-scrolled]` rule — off until the page has moved that far under it. `hideOnScroll` is unaffected, since `data-hidden` follows scroll direction rather than distance.
+- Slowed the bar's surface transition (fill, edge, shadow) from `--forte-duration-fast` to `--forte-duration-normal` via the `--forte-app-bar-duration` knob's default.
+
+### Drawer
+
+- Added a `scrollArea` prop to `Drawer.Content` (default `true`): the body now scrolls inside a composed `ScrollArea` rather than a plain `overflow: auto` box, so the scroll track and the edge-fade sit flush against the drawer's own edge instead of inset over the text, and the scrollport is a tab stop only while there is something to scroll. Set it to `false` for a body that brings its own scrolling — a virtualised list, a map, an embedded editor. Ships with the `--forte-scroll-area-fade-size` knob, set by default to the drawer's own padding.
+- Fixed the popup overflowing a narrow phone screen: its width now resolves against an explicit grid track sized to the available space instead of an implicit `auto` track sized to the popup's own width, which had let `max-inline-size: 100%` resolve circularly and leave the far edge of a `md` drawer hanging off a 375px screen.
+- Fixed a nested drawer's dimming overlay drawing a second, phantom scrollbar (most visible on Android): the overlay used to reach past the popup's edge with a negative `inset`, which counted as scrollable overflow on the popup's own fallback scroll container; it now reaches the same distance with a spread `box-shadow`, which paints outside the box without adding to anything's scrollable area.
+
+### Select
+
+- **Breaking:** `Select.Popup` now defaults `align` to Base UI's own default, `"center"`, instead of `"start"`. Every `Select.Popup` that did not set `align` explicitly now opens centred on its trigger rather than aligned to its start edge; pass `align="start"` to restore the previous position.
+
+### Tabs
+
+- Added an `autoHeight` prop to `Tabs.Root` (default `false`): when on, the panel area is measured and the root's height transitions between panels instead of snapping to the new panel's size, and keeps following the active panel afterwards as its content changes — an image loading, a disclosure opening. Ships with a new `--forte-tabs-auto-height-duration` knob (defaults to `--forte-duration-move`, the same clock the Tabs indicator runs on) controlling the transition length. While it is on, the panel is start-aligned rather than stretched to the track.
+
+### Design tokens & motion
+
+- Suppressed the platform's translucent tap-highlight box on every part the library renders, via one rule on `[data-forte]` in `patterns.css` rather than a scattered per-component declaration. It ignored border-radius, covered the whole element rather than the pressed part, and lingered after release; every interactive part already draws its own press state, so this is safe everywhere the library controls.
+- Added an opt-in `forte-reset` class (switched on by importing `@forte-ui/react/styles/reset.css`) that also suppresses the tap highlight for the rest of an app, for apps that draw their own press states outside the library's parts.
+- **Breaking:** Moved the reset stylesheet's `box-sizing` rule into its own `forte.reset` sublayer instead of the bare `forte` layer, fixing it silently outranking every other `forte.*` sublayer, including `forte.components`. An app whose own styles were being outranked by the old bare-`forte` placement may now see those styles win where they previously lost, since `forte.reset` sits below the other `forte.*` sublayers.
+- Fixed a `.forte-visually-hidden` span adding phantom scrollable overflow to a distant scrolling ancestor — seen with a `ColorPicker` nested low inside a `Drawer`, which grew a second, invisible-until-dragged scrollbar on the drawer's popup — by pinning the span to its containing block's start corner instead of leaving it to lay out against the nearest positioned ancestor.
+
+### create-forte-ui
+
+- Scaffolded Vite and Next.js apps now import `@forte-ui/react/styles/reset.css` and add the `forte-reset` class to `<html>`, switching on the library's blanket reset — box-sizing plus the tap-highlight suppression — as the new project's baseline.
+
+### General
+
+- `@forte-ui/react/docs-data/components.json` — the generated component catalogue as data — is now an exported subpath.
+
+## v1.0.0-alpha.9
+
+<ReleaseMeta date="2026-09-01" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...v1.0.0-alpha.9" kind="compare" />
+
+### NumberField
+
+- Added an `orientation` prop (`"vertical"` default, `"horizontal"`) to `NumberField.Root`, laying the `ScrubArea` label and the `Group` out on one row instead of stacked — the shape of an inspector panel, where a stacked label would double the height of every row. Only the layout changes; the scrub gesture's own `direction` is independent.
+
+### Pagination
+
+- New component: page controls for a long set — `Root`, `List`, `Item`, `Link`, `Previous`, `Next`, `First`, `Last` and `Ellipsis` — with `size`, `variant` (`ghost` / `outline` / `joined`) and `tone` axes. A slot renders an `<a>` when it has an `href` or `render` and a `<button>` otherwise, so URL-driven and state-driven strips share one API.
+- New `usePaginationRange` hook turns `page`, `count`, `siblings` and `boundaries` into a constant-length slot list, so `Next` never moves under the pointer. The window shift animates by key — fill lands on the pressed page, the strip holds, then the numbers slide one cell while the departing page fades out and the arriving one fades in — with an instant swap under reduced motion.
+
+### Steps
+
+- New component: a numbered sequence of steps and the user's position in it, with six parts (`Root`, `Item`, `Trigger`, `Indicator`, `Title`, `Description`). `current` on the root derives every step's status; `status` on an `Item` overrides it; wrapping the parts in a `Trigger` makes a step a real button. Horizontal (title inline or below the circle) and vertical layouts, three variants (`solid`, `outline`, `dot`), four tones, three sizes. The connector belongs to the step before it and fills when that step completes; the check draws on via `stroke-dashoffset` so it survives reduced motion.
+
+### Table
+
+- New component: rows and columns on the real `<table>` element, with `Container`, `Root`, `Caption`, `Header`, `Body`, `Footer`, `Row`, `Head` and `Cell` parts. Three variants (`line`, `outline`, `grid`), sizes that follow the density preset at `md`, striped/hoverable/selected tints scoped to the body, numeric columns with tabular figures, a sortable header with a real `<button>` and `aria-sort`, and a sticky header pinned to an optional `Table.Container` scroll box. The table holds no state — sorting, selection and pagination stay with the consumer.
+
+## v1.0.0-alpha.8
+
+<ReleaseMeta date="2026-09-01" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8" kind="compare" />
+
+### AppBar
+
+- New component: a header bar with `Leading`, `Title` and `Trailing` slots laid out as one three-column grid, so any subset of parts in any order still places itself. Four variants (`plain`, `panel`, `outline`, `frosted`), three tones (`neutral`, `primary`, `secondary`) and three sizes (`sm`, `md`, `lg`). `position` (`static`, `sticky`, `fixed`) controls whether the bar stays put, and once it stays it reports `data-scrolled` and `data-hidden` — driven by an `IntersectionObserver` and a direction-thresholded scroll listener on the bar's nearest scrolling ancestor — for `elevateOnScroll` and `hideOnScroll` and for consumer CSS to read.
+
+### Carousel
+
+- New component: a strip of slides moved by drag, by buttons, or on a timer, with a track driven by a single position variable so resizes, density changes and gap overrides never need re-measuring. `orientation` (horizontal/vertical), `loop`, `autoplay` (boolean or an interval), `slidesPerView`, `align` (`"start"` or `"center"`, for a centred active slide), `lazy` loading of slides outside a window around the active one, `autoHeight`, a `gap` prop for the space between slides, and a thumbnails pattern for building a synced strip alongside the main track.
+
+### Dialog
+
+- Added a 1px hairline border on the popup (`--forte-dialog-border-width`, `--forte-dialog-border-color`) so a dialog's edge stays visible against a page close to the scrim's own colour, where the shadow alone reads as nothing. Transparent at `size="fullscreen"`, where every edge lies on the bezel.
+- Fixed a nested dialog's dimming overlay leaving a sub-pixel crescent of undimmed background at each corner — a bright fleck in light mode — by painting it at the corner radius the padding box actually traces instead of inheriting the popup's outer radius.
+
+### Drawer
+
+- Fixed the same nested-parent dimming overlay leaving a corner gap as Dialog: the overlay is now oversized past the border and clipped by the popup's own `overflow`, which follows the padding box's arc exactly since Drawer's radius is set per side rather than through one token.
+
+### Design tokens & motion
+
+- Added `--forte-app-bar-h-sm`, `--forte-app-bar-h-md` and `--forte-app-bar-h-lg`, the AppBar's height at each size, for layout that needs the number from outside the bar — a sticky sidebar's offset, a page's `scroll-padding-top`, padding under a `fixed` bar. Restated per `data-forte-density` preset.
+
+## v1.0.0-alpha.7
+
+<ReleaseMeta date="2026-09-01" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.7" kind="compare" />
+
+### Button
+
+- Added `--forte-button-icon-size`, a size-scaled token that sizes an `<svg>` dropped directly into a button's content — an unsized icon set's default (lucide draws at 24px) no longer inflates `iconOnly`'s square. Reassigned per `size`; a consumer wanting a different size sets `--forte-button-icon-size` directly, or wins outright with an unlayered rule or a utility class on the icon.
+
+### Calendar
+
+- Fixed a selected day that was also today repainting its number in the accent colour instead of the fill's own text colour; today's marker now only applies when the day is not selected, so the `on-primary` / `primary` pair holds.
+- Fixed `--forte-calendar-day-radius` pointing at a raw scale step (`--forte-radius-2`) instead of the semantic `--forte-radius-control`, so a day cell now follows the `soft` and `pill` `data-forte-radius` presets like every other control — previously only `none` had any effect.
+
+### Card
+
+- New component: a static grouping surface with eight parts — `Card.Root`,
+  `Card.Header`, `Card.Title`, `Card.Description`, `Card.Action`,
+  `Card.Content`, `Card.Footer` and `Card.Media` — replacing the hand-rolled
+  `rounded-surface border border-border-muted bg-panel p-surface` panel.
+  Three variants (`outline`, `soft`, `elevated`) share one footprint: the
+  border is reserved even where it is painted transparent, so switching
+  variants moves nothing and forced-colors mode keeps an edge on all three.
+  Padding is a single `--forte-card-p` knob driven by `data-forte-density`,
+  and `Card.Media` spends it locally to run edge to edge, clipping itself to
+  the card's corner radius when it opens or closes the card. The parts are
+  also exported flat (`CardRoot`, `CardHeader`, …) for React Server
+  Components, where the `Card.Root` spelling cannot cross the client
+  boundary.
+
+### Kbd
+
+- New component: `Kbd`, a key cap rendering a real `<kbd>` element, and
+  `KbdGroup` for chords and sequences drawn as separate caps. The cap derives
+  its fill and edge from `currentColor`, so the same cap works in running
+  text, on `Tooltip`'s inverted popup, inside a solid `Button` and on a
+  highlighted menu row; its text is pinned LTR with `unicode-bidi: isolate`
+  so glyph chords (`⌘X`) do not reorder in RTL pages. Themeable through
+  `--forte-kbd-*` knobs.
+
+### Menu
+
+- `Menu.Shortcut` now draws its keys in a composed `Kbd` cap instead of bare
+  dimmed text; the wrapper `<span>` (and its `data-forte="menu-shortcut"`
+  marker, `aria-hidden` behaviour and row positioning) is unchanged, and the
+  cap inherits the row's muted/highlighted colour.
+
+### Select
+
+- `Select.Popup`'s `align` now defaults to `"start"` instead of falling through to Base UI's `"center"`, matching `Menu` — a popup wider than its trigger drops from the trigger's start edge instead of hanging off both. Only affects the dropdown-style placement reached with `alignItemWithTrigger={false}` (or Base UI's own touch/tight-viewport fallback); the default aligned mode ignores `align` entirely.
+
+### Tabs
+
+- Fixed the `pill` variant's strip radius being measured against `--forte-tabs-radius` (the panel's radius) instead of the indicator's own `--forte-tabs-indicator-radius`, so the strip's curve is now concentric with the pill it contains at every `data-forte-radius` preset — previously only `none` and `pill` happened to agree. A `pill` tab's own corners now match the indicator too, so its focus ring and hover fill trace the same shape as the thumb underneath.
+
+### ThemeToggle
+
+- New component: a built-in light/dark switch that works flash-free in both SSR (Next.js) and SPA (Vite) apps. The button renders both a sun and moon icon and lets CSS keyed on `data-theme` (with a `prefers-color-scheme` fallback) pick the visible one, so the server never needs the visitor's preference and there is no hydration mismatch or wrong icon at first paint. Ships alongside `useTheme` (treats the document attribute as the source of truth, with `localStorage` for persistence) and `ThemeScript` (replays a stored choice before paint). Controlled mode (`theme` + `onThemeChange`) makes the button a dumb control for external managers such as `next-themes`.
+- The button carries its 24×24px minimum target on `min-inline-size`/`min-block-size` as well as `inline-size`/`block-size`, so a flex or grid parent (for example a `justify-between` header row, where a flex item's default `min-width: auto` would otherwise squeeze it to the icon plus the border) cannot shrink the square below the target.
+
+### Tooltip
+
+- **Breaking:** `Tooltip.Shortcut` is now a composed `Kbd` — it renders a
+  `<kbd>` element carrying `data-forte="kbd"` instead of a `<span>` carrying
+  `data-forte="tooltip-shortcut"`. Scope it from outside as
+  `[data-forte="tooltip-popup"] [data-forte="kbd"]`. The
+  `--forte-tooltip-shortcut-*` knobs keep working — they now re-point the
+  cap's `--forte-kbd-*` set — and `TooltipShortcutProps` gains `Kbd`'s
+  `render` prop.
+- Fixed the popup breaking mixed inline content: it was a flex column, so
+  prose like `Press <Kbd>?</Kbd> to search` split into three stacked flex
+  items with the whitespace between them dropped. The popup is now block-flow
+  at rest and only becomes a flex row when a `Tooltip.Shortcut` is present.
+
+### create-forte-ui
+
+- New package: `pnpm create forte-ui` (or `npm create forte-ui@latest`) scaffolds a fresh app already wired up with forte-ui. It runs `create-vite` / `create-next-app` non-interactively for the framework half and then applies only the forte-ui overlay — the same steps as the [getting-started guides](https://forte-ui.com/getting-started/nextjs/), which are its spec, so a scaffolded app diffs against the walkthrough and shows only your own answers. Four questions (name, framework, Tailwind, accent colour) reach a running app; secondary colour, neutral tint, radius, density, motion and fonts hide behind one "customize further?" gate. Every prompt has a flag twin (`--seed`, `--radius`, `--font-sans`, `--pm`, `--yes`, `--no-install`, …), so the [Theme Studio](https://forte-ui.com/theme/)'s "Scaffold this theme" dialog can hand back a complete, copy-pasteable command line. A skipped answer writes nothing — no restated defaults, no attributes for default presets — so the scaffolded app keeps following the library's own defaults as they change. `pnpm --filter create-forte-ui smoke` builds all four framework × Tailwind combinations against the workspace library as its drift check.
+- Added a `--library` flag that pins the version spec used for the `@forte-ui/react` install — exact (`1.0.0-alpha.4`), a dist-tag (`alpha`), or a range — forwarded to the package manager unvalidated, so a bad spec fails with the registry's own error naming the exact spec rather than a generic "re-run the install" suggestion. It's a dev/CI knob only: no interactive prompt asks for it, and the Theme Studio's "Scaffold this theme" dialog does not use it. Defaults to the `latest` dist-tag, unchanged from before.
+- The scaffolder now installs the forte-ui agent skill (`skills add arsen/forte-ui -s forte-ui`) into the new project by default, so AI tooling working in the scaffolded app starts past the library's documented traps. A new `--no-skill` flag opts out on its own; `--no-install` continues to skip it along with everything else it installs. A failed skill install now only warns, with the manual command to retry, instead of failing the scaffold — the app itself is unaffected.
+- Added a `--scheme` flag (`system` | `light` | `dark`, default `system`) and a matching "Light and dark" step in the interactive "customize further?" prompt. Pinning `light` or `dark` writes a static `data-theme` on `<html>` and skips scaffolding the toggle below; the default keeps following the OS.
+- Vite and Next.js starters now scaffold a working `ThemeToggle` in the top-right corner when the scheme is left at `system` — the working half of the getting-started guides' "Light and dark" step. Vite gets an inline script in `index.html`'s `<head>` that replays a stored choice before first paint (byte-identical to `@forte-ui/react`'s `themeInitScript`); Next.js gets `ThemeScript` in the root layout's `<head>` plus `suppressHydrationWarning` on `<html>`.
+- Fixed the Vite path sometimes finishing as a stock Vite app with no forte-ui applied: `create-vite@latest` prompts interactively whenever stdin is a TTY even with `--template` set, and answering its "Install and start now?" question started a dev server inside the child process before the overlay could run. The scaffolder now passes `--no-interactive` to `create-vite`, which takes its non-interactive defaults and lets the scaffolder's own install (with the library included) run afterward.
+
+### Design tokens & motion
+
+- Consolidated the anchored-popup arrow (geometry, SVG sizing, forced-colors repaint) and content-swap viewport mechanics — previously hand-copied across `Popover`, `PreviewCard`, `Tooltip` and `NavigationMenu` — into shared `.forte-popup-*` patterns in `patterns.css`, and the duplicated `--available-width` registered property into one `--forte-popup-available-width` in `properties.css`. Each component's own `--forte-*` knobs, defaults and `data-forte` markers are unchanged; a build that imports only one of `Popover` / `PreviewCard` no longer risks shipping without the shared property's registration.
+
+### General
+
+- `docgen` now emits `docs-data/components.md`, a generated catalogue of every component with a one-line when-to-use summary, its `props.json` part keys, its `theming.json` pointer, and its hooks — assembled from new `@summary` / `@category` doc-comment tags that the build now requires on every component root, so a new component can no longer ship without being catalogued. The file is exported from the package (`@forte-ui/react/docs-data/components.md`), and the internal docgen script order changed so `theming.json` is generated before `components.md` reads it.
+- Fixed a docs-data generation bug where two parts sharing a prop name in one file (for example `ScrollArea.Root`'s `orientation="both"` and `ScrollArea.Scrollbar`'s `orientation="vertical"`) could overwrite each other's documented default in the published `docs-data/props.json`; defaults are now read from each component's own declaration.
+
+## v1.0.0-alpha.3
+
+<ReleaseMeta date="2026-08-31" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3" kind="compare" />
+
+### Button
+
+- Fixed `data-icon-only` being silently erased when `Button` is composed as
+  another forte-ui component's `render` target (for example
+  `<DialogClose render={<Button iconOnly />} />`); the button's own value now
+  survives Base UI's prop merge instead of being overwritten by the outer
+  part's unset attribute.
+
+### Dialog
+
+- Fixed `DialogClose`'s `data-icon-only` attribute clobbering a composed
+  `render` target's own value — `<DialogClose render={<Button iconOnly />} />`
+  no longer un-squares the button.
+
+### Drawer
+
+- A drawer rendered without its scrim (`backdrop={false}`) now draws a
+  hairline border, marked on the popup as `data-no-backdrop` and themed by the
+  new `--forte-drawer-border-width` / `--forte-drawer-border-color` knobs.
+  Without the dim, the shadow was the only thing separating the surface from
+  the page, which in dark mode is nearly nothing. On an `edge` drawer the side
+  resting against the screen edge stays borderless, so an overdrag does not
+  expose the hairline as a seam across the skirt.
+- Fixed a non-modal drawer (`modal={false}`) making the entire page
+  unclickable while open: the full-screen viewport that positions the popup
+  was silently absorbing every pointer event aimed at the page. The viewport
+  is now permanently `pointer-events: none` with the popup restoring its own
+  events — modal behaviour (scrim, outside-press dismissal) and the
+  click-through during the exit animation are unchanged.
+- Fixed `DrawerClose`'s `data-icon-only` attribute clobbering a composed
+  `render` target's own value, the same fix as `Dialog` and `Popover`'s close
+  buttons.
+
+### Popover
+
+- Fixed `PopoverClose`'s `data-icon-only` attribute clobbering a composed
+  `render` target's own value — `<PopoverClose render={<Button iconOnly />} />`
+  no longer un-squares the button.
+
+### ScrollArea
+
+- New `orientation` prop on `ScrollArea.Root` (`"both"` (default) |
+  `"vertical"` | `"horizontal"`). Naming the axis turns the other one off —
+  its `overflow` becomes `hidden` on the viewport and its overscroll is no
+  longer contained — so a wheel or trackpad gesture along the axis with
+  nothing to scroll falls through to the page instead of being claimed (and,
+  on macOS, rubber-banded) by a viewport that cannot move. The resolved value
+  is exposed as `data-orientation` on the root and viewport.
+
+### Tabs
+
+- The scroll area `Tabs.List` wraps itself in now inherits the strip's
+  `orientation`, so scrolling across the strip — vertically over horizontal
+  tabs, horizontally over vertical ones — reaches the page instead of
+  bouncing a viewport with nothing to scroll on that axis.
+- Fixed the `pill` variant's list radius being pinned to a fixed step instead
+  of concentric with its tabs, so under a rounder radius preset the strip's
+  corners no longer run a visibly tighter curve than the pills inside it.
+- The `line` variant's sliding indicator now squares off the two corners
+  against the rail — the same treatment the tab itself gets — instead of
+  rounding all four, so the bar reads as attached to the rail rather than
+  floating above it.
+
+### Toggle
+
+- Fixed `data-icon-only` on `Toggle` being erased when composed via `render`,
+  the same class of bug fixed on `Button`.
+
+## v1.0.0-alpha.2
+
+<ReleaseMeta date="2026-08-30" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2" kind="compare" />
+
+### NavList
+
+- **Breaking:** the `marker` prop's `"rail"` option is now `"edge"`. The
+  active-row cue is repainted as the row's own inline-start border (so it now
+  follows the row's corner radius) instead of a separately-inset bar; the
+  theming knobs move with it — `--forte-nav-list-rail-width` /
+  `--forte-nav-list-rail-color` are renamed to `--forte-nav-list-edge-width` /
+  `--forte-nav-list-edge-color`, and `--forte-nav-list-rail-inset` is removed
+  (the border now runs the row's full height, so there is nothing left to
+  inset).
+- Added a `revealActive` prop: when set, the active row scrolls into view on
+  mount or when it becomes active, without moving a container it doesn't own or
+  fighting the browser's own scroll restoration. The landing offset is
+  controlled by the new `--forte-nav-list-reveal-margin` token.
+
+### General
+
+- Added the unscoped `forte-ui` package as a functional alias of
+  `@forte-ui/react`. It re-exports the root entry along with the `cn` and
+  `tailwind-merge` subpaths, and proxies `theme.css` / `tailwind.css` via
+  `@import`. Its version tracks `@forte-ui/react` release-for-release, so
+  `forte-ui@X.Y.Z` always installs `@forte-ui/react@X.Y.Z`.
+
+## v1.0.0-alpha.1
+
+<ReleaseMeta date="2026-08-30" href="https://github.com/arsen/forte-ui/releases/tag/v1.0.0-alpha.1" kind="release" />
+
+Initial release.
+
+### Added
+
+- 45 accessible components built on [Base UI](https://base-ui.com) primitives:
+  Accordion, Alert, AspectRatio, Avatar, Badge, Breadcrumb, Button,
+  ButtonGroup, Calendar, Checkbox, Collapsible, ColorPicker, Combobox,
+  ContextMenu, DatePicker, Dialog, Drawer, Field, Fieldset, Form, Input,
+  InputGroup, Menu, Menubar, NavList, NavigationMenu, NumberField, OtpField,
+  Popover, PreviewCard, Progress, Radio, Resizable, ScrollArea, Select,
+  Separator, Skeleton, Slider, Spinner, Switch, Tabs, Textarea, Toast, Toggle,
+  Toolbar, Tooltip.
+- Token-driven design system: the full palette derives from a single accent
+  seed via CSS relative colour syntax — no JavaScript, no build step, no
+  runtime theming layer.
+- Theming via `data-forte-theme`, `data-forte-radius`, `data-forte-density`
+  and per-component `--forte-<component>-*` knobs, all scoped under
+  `@layer forte.*` so consumer CSS always wins.
+- Pure-CSS motion system with spring easings sampled into `linear()`, honouring
+  `prefers-reduced-motion` through collapsing geometry tokens, plus an in-page
+  `data-forte-motion` override.
+- Accessibility baseline: WCAG-gated contrast harness over the generated
+  ramps, two-tone focus rings, forced-colors support, 24×24 minimum targets,
+  and RTL support via `--forte-direction`.
+- Tailwind v4 bridge (`@forte-ui/react/tailwind.css`) that re-points
+  Tailwind's theme at the forte-ui tokens, plus a pre-configured `cn` /
+  `createCn` with the matching tailwind-merge config.
+- Documentation site with runnable demos, generated prop and theming tables,
+  and a token inventory.
+
+## Full history
+
+Every release to date is on this page. The same history, as one file, is [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub.
