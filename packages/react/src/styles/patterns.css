@@ -105,6 +105,94 @@
   }
 
   /* ------------------------------------------------------------------------
+   * Pressable
+   *
+   * The geometry of a press: the hover lift and grow, the squash while held,
+   * the spring back on release. One class rather than a copy per control,
+   * because this is a FEEL — a NavList row that squashes a touch less than
+   * the Button beside it reads as a different library, and hand-kept copies
+   * drift exactly that way. Button carried the only copy until NavList's
+   * link wanted the same thing.
+   *
+   * Geometry only. Which element, which role, which colors and how they
+   * change on hover stay with the component; this class touches `translate`,
+   * `scale` and the transition that carries them. It has to own the whole
+   * `transition` shorthand — listed with the three color properties every
+   * control already transitions — because a shorthand cannot be merged: a
+   * component that declares its own `transition` replaces this one outright
+   * and must then list `translate` and `scale` itself, or its press snaps.
+   * `box-shadow` is deliberately absent from the list: the focus ring is an
+   * `outline` plus a `box-shadow` halo, `outline` is not transitioned, and
+   * animating only half of the ring makes it assemble itself in two stages
+   * on every Tab press. Any of these declarations loses to the component's
+   * own under `@layer forte.components`, which is the escape hatch.
+   *
+   * Wiring contract, same shape as the anchored-popup patterns below: the
+   * rules read generic `--forte-press-*` properties, and a component maps its
+   * own published knobs onto them on its root (Button:
+   * `--forte-press-scale: var(--forte-button-press-scale)`). A control that
+   * maps nothing gets the fallbacks, which are Button's own defaults, so a
+   * row and a button squash alike out of the box — and those fallbacks are
+   * where the SHARED config lives: `--forte-scale-press` sets the squash for
+   * every pressable at once, `--forte-control-hover-lift` and
+   * `--forte-control-hover-scale` opt every one into hover geometry, and the
+   * release rides `--forte-duration-spring-snappy` with its paired easing.
+   *
+   * Hover geometry is identity by default: a hover cue is color, the one
+   * channel that cannot move the hit box. A lift moves it — at rest against
+   * the pointer's edge a non-zero lift hovers the control out from under the
+   * cursor and oscillates — which is why the fallback is 0px. The two hover
+   * slots are multiplied by `--forte-motion-ok`, so a literal value in either
+   * still collapses under reduced motion; the press scale is a motion token
+   * and collapses on its own.
+   *
+   * `translate` and `scale` are the independent properties, never the
+   * `transform` shorthand, so the lift and the squash transition at different
+   * speeds without fighting over one slot — and a component's enter/exit
+   * gesture can still compose on `transform` above them. The rest values are
+   * declared rather than left initial because a transition needs a from-value
+   * on the first hover. Snap in, spring out: the press lands on
+   * `--forte-duration-instant`, the release on the spring.
+   * --------------------------------------------------------------------- */
+  .forte-pressable {
+    translate: 0 0;
+    scale: 1;
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      translate var(--forte-duration-fast) var(--forte-ease-standard),
+      scale var(--forte-press-duration, var(--forte-duration-spring-snappy))
+        var(--forte-press-ease, var(--forte-ease-spring-snappy));
+  }
+
+  @media (hover: hover) {
+    .forte-pressable:hover:not([data-disabled]) {
+      translate: 0
+        calc(
+          -1 * var(--forte-press-lift, var(--forte-control-hover-lift, 0px)) *
+            var(--forte-motion-ok)
+        );
+      scale: calc(
+        1 +
+          (var(--forte-press-hover-scale, var(--forte-control-hover-scale, 1)) - 1) *
+          var(--forte-motion-ok)
+      );
+    }
+  }
+
+  .forte-pressable:active:not([data-disabled]) {
+    translate: 0 0;
+    scale: var(--forte-press-scale, var(--forte-scale-press));
+    transition-duration: var(--forte-duration-instant);
+  }
+
+  .forte-pressable[data-disabled] {
+    translate: 0 0;
+    scale: 1;
+  }
+
+  /* ------------------------------------------------------------------------
    * Scrim
    * --------------------------------------------------------------------- */
   .forte-scrim {

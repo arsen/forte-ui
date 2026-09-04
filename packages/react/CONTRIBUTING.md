@@ -132,7 +132,18 @@ to assistive technology goes in a `.forte-visually-hidden` span.
 `.forte-focus-ring` · `.forte-focus-ring-within` · `.forte-hc-surface` ·
 `.forte-visually-hidden` · `.forte-target` · `.forte-scrim` · `.forte-icon` ·
 `.forte-link` · `.forte-hc-decorative` · `.forte-preserve-color` ·
+`.forte-pressable` ·
 `.forte-popup-arrow` (+ `-svg` / `-fill` / `-border`) · `.forte-popup-viewport`
+
+`.forte-pressable` is the press geometry — hover lift, the squash while held,
+the spring back — shared by Button and `NavList.Link`. It owns the control's
+`transition` shorthand, so a component that wears it must not restate one (or
+must list `translate` and `scale` in its own). It reads generic
+`--forte-press-lift` / `-hover-scale` / `-scale` / `-duration` / `-ease`
+slots that a component maps its published knobs onto; the fallbacks are
+Button's defaults, and the global tokens behind them (`--forte-scale-press`,
+`--forte-control-hover-lift`, `--forte-control-hover-scale`) retune every
+pressable at once.
 
 The two `forte-popup-*` families are the shared anchored-popup mechanics: the
 arrow geometry (Popover, PreviewCard, Tooltip, NavigationMenu) and the

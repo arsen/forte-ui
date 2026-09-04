@@ -245,10 +245,11 @@
     text-decoration: none;
     scroll-margin-block: var(--forte-nav-list-reveal-margin);
     cursor: pointer;
-    transition:
-      background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+    /* No `transition` in the shared rule. `.link` wears `.forte-pressable`
+     * (patterns.css), which owns its transition list along with the press
+     * geometry — a shorthand restated here would replace that list and drop
+     * the squash. `.groupTrigger` does not wear it, so it restates the color
+     * half of the same list in its own rule below. */
   }
 
   /* An svg placed straight into a row is an icon: it must not squash when
@@ -323,6 +324,12 @@
     text-align: start;
     -webkit-user-select: none;
     user-select: none;
+    /* Same durations as the pattern's color half, so a link and a trigger
+     * side by side still fade at one speed. */
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      color var(--forte-duration-fast) var(--forte-ease-standard);
   }
 
   /* Owns the flexible column, so a long label wraps inside the row instead

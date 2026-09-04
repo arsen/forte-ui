@@ -398,7 +398,10 @@ export const NavListLink = React.forwardRef<HTMLAnchorElement, NavListLinkProps>
       ref: [ref, ownRef],
       defaultTagName: "a",
       props: {
-        className: clsx(styles.link, "forte-focus-ring", className),
+        // `forte-pressable` gives the row Button's press: the squash while
+        // held and the spring back. Rows and buttons share one feel because
+        // they share one stylesheet rule, not because this file copies it.
+        className: clsx(styles.link, "forte-focus-ring", "forte-pressable", className),
         "data-forte": "nav-list-link",
         // Inset, always: the list's usual home is a scroll container hard
         // against the viewport edge, where an outset ring's leading side is

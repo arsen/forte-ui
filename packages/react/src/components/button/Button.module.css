@@ -14,6 +14,12 @@
  * `--forte-motion-ok` where they are used, so even a hard-coded override
  * collapses. This file gets correct reduced-motion behavior without knowing
  * that reduced motion exists.
+ *
+ * The press geometry itself — hover lift, the squash while held, the spring
+ * back — is not in this file at all. It is the shared `.forte-pressable`
+ * pattern in patterns.css, which the root wears; the three motion knobs
+ * below are mapped onto the pattern's generic `--forte-press-*` slots. This
+ * file only decides what the press does to COLOR.
  */
 @layer forte.components {
   .root {
@@ -60,13 +66,13 @@
      * knock the button out of line with the controls beside it.
      *
      * Opt back into geometry on one button by setting `--forte-button-*`, or on
-     * every button by setting the `--forte-control-hover-*` escape hatch on a
-     * root/theme scope — those are deliberately left undefined so the fallback
-     * below is what normally applies:
+     * every pressable control by setting the `--forte-control-hover-*` escape
+     * hatch on a root/theme scope — those are deliberately left undefined so
+     * the fallback below is what normally applies:
      *   :root { --forte-control-hover-lift: var(--forte-travel-xs); }
      *   :root { --forte-control-hover-scale: 1.02; }
      *
-     * Literal values are safe in either slot: both are multiplied by
+     * Literal values are safe in either slot: the pattern multiplies both by
      * `--forte-motion-ok` at the point of use, so they collapse to identity
      * under reduced motion without the consumer having to know that. */
     /** How far the button rises on hover. Multiplied by `--forte-motion-ok`, so a
@@ -77,6 +83,16 @@
     --forte-button-hover-scale: var(--forte-control-hover-scale, 1);
     /** How far the button squashes while held. */
     --forte-button-press-scale: var(--forte-scale-press);
+
+    /* Wiring for the shared pressable pattern. The three knobs above are the
+     * published surface (theming.json reads them); these are the generic
+     * slots `.forte-pressable` in patterns.css actually reads. Plain
+     * comments on purpose — the mapping is private, the knobs are the API.
+     * Declared here, on the root, so the mapping resolves on the element the
+     * pattern styles. */
+    --forte-press-lift: var(--forte-button-hover-lift);
+    --forte-press-hover-scale: var(--forte-button-hover-scale);
+    --forte-press-scale: var(--forte-button-press-scale);
 
     /* Color slots, filled in per tone + variant below. */
     /** Resting background; filled in by `variant` */
@@ -135,51 +151,27 @@
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
-    /* `translate` and `scale` are animated as independent properties rather
-     * than through `transform`, so hover-lift and press-squash can transition
-     * at different speeds without fighting over one shorthand. */
-    translate: 0 0;
-    scale: 1;
-    /* `box-shadow` is deliberately absent. The focus ring is drawn as an
-     * `outline` plus a `box-shadow` halo, and `outline` is not transitioned —
-     * animating only half of it makes the ring assemble itself in two stages
-     * on every Tab press. Both halves now land on the same frame. */
-    transition:
-      background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard),
-      translate var(--forte-duration-fast) var(--forte-ease-standard),
-      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+    /* No `transition`, `translate` or `scale` here: `.forte-pressable` owns
+     * all three, colors included. Restating the shorthand in this layer would
+     * replace the pattern's list wholesale and drop the press. */
   }
 
   /* States ---------------------------------------------------------------- */
+  /* Color only. The lift and the squash arrive with `.forte-pressable`, on
+   * the same `:hover` / `:active` / `[data-disabled]` conditions. */
   @media (hover: hover) {
     .root:hover:not([data-disabled]) {
       background-color: var(--forte-button-bg-hover);
-      /* `--forte-motion-ok` is 1 normally and 0 under reduced motion, so both
-       * of these fall back to identity without a media query in this file.
-       * Note the lift moves the hit box: at rest against the pointer's edge a
-       * non-zero lift can hover-off the button and oscillate, which is why the
-       * shipped default is 0. */
-      translate: 0
-        calc(-1 * var(--forte-button-hover-lift) * var(--forte-motion-ok));
-      scale: calc(1 + (var(--forte-button-hover-scale) - 1) * var(--forte-motion-ok));
     }
   }
 
   .root:active:not([data-disabled]) {
     background-color: var(--forte-button-bg-active);
-    translate: 0 0;
-    scale: var(--forte-button-press-scale);
-    /* Snap in, spring out: pressing should feel immediate. */
-    transition-duration: var(--forte-duration-instant);
   }
 
   .root[data-disabled] {
     cursor: not-allowed;
     opacity: 0.55;
-    translate: 0 0;
-    scale: 1;
   }
 
   .root[data-full-width] {
