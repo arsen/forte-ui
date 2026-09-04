@@ -21,7 +21,7 @@
       "cache": false,
       "persistent": true
     },
-    // Never cached. These six scripts write CHECKED-IN files, so a cache hit on
+    // Never cached. These seven scripts write CHECKED-IN files, so a cache hit on
     // an unchanged input set would leave a hand-edit to tokens.color.css or
     // registry.ts sitting in the tree -- the exact drift `pnpm generate` exists
     // to repair. They run in a couple of seconds; caching buys nothing and

@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "registry": "node scripts/build-registry.mjs",
+    "changelog": "node scripts/build-changelog.mjs",
     "toc": "node scripts/build-toc.mjs",
     "catalog": "node scripts/build-catalog.mjs",
-    "generate": "pnpm run registry && pnpm run toc && pnpm run catalog",
+    "generate": "pnpm run registry && pnpm run changelog && pnpm run toc && pnpm run catalog",
     "dev": "pnpm run generate && next dev -p 3000",
     "build": "pnpm run generate && next build",
     "start": "npx --yes serve out -p 3000",
