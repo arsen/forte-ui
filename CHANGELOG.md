@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-04
+
+### Shimmer
+
+- Added `Shimmer`, a band of light sweeping through a run of text for status messages that are themselves the content (e.g. "Generating response…"), as an alternative to pairing a `Spinner` with a label. The text stays real, selectable text — only the paint animates. Props: `active` (default `true`) toggles the sweep without swapping components, `once` sweeps a single pass instead of looping, and `reverse` sweeps against the reading direction (the default follows `dir`). Styled via `data-*` attributes and `--forte-shimmer-*` custom properties; under reduced motion the band does not travel or show, leaving plain colored text.
+
 ## [1.0.1] - 2026-09-03
 
 ### create-forte-ui
@@ -325,7 +331,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/arsen/forte-ui/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/arsen/forte-ui/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...v1.0.0
 [1.0.0-beta.2]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...v1.0.0-beta.2

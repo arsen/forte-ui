@@ -19,6 +19,14 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.1.0
+
+<ReleaseMeta date="2026-09-04" href="https://github.com/arsen/forte-ui/compare/v1.0.1...v1.1.0" kind="compare" />
+
+### Shimmer
+
+- Added `Shimmer`, a band of light sweeping through a run of text for status messages that are themselves the content (e.g. "Generating response…"), as an alternative to pairing a `Spinner` with a label. The text stays real, selectable text — only the paint animates. Props: `active` (default `true`) toggles the sweep without swapping components, `once` sweeps a single pass instead of looping, and `reverse` sweeps against the reading direction (the default follows `dir`). Styled via `data-*` attributes and `--forte-shimmer-*` custom properties; under reduced motion the band does not travel or show, leaving plain colored text.
+
 ## v1.0.1
 
 <ReleaseMeta date="2026-09-03" href="https://github.com/arsen/forte-ui/compare/v1.0.0...v1.0.1" kind="compare" />
@@ -317,40 +325,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
   `@import`. Its version tracks `@forte-ui/react` release-for-release, so
   `forte-ui@X.Y.Z` always installs `@forte-ui/react@X.Y.Z`.
 
-## v1.0.0-alpha.1
-
-<ReleaseMeta date="2026-08-30" href="https://github.com/arsen/forte-ui/releases/tag/v1.0.0-alpha.1" kind="release" />
-
-Initial release.
-
-### Added
-
-- 45 accessible components built on [Base UI](https://base-ui.com) primitives:
-  Accordion, Alert, AspectRatio, Avatar, Badge, Breadcrumb, Button,
-  ButtonGroup, Calendar, Checkbox, Collapsible, ColorPicker, Combobox,
-  ContextMenu, DatePicker, Dialog, Drawer, Field, Fieldset, Form, Input,
-  InputGroup, Menu, Menubar, NavList, NavigationMenu, NumberField, OtpField,
-  Popover, PreviewCard, Progress, Radio, Resizable, ScrollArea, Select,
-  Separator, Skeleton, Slider, Spinner, Switch, Tabs, Textarea, Toast, Toggle,
-  Toolbar, Tooltip.
-- Token-driven design system: the full palette derives from a single accent
-  seed via CSS relative colour syntax — no JavaScript, no build step, no
-  runtime theming layer.
-- Theming via `data-forte-theme`, `data-forte-radius`, `data-forte-density`
-  and per-component `--forte-<component>-*` knobs, all scoped under
-  `@layer forte.*` so consumer CSS always wins.
-- Pure-CSS motion system with spring easings sampled into `linear()`, honouring
-  `prefers-reduced-motion` through collapsing geometry tokens, plus an in-page
-  `data-forte-motion` override.
-- Accessibility baseline: WCAG-gated contrast harness over the generated
-  ramps, two-tone focus rings, forced-colors support, 24×24 minimum targets,
-  and RTL support via `--forte-direction`.
-- Tailwind v4 bridge (`@forte-ui/react/tailwind.css`) that re-points
-  Tailwind's theme at the forte-ui tokens, plus a pre-configured `cn` /
-  `createCn` with the matching tailwind-merge config.
-- Documentation site with runnable demos, generated prop and theming tables,
-  and a token inventory.
-
 ## Full history
 
-Every release to date is on this page. The same history, as one file, is [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub.
+This page carries the 10 most recent releases. The one release before them — back to v1.0.0-alpha.1 on August 30, 2026 — is in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
