@@ -65,6 +65,14 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "added", text: "Added", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
+  "/components/": [
+    { id: "actions", text: "Actions", depth: 2 },
+    { id: "forms", text: "Forms", depth: 2 },
+    { id: "overlays", text: "Overlays", depth: 2 },
+    { id: "navigation", text: "Navigation", depth: 2 },
+    { id: "content-layout", text: "Content & layout", depth: 2 },
+    { id: "feedback", text: "Feedback", depth: 2 },
+  ],
   "/components/accordion/": [
     { id: "import", text: "Import", depth: 2 },
     { id: "examples", text: "Examples", depth: 2 },
