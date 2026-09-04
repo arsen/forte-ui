@@ -1,0 +1,173 @@
+/*
+ * Shimmer
+ *
+ * A band of light sweeping through a run of text. The text is never replaced
+ * or covered: the gradient is painted INTO the glyphs with
+ * `background-clip: text`, and the glyph color itself is made transparent
+ * through `-webkit-text-fill-color` rather than `color`. That distinction is
+ * the whole mechanism — `color` stays the inherited value, so `currentColor`
+ * inside the gradient is still the real text color, and everything outside the
+ * band paints exactly what the plain text would have. Setting `color:
+ * transparent` instead would turn `currentColor` transparent too and leave
+ * nothing to paint the rest of the word with.
+ *
+ * The band is derived from `currentColor`, not a fixed color, and derived
+ * differently per mode — see the note on `--forte-shimmer-color` below. What
+ * the two derivations share is that neither is a ramp position: "a light
+ * passing over the ink" has to be stated relative to the ink.
+ *
+ * Under reduced motion the band neither travels nor shows. Its travel is gated
+ * on `--forte-motion-ok`, per motion rule 11, and its color is mixed back into
+ * `currentColor` by `--forte-motion-off`, so what is left is the text in its
+ * own color. There is deliberately NO fallback pulse, unlike `Skeleton`, whose
+ * shimmer degrades into a breathe: a skeleton that stops moving reads as
+ * content that failed, but this text IS the content, and dimming it on a loop
+ * would spend the reader's contrast on a cue the words ("Generating…")
+ * already carry.
+ *
+ * The loop duration is never shortened: `--forte-duration-loop-sweep` is
+ * 1400ms in every motion state. A repeating animation driven toward 1ms
+ * flashes at around 1000Hz, a WCAG 2.3.1 hazard rather than a courtesy.
+ *
+ * Nothing here is `will-change`d or promoted. Animating `background-position`
+ * through a text clip repaints the glyphs every frame, which is cheap for a
+ * line of status text and is the wrong tool for a whole article — the
+ * component is a `<span>` on purpose.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared HERE, on the shimmer itself, so a value set
+     * on an ancestor is only INHERITED and loses to these. Re-skin one via
+     * `className` or `style` (an unlayered consumer rule beats this layer at
+     * any specificity); re-skin every shimmer by re-pointing the global
+     * tokens on the right-hand side. */
+
+    /* Two different tricks for the two modes, because "a light passing over
+     * the letters" is drawn differently against a light page and a dark one.
+     * In light mode the band is the text at a fifth of its alpha: the page
+     * shows THROUGH the glyphs, which reads as a gleam without needing a
+     * color lighter than the ink. Lifting lightness there instead lands muted
+     * text on the panel color and the word vanishes. In dark mode the page is
+     * dark, so a faded band would read as a dip, and the band is lifted to at
+     * least 0.8 and made more opaque. Both are relative to `currentColor`,
+     * which is what lets one shimmer sit in muted prose, in a solid button
+     * and on an inverted tooltip without a tone prop.
+     *
+     * The dark branch has a floor built in — on text that is already white
+     * there is nowhere lighter to go, and the band is invisible. The
+     * component is built for the muted status line it is documented on; on
+     * headline-weight text in dark mode, set the color. */
+    /** Color of the band. Defaults to the text's own color, faded in light
+     * mode and lifted toward white in dark mode. */
+    --forte-shimmer-color: light-dark(
+      oklch(from currentColor l c h / calc(alpha * 0.2)),
+      oklch(from currentColor max(0.8, calc(l + 0.4)) c h / calc(alpha + 0.4))
+    );
+    /** One full cycle. Speed is this one knob: shorter is faster. */
+    --forte-shimmer-duration: var(--forte-duration-loop-sweep);
+    /** Half-width of the band, measured across the text. Part `ch` so it
+     * scales with the type and part a fixed run so a small label still gets
+     * a visible gleam; a length rather than a fraction of the text, so a
+     * one-word label and a full sentence get the same light. */
+    --forte-shimmer-spread: calc(3ch + var(--forte-space-7));
+    /** Tilt of the band off vertical. `0deg` is a straight edge. */
+    --forte-shimmer-angle: 20deg;
+
+    /* The sign of the sweep. `background-position` is physical, so the travel
+     * multiplies by `--forte-direction` to follow the reading direction —
+     * and `reverse` flips that sign rather than setting
+     * `animation-direction`, so the two stay one mechanism. */
+    --forte-shimmer-sign: var(--forte-direction);
+  }
+
+  .root[data-reverse] {
+    --forte-shimmer-sign: calc(-1 * var(--forte-direction));
+  }
+
+  .root[data-active] {
+    /* See the header: fill goes transparent, `color` does not. The prefixed
+     * clip is not legacy hedging — Safari painted `background-clip: text`
+     * only under the prefix until 2023, and the prefix costs nothing where
+     * the standard form is understood. */
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    /* Five stops rather than three: the half-mixed shoulders at half a spread
+     * either side of the peak soften the band from a stripe into a gleam.
+     * Everything past a full spread is solid `currentColor`, which is why
+     * the text outside the band is simply the text. `50%` of the gradient is
+     * the image's center, so the band is centered in it. */
+    background-image: linear-gradient(
+      calc(90deg + var(--forte-shimmer-angle)),
+      currentColor calc(50% - var(--forte-shimmer-spread)),
+      color-mix(in oklch, var(--forte-shimmer-color), currentColor 50%)
+        calc(50% - var(--forte-shimmer-spread) / 2),
+      /* Mixed back into the ink under reduced motion, where the band cannot
+       * travel: a highlight parked in the middle of the word reads as a
+       * rendering defect. Mixed rather than faded to transparent, because a
+       * transparent stop here would punch a hole in the text. */
+      color-mix(
+          in oklch,
+          var(--forte-shimmer-color),
+          currentColor calc(100% * var(--forte-motion-off))
+        )
+        50%,
+      color-mix(in oklch, var(--forte-shimmer-color), currentColor 50%)
+        calc(50% + var(--forte-shimmer-spread) / 2),
+      currentColor calc(50% + var(--forte-shimmer-spread))
+    );
+    /* Two text-widths plus a full band on either side, so the band starts
+     * and finishes completely off the glyphs while `background-position`
+     * runs from one edge alignment to the other. */
+    background-size: calc(200% + var(--forte-shimmer-spread) * 2) 100%;
+    background-repeat: no-repeat;
+    /* Linear, and no rest between passes: a constant-speed gleam that leaves
+     * one edge as it enters the other is what reads as light rather than as
+     * a wiper. Symmetric easings are the only kind safe on a loop anyway
+     * (see motion.mjs), and linear is the most symmetric there is. */
+    animation: forte-shimmer-sweep var(--forte-shimmer-duration) linear infinite;
+  }
+
+  .root[data-once] {
+    animation-iteration-count: 1;
+    /* Hold the last frame: the band rests off the far edge, so the text
+     * simply stays the text instead of snapping back to the first frame. */
+    animation-fill-mode: forwards;
+  }
+
+  /* Keyframes -------------------------------------------------------------- */
+  @keyframes forte-shimmer-sweep {
+    /* With an image wider than its box, `background-position-x: 100%` aligns
+     * the RIGHT edges and puts the band off the LEFT of the glyphs; `0%` is
+     * the mirror. So in LTR (`sign` = 1) the position runs 100% → 0% and the
+     * band crosses left to right; in RTL the sign flips both ends.
+     * `--forte-motion-ok` collapses both to 50%, a band centered and — per
+     * the color-mix above — invisible. */
+    from {
+      background-position-x: calc(50% + 50% * var(--forte-shimmer-sign) * var(--forte-motion-ok));
+    }
+
+    to {
+      background-position-x: calc(50% - 50% * var(--forte-shimmer-sign) * var(--forte-motion-ok));
+    }
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    /* Forced colors remaps `color` to `CanvasText` but does NOT remap
+     * `background-image` or `-webkit-text-fill-color`, so left alone the
+     * glyphs would be painted with our gradient — a mid-gray band in a theme
+     * whose entire promise is that the page uses the user's colors. Put the
+     * fill back and drop the image; the text is the message, and it is
+     * still there. */
+    .root[data-active] {
+      -webkit-text-fill-color: currentColor;
+      background-image: none;
+    }
+  }
+}

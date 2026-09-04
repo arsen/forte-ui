@@ -7449,6 +7449,40 @@
       }
     ]
   },
+  "Shimmer": {
+    "name": "Shimmer",
+    "description": "A band of light sweeping through a run of text.\n\nIt is the wait indicator for text that is itself the message — \"Generating\nresponse…\", \"Thinking\", a title still being written — where a `Spinner`\nbeside the words would say the same thing twice. The text stays real text:\nselectable, read by a screen reader as written, the color it inherited.\nOnly the paint changes, and only while `active`.\n\n```tsx\n<Shimmer>Generating response…</Shimmer>\n<Shimmer once className=\"text-4 font-semibold\">Saved</Shimmer>\n<Shimmer active={pending}>{pending ? \"Thinking…\" : \"Done\"}</Shimmer>\n```\n\nUnder reduced motion the band does not travel and is not drawn; the text is\nsimply its own color. That is a deliberate departure from `Skeleton`, whose\nshimmer degrades into a pulse: here the text is the content, and dimming it\non a loop would trade the reader's contrast for a cue the words already\ncarry. Styling is driven by `data-*` attributes and `--forte-shimmer-*`\ncustom properties, so it can be re-skinned from plain CSS or Tailwind\narbitrary variants (`data-[active]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the highlight is sweeping. `false` renders the children as\nordinary text — same element, same layout, nothing else changes — so a\nlabel can go from \"Generating…\" to its finished state by flipping one\nflag rather than swapping components."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "once",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Sweep once and stop, instead of looping. For a line that has just\narrived — a new message, a freshly saved title — where a single pass says\n\"look here\" and a loop would say \"still waiting\"."
+      },
+      {
+        "name": "reverse",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Sweep against the reading direction. The default follows `dir`: left to\nright in LTR, right to left in RTL, without being told."
+      }
+    ]
+  },
   "SkeletonRoot": {
     "name": "SkeletonRoot",
     "description": "One placeholder shape.\n\n```tsx\n<Skeleton.Root className=\"h-32 w-full\" />\n<Skeleton.Root variant=\"circle\" width=\"2.5rem\" />\n<Skeleton.Root loading={pending}>{user.name}</Skeleton.Root>\n```",

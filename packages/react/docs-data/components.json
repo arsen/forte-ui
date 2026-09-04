@@ -1008,6 +1008,19 @@
     "hooks": []
   },
   {
+    "name": "Shimmer",
+    "dir": "shimmer",
+    "category": "Feedback",
+    "summary": "An animated highlight sweeping through text that is itself the status message; for a placeholder standing in for content, use Skeleton.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Shimmer"
+    ],
+    "hooks": []
+  },
+  {
     "name": "Skeleton",
     "dir": "skeleton",
     "category": "Feedback",

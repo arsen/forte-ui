@@ -651,6 +651,20 @@ import d_separator_variants from "./separator/variants";
 import d_separator_variants_src from "./separator/variants?raw";
 import d_separator_vertical from "./separator/vertical";
 import d_separator_vertical_src from "./separator/vertical?raw";
+import d_shimmer_active from "./shimmer/active";
+import d_shimmer_active_src from "./shimmer/active?raw";
+import d_shimmer_basic from "./shimmer/basic";
+import d_shimmer_basic_src from "./shimmer/basic?raw";
+import d_shimmer_direction from "./shimmer/direction";
+import d_shimmer_direction_src from "./shimmer/direction?raw";
+import d_shimmer_once from "./shimmer/once";
+import d_shimmer_once_src from "./shimmer/once?raw";
+import d_shimmer_reduced_motion from "./shimmer/reduced-motion";
+import d_shimmer_reduced_motion_src from "./shimmer/reduced-motion?raw";
+import d_shimmer_speed from "./shimmer/speed";
+import d_shimmer_speed_src from "./shimmer/speed?raw";
+import d_shimmer_theming from "./shimmer/theming";
+import d_shimmer_theming_src from "./shimmer/theming?raw";
 import d_skeleton_animations from "./skeleton/animations";
 import d_skeleton_animations_src from "./skeleton/animations?raw";
 import d_skeleton_card from "./skeleton/card";
@@ -1202,6 +1216,13 @@ export type DemoId =
   | "separator/toolbar"
   | "separator/variants"
   | "separator/vertical"
+  | "shimmer/active"
+  | "shimmer/basic"
+  | "shimmer/direction"
+  | "shimmer/once"
+  | "shimmer/reduced-motion"
+  | "shimmer/speed"
+  | "shimmer/theming"
   | "skeleton/animations"
   | "skeleton/card"
   | "skeleton/reduced-motion"
@@ -1641,6 +1662,13 @@ const REGISTRY: Record<DemoId, Demo> = {
   "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
   "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
   "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },
+  "shimmer/active": { Component: d_shimmer_active, source: d_shimmer_active_src, file: "shimmer/active.tsx" },
+  "shimmer/basic": { Component: d_shimmer_basic, source: d_shimmer_basic_src, file: "shimmer/basic.tsx" },
+  "shimmer/direction": { Component: d_shimmer_direction, source: d_shimmer_direction_src, file: "shimmer/direction.tsx" },
+  "shimmer/once": { Component: d_shimmer_once, source: d_shimmer_once_src, file: "shimmer/once.tsx" },
+  "shimmer/reduced-motion": { Component: d_shimmer_reduced_motion, source: d_shimmer_reduced_motion_src, file: "shimmer/reduced-motion.tsx" },
+  "shimmer/speed": { Component: d_shimmer_speed, source: d_shimmer_speed_src, file: "shimmer/speed.tsx" },
+  "shimmer/theming": { Component: d_shimmer_theming, source: d_shimmer_theming_src, file: "shimmer/theming.tsx" },
   "skeleton/animations": { Component: d_skeleton_animations, source: d_skeleton_animations_src, file: "skeleton/animations.tsx" },
   "skeleton/card": { Component: d_skeleton_card, source: d_skeleton_card_src, file: "skeleton/card.tsx" },
   "skeleton/reduced-motion": { Component: d_skeleton_reduced_motion, source: d_skeleton_reduced_motion_src, file: "skeleton/reduced-motion.tsx" },

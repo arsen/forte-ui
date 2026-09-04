@@ -8677,6 +8677,39 @@
       }
     ]
   },
+  "Shimmer": {
+    "name": "Shimmer",
+    "tokens": [
+      {
+        "name": "--forte-shimmer-color",
+        "value": "light-dark( oklch(from currentColor l c h / calc(alpha * 0.2)), oklch(from currentColor max(0.8, calc(l + 0.4)) c h / calc(alpha + 0.4)) )",
+        "description": "Color of the band. Defaults to the text's own color, faded in light mode and lifted toward white in dark mode.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-shimmer-duration",
+        "value": "var(--forte-duration-loop-sweep)",
+        "description": "One full cycle. Speed is this one knob: shorter is faster.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-shimmer-spread",
+        "value": "calc(3ch + var(--forte-space-7))",
+        "description": "Half-width of the band, measured across the text. Part `ch` so it scales with the type and part a fixed run so a small label still gets a visible gleam; a length rather than a fraction of the text, so a one-word label and a full sentence get the same light.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-shimmer-angle",
+        "value": "20deg",
+        "description": "Tilt of the band off vertical. `0deg` is a straight edge.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Skeleton": {
     "name": "Skeleton",
     "tokens": [
