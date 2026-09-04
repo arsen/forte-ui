@@ -13,6 +13,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-04
+
+### NavList
+
+- Added press feedback to `NavList.Link` rows: the same hover lift and press squash as `Button`, via the new shared `.forte-pressable` pattern, so rows and buttons feel like one control set.
+
+### Design tokens & motion
+
+- Extracted Button's press geometry (hover lift, press squash, spring release) into a shared `.forte-pressable` class in `patterns.css` that any interactive part can compose for the same feel. It reads generic `--forte-press-lift` / `-hover-scale` / `-scale` / `-duration` / `-ease` slots, falling back to Button's own defaults when a component maps nothing onto them.
+
 ## [1.1.0] - 2026-09-04
 
 ### Shimmer
@@ -331,7 +341,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/arsen/forte-ui/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/arsen/forte-ui/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...v1.0.0
