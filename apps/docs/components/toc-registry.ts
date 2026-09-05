@@ -878,6 +878,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "orientation", text: "Orientation", depth: 3 },
     { id: "nesting", text: "Nesting", depth: 3 },
     { id: "pixel-constraints", text: "Pixel constraints", depth: 3 },
+    { id: "anchored-panels", text: "Anchored panels", depth: 3 },
     { id: "collapsing", text: "Collapsing", depth: 3 },
     { id: "collapsing-to-a-rail", text: "Collapsing to a rail", depth: 3 },
     { id: "remembering-the-layout", text: "Remembering the layout", depth: 3 },

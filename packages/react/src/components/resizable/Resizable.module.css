@@ -1,11 +1,13 @@
 /*
  * Resizable
  *
- * A splitter. The group is a flex container, each panel is `flex: <n> 1 0`,
- * and the whole component's job is to keep those grow factors summing to 100
- * so they read as percentages. Nothing here is measured in pixels, which is
- * why a group re-divides itself correctly when the window changes without a
- * single line of JavaScript running.
+ * A splitter. The group is a flex container; a panel declared as a percentage
+ * is `flex: <n> 1 0`, and the component's job is to keep those grow factors
+ * summing to 100 so they read as percentages. A panel declared in px is
+ * `flex: 0 0 <n>px` instead, and holds that length. Nothing here is measured
+ * into pixels, which is why a group re-divides itself correctly when the
+ * window changes — the percentages sharing what the lengths leave — without
+ * a single line of JavaScript running.
  *
  * Five decisions carry the file.
  *
@@ -25,8 +27,9 @@
  *
  * 3 — Panel size transitions in exactly two situations, and the selector says
  *     which: the group has SETTLED (`data-ready`) and is either not being
- *     DRAGGED or is mid-SNAP (`data-snapping`). Both exclusions are
- *     load-bearing.
+ *     DRAGGED or is mid-SNAP (`data-snapping`) — and, either way, is not
+ *     REFITTING to a container that changed size (`data-refit`). Every
+ *     exclusion is load-bearing.
  *
  *     Before `data-ready`, the sizes on screen are the pre-hydration fallback
  *     and the next thing to happen is the real layout arriving. Transitioning
@@ -49,6 +52,14 @@
  *     back to following the pointer. A drag that keeps moving inside that
  *     window retargets the transition rather than fighting it: the panel
  *     catches up along the same curve.
+ *
+ *     A container resize is a correction, not a movement. The window gets
+ *     narrower, a px floor becomes a bigger share, the layout is refitted —
+ *     and eased, that refit is a panel drifting after the window edge for
+ *     half a second. The group raises `data-refit` for the one style
+ *     computation that applies the new sizes and drops it before paint, so
+ *     the correction lands in the same frame the browser's own flex layout
+ *     did.
  *
  * 4 — There is no `prefers-reduced-motion` block. The duration tokens shorten
  *     themselves and nothing here moves through space on a travel token, so
@@ -153,10 +164,15 @@
     /* `flex-basis: 0` is what turns the grow factor into a percentage: with a
      * basis of `auto` the factor would only divide the space LEFT OVER after
      * content, so two panels holding different amounts of text would start at
-     * different sizes despite identical `defaultSize`s. */
+     * different sizes despite identical `defaultSize`s. A panel declared in
+     * px has its basis written inline as that length, with `flex-grow: 0`.
+     * `flex-shrink: 1` stays for it too: in a group narrower than its
+     * anchored panels the browser shrinks them to fit for the frame before
+     * the component's own refit arrives, which is the layout the refit lands
+     * on anyway. */
     flex-basis: 0;
     flex-shrink: 1;
-    /* `flex-grow` is written by the component. */
+    /* `flex-grow` and `flex-basis` are written by the component. */
 
     /* A flex item's automatic minimum size is its content, so one long
      * unbreakable string — a URL, a code line, a wide table — would prop the
@@ -173,9 +189,11 @@
    * freeze the inner group's collapse animation. It is also exactly the
    * relationship the layout requires — a panel is a flex item of its group,
    * so anything that is not a direct child was already broken. */
-  .root[data-ready]:not([data-resizing]) > .panel,
-  .root[data-ready][data-snapping] > .panel {
-    transition: flex-grow var(--forte-resizable-duration) var(--forte-resizable-ease);
+  .root[data-ready]:not([data-resizing]):not([data-refit]) > .panel,
+  .root[data-ready][data-snapping]:not([data-refit]) > .panel {
+    transition:
+      flex-grow var(--forte-resizable-duration) var(--forte-resizable-ease),
+      flex-basis var(--forte-resizable-duration) var(--forte-resizable-ease);
   }
 
   /* Handle ----------------------------------------------------------------- */

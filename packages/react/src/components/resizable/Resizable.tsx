@@ -11,12 +11,23 @@ import styles from "./Resizable.module.css";
  * Base UI has no resizable primitive, so this component owns its own layout
  * model. Three decisions shape everything below.
  *
- * 1 — Sizes are PERCENTAGES and the layout is `flex-grow`. A panel is
- *     `flex: <size> 1 0` inside a flex container, so the browser divides the
- *     group in the ratio we hand it and re-divides it for free when the
- *     window changes. Nothing is measured per frame and nothing is written in
- *     pixels, which is what lets a group be `width: 100%`, sit inside a grid
- *     cell, or be nested in another group without a resize observer chain.
+ * 1 — The layout is `flex`, and a panel keeps the UNIT it was declared in.
+ *     A panel whose `defaultSize` is a percentage is `flex: <size> 1 0`, so
+ *     the browser divides the group in the ratio we hand it and re-divides
+ *     it for free when the window changes. A panel declared in px is
+ *     ANCHORED — `flex: 0 0 <size>px` — and the browser holds it at that
+ *     length while the percentage panels share what is left, again with
+ *     nothing measured per frame. That is the difference between a 25% pane
+ *     in an editor and a 280px sidebar: the sidebar the reader dragged to
+ *     320px is 320px after the window is maximized too, and it comes back
+ *     at 320px from storage on a laptop. Everything the component REASONS
+ *     about is still a percentage of the group — the transfers, the
+ *     constraints, `aria-valuenow`, `onLayout` — so the two kinds meet in one
+ *     view of the layout, computed from the group's measured size, and only
+ *     what is written to the DOM differs. Nothing here writes pixels it
+ *     measured, which is what lets a group be `width: 100%`, sit inside a
+ *     grid cell, or be nested in another group without a resize observer
+ *     chain.
  *
  * 2 — The group owns the sizes; the panels are told theirs. A panel cannot
  *     resize itself, because resizing is always a TRANSFER — every percent
@@ -109,17 +120,75 @@ function toPercent(
 }
 
 /**
- * The percentage a length resolves to before anything is measured. A number
- * or a `%` string already is one; a px value needs the container and comes
- * back NaN. This is what the first paint — including the server's — can know,
- * which is why the pre-layout fallbacks below use it instead of `toPercent`.
+ * A remembered size, in the unit it was declared in: a number is a percentage
+ * of the group, `{ px }` an absolute length. The unit is the whole point —
+ * decision 1 at the top of the file — so it travels with the value through
+ * state, storage and the size a collapsed panel reopens to, and is resolved
+ * to a percentage only at the moment the layout is computed.
  */
-function staticPercent(value: ResizableLength | undefined): number {
-  if (typeof value === "number") return value;
-  if (typeof value === "string" && !value.trim().endsWith("px")) {
-    return Number.parseFloat(value);
+type Intent = number | { readonly px: number };
+
+function isPx(intent: Intent | undefined): intent is { readonly px: number } {
+  return typeof intent === "object" && intent !== null;
+}
+
+/** Parse a `ResizableLength` into an intent; `undefined` for nothing usable. */
+function intentOf(value: ResizableLength | undefined): Intent | undefined {
+  if (value == null) return undefined;
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  const parsed = Number.parseFloat(value);
+  if (!Number.isFinite(parsed)) return undefined;
+  return value.trim().endsWith("px") ? { px: parsed } : parsed;
+}
+
+/**
+ * Resolve an intent to a percentage of the group. NaN for a length inside a
+ * group that has not been measured: the caller decides what an unknown is
+ * worth, and it is never worth a made-up number (see `layout`).
+ */
+function intentToPercent(intent: Intent | undefined, groupPx: number): number {
+  if (intent == null) return Number.NaN;
+  if (!isPx(intent)) return intent;
+  return groupPx > 0 ? (intent.px / groupPx) * 100 : Number.NaN;
+}
+
+/* Lengths round-trip through percentages on every commit, and a length of
+ * 511.99999999997px is a length of 512px that nobody wants to read back out
+ * of storage. A thousandth of a pixel is below anything a screen can show. */
+function roundPx(px: number): number {
+  return Math.round(px * 1000) / 1000;
+}
+
+/**
+ * The intent a percentage becomes when it is written back for a panel: a
+ * length for an anchored panel, the percentage itself for the rest. An
+ * unmeasured group cannot express a length and keeps the percentage; the next
+ * commit, with a measurement, converts it.
+ */
+function percentToIntent(percent: number, anchored: boolean, groupPx: number): Intent {
+  return anchored && groupPx > 0 ? { px: roundPx((percent * groupPx) / 100) } : percent;
+}
+
+function sameIntent(a: Intent | undefined, b: Intent | undefined): boolean {
+  if (a == null || b == null) return false;
+  if (isPx(a) || isPx(b)) return isPx(a) && isPx(b) && Math.abs(a.px - b.px) < 0.001;
+  return Math.abs(a - b) < EPSILON;
+}
+
+/* The stored shape, shared with the inline restore below: a finite number is
+ * a percentage, a `"<n>px"` string a length, and anything else discards the
+ * whole entry. Percentages alone is also what earlier versions wrote, so a
+ * layout saved before lengths were kept as lengths still reads. */
+function parseSavedIntent(value: unknown): Intent | undefined {
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  if (typeof value === "string" && /^\d+(\.\d+)?px$/.test(value)) {
+    return { px: Number.parseFloat(value) };
   }
-  return Number.NaN;
+  return undefined;
+}
+
+function serializeIntent(intent: Intent): number | string {
+  return isPx(intent) ? `${Number(intent.px.toFixed(3))}px` : Number(intent.toFixed(4));
 }
 
 /* `noUncheckedIndexedAccess` is on, and every index below is derived from the
@@ -307,14 +376,31 @@ function resizeAt(
 }
 
 /**
- * Pull every panel back inside its constraints and re-balance to 100.
+ * Fit the intent to the group: pull every panel back inside its constraints
+ * and balance the total to 100.
  *
- * Only px constraints make this necessary: a `240px` minimum is a different
+ * Two things put the total off 100. A px constraint is a different
  * percentage at every container width, so a group that shrinks can leave a
- * panel below a floor it was comfortably above a moment ago. Percent-only
- * groups are already valid and this is a no-op for them.
+ * panel below a floor it was comfortably above a moment ago. And an anchored
+ * panel is a different percentage at every width by definition — 280px is
+ * 17.5% of one window and 11.7% of the next — so the rest of the group has to
+ * give up or take up exactly that difference. Percent-only groups with
+ * percent-only constraints are already valid and this is a no-op for them.
+ *
+ * Who absorbs the difference is the whole behavior of an anchored panel. The
+ * PERCENTAGE panels do, first and in proportion to their sizes, so two panes
+ * sharing the space beside a sidebar keep their ratio as the window changes.
+ * The anchored panels are touched only once every percentage panel is at a
+ * bound — the group is narrower than its sidebars, say — and then share the
+ * shortfall the same way. Beyond that the constraints are over-subscribed
+ * (their minimums sum past 100, which happens the moment two px minimums are
+ * wider than the container) and there is no valid layout to find.
  */
-function enforce(sizes: number[], constraints: readonly PanelConstraints[]): number[] {
+function enforce(
+  sizes: number[],
+  constraints: readonly PanelConstraints[],
+  anchored: readonly boolean[],
+): number[] {
   if (sizes.length === 0) return sizes;
 
   const next = sizes.slice();
@@ -326,12 +412,9 @@ function enforce(sizes: number[], constraints: readonly PanelConstraints[]): num
     next[i] = clamp(sizeAt(next, i), Math.min(floor, limits.max), limits.max);
   }
 
-  // Two passes: the first spreads the error over the panels with slack, the
-  // second mops up whatever the bounds refused. Beyond that the constraints
-  // are over-subscribed — their minimums sum past 100, which happens the
-  // moment two px minimums are wider than the container — and there is no
-  // valid layout to find.
-  for (let pass = 0; pass < 2; pass++) {
+  // Each pass either clears the error or pins at least one more panel to a
+  // bound, so it cannot need more than one pass per panel per tier.
+  for (let pass = 0; pass < 2 * next.length + 2; pass++) {
     const error = 100 - next.reduce((sum, value) => sum + value, 0);
     if (Math.abs(error) < EPSILON) break;
 
@@ -348,11 +431,27 @@ function enforce(sizes: number[], constraints: readonly PanelConstraints[]): num
       }
       return Math.max(0, size - floorOf(limits, size));
     });
-    const slack = room.reduce((sum, value) => sum + value, 0);
-    if (slack < EPSILON) break;
 
-    for (let i = 0; i < next.length; i++) {
-      next[i] = sizeAt(next, i) + error * (sizeAt(room, i) / slack);
+    const tier = (wantAnchored: boolean) =>
+      room.flatMap((value, i) =>
+        value > EPSILON && (anchored[i] ?? false) === wantAnchored ? [i] : [],
+      );
+    let candidates = tier(false);
+    if (candidates.length === 0) candidates = tier(true);
+    if (candidates.length === 0) break;
+
+    // In proportion to size, so panels sharing the space keep their ratio;
+    // equally when they are all at nothing, since a share of zero is zero.
+    const total = candidates.reduce((sum, i) => sum + sizeAt(next, i), 0);
+    for (const i of candidates) {
+      const limits = limitsAt(constraints, i);
+      const size = sizeAt(next, i);
+      const share = total > EPSILON ? size / total : 1 / candidates.length;
+      next[i] = clamp(
+        size + error * share,
+        Math.min(floorOf(limits, size), limits.max),
+        limits.max,
+      );
     }
   }
 
@@ -405,7 +504,10 @@ interface ResizableContextValue {
   initialShare: number | undefined;
   /** Whether the group's server HTML carries the script that applies a saved layout before first paint. */
   prefilled: boolean;
+  /** Every panel's size as a percentage of the group — the fitted layout. */
   sizes: Readonly<Record<string, number>>;
+  /** What each panel draws: a length for an anchored panel, a grow factor for the rest. */
+  rendered: Readonly<Record<string, Intent>>;
   collapsedIds: ReadonlySet<string>;
   draggingId: string | null;
   register: (entry: RegistryEntry) => () => void;
@@ -461,10 +563,19 @@ function restoreScript(autoSaveId: string): string {
     `var v=JSON.parse(localStorage.getItem(${key}));` +
     'var p=[],c;for(c=g.firstElementChild;c;c=c.nextElementSibling)if(c.getAttribute("data-forte")==="resizable-panel")p.push(c);' +
     "if(!Array.isArray(v)||v.length!==p.length)return;" +
-    'for(var i=0;i<p.length;i++)if(typeof v[i]!=="number"||!isFinite(v[i]))return;' +
-    "for(i=0;i<p.length;i++)p[i].style.flexGrow=String(v[i]);" +
+    "var i,e;for(i=0;i<p.length;i++){e=v[i];" +
+    'if(typeof e==="number"?!isFinite(e):!(typeof e==="string"&&/^\\d+(\\.\\d+)?px$/.test(e)))return;}' +
+    "for(i=0;i<p.length;i++){e=v[i];" +
+    'if(typeof e==="number"){p[i].style.flexGrow=String(e);p[i].style.flexBasis="0";}' +
+    'else{p[i].style.flexGrow="0";p[i].style.flexBasis=e;}}' +
     "}catch(e){}})()"
   );
+}
+
+/* For `useSyncExternalStore` below: nothing to subscribe to, the snapshots
+ * are constants and only which one React reads changes. */
+function subscribeToNothing() {
+  return () => {};
 }
 
 function useResizableContext(part: string): ResizableContextValue {
@@ -500,8 +611,9 @@ export interface ResizableGroupProps
   largeStep?: number;
   /**
    * Remember the layout under this key and restore it on the next visit.
-   * Sizes are stored positionally, so the saved layout is discarded if the
-   * number of panels has changed since.
+   * Sizes are stored positionally, each in the unit its panel was declared in,
+   * so the saved layout is discarded if the number of panels has changed
+   * since.
    *
    * With the default storage the saved layout is applied before the first
    * paint: the group's server HTML carries a small inline script that reads
@@ -569,9 +681,11 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     if (registryRef.current === null) registryRef.current = new Map();
     const registry = registryRef.current;
 
-    const [, setRevision] = React.useState(0);
+    const [revision, setRevision] = React.useState(0);
     const [order, setOrder] = React.useState<readonly string[]>([]);
-    const [sizes, setSizes] = React.useState<Record<string, number>>({});
+    /* The INTENT: what the reader asked for, each panel in its own unit. Never
+     * what is on screen — that is `layout`, below. */
+    const [sizes, setSizes] = React.useState<Record<string, Intent>>({});
     const [draggingId, setDraggingId] = React.useState<string | null>(null);
     /* Bumped on every commit that snaps a collapsible panel across its
      * threshold, zeroed once the movement that commit started is over. A
@@ -579,6 +693,9 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
      * dragged back open — restart the watch below instead of sharing one. */
     const [snapping, setSnapping] = React.useState(0);
     const [groupPx, setGroupPx] = React.useState(0);
+    /* Raised for the commit that refits the layout to a changed container,
+     * and dropped again before paint — see the effect on it below. */
+    const [refit, setRefit] = React.useState(false);
 
     const invalidate = React.useCallback(() => {
       setRevision((value) => value + 1);
@@ -634,19 +751,53 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       return orientation === "horizontal" ? rect.width : rect.height;
     }, [orientation]);
 
-    /* px constraints are a percentage of a number that changes, so the group
-     * has to know its own size — and know when it changed. */
+    /* px constraints — and anchored panels — are a percentage of a number that
+     * changes, so the group has to know its own size, and know when it
+     * changed. */
+    const measuredPx = React.useRef(0);
+
     useIsoLayoutEffect(() => {
+      const update = () => {
+        const px = measure();
+        /* Zero is not a size, it is a group nobody can see — `display: none`,
+         * a closed tab, a drawer mid-exit. Every px constraint would fall
+         * back to nothing at it, un-collapsing a rail and floating a floor
+         * away while the group is hidden, and each of those is a callback to
+         * the consumer. The last real measurement is the better guess until
+         * the group is back. */
+        if (px <= 0 || px === measuredPx.current) return;
+        const first = measuredPx.current === 0;
+        measuredPx.current = px;
+        setGroupPx(px);
+        // A change of container, not of intent: the panels snap to the
+        // refitted layout rather than easing into it. Not for the first
+        // measurement, which `data-ready` already keeps from animating.
+        if (!first) setRefit(true);
+      };
       const element = groupRef.current;
       if (!element || typeof ResizeObserver === "undefined") {
-        setGroupPx(measure());
+        update();
         return;
       }
-      const observer = new ResizeObserver(() => setGroupPx(measure()));
+      const observer = new ResizeObserver(update);
       observer.observe(element);
-      setGroupPx(measure());
+      update();
       return () => observer.disconnect();
     }, [measure]);
+
+    /* `data-refit` lives for exactly one style computation. The read forces
+     * it: the browser computes the refitted sizes while the attribute says
+     * no transition applies, so the change starts nothing, and the commit
+     * that then drops the attribute changes no size and starts nothing
+     * either — the same two-step `data-ready` uses on mount. All of it is
+     * before paint, which is what makes a container resize a correction the
+     * reader never sees rather than a panel easing after the window. */
+    useIsoLayoutEffect(() => {
+      if (!refit) return;
+      // The read is the point; the value is not.
+      void groupRef.current?.offsetWidth;
+      setRefit(false);
+    }, [refit]);
 
     const constraintsFor = React.useCallback(
       (ids: readonly string[], px: number): PanelConstraints[] =>
@@ -666,27 +817,47 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       [],
     );
 
+    const constraints = React.useMemo(
+      () => constraintsFor(panelIds, groupPx),
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- `revision` is the signal that a config ref changed
+      [constraintsFor, panelIds, groupPx, revision],
+    );
+
+    /* Which panels are anchored — declared in px. Read the way the constraints
+     * are, through the config ref, on every revision. */
+    const anchored = React.useMemo(
+      () =>
+        panelIds.map((id) => isPx(intentOf(registry.get(id)?.config?.current.defaultSize))),
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- `revision` is the signal that a config ref changed
+      [panelIds, registry, revision],
+    );
+
     /* The INTENT, resolved from whatever is known: a size already assigned
      * wins, then the panel's `defaultSize`, then an equal share of what is
-     * left. Scaled to exactly 100 at the end so the flex ratios are also
-     * readable as percentages.
+     * left. The percentages are scaled to exactly 100 at the end so they are
+     * readable as percentages; the lengths stand outside that sum. What is
+     * left beside a 280px sidebar is not a number anyone can know without
+     * measuring, and nothing here measures — a length is kept as a length,
+     * so the intent resolves the same on the server, in a hidden tab and on
+     * screen, and it is the layout pass that squeezes the percentages into
+     * whatever the lengths leave once the group has a size.
      *
      * Deliberately unconstrained. Constraints are applied to the intent every
      * render, below, and never written back into it — see the note there. */
     const resolve = React.useCallback(
-      (ids: readonly string[], previous: Record<string, number>, px: number) => {
-        const next: Record<string, number> = {};
+      (ids: readonly string[], previous: Record<string, Intent>) => {
+        const next: Record<string, Intent> = {};
         const unsized: string[] = [];
         let assigned = 0;
 
         for (const id of ids) {
-          const config = registry.get(id)?.config?.current;
-          const size = previous[id] ?? toPercent(config?.defaultSize, px, Number.NaN);
-          if (Number.isFinite(size)) {
-            next[id] = size;
-            assigned += size;
-          } else {
+          const intent =
+            previous[id] ?? intentOf(registry.get(id)?.config?.current.defaultSize);
+          if (intent == null) {
             unsized.push(id);
+          } else {
+            next[id] = intent;
+            if (!isPx(intent)) assigned += intent;
           }
         }
 
@@ -695,9 +866,16 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
           for (const id of unsized) next[id] = each;
         }
 
-        const total = ids.reduce((sum, id) => sum + (next[id] ?? 0), 0);
+        let total = 0;
+        for (const id of ids) {
+          const intent = next[id];
+          if (intent != null && !isPx(intent)) total += intent;
+        }
         if (total > EPSILON && Math.abs(total - 100) > EPSILON) {
-          for (const id of ids) next[id] = ((next[id] ?? 0) / total) * 100;
+          for (const id of ids) {
+            const intent = next[id];
+            if (intent != null && !isPx(intent)) next[id] = (intent / total) * 100;
+          }
         }
 
         return next;
@@ -705,31 +883,46 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       [registry],
     );
 
-    const commit = React.useCallback((ids: readonly string[], next: number[]) => {
-      setSizes((prev) => {
-        if (ids.every((id, i) => Math.abs((prev[id] ?? Number.NaN) - sizeAt(next, i)) < EPSILON)) {
-          return prev;
-        }
-        const merged: Record<string, number> = {};
-        ids.forEach((id, i) => {
-          merged[id] = sizeAt(next, i);
+    /* Write a layout back as intent: each panel in its own unit, and a shut
+     * panel as its `collapsedSize` rather than the percentage it shut at.
+     * That substitution is what keeps a collapsed rail collapsed. A `56px`
+     * rail that was 5% of one window is 3.5% of a wider one, and a stored 5%
+     * would read there as "open, and below its minimum" — floating the rail
+     * back up to `minSize`, and telling the consumer it had been expanded,
+     * because the window grew. */
+    const commit = React.useCallback(
+      (ids: readonly string[], next: number[]) => {
+        setSizes((prev) => {
+          const merged: Record<string, Intent> = {};
+          let changed = Object.keys(prev).length !== ids.length;
+          ids.forEach((id, i) => {
+            const limits = limitsAt(constraints, i);
+            const percent = sizeAt(next, i);
+            const intent: Intent =
+              limits.collapsible && percent <= limits.collapsed + EPSILON
+                ? (intentOf(registry.get(id)?.config?.current.collapsedSize) ?? 0)
+                : percentToIntent(percent, anchored[i] ?? false, groupPx);
+            merged[id] = intent;
+            if (!sameIntent(prev[id], intent)) changed = true;
+          });
+          return changed ? merged : prev;
         });
-        return merged;
-      });
-    }, []);
+      },
+      [constraints, anchored, groupPx, registry],
+    );
 
     // A panel arrived or left: re-resolve, keeping every size already known.
-    // NOT a dependent of `groupPx` — a container resize must not rewrite the
-    // intent, which is the whole point of keeping the two apart.
+    // NOT a dependent of `groupPx`: nothing here needs the measurement, and a
+    // container resize must not rewrite the intent, which is the whole point
+    // of keeping the two apart.
     useIsoLayoutEffect(() => {
       setSizes((prev) => {
-        const next = resolve(panelIds, prev, groupPx);
+        const next = resolve(panelIds, prev);
         const changed =
           Object.keys(prev).length !== panelIds.length ||
-          panelIds.some((id) => Math.abs((prev[id] ?? Number.NaN) - (next[id] ?? 0)) > EPSILON);
+          panelIds.some((id) => !sameIntent(prev[id], next[id]));
         return changed ? next : prev;
       });
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- see above
     }, [panelIds, resolve]);
 
     /* ---------------------------------------------------------------------
@@ -758,24 +951,52 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         if (!raw) return;
         const saved: unknown = JSON.parse(raw);
         if (!Array.isArray(saved) || saved.length !== panelIds.length) return;
-        if (!saved.every((value) => typeof value === "number" && Number.isFinite(value))) return;
+        const intents = saved.map(parseSavedIntent);
+        if (intents.some((intent) => intent == null)) return;
         // Stored unconstrained, restored unconstrained: the saved layout is
         // an intent like any other, and the render pass fits it to whatever
         // the container happens to be on this visit.
-        commit(panelIds, saved as number[]);
+        const next: Record<string, Intent> = {};
+        panelIds.forEach((id, i) => {
+          next[id] = intents[i] as Intent;
+        });
+        setSizes(next);
       } catch {
         // A malformed or unreadable entry is not worth failing a render over;
         // the default layout is a perfectly good answer.
       }
-    }, [autoSaveId, store, panelIds, commit]);
+    }, [autoSaveId, store, panelIds]);
+
+    /* An anchored panel can be holding a percentage: a layout saved before
+     * lengths were kept as lengths, or a `defaultSize` whose unit changed
+     * under it. The best reading of that percentage is the length it comes
+     * to in THIS container, and it is a length from here on — at the first
+     * measurement that can say what that is, which is not always the commit
+     * the percentage arrived in (a group restored while hidden measures
+     * later). A shut panel is left alone: its intent is its `collapsedSize`,
+     * in whatever unit that was declared. */
+    useIsoLayoutEffect(() => {
+      if (groupPx <= 0) return;
+      setSizes((prev) => {
+        let next: Record<string, Intent> | null = null;
+        panelIds.forEach((id, i) => {
+          const intent = prev[id];
+          if (!(anchored[i] ?? false) || intent == null || isPx(intent)) return;
+          const limits = limitsAt(constraints, i);
+          if (limits.collapsible && intent <= limits.collapsed + EPSILON) return;
+          (next ??= { ...prev })[id] = { px: roundPx((intent * groupPx) / 100) };
+        });
+        return next ?? prev;
+      });
+    }, [groupPx, panelIds, anchored, constraints]);
 
     React.useEffect(() => {
       if (!autoSaveId || !store || !restoredRef.current || panelIds.length === 0) return;
-      if (panelIds.some((id) => !Number.isFinite(sizes[id]))) return;
+      if (panelIds.some((id) => sizes[id] == null)) return;
       try {
         store.setItem(
           `forte-resizable:${autoSaveId}`,
-          JSON.stringify(panelIds.map((id) => Number((sizes[id] ?? 0).toFixed(4)))),
+          JSON.stringify(panelIds.map((id) => serializeIntent(sizes[id] as Intent))),
         );
       } catch {
         // Quota, private mode, or a storage-less environment. Not fatal.
@@ -785,11 +1006,6 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     /* ---------------------------------------------------------------------
      * Derived state
      * ------------------------------------------------------------------ */
-
-    const constraints = React.useMemo(
-      () => constraintsFor(panelIds, groupPx),
-      [constraintsFor, panelIds, groupPx],
-    );
 
     /* Intent, then constraints — in that order, every render, and never the
      * other way round.
@@ -813,35 +1029,73 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
      * across several painted commits: a client-side navigation streams the
      * page in, and a hydration mismatch mounts the whole tree a second time.
      * Every derived value below has to be safe to read mid-window. */
-    const settled =
-      panelIds.length > 0 && panelIds.every((id) => Number.isFinite(sizes[id]));
+    const settled = panelIds.length > 0 && panelIds.every((id) => sizes[id] != null);
 
     const layout = React.useMemo(() => {
+      const map: Record<string, number> = {};
+      const percents = panelIds.map((id) => intentToPercent(sizes[id], groupPx));
       /* Before the intent is complete, enforcing would manufacture data:
        * `sizes[id] ?? 0` turns every not-yet-resolved panel into a zero, and
        * that zero is not inert — it renders a frame of collapsed panels, and
        * it is what told every collapsible panel it was shut (see
        * `collapsedIds`). Passing through only what is known lets a panel
        * without a size fall back to its own declared share, which is the
-       * value the resolve effect is about to hand it anyway. */
-      if (!settled) {
-        const map: Record<string, number> = {};
-        for (const id of panelIds) {
-          const size = sizes[id];
-          if (Number.isFinite(size)) map[id] = size as number;
-        }
+       * value the resolve effect is about to hand it anyway.
+       *
+       * The same goes for a length inside a group that has not been measured:
+       * it is not a percentage of anything yet. The panel still draws — as
+       * the length — so nothing is lost by waiting for the measurement, and
+       * everything would be by inventing a number for it. */
+      if (!settled || percents.some((percent) => !Number.isFinite(percent))) {
+        panelIds.forEach((id, i) => {
+          const percent = percents[i];
+          if (percent != null && Number.isFinite(percent)) map[id] = percent;
+        });
         return map;
       }
-      const enforced = enforce(
-        panelIds.map((id) => sizes[id] ?? 0),
-        constraints,
-      );
-      const map: Record<string, number> = {};
+      const enforced = enforce(percents, constraints, anchored);
       panelIds.forEach((id, i) => {
         map[id] = sizeAt(enforced, i);
       });
       return map;
-    }, [panelIds, sizes, constraints, settled]);
+    }, [panelIds, sizes, constraints, anchored, settled, groupPx]);
+
+    /* What each panel DRAWS, in the unit of its intent: a length for an
+     * anchored panel, a grow factor for the rest. The length is read back off
+     * the fitted layout rather than taken from the intent, because a
+     * constraint or an over-subscribed group may have cut it down — and for a
+     * panel nothing cut, the fitted percentage of the measured size is its
+     * own length again. Before the group is measured the intent is the only
+     * length there is.
+     *
+     * The unit is the intent's, not the panel's, so a percentage panel shut
+     * to a `56px` rail draws the rail as a length: the browser holds it at
+     * 56px through every resize, instead of the group re-deriving it a frame
+     * after each one.
+     *
+     * One exception: a group with nothing flexible in it — every panel a
+     * length — has no panel to give the leftover to, so it is drawn in grow
+     * factors after all, which fill the group the way the fitted percentages
+     * say. Otherwise a resize would leave a gap beside the last panel for
+     * the frame it takes the measurement to arrive. */
+    const rendered = React.useMemo(() => {
+      const map: Record<string, Intent> = {};
+      const flexible = panelIds.some((id) => !isPx(sizes[id]));
+      for (const id of panelIds) {
+        const intent = sizes[id];
+        if (intent == null) continue;
+        const percent = layout[id];
+        if (isPx(intent) && flexible) {
+          map[id] =
+            groupPx > 0 && percent != null ? { px: roundPx((percent * groupPx) / 100) } : intent;
+        } else if (percent != null) {
+          map[id] = percent;
+        } else if (!isPx(intent)) {
+          map[id] = intent;
+        }
+      }
+      return map;
+    }, [panelIds, sizes, layout, groupPx]);
 
     const collapsedIds = React.useMemo(() => {
       const set = new Set<string>();
@@ -904,7 +1158,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
      * the correctness of "reopen where it was" on React's effect ordering
      * between a panel's controlled-collapse effect and the group's — and that
      * ordering is exactly what changes when a panel is collapsed on mount. */
-    const restoreSizes = React.useRef<Record<string, number>>({});
+    const restoreSizes = React.useRef<Record<string, Intent>>({});
 
     const drag = React.useCallback(
       (handleId: string, snapshot: number[], deltaPercent: number) => {
@@ -919,7 +1173,13 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
           if (!limits.collapsible) return;
           const wasOpen = sizeAt(snapshot, i) > limits.collapsed + EPSILON;
           const isShut = sizeAt(next, i) <= limits.collapsed + EPSILON;
-          if (wasOpen && isShut) restoreSizes.current[id] = sizeAt(snapshot, i);
+          if (wasOpen && isShut) {
+            restoreSizes.current[id] = percentToIntent(
+              sizeAt(snapshot, i),
+              anchored[i] ?? false,
+              groupPx,
+            );
+          }
           /* The snap is judged against what is ON SCREEN, not the snapshot.
            * The snapshot is where the gesture started, and a panel shut and
            * dragged back open inside one gesture has crossed the threshold
@@ -935,7 +1195,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         if (snapped) setSnapping((count) => count + 1);
         commit(panelIds, next);
       },
-      [pivotOf, panelIds, constraints, currentSizes, commit],
+      [pivotOf, panelIds, constraints, anchored, groupPx, currentSizes, commit],
     );
 
     const nudge = React.useCallback(
@@ -985,30 +1245,32 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         if (isCollapsed === collapsed) return;
 
         if (collapsed) {
-          restoreSizes.current[panelId] = current;
+          // The intent rather than the fitted size: a sidebar squeezed by a
+          // narrow window reopens to the width the reader chose, not to the
+          // width the window happened to allow when it shut.
+          restoreSizes.current[panelId] = sizes[panelId] ?? current;
           resizePanelTo(index, limits.collapsed);
         } else {
           // Where it was, then where it started, then an equal share — the
           // last of which is only ever reached by a panel that was collapsed
           // on mount and has no `defaultSize`.
-          const remembered = restoreSizes.current[panelId];
-          const declared = toPercent(
-            registry.get(panelId)?.config?.current.defaultSize,
+          const remembered = intentToPercent(restoreSizes.current[panelId], groupPx);
+          const declared = intentToPercent(
+            intentOf(registry.get(panelId)?.config?.current.defaultSize),
             groupPx,
-            Number.NaN,
           );
           const fallback = Number.isFinite(declared)
             ? declared
             : Math.max(limits.min, 100 / panelIds.length);
           const target = clamp(
-            remembered != null && Number.isFinite(remembered) ? remembered : fallback,
+            Number.isFinite(remembered) ? remembered : fallback,
             limits.min,
             limits.max,
           );
           resizePanelTo(index, target);
         }
       },
-      [panelIds, layout, constraints, resizePanelTo, registry, groupPx],
+      [panelIds, sizes, layout, constraints, resizePanelTo, registry, groupPx],
     );
 
     const toggleCollapse = React.useCallback(
@@ -1036,8 +1298,8 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
 
     const resetLayout = React.useCallback(() => {
       restoreSizes.current = {};
-      setSizes(resolve(panelIds, {}, groupPx));
-    }, [panelIds, groupPx, resolve]);
+      setSizes(resolve(panelIds, {}));
+    }, [panelIds, resolve]);
 
     const neighbours = React.useCallback(
       (handleId: string) => {
@@ -1132,11 +1394,13 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
               typeof child.getAnimations === "function"
                 ? child
                     .getAnimations()
-                    .filter(
-                      (animation) =>
-                        (animation as CSSTransition).transitionProperty === "flex-grow" &&
-                        animation.playState !== "finished",
-                    )
+                    .filter((animation) => {
+                      const property = (animation as CSSTransition).transitionProperty;
+                      return (
+                        (property === "flex-grow" || property === "flex-basis") &&
+                        animation.playState !== "finished"
+                      );
+                    })
                 : [],
             )
           : [];
@@ -1168,10 +1432,11 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       React.Children.forEach(children, (child) => {
         if (!React.isValidElement(child) || child.type !== ResizablePanel) return;
         panels += 1;
-        const size = staticPercent((child.props as ResizablePanelProps).defaultSize);
-        if (Number.isFinite(size)) {
+        const intent = intentOf((child.props as ResizablePanelProps).defaultSize);
+        if (intent != null) {
           sized += 1;
-          declared += size;
+          // A length takes no share of the percentages — see `resolve`.
+          if (!isPx(intent)) declared += intent;
         }
       });
       if (panels === 0 || panels === sized) return undefined;
@@ -1182,6 +1447,20 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     // is a client object the server has never seen.
     const prefilled = autoSaveId != null && storage == null;
 
+    /* Whether this render is the server's, or the hydration of it — the only
+     * two renders where the inline restore belongs. React never executes a
+     * script it creates on the client, so on a client-side navigation the
+     * element would be dead markup, and in development a console error on
+     * every mount saying exactly that. `useSyncExternalStore` hands back the
+     * server snapshot for those two renders and the client one for every
+     * render after, which also removes the element once it has done its
+     * job. */
+    const hydrating = React.useSyncExternalStore(
+      subscribeToNothing,
+      () => false,
+      () => true,
+    );
+
     const context = React.useMemo<ResizableContextValue>(
       () => ({
         orientation,
@@ -1189,6 +1468,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         initialShare,
         prefilled,
         sizes: layout,
+        rendered,
         collapsedIds,
         draggingId,
         register,
@@ -1212,6 +1492,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         initialShare,
         prefilled,
         layout,
+        rendered,
         collapsedIds,
         draggingId,
         register,
@@ -1251,12 +1532,13 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
             "data-orientation": orientation,
             "data-resizing": draggingId ? "" : undefined,
             "data-snapping": snapping > 0 ? "" : undefined,
+            "data-refit": refit ? "" : undefined,
             "data-ready": ready && settled ? "" : undefined,
             ...props,
             children: (
               <>
                 {children}
-                {prefilled ? (
+                {prefilled && hydrating ? (
                   <script
                     data-forte="resizable-restore"
                     dangerouslySetInnerHTML={{ __html: restoreScript(autoSaveId as string) }}
@@ -1294,7 +1576,11 @@ export interface ResizablePanelProps
   extends Omit<React.ComponentPropsWithoutRef<"div">, "className"> {
   /**
    * Size before anyone drags anything, as a percentage of the group or a
-   * `px` string. Panels without one split whatever the sized panels leave.
+   * `px` string — and the unit is kept. A percentage panel scales with the
+   * group; a px panel is anchored: it holds its length when the group changes
+   * size, is remembered as a length after a drag, and is stored as one under
+   * `autoSaveId`, while the percentage panels share whatever it leaves. Panels
+   * without one split whatever the sized panels leave.
    */
   defaultSize?: ResizableLength;
   /**
@@ -1391,7 +1677,8 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
     forwardedRef,
   ) {
     const context = useResizableContext("Panel");
-    const { register, invalidate, sizes, collapsedIds, constraintsOf, setPanelCollapsed } = context;
+    const { register, invalidate, rendered, collapsedIds, constraintsOf, setPanelCollapsed } =
+      context;
     const id = React.useId();
 
     const config = React.useRef<PanelConfig>({
@@ -1487,7 +1774,6 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       }
     }, [isCollapsed, collapsedProp, id, setPanelCollapsed]);
 
-    const size = sizes[id];
     /* A panel collapsed to nothing is still in the DOM, still focusable and
      * still read out — `overflow: hidden` hides pixels, not the accessibility
      * tree, so Tab would walk into a sidebar that is not there. `inert` is the
@@ -1506,7 +1792,30 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       if (element) element.inert = hidden;
     }, [hidden]);
 
-    const declaredShare = staticPercent(defaultSize);
+    /* What to draw: the group's fitted answer, else the panel's own declared
+     * size, else the share the group worked out from its siblings. A length
+     * is `flex: 0 0 <px>` and a percentage `flex: <n> 1 0`. */
+    const drawn = rendered[id] ?? intentOf(defaultSize) ?? context.initialShare ?? 1;
+    const flexGrow = isPx(drawn) ? 0 : drawn;
+    const flexBasis = isPx(drawn) ? `${drawn.px}px` : "0";
+
+    /* Written to the element directly as well as rendered, because React's
+     * picture of these two properties cannot be trusted after hydration.
+     * The group's inline restore may have rewritten them in the server HTML
+     * before React arrived — in either unit, since a saved layout can hold a
+     * length for a panel the server drew as a percentage — and hydration
+     * adopts that DOM without reading it. React then diffs each later render
+     * against what IT rendered, not against the element, and skips a key it
+     * believes unchanged: a `flex-grow: 0` left as the script's `31.25`,
+     * under a `flex-basis` React did rewrite, and the panel is the sum of
+     * both. Keyed on the values, so it runs on mount and on every change, and
+     * before paint. A property the consumer sets through `style` is theirs. */
+    useIsoLayoutEffect(() => {
+      const element = entry.current.element;
+      if (!element) return;
+      if (style?.flexGrow === undefined) element.style.flexGrow = String(flexGrow);
+      if (style?.flexBasis === undefined) element.style.flexBasis = flexBasis;
+    }, [flexGrow, flexBasis, style?.flexGrow, style?.flexBasis]);
 
     return useRender({
       render,
@@ -1525,9 +1834,11 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
         // the server HTML before hydration; see `restoreScript`.
         suppressHydrationWarning: context.prefilled || undefined,
         style: {
-          /* `flexGrow` alone is the layout. `flexBasis: 0` makes the grow
-           * factor describe the WHOLE panel rather than the leftover space,
-           * which is what turns the number into a percentage.
+          /* `flexGrow` and `flexBasis` are the layout. For a percentage,
+           * `flexBasis: 0` makes the grow factor describe the WHOLE panel
+           * rather than the leftover space, which is what turns the number
+           * into a percentage; for a length the basis IS the size and the
+           * panel does not grow.
            *
            * Before the group has resolved the layout the panel falls back to
            * its own `defaultSize`, or — for a panel that declared none — to
@@ -1535,9 +1846,8 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
            * server-rendered split identical to the resolved one for the
            * ordinary anatomy, so there is nothing to correct on hydration and
            * nothing to see. */
-          flexGrow:
-            size ??
-            (Number.isFinite(declaredShare) ? declaredShare : (context.initialShare ?? 1)),
+          flexGrow,
+          flexBasis,
           ...style,
         },
         ...props,
