@@ -6875,7 +6875,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, so the saved layout is discarded if the\nnumber of panels has changed since.\n\nRestoration happens after mount — the server has no access to the store —\nso give the panels sensible `defaultSize`s as well, or the first paint is\nthe default layout rather than the saved one."
+        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, so the saved layout is discarded if the\nnumber of panels has changed since.\n\nWith the default storage the saved layout is applied before the first\npaint: the group's server HTML carries a small inline script that reads\n`localStorage` while the page is still parsing. A page whose Content\nSecurity Policy forbids inline scripts, or a custom `storage`, falls back\nto restoring after mount, so give the panels sensible `defaultSize`s as\nwell — they are what the first paint shows in that case."
       },
       {
         "name": "className",
@@ -6952,6 +6952,13 @@
         "required": false,
         "defaultValue": "0",
         "description": "Size when collapsed. `0` hides the panel; a small `px` value leaves an\nicon rail behind."
+      },
+      {
+        "name": "collapseOnDrag",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the handle may collapse the panel — by dragging past `minSize`,\nor with <kbd>Enter</kbd>, which is the same gesture from the keyboard.\nSet it to `false` for a sidebar that collapses only through `collapsed`,\nfrom your own toggle: the drag then stops at `minSize` like any other\npanel's, and while the panel is shut the handle leaves it shut. Nothing\nwithout `collapsible`."
       },
       {
         "name": "collapseThreshold",

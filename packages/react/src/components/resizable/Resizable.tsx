@@ -75,6 +75,8 @@ interface PanelConstraints {
   collapsible: boolean;
   collapsed: number;
   threshold: number;
+  /** Whether the handle — a drag past `min`, or Enter — may collapse or expand it. */
+  viaHandle: boolean;
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -131,6 +133,7 @@ const UNCONSTRAINED: PanelConstraints = {
   collapsible: false,
   collapsed: 0,
   threshold: 0.5,
+  viaHandle: true,
 };
 
 function sizeAt(sizes: readonly number[], index: number): number {
@@ -196,13 +199,21 @@ function snapCollapsible(
  * because that is the collapse gesture. A panel two positions out collapsing
  * because its neighbour ran out of room would be a layout jumping about far
  * from the pointer.
+ *
+ * `gesture` says whether this transfer is the reader's hand on the handle —
+ * a drag or its keyboard equivalents — or a programmatic target. A gesture
+ * snaps in the dead band, and it is the only kind of transfer a panel with
+ * `collapseOnDrag` off refuses across its collapsed edge: such a panel stops
+ * at its minimum on the way down, and once shut it stays shut until whatever
+ * owns its `collapsed` prop reopens it. A programmatic target neither snaps
+ * nor asks permission — it IS that owner.
  */
 function resizeAt(
   sizes: number[],
   constraints: readonly PanelConstraints[],
   pivot: number,
   delta: number,
-  snap = true,
+  gesture = true,
 ): number[] {
   if (!Number.isFinite(delta) || Math.abs(delta) < EPSILON) return sizes;
   if (pivot < 0 || pivot + 1 >= sizes.length) return sizes;
@@ -225,19 +236,32 @@ function resizeAt(
   for (let k = 0; k < shrinkOrder.length && remaining > EPSILON; k++) {
     const i = shrinkOrder[k] ?? 0;
     const limits = limitsAt(constraints, i);
-    const floor = k === 0 && limits.collapsible ? limits.collapsed : limits.min;
+    const floor =
+      k === 0 && limits.collapsible && (!gesture || limits.viaHandle)
+        ? limits.collapsed
+        : limits.min;
     const take = Math.min(Math.max(0, sizeAt(next, i) - floor), remaining);
     next[i] = sizeAt(next, i) - take;
     remaining -= take;
     freed += take;
   }
 
-  if (snap && shrinkOrder.length > 0) {
+  if (gesture && shrinkOrder.length > 0) {
     freed += snapCollapsible(next, constraints, shrinkOrder[0] ?? 0);
   }
 
   const grow = limitsAt(constraints, growIndex);
-  const applied = Math.min(freed, Math.max(0, grow.max - sizeAt(next, growIndex)));
+  /* A shut panel the handle may not reopen has no headroom for a gesture:
+   * the room it would have taken goes back where it came from, below, and
+   * the divider does not move. Without this the drag would crack it open to
+   * its minimum — the one transition the prop exists to reserve. */
+  const pinned =
+    gesture &&
+    grow.collapsible &&
+    !grow.viaHandle &&
+    sizeAt(next, growIndex) <= grow.collapsed + EPSILON;
+  const ceiling = pinned ? sizeAt(next, growIndex) : grow.max;
+  const applied = Math.min(freed, Math.max(0, ceiling - sizeAt(next, growIndex)));
   next[growIndex] = sizeAt(next, growIndex) + applied;
   let leftover = freed - applied;
 
@@ -247,7 +271,7 @@ function resizeAt(
    * out of what is still in hand. When it cannot be, the panel stays shut and
    * the reader drags a little further; the alternative is stealing percent
    * from a panel already at its minimum. */
-  if (snap && grow.collapsible) {
+  if (gesture && grow.collapsible) {
     const size = sizeAt(next, growIndex);
     if (size > grow.collapsed + EPSILON && size < grow.min - EPSILON) {
       const snapPoint = grow.collapsed + (grow.min - grow.collapsed) * grow.threshold;
@@ -361,6 +385,7 @@ interface PanelConfig {
   collapsible: boolean;
   collapsedSize: ResizableLength;
   collapseThreshold: number;
+  collapseOnDrag: boolean;
 }
 
 interface RegistryEntry {
@@ -378,6 +403,8 @@ interface ResizableContextValue {
   panelIds: readonly string[];
   /** Grow factor for a panel with no `defaultSize`, for the first paint only. */
   initialShare: number | undefined;
+  /** Whether the group's server HTML carries the script that applies a saved layout before first paint. */
+  prefilled: boolean;
   sizes: Readonly<Record<string, number>>;
   collapsedIds: ReadonlySet<string>;
   draggingId: string | null;
@@ -398,6 +425,47 @@ interface ResizableContextValue {
 }
 
 const ResizableContext = React.createContext<ResizableContextValue | null>(null);
+
+/* -------------------------------------------------------------------------
+ * The inline restore
+ *
+ * The layout a group remembers lives in the browser, and the server cannot
+ * read it, so the HTML it sends is the default split. Correcting that after
+ * hydration is correct and it is also a flash: the saved sidebar width
+ * arrives a paint or two after the default one, on every reload, and no
+ * amount of care about transitions makes a jump between two painted layouts
+ * invisible. The only thing that can get in before the first paint is a
+ * script in the HTML itself — the same trick every theme switcher uses to
+ * stop the white flash — so the group ships one, rendered right after its
+ * panels so they exist by the time it runs.
+ *
+ * It repeats the restore effect's validation exactly (an array, one finite
+ * number per direct-child panel) so the two can never disagree about whether
+ * an entry is usable. It writes only `flex-grow`, which is the whole layout.
+ * Hydration then finds the panels carrying a `style` the client render did
+ * not produce; React leaves the DOM alone in that case and only warns, and the
+ * panel suppresses the warning for exactly this attribute — the restore
+ * effect writes the same numbers a commit later, and nothing on screen moves.
+ *
+ * React never executes a script it creates itself, so on a client-side
+ * navigation this is inert markup, and that is fine: without server HTML
+ * there is no default paint to correct, the restore effect runs before the
+ * first one. Only a `<` needs escaping in the key — `JSON.stringify` handles
+ * the rest — since `</script>` inside the text would end the element early.
+ * ---------------------------------------------------------------------- */
+function restoreScript(autoSaveId: string): string {
+  const key = JSON.stringify(`forte-resizable:${autoSaveId}`).replace(/</g, "\\u003c");
+  return (
+    "(function(){try{" +
+    "var s=document.currentScript,g=s&&s.parentNode;if(!g)return;" +
+    `var v=JSON.parse(localStorage.getItem(${key}));` +
+    'var p=[],c;for(c=g.firstElementChild;c;c=c.nextElementSibling)if(c.getAttribute("data-forte")==="resizable-panel")p.push(c);' +
+    "if(!Array.isArray(v)||v.length!==p.length)return;" +
+    'for(var i=0;i<p.length;i++)if(typeof v[i]!=="number"||!isFinite(v[i]))return;' +
+    "for(i=0;i<p.length;i++)p[i].style.flexGrow=String(v[i]);" +
+    "}catch(e){}})()"
+  );
+}
 
 function useResizableContext(part: string): ResizableContextValue {
   const context = React.useContext(ResizableContext);
@@ -435,9 +503,12 @@ export interface ResizableGroupProps
    * Sizes are stored positionally, so the saved layout is discarded if the
    * number of panels has changed since.
    *
-   * Restoration happens after mount — the server has no access to the store —
-   * so give the panels sensible `defaultSize`s as well, or the first paint is
-   * the default layout rather than the saved one.
+   * With the default storage the saved layout is applied before the first
+   * paint: the group's server HTML carries a small inline script that reads
+   * `localStorage` while the page is still parsing. A page whose Content
+   * Security Policy forbids inline scripts, or a custom `storage`, falls back
+   * to restoring after mount, so give the panels sensible `defaultSize`s as
+   * well — they are what the first paint shows in that case.
    */
   autoSaveId?: string;
   /**
@@ -502,6 +573,11 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     const [order, setOrder] = React.useState<readonly string[]>([]);
     const [sizes, setSizes] = React.useState<Record<string, number>>({});
     const [draggingId, setDraggingId] = React.useState<string | null>(null);
+    /* Bumped on every commit that snaps a collapsible panel across its
+     * threshold, zeroed once the movement that commit started is over. A
+     * counter rather than a boolean so two snaps in one gesture — shut, then
+     * dragged back open — restart the watch below instead of sharing one. */
+    const [snapping, setSnapping] = React.useState(0);
     const [groupPx, setGroupPx] = React.useState(0);
 
     const invalidate = React.useCallback(() => {
@@ -584,6 +660,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
             collapsible: config?.collapsible ?? false,
             collapsed,
             threshold: clamp(config?.collapseThreshold ?? 0.5, 0, 1),
+            viaHandle: config?.collapseOnDrag ?? true,
           };
         }),
       [],
@@ -834,6 +911,8 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         const pivot = pivotOf(handleId);
         if (pivot < 0) return;
         const next = resizeAt(snapshot, constraints, pivot, deltaPercent);
+        const shown = currentSizes();
+        let snapped = false;
 
         panelIds.forEach((id, i) => {
           const limits = limitsAt(constraints, i);
@@ -841,11 +920,22 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
           const wasOpen = sizeAt(snapshot, i) > limits.collapsed + EPSILON;
           const isShut = sizeAt(next, i) <= limits.collapsed + EPSILON;
           if (wasOpen && isShut) restoreSizes.current[id] = sizeAt(snapshot, i);
+          /* The snap is judged against what is ON SCREEN, not the snapshot.
+           * The snapshot is where the gesture started, and a panel shut and
+           * dragged back open inside one gesture has crossed the threshold
+           * twice since — the second crossing is a jump like the first, and
+           * measured from the start of the drag it would look like nothing
+           * happened. */
+          const wasShut = sizeAt(shown, i) <= limits.collapsed + EPSILON;
+          if (wasShut !== isShut) snapped = true;
         });
 
+        // Same batch as the sizes, so the attribute that turns the easing on
+        // lands in the very commit that makes the jump.
+        if (snapped) setSnapping((count) => count + 1);
         commit(panelIds, next);
       },
-      [pivotOf, panelIds, constraints, commit],
+      [pivotOf, panelIds, constraints, currentSizes, commit],
     );
 
     const nudge = React.useCallback(
@@ -927,10 +1017,14 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         if (pivot < 0) return;
         // The panel before the handle is the one a splitter's Enter key acts
         // on (APG calls it the primary pane); the one after is the fallback
-        // for a handle whose primary side is not collapsible.
-        const index = constraints[pivot]?.collapsible
+        // for a handle whose primary side is not collapsible. A panel that
+        // reserves collapsing for its own toggle is skipped the same way:
+        // Enter is the drag from the keyboard, not a way around the prop.
+        const byHandle = (limits: PanelConstraints | undefined) =>
+          limits != null && limits.collapsible && limits.viaHandle;
+        const index = byHandle(constraints[pivot])
           ? pivot
-          : constraints[pivot + 1]?.collapsible
+          : byHandle(constraints[pivot + 1])
             ? pivot + 1
             : -1;
         const target = index < 0 ? undefined : panelIds[index];
@@ -966,15 +1060,31 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     /* Panels do not animate to their first size — they arrive at it.
      *
      * The layout is resolved on the client, so a server-rendered group paints
-     * its fallback split, hydrates, and corrects. With a transition declared
-     * that correction is a visible slide from a layout nobody asked for, on
-     * every page load. `ready` is set from a PASSIVE effect, which runs after
-     * the corrected sizes have been painted, so the attribute that turns the
-     * transition on can never be added in the same commit as a size change. */
+     * its fallback split, hydrates, and corrects — and a saved layout
+     * (`autoSaveId`) corrects it a second time. With a transition declared,
+     * either correction is a visible slide from a layout nobody asked for, on
+     * every page load.
+     *
+     * It is not enough to add the attribute in a LATER commit than the sizes.
+     * The whole mount cascade — register, sort, resolve, restore — runs as
+     * synchronous re-renders out of layout effects, and React flushes the
+     * passive effects of a synchronous commit before the task ends. So a
+     * passive `setReady` still landed in the same task as the restored sizes,
+     * the browser computed style once for both, and that single style change
+     * saw a size that differed AND a transition that applied: the restored
+     * layout slid in from the default on every reload. The transition
+     * machinery only knows what it has computed, so the fix is to make it
+     * compute: the read below forces style and layout for the settled sizes
+     * while the attribute is still absent — no transition declared, nothing
+     * to start — and the commit that then adds the attribute changes no
+     * size, so it starts nothing either. */
     const [ready, setReady] = React.useState(false);
 
-    React.useEffect(() => {
-      if (settled && !ready) setReady(true);
+    useIsoLayoutEffect(() => {
+      if (!settled || ready) return;
+      // The read is the point; the value is not.
+      void groupRef.current?.offsetWidth;
+      setReady(true);
     }, [settled, ready]);
 
     // The reverse edge is a layout effect: a panel joining or leaving means
@@ -995,6 +1105,52 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     useIsoLayoutEffect(() => {
       groupRef.current?.toggleAttribute("data-ready", ready && settled);
     });
+
+    /* `data-snapping` comes down once the movement it eased has run out, and
+     * the panels' own transitions are what say when that is. Not a timer: the
+     * duration is a token a consumer may re-point, and reduced motion shortens
+     * it. Not `transitionend` either: a drag that keeps moving retargets the
+     * running transition, which fires `transitioncancel` in the middle of the
+     * catch-up and would drop the easing halfway through. What is reliable is
+     * asking again — `finished` settles when a transition ends OR is replaced,
+     * and the replacement is a running transition like any other. The loop
+     * ends the first time no direct-child panel has a `flex-grow` transition
+     * in flight, which for a snap that happened to change nothing is
+     * immediately.
+     *
+     * A layout effect, because `getAnimations()` forces style for the element
+     * and the transitions of the commit that raised the attribute have to
+     * exist before they can be waited on. */
+    useIsoLayoutEffect(() => {
+      if (snapping === 0) return;
+      let stale = false;
+      const settle = () => {
+        if (stale) return;
+        const element = groupRef.current;
+        const running = element
+          ? Array.from(element.children).flatMap((child) =>
+              typeof child.getAnimations === "function"
+                ? child
+                    .getAnimations()
+                    .filter(
+                      (animation) =>
+                        (animation as CSSTransition).transitionProperty === "flex-grow" &&
+                        animation.playState !== "finished",
+                    )
+                : [],
+            )
+          : [];
+        if (running.length === 0) {
+          setSnapping(0);
+          return;
+        }
+        void Promise.allSettled(running.map((animation) => animation.finished)).then(settle);
+      };
+      settle();
+      return () => {
+        stale = true;
+      };
+    }, [snapping]);
 
     /* And the fallback split itself, so there is as little as possible to
      * correct. A panel cannot know what its siblings declared, but the group
@@ -1022,11 +1178,16 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       return Math.max(0, (100 - declared) / (panels - sized));
     }, [children, ready]);
 
+    // Only the default store can be read from the HTML; a custom `storage`
+    // is a client object the server has never seen.
+    const prefilled = autoSaveId != null && storage == null;
+
     const context = React.useMemo<ResizableContextValue>(
       () => ({
         orientation,
         panelIds,
         initialShare,
+        prefilled,
         sizes: layout,
         collapsedIds,
         draggingId,
@@ -1049,6 +1210,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         orientation,
         panelIds,
         initialShare,
+        prefilled,
         layout,
         collapsedIds,
         draggingId,
@@ -1088,11 +1250,18 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
             "data-forte": "resizable",
             "data-orientation": orientation,
             "data-resizing": draggingId ? "" : undefined,
+            "data-snapping": snapping > 0 ? "" : undefined,
             "data-ready": ready && settled ? "" : undefined,
             ...props,
             children: (
               <>
                 {children}
+                {prefilled ? (
+                  <script
+                    data-forte="resizable-restore"
+                    dangerouslySetInnerHTML={{ __html: restoreScript(autoSaveId as string) }}
+                  />
+                ) : null}
                 {/* A full-viewport sheet, mounted only while a handle is being
                   * dragged. It holds the resize cursor steady wherever the
                   * pointer wanders, and — the reason it exists rather than a
@@ -1161,6 +1330,16 @@ export interface ResizablePanelProps
    */
   collapseThreshold?: number;
   /**
+   * Whether the handle may collapse the panel — by dragging past `minSize`,
+   * or with <kbd>Enter</kbd>, which is the same gesture from the keyboard.
+   * Set it to `false` for a sidebar that collapses only through `collapsed`,
+   * from your own toggle: the drag then stops at `minSize` like any other
+   * panel's, and while the panel is shut the handle leaves it shut. Nothing
+   * without `collapsible`.
+   * @default true
+   */
+  collapseOnDrag?: boolean;
+  /**
    * Controls the collapsed state. Pass it with `onCollapsedChange` to drive a
    * panel from your own button — a sidebar toggle needs no imperative handle,
    * just this pair.
@@ -1201,6 +1380,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsible = false,
       collapsedSize = 0,
       collapseThreshold = 0.5,
+      collapseOnDrag = true,
       collapsed: collapsedProp,
       onCollapsedChange,
       render,
@@ -1221,6 +1401,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsible,
       collapsedSize,
       collapseThreshold,
+      collapseOnDrag,
     });
     config.current = {
       defaultSize,
@@ -1229,6 +1410,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsible,
       collapsedSize,
       collapseThreshold,
+      collapseOnDrag,
     };
 
     const entry = React.useRef<RegistryEntry>({
@@ -1255,7 +1437,16 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
      * state — a panel whose minimum grows when a toolbar appears, say. */
     useIsoLayoutEffect(() => {
       invalidate();
-    }, [invalidate, defaultSize, minSize, maxSize, collapsible, collapsedSize, collapseThreshold]);
+    }, [
+      invalidate,
+      defaultSize,
+      minSize,
+      maxSize,
+      collapsible,
+      collapsedSize,
+      collapseThreshold,
+      collapseOnDrag,
+    ]);
 
     const isCollapsed = collapsedIds.has(id);
 
@@ -1330,6 +1521,9 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
         "data-forte": "resizable-panel",
         "data-orientation": context.orientation,
         "data-collapsed": isCollapsed ? "" : undefined,
+        // The group's inline restore may have written a saved `flex-grow` into
+        // the server HTML before hydration; see `restoreScript`.
+        suppressHydrationWarning: context.prefilled || undefined,
         style: {
           /* `flexGrow` alone is the layout. `flexBasis: 0` makes the grow
            * factor describe the WHOLE panel rather than the leftover space,
@@ -1495,9 +1689,14 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
      * and announcing a bound the control can be dragged straight past is worse
      * than announcing none. */
     const value = before != null ? Math.round(sizes[before] ?? 0) : undefined;
-    const valueMin = Math.round(beforeConstraints?.collapsible
+    /* A panel the handle may not collapse has its minimum as the floor again —
+     * except while it is shut, when the handle cannot move it at all and the
+     * floor is wherever it is, since a `valuemin` above `valuenow` is a
+     * broken range. */
+    const floor = beforeConstraints?.collapsible && beforeConstraints.viaHandle
       ? beforeConstraints.collapsed
-      : (beforeConstraints?.min ?? 0));
+      : (beforeConstraints?.min ?? 0);
+    const valueMin = Math.round(value == null ? floor : Math.min(floor, value));
     const valueMax = Math.round(beforeConstraints?.max ?? 100);
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -1575,24 +1774,61 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
       });
     };
 
-    const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-      const state = dragState.current;
-      if (!state || state.pointerId !== event.pointerId) return;
+    /* Keyed on the pointer rather than on the event, and idempotent, because
+     * it is reached from four places and any two of them can fire for one
+     * release: `pointerup` and then `lostpointercapture` for the same pointer
+     * is the normal sequence, not an error. The DOM node comes from the
+     * registry entry rather than `currentTarget` so the window-level fallback
+     * below can call it too. */
+    const finishDrag = React.useCallback(
+      (pointerId: number) => {
+        const state = dragState.current;
+        if (!state || state.pointerId !== pointerId) return;
 
-      // Land on the last coordinate rather than wherever the previous frame
-      // happened to stop: releasing must leave the divider under the pointer.
-      if (pending.current.frame !== 0) {
-        cancelAnimationFrame(pending.current.frame);
-        pending.current.frame = 0;
-        applyPending();
-      }
+        // Land on the last coordinate rather than wherever the previous frame
+        // happened to stop: releasing must leave the divider under the pointer.
+        if (pending.current.frame !== 0) {
+          cancelAnimationFrame(pending.current.frame);
+          pending.current.frame = 0;
+          applyPending();
+        }
 
-      dragState.current = null;
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }
-      setDragging(null);
-    };
+        dragState.current = null;
+        const element = entry.current.element;
+        if (element?.hasPointerCapture(pointerId)) element.releasePointerCapture(pointerId);
+        setDragging(null);
+      },
+      [applyPending, setDragging],
+    );
+
+    const endDrag = (event: React.PointerEvent<HTMLDivElement>) => finishDrag(event.pointerId);
+
+    /* A drag that never hears its own release is the worst state this
+     * component has: `data-dragging` stays on, and the full-viewport overlay
+     * stays mounted ABOVE the handle, so nothing the reader does afterwards
+     * reaches it and the only way out is a reload. Capture is what normally
+     * guarantees the `pointerup`, and it is not a guarantee — it can be
+     * refused (the try/catch in pointerdown), and it can be taken away without
+     * a `pointerup` or `pointercancel`, which is what a window losing focus
+     * mid-drag does on some platforms. So while a drag is on, the window
+     * listens too: a release anywhere — on the overlay, on another frame's
+     * page — and a window blur both end it where the pointer last was. */
+    React.useEffect(() => {
+      if (!isDragging || typeof window === "undefined") return;
+      const onRelease = (event: PointerEvent) => finishDrag(event.pointerId);
+      const onBlur = () => {
+        const state = dragState.current;
+        if (state) finishDrag(state.pointerId);
+      };
+      window.addEventListener("pointerup", onRelease);
+      window.addEventListener("pointercancel", onRelease);
+      window.addEventListener("blur", onBlur);
+      return () => {
+        window.removeEventListener("pointerup", onRelease);
+        window.removeEventListener("pointercancel", onRelease);
+        window.removeEventListener("blur", onBlur);
+      };
+    }, [isDragging, finishDrag]);
 
     // A pointer released outside the window, or a component unmounted
     // mid-drag, would otherwise leave a frame queued against a dead handle.
@@ -1695,6 +1931,7 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
           endDrag(event);
         }}
         onPointerCancel={endDrag}
+        onLostPointerCapture={endDrag}
         onKeyDown={handleKeyDown}
         onBlur={(event) => {
           onBlur?.(event);

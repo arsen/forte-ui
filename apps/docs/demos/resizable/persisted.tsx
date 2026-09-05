@@ -3,9 +3,10 @@
 import { Resizable } from "@forte-ui/react";
 
 /* `autoSaveId` writes the layout to localStorage and reads it back on the next
- * mount. Drag the divider, reload the page, and the split is where you left
- * it. Restoration happens after mount — the server cannot read the store — so
- * the `defaultSize`s below are still what the first paint uses. */
+ * visit. Drag the divider, reload the page, and the split is where you left
+ * it — from the first paint, because the group's HTML applies the saved sizes
+ * before the page renders. The `defaultSize`s below are what a first visit
+ * shows. */
 export default function ResizablePersisted() {
   return (
     <Resizable.Group
