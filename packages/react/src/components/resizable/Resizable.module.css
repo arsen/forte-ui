@@ -237,6 +237,47 @@
     touch-action: none;
   }
 
+  /* Beside a collapsed panel the divider is a button as much as a splitter —
+   * a click reopens the panel — and the cursor is the only thing that says
+   * so. The two-way resize arrow reads as resize and nothing more; the
+   * one-way arrow points the way the divider will move, which reads as "this
+   * opens that way" and keeps the divider in the splitter's own vocabulary.
+   * It is the click's promise; whether a pull works too is `collapseOnDrag`'s
+   * business. The value is the SIDE the shut panel is on, so the arrow
+   * points away from it. Physical, like every cursor, so the
+   * horizontal pair flips under RTL — keyed on the `dir` attribute rather
+   * than `:dir()`, which the build lowers into `:lang()` (see tokens.css).
+   * Windows draws the one-way arrows as the two-way one; the click still
+   * works there, it is just not announced. Published only when a click WOULD
+   * do something, so a panel only its own state may reopen keeps the resize
+   * cursor rather than an arrow over a divider that ignores it. After the
+   * orientation rule, which the horizontal pair ties with; the vertical pair
+   * comes last, after the RTL pair it ties with; `[data-disabled]` never
+   * coincides, since a disabled handle publishes nothing. */
+  .handle[data-expandable="start"] {
+    cursor: e-resize;
+  }
+
+  .handle[data-expandable="end"] {
+    cursor: w-resize;
+  }
+
+  [dir="rtl"] .handle[data-expandable="start"] {
+    cursor: w-resize;
+  }
+
+  [dir="rtl"] .handle[data-expandable="end"] {
+    cursor: e-resize;
+  }
+
+  .handle[data-orientation="vertical"][data-expandable="start"] {
+    cursor: s-resize;
+  }
+
+  .handle[data-orientation="vertical"][data-expandable="end"] {
+    cursor: n-resize;
+  }
+
   .handle[data-disabled] {
     cursor: default;
   }

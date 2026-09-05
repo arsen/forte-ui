@@ -36,6 +36,7 @@ export default function ResizableIconRail() {
       <Resizable.Panel>
         <div className="h-full p-4 text-2 text-foreground-muted">
           Drag the divider all the way left: the sidebar stops at the rail rather than disappearing.
+          Click the divider to bring it back.
         </div>
       </Resizable.Panel>
     </Resizable.Group>

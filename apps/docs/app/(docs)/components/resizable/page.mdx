@@ -73,13 +73,15 @@ The same goes for the size a panel shuts to. A `56px` rail is stored as 56px whe
 
 ### Collapsing
 
-A `collapsible` panel may be dragged past its minimum, into the gap between `minSize` and `collapsedSize`. It does not rest there: `collapseThreshold` puts a snap point partway across that gap, so releasing nearer the closed end shuts the panel and releasing nearer the open end springs it back to `minSize`.
+A `collapsible` panel may be dragged past its minimum, into the gap between `minSize` and `collapsedSize`. It does not rest there: `collapseThreshold` puts a snap point partway across that gap, so releasing nearer the closed end shuts the panel and releasing nearer the open end springs it back to `minSize`. The same point works in reverse — drag a shut panel past it and it springs open to `minSize`, short of it and it falls shut again — so a divider that snapped shut at 80px snaps open at 80px, and the two directions feel like one control.
+
+Reopening it takes less. The divider beside a collapsed panel shows a one-way resize arrow pointing the way it will move, and a click — or a tap, or <Kbd>Enter</Kbd> — expands the panel to the size it shut at. A click is one gesture where a pull is two, and it puts the panel back where it was rather than at its minimum. Set `expandOnClick={false}` on the panel to turn the click off and leave the drag. The handle publishes `data-expandable="start"` or `"end"` — the side the shut panel is on — while a click would reopen it.
 
 Collapsed state is a controlled pair — `collapsed` and `onCollapsedChange` — rather than an imperative handle, so the button that toggles a sidebar is an ordinary button holding ordinary state, and the drag, the keyboard and your own UI all write to the same place.
 
 <DemoBlock id="resizable/collapsible" />
 
-When the toggle should be the only route — a sidebar that must never vanish under a slipped drag — add `collapseOnDrag={false}`. The panel is still `collapsible`, so `collapsed` still works and `data-collapsed` still publishes, but the drag stops at `minSize` like any other panel's, <Kbd>Enter</Kbd> on the divider does nothing, and while the panel is shut the divider leaves it shut.
+When the toggle should be the only route — a sidebar that must never vanish under a slipped drag — add `collapseOnDrag={false}`. The panel is still `collapsible`, so `collapsed` still works and `data-collapsed` still publishes, but the drag stops at `minSize` like any other panel's, <Kbd>Enter</Kbd> on the divider will not shut it, and while the panel is shut a drag leaves it shut — the same rule both ways. A click or <Kbd>Enter</Kbd> on the divider still reopens it, since nothing about a click can make a sidebar vanish; add `expandOnClick={false}` as well for a panel that only your own state may reopen.
 
 <DemoBlock id="resizable/toggle-only" />
 
@@ -115,6 +117,11 @@ Each handle is a real `role="separator"` with the [window splitter](https://www.
     { keys: ["Home"], description: "Moves the handle as far toward the start as the constraints allow." },
     { keys: ["End"], description: "Moves the handle as far toward the end as the constraints allow." },
     { keys: ["Enter"], description: "Collapses or expands a collapsible neighbour." },
+    {
+      keys: ["Click"],
+      description:
+        "Expands a collapsed neighbour. The divider shows a one-way resize arrow, pointing the way it will move, while a click would do this.",
+    },
     { keys: ["Double-click"], description: "Resets the group to its default layout." },
   ]}
 />
@@ -131,7 +138,7 @@ Every property below is declared on `Resizable.Group`, so override them there �
 
 Note the two thicknesses. `--forte-resizable-handle-size` is what the divider costs the LAYOUT; `--forte-resizable-line-size` is what you see. They are separate because a line that thickened on hover in flow would reflow both panels every time the pointer crossed it — and shift the very edge the pointer was aiming at out from under it.
 
-The parts publish their state as data attributes — `data-orientation`, `data-resizing`, `data-snapping` and `data-ready` on the group, `data-collapsed` on a panel, `data-dragging`, `data-disabled` and `data-collapsed` on a handle — so a Tailwind arbitrary variant such as `data-[dragging]:...` targets them without a wrapper.
+The parts publish their state as data attributes — `data-orientation`, `data-resizing`, `data-snapping` and `data-ready` on the group, `data-collapsed` on a panel, `data-dragging`, `data-disabled`, `data-collapsed` and `data-expandable` (`start` or `end`: the side of the collapsed neighbour a click would reopen) on a handle — so a Tailwind arbitrary variant such as `data-[dragging]:...` targets them without a wrapper.
 
 `data-ready` appears once the client has resolved the layout, and it is what gates the size transition. Before it, the panels are still at the split the server sent, and easing them to the real one would make every page load begin with a slide — a saved layout included, which arrives in place rather than sliding in from the defaults. During a drag the transition is off for the same reason in reverse — a panel that eases into place is a panel lagging the pointer. The one exception is the snap: when a drag pushes a collapsible panel past its threshold the group raises `data-snapping` for as long as the resulting movement takes, so the panel eases shut (or open) along the same curve a button press uses instead of vanishing in a frame.
 

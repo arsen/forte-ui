@@ -72,6 +72,14 @@ export interface ResizableStorage {
  * 1e-15% or a total that never quite reaches 100. */
 const EPSILON = 0.0001;
 
+/* How far a pointer may wander between going down on a handle and coming up
+ * before the gesture stops being a tap, in px. A finger wobbles a few over a
+ * press; a drag that means anything moves much further, since from a shut
+ * panel it has to reach the snap point before the layout changes at all.
+ * Both axes count: a finger sliding ALONG the divider is a swipe that
+ * happened to start on it, not a tap. */
+const TAP_SLOP = 8;
+
 const useIsoLayoutEffect =
   typeof document !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
@@ -86,8 +94,10 @@ interface PanelConstraints {
   collapsible: boolean;
   collapsed: number;
   threshold: number;
-  /** Whether the handle — a drag past `min`, or Enter — may collapse or expand it. */
+  /** Whether the handle — a drag past `min`, or Enter — may collapse it. */
   viaHandle: boolean;
+  /** Whether a click on the handle — or Enter — reopens it once shut. */
+  viaClick: boolean;
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -203,6 +213,7 @@ const UNCONSTRAINED: PanelConstraints = {
   collapsed: 0,
   threshold: 0.5,
   viaHandle: true,
+  viaClick: true,
 };
 
 function sizeAt(sizes: readonly number[], index: number): number {
@@ -272,10 +283,14 @@ function snapCollapsible(
  * `gesture` says whether this transfer is the reader's hand on the handle —
  * a drag or its keyboard equivalents — or a programmatic target. A gesture
  * snaps in the dead band, and it is the only kind of transfer a panel with
- * `collapseOnDrag` off refuses across its collapsed edge: such a panel stops
- * at its minimum on the way down, and once shut it stays shut until whatever
- * owns its `collapsed` prop reopens it. A programmatic target neither snaps
- * nor asks permission — it IS that owner.
+ * `collapseOnDrag` off refuses across its collapsed edge — in BOTH
+ * directions: such a panel stops at its minimum on the way down, and once
+ * shut a pull leaves it shut. The same rule both ways, which is the only
+ * rule a reader can guess from the one direction they tried; a divider that
+ * cannot be dragged shut but can be dragged open would read as broken in one
+ * of them. The click and Enter are not pulls, and reopen it regardless (see
+ * `expandOnClick`). A programmatic target neither snaps nor asks permission
+ * — it IS the owner of `collapsed`.
  */
 function resizeAt(
   sizes: number[],
@@ -320,10 +335,10 @@ function resizeAt(
   }
 
   const grow = limitsAt(constraints, growIndex);
-  /* A shut panel the handle may not reopen has no headroom for a gesture:
-   * the room it would have taken goes back where it came from, below, and
-   * the divider does not move. Without this the drag would crack it open to
-   * its minimum — the one transition the prop exists to reserve. */
+  /* A shut panel the drag may not reopen has no headroom for a gesture: the
+   * room it would have taken goes back where it came from, below, and the
+   * divider does not move. Without this the drag would crack it open to its
+   * minimum — the pull the prop refuses in the other direction. */
   const pinned =
     gesture &&
     grow.collapsible &&
@@ -335,23 +350,50 @@ function resizeAt(
   let leftover = freed - applied;
 
   /* The growing panel may be a collapsed one on its way back open, in which
-   * case it lands in the same dead band and snaps by the same rule — but here
-   * the snap costs room rather than releasing it, so it can only be honored
-   * out of what is still in hand. When it cannot be, the panel stays shut and
-   * the reader drags a little further; the alternative is stealing percent
-   * from a panel already at its minimum. */
+   * case it lands in the same dead band and snaps by the same rule — the
+   * same point, the same distance from the closed end, so a divider that
+   * snapped shut at 80px snaps open at 80px and the two directions feel like
+   * one control. Here the snap COSTS room rather than releasing it: past the
+   * point the panel opens to its minimum, and the difference is taken from
+   * the shrinking side the way the drag itself was, nearest first — but only
+   * down to each panel's MINIMUM, never across a collapsed edge, since
+   * reopening one panel must not shut another. Only when that side genuinely
+   * has no room does the panel stay shut and the reader drag a little
+   * further. Short of the point it falls back shut and the room it had
+   * taken is handed back below. */
   if (gesture && grow.collapsible) {
     const size = sizeAt(next, growIndex);
     if (size > grow.collapsed + EPSILON && size < grow.min - EPSILON) {
       const snapPoint = grow.collapsed + (grow.min - grow.collapsed) * grow.threshold;
-      const target = size <= snapPoint ? grow.collapsed : grow.min;
-      const cost = target - size;
-      if (cost <= leftover + EPSILON) {
-        next[growIndex] = target;
-        leftover -= cost;
-      } else {
+      if (size <= snapPoint) {
         leftover += size - grow.collapsed;
         next[growIndex] = grow.collapsed;
+      } else {
+        const need = grow.min - size;
+        const fromLeftover = Math.min(leftover, need);
+        let shortfall = need - fromLeftover;
+        // Planned, not applied: a snap that cannot be funded in full takes
+        // nothing at all, or the drag would leave a neighbour narrower for
+        // a panel that never opened.
+        const takes: number[] = [];
+        for (let k = 0; k < shrinkOrder.length && shortfall > EPSILON; k++) {
+          const i = shrinkOrder[k] ?? 0;
+          const room = Math.max(0, sizeAt(next, i) - limitsAt(constraints, i).min);
+          const take = Math.min(room, shortfall);
+          takes[k] = take;
+          shortfall -= take;
+        }
+        if (shortfall <= EPSILON) {
+          takes.forEach((take, k) => {
+            const i = shrinkOrder[k] ?? 0;
+            next[i] = sizeAt(next, i) - take;
+          });
+          next[growIndex] = grow.min;
+          leftover -= fromLeftover;
+        } else {
+          leftover += size - grow.collapsed;
+          next[growIndex] = grow.collapsed;
+        }
       }
     }
   }
@@ -485,6 +527,7 @@ interface PanelConfig {
   collapsedSize: ResizableLength;
   collapseThreshold: number;
   collapseOnDrag: boolean;
+  expandOnClick: boolean;
 }
 
 interface RegistryEntry {
@@ -812,6 +855,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
             collapsed,
             threshold: clamp(config?.collapseThreshold ?? 0.5, 0, 1),
             viaHandle: config?.collapseOnDrag ?? true,
+            viaClick: config?.expandOnClick ?? true,
           };
         }),
       [],
@@ -1279,16 +1323,18 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
         if (pivot < 0) return;
         // The panel before the handle is the one a splitter's Enter key acts
         // on (APG calls it the primary pane); the one after is the fallback
-        // for a handle whose primary side is not collapsible. A panel that
-        // reserves collapsing for its own toggle is skipped the same way:
-        // Enter is the drag from the keyboard, not a way around the prop.
-        const byHandle = (limits: PanelConstraints | undefined) =>
-          limits != null && limits.collapsible && limits.viaHandle;
-        const index = byHandle(constraints[pivot])
-          ? pivot
-          : byHandle(constraints[pivot + 1])
-            ? pivot + 1
-            : -1;
+        // for a handle whose primary side is not collapsible. Which way the
+        // toggle would go decides what Enter stands in for: shutting is the
+        // drag from the keyboard, so a panel that reserves shutting for its
+        // own toggle is skipped; reopening is the click from the keyboard as
+        // much as the drag, so a shut panel that takes either takes Enter.
+        const byHandle = (index: number) => {
+          const limits = constraints[index];
+          const panelId = panelIds[index];
+          if (limits == null || panelId == null || !limits.collapsible) return false;
+          return collapsedIds.has(panelId) ? limits.viaClick || limits.viaHandle : limits.viaHandle;
+        };
+        const index = byHandle(pivot) ? pivot : byHandle(pivot + 1) ? pivot + 1 : -1;
         const target = index < 0 ? undefined : panelIds[index];
         if (target == null) return;
         setPanelCollapsed(target, !collapsedIds.has(target));
@@ -1598,7 +1644,7 @@ export interface ResizablePanelProps
   /**
    * Whether dragging past `minSize` snaps the panel shut instead of stopping.
    * A collapsed panel publishes `data-collapsed`, and the handle beside it
-   * toggles it with <kbd>Enter</kbd>.
+   * toggles it with <kbd>Enter</kbd> and reopens it on a click.
    * @default false
    */
   collapsible?: boolean;
@@ -1611,20 +1657,38 @@ export interface ResizablePanelProps
   /**
    * How far down the gap between `collapsedSize` and `minSize` the snap point
    * sits, as a fraction. `0.5` is the midpoint: drag past halfway and the
-   * panel shuts, let go before it and it springs back to `minSize`.
+   * panel shuts, let go before it and it springs back to `minSize`. The same
+   * point works in reverse — drag a shut panel past it and it springs open
+   * to `minSize`, short of it and it falls shut again — so the two
+   * directions feel like one control.
    * @default 0.5
    */
   collapseThreshold?: number;
   /**
-   * Whether the handle may collapse the panel — by dragging past `minSize`,
-   * or with <kbd>Enter</kbd>, which is the same gesture from the keyboard.
-   * Set it to `false` for a sidebar that collapses only through `collapsed`,
-   * from your own toggle: the drag then stops at `minSize` like any other
-   * panel's, and while the panel is shut the handle leaves it shut. Nothing
-   * without `collapsible`.
+   * Whether the handle's drag may collapse the panel — dragging past
+   * `minSize`, or <kbd>Enter</kbd>, which is the same gesture from the
+   * keyboard. Set it to `false` for a sidebar that must never vanish under a
+   * slipped drag and collapses only through `collapsed`, from your own
+   * toggle: the drag then stops at `minSize` like any other panel's,
+   * <kbd>Enter</kbd> leaves an open panel open, and while the panel is shut a
+   * drag leaves it shut — the same rule both ways. A click still reopens it,
+   * and so does <kbd>Enter</kbd>, unless `expandOnClick` is off as well.
+   * Nothing without `collapsible`.
    * @default true
    */
   collapseOnDrag?: boolean;
+  /**
+   * Whether a click — or a tap — on the handle reopens the panel once it is
+   * shut, with the handle showing a one-way arrow to say so; <kbd>Enter</kbd>
+   * reopens it wherever a click or a drag would. On by default: a drag
+   * reopens it too, where `collapseOnDrag` allows, but a click is one gesture
+   * where a pull is two, and it puts the panel back where it was rather than
+   * at `minSize`. Set it to `false` for a divider that reopens only by drag
+   * — or, with `collapseOnDrag` off as well, only through `collapsed`.
+   * Nothing without `collapsible`.
+   * @default true
+   */
+  expandOnClick?: boolean;
   /**
    * Controls the collapsed state. Pass it with `onCollapsedChange` to drive a
    * panel from your own button — a sidebar toggle needs no imperative handle,
@@ -1633,7 +1697,8 @@ export interface ResizablePanelProps
   collapsed?: boolean;
   /**
    * Called when the panel collapses or expands, whichever caused it — a drag
-   * past the snap point, <kbd>Enter</kbd> on the handle, or your own state.
+   * past the snap point, <kbd>Enter</kbd> or a click on the handle, or your
+   * own state.
    */
   onCollapsedChange?: (collapsed: boolean) => void;
   /**
@@ -1667,6 +1732,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsedSize = 0,
       collapseThreshold = 0.5,
       collapseOnDrag = true,
+      expandOnClick = true,
       collapsed: collapsedProp,
       onCollapsedChange,
       render,
@@ -1689,6 +1755,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsedSize,
       collapseThreshold,
       collapseOnDrag,
+      expandOnClick,
     });
     config.current = {
       defaultSize,
@@ -1698,6 +1765,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsedSize,
       collapseThreshold,
       collapseOnDrag,
+      expandOnClick,
     };
 
     const entry = React.useRef<RegistryEntry>({
@@ -1733,6 +1801,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       collapsedSize,
       collapseThreshold,
       collapseOnDrag,
+      expandOnClick,
     ]);
 
     const isCollapsed = collapsedIds.has(id);
@@ -1891,6 +1960,10 @@ export interface ResizableHandleProps
 interface DragState {
   pointerId: number;
   origin: number;
+  /** The pointer's OTHER coordinate at pointerdown, for the tap test. */
+  cross: number;
+  /** Whether the pointer has left the tap slop on either axis. Sticky. */
+  moved: boolean;
   sign: number;
   groupPx: number;
   snapshot: number[];
@@ -1902,6 +1975,14 @@ interface DragState {
  * move it, <kbd>Page Up</kbd>/<kbd>Page Down</kbd> for a bigger step,
  * <kbd>Home</kbd>/<kbd>End</kbd> for the extremes, and <kbd>Enter</kbd> to
  * collapse or expand a collapsible neighbour.
+ *
+ * Beside a collapsed panel it is a button as well: the cursor turns into a
+ * one-way resize arrow pointing the way the divider will move, and a click —
+ * or a tap — reopens the panel where it was. Dragging it open works too,
+ * where `collapseOnDrag` allows, snapping open at the same point it snapped
+ * shut — but a click is one gesture where a pull is two, and it puts the
+ * panel back where it was rather than at its minimum. `expandOnClick={false}`
+ * on the panel turns the click off.
  *
  * Its hit area is expanded to the 24px minimum (SC 2.5.8) without changing
  * the hairline it draws, so it can be grabbed by a shaky hand or a thumb
@@ -1939,6 +2020,7 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
       nudge,
       extreme,
       toggleCollapse,
+      setPanelCollapsed,
       resetLayout,
       step,
       largeStep,
@@ -2000,7 +2082,7 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
      * than announcing none. */
     const value = before != null ? Math.round(sizes[before] ?? 0) : undefined;
     /* A panel the handle may not collapse has its minimum as the floor again —
-     * except while it is shut, when the handle cannot move it at all and the
+     * except while it is shut, when the drag cannot move it at all and the
      * floor is wherever it is, since a `valuemin` above `valuenow` is a
      * broken range. */
     const floor = beforeConstraints?.collapsible && beforeConstraints.viaHandle
@@ -2025,6 +2107,8 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
       dragState.current = {
         pointerId: event.pointerId,
         origin: orientation === "horizontal" ? event.clientX : event.clientY,
+        cross: orientation === "horizontal" ? event.clientY : event.clientX,
+        moved: false,
         // `translate` and pointer coordinates are physical; the layout is
         // logical. In RTL a rightward drag has to SHRINK the panel that comes
         // first in the flow, which is the one on the right.
@@ -2075,8 +2159,16 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
       const state = dragState.current;
       if (!state || state.pointerId !== event.pointerId) return;
 
-      pending.current.coordinate =
-        orientation === "horizontal" ? event.clientX : event.clientY;
+      const along = orientation === "horizontal" ? event.clientX : event.clientY;
+      if (!state.moved) {
+        const across = orientation === "horizontal" ? event.clientY : event.clientX;
+        state.moved =
+          Math.abs(along - state.origin) > TAP_SLOP || Math.abs(across - state.cross) > TAP_SLOP;
+      }
+
+      // Still applied under the slop: releasing must leave the divider under
+      // the pointer, and a sub-slop move on a shut panel snaps back anyway.
+      pending.current.coordinate = along;
       if (pending.current.frame !== 0) return;
       pending.current.frame = requestAnimationFrame(() => {
         pending.current.frame = 0;
@@ -2210,6 +2302,28 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
     const collapsedNeighbour =
       (before != null && collapsedIds.has(before)) || (after != null && collapsedIds.has(after));
 
+    /* The panel a tap reopens: a collapsed neighbour with `expandOnClick`,
+     * the primary pane first, the way Enter chooses. Published as
+     * `data-expandable`, whose value is the SIDE the shut panel is on — what
+     * the stylesheet needs to point the cursor the way the divider will move.
+     * `data-collapsed` stays the broader fact: a handle beside a shut panel
+     * that does not take the click is still beside a shut panel — the drag
+     * reopens it, where `collapseOnDrag` allows — and the two-way resize
+     * cursor says that. */
+    const reopens = (panelId: string | undefined) => {
+      if (panelId == null || !collapsedIds.has(panelId)) return false;
+      const limits = constraintsOf(panelId);
+      return limits != null && limits.collapsible && limits.viaClick;
+    };
+    const expandSide = disabled
+      ? undefined
+      : reopens(before)
+        ? "start"
+        : reopens(after)
+          ? "end"
+          : undefined;
+    const expandTarget = expandSide === "start" ? before : expandSide === "end" ? after : undefined;
+
     return (
       <div
         ref={setRef}
@@ -2233,12 +2347,25 @@ export const ResizableHandle = React.forwardRef<HTMLDivElement, ResizableHandleP
         data-dragging={isDragging ? "" : undefined}
         data-disabled={disabled ? "" : undefined}
         data-collapsed={collapsedNeighbour ? "" : undefined}
+        data-expandable={expandSide}
         {...props}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={(event) => {
           onPointerUp?.(event);
+          /* Judged before the release clears the gesture, acted on after it
+           * has landed: `finishDrag` flushes the last queued frame, and an
+           * expand committed before that flush would be overwritten by it.
+           * Only from here — a `pointercancel` or a capture lost mid-press
+           * is not a click, and neither is a release the window fallback
+           * caught somewhere else on the page. */
+          const state = dragState.current;
+          const tapped =
+            state != null && state.pointerId === event.pointerId && !state.moved;
           endDrag(event);
+          if (tapped && !event.defaultPrevented && expandTarget != null) {
+            setPanelCollapsed(expandTarget, false);
+          }
         }}
         onPointerCancel={endDrag}
         onLostPointerCapture={endDrag}
