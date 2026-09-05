@@ -13,6 +13,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-09-05
+
+### Resizable
+
+- Added `expandOnClick` to `Panel`, default `true`: a click or tap on the handle beside a collapsed panel now reopens it back to its previous size (not `minSize`), with the handle showing a one-way resize cursor pointing the way it will move to say so. Dragging the handle open still works wherever `collapseOnDrag` allows, snapping open at the same threshold point it snaps shut at, so both directions feel like one control. `Enter` now also reopens a shut panel whenever a click or a drag would, matching whichever gesture is enabled; set `expandOnClick` to `false` for a divider that reopens only by drag, or, with `collapseOnDrag` also off, only through the `collapsed` prop.
+- Fixed a shut panel with `collapseOnDrag` off also refusing to be dragged open — the prop now applies the same in both directions, so a divider that cannot be dragged shut behaves the same as one that cannot be dragged open.
+- Fixed a drag that reopens a collapsed panel past its snap point sometimes leaving a neighboring panel's size unaffected when room was actually available: the reopening panel can now borrow from the nearest shrinking panels (down to their own minimums) to fund the snap, rather than only from whatever slack the current drag step already freed.
+
 ## [1.2.0] - 2026-09-04
 
 ### Resizable
@@ -360,7 +368,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/arsen/forte-ui/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/arsen/forte-ui/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/arsen/forte-ui/compare/v1.0.1...v1.1.0

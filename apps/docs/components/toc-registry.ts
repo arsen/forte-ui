@@ -12,8 +12,10 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
-    { id: "v120", text: "v1.2.0", depth: 2 },
+    { id: "v130", text: "v1.3.0", depth: 2 },
     { id: "resizable", text: "Resizable", depth: 3 },
+    { id: "v120", text: "v1.2.0", depth: 2 },
+    { id: "resizable-1", text: "Resizable", depth: 3 },
     { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
     { id: "pagination", text: "Pagination", depth: 3 },
     { id: "v111", text: "v1.1.1", depth: 2 },
@@ -46,19 +48,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "dialog", text: "Dialog", depth: 3 },
     { id: "drawer-1", text: "Drawer", depth: 3 },
     { id: "design-tokens--motion-3", text: "Design tokens & motion", depth: 3 },
-    { id: "v100-alpha7", text: "v1.0.0-alpha.7", depth: 2 },
-    { id: "button", text: "Button", depth: 3 },
-    { id: "calendar", text: "Calendar", depth: 3 },
-    { id: "card", text: "Card", depth: 3 },
-    { id: "kbd", text: "Kbd", depth: 3 },
-    { id: "menu", text: "Menu", depth: 3 },
-    { id: "select-1", text: "Select", depth: 3 },
-    { id: "tabs-1", text: "Tabs", depth: 3 },
-    { id: "themetoggle", text: "ThemeToggle", depth: 3 },
-    { id: "tooltip", text: "Tooltip", depth: 3 },
-    { id: "create-forte-ui-2", text: "create-forte-ui", depth: 3 },
-    { id: "design-tokens--motion-4", text: "Design tokens & motion", depth: 3 },
-    { id: "general-3", text: "General", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
