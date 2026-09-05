@@ -60,7 +60,10 @@
     :root,
     .forte-theme,
     [data-forte-theme] {
-      --forte-color-border: var(--forte-gray-6);
+      /* A thinner slice of the same mix the default uses — an opaque gray-6
+       * here would out-contrast the 12% default and make "less" read as
+       * more. */
+      --forte-color-border: color-mix(in oklab, var(--forte-gray-12) 8%, transparent);
       --forte-color-foreground-muted: var(--forte-gray-10);
     }
   }

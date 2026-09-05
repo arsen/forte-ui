@@ -194,10 +194,25 @@
      * Icons and decoration only. `prefers-contrast: more` promotes it. */
     --forte-color-foreground-subtle: var(--forte-gray-10);
 
-    /* Borders */
-    --forte-color-border: var(--forte-gray-7);
-    --forte-color-border-muted: var(--forte-gray-6);
-    --forte-color-border-strong: var(--forte-gray-8);
+    /* Borders — a slice of the text color, not a ramp step. Every edge in
+     * the library is 1px; what made them read as thick was contrast, and
+     * an opaque step carries a different amount of it on every surface:
+     * gray-7 measured 1.5:1 on the page and 2.1:1 in dark mode, twice the
+     * weight of the thin hairline it was meant to be. An alpha border
+     * composites against whatever is behind it, so a Card on the page and a
+     * Popover over a scrim draw the same hairline, and gray-12 already
+     * carries the seed tint and the light/dark switch. The mixes land at
+     * 1.17 / 1.27 / 1.51 light and 1.20 / 1.34 / 1.74 dark against gray-1.
+     *
+     * That is below the 1.4:1 the harness holds gray-7 to, and on purpose:
+     * a hairline is decoration, and every control boundary that owes
+     * SC 1.4.11 a 3:1 edge earns it from the focus ring or its fill, never
+     * from the resting border. Two alpha edges that overlap sum to a darker
+     * seam, so a part that fuses bordered slots (Pagination's `joined`
+     * strip) must leave only one of the pair painted. */
+    --forte-color-border: color-mix(in oklab, var(--forte-gray-12) 12%, transparent);
+    --forte-color-border-muted: color-mix(in oklab, var(--forte-gray-12) 8%, transparent);
+    --forte-color-border-strong: color-mix(in oklab, var(--forte-gray-12) 20%, transparent);
 
     /* Primary */
     --forte-color-primary: var(--forte-accent-9);
