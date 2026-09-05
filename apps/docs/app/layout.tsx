@@ -16,6 +16,7 @@ import "./tailwind.css";
 import { TooltipProvider } from "@/components/tooltip-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageTransition } from "@/components/page-transition";
 import { Analytics } from "@/components/analytics";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL, X_HANDLE } from "@/lib/site";
 
@@ -123,6 +124,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       // the library's a11y.css already forces `scroll-behavior: auto` under
       // prefers-reduced-motion, so it needs no guard here.
       className="forte-reset scroll-smooth scroll-pt-(--forte-app-bar-h-md) [-webkit-text-size-adjust:100%]"
+      // Smooth scrolling is for the in-page jumps — a #fragment, the section
+      // rail — and not for the scroll to the top a new route gets. Next used
+      // to switch it off around that scroll on its own; since 16 it does so
+      // only when told the page scrolls smoothly, and warns in dev until it
+      // is. It matters now that every navigation is a cross-fade: the new
+      // page is snapshotted at whatever scroll position it holds when the
+      // route commits, so a top it was still gliding toward would arrive
+      // after the fade, as a second move.
+      data-scroll-behavior="smooth"
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashScript }} />
@@ -143,8 +153,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* The docs shell — sidebar, page column, section rail — is the
               * `(docs)` route group's layout, not this one's: the home page
               * is the one route with no columns, and it runs the full width
-              * under the same bar. */}
-            {children}
+              * under the same bar. Whichever it is, it cross-fades to the
+              * next on every navigation: the boundary around it is the
+              * site's one view transition, and `page-transition.tsx` says
+              * how it works and what must stay outside it. */}
+            <PageTransition>{children}</PageTransition>
             {/* The credit line and the project's three outbound links, on
               * every route. Here rather than in the `(docs)` layout for the
               * same reason as the bar above: the home page is outside that

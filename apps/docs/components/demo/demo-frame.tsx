@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { ViewTransition } from "react";
 import { cn } from "@/lib/cn";
 
 export type DemoScope = {
@@ -34,26 +35,37 @@ export function DemoFrame({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        // `@container` lets demos respond to the frame rather than the
-        // viewport, so a preview narrowed by the controls strip still shows its
-        // true responsive behavior.
-        "@container flex min-h-[8rem] flex-wrap items-center justify-center gap-3 p-6",
-        "bg-background text-foreground",
-        // The shell clips the frame, so the frame never rounds its own corners.
-        "rounded-none",
-        "forte-theme",
-        className,
-      )}
-      // `dir` is a real HTML attribute, not a CSS trick — it drives Base UI's
-      // keyboard direction handling as well as the visual flow.
-      dir={scope.dir}
-      data-theme={scope.theme === "inherit" ? undefined : scope.theme}
-      data-forte-motion={scope.motion === "inherit" ? undefined : "reduce"}
-    >
-      {children}
-    </div>
+    /* An inert view-transition boundary, and it is load-bearing. The root
+     * layout wraps every page in the boundary that cross-fades between
+     * routes, and React counts ANY transition inside that as an update of
+     * it — a demo's `startTransition` included, which the async Combobox
+     * demos use on every keystroke. React resolves a mutation to the
+     * innermost boundary around it, so this one claims everything a demo
+     * does and resolves it to nothing; without it, typing in that demo would
+     * cross-fade the whole page and hold the input's caret behind a snapshot
+     * for the length of the fade. See `components/page-transition.tsx`. */
+    <ViewTransition default="none">
+      <div
+        className={cn(
+          // `@container` lets demos respond to the frame rather than the
+          // viewport, so a preview narrowed by the controls strip still shows its
+          // true responsive behavior.
+          "@container flex min-h-[8rem] flex-wrap items-center justify-center gap-3 p-6",
+          "bg-background text-foreground",
+          // The shell clips the frame, so the frame never rounds its own corners.
+          "rounded-none",
+          "forte-theme",
+          className,
+        )}
+        // `dir` is a real HTML attribute, not a CSS trick — it drives Base UI's
+        // keyboard direction handling as well as the visual flow.
+        dir={scope.dir}
+        data-theme={scope.theme === "inherit" ? undefined : scope.theme}
+        data-forte-motion={scope.motion === "inherit" ? undefined : "reduce"}
+      >
+        {children}
+      </div>
+    </ViewTransition>
   );
 }
 
