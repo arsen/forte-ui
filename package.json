@@ -15,7 +15,8 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
-    "release": "node scripts/release.mjs"
+    "release": "node scripts/release.mjs",
+    "deploy:docs": "turbo run build --filter=@forte-ui/docs && pnpm --filter @forte-ui/docs deploy"
   },
   "devDependencies": {
     "turbo": "^2.10.5",

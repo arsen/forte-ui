@@ -77,6 +77,7 @@ pnpm generate                               # re-run ALL six generators
 pnpm typecheck                              # the real gate — there is no linter
 pnpm test                                   # contrast harness (--fine) + popup parity
 pnpm release                                # build packages/*, preview, confirm, publish
+pnpm deploy:docs                            # build the docs app (and what it depends on), then firebase deploy
 ```
 
 `pnpm generate` is the one to reach for after editing a source of truth while
