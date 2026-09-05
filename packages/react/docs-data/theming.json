@@ -8202,15 +8202,15 @@
       },
       {
         "name": "--forte-resizable-duration",
-        "value": "var(--forte-duration-normal)",
-        "description": "How long a panel takes to reach a new size. Applies to a collapse or an expand, never to a drag",
+        "value": "var(--forte-duration-spring-precise)",
+        "description": "How long a panel takes to reach a new size. Applies to a collapse, an expand, or the snap at the end of a drag, never to the drag itself",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-resizable-ease",
-        "value": "var(--forte-ease-standard)",
-        "description": "Curve a panel follows to a new size. Not a spring: overshooting a panel's size flashes a band of the panel behind it",
+        "value": "var(--forte-ease-spring-precise)",
+        "description": "Curve a panel follows to a new size. Keep it free of overshoot: a panel briefly larger than its target flashes a band of the panel behind it",
         "part": "root",
         "overrides": []
       },

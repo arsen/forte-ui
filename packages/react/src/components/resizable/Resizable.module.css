@@ -7,7 +7,7 @@
  * why a group re-divides itself correctly when the window changes without a
  * single line of JavaScript running.
  *
- * Four decisions carry the file.
+ * Five decisions carry the file.
  *
  * 1 — The divider's LAYOUT thickness and its VISIBLE thickness are different
  *     properties. The handle occupies `--forte-resizable-handle-size` (a
@@ -24,8 +24,9 @@
  *     paints nothing.
  *
  * 3 — Panel size transitions in exactly two situations, and the selector says
- *     which: the group has SETTLED (`data-ready`) and is not being DRAGGED.
- *     Both exclusions are load-bearing.
+ *     which: the group has SETTLED (`data-ready`) and is either not being
+ *     DRAGGED or is mid-SNAP (`data-snapping`). Both exclusions are
+ *     load-bearing.
  *
  *     Before `data-ready`, the sizes on screen are the pre-hydration fallback
  *     and the next thing to happen is the real layout arriving. Transitioning
@@ -39,9 +40,27 @@
  *     where it is wanted costs nothing, and leaves no `transition: none` for
  *     the reduced-motion rules to trip over.
  *
+ *     The snap is the one moment a drag WANTS the easing. A collapsible panel
+ *     crossing its threshold jumps from its minimum to its collapsed size in
+ *     a single frame — far further than the pointer moved — and drawn raw
+ *     that is a panel vanishing under the cursor. The group raises
+ *     `data-snapping` for that commit and drops it once the transitions it
+ *     started have finished, so the jump is eased and the frames after it go
+ *     back to following the pointer. A drag that keeps moving inside that
+ *     window retargets the transition rather than fighting it: the panel
+ *     catches up along the same curve.
+ *
  * 4 — There is no `prefers-reduced-motion` block. The duration tokens shorten
  *     themselves and nothing here moves through space on a travel token, so
  *     the component is already correct under it.
+ *
+ * 5 — Focus highlights the divider only when it came from the keyboard. A
+ *     drag focuses the handle so the arrow keys work afterwards, and the
+ *     browser may well call that focus `:focus-visible` — it does on the
+ *     first interaction of a fresh page, see the note on `data-pointer-focus`
+ *     below. The outline is already suppressed for that case; the thickened
+ *     line has to be too, or every drag leaves the divider lit until the
+ *     reader clicks somewhere else.
  */
 @layer forte.components {
   .root {
@@ -84,14 +103,22 @@
     --forte-resizable-grip-dot-gap: 2px;
 
     /* Panel size changes. Long enough to read as a movement when a panel
-     * collapses — and applied only when the group is settled and not being
-     * dragged, so this never describes a panel following a pointer. */
-    /** How long a panel takes to reach a new size. Applies to a collapse or an
-     * expand, never to a drag */
-    --forte-resizable-duration: var(--forte-duration-normal);
-    /** Curve a panel follows to a new size. Not a spring: overshooting a
-     * panel's size flashes a band of the panel behind it */
-    --forte-resizable-ease: var(--forte-ease-standard);
+     * collapses — and applied only when the group is settled and either not
+     * being dragged or mid-snap, so this never describes a panel following a
+     * pointer. The precise spring rather than the standard curve: at the
+     * standard curve's 240ms a collapse is over before the deceleration
+     * registers and reads as a linear wipe. The spring is longer and spends
+     * that time settling, which is what makes it look eased. It is the one
+     * spring that never overshoots — a scale above 1 here would flash a band
+     * of the panel behind — and it is paired with its own duration, since a
+     * shorter one truncates the settle. */
+    /** How long a panel takes to reach a new size. Applies to a collapse, an
+     * expand, or the snap at the end of a drag, never to the drag itself */
+    --forte-resizable-duration: var(--forte-duration-spring-precise);
+    /** Curve a panel follows to a new size. Keep it free of overshoot: a
+     * panel briefly larger than its target flashes a band of the panel behind
+     * it */
+    --forte-resizable-ease: var(--forte-ease-spring-precise);
 
     /** Stacking level of the sheet mounted over the page during a drag. Above
      * the library's own overlays (Drawer sits at 40) so a splitter inside one
@@ -146,7 +173,8 @@
    * freeze the inner group's collapse animation. It is also exactly the
    * relationship the layout requires — a panel is a flex item of its group,
    * so anything that is not a direct child was already broken. */
-  .root[data-ready]:not([data-resizing]) > .panel {
+  .root[data-ready]:not([data-resizing]) > .panel,
+  .root[data-ready][data-snapping] > .panel {
     transition: flex-grow var(--forte-resizable-duration) var(--forte-resizable-ease);
   }
 
@@ -256,15 +284,20 @@
     block-size: var(--forte-resizable-line-size);
   }
 
+  /* `:not([data-pointer-focus])`, here and on every focus rule below: the
+   * handle takes focus on pointerdown and keeps it after the drag, and the
+   * ring rules suppress the outline for that case but leave `:focus-visible`
+   * itself matching. Without the guard the thickened line survives the
+   * release and the divider stays lit until something else is clicked. */
   .handle:hover::before,
-  .handle:focus-visible::before,
+  .handle:focus-visible:not([data-pointer-focus])::before,
   .handle[data-dragging]::before {
     inline-size: var(--forte-resizable-line-size-active);
     background-color: var(--forte-resizable-line-color-active);
   }
 
   .handle[data-orientation="vertical"]:hover::before,
-  .handle[data-orientation="vertical"]:focus-visible::before,
+  .handle[data-orientation="vertical"]:focus-visible:not([data-pointer-focus])::before,
   .handle[data-orientation="vertical"][data-dragging]::before {
     inline-size: auto;
     block-size: var(--forte-resizable-line-size-active);
@@ -311,7 +344,7 @@
   }
 
   .handle:hover .grip,
-  .handle:focus-visible .grip,
+  .handle:focus-visible:not([data-pointer-focus]) .grip,
   .handle[data-dragging] .grip {
     border-color: var(--forte-resizable-line-color-active);
   }
@@ -379,7 +412,7 @@
     }
 
     .handle:hover::before,
-    .handle:focus-visible::before,
+    .handle:focus-visible:not([data-pointer-focus])::before,
     .handle[data-dragging]::before {
       background-color: Highlight;
     }

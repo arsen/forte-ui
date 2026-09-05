@@ -615,6 +615,8 @@ import d_resizable_nested from "./resizable/nested";
 import d_resizable_nested_src from "./resizable/nested?raw";
 import d_resizable_persisted from "./resizable/persisted";
 import d_resizable_persisted_src from "./resizable/persisted?raw";
+import d_resizable_toggle_only from "./resizable/toggle-only";
+import d_resizable_toggle_only_src from "./resizable/toggle-only?raw";
 import d_resizable_vertical from "./resizable/vertical";
 import d_resizable_vertical_src from "./resizable/vertical?raw";
 import d_scroll_area_basic from "./scroll-area/basic";
@@ -1198,6 +1200,7 @@ export type DemoId =
   | "resizable/icon-rail"
   | "resizable/nested"
   | "resizable/persisted"
+  | "resizable/toggle-only"
   | "resizable/vertical"
   | "scroll-area/basic"
   | "scroll-area/both-axes"
@@ -1644,6 +1647,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "resizable/icon-rail": { Component: d_resizable_icon_rail, source: d_resizable_icon_rail_src, file: "resizable/icon-rail.tsx" },
   "resizable/nested": { Component: d_resizable_nested, source: d_resizable_nested_src, file: "resizable/nested.tsx" },
   "resizable/persisted": { Component: d_resizable_persisted, source: d_resizable_persisted_src, file: "resizable/persisted.tsx" },
+  "resizable/toggle-only": { Component: d_resizable_toggle_only, source: d_resizable_toggle_only_src, file: "resizable/toggle-only.tsx" },
   "resizable/vertical": { Component: d_resizable_vertical, source: d_resizable_vertical_src, file: "resizable/vertical.tsx" },
   "scroll-area/basic": { Component: d_scroll_area_basic, source: d_scroll_area_basic_src, file: "scroll-area/basic.tsx" },
   "scroll-area/both-axes": { Component: d_scroll_area_both_axes, source: d_scroll_area_both_axes_src, file: "scroll-area/both-axes.tsx" },
