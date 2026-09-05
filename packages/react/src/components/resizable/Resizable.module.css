@@ -77,7 +77,7 @@
     /** Thickness of the painted divider line at rest */
     --forte-resizable-line-size: 1px;
     /** Thickness of the painted divider line while hovered, focused or dragged */
-    --forte-resizable-line-size-active: 3px;
+    --forte-resizable-line-size-active: 2px;
     /** Color of the divider line at rest */
     --forte-resizable-line-color: var(--forte-color-border);
     /** Color of the divider line while hovered, focused or dragged */

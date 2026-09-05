@@ -8125,7 +8125,7 @@
       },
       {
         "name": "--forte-resizable-line-size-active",
-        "value": "3px",
+        "value": "2px",
         "description": "Thickness of the painted divider line while hovered, focused or dragged",
         "part": "root",
         "overrides": []
