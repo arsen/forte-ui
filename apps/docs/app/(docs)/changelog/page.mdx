@@ -19,6 +19,27 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.2.0
+
+<ReleaseMeta date="2026-09-04" href="https://github.com/arsen/forte-ui/compare/v1.1.1...v1.2.0" kind="compare" />
+
+### Resizable
+
+- Added `collapseOnDrag` to `Panel`, default `true`. Set to `false`, the divider handle can no longer collapse or reopen the panel by dragging past its threshold or pressing Enter — the drag stops at `minSize` and a shut panel stays shut under a drag — while the `collapsed` prop and a consumer's own toggle still work, for a sidebar whose only route to closed is deliberate.
+- A panel given a `px` size now holds that length across a window resize instead of drifting back toward a percentage: it is anchored at that pixel width (or height) while the group's percentage-sized panels share what is left, and it comes back at the same length when restored from `autoSaveId` storage.
+- Fixed the divider staying lit after a pointer drag: a drag focuses the handle, and the browser may treat that as keyboard focus, so the thickened line and grip border now light up only for genuine `:focus-visible` (keyboard) focus, matching the outline suppression already in place. A drag that never receives its release — capture refused or lost — now ends cleanly on `lostpointercapture`, `pointerup`, `pointercancel` or `blur` instead of leaving the drag overlay mounted until reload.
+- Fixed a collapsible panel snapping shut in a single frame when a drag crossed its collapse threshold; the jump now eases in on a spring curve (`--forte-ease-spring-precise` / `--forte-duration-spring-precise`) and a drag that keeps moving during the ease retargets smoothly instead of fighting it.
+- Fixed a group restored from `autoSaveId` visibly sliding in from its default sizes before snapping to the saved layout: sizes now apply before the group's first paint (via a small inline script on the server-rendered markup, falling back to a post-mount restore under a strict CSP or a custom `storage`).
+- Thinned the divider's active (hover/focus/dragging) line from 3px to 2px.
+
+### Design tokens & motion
+
+- `--forte-color-border`, `--forte-color-border-muted` and `--forte-color-border-strong` are now translucent (`color-mix` against transparent) instead of opaque gray steps, so every 1px edge reads as a hairline instead of carrying full ramp contrast (previously up to 2.1:1 in dark mode, now 1.2–1.7:1). A consumer relying on the previous opaque values — for compositing against a custom background, or reusing the token outside its usual surface — will see the new, lighter edges. The `prefers-contrast: less` override now derives from the same mix rather than an opaque gray-6, so it stays lighter than the default rather than overriding it.
+
+### Pagination
+
+- Fixed a doubled-looking seam between adjacent slots in the `joined` variant: two overlapping translucent borders summed to a darker line than the strip's outer edge, so a slot now paints only one side of each shared edge.
+
 ## v1.1.1
 
 <ReleaseMeta date="2026-09-04" href="https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1" kind="compare" />
@@ -238,78 +259,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 - `docgen` now emits `docs-data/components.md`, a generated catalogue of every component with a one-line when-to-use summary, its `props.json` part keys, its `theming.json` pointer, and its hooks — assembled from new `@summary` / `@category` doc-comment tags that the build now requires on every component root, so a new component can no longer ship without being catalogued. The file is exported from the package (`@forte-ui/react/docs-data/components.md`), and the internal docgen script order changed so `theming.json` is generated before `components.md` reads it.
 - Fixed a docs-data generation bug where two parts sharing a prop name in one file (for example `ScrollArea.Root`'s `orientation="both"` and `ScrollArea.Scrollbar`'s `orientation="vertical"`) could overwrite each other's documented default in the published `docs-data/props.json`; defaults are now read from each component's own declaration.
 
-## v1.0.0-alpha.3
-
-<ReleaseMeta date="2026-08-31" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3" kind="compare" />
-
-### Button
-
-- Fixed `data-icon-only` being silently erased when `Button` is composed as
-  another forte-ui component's `render` target (for example
-  `<DialogClose render={<Button iconOnly />} />`); the button's own value now
-  survives Base UI's prop merge instead of being overwritten by the outer
-  part's unset attribute.
-
-### Dialog
-
-- Fixed `DialogClose`'s `data-icon-only` attribute clobbering a composed
-  `render` target's own value — `<DialogClose render={<Button iconOnly />} />`
-  no longer un-squares the button.
-
-### Drawer
-
-- A drawer rendered without its scrim (`backdrop={false}`) now draws a
-  hairline border, marked on the popup as `data-no-backdrop` and themed by the
-  new `--forte-drawer-border-width` / `--forte-drawer-border-color` knobs.
-  Without the dim, the shadow was the only thing separating the surface from
-  the page, which in dark mode is nearly nothing. On an `edge` drawer the side
-  resting against the screen edge stays borderless, so an overdrag does not
-  expose the hairline as a seam across the skirt.
-- Fixed a non-modal drawer (`modal={false}`) making the entire page
-  unclickable while open: the full-screen viewport that positions the popup
-  was silently absorbing every pointer event aimed at the page. The viewport
-  is now permanently `pointer-events: none` with the popup restoring its own
-  events — modal behaviour (scrim, outside-press dismissal) and the
-  click-through during the exit animation are unchanged.
-- Fixed `DrawerClose`'s `data-icon-only` attribute clobbering a composed
-  `render` target's own value, the same fix as `Dialog` and `Popover`'s close
-  buttons.
-
-### Popover
-
-- Fixed `PopoverClose`'s `data-icon-only` attribute clobbering a composed
-  `render` target's own value — `<PopoverClose render={<Button iconOnly />} />`
-  no longer un-squares the button.
-
-### ScrollArea
-
-- New `orientation` prop on `ScrollArea.Root` (`"both"` (default) |
-  `"vertical"` | `"horizontal"`). Naming the axis turns the other one off —
-  its `overflow` becomes `hidden` on the viewport and its overscroll is no
-  longer contained — so a wheel or trackpad gesture along the axis with
-  nothing to scroll falls through to the page instead of being claimed (and,
-  on macOS, rubber-banded) by a viewport that cannot move. The resolved value
-  is exposed as `data-orientation` on the root and viewport.
-
-### Tabs
-
-- The scroll area `Tabs.List` wraps itself in now inherits the strip's
-  `orientation`, so scrolling across the strip — vertically over horizontal
-  tabs, horizontally over vertical ones — reaches the page instead of
-  bouncing a viewport with nothing to scroll on that axis.
-- Fixed the `pill` variant's list radius being pinned to a fixed step instead
-  of concentric with its tabs, so under a rounder radius preset the strip's
-  corners no longer run a visibly tighter curve than the pills inside it.
-- The `line` variant's sliding indicator now squares off the two corners
-  against the rail — the same treatment the tab itself gets — instead of
-  rounding all four, so the bar reads as attached to the rail rather than
-  floating above it.
-
-### Toggle
-
-- Fixed `data-icon-only` on `Toggle` being erased when composed via `render`,
-  the same class of bug fixed on `Button`.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 2 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 3 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

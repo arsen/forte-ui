@@ -13,6 +13,25 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-04
+
+### Resizable
+
+- Added `collapseOnDrag` to `Panel`, default `true`. Set to `false`, the divider handle can no longer collapse or reopen the panel by dragging past its threshold or pressing Enter — the drag stops at `minSize` and a shut panel stays shut under a drag — while the `collapsed` prop and a consumer's own toggle still work, for a sidebar whose only route to closed is deliberate.
+- A panel given a `px` size now holds that length across a window resize instead of drifting back toward a percentage: it is anchored at that pixel width (or height) while the group's percentage-sized panels share what is left, and it comes back at the same length when restored from `autoSaveId` storage.
+- Fixed the divider staying lit after a pointer drag: a drag focuses the handle, and the browser may treat that as keyboard focus, so the thickened line and grip border now light up only for genuine `:focus-visible` (keyboard) focus, matching the outline suppression already in place. A drag that never receives its release — capture refused or lost — now ends cleanly on `lostpointercapture`, `pointerup`, `pointercancel` or `blur` instead of leaving the drag overlay mounted until reload.
+- Fixed a collapsible panel snapping shut in a single frame when a drag crossed its collapse threshold; the jump now eases in on a spring curve (`--forte-ease-spring-precise` / `--forte-duration-spring-precise`) and a drag that keeps moving during the ease retargets smoothly instead of fighting it.
+- Fixed a group restored from `autoSaveId` visibly sliding in from its default sizes before snapping to the saved layout: sizes now apply before the group's first paint (via a small inline script on the server-rendered markup, falling back to a post-mount restore under a strict CSP or a custom `storage`).
+- Thinned the divider's active (hover/focus/dragging) line from 3px to 2px.
+
+### Design tokens & motion
+
+- `--forte-color-border`, `--forte-color-border-muted` and `--forte-color-border-strong` are now translucent (`color-mix` against transparent) instead of opaque gray steps, so every 1px edge reads as a hairline instead of carrying full ramp contrast (previously up to 2.1:1 in dark mode, now 1.2–1.7:1). A consumer relying on the previous opaque values — for compositing against a custom background, or reusing the token outside its usual surface — will see the new, lighter edges. The `prefers-contrast: less` override now derives from the same mix rather than an opaque gray-6, so it stays lighter than the default rather than overriding it.
+
+### Pagination
+
+- Fixed a doubled-looking seam between adjacent slots in the `joined` variant: two overlapping translucent borders summed to a darker line than the strip's outer edge, so a slot now paints only one side of each shared edge.
+
 ## [1.1.1] - 2026-09-04
 
 ### NavList
@@ -341,7 +360,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/arsen/forte-ui/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/arsen/forte-ui/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/arsen/forte-ui/compare/v1.0.0...v1.0.1
