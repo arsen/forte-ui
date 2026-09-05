@@ -12,7 +12,7 @@
     "dev": "pnpm run generate && next dev -p 3000",
     "build": "pnpm run generate && next build",
     "start": "npx --yes serve out -p 3000",
-    "deploy": "firebase deploy --only hosting",
+    "deploy:hosting": "firebase deploy --only hosting",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
