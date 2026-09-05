@@ -6875,7 +6875,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, so the saved layout is discarded if the\nnumber of panels has changed since.\n\nWith the default storage the saved layout is applied before the first\npaint: the group's server HTML carries a small inline script that reads\n`localStorage` while the page is still parsing. A page whose Content\nSecurity Policy forbids inline scripts, or a custom `storage`, falls back\nto restoring after mount, so give the panels sensible `defaultSize`s as\nwell — they are what the first paint shows in that case."
+        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, each in the unit its panel was declared in,\nso the saved layout is discarded if the number of panels has changed\nsince.\n\nWith the default storage the saved layout is applied before the first\npaint: the group's server HTML carries a small inline script that reads\n`localStorage` while the page is still parsing. A page whose Content\nSecurity Policy forbids inline scripts, or a custom `storage`, falls back\nto restoring after mount, so give the panels sensible `defaultSize`s as\nwell — they are what the first paint shows in that case."
       },
       {
         "name": "className",
@@ -6979,7 +6979,7 @@
         "type": "ResizableLength",
         "required": false,
         "defaultValue": null,
-        "description": "Size before anyone drags anything, as a percentage of the group or a\n`px` string. Panels without one split whatever the sized panels leave."
+        "description": "Size before anyone drags anything, as a percentage of the group or a\n`px` string — and the unit is kept. A percentage panel scales with the\ngroup; a px panel is anchored: it holds its length when the group changes\nsize, is remembered as a length after a drag, and is stored as one under\n`autoSaveId`, while the percentage panels share whatever it leaves. Panels\nwithout one split whatever the sized panels leave."
       },
       {
         "name": "maxSize",

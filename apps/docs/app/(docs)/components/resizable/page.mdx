@@ -38,7 +38,7 @@ The group has no size of its own — it fills whatever box it is given, so give 
 The layout is resolved on the client, from measurements the server does not have — but the server-rendered split is not a guess. The group reads the `defaultSize`s off its children and gives whatever is left to the panels that declared none, so the HTML arrives at the split the client is about to compute and there is nothing to correct on hydration. That shortcut needs the panels to be plain children of the group; if yours come out of a `map` through a wrapper component, declare a `defaultSize` on each one and the result is the same.
 
 <Callout kind="note">
-  Sizes are percentages of the group, and they always add up to 100. That is what makes the layout survive a window resize with no JavaScript running: each panel is `flex: <size> 1 0`, and the browser re-divides the space itself. Constraints are the exception — `minSize`, `maxSize` and `collapsedSize` also accept a `px` string, resolved against the group's measured size whenever they are read.
+  A panel keeps the unit its `defaultSize` was declared in. A percentage panel is `flex: <size> 1 0`, so the browser re-divides the space itself when the window changes, with no JavaScript running. A panel declared in px is `flex: 0 0 <size>px`: it holds that length, and the percentage panels share whatever it leaves. `minSize`, `maxSize` and `collapsedSize` accept either unit on either kind of panel, resolved against the group's measured size whenever they are read.
 </Callout>
 
 ## Examples
@@ -62,6 +62,14 @@ Groups nest. A vertical group inside a horizontal group's middle panel is the st
 <DemoBlock id="resizable/constraints" />
 
 `onLayout` reports every panel's size, in percent and in DOM order, whenever the layout settles — including the first time.
+
+### Anchored panels
+
+A sidebar is not a share of the window. Declare its `defaultSize` in px and it is anchored: 260px of a wide window and 260px of a narrow one, and whatever the reader drags it to is remembered as a length — after the window is maximized, and on the next visit under `autoSaveId`. Only the percentage panels beside it grow and shrink, and they keep their ratio to each other while they do. The browser does the holding, through `flex-basis`, so the divider does not drift after the window edge; the group only steps in when a constraint bites, and then it corrects without easing, in the same frame.
+
+<DemoBlock id="resizable/anchored" />
+
+The same goes for the size a panel shuts to. A `56px` rail is stored as 56px whether it was a percentage panel or an anchored one, so a collapsed sidebar stays collapsed when the window grows instead of being read as "open, and below its minimum" at the new width.
 
 ### Collapsing
 

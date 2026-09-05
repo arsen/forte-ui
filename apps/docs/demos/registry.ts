@@ -603,6 +603,8 @@ import d_radio_orientation from "./radio/orientation";
 import d_radio_orientation_src from "./radio/orientation?raw";
 import d_radio_sizes from "./radio/sizes";
 import d_radio_sizes_src from "./radio/sizes?raw";
+import d_resizable_anchored from "./resizable/anchored";
+import d_resizable_anchored_src from "./resizable/anchored?raw";
 import d_resizable_basic from "./resizable/basic";
 import d_resizable_basic_src from "./resizable/basic?raw";
 import d_resizable_collapsible from "./resizable/collapsible";
@@ -1194,6 +1196,7 @@ export type DemoId =
   | "radio/native-button"
   | "radio/orientation"
   | "radio/sizes"
+  | "resizable/anchored"
   | "resizable/basic"
   | "resizable/collapsible"
   | "resizable/constraints"
@@ -1641,6 +1644,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "radio/native-button": { Component: d_radio_native_button, source: d_radio_native_button_src, file: "radio/native-button.tsx" },
   "radio/orientation": { Component: d_radio_orientation, source: d_radio_orientation_src, file: "radio/orientation.tsx" },
   "radio/sizes": { Component: d_radio_sizes, source: d_radio_sizes_src, file: "radio/sizes.tsx" },
+  "resizable/anchored": { Component: d_resizable_anchored, source: d_resizable_anchored_src, file: "resizable/anchored.tsx" },
   "resizable/basic": { Component: d_resizable_basic, source: d_resizable_basic_src, file: "resizable/basic.tsx" },
   "resizable/collapsible": { Component: d_resizable_collapsible, source: d_resizable_collapsible_src, file: "resizable/collapsible.tsx" },
   "resizable/constraints": { Component: d_resizable_constraints, source: d_resizable_constraints_src, file: "resizable/constraints.tsx" },
