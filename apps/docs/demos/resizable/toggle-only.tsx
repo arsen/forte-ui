@@ -5,8 +5,9 @@ import { Button, Resizable } from "@forte-ui/react";
 
 /* `collapseOnDrag={false}` reserves collapsing for the `collapsed` prop. The
  * drag stops at `minSize` the way a non-collapsible panel's does, Enter on the
- * divider does nothing, and while the sidebar is shut the divider leaves it
- * shut — the button is the one route in either direction. */
+ * divider will not shut it, and while the sidebar is shut a drag leaves it
+ * shut — the same rule both ways. A click or Enter on the divider still
+ * reopens it, because nothing about a click can make a sidebar vanish. */
 export default function ResizableToggleOnly() {
   const [collapsed, setCollapsed] = React.useState(false);
 

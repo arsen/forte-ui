@@ -6,7 +6,8 @@ import { Button, Resizable } from "@forte-ui/react";
 /* `collapsed` + `onCollapsedChange` is an ordinary controlled pair, so the
  * toggle button is an ordinary button holding ordinary state. Drag the sidebar
  * past half of its minimum and it shuts, and the button re-labels itself —
- * both routes write to the same piece of state. */
+ * both routes write to the same piece of state. So does the third: once the
+ * sidebar is shut, a click on the divider reopens it. */
 export default function ResizableCollapsible() {
   const [collapsed, setCollapsed] = React.useState(false);
 
@@ -17,7 +18,7 @@ export default function ResizableCollapsible() {
           {collapsed ? "Show sidebar" : "Hide sidebar"}
         </Button>
         <span className="text-1 text-foreground-subtle">
-          Or drag the divider left, or press Enter on it.
+          Or drag the divider left, or press Enter on it — and once it is shut, click it.
         </span>
       </div>
 

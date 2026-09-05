@@ -6958,21 +6958,21 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Whether the handle may collapse the panel — by dragging past `minSize`,\nor with <kbd>Enter</kbd>, which is the same gesture from the keyboard.\nSet it to `false` for a sidebar that collapses only through `collapsed`,\nfrom your own toggle: the drag then stops at `minSize` like any other\npanel's, and while the panel is shut the handle leaves it shut. Nothing\nwithout `collapsible`."
+        "description": "Whether the handle's drag may collapse the panel — dragging past\n`minSize`, or <kbd>Enter</kbd>, which is the same gesture from the\nkeyboard. Set it to `false` for a sidebar that must never vanish under a\nslipped drag and collapses only through `collapsed`, from your own\ntoggle: the drag then stops at `minSize` like any other panel's,\n<kbd>Enter</kbd> leaves an open panel open, and while the panel is shut a\ndrag leaves it shut — the same rule both ways. A click still reopens it,\nand so does <kbd>Enter</kbd>, unless `expandOnClick` is off as well.\nNothing without `collapsible`."
       },
       {
         "name": "collapseThreshold",
         "type": "number",
         "required": false,
         "defaultValue": "0.5",
-        "description": "How far down the gap between `collapsedSize` and `minSize` the snap point\nsits, as a fraction. `0.5` is the midpoint: drag past halfway and the\npanel shuts, let go before it and it springs back to `minSize`."
+        "description": "How far down the gap between `collapsedSize` and `minSize` the snap point\nsits, as a fraction. `0.5` is the midpoint: drag past halfway and the\npanel shuts, let go before it and it springs back to `minSize`. The same\npoint works in reverse — drag a shut panel past it and it springs open\nto `minSize`, short of it and it falls shut again — so the two\ndirections feel like one control."
       },
       {
         "name": "collapsible",
         "type": "boolean",
         "required": false,
         "defaultValue": "false",
-        "description": "Whether dragging past `minSize` snaps the panel shut instead of stopping.\nA collapsed panel publishes `data-collapsed`, and the handle beside it\ntoggles it with <kbd>Enter</kbd>."
+        "description": "Whether dragging past `minSize` snaps the panel shut instead of stopping.\nA collapsed panel publishes `data-collapsed`, and the handle beside it\ntoggles it with <kbd>Enter</kbd> and reopens it on a click."
       },
       {
         "name": "defaultSize",
@@ -6980,6 +6980,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Size before anyone drags anything, as a percentage of the group or a\n`px` string — and the unit is kept. A percentage panel scales with the\ngroup; a px panel is anchored: it holds its length when the group changes\nsize, is remembered as a length after a drag, and is stored as one under\n`autoSaveId`, while the percentage panels share whatever it leaves. Panels\nwithout one split whatever the sized panels leave."
+      },
+      {
+        "name": "expandOnClick",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether a click — or a tap — on the handle reopens the panel once it is\nshut, with the handle showing a one-way arrow to say so; <kbd>Enter</kbd>\nreopens it wherever a click or a drag would. On by default: a drag\nreopens it too, where `collapseOnDrag` allows, but a click is one gesture\nwhere a pull is two, and it puts the panel back where it was rather than\nat `minSize`. Set it to `false` for a divider that reopens only by drag\n— or, with `collapseOnDrag` off as well, only through `collapsed`.\nNothing without `collapsible`."
       },
       {
         "name": "maxSize",
@@ -7000,7 +7007,7 @@
         "type": "((collapsed: boolean) => void)",
         "required": false,
         "defaultValue": null,
-        "description": "Called when the panel collapses or expands, whichever caused it — a drag\npast the snap point, <kbd>Enter</kbd> on the handle, or your own state."
+        "description": "Called when the panel collapses or expands, whichever caused it — a drag\npast the snap point, <kbd>Enter</kbd> or a click on the handle, or your\nown state."
       },
       {
         "name": "render",
@@ -7013,7 +7020,7 @@
   },
   "ResizableHandle": {
     "name": "ResizableHandle",
-    "description": "The divider between two panels — draggable, focusable, and a real\n`role=\"separator\"` with the window-splitter keyboard interface: arrows to\nmove it, <kbd>Page Up</kbd>/<kbd>Page Down</kbd> for a bigger step,\n<kbd>Home</kbd>/<kbd>End</kbd> for the extremes, and <kbd>Enter</kbd> to\ncollapse or expand a collapsible neighbour.\n\nIts hit area is expanded to the 24px minimum (SC 2.5.8) without changing\nthe hairline it draws, so it can be grabbed by a shaky hand or a thumb\nwithout becoming a visible gutter.",
+    "description": "The divider between two panels — draggable, focusable, and a real\n`role=\"separator\"` with the window-splitter keyboard interface: arrows to\nmove it, <kbd>Page Up</kbd>/<kbd>Page Down</kbd> for a bigger step,\n<kbd>Home</kbd>/<kbd>End</kbd> for the extremes, and <kbd>Enter</kbd> to\ncollapse or expand a collapsible neighbour.\n\nBeside a collapsed panel it is a button as well: the cursor turns into a\none-way resize arrow pointing the way the divider will move, and a click —\nor a tap — reopens the panel where it was. Dragging it open works too,\nwhere `collapseOnDrag` allows, snapping open at the same point it snapped\nshut — but a click is one gesture where a pull is two, and it puts the\npanel back where it was rather than at its minimum. `expandOnClick={false}`\non the panel turns the click off.\n\nIts hit area is expanded to the 24px minimum (SC 2.5.8) without changing\nthe hairline it draws, so it can be grabbed by a shaky hand or a thumb\nwithout becoming a visible gutter.",
     "props": [
       {
         "name": "className",
