@@ -355,6 +355,17 @@
     z-index: 1;
   }
 
+  /* The border tokens are alpha, so the two edges the overlap stacks at a
+   * seam would sum to a darker line than the strip's outer frame. The later
+   * slot gives up its start edge and the seam is its neighbour's end edge
+   * alone. The current page keeps all four: it is raised above both
+   * neighbours and framed in its own color, so there is nothing under its
+   * edge to stack with. */
+  .root[data-variant="joined"] .item:not(:first-child) > .control:not([data-current]),
+  .root[data-variant="joined"] .item:not(:first-child) > .ellipsis {
+    border-inline-start-color: transparent;
+  }
+
   /* The focus ring is an `outline` drawn OUTSIDE the border box, so on a
    * fused edge it reaches over the neighbour — which, painting later, covers
    * that stretch of ring. Raising the focused slot above even the current
