@@ -111,10 +111,33 @@ export function HeroThemer() {
      * moving to the pressed swatch — is committed inside the callback, where
      * the "new" snapshot is taken. Left to React's own scheduling it lands a
      * frame later, after that snapshot, and the ring pops in once the fade
-     * has finished instead of fading in with the palette. */
-    const transition = document.startViewTransition(() => {
-      flushSync(() => setThemeConfig(next));
-    });
+     * has finished instead of fading in with the palette.
+     *
+     * Typed `palette`, because this is no longer the only view transition
+     * on the site: every client-side navigation is one too, and the two
+     * want opposite things from the ROOT snapshot. A navigation cross-fades
+     * the page region through its own boundary and leaves the root live,
+     * so the app bar simply is the next page's; this wash has no boundary
+     * of its own and the root is the thing that fades, on
+     * `--forte-duration-slow`, bar included. The type is what lets
+     * `globals.css` tell them apart — `:active-view-transition-type(palette)`
+     * — and it is the same mechanism React uses for its own transition
+     * types, so the two never collide.
+     *
+     * The object form of the API is the one that carries a type. A browser
+     * with only the older callback form (Chromium 111–124) refuses the
+     * object before the update runs, so the catch applies the palette
+     * plainly — a cut, which is what the theme drawer does everywhere. */
+    let transition: ViewTransition;
+    try {
+      transition = document.startViewTransition({
+        update: () => flushSync(() => setThemeConfig(next)),
+        types: ["palette"],
+      });
+    } catch {
+      setThemeConfig(next);
+      return;
+    }
     /* A transition the browser skips — the tab is hidden, or a second click
      * lands mid-fade and supersedes the first — rejects `ready`, and nothing
      * here waits on it. Chromium 148 reports that rejection as an uncaught

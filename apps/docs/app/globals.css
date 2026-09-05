@@ -193,23 +193,27 @@
   }
 
   /* -------------------------------------------------------------------------
-   * Palette cross-fade.
+   * View transitions.
    *
-   * The home page's swatches change the palette inside a view transition
-   * (`hero-themer.tsx` is the only caller): the browser snapshots the page,
-   * the seeds change in one style recalc, and the two snapshots cross-fade on
-   * the compositor. The UA's own keyframes do the fading — old out, new in,
-   * blended `plus-lighter` so the middle never dips — and these two
-   * declarations only put them on the library's clock. Reduced motion is
-   * decided in the caller, off `--forte-motion-ok`, by not starting a
-   * transition at all; there is nothing to gate here.
+   * Two things start one. Every client-side navigation is a React transition
+   * in which the page boundary in `components/page-transition.tsx` is
+   * updated — that is the cross-fade between pages — and a palette pick on
+   * the home page (`hero-themer.tsx`) calls `document.startViewTransition`
+   * itself, typed `palette`. Both end up here: pseudo-elements on the root
+   * that no element carries a class for, which is why this is CSS.
    *
-   * Not a utility: a pseudo-element has no element to carry a class.
+   * Everything below runs on the library's clock, and none of it writes a
+   * `prefers-reduced-motion` query: the duration tokens shorten under the OS
+   * preference AND under the studio's `data-forte-motion`, and the
+   * pseudo-elements inherit them from `<html>`, so a reader who asked for
+   * less motion gets a shorter fade from the same rules. A fade is not
+   * motion; the one whole-page effect that should not run at all under it,
+   * the palette wash, is declined in its caller off `--forte-motion-ok`.
    *
-   * It used to be a `transition` on the two registered seeds, on `:root` —
-   * one animatable property, re-deriving every ramp step per frame with
-   * relative color syntax, no JavaScript in the animation path. Two things
-   * were wrong with it, and only one was visible from here:
+   * The palette fade used to be a `transition` on the two registered seeds,
+   * on `:root` — one animatable property, re-deriving every ramp step per
+   * frame with relative color syntax, no JavaScript in the animation path.
+   * Two things were wrong with it, and only one was visible from here:
    *
    * - In the desktop app's Chromium (148) every `border: 1px solid var(--…)`
    *   SHORTHAND on the page painted its edge in `currentColor` for the length
@@ -229,8 +233,54 @@
    * A snapshot fade has neither problem: the DOM never holds a mid-fade
    * value, and the fade is two textures.
    * ---------------------------------------------------------------------- */
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
+
+  /* The overlay would otherwise swallow every click for the length of a
+   * fade. */
+  ::view-transition {
+    pointer-events: none;
+  }
+
+  /* The page: the boundary's two snapshots, before and after, cross-fading.
+   * The UA's own keyframes do the fading — old out, new in, blended
+   * `plus-lighter` so the middle never dips — and these declarations only
+   * put them on the clock. `normal` rather than `fast`, on the library's own
+   * rule for a large surface. */
+  ::view-transition-group(.page),
+  ::view-transition-old(.page),
+  ::view-transition-new(.page) {
+    animation-duration: var(--forte-duration-normal);
+    animation-timing-function: var(--forte-ease-standard);
+  }
+
+  /* The root — the app bar, the footer, the page background — stays LIVE
+   * during a navigation: no old snapshot, no fade on the new one, so what
+   * is outside the page simply is the next page's from the first frame. Two
+   * reasons. The bar is frosted, and two translucent snapshots blended
+   * `plus-lighter` flash bright for the length of a fade. And a React
+   * transition that names no boundary — a demo's own `startTransition`,
+   * see `page-transition.tsx` — still opens a view transition, which with a
+   * root fade would be the page cross-fading to itself on every keystroke
+   * in an async demo. Live, it is nothing.
+   *
+   * Not during the palette wash. There the root is the thing that fades —
+   * the whole page changes color at once — and it takes its time, because
+   * at a navigation's pace a color change reads as a flash. */
+  html:not(:active-view-transition-type(palette))::view-transition-old(root) {
+    display: none;
+  }
+
+  /* The group too, not only the pair: it moves nothing, but the UA gives it
+   * a quarter-second of its own, and a transition lasts as long as its
+   * longest animation — which would outlive the fade above, and under
+   * reduced motion by twice. */
+  html:not(:active-view-transition-type(palette))::view-transition-group(root),
+  html:not(:active-view-transition-type(palette))::view-transition-new(root) {
+    animation: none;
+  }
+
+  html:active-view-transition-type(palette)::view-transition-group(root),
+  html:active-view-transition-type(palette)::view-transition-old(root),
+  html:active-view-transition-type(palette)::view-transition-new(root) {
     animation-duration: var(--forte-duration-slow);
     animation-timing-function: var(--forte-ease-standard);
   }
