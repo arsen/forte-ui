@@ -6875,7 +6875,7 @@
         "type": "string",
         "required": false,
         "defaultValue": null,
-        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, each in the unit its panel was declared in,\nso the saved layout is discarded if the number of panels has changed\nsince.\n\nWith the default storage the saved layout is applied before the first\npaint: the group's server HTML carries a small inline script that reads\n`localStorage` while the page is still parsing. A page whose Content\nSecurity Policy forbids inline scripts, or a custom `storage`, falls back\nto restoring after mount, so give the panels sensible `defaultSize`s as\nwell — they are what the first paint shows in that case."
+        "description": "Remember the layout under this key and restore it on the next visit.\nSizes are stored positionally, each in the unit its panel was declared in,\nso the saved layout is discarded if the number of panels has changed\nsince.\n\nThe saved layout is what the panels draw from their first render on the\nclient — so content that measures its panel in a mount effect measures\nthe restored split, not the default one — and with the default storage\nit is on screen before that: the group's server HTML carries a small\ninline script that reads `localStorage` while the page is still parsing.\nA page whose Content Security Policy forbids inline scripts, or a custom\n`storage`, shows the defaults until the group hydrates, so give the\npanels sensible `defaultSize`s as well."
       },
       {
         "name": "className",
@@ -6897,6 +6897,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Called with every panel's size, in percent and in DOM order, whenever the\nlayout changes — including the first time it settles."
+      },
+      {
+        "name": "onReady",
+        "type": "(() => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called once, when the layout first settles: every panel has its size —\nrestored under `autoSaveId`, or resolved from the `defaultSize`s — and\nis drawn at it. Content that measures its panel does not usually need\nthis, because a saved layout is drawn from the first render; a group\nthat mounts hidden, or whose panels are not direct `Resizable.Panel`\nchildren, settles later, and this is the moment to measure then."
       },
       {
         "name": "orientation",
