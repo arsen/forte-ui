@@ -1,4 +1,4 @@
-export { OTPField, OTPFieldRoot, OTPFieldInput, OTPFieldSeparator } from "./OTPField";
+export { OTPField } from "./OTPField";
 export type {
   OTPFieldSize,
   OTPFieldVariant,

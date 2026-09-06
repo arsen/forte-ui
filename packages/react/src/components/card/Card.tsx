@@ -284,13 +284,6 @@ export const CardMedia = React.forwardRef<HTMLDivElement, CardMediaProps>(functi
 
 /* -------------------------------------------------------------------------
  * Compound export
- *
- * The parts are ALSO exported flat (CardRoot, CardHeader, …), and that is not
- * a convenience: a React Server Component cannot dereference `Card.Root` —
- * the namespace object crosses the client boundary as an opaque reference
- * whose properties are `undefined`, which renders as "Element type is
- * invalid" at runtime and passes the type checker completely. The flat names
- * are the ones an RSC can use, the same arrangement Field and DatePicker ship.
  * ---------------------------------------------------------------------- */
 
 /**

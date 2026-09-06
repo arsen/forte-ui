@@ -1,13 +1,4 @@
-export {
-  NumberField,
-  NumberFieldRoot,
-  NumberFieldGroup,
-  NumberFieldInput,
-  NumberFieldIncrement,
-  NumberFieldDecrement,
-  NumberFieldScrubArea,
-  NumberFieldScrubAreaCursor,
-} from "./NumberField";
+export { NumberField } from "./NumberField";
 export type {
   NumberFieldSize,
   NumberFieldVariant,

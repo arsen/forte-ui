@@ -15,6 +15,9 @@ src/components/<name>/
 Register the component in `src/index.ts`. Every file that renders is
 `"use client"` — Base UI primitives use context and refs.
 
+A compound component is exported as its namespace object only — `Card`, used
+as `Card.Root` — never as flat `CardRoot`-style aliases beside it.
+
 ## The rules
 
 **1. Consume tokens; never hardcode a value.** No hex colors, no `px`

@@ -1,12 +1,4 @@
-export {
-  InputGroup,
-  InputGroupRoot,
-  InputGroupInput,
-  InputGroupTextarea,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupButton,
-} from "./InputGroup";
+export { InputGroup } from "./InputGroup";
 export type {
   InputGroupSize,
   InputGroupVariant,

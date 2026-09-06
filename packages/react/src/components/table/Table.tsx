@@ -432,12 +432,6 @@ export const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
 
 /* -------------------------------------------------------------------------
  * Compound export
- *
- * The parts are ALSO exported flat (TableRoot, TableRow, …), for the reason
- * Card gives: a React Server Component cannot dereference `Table.Root` —
- * the namespace object crosses the client boundary as an opaque reference
- * whose properties are `undefined`, a runtime error the type checker
- * cannot see. A table of data fetched on the server is exactly the case.
  * ---------------------------------------------------------------------- */
 
 /**
