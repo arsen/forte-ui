@@ -299,7 +299,10 @@
     transition:
       background-color var(--forte-toolbar-link-duration) var(--forte-ease-standard),
       text-decoration-color var(--forte-toolbar-link-duration)
-        var(--forte-ease-standard);
+        var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Gated on real hover support so a touch device does not stick in the hover

@@ -67,7 +67,7 @@ const CONTROL = [
   // utilities, and the `font` shorthand carries a `font-size` — so it silently
   // overwrote the `text-1` sitting right next to it.
   "rounded-2 border-0 bg-transparent px-2 py-1 font-sans font-normal leading-normal text-1",
-  "text-foreground-muted transition-[color,background-color] duration-fast ease-standard",
+  "text-foreground-muted transition-[color,background-color,outline-color,outline-offset,box-shadow] duration-fast ease-standard",
   "hover:bg-panel-hover hover:text-foreground",
   "data-active:bg-primary-soft data-active:text-primary-text",
   "forte-focus-ring",

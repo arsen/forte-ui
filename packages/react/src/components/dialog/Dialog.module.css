@@ -296,7 +296,10 @@
       /* In step with the ::after dim below — the two together are one
        * overlay, and a border that snapped while the surface faded would
        * announce itself as a separate thing. */
-      border-color var(--forte-dialog-nested-duration) var(--forte-ease-standard);
+      border-color var(--forte-dialog-nested-duration) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Rises into place from below and grows to full size. */
@@ -594,7 +597,10 @@
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {

@@ -149,7 +149,10 @@
     text-decoration: none;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* An svg placed straight into a crumb is an icon: it must not squash when
@@ -251,7 +254,10 @@
     cursor: default;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   button.ellipsis,

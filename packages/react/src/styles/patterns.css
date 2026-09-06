@@ -13,11 +13,39 @@
    * follows border-radius, honors outline-offset, is not clipped by an
    * ancestor's overflow:hidden, and — decisively — survives forced-colors
    * mode, where box-shadow is forced to `none`. The box-shadow here only
-   * fills the offset gap with the contrasting second tone.
+   * fills the offset gap with the near-page tone the outline is measured
+   * against (a11y.css says why that gap is what keeps the brand ring honest).
+   *
+   * The ring grows out of the control while it fades in, and the mechanism
+   * is that at rest the outline is ALREADY drawn — full width, in
+   * `transparent`, its offset pulled `--forte-focus-ring-travel` INSIDE the
+   * edge. Gaining focus then changes only `outline-color` and
+   * `outline-offset`, both of which interpolate, where
+   * `outline-style: none → solid` cannot; the travel token is `0px` under
+   * reduced motion, so there the ring simply fades in place. The transition
+   * declared here reaches only the parts that declare none of their own: a
+   * `transition` shorthand on the part resets the property list, so every
+   * ringed part that has one lists `outline-color`, `outline-offset` and
+   * `box-shadow` alongside its own, on the ring's own clock (rule 5 in
+   * CONTRIBUTING.md), or it is the one control on the page whose ring
+   * snaps. Under forced-colors `transparent` is
+   * replaced with a system color and this resting outline would show on
+   * every control at once — the a11y block at the foot of this file turns it
+   * off there and puts the Highlight ring back on focus.
    * --------------------------------------------------------------------- */
+  .forte-focus-ring,
+  .forte-focus-ring-within {
+    outline: var(--forte-focus-ring-width) solid transparent;
+    outline-offset: calc(var(--forte-focus-ring-offset) - var(--forte-focus-ring-travel));
+    transition:
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
+  }
+
   .forte-focus-ring:focus-visible,
   .forte-focus-ring-within:has(:focus-visible) {
-    outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
+    outline-color: var(--forte-focus-ring-inner);
     outline-offset: var(--forte-focus-ring-offset);
     box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
   }
@@ -41,9 +69,17 @@
   }
 
   /* Inside a clipping context — list rows, tab strips, select items — an
-   * outward ring would be cut off. Invert it. */
+   * outward ring would be cut off. Invert it. The offset is the same in both
+   * states — an inset ring has no room to travel, and set only on focus it
+   * would jump the instant focus left, while the color was still fading.
+   * (0,2,0) against the focus rule's (0,2,0): document order settles it, so
+   * this stays below. */
+  .forte-focus-ring[data-focus-inset],
   .forte-focus-ring[data-focus-inset]:focus-visible {
     outline-offset: calc(-1 * var(--forte-focus-ring-width) - 1px);
+  }
+
+  .forte-focus-ring[data-focus-inset]:focus-visible {
     box-shadow: inset 0 0 0
       calc(var(--forte-focus-ring-width) + var(--forte-focus-ring-offset))
       var(--forte-focus-ring-outer);
@@ -163,7 +199,12 @@
       color var(--forte-duration-fast) var(--forte-ease-standard),
       translate var(--forte-duration-fast) var(--forte-ease-standard),
       scale var(--forte-press-duration, var(--forte-duration-spring-snappy))
-        var(--forte-press-ease, var(--forte-ease-spring-snappy));
+        var(--forte-press-ease, var(--forte-ease-spring-snappy)),
+      /* This shorthand replaces the focus ring's own (above), so the ring's
+       * properties ride along or a pressable part is the one that snaps. */
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {
@@ -574,6 +615,14 @@
     :where([data-disabled], [aria-disabled="true"], :disabled) :where(svg, .forte-icon) {
       fill: GrayText;
       stroke: GrayText;
+    }
+
+    /* The resting outline is `transparent`, which forced-colors replaces with
+     * a system color — every ringed part would wear a ring at once. Off at
+     * rest; the rule below puts it back on focus. */
+    .forte-focus-ring,
+    .forte-focus-ring-within {
+      outline-style: none;
     }
 
     .forte-focus-ring:focus-visible,

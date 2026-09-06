@@ -208,11 +208,12 @@ contains a media query:
 
 Beyond what Base UI provides:
 
-- **Focus rings are two-tone** — a dark inner and light outer ring that contrast
-  with each other, so one boundary always clears 3:1 whatever is behind the
-  control. Carried by `outline`, which follows `border-radius`, is not clipped
-  by `overflow: hidden`, and survives forced-colors mode where shadows are
-  stripped.
+- **Focus rings are brand-colored, and measured** — the outline is the accent
+  ramp's text step, held to 4.5:1 for every seed, drawn over a gap filled with
+  the near-page tone so it clears 3:1 whatever the control's own fill. Carried
+  by `outline`, which follows `border-radius`, is not clipped by
+  `overflow: hidden`, and survives forced-colors mode where shadows are
+  stripped; it fades in and out rather than snapping.
 - **Forced colors (Windows High Contrast)** is handled in a dedicated cascade
   layer ordered *after* components, so the overrides win by layer order rather
   than by specificity games. Disabled controls resolve to `GrayText` at full

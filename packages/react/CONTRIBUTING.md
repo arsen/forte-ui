@@ -51,6 +51,16 @@ popup stays in the DOM permanently. `getAnimations()` is not called with
 part sits inside a clipping container (list rows, tab strips, select items),
 which flips the ring inward so `overflow: hidden` cannot crop it.
 
+The ring grows out of the control while it fades in, and the motion is per
+part. At rest the pattern already draws the outline in `transparent`, pulled
+inside the edge by `--forte-focus-ring-travel`, so focus changes only
+`outline-color` and `outline-offset` — but a `transition` shorthand on the part
+resets its property list, so a ringed part that declares one lists
+`outline-color`, `outline-offset` and `box-shadow` alongside its own, each on
+`var(--forte-focus-ring-duration) var(--forte-focus-ring-ease)`, or its ring is
+the one on the page that snaps. A part with no shorthand inherits the
+pattern's.
+
 Where the element that HOLDS focus is not the element that should look focused —
 Slider's and ColorPicker's thumbs over their hidden inputs, NumberField's group
 over its text field — the wrapper takes `.forte-focus-ring-within` instead. That
@@ -212,8 +222,8 @@ list and that file disagree, the file is right; fix the list.
 **ease** (8)
 `--forte-ease-emphasized` · `--forte-ease-exit` · `--forte-ease-in-out` · `--forte-ease-spring-bouncy` · `--forte-ease-spring-gentle` · `--forte-ease-spring-precise` · `--forte-ease-spring-snappy` · `--forte-ease-standard`
 
-**focus** (4)
-`--forte-focus-ring-inner` · `--forte-focus-ring-offset` · `--forte-focus-ring-outer` · `--forte-focus-ring-width`
+**focus** (7)
+`--forte-focus-ring-duration` · `--forte-focus-ring-ease` · `--forte-focus-ring-inner` · `--forte-focus-ring-offset` · `--forte-focus-ring-outer` · `--forte-focus-ring-travel` · `--forte-focus-ring-width`
 
 **font** (12)
 `--forte-font-mono` · `--forte-font-sans` · `--forte-font-size-1` · `--forte-font-size-2` · `--forte-font-size-3` · `--forte-font-size-4` · `--forte-font-size-5` · `--forte-font-size-6` · `--forte-font-weight-bold` · `--forte-font-weight-medium` · `--forte-font-weight-normal` · `--forte-font-weight-semibold`

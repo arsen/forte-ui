@@ -419,7 +419,10 @@
     scroll-margin-inline: var(--forte-tabs-scroll-peek);
     transition:
       color var(--forte-duration-fast) var(--forte-ease-standard),
-      background-color var(--forte-duration-fast) var(--forte-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Vertical scrolls on the block axis instead, so the peek moves with it. The
@@ -610,7 +613,10 @@
     translate: 0 0;
     transition:
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
-      translate var(--forte-duration-normal) var(--forte-ease-spring-snappy);
+      translate var(--forte-duration-normal) var(--forte-ease-spring-snappy),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .panel[data-starting-style],

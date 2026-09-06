@@ -16,7 +16,7 @@ Three decisions shape everything else in the library.
 
 **Nothing is hardcoded.** Color, spacing, radius, duration and easing all come from tokens. A seed color derives twelve accent steps, brand-tinted neutrals and a readable text color, and the density and radius presets rewrite the rest — so a theme is a handful of declarations, not a fork.
 
-**Accessibility is measured, not asserted.** The color ramp is verified against 119,108 in-gamut seeds before a release, and text on a solid fill never drops below 4.5:1 whichever brand color you pick. Keyboard behavior, focus management and ARIA come from Base UI, and every focusable part carries a two-tone focus ring that stays visible on any background.
+**Accessibility is measured, not asserted.** The color ramp is verified against 119,108 in-gamut seeds before a release, and text on a solid fill never drops below 4.5:1 whichever brand color you pick. Keyboard behavior, focus management and ARIA come from Base UI, and every focusable part carries a brand-colored focus ring drawn over its own gap, so it stays visible on any background.
 
 **Your CSS always wins.** Everything the library ships sits inside a cascade layer, which loses to unlayered author CSS by definition. Plain stylesheets and utility classes override any component without a single `!important`.
 

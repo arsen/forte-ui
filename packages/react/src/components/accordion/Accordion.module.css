@@ -220,8 +220,12 @@
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
-    transition: background-color var(--forte-duration-fast)
-      var(--forte-ease-standard);
+    transition:
+      background-color var(--forte-duration-fast)
+      var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Open, the row's bottom edge is the seam with the panel rather than the

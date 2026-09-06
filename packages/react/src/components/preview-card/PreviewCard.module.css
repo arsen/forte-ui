@@ -80,8 +80,12 @@
      * typeface's designer put it and matches the surrounding prose. */
     text-decoration-thickness: from-font;
     text-underline-offset: var(--forte-preview-card-trigger-underline-offset);
-    transition: text-decoration-color var(--forte-duration-fast)
-      var(--forte-ease-standard);
+    transition:
+      text-decoration-color var(--forte-duration-fast)
+      var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {
@@ -384,7 +388,10 @@
       transform var(--forte-preview-card-enter-duration)
         var(--forte-preview-card-enter-ease),
       width var(--forte-preview-card-resize-duration) var(--forte-ease-emphasized),
-      height var(--forte-preview-card-resize-duration) var(--forte-ease-emphasized);
+      height var(--forte-preview-card-resize-duration) var(--forte-ease-emphasized),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
 
     /* The viewport has taken over the column for its own two children, and the
      * card's gap would add a phantom row beside its single child. */

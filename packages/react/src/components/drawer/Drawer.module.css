@@ -413,7 +413,10 @@
       scale var(--forte-drawer-nested-duration) var(--forte-ease-spring-precise),
       /* Paired with the overlay's own fade below, so the silhouette and the
        * surface inside it dim as one thing rather than in two steps. */
-      border-color var(--forte-drawer-nested-duration) var(--forte-ease-standard);
+      border-color var(--forte-drawer-nested-duration) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Waiting off-screen, and going back there. The same declaration serves
@@ -1024,7 +1027,10 @@
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {

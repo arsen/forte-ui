@@ -238,7 +238,10 @@
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
       color var(--forte-duration-fast) var(--forte-ease-standard),
-      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {
@@ -304,7 +307,10 @@
     cursor: default;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   button.ellipsis,

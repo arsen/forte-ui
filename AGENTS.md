@@ -324,8 +324,8 @@ specificity completely, so an accessibility override placed earlier can never
 win. Forced-colors rules go in a separate `@layer forte.a11y` block at the
 bottom of the file, not nested inside the components block.
 
-**Accessibility beyond what Base UI gives you.** Two-tone focus rings carried by
-`outline`; `.forte-focus-ring` on every focusable part, plus `data-focus-inset`
+**Accessibility beyond what Base UI gives you.** Brand-colored focus rings
+carried by `outline` over a near-page gap fill, fading rather than snapping; `.forte-focus-ring` on every focusable part, plus `data-focus-inset`
 inside clipping containers; `.forte-hc-surface` on every floating surface; 24×24
 minimum targets (SC 2.5.8); decorative SVG gets `aria-hidden`, and state that
 matters goes in a `.forte-visually-hidden` span.
