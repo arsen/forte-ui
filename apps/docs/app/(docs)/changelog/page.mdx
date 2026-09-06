@@ -19,6 +19,67 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.4.0
+
+<ReleaseMeta date="2026-09-05" href="https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0" kind="compare" />
+
+### AppBar
+
+- **Breaking:** Removed the flat `AppBarRoot`, `AppBarLeading`, `AppBarTitle` and `AppBarTrailing` exports. Use the namespace properties instead — `AppBar.Root`, `AppBar.Leading`, `AppBar.Title`, `AppBar.Trailing`.
+
+### Button
+
+- **Breaking:** `tone` now defaults to `neutral` instead of `primary`, so a plain `<Button>` renders as a gray control rather than the accent color. A view typically has many buttons and one call to action; keep `tone="primary"` for the action you want found, and add it explicitly wherever a button relied on the old default.
+
+### Card
+
+- **Breaking:** Removed the flat `CardRoot`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter` and `CardMedia` exports — `Card` is now available only as its namespace object (`Card.Root`, `Card.Header`, …). A namespace object crosses a Server Component boundary as an opaque reference whose properties read as `undefined` at runtime, so a card built from server-fetched data now needs its own small Client Component wrapper.
+
+### Combobox
+
+- **Breaking:** Removed the flat `ComboboxRoot`, `ComboboxLabel`, `ComboboxInputGroup`, `ComboboxInput`, `ComboboxTrigger`, `ComboboxValue`, `ComboboxIcon`, `ComboboxClear`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipRemove`, `ComboboxPopup`, `ComboboxList`, `ComboboxEmpty`, `ComboboxStatus`, `ComboboxItem`, `ComboboxGroup`, `ComboboxGroupLabel`, `ComboboxSeparator`, `ComboboxRow` and `ComboboxCollection` exports. Use the `Combobox.*` namespace properties instead; `useComboboxFilter` and `useComboboxFilteredItems` are unaffected.
+
+### DatePicker
+
+- **Breaking:** Removed the flat `DatePickerRoot`, `DatePickerTrigger`, `DatePickerValue`, `DatePickerIcon`, `DatePickerPopup`, `DatePickerCalendar`, `DatePickerFooter` and `DatePickerClear` exports. Use the `DatePicker.*` namespace properties instead.
+
+### Field
+
+- **Breaking:** Removed the flat `FieldRoot`, `FieldLabel`, `FieldDescription`, `FieldError` and `FieldItem` exports. Use the `Field.*` namespace properties instead.
+
+### Fieldset
+
+- **Breaking:** Removed the flat `FieldsetRoot` and `FieldsetLegend` exports. Use `Fieldset.Root` and `Fieldset.Legend`.
+
+### InputGroup
+
+- **Breaking:** Removed the flat `InputGroupRoot`, `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`, `InputGroupText` and `InputGroupButton` exports. Use the `InputGroup.*` namespace properties instead.
+
+### NumberField
+
+- **Breaking:** Removed the flat `NumberFieldRoot`, `NumberFieldGroup`, `NumberFieldInput`, `NumberFieldIncrement`, `NumberFieldDecrement`, `NumberFieldScrubArea` and `NumberFieldScrubAreaCursor` exports. Use the `NumberField.*` namespace properties instead.
+
+### OTPField
+
+- **Breaking:** Removed the flat `OTPFieldRoot`, `OTPFieldInput` and `OTPFieldSeparator` exports. Use the `OTPField.*` namespace properties instead.
+
+### Resizable
+
+- **Breaking:** Removed the flat `ResizableGroup`, `ResizablePanel` and `ResizableHandle` exports. Use `Resizable.Group`, `Resizable.Panel` and `Resizable.Handle`.
+
+### Select
+
+- **Breaking:** Removed the flat `SelectRoot`, `SelectLabel`, `SelectTrigger`, `SelectValue`, `SelectIcon`, `SelectPopup`, `SelectItem`, `SelectGroup`, `SelectGroupLabel` and `SelectSeparator` exports. Use the `Select.*` namespace properties instead.
+
+### Table
+
+- **Breaking:** Removed the flat `TableContainer`, `TableRoot`, `TableCaption`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead` and `TableCell` exports — `Table` is now available only as its namespace object. The same Server Component caveat as `Card` applies: `Table.Root` and friends do not resolve across an RSC boundary, so a table of server-fetched rows now needs a Client Component wrapper.
+
+### Design tokens & motion
+
+- The focus ring now grows outward from just inside a control's edge while it fades in, and shrinks back on blur, instead of snapping into place. Three new tokens drive the pace: `--forte-focus-ring-duration` (`--forte-duration-normal`), `--forte-focus-ring-ease` (`--forte-ease-standard`) and `--forte-focus-ring-travel` (`--forte-travel-sm`, `0px` under reduced motion, where the ring simply fades in place).
+- `--forte-focus-ring-inner` is now brand-colored — the accent ramp's text step (`--forte-color-primary-text`, held to 4.5:1 against the page) — instead of a fixed near-black/near-white pair, so the ring now recomputes per theme scope's seed instead of looking identical everywhere.
+
 ## v1.3.0
 
 <ReleaseMeta date="2026-09-05" href="https://github.com/arsen/forte-ui/compare/v1.2.0...v1.3.0" kind="compare" />
@@ -153,31 +214,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - New component: rows and columns on the real `<table>` element, with `Container`, `Root`, `Caption`, `Header`, `Body`, `Footer`, `Row`, `Head` and `Cell` parts. Three variants (`line`, `outline`, `grid`), sizes that follow the density preset at `md`, striped/hoverable/selected tints scoped to the body, numeric columns with tabular figures, a sortable header with a real `<button>` and `aria-sort`, and a sticky header pinned to an optional `Table.Container` scroll box. The table holds no state — sorting, selection and pagination stay with the consumer.
 
-## v1.0.0-alpha.8
-
-<ReleaseMeta date="2026-09-01" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8" kind="compare" />
-
-### AppBar
-
-- New component: a header bar with `Leading`, `Title` and `Trailing` slots laid out as one three-column grid, so any subset of parts in any order still places itself. Four variants (`plain`, `panel`, `outline`, `frosted`), three tones (`neutral`, `primary`, `secondary`) and three sizes (`sm`, `md`, `lg`). `position` (`static`, `sticky`, `fixed`) controls whether the bar stays put, and once it stays it reports `data-scrolled` and `data-hidden` — driven by an `IntersectionObserver` and a direction-thresholded scroll listener on the bar's nearest scrolling ancestor — for `elevateOnScroll` and `hideOnScroll` and for consumer CSS to read.
-
-### Carousel
-
-- New component: a strip of slides moved by drag, by buttons, or on a timer, with a track driven by a single position variable so resizes, density changes and gap overrides never need re-measuring. `orientation` (horizontal/vertical), `loop`, `autoplay` (boolean or an interval), `slidesPerView`, `align` (`"start"` or `"center"`, for a centred active slide), `lazy` loading of slides outside a window around the active one, `autoHeight`, a `gap` prop for the space between slides, and a thumbnails pattern for building a synced strip alongside the main track.
-
-### Dialog
-
-- Added a 1px hairline border on the popup (`--forte-dialog-border-width`, `--forte-dialog-border-color`) so a dialog's edge stays visible against a page close to the scrim's own colour, where the shadow alone reads as nothing. Transparent at `size="fullscreen"`, where every edge lies on the bezel.
-- Fixed a nested dialog's dimming overlay leaving a sub-pixel crescent of undimmed background at each corner — a bright fleck in light mode — by painting it at the corner radius the padding box actually traces instead of inheriting the popup's outer radius.
-
-### Drawer
-
-- Fixed the same nested-parent dimming overlay leaving a corner gap as Dialog: the overlay is now oversized past the border and clipped by the popup's own `overflow`, which follows the padding box's arc exactly since Drawer's radius is set per side rather than through one token.
-
-### Design tokens & motion
-
-- Added `--forte-app-bar-h-sm`, `--forte-app-bar-h-md` and `--forte-app-bar-h-lg`, the AppBar's height at each size, for layout that needs the number from outside the bar — a sticky sidebar's offset, a page's `scroll-padding-top`, padding under a `fixed` bar. Restated per `data-forte-density` preset.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 4 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 5 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

@@ -13,6 +13,65 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-09-05
+
+### AppBar
+
+- **Breaking:** Removed the flat `AppBarRoot`, `AppBarLeading`, `AppBarTitle` and `AppBarTrailing` exports. Use the namespace properties instead — `AppBar.Root`, `AppBar.Leading`, `AppBar.Title`, `AppBar.Trailing`.
+
+### Button
+
+- **Breaking:** `tone` now defaults to `neutral` instead of `primary`, so a plain `<Button>` renders as a gray control rather than the accent color. A view typically has many buttons and one call to action; keep `tone="primary"` for the action you want found, and add it explicitly wherever a button relied on the old default.
+
+### Card
+
+- **Breaking:** Removed the flat `CardRoot`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter` and `CardMedia` exports — `Card` is now available only as its namespace object (`Card.Root`, `Card.Header`, …). A namespace object crosses a Server Component boundary as an opaque reference whose properties read as `undefined` at runtime, so a card built from server-fetched data now needs its own small Client Component wrapper.
+
+### Combobox
+
+- **Breaking:** Removed the flat `ComboboxRoot`, `ComboboxLabel`, `ComboboxInputGroup`, `ComboboxInput`, `ComboboxTrigger`, `ComboboxValue`, `ComboboxIcon`, `ComboboxClear`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipRemove`, `ComboboxPopup`, `ComboboxList`, `ComboboxEmpty`, `ComboboxStatus`, `ComboboxItem`, `ComboboxGroup`, `ComboboxGroupLabel`, `ComboboxSeparator`, `ComboboxRow` and `ComboboxCollection` exports. Use the `Combobox.*` namespace properties instead; `useComboboxFilter` and `useComboboxFilteredItems` are unaffected.
+
+### DatePicker
+
+- **Breaking:** Removed the flat `DatePickerRoot`, `DatePickerTrigger`, `DatePickerValue`, `DatePickerIcon`, `DatePickerPopup`, `DatePickerCalendar`, `DatePickerFooter` and `DatePickerClear` exports. Use the `DatePicker.*` namespace properties instead.
+
+### Field
+
+- **Breaking:** Removed the flat `FieldRoot`, `FieldLabel`, `FieldDescription`, `FieldError` and `FieldItem` exports. Use the `Field.*` namespace properties instead.
+
+### Fieldset
+
+- **Breaking:** Removed the flat `FieldsetRoot` and `FieldsetLegend` exports. Use `Fieldset.Root` and `Fieldset.Legend`.
+
+### InputGroup
+
+- **Breaking:** Removed the flat `InputGroupRoot`, `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`, `InputGroupText` and `InputGroupButton` exports. Use the `InputGroup.*` namespace properties instead.
+
+### NumberField
+
+- **Breaking:** Removed the flat `NumberFieldRoot`, `NumberFieldGroup`, `NumberFieldInput`, `NumberFieldIncrement`, `NumberFieldDecrement`, `NumberFieldScrubArea` and `NumberFieldScrubAreaCursor` exports. Use the `NumberField.*` namespace properties instead.
+
+### OTPField
+
+- **Breaking:** Removed the flat `OTPFieldRoot`, `OTPFieldInput` and `OTPFieldSeparator` exports. Use the `OTPField.*` namespace properties instead.
+
+### Resizable
+
+- **Breaking:** Removed the flat `ResizableGroup`, `ResizablePanel` and `ResizableHandle` exports. Use `Resizable.Group`, `Resizable.Panel` and `Resizable.Handle`.
+
+### Select
+
+- **Breaking:** Removed the flat `SelectRoot`, `SelectLabel`, `SelectTrigger`, `SelectValue`, `SelectIcon`, `SelectPopup`, `SelectItem`, `SelectGroup`, `SelectGroupLabel` and `SelectSeparator` exports. Use the `Select.*` namespace properties instead.
+
+### Table
+
+- **Breaking:** Removed the flat `TableContainer`, `TableRoot`, `TableCaption`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead` and `TableCell` exports — `Table` is now available only as its namespace object. The same Server Component caveat as `Card` applies: `Table.Root` and friends do not resolve across an RSC boundary, so a table of server-fetched rows now needs a Client Component wrapper.
+
+### Design tokens & motion
+
+- The focus ring now grows outward from just inside a control's edge while it fades in, and shrinks back on blur, instead of snapping into place. Three new tokens drive the pace: `--forte-focus-ring-duration` (`--forte-duration-normal`), `--forte-focus-ring-ease` (`--forte-ease-standard`) and `--forte-focus-ring-travel` (`--forte-travel-sm`, `0px` under reduced motion, where the ring simply fades in place).
+- `--forte-focus-ring-inner` is now brand-colored — the accent ramp's text step (`--forte-color-primary-text`, held to 4.5:1 against the page) — instead of a fixed near-black/near-white pair, so the ring now recomputes per theme scope's seed instead of looking identical everywhere.
+
 ## [1.3.0] - 2026-09-05
 
 ### Resizable
@@ -368,7 +427,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/arsen/forte-ui/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/arsen/forte-ui/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1
