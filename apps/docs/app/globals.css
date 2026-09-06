@@ -244,7 +244,16 @@
    * The UA's own keyframes do the fading — old out, new in, blended
    * `plus-lighter` so the middle never dips — and these declarations only
    * put them on the clock. `normal` rather than `fast`, on the library's own
-   * rule for a large surface. */
+   * rule for a large surface.
+   *
+   * The group is on the clock too, and its animation is not the fade: it
+   * is the MOVE from the old snapshot's box to the new one's — for a page
+   * scrolled when the link was clicked, a slide the length of that scroll,
+   * sidebar and rail included, since they are painted inside the page's
+   * snapshot. `page-transition.tsx` cancels it the moment the transition is
+   * ready and puts the old image back where it was seen. The duration here
+   * is for the browser that hands the script nothing to cancel: a slide of
+   * the library's length rather than the UA's quarter second. */
   ::view-transition-group(.page),
   ::view-transition-old(.page),
   ::view-transition-new(.page) {

@@ -669,6 +669,19 @@ never fades the page; a site component that starts using `startTransition`,
 data-scroll-behavior="smooth">` is what lets Next scroll a new route to the
 top instantly, so the new snapshot is taken at the top rather than mid-glide.
 
+That scroll is also why the boundary has an `onUpdate`. The page is a
+document-scrolled element, so when the link was clicked mid-read its two
+snapshots sit in different places — the old one a scroll's worth above the
+viewport, the new one under the bar — and the browser's default for a named
+element that moved is to slide the group from one box to the other for the
+length of the fade. Everything painted inside the snapshot slides with it,
+the sticky sidebar and section rail included: sticky pins them to the
+viewport in the page, not in a picture of the page. `holdStill` in
+`page-transition.tsx` cancels that slide before the first frame and offsets
+the old image by the delta it reads from the browser's own keyframes, so
+both views fade where they were seen. Moving the two columns out of the
+boundary would not fix it — the page column would still lurch.
+
 Prose typography is NOT in there. It lives in
 [`mdx-components.tsx`](apps/docs/mdx-components.tsx), one class list per
 element, which is what keeps it from reaching into a demo: a `<p>` inside a
@@ -915,6 +928,11 @@ drafts a section in exactly this shape.
   unmounts, so per-page wrappers, link types and named elements are all
   unnecessary — and a boundary that fires on every React transition inside
   it is also why every demo sits in an inert one (see *View transitions*).
+  The one thing an update costs is geometry: the boundary's element scrolls
+  with the document, and the browser animates the group between the old
+  box and the new, so a navigation from a scrolled page slid the whole
+  snapshot — sidebar included — until `page-transition.tsx` started holding
+  the group still and putting the old image back by hand.
   The site tried the full set first — directional slides typed on the links,
   the catalog card's title flying up into the page's `<h1>`, pinned chrome —
   and a plain cross-fade was preferred. Do not bring them back without
