@@ -201,6 +201,33 @@ function serializeIntent(intent: Intent): number | string {
   return isPx(intent) ? `${Number(intent.px.toFixed(3))}px` : Number(intent.toFixed(4));
 }
 
+/**
+ * The layout stored under `autoSaveId`, one intent per panel in DOM order —
+ * or nothing, which a missing, malformed and unreadable entry all come to,
+ * since the default layout is a perfectly good answer to each. The
+ * validation is the inline restore's, line for line (an array, every entry a
+ * finite number or a `px` string), so the two can never disagree about
+ * whether an entry is usable. Whether it FITS is a separate question, asked
+ * wherever the layout is applied: the count has to match the panels it is
+ * applied to, and a layout stored for three panels says nothing about two.
+ */
+function readSavedLayout(
+  autoSaveId: string | undefined,
+  store: ResizableStorage | null,
+): readonly Intent[] | undefined {
+  if (!autoSaveId || !store) return undefined;
+  try {
+    const raw = store.getItem(`forte-resizable:${autoSaveId}`);
+    if (!raw) return undefined;
+    const saved: unknown = JSON.parse(raw);
+    if (!Array.isArray(saved)) return undefined;
+    const intents = saved.map(parseSavedIntent);
+    return intents.every((intent): intent is Intent => intent != null) ? intents : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /* `noUncheckedIndexedAccess` is on, and every index below is derived from the
  * length of the array it indexes a line or two earlier. Reading through these
  * two accessors keeps that provable-by-construction fact from decaying into a
@@ -545,6 +572,8 @@ interface ResizableContextValue {
   panelIds: readonly string[];
   /** Grow factor for a panel with no `defaultSize`, for the first paint only. */
   initialShare: number | undefined;
+  /** Whether the group restores a layout under `autoSaveId`, so a client render may carry sizes its server HTML did not. */
+  persisted: boolean;
   /** Whether the group's server HTML carries the script that applies a saved layout before first paint. */
   prefilled: boolean;
   /** Every panel's size as a percentage of the group — the fitted layout. */
@@ -571,6 +600,24 @@ interface ResizableContextValue {
 
 const ResizableContext = React.createContext<ResizableContextValue | null>(null);
 
+/* A panel's entry in the saved layout, handed to it by POSITION for the
+ * renders before the registry exists — the only renders in which a panel has
+ * nothing better, and the ones a mount effect measures (see `hints` in the
+ * group). Its own context rather than a field on the group's, because the
+ * value is per panel, and a panel the group has not met yet can only be
+ * addressed by wrapping the element it was handed. */
+const PanelHintContext = React.createContext<Intent | undefined>(undefined);
+
+/* What the group can tell its panels before the registry exists. */
+interface Hints {
+  /** Grow factor for a panel with no `defaultSize`. */
+  share: number | undefined;
+  /** The saved layout, one entry per plain panel child, in order. */
+  intents: readonly Intent[] | undefined;
+}
+
+const NO_HINTS: Hints = { share: undefined, intents: undefined };
+
 /* -------------------------------------------------------------------------
  * The inline restore
  *
@@ -584,19 +631,21 @@ const ResizableContext = React.createContext<ResizableContextValue | null>(null)
  * stop the white flash — so the group ships one, rendered right after its
  * panels so they exist by the time it runs.
  *
- * It repeats the restore effect's validation exactly (an array, one finite
- * number per direct-child panel) so the two can never disagree about whether
- * an entry is usable. It writes only `flex-grow`, which is the whole layout.
- * Hydration then finds the panels carrying a `style` the client render did
- * not produce; React leaves the DOM alone in that case and only warns, and the
- * panel suppresses the warning for exactly this attribute — the restore
- * effect writes the same numbers a commit later, and nothing on screen moves.
+ * It repeats `readSavedLayout`'s validation exactly (an array, one finite
+ * number or `px` string per direct-child panel) so the two can never disagree
+ * about whether an entry is usable. It writes only `flex-grow` and
+ * `flex-basis`, which are the whole layout. Hydration then finds the panels
+ * carrying a `style` attribute the browser re-serialized; React leaves the
+ * DOM alone in that case and only warns, and the panel suppresses the
+ * warning for exactly this attribute — the client's first render draws the
+ * same numbers (see `hints`), and nothing on screen moves.
  *
  * React never executes a script it creates itself, so on a client-side
  * navigation this is inert markup, and that is fine: without server HTML
- * there is no default paint to correct, the restore effect runs before the
- * first one. Only a `<` needs escaping in the key — `JSON.stringify` handles
- * the rest — since `</script>` inside the text would end the element early.
+ * there is no default paint to correct, and the first render is already the
+ * saved layout. Only a `<` needs escaping in the key — `JSON.stringify`
+ * handles the rest — since `</script>` inside the text would end the element
+ * early.
  * ---------------------------------------------------------------------- */
 function restoreScript(autoSaveId: string): string {
   const key = JSON.stringify(`forte-resizable:${autoSaveId}`).replace(/</g, "\\u003c");
@@ -658,12 +707,14 @@ export interface ResizableGroupProps
    * so the saved layout is discarded if the number of panels has changed
    * since.
    *
-   * With the default storage the saved layout is applied before the first
-   * paint: the group's server HTML carries a small inline script that reads
-   * `localStorage` while the page is still parsing. A page whose Content
-   * Security Policy forbids inline scripts, or a custom `storage`, falls back
-   * to restoring after mount, so give the panels sensible `defaultSize`s as
-   * well — they are what the first paint shows in that case.
+   * The saved layout is what the panels draw from their first render on the
+   * client — so content that measures its panel in a mount effect measures
+   * the restored split, not the default one — and with the default storage
+   * it is on screen before that: the group's server HTML carries a small
+   * inline script that reads `localStorage` while the page is still parsing.
+   * A page whose Content Security Policy forbids inline scripts, or a custom
+   * `storage`, shows the defaults until the group hydrates, so give the
+   * panels sensible `defaultSize`s as well.
    */
   autoSaveId?: string;
   /**
@@ -677,6 +728,15 @@ export interface ResizableGroupProps
    * layout changes — including the first time it settles.
    */
   onLayout?: (sizes: number[]) => void;
+  /**
+   * Called once, when the layout first settles: every panel has its size —
+   * restored under `autoSaveId`, or resolved from the `defaultSize`s — and
+   * is drawn at it. Content that measures its panel does not usually need
+   * this, because a saved layout is drawn from the first render; a group
+   * that mounts hidden, or whose panels are not direct `Resizable.Panel`
+   * children, settles later, and this is the moment to measure then.
+   */
+  onReady?: () => void;
   /**
    * Replaces the rendered `<div>` with another element or component.
    */
@@ -712,6 +772,7 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       autoSaveId,
       storage,
       onLayout,
+      onReady,
       render,
       className,
       children,
@@ -955,20 +1016,6 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       [constraints, anchored, groupPx, registry],
     );
 
-    // A panel arrived or left: re-resolve, keeping every size already known.
-    // NOT a dependent of `groupPx`: nothing here needs the measurement, and a
-    // container resize must not rewrite the intent, which is the whole point
-    // of keeping the two apart.
-    useIsoLayoutEffect(() => {
-      setSizes((prev) => {
-        const next = resolve(panelIds, prev);
-        const changed =
-          Object.keys(prev).length !== panelIds.length ||
-          panelIds.some((id) => !sameIntent(prev[id], next[id]));
-        return changed ? next : prev;
-      });
-    }, [panelIds, resolve]);
-
     /* ---------------------------------------------------------------------
      * Persistence
      * ------------------------------------------------------------------ */
@@ -985,31 +1032,61 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       }
     }, [storage]);
 
+    /* Read during render, and that placement is the fix for a bug an effect
+     * cannot see. React flushes the mount commit's passive effects — every
+     * `useEffect` in every panel's content — BEFORE the synchronous re-render
+     * a layout effect's `setSizes` schedules, so a layout restored from an
+     * effect arrives one render after anything that measures its container
+     * on mount: a canvas fitting its pages to the panel fit them to the
+     * default split, and kept that fit once the saved one arrived. Read here,
+     * the saved layout is what the panels draw from their FIRST render, by
+     * position (see `hints`), and the mount effects measure it.
+     *
+     * Keyed on the key and the store so a group handed an `autoSaveId` after
+     * mount reads its layout then; `restoredRef` keeps any re-read from being
+     * applied twice. On the server the default store is null and this is
+     * nothing, which is what keeps the server HTML at the defaults the inline
+     * restore then corrects. */
+    const saved = React.useMemo(() => readSavedLayout(autoSaveId, store), [autoSaveId, store]);
+
     const restoredRef = React.useRef(false);
 
+    /* A panel arrived or left: re-resolve, keeping every size already known.
+     * The first time there are panels to resolve, the saved layout is the
+     * starting point instead — applied whole, and only with an entry per
+     * registered panel, matched by DOM order rather than through `hints` so
+     * a panel wrapped in a consumer's component is restored too. Stored
+     * unconstrained, restored unconstrained: the saved layout is an intent
+     * like any other, and the render pass fits it to whatever the container
+     * happens to be on this visit. It bypasses `resolve` deliberately, since
+     * that scales the percentages to 100 among themselves, and the stored
+     * 91.7% beside a stored 80px rail is the size the panel reopens to —
+     * scaled, it would reopen to the whole group.
+     *
+     * NOT a dependent of `groupPx`: nothing here needs the measurement, and a
+     * container resize must not rewrite the intent, which is the whole point
+     * of keeping the two apart. */
     useIsoLayoutEffect(() => {
-      if (!autoSaveId || !store || restoredRef.current || panelIds.length === 0) return;
-      restoredRef.current = true;
-      try {
-        const raw = store.getItem(`forte-resizable:${autoSaveId}`);
-        if (!raw) return;
-        const saved: unknown = JSON.parse(raw);
-        if (!Array.isArray(saved) || saved.length !== panelIds.length) return;
-        const intents = saved.map(parseSavedIntent);
-        if (intents.some((intent) => intent == null)) return;
-        // Stored unconstrained, restored unconstrained: the saved layout is
-        // an intent like any other, and the render pass fits it to whatever
-        // the container happens to be on this visit.
-        const next: Record<string, Intent> = {};
-        panelIds.forEach((id, i) => {
-          next[id] = intents[i] as Intent;
-        });
-        setSizes(next);
-      } catch {
-        // A malformed or unreadable entry is not worth failing a render over;
-        // the default layout is a perfectly good answer.
+      let seed: Record<string, Intent> | null = null;
+      if (autoSaveId && store && !restoredRef.current && panelIds.length > 0) {
+        restoredRef.current = true;
+        if (saved != null && saved.length === panelIds.length) {
+          const entries: Record<string, Intent> = {};
+          saved.forEach((intent, i) => {
+            const id = panelIds[i];
+            if (id != null) entries[id] = intent;
+          });
+          seed = entries;
+        }
       }
-    }, [autoSaveId, store, panelIds]);
+      setSizes((prev) => {
+        const next = seed ?? resolve(panelIds, prev);
+        const changed =
+          Object.keys(prev).length !== panelIds.length ||
+          panelIds.some((id) => !sameIntent(prev[id], next[id]));
+        return changed ? next : prev;
+      });
+    }, [autoSaveId, store, saved, panelIds, resolve]);
 
     /* An anchored panel can be holding a percentage: a layout saved before
      * lengths were kept as lengths, or a `defaultSize` whose unit changed
@@ -1368,10 +1445,10 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     /* Panels do not animate to their first size — they arrive at it.
      *
      * The layout is resolved on the client, so a server-rendered group paints
-     * its fallback split, hydrates, and corrects — and a saved layout
-     * (`autoSaveId`) corrects it a second time. With a transition declared,
-     * either correction is a visible slide from a layout nobody asked for, on
-     * every page load.
+     * its fallback split, hydrates, and corrects — and a saved layout the
+     * first render could not place (see `hints`) corrects it a second time.
+     * With a transition declared, either correction is a visible slide from a
+     * layout nobody asked for, on every page load.
      *
      * It is not enough to add the attribute in a LATER commit than the sizes.
      * The whole mount cascade — register, sort, resolve, restore — runs as
@@ -1401,6 +1478,21 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
     useIsoLayoutEffect(() => {
       if (!settled && ready) setReady(false);
     }, [settled, ready]);
+
+    /* The readiness contract: fired once, from the commit that first carries
+     * `data-ready`, so it is strictly after the sizes are in the DOM and after
+     * every mount effect below the group has run — the moment for a consumer
+     * whose content could not measure at mount (see `hints`) to measure
+     * instead. A passive effect, like `onLayout`. */
+    const onReadyRef = React.useRef(onReady);
+    onReadyRef.current = onReady;
+    const announcedRef = React.useRef(false);
+
+    React.useEffect(() => {
+      if (announcedRef.current || !ready || !settled) return;
+      announcedRef.current = true;
+      onReadyRef.current?.();
+    }, [ready, settled]);
 
     /* Imperative, every commit, alongside the rendered attribute. Hydration
      * never patches attribute mismatches, so when a server-painted tree is
@@ -1462,21 +1554,44 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       };
     }, [snapping]);
 
-    /* And the fallback split itself, so there is as little as possible to
-     * correct. A panel cannot know what its siblings declared, but the group
-     * can read the children it was handed — for THIS ONE PURPOSE only. The
-     * layout proper still comes from the DOM-ordered registry, because that is
-     * the thing that stays right when panels are mapped, wrapped or
-     * conditional; this is a hint for a frame that exists before any of that
-     * has happened, and it simply does not apply when the children are not
-     * plain `Resizable.Panel` elements. */
-    const initialShare = React.useMemo(() => {
-      if (ready) return undefined;
+    /* And the first render's split itself, so there is as little as possible
+     * to correct — and, under `autoSaveId`, nothing at all. A panel cannot
+     * know what its siblings declared or where it stands in the saved layout,
+     * but the group can read the children it was handed — for THIS ONE
+     * PURPOSE only. The layout proper still comes from the DOM-ordered
+     * registry, because that is the thing that stays right when panels are
+     * mapped, wrapped or conditional; these are hints for the renders that
+     * exist before any of that has happened, and they simply do not apply
+     * when the children are not plain `Resizable.Panel` elements.
+     *
+     * Two hints. `share` is the grow factor for a panel with no
+     * `defaultSize`. `intents` is the saved layout, one entry per plain panel
+     * in order, and it is what makes the first render the restored layout
+     * rather than the default one the restore then corrects — which matters
+     * because the mount commit's passive effects run against that first
+     * render (see `saved`). It is handed out only when every child is a
+     * panel or a handle and the count matches: a stray element might be a
+     * panel in a consumer's wrapper, the registry would then count one more
+     * than the children did, and the entries would land on the wrong panels
+     * for a commit — never painted, but measured by any mount effect, which
+     * is the exact bug this exists to prevent. */
+    const hints = React.useMemo<Hints>(() => {
+      if (ready) return NO_HINTS;
       let panels = 0;
       let sized = 0;
       let declared = 0;
+      let plain = true;
       React.Children.forEach(children, (child) => {
-        if (!React.isValidElement(child) || child.type !== ResizablePanel) return;
+        if (child == null || typeof child === "boolean") return;
+        if (!React.isValidElement(child)) {
+          plain = false;
+          return;
+        }
+        if (child.type === ResizableHandle) return;
+        if (child.type !== ResizablePanel) {
+          plain = false;
+          return;
+        }
         panels += 1;
         const intent = intentOf((child.props as ResizablePanelProps).defaultSize);
         if (intent != null) {
@@ -1485,13 +1600,40 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
           if (!isPx(intent)) declared += intent;
         }
       });
-      if (panels === 0 || panels === sized) return undefined;
-      return Math.max(0, (100 - declared) / (panels - sized));
-    }, [children, ready]);
+      return {
+        share:
+          panels === 0 || panels === sized
+            ? undefined
+            : Math.max(0, (100 - declared) / (panels - sized)),
+        intents: plain && saved != null && saved.length === panels ? saved : undefined,
+      };
+    }, [children, ready, saved]);
+
+    /* Each plain panel child wrapped in its own entry of the saved layout,
+     * counted in the order the children were handed over — the order the
+     * inline restore and the registry both use for the same panels. Always
+     * wrapped, whether or not there is an entry to hand over: the wrapper is
+     * part of the element tree, and a child that is a panel in one render and
+     * a provider around one in the next is remounted, registry entry, state
+     * and all. The provider adds nothing to the DOM. */
+    const hinted = React.useMemo(() => {
+      let index = 0;
+      return React.Children.map(children, (child) => {
+        if (!React.isValidElement(child) || child.type !== ResizablePanel) return child;
+        const intent = hints.intents?.[index];
+        index += 1;
+        return <PanelHintContext.Provider value={intent}>{child}</PanelHintContext.Provider>;
+      });
+    }, [children, hints.intents]);
+
+    /* Whether a client render may carry sizes the server HTML did not — a
+     * saved layout the server could not read — which is what the panels
+     * suppress the hydration warning for. */
+    const persisted = autoSaveId != null;
 
     // Only the default store can be read from the HTML; a custom `storage`
     // is a client object the server has never seen.
-    const prefilled = autoSaveId != null && storage == null;
+    const prefilled = persisted && storage == null;
 
     /* Whether this render is the server's, or the hydration of it — the only
      * two renders where the inline restore belongs. React never executes a
@@ -1511,7 +1653,8 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       () => ({
         orientation,
         panelIds,
-        initialShare,
+        initialShare: hints.share,
+        persisted,
         prefilled,
         sizes: layout,
         rendered,
@@ -1535,7 +1678,8 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
       [
         orientation,
         panelIds,
-        initialShare,
+        hints.share,
+        persisted,
         prefilled,
         layout,
         rendered,
@@ -1583,7 +1727,12 @@ export const ResizableGroup = React.forwardRef<HTMLDivElement, ResizableGroupPro
             ...props,
             children: (
               <>
-                {children}
+                {/* The reset around the wrapped children is for nesting: a
+                  * panel of an inner group that is NOT a plain child of it —
+                  * wrapped in a consumer's component — would otherwise read
+                  * the nearest provider above, which is the outer panel's
+                  * own entry. */}
+                <PanelHintContext.Provider value={undefined}>{hinted}</PanelHintContext.Provider>
                 {prefilled && hydrating ? (
                   <script
                     data-forte="resizable-restore"
@@ -1745,6 +1894,7 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
     const context = useResizableContext("Panel");
     const { register, invalidate, rendered, collapsedIds, constraintsOf, setPanelCollapsed } =
       context;
+    const hint = React.useContext(PanelHintContext);
     const id = React.useId();
 
     const config = React.useRef<PanelConfig>({
@@ -1861,10 +2011,15 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
       if (element) element.inert = hidden;
     }, [hidden]);
 
-    /* What to draw: the group's fitted answer, else the panel's own declared
-     * size, else the share the group worked out from its siblings. A length
-     * is `flex: 0 0 <px>` and a percentage `flex: <n> 1 0`. */
-    const drawn = rendered[id] ?? intentOf(defaultSize) ?? context.initialShare ?? 1;
+    /* What to draw: the group's fitted answer, else the panel's entry in the
+     * saved layout, else its own declared size, else the share the group
+     * worked out from its siblings. A length is `flex: 0 0 <px>` and a
+     * percentage `flex: <n> 1 0`. The saved entry outranks the declared size
+     * because it is what the group is about to answer, and a mount effect in
+     * the content measures THIS render — the group's answer comes one render
+     * too late for it (see `saved` in the group). */
+    const assigned = rendered[id] != null;
+    const drawn = rendered[id] ?? hint ?? intentOf(defaultSize) ?? context.initialShare ?? 1;
     const flexGrow = isPx(drawn) ? 0 : drawn;
     const flexBasis = isPx(drawn) ? `${drawn.px}px` : "0";
 
@@ -1878,13 +2033,25 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
      * believes unchanged: a `flex-grow: 0` left as the script's `31.25`,
      * under a `flex-basis` React did rewrite, and the panel is the sum of
      * both. Keyed on the values, so it runs on mount and on every change, and
-     * before paint. A property the consumer sets through `style` is theirs. */
+     * before paint. A property the consumer sets through `style` is theirs.
+     *
+     * Not before the group has answered, though, when the HTML carries the
+     * script and this panel has no entry of its own: the element may then be
+     * holding the script's values — a layout the group could not match up at
+     * render time, its panels wrapped in a consumer's component — and this
+     * render's fallback written over them puts the default split back for
+     * exactly the commit whose mount effects measure it; the group's answer,
+     * a commit later, corrects the screen but not the measurement. With an
+     * entry the render already IS the script's answer, and the write is a
+     * no-op — or, on a page whose Content Security Policy kept the script
+     * from running, the correction itself. */
     useIsoLayoutEffect(() => {
       const element = entry.current.element;
       if (!element) return;
+      if (context.prefilled && !assigned && hint == null) return;
       if (style?.flexGrow === undefined) element.style.flexGrow = String(flexGrow);
       if (style?.flexBasis === undefined) element.style.flexBasis = flexBasis;
-    }, [flexGrow, flexBasis, style?.flexGrow, style?.flexBasis]);
+    }, [flexGrow, flexBasis, assigned, hint, context.prefilled, style?.flexGrow, style?.flexBasis]);
 
     return useRender({
       render,
@@ -1899,9 +2066,12 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
         "data-forte": "resizable-panel",
         "data-orientation": context.orientation,
         "data-collapsed": isCollapsed ? "" : undefined,
-        // The group's inline restore may have written a saved `flex-grow` into
-        // the server HTML before hydration; see `restoreScript`.
-        suppressHydrationWarning: context.prefilled || undefined,
+        // Under `autoSaveId` the first client render draws the saved layout
+        // and the server HTML the default one — rewritten by the inline
+        // restore where there is one, and the browser's re-serialized `style`
+        // attribute differs textually even where the numbers agree; see
+        // `restoreScript`.
+        suppressHydrationWarning: context.persisted || undefined,
         style: {
           /* `flexGrow` and `flexBasis` are the layout. For a percentage,
            * `flexBasis: 0` makes the grow factor describe the WHOLE panel
@@ -1910,11 +2080,11 @@ export const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelPro
            * panel does not grow.
            *
            * Before the group has resolved the layout the panel falls back to
-           * its own `defaultSize`, or — for a panel that declared none — to
-           * the share the group worked out from its siblings. That makes the
-           * server-rendered split identical to the resolved one for the
-           * ordinary anatomy, so there is nothing to correct on hydration and
-           * nothing to see. */
+           * its entry in the saved layout, then to its own `defaultSize`, or
+           * — for a panel that declared none — to the share the group worked
+           * out from its siblings. That makes the first render's split
+           * identical to the resolved one for the ordinary anatomy, so there
+           * is nothing to correct and nothing to see. */
           flexGrow,
           flexBasis,
           ...style,

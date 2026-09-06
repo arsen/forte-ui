@@ -99,7 +99,9 @@ A panel collapsed to nothing is given `inert`. `overflow: hidden` hides pixels, 
 
 <DemoBlock id="resizable/persisted" />
 
-The server cannot read the store, so the group's HTML carries a small inline script that applies the saved sizes while the page is still parsing — the first paint is the saved layout, not the default one corrected a frame later. Two things switch that off: a Content Security Policy that forbids inline scripts, and a custom `storage`. Pass `storage={sessionStorage}` — or any object with `getItem` and `setItem` — to put the layout somewhere else; in either case restoration happens after mount instead, so give the panels sensible `defaultSize`s as well, since they are what the first paint shows.
+The server cannot read the store, so the group's HTML carries a small inline script that applies the saved sizes while the page is still parsing — the first paint is the saved layout, not the default one corrected a frame later. Two things switch that off: a Content Security Policy that forbids inline scripts, and a custom `storage`. Pass `storage={sessionStorage}` — or any object with `getItem` and `setItem` — to put the layout somewhere else; in either case the page shows the defaults until the group hydrates, so give the panels sensible `defaultSize`s as well.
+
+Either way, the saved layout is what the panels draw from their first render on the client, so content that measures its panel in a mount effect — a canvas fitting itself to its container, say — measures the restored split rather than the default one. That holds when the panels are direct children of the group. A panel inside a wrapper component of your own is restored a commit later, once the group has found it in the DOM, and a group that is hidden when it mounts settles once it has a size; for those, `onReady` fires once the layout has settled and the panels are drawn at it, and is the moment to measure.
 
 ## Accessibility
 
