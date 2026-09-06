@@ -57,6 +57,7 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   components/toc-registry.ts       GENERATED — the rail's server-rendered seed
   components/component-catalog.ts  GENERATED — the library's catalog, resolved to routes
   components/component-index.tsx   the index page's cards, grouped by category
+  components/component-previews.tsx  the picture on each card — every component, rendered small and inert; typecheck fails without one
   lib/cn.ts                        clsx + a CONFIGURED tailwind-merge
   lib/env.ts                       the ONLY `process.env` reads — typed exports, nothing else touches the env
   lib/site.ts                      the site's ORIGIN and name — metadata, sitemap and cards all read it
@@ -742,6 +743,15 @@ base rules without a single `!important`.
     the new route. It will find the headings without you — reading them off the
     rendered page is what it falls back to — but until the seed is regenerated
     they arrive a frame after hydration instead of with the document.
+11. Give the card its picture: add an entry to `PREVIEWS` in
+    [`apps/docs/components/component-previews.tsx`](apps/docs/components/component-previews.tsx).
+    The map is a `Record` over the `ComponentName` union `catalog` just
+    regenerated, so `typecheck` names the missing key until you do. A few
+    lines in the state that says most — a Switch that is on, a Menu that is
+    open — not a demo; the stage is `inert`, so nothing in it can be
+    operated, and anything that opens must be non-modal and portal into the
+    `Scene` beside it (the file header says why, and what a modal one did to
+    the page).
 
 ### Before you call it done
 
@@ -861,6 +871,15 @@ drafts a section in exactly this shape.
 - Base UI keeps an outgoing panel mounted until its exit transition finishes.
   Overlap panels in one grid cell; stacking them in flow makes the component
   grow and snap back.
+- Base UI's `Select`, `Menu`, `ContextMenu`, `Dialog` and `Drawer` roots are
+  `modal` by default; `Popover` and `Combobox` are not. A modal popup that is
+  simply mounted `open` locks the document's scroll and marks everything
+  outside its portal `aria-hidden` — the component index did exactly that
+  through one open Select, and the whole page was a listbox to a screen
+  reader. Pass `modal={false}` to anything rendered open for show, and give it
+  a `container` so it does not land in `<body>`. `AlertDialog` and
+  `ContextMenu` drop the prop and stay modal; stand in a `Dialog` or a `Menu`
+  for them.
 - The getting-started guides are executable: `create-forte-ui`'s templates
   mirror their setup steps file for file. Change a setup step in a guide and
   change `packages/create-forte-ui/src/templates.ts` in the same PR (and vice

@@ -58,8 +58,7 @@ export const HEADING = "scroll-mt-6 font-semibold";
 export const PROSE_H2 = `${HEADING} mt-8 mb-3 text-6 tracking-tight`;
 
 /**
- * A card that IS a link — the entry cards on the home page, and every card in
- * the component index.
+ * A card that IS a link — the entry cards on the home page.
  *
  * The anchor wraps the card rather than sitting inside it, so the whole surface
  * is the target and there is no dead border to miss by a pixel. The hover state
@@ -69,9 +68,11 @@ export const PROSE_H2 = `${HEADING} mt-8 mb-3 text-6 tracking-tight`;
  *
  * It also means nothing inside the card can be a link of its own: an `<a>`
  * inside an `<a>` is invalid, and the browser closes the outer one early rather
- * than nesting. The component index wanted exactly that — its summaries name
- * sibling components — and does without, which costs nothing, because every
- * component named in a summary has its own card on the same page.
+ * than nesting. That is why the component index no longer uses this pair: each
+ * of its cards opens with a live rendering of the component, and Breadcrumb,
+ * Pagination and NavList render anchors. Those cards stretch the title's link
+ * over the card instead — `component-index.tsx` has the shape and the reasons —
+ * and they reuse the same hover border, so the two kinds still read as one.
  *
  * `text-foreground` on the anchor is not cosmetic. The site's link reset in
  * globals.css is `a:not(.forte-focus-ring) { color: inherit }` — it skips

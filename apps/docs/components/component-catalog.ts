@@ -19,9 +19,78 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
+/**
+ * Every exported name, as a union. `component-previews.tsx` keys its map on
+ * this, so a component added to the library without a card preview fails
+ * `typecheck` naming the missing key — the same shape of gate this script
+ * applies to pages, one file over.
+ */
+export type ComponentName =
+  | "Button"
+  | "ButtonGroup"
+  | "ThemeToggle"
+  | "Toggle"
+  | "ToggleGroup"
+  | "Toolbar"
+  | "Calendar"
+  | "Checkbox"
+  | "CheckboxGroup"
+  | "ColorPicker"
+  | "Combobox"
+  | "DatePicker"
+  | "Field"
+  | "Fieldset"
+  | "Form"
+  | "Input"
+  | "InputGroup"
+  | "NumberField"
+  | "OTPField"
+  | "Radio"
+  | "RadioGroup"
+  | "Select"
+  | "Slider"
+  | "Switch"
+  | "Textarea"
+  | "AlertDialog"
+  | "ContextMenu"
+  | "Dialog"
+  | "Drawer"
+  | "Menu"
+  | "Menubar"
+  | "Popover"
+  | "PreviewCard"
+  | "Toast"
+  | "Tooltip"
+  | "AppBar"
+  | "Breadcrumb"
+  | "NavigationMenu"
+  | "NavList"
+  | "Pagination"
+  | "Steps"
+  | "Tabs"
+  | "Accordion"
+  | "Alert"
+  | "AspectRatio"
+  | "Avatar"
+  | "Badge"
+  | "Card"
+  | "Carousel"
+  | "Collapsible"
+  | "Kbd"
+  | "KbdGroup"
+  | "Resizable"
+  | "ScrollArea"
+  | "Separator"
+  | "Table"
+  | "Progress"
+  | "ProgressCircle"
+  | "Shimmer"
+  | "Skeleton"
+  | "Spinner";
+
 export type CatalogEntry = {
   /** The exported name — `NavList`, `OTPField`. */
-  name: string;
+  name: ComponentName;
   /** That name as prose — `Nav List`, `OTP Field`. */
   title: string;
   href: string;

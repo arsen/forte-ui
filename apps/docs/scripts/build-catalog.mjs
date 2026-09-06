@@ -162,9 +162,18 @@ ${CATEGORIES.map((c) => `  ${lit(c)},`).join("\n")}
 
 export type Category = (typeof CATEGORIES)[number];
 
+/**
+ * Every exported name, as a union. \`component-previews.tsx\` keys its map on
+ * this, so a component added to the library without a card preview fails
+ * \`typecheck\` naming the missing key — the same shape of gate this script
+ * applies to pages, one file over.
+ */
+export type ComponentName =
+${resolved.map((entry) => `  | ${lit(entry.name)}`).join("\n")};
+
 export type CatalogEntry = {
   /** The exported name — \`NavList\`, \`OTPField\`. */
-  name: string;
+  name: ComponentName;
   /** That name as prose — \`Nav List\`, \`OTP Field\`. */
   title: string;
   href: string;
