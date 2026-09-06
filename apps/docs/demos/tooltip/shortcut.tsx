@@ -23,7 +23,7 @@ export default function TooltipShortcut() {
             <Tooltip.Trigger
               aria-label={label}
               aria-keyshortcuts={ariaKeys}
-              render={<Button variant="ghost" tone="neutral" iconOnly />}
+              render={<Button variant="ghost" iconOnly />}
             >
               <Icon aria-hidden="true" />
             </Tooltip.Trigger>

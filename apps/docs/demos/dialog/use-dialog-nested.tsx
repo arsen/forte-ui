@@ -43,7 +43,7 @@ function RenameProject({
         <Input value={name} onValueChange={(value) => setName(value)} />
       </Field.Root>
       <Dialog.Footer>
-        <Button variant="soft" tone="neutral" onClick={() => void cancel()}>
+        <Button variant="soft" onClick={() => void cancel()}>
           Cancel
         </Button>
         <Button disabled={!dirty} onClick={() => close(name.trim())}>

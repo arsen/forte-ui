@@ -73,7 +73,7 @@ export function Showcase() {
                 This changes the workspace name for everyone on the team.
               </Dialog.Description>
               <Dialog.Footer align="end">
-                <Dialog.Close render={<Button variant="ghost" tone="neutral" />}>
+                <Dialog.Close render={<Button variant="ghost" />}>
                   Cancel
                 </Dialog.Close>
                 <Dialog.Close render={<Button />}>Save</Dialog.Close>
@@ -102,7 +102,8 @@ export function Showcase() {
           * the same thing without a sibling selector. */}
         <div className="grid gap-4">
           <div className={ROW}>
-            <Button>Primary</Button>
+            <Button>Neutral</Button>
+            <Button tone="primary">Primary</Button>
             <Button tone="secondary">Secondary</Button>
             <Button variant="soft">Soft</Button>
             <Button variant="outline">Outline</Button>

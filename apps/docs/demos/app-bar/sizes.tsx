@@ -14,13 +14,13 @@ export default function AppBarSizes() {
          * each control keeps its own `size`, matched here by hand. */
         <AppBar.Root key={size} size={size} variant="outline">
           <AppBar.Leading>
-            <Button variant="ghost" tone="neutral" size={size} iconOnly aria-label="Open navigation">
+            <Button variant="ghost" size={size} iconOnly aria-label="Open navigation">
               <Menu className={ICON} />
             </Button>
           </AppBar.Leading>
           <AppBar.Title>Settings</AppBar.Title>
           <AppBar.Trailing>
-            <Button variant="ghost" tone="neutral" size={size} iconOnly aria-label="Search">
+            <Button variant="ghost" size={size} iconOnly aria-label="Search">
               <Search className={ICON} />
             </Button>
             <Button variant="solid" tone="primary" size={size}>

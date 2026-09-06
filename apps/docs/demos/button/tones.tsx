@@ -3,7 +3,7 @@
 import { Button } from "@forte-ui/react";
 
 const variants = ["solid", "soft", "outline", "ghost"] as const;
-const tones = ["primary", "secondary", "danger", "neutral"] as const;
+const tones = ["neutral", "primary", "secondary", "danger"] as const;
 
 export default function ButtonTones() {
   return (

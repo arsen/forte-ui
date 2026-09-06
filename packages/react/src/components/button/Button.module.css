@@ -3,8 +3,8 @@
  *
  * Two independent axes rather than an exploding variant list:
  *   data-variant  how much the button asserts itself (solid/soft/outline/ghost)
- *   data-tone     which semantic color set it draws from (primary/secondary/
- *                 danger/neutral)
+ *   data-tone     which semantic color set it draws from (neutral/primary/
+ *                 secondary/danger)
  * Every combination works because each tone only has to define six color
  * slots; the variants decide which slots become background, text and border.
  *
@@ -106,25 +106,30 @@
     /** Border color */
     --forte-button-border-color: transparent;
 
-    /* Per-tone palette. Overridden by [data-tone]; primary is the default. */
+    /* Per-tone palette. Overridden by [data-tone]; neutral is the default.
+     * It lives here rather than under `[data-tone="neutral"]` so the defaults
+     * these knobs publish are the colors an unqualified `<Button>` actually
+     * paints. Neutral rather than primary because a view has many buttons and
+     * one call to action: when every button carries the accent, the one that
+     * matters has nothing left to stand out with. */
     /** Tone's solid fill */
-    --forte-button-tone-solid: var(--forte-color-primary);
+    --forte-button-tone-solid: var(--forte-gray-12);
     /** Tone's solid fill on hover */
-    --forte-button-tone-solid-hover: var(--forte-color-primary-hover);
+    --forte-button-tone-solid-hover: var(--forte-gray-11);
     /** Tone's solid fill when pressed */
-    --forte-button-tone-solid-active: var(--forte-color-primary-active);
+    --forte-button-tone-solid-active: var(--forte-gray-10);
     /** Text color on the solid fill */
-    --forte-button-tone-on-solid: var(--forte-color-on-primary);
+    --forte-button-tone-on-solid: var(--forte-gray-1);
     /** Tone's tinted fill, and the hover wash for `outline` and `ghost` */
-    --forte-button-tone-soft: var(--forte-color-primary-soft);
+    --forte-button-tone-soft: var(--forte-gray-3);
     /** Tinted fill on hover */
-    --forte-button-tone-soft-hover: var(--forte-color-primary-soft-hover);
+    --forte-button-tone-soft-hover: var(--forte-gray-4);
     /** Tinted fill when pressed */
-    --forte-button-tone-soft-active: var(--forte-color-primary-soft-active);
+    --forte-button-tone-soft-active: var(--forte-gray-5);
     /** Label color for `soft`, `outline` and `ghost` */
-    --forte-button-tone-text: var(--forte-color-primary-text);
+    --forte-button-tone-text: var(--forte-color-foreground);
     /** Border color for `outline` */
-    --forte-button-tone-border: var(--forte-color-primary-border);
+    --forte-button-tone-border: var(--forte-color-border);
 
     box-sizing: border-box;
     position: relative;
@@ -221,6 +226,18 @@
   }
 
   /* Tones ----------------------------------------------------------------- */
+  .root[data-tone="primary"] {
+    --forte-button-tone-solid: var(--forte-color-primary);
+    --forte-button-tone-solid-hover: var(--forte-color-primary-hover);
+    --forte-button-tone-solid-active: var(--forte-color-primary-active);
+    --forte-button-tone-on-solid: var(--forte-color-on-primary);
+    --forte-button-tone-soft: var(--forte-color-primary-soft);
+    --forte-button-tone-soft-hover: var(--forte-color-primary-soft-hover);
+    --forte-button-tone-soft-active: var(--forte-color-primary-soft-active);
+    --forte-button-tone-text: var(--forte-color-primary-text);
+    --forte-button-tone-border: var(--forte-color-primary-border);
+  }
+
   .root[data-tone="secondary"] {
     --forte-button-tone-solid: var(--forte-color-secondary);
     --forte-button-tone-solid-hover: var(--forte-color-secondary-hover);
@@ -243,18 +260,6 @@
     --forte-button-tone-soft-active: var(--forte-danger-7);
     --forte-button-tone-text: var(--forte-color-danger-text);
     --forte-button-tone-border: var(--forte-color-danger-border);
-  }
-
-  .root[data-tone="neutral"] {
-    --forte-button-tone-solid: var(--forte-gray-12);
-    --forte-button-tone-solid-hover: var(--forte-gray-11);
-    --forte-button-tone-solid-active: var(--forte-gray-10);
-    --forte-button-tone-on-solid: var(--forte-gray-1);
-    --forte-button-tone-soft: var(--forte-gray-3);
-    --forte-button-tone-soft-hover: var(--forte-gray-4);
-    --forte-button-tone-soft-active: var(--forte-gray-5);
-    --forte-button-tone-text: var(--forte-color-foreground);
-    --forte-button-tone-border: var(--forte-color-border);
   }
 
   /* Variants -------------------------------------------------------------- */

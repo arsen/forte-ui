@@ -15,7 +15,7 @@ export default function DialogAlert() {
           immediately. This cannot be undone.
         </AlertDialog.Description>
         <AlertDialog.Footer align="between">
-          <AlertDialog.Close render={<Button variant="soft" tone="neutral" />}>
+          <AlertDialog.Close render={<Button variant="soft" />}>
             Keep project
           </AlertDialog.Close>
           <AlertDialog.Close render={<Button tone="danger" />}>

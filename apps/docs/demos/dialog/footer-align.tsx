@@ -39,7 +39,7 @@ export default function DialogFooterAlignment() {
             {/* The footer is a flex row that wraps, so on a narrow screen the
                 buttons stack and the alignment applies to each line. */}
             <Dialog.Footer align={align}>
-              <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+              <Dialog.Close render={<Button variant="soft" />}>
                 Cancel
               </Dialog.Close>
               <Dialog.Close render={<Button />}>Confirm</Dialog.Close>

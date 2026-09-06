@@ -10,7 +10,7 @@ export default function TooltipWithProvider() {
         <Tooltip.Root>
           <Tooltip.Trigger
             aria-label="Bold"
-            render={<Button variant="ghost" tone="neutral" iconOnly />}
+            render={<Button variant="ghost" iconOnly />}
           >
             <BoldIcon />
           </Tooltip.Trigger>
@@ -23,7 +23,7 @@ export default function TooltipWithProvider() {
         <Tooltip.Root>
           <Tooltip.Trigger
             aria-label="Italic"
-            render={<Button variant="ghost" tone="neutral" iconOnly />}
+            render={<Button variant="ghost" iconOnly />}
           >
             <ItalicIcon />
           </Tooltip.Trigger>
@@ -36,7 +36,7 @@ export default function TooltipWithProvider() {
         <Tooltip.Root>
           <Tooltip.Trigger
             aria-label="Underline"
-            render={<Button variant="ghost" tone="neutral" iconOnly />}
+            render={<Button variant="ghost" iconOnly />}
           >
             <UnderlineIcon />
           </Tooltip.Trigger>
@@ -49,7 +49,7 @@ export default function TooltipWithProvider() {
         <Tooltip.Root>
           <Tooltip.Trigger
             aria-label="Insert link"
-            render={<Button variant="ghost" tone="neutral" iconOnly />}
+            render={<Button variant="ghost" iconOnly />}
           >
             <LinkIcon />
           </Tooltip.Trigger>

@@ -71,7 +71,9 @@ export function Hero() {
         measured rather than promised, and nothing added to your bundle.
       </p>
       <div className="mb-6 flex flex-wrap justify-center gap-3">
-        <Button size="lg" nativeButton={false} render={<Link href="/getting-started/introduction/">Get started</Link>} />
+        {/* The page's one call to action, so the one button that carries the
+          * accent — Button is `neutral` unless told otherwise. */}
+        <Button size="lg" tone="primary" nativeButton={false} render={<Link href="/getting-started/introduction/">Get started</Link>} />
         <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/components/">Browse components</Link>} />
         <Button size="lg" variant="ghost" nativeButton={false} render={<Link href="/theme/">Open Theme Studio</Link>} />
       </div>

@@ -64,7 +64,6 @@ export default function DrawerControlled() {
         <Button
           key={item.id}
           variant="outline"
-          tone="neutral"
           fullWidth
           onClick={() => inspect(item)}
         >
@@ -114,7 +113,7 @@ export default function DrawerControlled() {
                   through setOpen(false). It is the same state change either
                   way, but this one keeps the button a real close control for
                   assistive technology. */}
-              <Drawer.Close render={<Button variant="soft" tone="neutral" />}>
+              <Drawer.Close render={<Button variant="soft" />}>
                 Close
               </Drawer.Close>
             </Drawer.Footer>

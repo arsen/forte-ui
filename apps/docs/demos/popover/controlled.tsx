@@ -54,7 +54,7 @@ export default function PopoverControlled() {
             <Popover.Trigger
               key={item.id}
               id={item.id}
-              render={<Button variant="outline" tone="neutral" size="sm" />}
+              render={<Button variant="outline" size="sm" />}
             >
               {item.name}
             </Popover.Trigger>
@@ -71,7 +71,6 @@ export default function PopoverControlled() {
               * without it ever leaving the screen. */}
             <Button
               variant="ghost"
-              tone="neutral"
               size="sm"
               disabled={index === STEPS.length - 1}
               onClick={() => setTriggerId(STEPS[index + 1]?.id ?? null)}
@@ -79,7 +78,7 @@ export default function PopoverControlled() {
               Next step
             </Button>
             <Popover.Close
-              render={<Button variant="soft" tone="neutral" size="sm" />}
+              render={<Button variant="soft" size="sm" />}
             >
               Done
             </Popover.Close>

@@ -12,15 +12,15 @@ export default function ButtonGroupBasic() {
     <ButtonGroup.Root aria-label="Message actions">
       {/* `outline` is the natural variant for a fused group: every control
         * draws its own border, so the seams come for free — no separators. */}
-      <Button variant="outline" tone="neutral">
+      <Button variant="outline">
         <Archive className={ICON} aria-hidden />
         Archive
       </Button>
-      <Button variant="outline" tone="neutral">
+      <Button variant="outline">
         <Flag className={ICON} aria-hidden />
         Report
       </Button>
-      <Button variant="outline" tone="neutral">
+      <Button variant="outline">
         <Clock className={ICON} aria-hidden />
         Snooze
       </Button>

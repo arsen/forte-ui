@@ -39,7 +39,6 @@ export function CopyButton({ className }: { className?: string }) {
       ref={ref}
       className={className}
       variant="soft"
-      tone="neutral"
       size="sm"
       iconOnly
       onClick={copy}

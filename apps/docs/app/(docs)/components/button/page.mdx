@@ -26,7 +26,7 @@ import { Button } from "@forte-ui/react";
 
 ### Tones
 
-`variant` and `tone` combine freely, and all sixteen pairs are defined. That means emphasis and meaning stay separate decisions: `tone="danger" variant="solid"` is the destructive action you want people to find, while `tone="danger" variant="outline"` is the same meaning at low emphasis — the right shape for a delete sitting among other row actions.
+`variant` and `tone` combine freely, and all sixteen pairs are defined. That means emphasis and meaning stay separate decisions: `tone="danger" variant="solid"` is the destructive action you want people to find, while `tone="danger" variant="outline"` is the same meaning at low emphasis — the right shape for a delete sitting among other row actions. The default is `neutral`: a view has many buttons and one call to action, so an ordinary button reads as a control and `tone="primary"` is kept for the action you want found — which is what keeps the accent legible as a signal.
 
 <DemoBlock id="button/tones" />
 
@@ -110,7 +110,7 @@ Two disabled states behave differently, and the difference matters. A plain `dis
 
 ## Theming
 
-Every property below is declared on the button's own root element. That means setting one on `:root`, on a theme class or on a wrapper has no effect — the element's own declaration wins over an inherited value. Override them on the button itself, through the `className` prop (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. To move every button at once, re-point the global tokens in the Default column instead — `--forte-color-*`, `--forte-radius-*`, `--forte-control-*` and `--forte-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope. State is exposed on data attributes — `data-variant`, `data-tone`, `data-size`, `data-loading`, `data-icon-only`, `data-full-width`, `data-disabled` — which is also what Tailwind arbitrary variants like `data-[variant=solid]:…` target.
+Every property below is declared on the button's own root element. That means setting one on `:root`, on a theme class or on a wrapper has no effect — the element's own declaration wins over an inherited value. Override them on the button itself, through the `className` prop (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. To move every button at once, re-point the global tokens in the Default column instead — `--forte-color-*`, `--forte-gray-*`, `--forte-radius-*`, `--forte-control-*` and `--forte-font-*` are only read here, never re-declared, so those do inherit from `:root` or a theme scope. State is exposed on data attributes — `data-variant`, `data-tone`, `data-size`, `data-loading`, `data-icon-only`, `data-full-width`, `data-disabled` — which is also what Tailwind arbitrary variants like `data-[variant=solid]:…` target.
 
 <ThemingTable component="Button" />
 

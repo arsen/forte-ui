@@ -10,13 +10,13 @@ export default function AppBarHideOnScroll() {
     <div className="h-[18rem] w-full overflow-y-auto rounded-surface border border-border-muted bg-background">
       <AppBar.Root position="sticky" variant="panel" hideOnScroll>
         <AppBar.Leading>
-          <Button variant="ghost" tone="neutral" iconOnly aria-label="Back">
+          <Button variant="ghost" iconOnly aria-label="Back">
             <ChevronLeft className={ICON} />
           </Button>
         </AppBar.Leading>
         <AppBar.Title align="center">Article</AppBar.Title>
         <AppBar.Trailing>
-          <Button variant="ghost" tone="neutral" iconOnly aria-label="Share">
+          <Button variant="ghost" iconOnly aria-label="Share">
             <Share className={ICON} />
           </Button>
         </AppBar.Trailing>

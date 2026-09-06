@@ -35,7 +35,6 @@ export default function ColorPickerControlled() {
 
         <Button
           variant="soft"
-          tone="neutral"
           onClick={() => setValue(PRESET)}
           disabled={value === PRESET}
         >

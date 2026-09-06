@@ -9,7 +9,7 @@ export default function TooltipPlacement() {
     <>
       {SIDES.map((side) => (
         <Tooltip.Root key={side}>
-          <Tooltip.Trigger render={<Button variant="outline" tone="neutral" />}>
+          <Tooltip.Trigger render={<Button variant="outline" />}>
             {side}
           </Tooltip.Trigger>
           <Tooltip.Popup side={side}>

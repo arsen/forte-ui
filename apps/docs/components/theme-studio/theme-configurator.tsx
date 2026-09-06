@@ -217,7 +217,6 @@ export function ThemeConfigurator({ className }: { className?: string }) {
         * the default preset writes a record that happens to equal the defaults. */}
       <Button
         variant="ghost"
-        tone="neutral"
         fullWidth
         disabled={isDefaultTheme(cfg)}
         onClick={resetThemeConfig}
@@ -548,7 +547,7 @@ function Scaffold({ cfg }: { cfg: ThemeConfig }) {
           </div>
 
           <Dialog.Footer>
-            <Dialog.Close render={<Button variant="soft" tone="neutral" />}>Close</Dialog.Close>
+            <Dialog.Close render={<Button variant="soft" />}>Close</Dialog.Close>
           </Dialog.Footer>
         </Dialog.Popup>
       </Dialog.Root>

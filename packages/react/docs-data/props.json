@@ -818,8 +818,8 @@
         "name": "tone",
         "type": "ButtonTone",
         "required": false,
-        "defaultValue": "primary",
-        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+        "defaultValue": "neutral",
+        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action. `neutral` by default: a view has many buttons and\none call to action, so an ordinary button reads as a control and\n`tone=\"primary\"` is kept for the action you want found."
       },
       {
         "name": "variant",
@@ -832,7 +832,7 @@
   },
   "ButtonGroupRoot": {
     "name": "ButtonGroupRoot",
-    "description": "The group container. Renders a `<div role=\"group\">`.\n\n```tsx\n<ButtonGroup.Root aria-label=\"Message actions\">\n  <Button variant=\"outline\" tone=\"neutral\">Archive</Button>\n  <Button variant=\"outline\" tone=\"neutral\">Report</Button>\n  <Button variant=\"outline\" tone=\"neutral\">Snooze</Button>\n</ButtonGroup.Root>\n```\n\nDirect children are fused: inner corners squared, one hairline between\nneighbours, outer corners kept. The children stay ordinary components with\ntheir own props — the group never reaches into them beyond that edge.\n\n`role=\"group\"` has no name of its own, so give the group `aria-label` (or\npoint `aria-labelledby` at a heading) when the grouping carries meaning a\nscreen reader should hear — without one it is purely visual.",
+    "description": "The group container. Renders a `<div role=\"group\">`.\n\n```tsx\n<ButtonGroup.Root aria-label=\"Message actions\">\n  <Button variant=\"outline\">Archive</Button>\n  <Button variant=\"outline\">Report</Button>\n  <Button variant=\"outline\">Snooze</Button>\n</ButtonGroup.Root>\n```\n\nDirect children are fused: inner corners squared, one hairline between\nneighbours, outer corners kept. The children stay ordinary components with\ntheir own props — the group never reaches into them beyond that edge.\n\n`role=\"group\"` has no name of its own, so give the group `aria-label` (or\npoint `aria-labelledby` at a heading) when the grouping carries meaning a\nscreen reader should hear — without one it is purely visual.",
     "props": [
       {
         "name": "className",
@@ -3702,8 +3702,8 @@
         "name": "tone",
         "type": "ButtonTone",
         "required": false,
-        "defaultValue": "primary",
-        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+        "defaultValue": "neutral",
+        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action. `neutral` by default: a view has many buttons and\none call to action, so an ordinary button reads as a control and\n`tone=\"primary\"` is kept for the action you want found."
       },
       {
         "name": "variant",
@@ -4523,7 +4523,7 @@
         "type": "ButtonTone",
         "required": false,
         "defaultValue": "neutral",
-        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action."
+        "description": "Which semantic color set the button draws from. Combines freely with\n`variant` — `tone=\"danger\" variant=\"outline\"` is a low-emphasis\ndestructive action. `neutral` by default: a view has many buttons and\none call to action, so an ordinary button reads as a control and\n`tone=\"primary\"` is kept for the action you want found."
       },
       {
         "name": "variant",

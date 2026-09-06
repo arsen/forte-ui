@@ -22,7 +22,6 @@ export default function CalendarLocale() {
           <Button
             key={entry.tag}
             size="sm"
-            tone="neutral"
             variant={entry.tag === locale.tag ? "soft" : "ghost"}
             aria-pressed={entry.tag === locale.tag}
             onClick={() => setLocale(entry)}

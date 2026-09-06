@@ -52,9 +52,9 @@ export interface ButtonGroupRootProps
  *
  * ```tsx
  * <ButtonGroup.Root aria-label="Message actions">
- *   <Button variant="outline" tone="neutral">Archive</Button>
- *   <Button variant="outline" tone="neutral">Report</Button>
- *   <Button variant="outline" tone="neutral">Snooze</Button>
+ *   <Button variant="outline">Archive</Button>
+ *   <Button variant="outline">Report</Button>
+ *   <Button variant="outline">Snooze</Button>
  * </ButtonGroup.Root>
  * ```
  *
@@ -190,8 +190,8 @@ export const ButtonGroupText = React.forwardRef<HTMLDivElement, ButtonGroupTextP
  *
  * ```tsx
  * <ButtonGroup.Root aria-label="Pagination">
- *   <Button variant="outline" tone="neutral">Previous</Button>
- *   <Button variant="outline" tone="neutral">Next</Button>
+ *   <Button variant="outline">Previous</Button>
+ *   <Button variant="outline">Next</Button>
  * </ButtonGroup.Root>
  * ```
  *
