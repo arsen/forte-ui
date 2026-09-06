@@ -1,16 +1,4 @@
-export {
-  Select,
-  SelectRoot,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-  SelectIcon,
-  SelectPopup,
-  SelectItem,
-  SelectGroup,
-  SelectGroupLabel,
-  SelectSeparator,
-} from "./Select";
+export { Select } from "./Select";
 export type {
   SelectRootProps,
   SelectLabelProps,

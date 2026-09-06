@@ -1,14 +1,4 @@
-export {
-  Card,
-  CardRoot,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardAction,
-  CardContent,
-  CardFooter,
-  CardMedia,
-} from "./Card";
+export { Card } from "./Card";
 export type {
   CardVariant,
   CardFooterAlign,

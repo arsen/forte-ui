@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
+import { Card } from "@forte-ui/react";
 import { CATALOG, CATEGORIES } from "./component-catalog";
 import { LINK_CARD, LINK_CARD_SURFACE, PROSE_H2 } from "./styles";
 import { categorySlug } from "@/lib/category-slug.mjs";
@@ -48,17 +50,17 @@ export function ComponentIndex() {
             {CATALOG.filter((entry) => entry.category === category).map((entry) => (
               <li key={entry.name}>
                 <Link href={entry.href} className={LINK_CARD}>
-                  <CardRoot className={LINK_CARD_SURFACE}>
-                    <CardHeader>
-                      <CardTitle>
+                  <Card.Root className={LINK_CARD_SURFACE}>
+                    <Card.Header>
+                      <Card.Title>
                         {/* The exported name, not the prose title: this is what
                           * you type to use it, and the name someone scanning
                           * for `ScrollArea` is scanning for. The sidebar spaces
                           * the same names out, because a rail of fifty-six runs
                           * of camel case is harder to read down. */}
                         <h3>{entry.name}</h3>
-                      </CardTitle>
-                      <CardDescription className="text-pretty">{entry.summary}</CardDescription>
+                      </Card.Title>
+                      <Card.Description className="text-pretty">{entry.summary}</Card.Description>
                       {/* The four entries that head no page of their own. The
                         * card still exists — someone looking for AlertDialog
                         * should find it here — and this line is what stops two
@@ -81,8 +83,8 @@ export function ComponentIndex() {
                           Documented with {entry.partOf}
                         </p>
                       )}
-                    </CardHeader>
-                  </CardRoot>
+                    </Card.Header>
+                  </Card.Root>
                 </Link>
               </li>
             ))}

@@ -1,15 +1,4 @@
-export {
-  Table,
-  TableContainer,
-  TableRoot,
-  TableCaption,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "./Table";
+export { Table } from "./Table";
 export type {
   TableVariant,
   TableSize,

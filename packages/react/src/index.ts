@@ -112,17 +112,7 @@ export type {
   CalendarProps,
 } from "./components/calendar";
 
-export {
-  Card,
-  CardRoot,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardAction,
-  CardContent,
-  CardFooter,
-  CardMedia,
-} from "./components/card";
+export { Card } from "./components/card";
 export type {
   CardVariant,
   CardFooterAlign,
@@ -244,17 +234,7 @@ export type {
   ContextMenuShortcutProps,
 } from "./components/context-menu";
 
-export {
-  DatePicker,
-  DatePickerRoot,
-  DatePickerTrigger,
-  DatePickerValue,
-  DatePickerIcon,
-  DatePickerPopup,
-  DatePickerCalendar,
-  DatePickerFooter,
-  DatePickerClear,
-} from "./components/date-picker";
+export { DatePicker } from "./components/date-picker";
 export type {
   DatePickerSize,
   DatePickerVariant,
@@ -315,7 +295,7 @@ export type {
   DrawerVirtualKeyboardProviderProps,
 } from "./components/drawer";
 
-export { Field, FieldRoot, FieldLabel, FieldDescription, FieldError, FieldItem } from "./components/field";
+export { Field } from "./components/field";
 export type {
   FieldRootProps,
   FieldLabelProps,
@@ -324,7 +304,7 @@ export type {
   FieldItemProps,
 } from "./components/field";
 
-export { Fieldset, FieldsetRoot, FieldsetLegend } from "./components/fieldset";
+export { Fieldset } from "./components/fieldset";
 export type { FieldsetRootProps, FieldsetLegendProps } from "./components/fieldset";
 
 export { Form } from "./components/form";
@@ -596,18 +576,7 @@ export type {
 export { Switch } from "./components/switch";
 export type { SwitchProps, SwitchSize } from "./components/switch";
 
-export {
-  Table,
-  TableContainer,
-  TableRoot,
-  TableCaption,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "./components/table";
+export { Table } from "./components/table";
 export type {
   TableVariant,
   TableSize,

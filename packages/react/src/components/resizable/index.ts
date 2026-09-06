@@ -1,4 +1,4 @@
-export { Resizable, ResizableGroup, ResizablePanel, ResizableHandle } from "./Resizable";
+export { Resizable } from "./Resizable";
 export type {
   ResizableOrientation,
   ResizableLength,

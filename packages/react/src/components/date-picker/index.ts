@@ -1,14 +1,4 @@
-export {
-  DatePicker,
-  DatePickerRoot,
-  DatePickerTrigger,
-  DatePickerValue,
-  DatePickerIcon,
-  DatePickerPopup,
-  DatePickerCalendar,
-  DatePickerFooter,
-  DatePickerClear,
-} from "./DatePicker";
+export { DatePicker } from "./DatePicker";
 export type {
   DatePickerSize,
   DatePickerVariant,

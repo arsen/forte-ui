@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { BookOpen, Bot, Palette, Paintbrush, Rocket, Zap } from "lucide-react";
-import { CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
+import { Card } from "@forte-ui/react";
 import { LINK_CARD, LINK_CARD_SURFACE } from "../styles";
 
 /**
@@ -59,9 +61,9 @@ export function EntryCards() {
       {ENTRIES.map(({ title, body, href, icon: Icon }) => (
         <li key={href}>
           <Link href={href} className={LINK_CARD}>
-            <CardRoot className={LINK_CARD_SURFACE}>
-              <CardHeader>
-                <CardTitle>
+            <Card.Root className={LINK_CARD_SURFACE}>
+              <Card.Header>
+                <Card.Title>
                   <h3 className="flex items-center gap-2">
                     {/* The icon is a glyph for the title beside it, not
                       * content of its own; `size-5` is the space token
@@ -69,10 +71,10 @@ export function EntryCards() {
                     <Icon className="size-5 shrink-0 text-primary-text" aria-hidden="true" />
                     {title}
                   </h3>
-                </CardTitle>
-                <CardDescription className="text-pretty">{body}</CardDescription>
-              </CardHeader>
-            </CardRoot>
+                </Card.Title>
+                <Card.Description className="text-pretty">{body}</Card.Description>
+              </Card.Header>
+            </Card.Root>
           </Link>
         </li>
       ))}
