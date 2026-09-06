@@ -132,7 +132,7 @@ function SubmitButton() {
   }, [loading]);
   return (
     <Button loading={loading} onClick={() => setLoading(true)}>
-      {loading ? "Saving" : "Click to load"}
+      Click to load
     </Button>
   );
 }
