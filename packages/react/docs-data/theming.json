@@ -2220,10 +2220,14 @@
       },
       {
         "name": "--forte-button-tone-solid",
-        "value": "var(--forte-color-primary)",
+        "value": "var(--forte-gray-12)",
         "description": "Tone's solid fill",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary)"
@@ -2231,19 +2235,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-color-danger)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-12)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-solid-hover",
-        "value": "var(--forte-color-primary-hover)",
+        "value": "var(--forte-gray-11)",
         "description": "Tone's solid fill on hover",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-hover)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-hover)"
@@ -2251,19 +2255,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-color-danger-hover)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-11)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-solid-active",
-        "value": "var(--forte-color-primary-active)",
+        "value": "var(--forte-gray-10)",
         "description": "Tone's solid fill when pressed",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-active)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-active)"
@@ -2271,19 +2275,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-color-danger-hover)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-10)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-on-solid",
-        "value": "var(--forte-color-on-primary)",
+        "value": "var(--forte-gray-1)",
         "description": "Text color on the solid fill",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-on-primary)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-on-secondary)"
@@ -2291,19 +2295,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-color-on-danger)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-1)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-soft",
-        "value": "var(--forte-color-primary-soft)",
+        "value": "var(--forte-gray-3)",
         "description": "Tone's tinted fill, and the hover wash for `outline` and `ghost`",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-soft)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-soft)"
@@ -2311,19 +2315,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-danger-3)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-3)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-soft-hover",
-        "value": "var(--forte-color-primary-soft-hover)",
+        "value": "var(--forte-gray-4)",
         "description": "Tinted fill on hover",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-soft-hover)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-soft-hover)"
@@ -2331,19 +2335,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-danger-3)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-4)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-soft-active",
-        "value": "var(--forte-color-primary-soft-active)",
+        "value": "var(--forte-gray-5)",
         "description": "Tinted fill when pressed",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-soft-active)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-soft-active)"
@@ -2351,19 +2355,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-danger-7)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-gray-5)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-text",
-        "value": "var(--forte-color-primary-text)",
+        "value": "var(--forte-color-foreground)",
         "description": "Label color for `soft`, `outline` and `ghost`",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-text)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-text)"
@@ -2371,19 +2375,19 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-color-danger-text)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-color-foreground)"
           }
         ]
       },
       {
         "name": "--forte-button-tone-border",
-        "value": "var(--forte-color-primary-border)",
+        "value": "var(--forte-color-border)",
         "description": "Border color for `outline`",
         "part": "root",
         "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary-border)"
+          },
           {
             "selector": ".root[data-tone=\"secondary\"]",
             "value": "var(--forte-color-secondary-border)"
@@ -2391,10 +2395,6 @@
           {
             "selector": ".root[data-tone=\"danger\"]",
             "value": "var(--forte-color-danger-border)"
-          },
-          {
-            "selector": ".root[data-tone=\"neutral\"]",
-            "value": "var(--forte-color-border)"
           }
         ]
       },

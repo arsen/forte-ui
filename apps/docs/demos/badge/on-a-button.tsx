@@ -14,7 +14,7 @@ export default function BadgeOnAButton() {
           * part of it — "Inbox 12" — and nothing has to be repeated in an
           * aria-label. Reach for this first: the corner version below buys a
           * tighter layout and pays for it in markup. */}
-        <Button variant="soft" tone="neutral">
+        <Button variant="soft">
           <Inbox aria-hidden />
           Inbox
           <Badge tone="primary" size="sm" count={unread} />
@@ -28,7 +28,6 @@ export default function BadgeOnAButton() {
           <Button
             iconOnly
             variant="ghost"
-            tone="neutral"
             aria-label={`Notifications, ${unread} unread`}
             onClick={() => setUnread(0)}
           >

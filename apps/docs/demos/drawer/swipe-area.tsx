@@ -28,7 +28,7 @@ export default function DrawerSwipeArea() {
             Swipe back toward the left edge to dismiss.
           </Drawer.Description>
           <Drawer.Footer align="start">
-            <Drawer.Close render={<Button variant="soft" tone="neutral" />}>
+            <Drawer.Close render={<Button variant="soft" />}>
               Close
             </Drawer.Close>
           </Drawer.Footer>

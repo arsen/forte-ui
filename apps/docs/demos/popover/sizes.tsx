@@ -14,7 +14,7 @@ export default function PopoverSizes() {
     <>
       {SIZES.map((size) => (
         <Popover.Root key={size}>
-          <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+          <Popover.Trigger render={<Button variant="outline" />}>
             {size}
           </Popover.Trigger>
           <Popover.Popup size={size}>

@@ -25,13 +25,12 @@ export default function BadgeCounts() {
 
       <div className="flex flex-wrap items-center gap-3">
         <Badge variant="soft" tone="primary" shape="pill" count={count} />
-        <Button size="sm" variant="outline" tone="neutral" onClick={() => setCount((c) => c + 1)}>
+        <Button size="sm" variant="outline" onClick={() => setCount((c) => c + 1)}>
           Add one
         </Button>
         <Button
           size="sm"
           variant="ghost"
-          tone="neutral"
           onClick={() => setCount(9)}
           disabled={count === 9}
         >

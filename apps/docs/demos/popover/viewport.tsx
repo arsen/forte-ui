@@ -39,7 +39,7 @@ export default function PopoverViewport() {
               <Popover.Trigger
                 key={env.id}
                 payload={env}
-                render={<Button variant="outline" tone="neutral" size="sm" />}
+                render={<Button variant="outline" size="sm" />}
               >
                 {env.name}
               </Popover.Trigger>

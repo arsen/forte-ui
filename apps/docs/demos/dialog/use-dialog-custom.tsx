@@ -44,7 +44,7 @@ function ChooseEnvironment({
         ))}
       </div>
       <Dialog.Footer>
-        <Dialog.Close render={<Button variant="ghost" tone="neutral" />}>
+        <Dialog.Close render={<Button variant="ghost" />}>
           Cancel
         </Dialog.Close>
       </Dialog.Footer>

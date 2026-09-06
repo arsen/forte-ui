@@ -5,7 +5,7 @@ import { Button, Popover } from "@forte-ui/react";
 export default function PopoverBasic() {
   return (
     <Popover.Root>
-      <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+      <Popover.Trigger render={<Button variant="outline" />}>
         Notifications
       </Popover.Trigger>
       <Popover.Popup>

@@ -16,11 +16,11 @@ export default function KbdComposed() {
         Send
         <Kbd aria-hidden="true">⌘⏎</Kbd>
       </Button>
-      <Button variant="soft" tone="neutral" aria-keyshortcuts="Meta+S">
+      <Button variant="soft" aria-keyshortcuts="Meta+S">
         Save draft
         <Kbd aria-hidden="true">⌘S</Kbd>
       </Button>
-      <Button variant="outline" tone="neutral" aria-keyshortcuts="Escape">
+      <Button variant="outline" aria-keyshortcuts="Escape">
         Discard
         <Kbd aria-hidden="true">Esc</Kbd>
       </Button>

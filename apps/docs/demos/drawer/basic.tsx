@@ -29,7 +29,7 @@ export default function DrawerBasic() {
             Has a linked pull request
           </label>
           <Drawer.Footer>
-            <Drawer.Close render={<Button variant="soft" tone="neutral" />}>
+            <Drawer.Close render={<Button variant="soft" />}>
               Reset
             </Drawer.Close>
             <Drawer.Close render={<Button />}>Done</Drawer.Close>

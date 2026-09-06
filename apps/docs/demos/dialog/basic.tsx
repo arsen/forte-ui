@@ -24,7 +24,7 @@ export default function DialogBasic() {
           Show my local time
         </label>
         <Dialog.Footer>
-          <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+          <Dialog.Close render={<Button variant="soft" />}>
             Cancel
           </Dialog.Close>
           <Dialog.Close render={<Button />}>Save changes</Dialog.Close>

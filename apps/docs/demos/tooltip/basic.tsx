@@ -7,7 +7,7 @@ export default function TooltipBasic() {
     <Tooltip.Root>
       <Tooltip.Trigger
         aria-label="Archive conversation"
-        render={<Button variant="ghost" tone="neutral" iconOnly />}
+        render={<Button variant="ghost" iconOnly />}
       >
         <ArchiveIcon />
       </Tooltip.Trigger>

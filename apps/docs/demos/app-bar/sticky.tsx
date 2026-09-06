@@ -12,13 +12,13 @@ export default function AppBarSticky() {
     <div className="h-[18rem] w-full overflow-y-auto rounded-surface border border-border-muted bg-background">
       <AppBar.Root position="sticky" variant="frosted" elevateOnScroll>
         <AppBar.Leading>
-          <Button variant="ghost" tone="neutral" iconOnly aria-label="Open navigation">
+          <Button variant="ghost" iconOnly aria-label="Open navigation">
             <Menu className={ICON} />
           </Button>
         </AppBar.Leading>
         <AppBar.Title>Release notes</AppBar.Title>
         <AppBar.Trailing>
-          <Button variant="ghost" tone="neutral" iconOnly aria-label="Search">
+          <Button variant="ghost" iconOnly aria-label="Search">
             <Search className={ICON} />
           </Button>
         </AppBar.Trailing>

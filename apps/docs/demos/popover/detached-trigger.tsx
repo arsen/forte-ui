@@ -42,7 +42,7 @@ export default function PopoverDetachedTrigger() {
             id={view.id}
             handle={savedViews}
             payload={view}
-            render={<Button variant="outline" tone="neutral" size="sm" />}
+            render={<Button variant="outline" size="sm" />}
           >
             {view.name}
           </Popover.Trigger>
@@ -62,7 +62,6 @@ export default function PopoverDetachedTrigger() {
       <div className="flex flex-wrap gap-2">
         <Button
           variant="soft"
-          tone="neutral"
           size="sm"
           onClick={() => savedViews.open(VIEWS[0].id)}
         >
@@ -70,7 +69,6 @@ export default function PopoverDetachedTrigger() {
         </Button>
         <Button
           variant="soft"
-          tone="neutral"
           size="sm"
           onClick={() => savedViews.close()}
         >

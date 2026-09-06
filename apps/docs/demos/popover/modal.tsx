@@ -6,7 +6,7 @@ export default function PopoverModal() {
   return (
     <>
       <Popover.Root modal>
-        <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+        <Popover.Trigger render={<Button variant="outline" />}>
           Modal
         </Popover.Trigger>
         {/* The scrim is opt-in and belongs with `modal`: page scroll is
@@ -25,7 +25,7 @@ export default function PopoverModal() {
               * inside the popup is what switches focus trapping on — and it
               * is the only way out for a touch screen-reader user, who has
               * neither Escape nor an outside press. */}
-            <Popover.Close render={<Button variant="soft" tone="neutral" />}>
+            <Popover.Close render={<Button variant="soft" />}>
               Close
             </Popover.Close>
           </Popover.Footer>
@@ -33,7 +33,7 @@ export default function PopoverModal() {
       </Popover.Root>
 
       <Popover.Root modal="trap-focus">
-        <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+        <Popover.Trigger render={<Button variant="outline" />}>
           Trap focus only
         </Popover.Trigger>
         <Popover.Popup>
@@ -44,7 +44,7 @@ export default function PopoverModal() {
             still takes clicks.
           </Popover.Description>
           <Popover.Footer>
-            <Popover.Close render={<Button variant="soft" tone="neutral" />}>
+            <Popover.Close render={<Button variant="soft" />}>
               Close
             </Popover.Close>
           </Popover.Footer>

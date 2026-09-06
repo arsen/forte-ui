@@ -9,7 +9,7 @@ export default function AppBarBasic() {
   return (
     <AppBar.Root className="w-full">
       <AppBar.Leading>
-        <Button variant="ghost" tone="neutral" iconOnly aria-label="Open navigation">
+        <Button variant="ghost" iconOnly aria-label="Open navigation">
           <Menu className={ICON} />
         </Button>
       </AppBar.Leading>
@@ -21,10 +21,10 @@ export default function AppBarBasic() {
       </AppBar.Title>
 
       <AppBar.Trailing>
-        <Button variant="ghost" tone="neutral" iconOnly aria-label="Search">
+        <Button variant="ghost" iconOnly aria-label="Search">
           <Search className={ICON} />
         </Button>
-        <Button variant="ghost" tone="neutral" iconOnly aria-label="Notifications">
+        <Button variant="ghost" iconOnly aria-label="Notifications">
           <Bell className={ICON} />
         </Button>
         <ThemeToggle />

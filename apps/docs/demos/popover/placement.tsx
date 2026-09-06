@@ -9,7 +9,7 @@ export default function PopoverPlacement() {
     <>
       {SIDES.map((side) => (
         <Popover.Root key={side}>
-          <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+          <Popover.Trigger render={<Button variant="outline" />}>
             {side}
           </Popover.Trigger>
           {/* Both `side` and `align` are hints. The popup flips to the

@@ -46,7 +46,7 @@ export default function DialogScrollable() {
           </p>
         ))}
         <Dialog.Footer>
-          <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+          <Dialog.Close render={<Button variant="soft" />}>
             Decline
           </Dialog.Close>
           <Dialog.Close render={<Button />}>Accept</Dialog.Close>

@@ -6,7 +6,7 @@ export default function TooltipDelay() {
   return (
     <Tooltip.Provider delay={700}>
       <Tooltip.Root>
-        <Tooltip.Trigger render={<Button variant="outline" tone="neutral" />}>
+        <Tooltip.Trigger render={<Button variant="outline" />}>
           Duplicate
         </Tooltip.Trigger>
         <Tooltip.Popup>

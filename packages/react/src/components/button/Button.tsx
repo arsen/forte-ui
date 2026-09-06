@@ -21,8 +21,10 @@ export interface ButtonProps extends Omit<BaseButtonProps, "className"> {
   /**
    * Which semantic color set the button draws from. Combines freely with
    * `variant` — `tone="danger" variant="outline"` is a low-emphasis
-   * destructive action.
-   * @default "primary"
+   * destructive action. `neutral` by default: a view has many buttons and
+   * one call to action, so an ordinary button reads as a control and
+   * `tone="primary"` is kept for the action you want found.
+   * @default "neutral"
    */
   tone?: ButtonTone;
   /**
@@ -86,7 +88,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(
     {
       variant = "solid",
-      tone = "primary",
+      tone = "neutral",
       size = "md",
       fullWidth = false,
       iconOnly = false,

@@ -87,7 +87,7 @@ export default function DrawerNested() {
           </Drawer.Root>
 
           <Drawer.Footer>
-            <Drawer.Close render={<Button variant="soft" tone="neutral" />}>
+            <Drawer.Close render={<Button variant="soft" />}>
               Close
             </Drawer.Close>
           </Drawer.Footer>

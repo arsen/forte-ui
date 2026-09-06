@@ -31,7 +31,7 @@ export default function MenubarTriggers() {
         * of its own however it is styled. */}
       <Menu.Root>
         <Menu.Trigger
-          render={<Button variant="outline" tone="neutral" iconOnly />}
+          render={<Button variant="outline" iconOnly />}
           aria-label="More"
         >
           <EllipsisVertical aria-hidden="true" />

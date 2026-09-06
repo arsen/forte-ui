@@ -78,7 +78,7 @@ export default function DialogForm() {
             </Field.Root>
 
             <Dialog.Footer>
-              <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+              <Dialog.Close render={<Button variant="soft" />}>
                 Cancel
               </Dialog.Close>
               {/* NOT a Dialog.Close. A close button closes on press, before
