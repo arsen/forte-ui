@@ -1,10 +1,4 @@
-export {
-  AppBar,
-  AppBarRoot,
-  AppBarLeading,
-  AppBarTitle,
-  AppBarTrailing,
-} from "./AppBar";
+export { AppBar } from "./AppBar";
 export type {
   AppBarVariant,
   AppBarTone,

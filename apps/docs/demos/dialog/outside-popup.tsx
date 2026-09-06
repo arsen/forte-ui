@@ -62,7 +62,7 @@ export default function DialogOutsidePopup() {
           // any help — and `flex-end` puts it clear of the panel's corner
           // rather than inside it.
           className="self-end"
-          render={<Button iconOnly size="sm" tone="neutral" />}
+          render={<Button iconOnly size="sm" />}
         >
           <Icon>
             <path d="M18 6 6 18M6 6l12 12" />
@@ -80,7 +80,6 @@ export default function DialogOutsidePopup() {
         <div className={pager}>
           <Button
             size="sm"
-            tone="neutral"
             className="pointer-events-auto"
             disabled={index === 0}
             onClick={() => setIndex((i) => i - 1)}
@@ -89,7 +88,6 @@ export default function DialogOutsidePopup() {
           </Button>
           <Button
             size="sm"
-            tone="neutral"
             className="pointer-events-auto"
             disabled={index === ASSETS.length - 1}
             onClick={() => setIndex((i) => i + 1)}

@@ -51,7 +51,7 @@ export default function DrawerSnapPoints() {
               </li>
             ))}
           </ul>
-          <Drawer.Close render={<Button variant="soft" tone="neutral" />}>
+          <Drawer.Close render={<Button variant="soft" />}>
             Close
           </Drawer.Close>
         </Drawer.Content>

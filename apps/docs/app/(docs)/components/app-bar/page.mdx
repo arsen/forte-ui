@@ -42,10 +42,6 @@ import { AppBar } from "@forte-ui/react";
 
 The slots are slots, not controls: whatever goes in them is a real component with its own props, and wrapping one would mean re-exposing all of them. Compose a [`Button`](/components/button/), a [`NavigationMenu`](/components/navigation-menu/), an [`Avatar`](/components/avatar/); the bar only decides where they sit.
 
-<Callout kind="note">
-  The parts are also exported flat — `AppBarRoot`, `AppBarTitle`, and so on. In a React **Server** Component, use those: `AppBar.Root` cannot be dereferenced there, because the namespace object crosses the client boundary as an opaque reference whose properties are `undefined` — a runtime error the type checker does not catch.
-</Callout>
-
 ## Examples
 
 ### Variants

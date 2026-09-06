@@ -15,7 +15,7 @@ export default function AppBarTones() {
          * colored bar re-points those for its subtree. */
         <AppBar.Root key={tone} tone={tone}>
           <AppBar.Leading>
-            <Button variant="ghost" tone="neutral" iconOnly aria-label="Open navigation">
+            <Button variant="ghost" iconOnly aria-label="Open navigation">
               <Menu className={ICON} />
             </Button>
           </AppBar.Leading>
@@ -23,11 +23,11 @@ export default function AppBarTones() {
             Projects <span className="font-normal text-foreground-muted">· {tone}</span>
           </AppBar.Title>
           <AppBar.Trailing>
-            <Button variant="ghost" tone="neutral" iconOnly aria-label="Search">
+            <Button variant="ghost" iconOnly aria-label="Search">
               <Search className={ICON} />
             </Button>
             <Separator orientation="vertical" decorative />
-            <Button variant="ghost" tone="neutral" iconOnly aria-label="More">
+            <Button variant="ghost" iconOnly aria-label="More">
               <MoreVertical className={ICON} />
             </Button>
           </AppBar.Trailing>

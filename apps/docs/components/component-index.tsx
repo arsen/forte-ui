@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { CardRoot, CardHeader, CardTitle, CardDescription, CardMedia } from "@forte-ui/react";
+import { Card } from "@forte-ui/react";
 import { CATALOG, CATEGORIES } from "./component-catalog";
 import { ComponentPreview } from "./component-previews";
 import { PROSE_H2 } from "./styles";
@@ -86,12 +88,12 @@ export function ComponentIndex() {
           <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4 p-0">
             {CATALOG.filter((entry) => entry.category === category).map((entry) => (
               <li key={entry.name}>
-                <CardRoot className={PREVIEW_CARD}>
-                  <CardMedia className={PREVIEW_MEDIA}>
+                <Card.Root className={PREVIEW_CARD}>
+                  <Card.Media className={PREVIEW_MEDIA}>
                     <ComponentPreview name={entry.name} />
-                  </CardMedia>
-                  <CardHeader>
-                    <CardTitle>
+                  </Card.Media>
+                  <Card.Header>
+                    <Card.Title>
                       {/* The exported name, not the prose title: this is what
                         * you type to use it, and the name someone scanning
                         * for `ScrollArea` is scanning for. The sidebar spaces
@@ -106,10 +108,10 @@ export function ComponentIndex() {
                           {entry.name}
                         </Link>
                       </h3>
-                    </CardTitle>
-                    <CardDescription id={`${entry.name}-summary`} className="text-pretty">
+                    </Card.Title>
+                    <Card.Description id={`${entry.name}-summary`} className="text-pretty">
                       {entry.summary}
-                    </CardDescription>
+                    </Card.Description>
                     {/* The four entries that head no page of their own. The
                       * card still exists — someone looking for AlertDialog
                       * should find it here — and this line is what stops two
@@ -132,8 +134,8 @@ export function ComponentIndex() {
                         Documented with {entry.partOf}
                       </p>
                     )}
-                  </CardHeader>
-                </CardRoot>
+                  </Card.Header>
+                </Card.Root>
               </li>
             ))}
           </ul>

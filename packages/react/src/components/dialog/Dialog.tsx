@@ -1531,7 +1531,7 @@ export function useDialog(): DialogApi {
  *     <Dialog.Title>Edit profile</Dialog.Title>
  *     <Dialog.Description>Change your display name.</Dialog.Description>
  *     <Dialog.Footer>
- *       <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+ *       <Dialog.Close render={<Button variant="soft" />}>
  *         Cancel
  *       </Dialog.Close>
  *       <Dialog.Close render={<Button />}>Save</Dialog.Close>

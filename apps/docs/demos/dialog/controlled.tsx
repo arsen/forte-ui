@@ -61,7 +61,6 @@ export default function DialogControlled() {
         <Button
           key={item.id}
           variant="outline"
-          tone="neutral"
           fullWidth
           onClick={() => inspect(item)}
         >
@@ -108,7 +107,7 @@ export default function DialogControlled() {
                 through setOpen(false). It is the same state change either way,
                 but this one keeps the button a real close control for
                 assistive technology. */}
-            <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+            <Dialog.Close render={<Button variant="soft" />}>
               Close
             </Dialog.Close>
           </Dialog.Footer>

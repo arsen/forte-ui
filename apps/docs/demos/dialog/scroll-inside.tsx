@@ -64,7 +64,7 @@ export default function DialogScrollInside() {
         {/* Outside the scroll region, so the actions stay put instead of
             scrolling away with the clauses. */}
         <Dialog.Footer>
-          <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+          <Dialog.Close render={<Button variant="soft" />}>
             Decline
           </Dialog.Close>
           <Dialog.Close render={<Button />}>Accept</Dialog.Close>

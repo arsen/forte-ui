@@ -219,26 +219,20 @@ function Pane({ title }: { title: string }) {
 const PREVIEWS: Record<ComponentName, React.ComponentType> = {
   /* Actions ------------------------------------------------------------- */
 
+  // The default tone is neutral, so the call to action says `primary` itself
+  // — the picture is the pair, one found and one ordinary.
   Button: () => (
     <>
-      <Button>Save changes</Button>
-      <Button variant="outline" tone="neutral">
-        Cancel
-      </Button>
+      <Button tone="primary">Save changes</Button>
+      <Button variant="outline">Cancel</Button>
     </>
   ),
 
   ButtonGroup: () => (
     <ButtonGroup.Root aria-label="Range">
-      <Button variant="outline" tone="neutral">
-        Day
-      </Button>
-      <Button variant="outline" tone="neutral">
-        Week
-      </Button>
-      <Button variant="outline" tone="neutral">
-        Month
-      </Button>
+      <Button variant="outline">Day</Button>
+      <Button variant="outline">Week</Button>
+      <Button variant="outline">Month</Button>
     </ButtonGroup.Root>
   ),
 
@@ -406,7 +400,7 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
         <Field.Label>Workspace name</Field.Label>
         <Input placeholder="acme" />
       </Field.Root>
-      <Button type="submit" size="sm" className="self-start">
+      <Button type="submit" tone="primary" size="sm" className="self-start">
         Create workspace
       </Button>
     </Form>
@@ -546,7 +540,7 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
               <Dialog.Title>Delete project?</Dialog.Title>
               <Dialog.Description>This cannot be undone.</Dialog.Description>
               <Dialog.Footer align="between">
-                <Button size="sm" variant="soft" tone="neutral">
+                <Button size="sm" variant="soft">
                   Keep
                 </Button>
                 <Button size="sm" tone="danger">
@@ -600,10 +594,12 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
               <Dialog.Title>Edit profile</Dialog.Title>
               <Dialog.Description>Visible to everyone in the workspace.</Dialog.Description>
               <Dialog.Footer>
-                <Button size="sm" variant="soft" tone="neutral">
+                <Button size="sm" variant="soft">
                   Cancel
                 </Button>
-                <Button size="sm">Save</Button>
+                <Button size="sm" tone="primary">
+                  Save
+                </Button>
               </Dialog.Footer>
             </Dialog.Popup>
           </Dialog.Root>
@@ -667,7 +663,7 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
     <Scene>
       {(portal) => (
         <Popover.Root open>
-          <Popover.Trigger render={<Button variant="outline" tone="neutral" className="self-start" />}>
+          <Popover.Trigger render={<Button variant="outline" className="self-start" />}>
             Notifications
           </Popover.Trigger>
           {portal && (
@@ -730,7 +726,7 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
         <Tooltip.Root open>
           <Tooltip.Trigger
             aria-label="Archive conversation"
-            render={<Button variant="outline" tone="neutral" iconOnly />}
+            render={<Button variant="outline" iconOnly />}
           >
             <Archive className={ICON} />
           </Tooltip.Trigger>
@@ -750,13 +746,13 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
   AppBar: () => (
     <AppBar.Root variant="outline" position="static" size="sm" className="w-full">
       <AppBar.Leading>
-        <Button variant="ghost" tone="neutral" size="sm" iconOnly aria-label="Open navigation">
+        <Button variant="ghost" size="sm" iconOnly aria-label="Open navigation">
           <MenuIcon className={ICON} />
         </Button>
       </AppBar.Leading>
       <AppBar.Title>Inbox</AppBar.Title>
       <AppBar.Trailing>
-        <Button variant="ghost" tone="neutral" size="sm" iconOnly aria-label="Search">
+        <Button variant="ghost" size="sm" iconOnly aria-label="Search">
           <Search className={ICON} />
         </Button>
         <Avatar.Root size="xs">

@@ -53,7 +53,6 @@ export default function PreviewCardControlled() {
           * reports through onOpenChange a moment before this handler runs. */}
         <Button
           variant="soft"
-          tone="neutral"
           size="sm"
           disabled={index === RELEASES.length - 1}
           onClick={() => {

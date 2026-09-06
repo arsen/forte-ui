@@ -26,7 +26,7 @@ export default function DialogNested() {
               next renewal, and today’s invoice is unaffected.
             </Dialog.Description>
             <Dialog.Footer>
-              <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+              <Dialog.Close render={<Button variant="soft" />}>
                 Back
               </Dialog.Close>
               <Dialog.Close render={<Button />}>Confirm switch</Dialog.Close>
@@ -35,7 +35,7 @@ export default function DialogNested() {
         </Dialog.Root>
 
         <Dialog.Footer>
-          <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+          <Dialog.Close render={<Button variant="soft" />}>
             Close
           </Dialog.Close>
         </Dialog.Footer>

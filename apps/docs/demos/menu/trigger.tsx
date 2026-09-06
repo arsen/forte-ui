@@ -38,7 +38,7 @@ export default function MenuTrigger() {
         * `aria-expanded`; what it cannot supply is what this button is for. */}
       <Menu.Root>
         <Menu.Trigger
-          render={<Button variant="ghost" tone="neutral" iconOnly />}
+          render={<Button variant="ghost" iconOnly />}
           aria-label="Row actions"
         >
           <EllipsisVertical aria-hidden="true" />

@@ -51,7 +51,6 @@ export default function PreviewCardDetachedTrigger() {
       <div className="flex flex-wrap gap-2">
         <Button
           variant="soft"
-          tone="neutral"
           size="sm"
           onClick={() => handbook.open(DOCS[0].id)}
         >
@@ -59,7 +58,6 @@ export default function PreviewCardDetachedTrigger() {
         </Button>
         <Button
           variant="soft"
-          tone="neutral"
           size="sm"
           onClick={() => handbook.close()}
         >

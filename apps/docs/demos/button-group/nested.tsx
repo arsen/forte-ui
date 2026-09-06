@@ -13,17 +13,17 @@ export default function ButtonGroupNested() {
     // between decisions.
     <ButtonGroup.Root aria-label="Pagination">
       <ButtonGroup.Root role="presentation">
-        <Button variant="outline" tone="neutral" iconOnly aria-label="Previous page">
+        <Button variant="outline" iconOnly aria-label="Previous page">
           <ChevronLeft className={ICON} />
         </Button>
-        <Button variant="outline" tone="neutral" iconOnly aria-label="Next page">
+        <Button variant="outline" iconOnly aria-label="Next page">
           <ChevronRight className={ICON} />
         </Button>
       </ButtonGroup.Root>
       <ButtonGroup.Root role="presentation">
-        <Button variant="outline" tone="neutral">1</Button>
-        <Button variant="outline" tone="neutral">2</Button>
-        <Button variant="outline" tone="neutral">3</Button>
+        <Button variant="outline">1</Button>
+        <Button variant="outline">2</Button>
+        <Button variant="outline">3</Button>
       </ButtonGroup.Root>
     </ButtonGroup.Root>
   );

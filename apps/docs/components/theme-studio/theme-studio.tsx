@@ -188,7 +188,6 @@ export function ThemeStudio() {
               <Button
                 size="sm"
                 variant="soft"
-                tone="neutral"
                 onClick={async () => {
                   try {
                     await navigator.clipboard.writeText(css);
@@ -264,9 +263,9 @@ export function ThemeStudio() {
                 <Button variant="ghost">Ghost</Button>
               </Row>
               <Row label="Tone">
-                <Button>Primary</Button>
+                <Button>Neutral</Button>
+                <Button tone="primary">Primary</Button>
                 <Button tone="secondary">Secondary</Button>
-                <Button tone="neutral">Neutral</Button>
                 <Button tone="danger">Danger</Button>
               </Row>
               <Row label="Size">
@@ -281,21 +280,21 @@ export function ThemeStudio() {
                   <Plus className={ICON} aria-hidden />
                   With icon
                 </Button>
-                <Button variant="outline" tone="neutral" iconOnly aria-label="Delete">
+                <Button variant="outline" iconOnly aria-label="Delete">
                   <Trash2 className={ICON} aria-hidden />
                 </Button>
               </Row>
               <Row label="Group">
                 <ButtonGroup.Root aria-label="Message actions">
-                  <Button variant="outline" tone="neutral">
+                  <Button variant="outline">
                     <Archive className={ICON} aria-hidden />
                     Archive
                   </Button>
-                  <Button variant="outline" tone="neutral">
+                  <Button variant="outline">
                     <Flag className={ICON} aria-hidden />
                     Report
                   </Button>
-                  <Button variant="outline" tone="neutral">
+                  <Button variant="outline">
                     <Clock className={ICON} aria-hidden />
                     Snooze
                   </Button>
@@ -397,7 +396,7 @@ export function ThemeStudio() {
               </div>
             </div>
             <Card.Footer align="end">
-              <Button variant="ghost" tone="neutral">
+              <Button variant="ghost">
                 Cancel
               </Button>
               <Button>Save changes</Button>
@@ -523,7 +522,7 @@ export function ThemeStudio() {
               <Tooltip.Root>
                 <Tooltip.Trigger
                   aria-label="Notifications"
-                  render={<Button variant="outline" tone="neutral" iconOnly />}
+                  render={<Button variant="outline" iconOnly />}
                 >
                   <Bell className={ICON} aria-hidden />
                 </Tooltip.Trigger>
@@ -534,7 +533,7 @@ export function ThemeStudio() {
               </Tooltip.Root>
 
               <Popover.Root>
-                <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+                <Popover.Trigger render={<Button variant="outline" />}>
                   Popover
                 </Popover.Trigger>
                 <Popover.Popup>
@@ -601,7 +600,7 @@ export function ThemeStudio() {
                     <Input defaultValue="Ada Lovelace" />
                   </Field.Root>
                   <Dialog.Footer>
-                    <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+                    <Dialog.Close render={<Button variant="soft" />}>
                       Cancel
                     </Dialog.Close>
                     <Dialog.Close render={<Button />}>Save changes</Dialog.Close>

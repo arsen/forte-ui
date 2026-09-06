@@ -16,7 +16,7 @@ export default function PopoverOpenOnHover() {
           openOnHover
           delay={200}
           aria-label="About monthly active users"
-          render={<Button variant="ghost" tone="neutral" size="sm" iconOnly />}
+          render={<Button variant="ghost" size="sm" iconOnly />}
         >
           <InfoIcon />
         </Popover.Trigger>

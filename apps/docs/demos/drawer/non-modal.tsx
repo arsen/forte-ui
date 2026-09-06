@@ -36,7 +36,7 @@ export default function DrawerNonModal() {
                 below still counts.
               </Drawer.Description>
               <Drawer.Footer>
-                <Drawer.Close render={<Button variant="soft" tone="neutral" />}>
+                <Drawer.Close render={<Button variant="soft" />}>
                   Close
                 </Drawer.Close>
               </Drawer.Footer>
@@ -47,7 +47,6 @@ export default function DrawerNonModal() {
 
       <Button
         variant="soft"
-        tone="neutral"
         onClick={() => setClicks((n) => n + 1)}
       >
         Still clickable — {clicks}

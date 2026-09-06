@@ -175,7 +175,7 @@ export default function ComboboxCreatable() {
               />
             </Field.Root>
             <Dialog.Footer>
-              <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+              <Dialog.Close render={<Button variant="soft" />}>
                 Cancel
               </Dialog.Close>
               <Button type="submit">Create</Button>

@@ -80,7 +80,6 @@ export default function DialogHeader() {
               the user pressing the button twice. */}
           <Button
             variant="soft"
-            tone="neutral"
             onClick={() => {
               navigator.clipboard?.writeText(LINK).then(
                 () => setCopied(true),
@@ -95,7 +94,7 @@ export default function DialogHeader() {
         {/* A dialog can have both. The corner × is the escape hatch that is
             always in the same place; the footer is where the decision lives. */}
         <Dialog.Footer>
-          <Dialog.Close render={<Button variant="soft" tone="neutral" />}>
+          <Dialog.Close render={<Button variant="soft" />}>
             Revoke link
           </Dialog.Close>
           <Dialog.Close render={<Button />}>Done</Dialog.Close>

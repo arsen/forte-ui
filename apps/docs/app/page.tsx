@@ -1,10 +1,8 @@
 import Link from "next/link";
-// The flat part names, not the `Card` namespace: this page is a Server
-// Component, and dereferencing `Card.Root` across the client boundary yields
-// `undefined` — the object arrives as an opaque client reference.
-import { Button, CardRoot, CardHeader, CardTitle, CardDescription } from "@forte-ui/react";
+import { Button } from "@forte-ui/react";
 import { Hero } from "@/components/home/hero";
 import { EntryCards } from "@/components/home/entry-cards";
+import { FeatureCards } from "@/components/home/feature-cards";
 import { Showcase } from "@/components/home/showcase";
 import { CodeBlock } from "@/components/demo/code-block";
 import { cn } from "@/lib/cn";
@@ -23,33 +21,6 @@ import { cn } from "@/lib/cn";
  * index: fifty-odd tiles is a sidebar laid flat, and the sidebar is one
  * click away on every page the cards lead to.
  */
-
-const FEATURES = [
-  {
-    title: "One variable, whole system",
-    body: "Set a seed color and twelve accent steps, brand-tinted neutrals, and a readable text color derive themselves — in both light and dark mode, in pure CSS.",
-  },
-  {
-    title: "Contrast that is measured",
-    body: "The ramp is verified against 119,108 in-gamut seeds. Text on a solid fill never drops below 4.5:1, whichever brand color you pick.",
-  },
-  {
-    title: "Motion that listens",
-    body: "Reduced motion is handled once, in the token layer. Movement stops, fades stay, and state that was carried by movement gets a second cue.",
-  },
-  {
-    title: "Built on Base UI",
-    body: "Keyboard behavior, focus management and ARIA come from primitives that are tested across browsers, platforms and screen readers.",
-  },
-  {
-    title: "Yours to override",
-    body: "Everything ships inside a cascade layer, so your CSS and your utility classes win without a single !important.",
-  },
-  {
-    title: "No runtime",
-    body: "No animation library, no CSS-in-JS, no theme provider. The components render, the browser does the rest.",
-  },
-];
 
 /* Scroll reveal, progressive enhancement only: the base state is fully VISIBLE
  * and the keyframe is additive, so where scroll-driven animations are missing
@@ -112,18 +83,7 @@ export default function HomePage() {
 
       <section className={cn(SECTION, REVEAL)} aria-labelledby="features">
         <h2 id="features" className={H2}>What you get</h2>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
-          {FEATURES.map((f) => (
-            <CardRoot key={f.title}>
-              <CardHeader>
-                <CardTitle>
-                  <h3>{f.title}</h3>
-                </CardTitle>
-                <CardDescription className="text-pretty">{f.body}</CardDescription>
-              </CardHeader>
-            </CardRoot>
-          ))}
-        </div>
+        <FeatureCards />
       </section>
 
       <section className={cn(SECTION, REVEAL)} aria-labelledby="install">

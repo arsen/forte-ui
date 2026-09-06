@@ -45,10 +45,6 @@ import { Card } from "@forte-ui/react";
 
 Padding lives on the root rather than on the parts. The sections stack with one gap between them, and `--forte-card-p` is the single number that moves everything at once — it defaults to `--forte-surface-p`, so `data-forte-density` already drives it and a card needs no size prop.
 
-<Callout kind="note">
-  The parts are also exported flat — `CardRoot`, `CardHeader`, `CardTitle`, and so on. In a React **Server** Component, use those: `Card.Root` cannot be dereferenced there, because the namespace object crosses the client boundary as an opaque reference whose properties are `undefined` — a runtime error the type checker does not catch. (`Field` and `DatePicker` ship the same pair of spellings for the same reason.)
-</Callout>
-
 ## Examples
 
 ### Variants

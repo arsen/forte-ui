@@ -46,7 +46,7 @@ export default function ContextMenuWithMenu() {
         * has one, and no keyboard reaches it. */}
       <Menu.Root>
         <Menu.Trigger
-          render={<Button variant="ghost" tone="neutral" size="sm" iconOnly />}
+          render={<Button variant="ghost" size="sm" iconOnly />}
           aria-label="Image actions"
           className="absolute end-2 top-2"
         >

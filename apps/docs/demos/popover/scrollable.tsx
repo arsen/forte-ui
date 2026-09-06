@@ -16,7 +16,7 @@ const ACTIVITY = [
 export default function PopoverScrollable() {
   return (
     <Popover.Root>
-      <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+      <Popover.Trigger render={<Button variant="outline" />}>
         Recent activity
       </Popover.Trigger>
       <Popover.Popup>

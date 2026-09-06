@@ -9,7 +9,7 @@ export default function PopoverForm() {
 
   return (
     <Popover.Root>
-      <Popover.Trigger render={<Button variant="outline" tone="neutral" />}>
+      <Popover.Trigger render={<Button variant="outline" />}>
         Rename report
       </Popover.Trigger>
       {/* `initialFocus` points at the input instead of letting focus land on
@@ -32,7 +32,7 @@ export default function PopoverForm() {
           {/* Both buttons close, so both are Popover.Close — it is the same
             * state change as calling close() yourself, but it keeps them real
             * close controls for assistive technology. */}
-          <Popover.Close render={<Button variant="soft" tone="neutral" />}>
+          <Popover.Close render={<Button variant="soft" />}>
             Cancel
           </Popover.Close>
           <Popover.Close render={<Button />}>Save</Popover.Close>

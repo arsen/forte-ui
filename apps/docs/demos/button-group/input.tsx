@@ -19,7 +19,7 @@ export default function ButtonGroupInput() {
         defaultValue="github.com/arsen/forte-ui.git"
         readOnly
       />
-      <Button variant="outline" tone="neutral" iconOnly aria-label="Copy URL">
+      <Button variant="outline" iconOnly aria-label="Copy URL">
         <Copy className={ICON} />
       </Button>
     </ButtonGroup.Root>

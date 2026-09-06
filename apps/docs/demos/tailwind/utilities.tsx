@@ -18,7 +18,7 @@ export default function TokenUtilities() {
         <Input placeholder="you@work.com" />
       </Field.Root>
       <div className="flex justify-end gap-2">
-        <Button variant="ghost" tone="neutral">
+        <Button variant="ghost">
           Cancel
         </Button>
         <Button type="submit" className="rounded-pill">

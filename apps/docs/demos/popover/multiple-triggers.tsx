@@ -38,7 +38,7 @@ export default function PopoverMultipleTriggers() {
             <Popover.Trigger
               key={metric.id}
               payload={metric}
-              render={<Button variant="outline" tone="neutral" />}
+              render={<Button variant="outline" />}
             >
               {metric.name}
             </Popover.Trigger>

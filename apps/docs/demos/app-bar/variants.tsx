@@ -15,13 +15,13 @@ export default function AppBarVariants() {
       {VARIANTS.map((variant) => (
         <AppBar.Root key={variant} variant={variant}>
           <AppBar.Leading>
-            <Button variant="ghost" tone="neutral" iconOnly aria-label="Open navigation">
+            <Button variant="ghost" iconOnly aria-label="Open navigation">
               <Menu className={ICON} />
             </Button>
           </AppBar.Leading>
           <AppBar.Title>{variant}</AppBar.Title>
           <AppBar.Trailing>
-            <Button variant="ghost" tone="neutral" iconOnly aria-label="Search">
+            <Button variant="ghost" iconOnly aria-label="Search">
               <Search className={ICON} />
             </Button>
             <Button variant="solid" tone="primary" size="sm">

@@ -47,10 +47,6 @@ import { Table } from "@forte-ui/react";
 </Table.Root>
 ```
 
-<Callout kind="note">
-  The parts are also exported flat — `TableRoot`, `TableRow`, `TableCell`, and so on. In a React **Server** Component, use those: `Table.Root` cannot be dereferenced there, because the namespace object crosses the client boundary as an opaque reference whose properties are `undefined` — a runtime error the type checker does not catch. A table of rows fetched on the server is exactly the case, and `Card` ships the same pair of spellings for the same reason.
-</Callout>
-
 ## Examples
 
 ### Variants
