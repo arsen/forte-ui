@@ -82,18 +82,17 @@ export const PROSE_H2 = `${HEADING} mt-8 mb-3 text-6 tracking-tight`;
  * mode. Nothing visible reads it directly, but it IS the anchor's
  * `currentColor`, which is what any descendant's color or border falls
  * back to the moment its own value fails to resolve — and that is exactly
- * what a palette switch showed: a lavender border on the cards for the
- * length of the cross-fade.
+ * what a palette switch showed while it was still a seed transition: a
+ * lavender border on the cards for the length of the fade.
  *
  * The card deliberately carries no transition. It used to say so out loud,
  * with `transition-none`, because the palette cross-fade was a blanket
  * `transition` on `.themeTransition *` and the card's border would otherwise
  * restart a 400ms one every frame of the fade — chasing a target that had
  * moved again before it arrived, so the edge lagged everything it sits
- * against. The palette change is a view transition now (globals.css says
- * why at length): the seed moves once, in one style recalc, and the fade is
- * between two snapshots — so `Card` declares no transition of its own, and
- * the border simply follows the seed.
+ * against. The palette change is a cut now (`hero-themer.tsx` says why):
+ * the seed moves once, in one style recalc — so `Card` declares no
+ * transition of its own, and the border simply follows the seed.
  *
  * No geometry on hover either — motion rule 7 in AGENTS.md: hover is a color
  * cue, lift is opt-in.

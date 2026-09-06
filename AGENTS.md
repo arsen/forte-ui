@@ -47,7 +47,6 @@ apps/docs               the docs site — Next.js 16, MDX, Shiki, Tailwind v4
   app/globals.css                  the CSS that could not be a utility — read it
   app/tailwind.css                 the forte-ui token bridge — read before styling anything
   components/styles.ts             class strings two components have to agree on
-  components/page-transition.tsx   the cross-fade between pages — the site's one view transition, and what must stay outside it
   components/site-header.tsx       the app bar — the shell's top row, on the library's AppBar
   components/analytics.tsx         Firebase page views — inert without NEXT_PUBLIC_FIREBASE_* in .env.local
   components/nav.tsx               the page list itself — rail and drawer share it
@@ -489,11 +488,11 @@ Test RTL — the demo frame has a toggle for it.
 ## Styling the docs site — Tailwind
 
 The docs site is styled with Tailwind v4 and nothing else: there are no CSS
-modules left in `apps/docs`, and `globals.css` is 159 lines of things a utility
-class provably cannot express. Demos are still the reason it is set up this
-way — a demo is documentation, so the class list a reader copies out of one is
-the example they paste into their own app — but the chrome now uses the same
-vocabulary, which is what stops the two drifting.
+modules left in `apps/docs`, and `globals.css` is under two hundred lines of
+things a utility class provably cannot express. Demos are still the reason it
+is set up this way — a demo is documentation, so the class list a reader
+copies out of one is the example they paste into their own app — but the
+chrome now uses the same vocabulary, which is what stops the two drifting.
 
 Reach for utilities instead of a `style={{ ... }}` object for anything that is
 layout or typography.
@@ -623,7 +622,7 @@ not error, it just stops overriding its own family.
 
 ### What is still CSS, and why
 
-[`globals.css`](apps/docs/app/globals.css) holds three blocks, each of which
+[`globals.css`](apps/docs/app/globals.css) holds two blocks, each of which
 targets something no class can reach:
 
 - **A Preflight substitute** — `box-sizing` on every element, the `a` color and
@@ -633,54 +632,6 @@ targets something no class can reach:
 - **Shiki's output** — `pre.shiki`, `.shiki span`, `.line.highlighted`. It
   arrives as an HTML string from the highlighter or the rehype plugin; there is
   no element to hang a class on.
-- **The view transitions** — every `::view-transition-*` rule: the page
-  cross-fade's clock, the live root, and the palette wash's slower one. A
-  pseudo-element has no element to carry a class. See *View transitions*
-  below.
-
-### View transitions
-
-Every client-side navigation cross-fades — sidebar, prose link, card,
-wordmark — and that is the whole of it: no slides, no shared elements,
-nothing decided per link. (The browser's Back and Forward cut instead: React
-commits an update started in a `popstate` event synchronously so scroll
-restoration works, and no view transition is possible there.) One boundary
-does it,
-[`page-transition.tsx`](apps/docs/components/page-transition.tsx), in the
-root layout around `{children}`: React updates it on every route change,
-the browser snapshots what it wraps before and after, and the two cross-fade
-on `--forte-duration-normal`. The app bar and footer sit outside it and the
-root is left LIVE for a navigation, so the chrome simply is the next page's
-from the first frame — the frosted bar has no two snapshots to blend. The
-palette swatches on the home page are the other transition, a
-`document.startViewTransition` of their own typed `palette`, and the root is
-what fades there, on `--forte-duration-slow`; the type is how the last block
-of `globals.css` tells the two apart. No `prefers-reduced-motion` query
-anywhere: the duration tokens shorten under the OS preference and the
-studio's `data-forte-motion` alike, and the pseudo-elements inherit them
-from `<html>`.
-
-Two things keep it clean, and both are easy to undo by accident. A React
-transition anywhere inside the boundary is an update of it — `DemoFrame`
-wraps every demo in an inert `<ViewTransition default="none">` so the async
-Combobox demos' `startTransition` resolves to that innermost boundary and
-never fades the page; a site component that starts using `startTransition`,
-`useDeferredValue` or Suspense needs the same. And `<html
-data-scroll-behavior="smooth">` is what lets Next scroll a new route to the
-top instantly, so the new snapshot is taken at the top rather than mid-glide.
-
-That scroll is also why the boundary has an `onUpdate`. The page is a
-document-scrolled element, so when the link was clicked mid-read its two
-snapshots sit in different places — the old one a scroll's worth above the
-viewport, the new one under the bar — and the browser's default for a named
-element that moved is to slide the group from one box to the other for the
-length of the fade. Everything painted inside the snapshot slides with it,
-the sticky sidebar and section rail included: sticky pins them to the
-viewport in the page, not in a picture of the page. `holdStill` in
-`page-transition.tsx` cancels that slide before the first frame and offsets
-the old image by the delta it reads from the browser's own keyframes, so
-both views fade where they were seen. Moving the two columns out of the
-boundary would not fix it — the page column would still lurch.
 
 Prose typography is NOT in there. It lives in
 [`mdx-components.tsx`](apps/docs/mdx-components.tsx), one class list per
@@ -919,24 +870,25 @@ drafts a section in exactly this shape.
   while a longhand `border-color: var(--…)` on the same token held. It does
   not reproduce on a forced style read mid-fade, nor in headless Chrome 152;
   only a screen recording of a live fade shows it. It was also a full-page
-  style recalc per frame, ~100ms each. The palette cross-fade is a view
-  transition now (`hero-themer.tsx`): one recalc, then a compositor fade
-  between two snapshots — typed `palette`, because navigations are view
-  transitions too and `globals.css` tells the two apart by type.
-- The page cross-fade is an UPDATE of one boundary, not an enter/exit, and
-  that is what makes it cheap to keep: a boundary in a layout never mounts or
-  unmounts, so per-page wrappers, link types and named elements are all
-  unnecessary — and a boundary that fires on every React transition inside
-  it is also why every demo sits in an inert one (see *View transitions*).
-  The one thing an update costs is geometry: the boundary's element scrolls
-  with the document, and the browser animates the group between the old
-  box and the new, so a navigation from a scrolled page slid the whole
-  snapshot — sidebar included — until `page-transition.tsx` started holding
-  the group still and putting the old image back by hand.
-  The site tried the full set first — directional slides typed on the links,
+  style recalc per frame, ~100ms each. The palette change is a plain cut now
+  (`hero-themer.tsx`): one recalc, and the page is the new palette from the
+  next frame — the same as a preset picked in the theme drawer.
+- The docs site has NO view transitions, and that is a decision, not an
+  omission. It tried the full set — directional slides typed on the links,
   the catalog card's title flying up into the page's `<h1>`, pinned chrome —
-  and a plain cross-fade was preferred. Do not bring them back without
-  asking.
+  then a plain cross-fade through one `<ViewTransition>` boundary in the
+  root layout, with a `document.startViewTransition` wash for the home
+  page's palette swatches, and in September 2026 removed all of it: the
+  boundary, the `::view-transition-*` rules in `globals.css`, the inert
+  boundary every demo frame carried so an async demo's `startTransition`
+  would not fade the page, and the `vercel-react-view-transitions` skill.
+  Do not bring any of it back without asking. That includes
+  `data-scroll-behavior="smooth"` on `<html>`, which the cross-fade added
+  so a new route would jump to the top before its snapshot was taken: the
+  attribute is Next 16's opt-in to force `scroll-behavior: auto` around
+  that scroll, and without it the page's `scroll-smooth` glides the new
+  route to the top, which is the behavior the site wants. Next warns once
+  per dev session that the attribute is missing — expected, not a to-do.
 - A generated `opengraph-image.tsx` emits a file with **no extension** —
   `out/opengraph-image`, and `out/components/opengraph-image-1pqg0z` for a
   nested one, where the suffix changes with the content. Firebase Hosting
