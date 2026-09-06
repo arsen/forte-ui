@@ -117,6 +117,17 @@ import { ICON } from "./styles";
  * server, so those surfaces appear a frame after hydration, entering on
  * their own transition; the trigger beside them is in the HTML.
  *
+ * And a list with a SELECTED item must not open until its card is on screen.
+ * Base UI's list navigation calls `scrollIntoView({ block: "nearest" })` on
+ * the selected item when the popup opens, and `inert` stops focus, not
+ * scrolling: the call walks every scroll container up to the document, so
+ * a Select mounted open below the fold scrolled the whole page down to its
+ * own card on every load — smoothly, because the site scrolls smoothly, so
+ * it read as the page drifting to the middle on its own. `useInView` holds
+ * `open` until the stage is fully visible, when "nearest" is where the item
+ * already is. The Combobox needs no such guard only because nothing in it
+ * is selected; give it a value and it will.
+ *
  * ---------------------------------------------------------------------------
  * The map is exhaustive, and typecheck says so
  * ---------------------------------------------------------------------------
@@ -185,6 +196,35 @@ function Peek({ children, className }: { children: React.ReactNode; className?: 
   );
 }
 
+/**
+ * True once `el` has been fully inside the viewport, and from then on.
+ *
+ * For a popup whose opening scrolls its selected item into view — see the
+ * header. Nearly all of it rather than any intersection: at the edge of the
+ * viewport "nearest" still means a nudge, and a page that nudges itself
+ * while the reader scrolls is the same bug at a smaller size. Not exactly
+ * 1, though: a card at a fractional pixel offset reports a ratio of 0.998
+ * when it is entirely on screen, and a threshold of 1 then never fires. At
+ * 0.95 the most that can be cut off is nine pixels of a stage whose items
+ * start fifty pixels down, so the item is still in view when the list
+ * opens and the document has nothing to do.
+ */
+function useInView(el: Element | null) {
+  const [inView, setInView] = React.useState(false);
+  React.useEffect(() => {
+    if (!el || inView) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) setInView(true);
+      },
+      { threshold: 0.95 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [el, inView]);
+  return inView;
+}
+
 /* A fixed day, so the server and the browser render the same month and no
  * cell is "today" — that attribute is set from the clock on each side, and
  * a mismatch fails hydration. Built from parts rather than an ISO string so
@@ -206,6 +246,37 @@ function RaisedToast() {
     return () => handle.close();
   }, [success]);
   return null;
+}
+
+/**
+ * The Select, opened only once its card is in view — the header says why.
+ * A component of its own because the guard is a hook, and the map's entries
+ * are components already: this is the one that needs state.
+ */
+function SelectScene({ portal }: { portal: HTMLDivElement | null }) {
+  const open = useInView(portal);
+  return (
+    // `modal={false}` is not optional: Base UI's Select, like its Menu, is
+    // modal by default, and one open on mount locked the page's scroll and
+    // marked everything outside itself `aria-hidden` — the whole index, for
+    // a screen reader, was one listbox. `alignItemWithTrigger={false}` for
+    // the same reason one level down: that mode holds its own scroll lock.
+    <Select.Root items={ZONES} defaultValue="gmt" open={open} modal={false}>
+      <Select.Trigger aria-label="Time zone" size="sm" className="self-start">
+        <Select.Value />
+        <Select.Icon />
+      </Select.Trigger>
+      {portal && (
+        <Select.Popup container={portal} alignItemWithTrigger={false}>
+          {Object.entries(ZONES).map(([value, label]) => (
+            <Select.Item key={value} value={value}>
+              {label}
+            </Select.Item>
+          ))}
+        </Select.Popup>
+      )}
+    </Select.Root>
+  );
 }
 
 function Pane({ title }: { title: string }) {
@@ -466,31 +537,7 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
     </RadioGroup>
   ),
 
-  Select: () => (
-    <Scene>
-      {(portal) => (
-        // `modal={false}` is not optional: Base UI's Select, like its Menu, is
-        // modal by default, and one open on mount locked the page's scroll
-        // and marked everything outside itself `aria-hidden` — the whole
-        // index, for a screen reader, was one listbox.
-        <Select.Root items={ZONES} defaultValue="gmt" open modal={false}>
-          <Select.Trigger aria-label="Time zone" size="sm" className="self-start">
-            <Select.Value />
-            <Select.Icon />
-          </Select.Trigger>
-          {portal && (
-            <Select.Popup container={portal} alignItemWithTrigger={false}>
-              {Object.entries(ZONES).map(([value, label]) => (
-                <Select.Item key={value} value={value}>
-                  {label}
-                </Select.Item>
-              ))}
-            </Select.Popup>
-          )}
-        </Select.Root>
-      )}
-    </Scene>
-  ),
+  Select: () => <Scene>{(portal) => <SelectScene portal={portal} />}</Scene>,
 
   Slider: () => (
     <Slider.Root defaultValue={40} className="w-44">
