@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { Card } from "@forte-ui/react";
 import { CATALOG, CATEGORIES } from "./component-catalog";
-import { LINK_CARD, LINK_CARD_SURFACE, PROSE_H2 } from "./styles";
+import { ComponentPreview } from "./component-previews";
+import { PROSE_H2 } from "./styles";
 import { categorySlug } from "@/lib/category-slug.mjs";
 
 /**
@@ -31,7 +32,45 @@ import { categorySlug } from "@/lib/category-slug.mjs";
  * this page too; before it, the rail and the phone's drawer button were
  * assembled from the DOM on mount and appeared a frame after everything
  * else. `Toc` still reconciles against the DOM, as on every page.
+ *
+ * ---------------------------------------------------------------------------
+ * The card is not the link
+ * ---------------------------------------------------------------------------
+ * The home page's entry cards wrap the whole card in the anchor. These cannot:
+ * the top of each one is a live rendering of the component
+ * (`component-previews.tsx`), and Breadcrumb, Pagination, NavList and the
+ * rest render anchors of their own — an `<a>` inside an `<a>` is closed early
+ * by the HTML parser, so the server HTML and the client tree disagree and
+ * hydration fails. The preview is `inert`, which takes it out of focus, hit
+ * testing and the accessibility tree, but not out of the parser.
+ *
+ * So the link is the title, stretched: an `::after` pinned to the card's
+ * edges makes the whole surface the target, the card is `relative` to give
+ * that box its bounds, and the card — not the anchor — carries the hover
+ * border and the focus ring. `forte-focus-ring-within` is the library's own
+ * class for exactly this: the ring draws on the card when a descendant is
+ * `:focus-visible`, and the anchor's own outline is suppressed so there is
+ * one ring, not two. The link's accessible name is now just the component's
+ * name, which is the right one for a list of sixty; `aria-describedby`
+ * hands a screen reader the summary on request.
+ *
+ * `has-[a:hover]` rather than `group-hover`: hover has to originate on the
+ * anchor (its `::after` is what the pointer is over) and land on the card,
+ * which is the anchor's ancestor — the direction `group` does not run. The
+ * preview's own anchors cannot match it; inert elements are never hovered.
  */
+
+/** The card. `h-full` so a row of cards stays one height, whatever their
+ *  summaries wrap to. No transition, for the reason `LINK_CARD` gives. */
+const PREVIEW_CARD = "relative h-full forte-focus-ring-within has-[a:hover]:border-primary-border";
+
+/** The stage's seam with the card body. The preview draws on the page color
+ *  inside a panel-colored card, the way every demo frame does, and the rule
+ *  is what stops a light preview reading as a floating slab. */
+const PREVIEW_MEDIA = "border-b border-border-muted";
+
+/** The title link, stretched over the card — see the header. */
+const STRETCHED_LINK = "after:absolute after:inset-0";
 
 export function ComponentIndex() {
   return (
@@ -49,43 +88,54 @@ export function ComponentIndex() {
           <ul className="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] gap-4 p-0">
             {CATALOG.filter((entry) => entry.category === category).map((entry) => (
               <li key={entry.name}>
-                <Link href={entry.href} className={LINK_CARD}>
-                  <Card.Root className={LINK_CARD_SURFACE}>
-                    <Card.Header>
-                      <Card.Title>
-                        {/* The exported name, not the prose title: this is what
-                          * you type to use it, and the name someone scanning
-                          * for `ScrollArea` is scanning for. The sidebar spaces
-                          * the same names out, because a rail of fifty-six runs
-                          * of camel case is harder to read down. */}
-                        <h3>{entry.name}</h3>
-                      </Card.Title>
-                      <Card.Description className="text-pretty">{entry.summary}</Card.Description>
-                      {/* The four entries that head no page of their own. The
-                        * card still exists — someone looking for AlertDialog
-                        * should find it here — and this line is what stops two
-                        * cards arriving at one page reading as a duplicate.
-                        *
-                        * `col-start-1` is load-bearing, and its absence is not
-                        * visible until you look at one of these four cards.
-                        * `Card.Header` is a two-column grid, message beside
-                        * action, and only the title and the description claim
-                        * column 1 — so a third child auto-places into the first
-                        * free cell, which is the ACTION corner. The note stood
-                        * as a second column and squeezed the summary beside it
-                        * to a hundred pixels.
-                        *
-                        * No margin: the header's own `row-gap` already spaces
-                        * the title from the description, and this line is one
-                        * more row of the same list. */}
-                      {entry.partOf && (
-                        <p className="col-start-1 m-0 text-1 text-foreground-subtle">
-                          Documented with {entry.partOf}
-                        </p>
-                      )}
-                    </Card.Header>
-                  </Card.Root>
-                </Link>
+                <Card.Root className={PREVIEW_CARD}>
+                  <Card.Media className={PREVIEW_MEDIA}>
+                    <ComponentPreview name={entry.name} />
+                  </Card.Media>
+                  <Card.Header>
+                    <Card.Title>
+                      {/* The exported name, not the prose title: this is what
+                        * you type to use it, and the name someone scanning
+                        * for `ScrollArea` is scanning for. The sidebar spaces
+                        * the same names out, because a rail of fifty-six runs
+                        * of camel case is harder to read down. */}
+                      <h3>
+                        <Link
+                          href={entry.href}
+                          className={STRETCHED_LINK}
+                          aria-describedby={`${entry.name}-summary`}
+                        >
+                          {entry.name}
+                        </Link>
+                      </h3>
+                    </Card.Title>
+                    <Card.Description id={`${entry.name}-summary`} className="text-pretty">
+                      {entry.summary}
+                    </Card.Description>
+                    {/* The four entries that head no page of their own. The
+                      * card still exists — someone looking for AlertDialog
+                      * should find it here — and this line is what stops two
+                      * cards arriving at one page reading as a duplicate.
+                      *
+                      * `col-start-1` is load-bearing, and its absence is not
+                      * visible until you look at one of these four cards.
+                      * `Card.Header` is a two-column grid, message beside
+                      * action, and only the title and the description claim
+                      * column 1 — so a third child auto-places into the first
+                      * free cell, which is the ACTION corner. The note stood
+                      * as a second column and squeezed the summary beside it
+                      * to a hundred pixels.
+                      *
+                      * No margin: the header's own `row-gap` already spaces
+                      * the title from the description, and this line is one
+                      * more row of the same list. */}
+                    {entry.partOf && (
+                      <p className="col-start-1 m-0 text-1 text-foreground-subtle">
+                        Documented with {entry.partOf}
+                      </p>
+                    )}
+                  </Card.Header>
+                </Card.Root>
               </li>
             ))}
           </ul>
