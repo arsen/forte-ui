@@ -80,7 +80,7 @@ Status hues are fixed rather than seed-derived — a brand color must not be abl
 
 ### Focus ring
 
-The ring is two tones that contrast with *each other*, so one boundary always clears 3:1 against whatever sits behind the control (WCAG SC 1.4.11) — a single accent-colored ring cannot promise that.
+The ring is brand-colored and still measured: the outline is `--forte-color-primary-text`, the ramp step the contrast harness holds to 4.5:1 for every seed, and it sits on a gap filled with the near-page `-outer` tone rather than on the control itself — so a solid primary button and a ghost one ring against the same known background (WCAG SC 1.4.11). The seed itself cannot promise that, which is why it is the caret and not the ring. It grows out of the control's edge while fading in, and shrinks back while fading out, on `--forte-focus-ring-duration`; the distance is `--forte-focus-ring-travel`, a travel token, so reduced motion keeps the fade and drops the movement.
 
 <TokenTable
   prefixes={["--forte-focus-ring", "--forte-color-focus-ring"]}

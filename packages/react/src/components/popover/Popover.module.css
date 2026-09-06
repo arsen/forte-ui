@@ -73,7 +73,10 @@
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {
@@ -302,7 +305,10 @@
      * instead of the popup spending the whole entrance half-transparent. */
     transition:
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
-      transform var(--forte-popover-enter-duration) var(--forte-popover-enter-ease);
+      transform var(--forte-popover-enter-duration) var(--forte-popover-enter-ease),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Directional rise: the popup starts a few pixels nearer the trigger and
@@ -507,7 +513,10 @@
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
       transform var(--forte-popover-enter-duration) var(--forte-popover-enter-ease),
       width var(--forte-popover-resize-duration) var(--forte-ease-emphasized),
-      height var(--forte-popover-resize-duration) var(--forte-ease-emphasized);
+      height var(--forte-popover-resize-duration) var(--forte-ease-emphasized),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
 
     /* The viewport has taken over the column for its own two children, and
      * the popup's gap would add a phantom row beside its single child. */

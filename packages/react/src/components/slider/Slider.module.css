@@ -361,7 +361,10 @@
      * Only color is transitioned here, and the halo on ::before. */
     transition:
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      background-color var(--forte-duration-fast) var(--forte-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Elevation and halo, kept off the thumb itself for the reason above.

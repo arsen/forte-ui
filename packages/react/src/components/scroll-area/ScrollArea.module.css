@@ -240,8 +240,17 @@
    * forced-colors counterpart is mirrored too, in the a11y layer at the foot
    * of this file — a ring that only exists here would be the one that
    * disappears in high contrast. */
+  .root {
+    outline: var(--forte-focus-ring-width) solid transparent;
+    outline-offset: calc(var(--forte-focus-ring-offset) - var(--forte-focus-ring-travel));
+    transition:
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
+  }
+
   .root:has(> .viewport:focus-visible) {
-    outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
+    outline-color: var(--forte-focus-ring-inner);
     outline-offset: var(--forte-focus-ring-offset);
     box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
   }
@@ -432,6 +441,12 @@
      * element that takes focus is not the element that can paint it. Keeping
      * the two in step is the price of that; the alternative is a scroll region
      * with no visible focus in the one mode that most needs it. */
+    /* The resting outline above is `transparent`, which forced-colors swaps
+     * for a system color — off at rest, back on focus, as in patterns.css. */
+    .root {
+      outline-style: none;
+    }
+
     .root:has(> .viewport:focus-visible) {
       outline: 3px solid Highlight;
       outline-offset: 2px;

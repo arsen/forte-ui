@@ -262,7 +262,10 @@
     pointer-events: none;
     transition:
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      scale var(--forte-duration-fast) var(--forte-ease-standard);
+      scale var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* The hairline that keeps the handle legible where its ring matches what is
@@ -406,7 +409,11 @@
     cursor: pointer;
     /* Position is written inline by Base UI on every pointermove and is
      * deliberately absent from this transition — see the file header. */
-    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Same argument as the canvas handle's ::before: the outer hairline cannot
@@ -496,7 +503,10 @@
      * palette starts with. */
     color: var(--forte-color-picker-swatch-on, #ffffff);
     cursor: pointer;
-    transition: box-shadow var(--forte-duration-fast) var(--forte-ease-standard);
+    transition:
+      box-shadow var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .swatch:disabled {
@@ -593,7 +603,10 @@
      * table in CLAUDE.md. */
     transition:
       border-color var(--forte-duration-fast) var(--forte-ease-standard),
-      background-color var(--forte-duration-fast) var(--forte-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .input[data-invalid] {
@@ -624,7 +637,10 @@
     cursor: pointer;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      color var(--forte-duration-fast) var(--forte-ease-standard);
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {
@@ -693,7 +709,10 @@
     cursor: pointer;
     transition:
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
-      border-color var(--forte-duration-fast) var(--forte-ease-standard);
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   @media (hover: hover) {

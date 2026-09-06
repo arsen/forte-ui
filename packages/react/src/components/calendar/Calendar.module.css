@@ -347,7 +347,10 @@
     cursor: pointer;
     transition:
       background-color var(--forte-calendar-duration) var(--forte-calendar-ease),
-      color var(--forte-calendar-duration) var(--forte-calendar-ease);
+      color var(--forte-calendar-duration) var(--forte-calendar-ease),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .day[data-outside] {

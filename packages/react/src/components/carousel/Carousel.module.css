@@ -265,7 +265,10 @@
       background-color var(--forte-duration-fast) var(--forte-ease-standard),
       color var(--forte-duration-fast) var(--forte-ease-standard),
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
-      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy);
+      scale var(--forte-duration-spring-snappy) var(--forte-ease-spring-snappy),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .control:hover {
@@ -386,7 +389,10 @@
     transition:
       inline-size var(--forte-duration-move) var(--forte-ease-spring-snappy),
       block-size var(--forte-duration-move) var(--forte-ease-spring-snappy),
-      background-color var(--forte-duration-fast) var(--forte-ease-standard);
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .dot:hover {
@@ -441,7 +447,10 @@
     cursor: pointer;
     transition:
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
-      border-color var(--forte-duration-fast) var(--forte-ease-standard);
+      border-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   .thumb:hover {

@@ -457,7 +457,11 @@
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
-    transition: background-color var(--forte-duration-fast) var(--forte-ease-standard);
+    transition:
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
   /* Inside the button the face is not chrome; the pointer is the button's. */
