@@ -12,10 +12,8 @@ import { cn } from "@/lib/cn";
  *
  * The logo is the point. Its gradients read the live `--forte-accent-9` /
  * `--forte-secondary-9` tokens, so the swatches under it re-theme the mark
- * on the spot — and the change is a cross-fade rather than a cut, a view
- * transition `hero-themer.tsx` starts around the write. That is the
- * library's whole pitch in one interaction, which is why the palette row
- * sits in the hero and not further down the page.
+ * on the spot. That is the library's whole pitch in one interaction, which
+ * is why the palette row sits in the hero and not further down the page.
  *
  * The glow behind the mark is a radial gradient of the accent at low
  * opacity, mixed with `color-mix()` so it follows the seed too. It is a

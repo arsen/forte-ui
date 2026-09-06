@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { flushSync } from "react-dom";
 import { PRESETS, useThemeConfig } from "@/components/theme-studio/theme-config";
 
 /* The five the hero offers, resolved from the studio's own list rather than
@@ -37,44 +36,19 @@ const SWATCH = [
   "forte-focus-ring",
 ].join(" ");
 
-/** Whether a full-page cross-fade is welcome right now, read off the
- *  library's own motion token rather than a media query of this file's own.
- *
- *  `--forte-motion-ok` is `1` normally and `0` under BOTH the OS preference
- *  and a `data-forte-motion="reduce"` set in the studio, so asking it is the
- *  only way the fade below stays in step with a reader who asked for less
- *  motion either way — and a whole-page color wash is exactly the kind of
- *  large-area change that guidance asks us to drop, so under `0` the palette
- *  simply snaps. */
-function motionOk(root: HTMLElement) {
-  return getComputedStyle(root).getPropertyValue("--forte-motion-ok").trim() !== "0";
-}
-
 /**
  * Re-themes the entire page from a row of swatches.
  *
- * The cross-fade is a view transition: the browser snapshots the page, the
- * seeds change in ONE style recalc, and the old and new snapshots fade on the
- * compositor for `--forte-duration-slow` (the pseudo-element rule in
- * `globals.css` puts it on the library's clock). Nothing in the DOM is in an
- * intermediate state at any point of the fade, and nothing is transitioned.
- *
- * It used to be a `transition` on the two registered seeds instead — one
- * animatable property, re-deriving every ramp step per frame, no JavaScript
- * in the animation path — and it was the better story right up until a
- * screen recording showed what the frames in between actually held. In the
- * desktop app's Chromium (148) every `border: 1px solid var(--…)` shorthand
- * on the page painted its edge in `currentColor` for the length of the fade:
- * near-white on every entry card, the label color on the outline Button.
- * Longhand `border-color: var(--…)` declarations feeding on the SAME token —
- * the swatches here, the divider under the hero — held, so the ramp was
- * fine and the shorthand's color was what dropped. It does not reproduce
- * on a forced style read mid-fade, nor in headless Chrome 152, which is why
- * it survived for as long as it did. The per-frame cost was the other half:
- * every element re-resolves every token on every frame, which measured at
- * ~100ms of style recalc each, so the 400ms "fade" was three or four
- * frames. The snapshot fade has neither problem — the DOM never holds a
- * mid-fade value, and the fade is two textures.
+ * The change is a cut: the seeds move in one style recalc and the page is the
+ * new palette from the next frame, the same as a preset picked in the theme
+ * drawer on any other page. It has been two other things, and neither is
+ * coming back. A `transition` on the two registered seeds — one animatable
+ * property, re-deriving every ramp step per frame — painted every
+ * `border: 1px solid var(--…)` shorthand on the page in `currentColor` for
+ * the length of the fade in the desktop app's Chromium (148), and cost
+ * ~100ms of full-page style recalc per frame; AGENTS.md keeps the record. A
+ * view transition around the write had neither problem, and went out with
+ * the rest of the site's view transitions.
  *
  * The write goes through `setThemeConfig` — the studio's one write path —
  * rather than straight onto `<html>`, which is what it used to do. Three
@@ -98,53 +72,7 @@ export function HeroThemer() {
   );
 
   function apply(preset: (typeof HERO_PRESETS)[number]) {
-    const next = { ...cfg, seed: preset.seed, secondary: preset.secondary };
-    const root = document.documentElement;
-    /* Feature-detected, not assumed: a browser without view transitions
-     * gets the same palette as a cut, which is what the theme drawer does
-     * on every page anyway. */
-    if (typeof document.startViewTransition !== "function" || !motionOk(root)) {
-      setThemeConfig(next);
-      return;
-    }
-    /* `flushSync`, so the re-render the store change queues — the ring
-     * moving to the pressed swatch — is committed inside the callback, where
-     * the "new" snapshot is taken. Left to React's own scheduling it lands a
-     * frame later, after that snapshot, and the ring pops in once the fade
-     * has finished instead of fading in with the palette.
-     *
-     * Typed `palette`, because this is no longer the only view transition
-     * on the site: every client-side navigation is one too, and the two
-     * want opposite things from the ROOT snapshot. A navigation cross-fades
-     * the page region through its own boundary and leaves the root live,
-     * so the app bar simply is the next page's; this wash has no boundary
-     * of its own and the root is the thing that fades, on
-     * `--forte-duration-slow`, bar included. The type is what lets
-     * `globals.css` tell them apart — `:active-view-transition-type(palette)`
-     * — and it is the same mechanism React uses for its own transition
-     * types, so the two never collide.
-     *
-     * The object form of the API is the one that carries a type. A browser
-     * with only the older callback form (Chromium 111–124) refuses the
-     * object before the update runs, so the catch applies the palette
-     * plainly — a cut, which is what the theme drawer does everywhere. */
-    let transition: ViewTransition;
-    try {
-      transition = document.startViewTransition({
-        update: () => flushSync(() => setThemeConfig(next)),
-        types: ["palette"],
-      });
-    } catch {
-      setThemeConfig(next);
-      return;
-    }
-    /* A transition the browser skips — the tab is hidden, or a second click
-     * lands mid-fade and supersedes the first — rejects `ready`, and nothing
-     * here waits on it. Chromium 148 reports that rejection as an uncaught
-     * error in the console; the palette has still been applied, because the
-     * update callback runs either way, so the only thing to do is to say so
-     * to the promise. */
-    transition.ready.catch(() => {});
+    setThemeConfig({ ...cfg, seed: preset.seed, secondary: preset.secondary });
   }
 
   return (
