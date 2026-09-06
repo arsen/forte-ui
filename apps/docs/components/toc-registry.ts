@@ -12,6 +12,8 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v141", text: "v1.4.1", depth: 2 },
+    { id: "resizable", text: "Resizable", depth: 3 },
     { id: "v140", text: "v1.4.0", depth: 2 },
     { id: "appbar", text: "AppBar", depth: 3 },
     { id: "button", text: "Button", depth: 3 },
@@ -23,14 +25,14 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "inputgroup", text: "InputGroup", depth: 3 },
     { id: "numberfield", text: "NumberField", depth: 3 },
     { id: "otpfield", text: "OTPField", depth: 3 },
-    { id: "resizable", text: "Resizable", depth: 3 },
+    { id: "resizable-1", text: "Resizable", depth: 3 },
     { id: "select", text: "Select", depth: 3 },
     { id: "table", text: "Table", depth: 3 },
     { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
     { id: "v130", text: "v1.3.0", depth: 2 },
-    { id: "resizable-1", text: "Resizable", depth: 3 },
-    { id: "v120", text: "v1.2.0", depth: 2 },
     { id: "resizable-2", text: "Resizable", depth: 3 },
+    { id: "v120", text: "v1.2.0", depth: 2 },
+    { id: "resizable-3", text: "Resizable", depth: 3 },
     { id: "design-tokens--motion-1", text: "Design tokens & motion", depth: 3 },
     { id: "pagination", text: "Pagination", depth: 3 },
     { id: "v111", text: "v1.1.1", depth: 2 },
@@ -52,11 +54,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "design-tokens--motion-3", text: "Design tokens & motion", depth: 3 },
     { id: "create-forte-ui-1", text: "create-forte-ui", depth: 3 },
     { id: "general-2", text: "General", depth: 3 },
-    { id: "v100-alpha9", text: "v1.0.0-alpha.9", depth: 2 },
-    { id: "numberfield-1", text: "NumberField", depth: 3 },
-    { id: "pagination-1", text: "Pagination", depth: 3 },
-    { id: "steps", text: "Steps", depth: 3 },
-    { id: "table-1", text: "Table", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [

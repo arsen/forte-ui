@@ -19,6 +19,15 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.4.1
+
+<ReleaseMeta date="2026-09-06" href="https://github.com/arsen/forte-ui/compare/v1.4.0...v1.4.1" kind="compare" />
+
+### Resizable
+
+- A saved layout under `autoSaveId` is now drawn from the group's first client render instead of applied a render later, so content that measures its panel in a mount effect (a canvas fitting its pages, for example) measures the restored split rather than the default one.
+- Added an `onReady` callback, fired once when the layout first settles — restored under `autoSaveId` or resolved from `defaultSize`s — for content that mounts hidden or whose panels aren't direct `Resizable.Panel` children and so can't measure at mount.
+
 ## v1.4.0
 
 <ReleaseMeta date="2026-09-05" href="https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0" kind="compare" />
@@ -193,27 +202,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - `@forte-ui/react/docs-data/components.json` — the generated component catalogue as data — is now an exported subpath.
 
-## v1.0.0-alpha.9
-
-<ReleaseMeta date="2026-09-01" href="https://github.com/arsen/forte-ui/compare/v1.0.0-alpha.8...v1.0.0-alpha.9" kind="compare" />
-
-### NumberField
-
-- Added an `orientation` prop (`"vertical"` default, `"horizontal"`) to `NumberField.Root`, laying the `ScrubArea` label and the `Group` out on one row instead of stacked — the shape of an inspector panel, where a stacked label would double the height of every row. Only the layout changes; the scrub gesture's own `direction` is independent.
-
-### Pagination
-
-- New component: page controls for a long set — `Root`, `List`, `Item`, `Link`, `Previous`, `Next`, `First`, `Last` and `Ellipsis` — with `size`, `variant` (`ghost` / `outline` / `joined`) and `tone` axes. A slot renders an `<a>` when it has an `href` or `render` and a `<button>` otherwise, so URL-driven and state-driven strips share one API.
-- New `usePaginationRange` hook turns `page`, `count`, `siblings` and `boundaries` into a constant-length slot list, so `Next` never moves under the pointer. The window shift animates by key — fill lands on the pressed page, the strip holds, then the numbers slide one cell while the departing page fades out and the arriving one fades in — with an instant swap under reduced motion.
-
-### Steps
-
-- New component: a numbered sequence of steps and the user's position in it, with six parts (`Root`, `Item`, `Trigger`, `Indicator`, `Title`, `Description`). `current` on the root derives every step's status; `status` on an `Item` overrides it; wrapping the parts in a `Trigger` makes a step a real button. Horizontal (title inline or below the circle) and vertical layouts, three variants (`solid`, `outline`, `dot`), four tones, three sizes. The connector belongs to the step before it and fills when that step completes; the check draws on via `stroke-dashoffset` so it survives reduced motion.
-
-### Table
-
-- New component: rows and columns on the real `<table>` element, with `Container`, `Root`, `Caption`, `Header`, `Body`, `Footer`, `Row`, `Head` and `Cell` parts. Three variants (`line`, `outline`, `grid`), sizes that follow the density preset at `md`, striped/hoverable/selected tints scoped to the body, numeric columns with tabular figures, a sortable header with a real `<button>` and `aria-sort`, and a sticky header pinned to an optional `Table.Container` scroll box. The table holds no state — sorting, selection and pagination stay with the consumer.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 5 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 6 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

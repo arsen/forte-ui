@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-09-06
+
+### Resizable
+
+- A saved layout under `autoSaveId` is now drawn from the group's first client render instead of applied a render later, so content that measures its panel in a mount effect (a canvas fitting its pages, for example) measures the restored split rather than the default one.
+- Added an `onReady` callback, fired once when the layout first settles — restored under `autoSaveId` or resolved from `defaultSize`s — for content that mounts hidden or whose panels aren't direct `Resizable.Panel` children and so can't measure at mount.
+
 ## [1.4.0] - 2026-09-05
 
 ### AppBar
@@ -427,7 +434,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/arsen/forte-ui/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/arsen/forte-ui/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/arsen/forte-ui/compare/v1.1.1...v1.2.0
