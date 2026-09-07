@@ -8,5 +8,6 @@ export type {
   ToolbarButtonProps,
   ToolbarLinkProps,
   ToolbarInputProps,
+  ToolbarTextProps,
   ToolbarSeparatorProps,
 } from "./Toolbar";

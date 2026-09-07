@@ -738,11 +738,18 @@
     border-color: var(--forte-color-border-strong);
   }
 
+  /* Every knob the swatch reads carries a fallback, restating the `.trigger`
+   * defaults above. A trigger given `render` drops `.trigger` — and with it
+   * the only declarations of these — while the swatch inside it stays. Without
+   * the fallbacks an unset `inline-size: var(--…)` is invalid at computed-value
+   * time and the swatch collapses to nothing, which is exactly the case
+   * `render` exists for: a swatch inside a toolbar button. Set the knobs on
+   * the rendered element and the swatch still inherits them. */
   .triggerSwatch {
     box-sizing: border-box;
     flex: none;
-    inline-size: var(--forte-color-picker-trigger-swatch-size);
-    block-size: var(--forte-color-picker-trigger-swatch-size);
+    inline-size: var(--forte-color-picker-trigger-swatch-size, 1rem);
+    block-size: var(--forte-color-picker-trigger-swatch-size, 1rem);
     border: 1px solid var(--forte-color-border);
     border-radius: var(--forte-radius-1);
     background-image:
@@ -751,12 +758,12 @@
         var(--forte-color-picker-color, transparent)
       ),
       repeating-conic-gradient(
-        var(--forte-color-picker-checker-light) 0% 25%,
-        var(--forte-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light, var(--forte-color-background)) 0% 25%,
+        var(--forte-color-picker-checker-dark, var(--forte-color-border)) 0% 50%
       );
     background-size:
       auto,
-      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
+      var(--forte-color-picker-checker-size, 6px) var(--forte-color-picker-checker-size, 6px);
   }
 }
 

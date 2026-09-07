@@ -3,8 +3,8 @@
  *
  * A row (or column) of controls that is ONE tab stop, with the arrow keys
  * moving between the items. Base UI owns all of that; this file only decides
- * what the bar and its two owned parts — the group and the separator — look
- * like.
+ * what the bar and its owned parts — the group, the separator, the link and
+ * the text — look like.
  *
  * Two axes, as everywhere else in the library:
  *   data-variant  how much chrome the BAR carries (plain / panel / outline)
@@ -328,6 +328,60 @@
   .link[data-size="lg"] {
     --forte-toolbar-link-height: var(--forte-control-h-lg);
     --forte-toolbar-link-font-size: var(--forte-font-size-3);
+  }
+
+  /* Text -------------------------------------------------------------------
+   * Static text in the bar. The height and the type scale are the link's, so
+   * a readout sits on the same baseline as the buttons either side of it and
+   * grows with the bar's `size`; the color is muted so it reads as
+   * information rather than as an action that has lost its border.
+   *
+   * There is no hover fill, no radius and no transition: nothing here changes
+   * state. Chrome, so `default` and unselectable per the cursor table in
+   * AGENTS.md — a page count is not something the user drags across. */
+  .text {
+    /** Height. `size` re-points it. */
+    --forte-toolbar-text-height: var(--forte-control-h-md);
+    /** Inline padding. */
+    --forte-toolbar-text-padding-x: var(--forte-space-2);
+    /** Font size. `size` re-points it. */
+    --forte-toolbar-text-font-size: var(--forte-font-size-2);
+    /** Color. Muted, so a readout does not compete with the actions around
+     * it. */
+    --forte-toolbar-text-color: var(--forte-color-foreground-muted);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--forte-control-gap);
+    block-size: var(--forte-toolbar-text-height);
+    padding-inline: var(--forte-toolbar-text-padding-x);
+
+    color: var(--forte-toolbar-text-color);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-toolbar-text-font-size);
+    font-weight: var(--forte-font-weight-normal);
+    line-height: var(--forte-line-height-tight);
+    white-space: nowrap;
+
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .text[data-size="sm"] {
+    --forte-toolbar-text-height: var(--forte-control-h-sm);
+    --forte-toolbar-text-font-size: var(--forte-font-size-1);
+  }
+
+  .text[data-size="md"] {
+    --forte-toolbar-text-height: var(--forte-control-h-md);
+    --forte-toolbar-text-font-size: var(--forte-font-size-2);
+  }
+
+  .text[data-size="lg"] {
+    --forte-toolbar-text-height: var(--forte-control-h-lg);
+    --forte-toolbar-text-font-size: var(--forte-font-size-3);
   }
 }
 

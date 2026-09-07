@@ -247,6 +247,8 @@ import d_color_picker_swatches from "./color-picker/swatches";
 import d_color_picker_swatches_src from "./color-picker/swatches?raw";
 import d_color_picker_theming from "./color-picker/theming";
 import d_color_picker_theming_src from "./color-picker/theming?raw";
+import d_color_picker_toolbar from "./color-picker/toolbar";
+import d_color_picker_toolbar_src from "./color-picker/toolbar?raw";
 import d_color_picker_trigger from "./color-picker/trigger";
 import d_color_picker_trigger_src from "./color-picker/trigger?raw";
 import d_combobox_async_multiple from "./combobox/async-multiple";
@@ -885,6 +887,8 @@ import d_toolbar_orientation from "./toolbar/orientation";
 import d_toolbar_orientation_src from "./toolbar/orientation?raw";
 import d_toolbar_sizes from "./toolbar/sizes";
 import d_toolbar_sizes_src from "./toolbar/sizes?raw";
+import d_toolbar_text from "./toolbar/text";
+import d_toolbar_text_src from "./toolbar/text?raw";
 import d_toolbar_variants from "./toolbar/variants";
 import d_toolbar_variants_src from "./toolbar/variants?raw";
 import d_tooltip_basic from "./tooltip/basic";
@@ -1018,6 +1022,7 @@ export type DemoId =
   | "color-picker/inline"
   | "color-picker/swatches"
   | "color-picker/theming"
+  | "color-picker/toolbar"
   | "color-picker/trigger"
   | "combobox/async-multiple"
   | "combobox/async-search"
@@ -1337,6 +1342,7 @@ export type DemoId =
   | "toolbar/link"
   | "toolbar/orientation"
   | "toolbar/sizes"
+  | "toolbar/text"
   | "toolbar/variants"
   | "tooltip/basic"
   | "tooltip/delay"
@@ -1466,6 +1472,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "color-picker/inline": { Component: d_color_picker_inline, source: d_color_picker_inline_src, file: "color-picker/inline.tsx" },
   "color-picker/swatches": { Component: d_color_picker_swatches, source: d_color_picker_swatches_src, file: "color-picker/swatches.tsx" },
   "color-picker/theming": { Component: d_color_picker_theming, source: d_color_picker_theming_src, file: "color-picker/theming.tsx" },
+  "color-picker/toolbar": { Component: d_color_picker_toolbar, source: d_color_picker_toolbar_src, file: "color-picker/toolbar.tsx" },
   "color-picker/trigger": { Component: d_color_picker_trigger, source: d_color_picker_trigger_src, file: "color-picker/trigger.tsx" },
   "combobox/async-multiple": { Component: d_combobox_async_multiple, source: d_combobox_async_multiple_src, file: "combobox/async-multiple.tsx" },
   "combobox/async-search": { Component: d_combobox_async_search, source: d_combobox_async_search_src, file: "combobox/async-search.tsx" },
@@ -1785,6 +1792,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "toolbar/link": { Component: d_toolbar_link, source: d_toolbar_link_src, file: "toolbar/link.tsx" },
   "toolbar/orientation": { Component: d_toolbar_orientation, source: d_toolbar_orientation_src, file: "toolbar/orientation.tsx" },
   "toolbar/sizes": { Component: d_toolbar_sizes, source: d_toolbar_sizes_src, file: "toolbar/sizes.tsx" },
+  "toolbar/text": { Component: d_toolbar_text, source: d_toolbar_text_src, file: "toolbar/text.tsx" },
   "toolbar/variants": { Component: d_toolbar_variants, source: d_toolbar_variants_src, file: "toolbar/variants.tsx" },
   "tooltip/basic": { Component: d_tooltip_basic, source: d_tooltip_basic_src, file: "tooltip/basic.tsx" },
   "tooltip/delay": { Component: d_tooltip_delay, source: d_tooltip_delay_src, file: "tooltip/delay.tsx" },

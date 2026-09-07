@@ -1845,6 +1845,20 @@
         "required": false,
         "defaultValue": "false",
         "description": "Hide the built-in swatch, for a trigger that shows the color some other\nway — a filled button, an icon that inherits it."
+      },
+      {
+        "name": "nativeButton",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Whether the rendered element is a real `<button>`. Set it to `false` when\n`render` replaces the button with something else (a `<div>`, a table\ncell), so Base UI supplies the keyboard and role behavior the element\ndoes not have natively."
+      },
+      {
+        "name": "render",
+        "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, PopoverTriggerState>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component. This\nis how the trigger takes on a look that is not its own —\n`render={<Button variant=\"outline\" iconOnly />}`, or\n`render={<Toolbar.Button iconOnly />}` for a swatch in a toolbar, which\nalso puts it in the bar's arrow-key order.\n\nThe built-in trigger styling steps aside when this is present, so the two\nnever fight over the cascade. The swatch, the hidden color announcement\nand the live color variables stay: they are what makes it a color\ntrigger, whatever it is drawn as."
       }
     ]
   },
@@ -8896,7 +8910,7 @@
         "type": "ToolbarSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the bar, and the default size of every `Toolbar.Button`,\n`Toolbar.Input` and `Toolbar.Link` inside it. An item's own `size` still\nwins."
+        "description": "Size of the bar, and the default size of every `Toolbar.Button`,\n`Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it. An item's\nown `size` still wins."
       },
       {
         "name": "variant",
@@ -9061,6 +9075,26 @@
         "required": false,
         "defaultValue": "outline",
         "description": "How much visual weight the control carries.\n\nIgnored when `render` is set."
+      }
+    ]
+  },
+  "ToolbarText": {
+    "name": "ToolbarText",
+    "description": "Static text in the toolbar — a page count, a zoom readout, the word before\na control. Renders a `<span>`.\n\nIt is not an item: it takes no focus and the arrow keys pass over it, the\nway they pass over a separator. What it adds over a bare `<span>` is the\nbar's own measure — the text is as tall as the controls beside it and sized\nwith them, which is what keeps one baseline across the bar — and a muted\ncolor, so a readout does not compete with the actions around it.\n\nThis is a plain element rather than a Base UI part, the way\n`Popover.Footer` is; Base UI's toolbar has no text part.\n\nBecause it is skipped while arrowing, text that *names* the control after\nit is not announced on the way to that control. Give it an `id` and point\nthe control's `aria-labelledby` at it.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "size",
+        "type": "ToolbarSize",
+        "required": false,
+        "defaultValue": "the root's `size`",
+        "description": "Size of the text, matching the controls beside it. Inherited from\n`Toolbar.Root` when left unset."
       }
     ]
   },

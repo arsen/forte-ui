@@ -83,6 +83,7 @@
       "ToolbarButton",
       "ToolbarLink",
       "ToolbarInput",
+      "ToolbarText",
       "ToolbarSeparator"
     ],
     "hooks": []

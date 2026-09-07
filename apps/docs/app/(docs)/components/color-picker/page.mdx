@@ -166,6 +166,15 @@ value itself.
 
 <DemoBlock id="color-picker/trigger" />
 
+Give it `render` to draw it as something else. The built-in trigger styling
+steps aside, so the rendered component keeps its own look; the swatch, the
+hidden color announcement and the live color variables stay, which is what
+still makes it a color trigger. Inside a [toolbar](/components/toolbar/) that
+something is a `Toolbar.Button`, which brings the bar's quiet styling, its
+size, and a place in its arrow-key order.
+
+<DemoBlock id="color-picker/toolbar" />
+
 ### In a form
 
 `ColorPicker.HiddenInput` submits the color under a `name`.
@@ -311,6 +320,9 @@ hue underneath them.
 ### ColorPicker.Trigger
 
 <PropTable component="ColorPickerTrigger" />
+
+Every other `<button>` prop passes through unchanged, as do `Popover.Trigger`'s
+`render` and `nativeButton`.
 
 ### ColorPicker.Popup
 
