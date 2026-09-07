@@ -11124,6 +11124,60 @@
         "description": "Color transitions between states.",
         "part": "link",
         "overrides": []
+      },
+      {
+        "name": "--forte-toolbar-text-height",
+        "value": "var(--forte-control-h-md)",
+        "description": "Height. `size` re-points it.",
+        "part": "text",
+        "overrides": [
+          {
+            "selector": ".text[data-size=\"sm\"]",
+            "value": "var(--forte-control-h-sm)"
+          },
+          {
+            "selector": ".text[data-size=\"md\"]",
+            "value": "var(--forte-control-h-md)"
+          },
+          {
+            "selector": ".text[data-size=\"lg\"]",
+            "value": "var(--forte-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-toolbar-text-padding-x",
+        "value": "var(--forte-space-2)",
+        "description": "Inline padding.",
+        "part": "text",
+        "overrides": []
+      },
+      {
+        "name": "--forte-toolbar-text-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Font size. `size` re-points it.",
+        "part": "text",
+        "overrides": [
+          {
+            "selector": ".text[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".text[data-size=\"md\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".text[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-toolbar-text-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Color. Muted, so a readout does not compete with the actions around it.",
+        "part": "text",
+        "overrides": []
       }
     ]
   },

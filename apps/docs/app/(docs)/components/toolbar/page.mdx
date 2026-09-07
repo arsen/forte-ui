@@ -81,8 +81,8 @@ mistake.
 ### Sizes
 
 `size` on the root is the default size of every `Toolbar.Button`,
-`Toolbar.Input` and `Toolbar.Link` inside it, so a bar stays one height without
-repeating the prop per control. An item's own `size` still wins.
+`Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it, so a bar stays one
+height without repeating the prop per control. An item's own `size` still wins.
 
 <DemoBlock id="toolbar/sizes" />
 
@@ -167,6 +167,26 @@ text color.
 <DemoBlock id="toolbar/link" />
 
 Use `render` for a router link — `render={<Link href="/docs" />}`.
+
+### Static text
+
+`Toolbar.Text` is text that sits in the bar without joining it — a page count,
+a zoom readout, the word before a control. It is not an item: it takes no
+focus, and the arrow keys pass over it the way they pass over a separator.
+What it adds over a bare `<span>` is the bar's own measure. The text is as tall
+as the controls beside it and sized with them, which keeps one baseline across
+the bar, and it is muted, so a readout does not compete with the actions around
+it.
+
+<DemoBlock id="toolbar/text" />
+
+<Callout kind="a11y">
+  Because it is skipped while arrowing, text that *names* the control after it
+  is never announced on the way to that control. Give it an `id` and point the
+  control's `aria-labelledby` at it, as the zoom select above does — the visible
+  word then is the control's name, rather than a caption the screen reader only
+  finds in browse mode.
+</Callout>
 
 ### Disabled
 
@@ -274,6 +294,10 @@ colors are forced to `CanvasText` instead.
 
 <ThemingTable component="Toolbar" part="link" />
 
+### Text
+
+<ThemingTable component="Toolbar" part="text" />
+
 The controls inside the bar are themed through their own properties —
 `--forte-button-*` on [`Button`](/components/button/), `--forte-input-*` on
 [`Input`](/components/input/), `--forte-toggle-*` on [`Toggle`](/components/toggle/).
@@ -302,6 +326,10 @@ Every other [`Button`](/components/button/) prop passes through unchanged, as do
 ### Toolbar.Input
 
 <PropTable component="ToolbarInput" />
+
+### Toolbar.Text
+
+<PropTable component="ToolbarText" />
 
 ### Toolbar.Separator
 

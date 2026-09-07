@@ -28,7 +28,7 @@ Components.
 - **ToggleGroup** — A set of Toggles sharing one value, single or multiple choice — the view-switcher pattern; for form data use RadioGroup or CheckboxGroup.
   props.json: ToggleGroup
 - **Toolbar** — A strip of related controls that behaves as one tab stop, arrow keys moving between them — the row above an editor or table.
-  compound · parts (props.json): ToolbarRoot, ToolbarGroup, ToolbarButton, ToolbarLink, ToolbarInput, ToolbarSeparator · knobs: theming.json → Toolbar
+  compound · parts (props.json): ToolbarRoot, ToolbarGroup, ToolbarButton, ToolbarLink, ToolbarInput, ToolbarText, ToolbarSeparator · knobs: theming.json → Toolbar
 
 ## Forms
 

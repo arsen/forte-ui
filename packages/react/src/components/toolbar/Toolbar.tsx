@@ -16,7 +16,7 @@ export type ToolbarSize = "sm" | "md" | "lg";
  *
  * A bar whose controls are three different heights does not read as a bar, so
  * `size` set on the root becomes the default for every `Toolbar.Button`,
- * `Toolbar.Input` and `Toolbar.Link` inside it.
+ * `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it.
  *
  * React context and not CSS inheritance, for the same reason `ToggleGroup`
  * uses context: the size knobs are declared on each control's OWN root rule —
@@ -48,8 +48,8 @@ export interface ToolbarRootProps extends Omit<BaseToolbar.Root.Props, "classNam
   variant?: ToolbarVariant;
   /**
    * Size of the bar, and the default size of every `Toolbar.Button`,
-   * `Toolbar.Input` and `Toolbar.Link` inside it. An item's own `size` still
-   * wins.
+   * `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it. An item's
+   * own `size` still wins.
    * @default "md"
    */
   size?: ToolbarSize;
@@ -445,6 +445,58 @@ export const ToolbarInput = React.forwardRef<HTMLInputElement, ToolbarInputProps
 );
 
 /* -------------------------------------------------------------------------
+ * Text
+ * ---------------------------------------------------------------------- */
+
+export interface ToolbarTextProps
+  extends Omit<React.ComponentPropsWithoutRef<"span">, "className"> {
+  /**
+   * Size of the text, matching the controls beside it. Inherited from
+   * `Toolbar.Root` when left unset.
+   * @default the root's `size`
+   */
+  size?: ToolbarSize;
+  /**
+   * Additional class name(s). Applied after the internal styles so consumer
+   * utilities (e.g. Tailwind) win without needing `!important`.
+   */
+  className?: string;
+}
+
+/**
+ * Static text in the toolbar — a page count, a zoom readout, the word before
+ * a control. Renders a `<span>`.
+ *
+ * It is not an item: it takes no focus and the arrow keys pass over it, the
+ * way they pass over a separator. What it adds over a bare `<span>` is the
+ * bar's own measure — the text is as tall as the controls beside it and sized
+ * with them, which is what keeps one baseline across the bar — and a muted
+ * color, so a readout does not compete with the actions around it.
+ *
+ * This is a plain element rather than a Base UI part, the way
+ * `Popover.Footer` is; Base UI's toolbar has no text part.
+ *
+ * Because it is skipped while arrowing, text that *names* the control after
+ * it is not announced on the way to that control. Give it an `id` and point
+ * the control's `aria-labelledby` at it.
+ */
+export const ToolbarText = React.forwardRef<HTMLSpanElement, ToolbarTextProps>(
+  function ToolbarText({ size, className, ...props }, ref) {
+    const toolbarSize = React.useContext(ToolbarSizeContext);
+
+    return (
+      <span
+        ref={ref}
+        className={clsx(styles.text, className)}
+        data-forte="toolbar-text"
+        data-size={size ?? toolbarSize ?? "md"}
+        {...props}
+      />
+    );
+  },
+);
+
+/* -------------------------------------------------------------------------
  * Separator
  * ---------------------------------------------------------------------- */
 
@@ -521,5 +573,6 @@ export const Toolbar = {
   Button: ToolbarButton,
   Link: ToolbarLink,
   Input: ToolbarInput,
+  Text: ToolbarText,
   Separator: ToolbarSeparator,
 };

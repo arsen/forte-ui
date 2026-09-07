@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Slider as BaseSlider } from "@base-ui/react/slider";
 import { clsx } from "clsx";
-import { Popover, type PopoverPopupProps } from "../popover";
+import { Popover, type PopoverPopupProps, type PopoverTriggerProps } from "../popover";
 import { Select } from "../select";
 import styles from "./ColorPicker.module.css";
 import {
@@ -422,6 +422,27 @@ export interface ColorPickerTriggerProps
    */
   children?: React.ReactNode;
   /**
+   * Replaces the rendered `<button>` with another element or component. This
+   * is how the trigger takes on a look that is not its own —
+   * `render={<Button variant="outline" iconOnly />}`, or
+   * `render={<Toolbar.Button iconOnly />}` for a swatch in a toolbar, which
+   * also puts it in the bar's arrow-key order.
+   *
+   * The built-in trigger styling steps aside when this is present, so the two
+   * never fight over the cascade. The swatch, the hidden color announcement
+   * and the live color variables stay: they are what makes it a color
+   * trigger, whatever it is drawn as.
+   */
+  render?: PopoverTriggerProps["render"];
+  /**
+   * Whether the rendered element is a real `<button>`. Set it to `false` when
+   * `render` replaces the button with something else (a `<div>`, a table
+   * cell), so Base UI supplies the keyboard and role behavior the element
+   * does not have natively.
+   * @default true
+   */
+  nativeButton?: PopoverTriggerProps["nativeButton"];
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -440,7 +461,7 @@ export const ColorPickerTrigger = React.forwardRef<
   HTMLButtonElement,
   ColorPickerTriggerProps
 >(function ColorPickerTrigger(
-  { hideSwatch = false, disabled, className, style, children, ...props },
+  { hideSwatch = false, disabled, className, style, render, children, ...props },
   ref,
 ) {
   const context = useColorPicker("Trigger");
@@ -449,11 +470,13 @@ export const ColorPickerTrigger = React.forwardRef<
   return (
     <Popover.Trigger
       ref={ref}
-      /* `render` rather than the default element, so Popover's own neutral
-       * trigger styling steps aside instead of resolving against this one by
-       * source order. */
-      render={<button type="button" />}
-      className={clsx(styles.trigger, className)}
+      /* Always a `render`, even with none from the caller, so Popover's own
+       * neutral trigger styling steps aside instead of resolving against this
+       * one by source order. A caller's `render` then drops THIS styling too,
+       * for the same reason one level up: the rendered component brings its
+       * own look, and `.trigger` is a full button rule. */
+      render={render ?? <button type="button" />}
+      className={clsx(render === undefined && styles.trigger, className)}
       disabled={context.disabled || disabled}
       /* The picker's live color merged UNDER any style the caller passed, so
        * a consumer setting `style` on a part does not silently blank the
