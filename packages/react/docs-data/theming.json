@@ -3477,8 +3477,8 @@
       },
       {
         "name": "--forte-color-picker-area-radius",
-        "value": "var(--forte-radius-2)",
-        "description": "Corner radius of the canvas and the swatches",
+        "value": "min(var(--forte-radius-control), var(--forte-radius-5))",
+        "description": "Corner radius of the canvas",
         "part": "panel",
         "overrides": []
       },
