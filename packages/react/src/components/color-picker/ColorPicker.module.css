@@ -91,8 +91,13 @@
     --forte-color-picker-radius: var(--forte-radius-surface);
     /** Height of the saturation/brightness canvas */
     --forte-color-picker-area-height: 8.5rem;
-    /** Corner radius of the canvas and the swatches */
-    --forte-color-picker-area-radius: var(--forte-radius-2);
+    /* Follows the radius preset through `--forte-radius-control`, which is
+     * what a `data-forte-radius` scope rewrites; the fixed `--forte-radius-2`
+     * step it used to take moves under no preset but `none`. The `min()` is
+     * for `pill`, where the control radius is 9999px and a canvas several
+     * times wider than it is tall would round into a stadium. */
+    /** Corner radius of the canvas */
+    --forte-color-picker-area-radius: min(var(--forte-radius-control), var(--forte-radius-5));
     /** Diameter of the canvas handle */
     --forte-color-picker-thumb-size: 0.875rem;
     /** Thickness of the ring around both kinds of handle */
@@ -215,6 +220,13 @@
     border: 1px solid var(--forte-color-border);
     border-radius: var(--forte-color-picker-area-radius);
 
+    /* The hairline is translucent, and a background paints UNDER the border by
+     * default: sized to the padding box, then tiled outward into the border
+     * strip. The tiles that land there are the gradients' far ends — a white
+     * line down one side, the hue down the other — showing through the
+     * hairline as a second, wrong-colored edge. Stopping the paint at the
+     * padding box leaves the hairline over the panel alone. */
+    background-clip: padding-box;
     background-image:
       linear-gradient(to top, rgb(0 0 0) 0%, rgb(0 0 0 / 0) 100%),
       linear-gradient(
@@ -346,6 +358,9 @@
     block-size: var(--forte-color-picker-rail-thickness);
     border: 1px solid var(--forte-color-border);
     border-radius: var(--forte-color-picker-rail-radius);
+    /* Same reason as the canvas: the ramp would tile into the translucent
+     * hairline and put red at the end where the rail's far side is magenta. */
+    background-clip: padding-box;
   }
 
   /* Seven stops rather than `in hsl longer hue`, which says the same thing in
