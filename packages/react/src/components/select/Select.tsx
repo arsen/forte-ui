@@ -105,6 +105,32 @@ function CaretDownIcon(props: React.ComponentProps<"svg">) {
 }
 
 /* -------------------------------------------------------------------------
+ * Size context
+ *
+ * The popup is portalled, so it inherits nothing from the trigger — not the
+ * `data-size` attribute, not a custom property set on it. Without this the
+ * rows kept the `md` metrics whatever the trigger was, and a `sm` select
+ * opened onto a list visibly taller than the control it belongs to. The
+ * trigger publishes its `size` here and the popup reads it, so `size` stays
+ * where it always was — on the trigger — and the two halves agree.
+ *
+ * It flows through state rather than a plain prop on the root: the trigger
+ * and the popup are siblings, and the root cannot see either's props. The
+ * one-render lag is invisible, because the popup is closed on mount — and a
+ * popup rendered `open` (the component index does this) is covered by the
+ * trigger publishing from a layout effect, before the first paint.
+ * ---------------------------------------------------------------------- */
+
+interface SelectSizeContextValue {
+  size: SelectSize;
+  setSize: (size: SelectSize) => void;
+}
+
+const SelectSizeContext = React.createContext<SelectSizeContextValue | null>(
+  null,
+);
+
+/* -------------------------------------------------------------------------
  * Root
  * ---------------------------------------------------------------------- */
 
@@ -129,7 +155,16 @@ export type SelectRootProps<
 export function SelectRoot<Value, Multiple extends boolean | undefined = false>(
   props: SelectRootProps<Value, Multiple>,
 ): React.JSX.Element {
-  return <BaseSelect.Root {...props} />;
+  const [size, setSize] = React.useState<SelectSize>("md");
+  const context = React.useMemo<SelectSizeContextValue>(
+    () => ({ size, setSize }),
+    [size],
+  );
+  return (
+    <SelectSizeContext.Provider value={context}>
+      <BaseSelect.Root {...props} />
+    </SelectSizeContext.Provider>
+  );
 }
 
 /* -------------------------------------------------------------------------
@@ -182,8 +217,9 @@ export interface SelectTriggerProps extends Omit<BaseTriggerProps, "className"> 
    */
   variant?: SelectVariant;
   /**
-   * Size of the trigger. Actual dimensions also follow the ambient
-   * `data-forte-density` setting.
+   * Size of the trigger. The popup follows it: item height, padding and
+   * font size step with the trigger's, so a `sm` select opens a `sm` list.
+   * Actual dimensions also follow the ambient `data-forte-density` setting.
    * @default "md"
    */
   size?: SelectSize;
@@ -228,6 +264,17 @@ export const SelectTrigger = React.forwardRef<
     },
     [ref],
   );
+
+  const sizeContext = React.useContext(SelectSizeContext);
+  const setSize = sizeContext?.setSize;
+
+  // Layout effect, not a passive one: a popup mounted `open` paints in the
+  // same frame as the trigger, and a passive effect would let that first
+  // frame go out with `md` rows under a `sm` trigger. The root's state starts
+  // at "md", so the default size costs no re-render at all.
+  React.useLayoutEffect(() => {
+    setSize?.(size);
+  }, [setSize, size]);
 
   const warnedRef = React.useRef(false);
 
@@ -453,6 +500,14 @@ export interface SelectPopupProps extends Omit<BasePopupProps, "className"> {
    */
   finalFocus?: BasePopupProps["finalFocus"];
   /**
+   * Size of the rows. Defaults to the `size` of the `<Select.Trigger>` in the
+   * same root, so the list opens in the trigger's own scale; pass it to break
+   * that link — `size="md"` keeps the default rows under a `sm` or `lg`
+   * trigger.
+   * @default the trigger's `size`
+   */
+  size?: SelectSize;
+  /**
    * Additional class name(s) for the popup surface. Applied after the
    * internal styles so consumer utilities win without needing `!important`.
    */
@@ -488,12 +543,18 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
       container,
       backdrop = false,
       scrollArrows = true,
+      size: sizeProp,
       className,
       positionerClassName,
       ...props
     },
     ref,
   ) {
+    // The prop is the consumer's override of the link; the fallback "md"
+    // covers a popup outside a `Select.Root` of ours, or under a custom
+    // trigger that never publishes — the same default the trigger has.
+    const published = React.useContext(SelectSizeContext)?.size;
+    const size = sizeProp ?? published ?? "md";
     return (
       <BaseSelect.Portal container={container}>
         {backdrop ? (
@@ -520,6 +581,7 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
             ref={ref}
             className={clsx(styles.popup, "forte-hc-surface", className)}
             data-forte="select-popup"
+            data-size={size}
             {...props}
           >
             {scrollArrows ? (

@@ -38,7 +38,15 @@ import { Combobox } from "@forte-ui/react";
 
 `size` on `<Combobox.InputGroup>` sets the field's height floor, inline
 padding and font size, on the same `--forte-control-*` scale as `Input` and
-`Select.Trigger` — the three line up on one row. The popup is unaffected.
+`Select.Trigger` — the three line up on one row. The popup follows: each row
+is at least as tall as the field, in the same type size, with its padding
+stepped to match, and in the input-inside-popup pattern the search row takes
+the same height. The popup is portalled, so it cannot read the field's
+attribute — the group (or a standalone `<Combobox.Trigger>`) publishes its
+size through the root and the popup carries it as its own `data-size`.
+
+To keep the popup out of it, give `<Combobox.Popup>` a `size` of its own: it
+wins over the field's, so `size="md"` under a `sm` field is the old behavior.
 
 <DemoBlock id="combobox/sizes" />
 
@@ -178,13 +186,21 @@ forte.components`, whatever its specificity) or an inline `style`:
   standalone select-like shape only.
 - `Combobox.Chip` declares the `chip-*` properties.
 - `Combobox.Popup` declares the `popup-*` and motion properties plus
-  `--forte-combobox-item-px`, `--forte-combobox-item-gap` and
-  `--forte-combobox-item-indicator-size` — the layout knobs the list, the
-  items, the group labels and the status rows read but never redeclare.
+  `--forte-combobox-item-px`, `--forte-combobox-item-py`,
+  `--forte-combobox-item-height`, `--forte-combobox-item-font-size`,
+  `--forte-combobox-item-gap`, `--forte-combobox-item-indicator-size` and
+  `--forte-combobox-group-label-font-size` — the layout and type knobs the
+  list, the items, the search row, the group labels and the status rows read
+  but never redeclare. The ones marked "reset per `size`" are re-pointed by
+  the popup's `data-size`, so a value set on `Combobox.Popup` itself wins over
+  the size, and a value on a global token it resolves to (say
+  `--forte-control-h-sm`) moves the size instead.
 - `positionerClassName` reaches `--forte-combobox-z-index`, the only property
   declared on the positioner.
 - `Combobox.List` declares `--forte-combobox-list-padding-y`; `Combobox.Item`
-  declares the `item-*` color and font properties.
+  declares the `item-*` color properties, and `Combobox.GroupLabel` the other
+  `group-label-*` ones — their font sizes are popup knobs, above, because the
+  part's own declaration would beat the size.
 
 The global tokens these resolve to — `--forte-color-*`, `--forte-control-*`,
 `--forte-radius-*`, `--forte-space-*` — are the exception: the component only

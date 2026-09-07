@@ -96,6 +96,36 @@ export type ComboboxRootProps<
   Multiple extends boolean | undefined = false,
 > = BaseCombobox.Root.Props<Value, Multiple>;
 
+/* -------------------------------------------------------------------------
+ * Size context
+ *
+ * The popup is portalled, so it inherits nothing from the field — not the
+ * `data-size` attribute, not a custom property set on it. Without this the
+ * rows kept the `md` metrics whatever the field was, and a `sm` combobox
+ * opened onto a list visibly taller than the control it belongs to. The part
+ * that owns the size — `InputGroup`, or a standalone `Trigger` — publishes it
+ * here and the popup reads it, so `size` stays where it always was and the
+ * two halves agree. A trigger INSIDE a group stays silent: the group's size
+ * decides there, exactly as the trigger's own `size` prop documents.
+ *
+ * It flows through state rather than a prop on the root: the field and the
+ * popup are siblings, and the root cannot see either's props. The one-render
+ * lag is invisible, because the popup is closed on mount — and one rendered
+ * `open` is covered by publishing from a layout effect, before first paint.
+ * ---------------------------------------------------------------------- */
+
+interface ComboboxSizeContextValue {
+  size: ComboboxSize;
+  setSize: (size: ComboboxSize) => void;
+}
+
+const ComboboxSizeContext =
+  React.createContext<ComboboxSizeContextValue | null>(null);
+
+/* `true` inside an `<Combobox.InputGroup>`; the trigger reads it to know the
+ * group owns the size. */
+const ComboboxInGroupContext = React.createContext(false);
+
 /**
  * Groups every part of the combobox and owns its value, input value and open
  * state. Renders no DOM element of its own, so it accepts neither `className`
@@ -137,7 +167,17 @@ export function ComboboxRoot<
     [multiple, onOpenChange],
   );
 
-  return <BaseCombobox.Root {...props} onOpenChange={handleOpenChange} />;
+  const [size, setSize] = React.useState<ComboboxSize>("md");
+  const sizeContext = React.useMemo<ComboboxSizeContextValue>(
+    () => ({ size, setSize }),
+    [size],
+  );
+
+  return (
+    <ComboboxSizeContext.Provider value={sizeContext}>
+      <BaseCombobox.Root {...props} onOpenChange={handleOpenChange} />
+    </ComboboxSizeContext.Provider>
+  );
 }
 
 /* -------------------------------------------------------------------------
@@ -198,6 +238,8 @@ export interface ComboboxInputGroupProps
    * Size of the field. Height, inline padding and font size move together,
    * and the actual numbers follow the ambient `data-forte-density` setting.
    * Matches `Input` and `Select.Trigger`, so the three line up on one row.
+   * The popup follows it — row height, padding and font size step with the
+   * field's — unless `<Combobox.Popup>` is given a `size` of its own.
    * @default "md"
    */
   size?: ComboboxSize;
@@ -228,16 +270,28 @@ export const ComboboxInputGroup = React.forwardRef<
   { variant = "outline", size = "md", fullWidth = false, className, ...props },
   ref,
 ) {
+  const setSize = React.useContext(ComboboxSizeContext)?.setSize;
+
+  // Layout effect, not a passive one: a popup mounted `open` paints in the
+  // same frame as the field, and a passive effect would let that first frame
+  // go out with `md` rows under a `sm` field. The root's state starts at
+  // "md", so the default size costs no re-render at all.
+  React.useLayoutEffect(() => {
+    setSize?.(size);
+  }, [setSize, size]);
+
   return (
-    <BaseCombobox.InputGroup
-      ref={ref}
-      className={clsx(styles.inputGroup, "forte-focus-ring-within", className)}
-      data-forte="combobox-input-group"
-      data-variant={variant}
-      data-size={size}
-      data-full-width={fullWidth || undefined}
-      {...props}
-    />
+    <ComboboxInGroupContext.Provider value={true}>
+      <BaseCombobox.InputGroup
+        ref={ref}
+        className={clsx(styles.inputGroup, "forte-focus-ring-within", className)}
+        data-forte="combobox-input-group"
+        data-variant={variant}
+        data-size={size}
+        data-full-width={fullWidth || undefined}
+        {...props}
+      />
+    </ComboboxInGroupContext.Provider>
   );
 });
 
@@ -296,7 +350,9 @@ export interface ComboboxTriggerProps
   variant?: ComboboxVariant;
   /**
    * Size of the standalone trigger. Ignored inside an
-   * `<Combobox.InputGroup>`, where the group's `size` decides.
+   * `<Combobox.InputGroup>`, where the group's `size` decides. The popup
+   * follows whichever of the two is in charge, unless `<Combobox.Popup>` is
+   * given a `size` of its own.
    * @default "md"
    */
   size?: ComboboxSize;
@@ -341,6 +397,17 @@ export const ComboboxTrigger = React.forwardRef<
   },
   ref,
 ) {
+  const inGroup = React.useContext(ComboboxInGroupContext);
+  const setSize = React.useContext(ComboboxSizeContext)?.setSize;
+
+  // Standalone only — see the size context. Same layout-effect reasoning as
+  // the group's.
+  React.useLayoutEffect(() => {
+    if (!inGroup) {
+      setSize?.(size);
+    }
+  }, [inGroup, setSize, size]);
+
   return (
     <BaseCombobox.Trigger
       ref={ref}
@@ -624,6 +691,15 @@ export interface ComboboxPopupProps extends Omit<BasePopupProps, "className"> {
    */
   backdrop?: boolean;
   /**
+   * Size of the rows, and of the search row in the input-inside-popup
+   * pattern. Defaults to the `size` of the `<Combobox.InputGroup>` — or the
+   * standalone `<Combobox.Trigger>` — in the same root, so the list opens in
+   * the field's own scale; pass it to break that link — `size="md"` keeps
+   * the default rows under a `sm` or `lg` field.
+   * @default the field's `size`
+   */
+  size?: ComboboxSize;
+  /**
    * Additional class name(s) for the popup surface. Applied after the
    * internal styles so consumer utilities win without needing `!important`.
    */
@@ -656,12 +732,18 @@ export const ComboboxPopup = React.forwardRef<HTMLDivElement, ComboboxPopupProps
       collisionPadding,
       container,
       backdrop = false,
+      size: sizeProp,
       className,
       positionerClassName,
       ...props
     },
     ref,
   ) {
+    // The prop is the consumer's override of the link; the fallback "md"
+    // covers a popup outside a `Combobox.Root` of ours, or a field built from
+    // bare parts that never publishes — the same default the group has.
+    const published = React.useContext(ComboboxSizeContext)?.size;
+    const size = sizeProp ?? published ?? "md";
     return (
       <BaseCombobox.Portal container={container}>
         {backdrop ? (
@@ -687,6 +769,7 @@ export const ComboboxPopup = React.forwardRef<HTMLDivElement, ComboboxPopupProps
             ref={ref}
             className={clsx(styles.popup, "forte-hc-surface", className)}
             data-forte="combobox-popup"
+            data-size={size}
             {...props}
           >
             {children}
