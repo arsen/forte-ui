@@ -4113,7 +4113,20 @@
         "value": "var(--forte-space-3)",
         "description": "Inline padding shared by items, group labels and status rows",
         "part": "popup",
-        "overrides": []
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "var(--forte-space-2)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-space-3)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-space-4)"
+          }
+        ]
       },
       {
         "name": "--forte-combobox-item-gap",
@@ -4128,6 +4141,78 @@
         "description": "Width of the check-mark column",
         "part": "popup",
         "overrides": []
+      },
+      {
+        "name": "--forte-combobox-item-py",
+        "value": "var(--forte-list-item-py)",
+        "description": "Block padding of items, empty and status rows (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "calc(var(--forte-list-item-py) / 2)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-list-item-py)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-list-item-py)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-combobox-item-height",
+        "value": "var(--forte-control-h-md)",
+        "description": "Minimum row height, the field's own height; also the height of the search row in the input-inside-popup pattern (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "var(--forte-control-h-sm)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-control-h-md)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-combobox-item-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Font size of items, the search row, empty and status rows (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-combobox-group-label-font-size",
+        "value": "var(--forte-font-size-1)",
+        "description": "Group label text size (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-2)"
+          }
+        ]
       },
       {
         "name": "--forte-combobox-list-padding-y",
@@ -4165,23 +4250,9 @@
         "overrides": []
       },
       {
-        "name": "--forte-combobox-item-font-size",
-        "value": "var(--forte-font-size-2)",
-        "description": "Item font size",
-        "part": "item",
-        "overrides": []
-      },
-      {
         "name": "--forte-combobox-group-label-fg",
         "value": "var(--forte-color-foreground-muted)",
         "description": "Group label text color",
-        "part": "groupLabel",
-        "overrides": []
-      },
-      {
-        "name": "--forte-combobox-group-label-font-size",
-        "value": "var(--forte-font-size-1)",
-        "description": "Group label text size",
         "part": "groupLabel",
         "overrides": []
       },
@@ -8554,7 +8625,20 @@
         "value": "var(--forte-space-3)",
         "description": "Inline padding shared by items and group labels",
         "part": "popup",
-        "overrides": []
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "var(--forte-space-2)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-space-3)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-space-4)"
+          }
+        ]
       },
       {
         "name": "--forte-select-item-gap",
@@ -8569,6 +8653,78 @@
         "description": "Width of the check-mark column",
         "part": "popup",
         "overrides": []
+      },
+      {
+        "name": "--forte-select-item-py",
+        "value": "var(--forte-list-item-py)",
+        "description": "Block padding of items and group labels (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "calc(var(--forte-list-item-py) / 2)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-list-item-py)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-list-item-py)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-select-item-height",
+        "value": "var(--forte-control-h-md)",
+        "description": "Minimum row height, the trigger's own height (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "var(--forte-control-h-sm)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-control-h-md)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-control-h-lg)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-select-item-font-size",
+        "value": "var(--forte-font-size-2)",
+        "description": "Item font size (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-1)"
+          },
+          {
+            "selector": ".popup[data-size=\"md\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-3)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-select-group-label-font-size",
+        "value": "var(--forte-font-size-1)",
+        "description": "Group label font size (reset per `size`)",
+        "part": "popup",
+        "overrides": [
+          {
+            "selector": ".popup[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-2)"
+          }
+        ]
       },
       {
         "name": "--forte-select-list-padding-y",
@@ -8609,13 +8765,6 @@
         "name": "--forte-select-item-fg-selected",
         "value": "var(--forte-color-primary-text)",
         "description": "Text color of the selected item",
-        "part": "item",
-        "overrides": []
-      },
-      {
-        "name": "--forte-select-item-font-size",
-        "value": "var(--forte-font-size-2)",
-        "description": "Item font size",
         "part": "item",
         "overrides": []
       }

@@ -382,6 +382,20 @@
     --forte-select-item-gap: var(--forte-control-gap);
     /** Width of the check-mark column */
     --forte-select-item-indicator-size: var(--forte-space-4);
+    /* The row metrics live here too, and are reset per `size` below, because
+     * the popup is the element that carries `data-size` — the trigger's value,
+     * relayed through context, since a portalled popup inherits nothing from
+     * it. An Item cannot declare its own font size or padding as a default
+     * and still let this rule reset it: an element's own declaration beats
+     * anything inherited, so those knobs would pin every row to `md`. */
+    /** Block padding of items and group labels (reset per `size`) */
+    --forte-select-item-py: var(--forte-list-item-py);
+    /** Minimum row height, the trigger's own height (reset per `size`) */
+    --forte-select-item-height: var(--forte-control-h-md);
+    /** Item font size (reset per `size`) */
+    --forte-select-item-font-size: var(--forte-font-size-2);
+    /** Group label font size (reset per `size`) */
+    --forte-select-group-label-font-size: var(--forte-font-size-1);
 
     box-sizing: border-box;
     /* The scroll arrows are absolutely positioned by Base UI (an inline
@@ -424,6 +438,45 @@
     transition:
       opacity var(--forte-duration-fast) var(--forte-ease-standard),
       transform var(--forte-duration-normal) var(--forte-select-popup-ease);
+  }
+
+  /* Sizes. Each row is at least as tall as the trigger it opened from, in the
+   * same type size, so the list reads as the same control unfolded rather
+   * than a stock menu that happens to be attached. The heights are the
+   * `--forte-control-h-*` tokens, which is what keeps this true under every
+   * `data-forte-density` preset without restating anything here.
+   *
+   * Inline padding steps one `--forte-space-*` below the trigger's
+   * `--forte-control-px-*` at every size, the relation `md` already had. In
+   * `alignItemWithTrigger` mode Base UI shifts the popup so the item text sits
+   * on the trigger's value text; that shift is the difference between the two
+   * paddings plus the indicator column, and holding the difference constant
+   * keeps the popup's overhang the same width whatever the size.
+   *
+   * `sm` halves the block padding rather than dropping to a fixed step, so a
+   * density preset that shrinks `--forte-list-item-py` shrinks it too. The
+   * row is clamped by its min-height anyway; the padding only decides how
+   * close two rows' text can sit once the height floor is met. */
+  .popup[data-size="sm"] {
+    --forte-select-item-px: var(--forte-space-2);
+    --forte-select-item-py: calc(var(--forte-list-item-py) / 2);
+    --forte-select-item-height: var(--forte-control-h-sm);
+    --forte-select-item-font-size: var(--forte-font-size-1);
+  }
+
+  .popup[data-size="md"] {
+    --forte-select-item-px: var(--forte-space-3);
+    --forte-select-item-py: var(--forte-list-item-py);
+    --forte-select-item-height: var(--forte-control-h-md);
+    --forte-select-item-font-size: var(--forte-font-size-2);
+  }
+
+  .popup[data-size="lg"] {
+    --forte-select-item-px: var(--forte-space-4);
+    --forte-select-item-py: var(--forte-list-item-py);
+    --forte-select-item-height: var(--forte-control-h-lg);
+    --forte-select-item-font-size: var(--forte-font-size-3);
+    --forte-select-group-label-font-size: var(--forte-font-size-2);
   }
 
   /* A popup placed above or below the trigger needs no help from a slide:
@@ -684,8 +737,6 @@
     --forte-select-item-fg-highlighted: var(--forte-color-primary-text);
     /** Text color of the selected item */
     --forte-select-item-fg-selected: var(--forte-color-primary-text);
-    /** Item font size */
-    --forte-select-item-font-size: var(--forte-font-size-2);
 
     box-sizing: border-box;
     position: relative;
@@ -693,8 +744,12 @@
     grid-template-columns: var(--forte-select-item-indicator-size) 1fr;
     align-items: center;
     gap: var(--forte-select-item-gap);
-    min-height: var(--forte-target-min);
-    padding-block: var(--forte-list-item-py);
+    /* The size's row height, floored at the SC 2.5.8 target. Every
+     * `--forte-control-h-*` clears 24px today, including `sm` under the
+     * compact preset, which lands exactly on it — the `max()` is what keeps
+     * that a coincidence rather than a dependency. */
+    min-height: max(var(--forte-target-min), var(--forte-select-item-height));
+    padding-block: var(--forte-select-item-py);
     padding-inline: var(--forte-select-item-px);
     color: var(--forte-select-item-fg);
     font-family: var(--forte-font-sans);
@@ -764,18 +819,18 @@
 
   .groupLabel {
     box-sizing: border-box;
-    padding-block: var(--forte-list-item-py);
+    padding-block: var(--forte-select-item-py);
     padding-inline-start: calc(
       var(--forte-select-item-px) + var(--forte-select-item-indicator-size) +
         var(--forte-select-item-gap)
     );
     padding-inline-end: var(--forte-select-item-px);
     /* Permanently visible text, so SC 1.4.3 applies: `-subtle` is documented
-     * non-text only. The semibold weight and font-size-1 already carry the
-     * hierarchy, so nothing is lost by meeting contrast here. */
+     * non-text only. The semibold weight and the smaller size already carry
+     * the hierarchy, so nothing is lost by meeting contrast here. */
     color: var(--forte-color-foreground-muted);
     font-family: var(--forte-font-sans);
-    font-size: var(--forte-font-size-1);
+    font-size: var(--forte-select-group-label-font-size);
     font-weight: var(--forte-font-weight-semibold);
     line-height: var(--forte-line-height-tight);
     -webkit-user-select: none;

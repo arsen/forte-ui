@@ -78,9 +78,16 @@ four while the popup is aligned.
 
 ### Sizes
 
-`size` sets the trigger's height, inline padding and font size — nothing else.
-The popup is unaffected: items keep their own type scale and their
-`--forte-target-min` (24px) minimum row height whatever size the trigger is.
+`size` sets the trigger's height, inline padding and font size, and the popup
+follows: each row is at least as tall as the trigger, in the same type size,
+with its padding stepped to match. The popup is portalled, so it cannot read
+the trigger's attribute — the trigger publishes its size through the root and
+the popup carries it as its own `data-size`. Rows never drop below
+`--forte-target-min` (24px) whatever the size.
+
+To keep the popup out of it, give `<Select.Popup>` a `size` of its own: it
+wins over the trigger's, so `size="md"` under a `sm` trigger is the old
+behavior — a compact control opening the default list.
 
 <DemoBlock id="select/sizes" />
 
@@ -161,15 +168,22 @@ whatever its specificity) or an inline `style`:
 - `Select.Label` declares the four `label-*` properties.
 - `Select.Trigger` declares every `trigger-*` property.
 - `Select.Popup` declares the `popup-*` properties plus `--forte-select-item-px`,
-  `--forte-select-item-gap` and `--forte-select-item-indicator-size` — the layout
-  knobs the list, the items and the group labels read but never redeclare, so
-  the popup is the right place to set them.
+  `--forte-select-item-py`, `--forte-select-item-height`,
+  `--forte-select-item-font-size`, `--forte-select-item-gap`,
+  `--forte-select-item-indicator-size` and
+  `--forte-select-group-label-font-size` — the layout and type knobs the list,
+  the items and the group labels read but never redeclare, so the popup is the
+  right place to set them. The ones marked "reset per `size`" are re-pointed
+  by the popup's `data-size`, so a value set on `Select.Popup` itself wins
+  over the size, and a value on a global token it resolves to (say
+  `--forte-control-h-sm`) moves the size instead.
 - `positionerClassName` reaches `--forte-select-z-index` and
   `--forte-select-positioner-min-height`, and nothing else: those two are the only
   properties declared on the positioner.
 - `Select.Item` declares `--forte-select-item-fg`,
-  `--forte-select-item-bg-highlighted`, `--forte-select-item-fg-highlighted`,
-  `--forte-select-item-fg-selected` and `--forte-select-item-font-size`.
+  `--forte-select-item-bg-highlighted`, `--forte-select-item-fg-highlighted`
+  and `--forte-select-item-fg-selected` — the colors only. Its font size is a
+  popup knob, above, because the item's own declaration would beat the size.
 - `--forte-select-backdrop-z-index`, `--forte-select-list-padding-y` and
   `--forte-select-scroll-arrow-size` are declared on the backdrop, the list and
   the scroll arrows — elements `Select.Popup` renders internally and exposes no

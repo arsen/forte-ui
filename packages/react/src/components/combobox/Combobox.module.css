@@ -791,6 +791,22 @@
     --forte-combobox-item-gap: var(--forte-control-gap);
     /** Width of the check-mark column */
     --forte-combobox-item-indicator-size: var(--forte-space-4);
+    /* The row metrics live here too, and are reset per `size` below, because
+     * the popup is the element that carries `data-size` — the field's value,
+     * relayed through context, since a portalled popup inherits nothing from
+     * it. An Item cannot declare its own font size or padding as a default
+     * and still let this rule reset it: an element's own declaration beats
+     * anything inherited, so those knobs would pin every row to `md`. */
+    /** Block padding of items, empty and status rows (reset per `size`) */
+    --forte-combobox-item-py: var(--forte-list-item-py);
+    /** Minimum row height, the field's own height; also the height of the
+     * search row in the input-inside-popup pattern (reset per `size`) */
+    --forte-combobox-item-height: var(--forte-control-h-md);
+    /** Font size of items, the search row, empty and status rows (reset per
+     * `size`) */
+    --forte-combobox-item-font-size: var(--forte-font-size-2);
+    /** Group label text size (reset per `size`) */
+    --forte-combobox-group-label-font-size: var(--forte-font-size-1);
 
     /* Enter/exit displacement, resolved per side below. Defaults to the
      * `side="bottom"` case, which is this component's default side. */
@@ -892,6 +908,40 @@
     transition: none;
   }
 
+  /* Sizes. Each row is at least as tall as the field it opened from, in the
+   * same type size, so the list reads as the same control unfolded rather
+   * than a stock menu that happens to be attached. The heights are the
+   * `--forte-control-h-*` tokens, which is what keeps this true under every
+   * `data-forte-density` preset without restating anything here. Inline
+   * padding steps one `--forte-space-*` below the field's `--forte-control-px-*`
+   * at every size, the relation `md` already had.
+   *
+   * `sm` halves the block padding rather than dropping to a fixed step, so a
+   * density preset that shrinks `--forte-list-item-py` shrinks it too. The
+   * row is clamped by its min-height anyway; the padding only decides how
+   * close two rows' text can sit once the height floor is met. */
+  .popup[data-size="sm"] {
+    --forte-combobox-item-px: var(--forte-space-2);
+    --forte-combobox-item-py: calc(var(--forte-list-item-py) / 2);
+    --forte-combobox-item-height: var(--forte-control-h-sm);
+    --forte-combobox-item-font-size: var(--forte-font-size-1);
+  }
+
+  .popup[data-size="md"] {
+    --forte-combobox-item-px: var(--forte-space-3);
+    --forte-combobox-item-py: var(--forte-list-item-py);
+    --forte-combobox-item-height: var(--forte-control-h-md);
+    --forte-combobox-item-font-size: var(--forte-font-size-2);
+  }
+
+  .popup[data-size="lg"] {
+    --forte-combobox-item-px: var(--forte-space-4);
+    --forte-combobox-item-py: var(--forte-list-item-py);
+    --forte-combobox-item-height: var(--forte-control-h-lg);
+    --forte-combobox-item-font-size: var(--forte-font-size-3);
+    --forte-combobox-group-label-font-size: var(--forte-font-size-2);
+  }
+
   /* Input inside the popup -------------------------------------------------
    * The search-row restyle of `.input` for the input-inside-popup pattern:
    * fixed height, full width, and a hairline separating it from the list. */
@@ -899,11 +949,11 @@
     flex: 0 0 auto;
     inline-size: 100%;
     min-inline-size: 0;
-    block-size: var(--forte-control-h-md);
+    block-size: var(--forte-combobox-item-height);
     padding-inline: var(--forte-combobox-item-px);
     border-block-end: 1px solid var(--forte-color-border-muted);
     border-radius: 0;
-    font-size: var(--forte-font-size-2);
+    font-size: var(--forte-combobox-item-font-size);
   }
 
   /* The search row is the ONE focusable thing in the popup, and Base UI moves
@@ -980,10 +1030,10 @@
     display: flex;
     align-items: center;
     gap: var(--forte-combobox-item-gap);
-    padding-block: var(--forte-list-item-py);
+    padding-block: var(--forte-combobox-item-py);
     padding-inline: var(--forte-combobox-item-px);
     color: var(--forte-color-foreground-muted);
-    font-size: var(--forte-font-size-2);
+    font-size: var(--forte-combobox-item-font-size);
     line-height: var(--forte-line-height-normal);
   }
 
@@ -1005,8 +1055,6 @@
     --forte-combobox-item-fg-highlighted: var(--forte-color-primary-text);
     /** Text color of the selected item */
     --forte-combobox-item-fg-selected: var(--forte-color-primary-text);
-    /** Item font size */
-    --forte-combobox-item-font-size: var(--forte-font-size-2);
 
     box-sizing: border-box;
     position: relative;
@@ -1014,8 +1062,12 @@
     grid-template-columns: var(--forte-combobox-item-indicator-size) 1fr;
     align-items: center;
     gap: var(--forte-combobox-item-gap);
-    min-height: var(--forte-target-min);
-    padding-block: var(--forte-list-item-py);
+    /* The size's row height, floored at the SC 2.5.8 target. Every
+     * `--forte-control-h-*` clears 24px today, including `sm` under the
+     * compact preset, which lands exactly on it — the `max()` is what keeps
+     * that a coincidence rather than a dependency. */
+    min-height: max(var(--forte-target-min), var(--forte-combobox-item-height));
+    padding-block: var(--forte-combobox-item-py);
     padding-inline: var(--forte-combobox-item-px);
     color: var(--forte-combobox-item-fg);
     font-family: var(--forte-font-sans);
@@ -1086,8 +1138,8 @@
   .groupLabel {
     /** Group label text color */
     --forte-combobox-group-label-fg: var(--forte-color-foreground-muted);
-    /** Group label text size */
-    --forte-combobox-group-label-font-size: var(--forte-font-size-1);
+    /* The text size is a popup knob, reset per `size` there; declaring a
+     * default here would beat it. */
     /* Tracking has to come back at this size, or a short uppercase word closes
      * up into a block. Same 0.06em NavList's section labels use — this is the
      * house heading idiom, not a new one. */
