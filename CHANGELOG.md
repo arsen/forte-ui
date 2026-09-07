@@ -13,6 +13,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-07
+
+### ColorPicker
+
+- `ColorPicker.Trigger` now accepts `render` and `nativeButton`, so it can take on another element's look — `render={<Button variant="outline" iconOnly />}`, or `render={<Toolbar.Button iconOnly />}` to put a swatch in a toolbar's arrow-key order — while keeping the swatch, the hidden color announcement and the live color variables. Set `nativeButton={false}` when `render` replaces the button with an element that isn't one.
+
+### Toolbar
+
+- Added `Toolbar.Text`, for static text in the bar — a page count, a zoom readout, the word before a control. It matches the height and type scale of the controls beside it, uses a muted color, and (like a separator) takes no focus and is skipped by the arrow keys.
+
 ## [1.4.1] - 2026-09-06
 
 ### Resizable
@@ -434,7 +444,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/arsen/forte-ui/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/arsen/forte-ui/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/arsen/forte-ui/compare/v1.2.0...v1.3.0

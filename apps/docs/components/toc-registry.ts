@@ -12,6 +12,9 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v150", text: "v1.5.0", depth: 2 },
+    { id: "colorpicker", text: "ColorPicker", depth: 3 },
+    { id: "toolbar", text: "Toolbar", depth: 3 },
     { id: "v141", text: "v1.4.1", depth: 2 },
     { id: "resizable", text: "Resizable", depth: 3 },
     { id: "v140", text: "v1.4.0", depth: 2 },
@@ -46,14 +49,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "general", text: "General", depth: 3 },
     { id: "v100-beta2", text: "v1.0.0-beta.2", depth: 2 },
     { id: "general-1", text: "General", depth: 3 },
-    { id: "v100-beta0", text: "v1.0.0-beta.0", depth: 2 },
-    { id: "appbar-1", text: "AppBar", depth: 3 },
-    { id: "drawer", text: "Drawer", depth: 3 },
-    { id: "select-1", text: "Select", depth: 3 },
-    { id: "tabs", text: "Tabs", depth: 3 },
-    { id: "design-tokens--motion-3", text: "Design tokens & motion", depth: 3 },
-    { id: "create-forte-ui-1", text: "create-forte-ui", depth: 3 },
-    { id: "general-2", text: "General", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
