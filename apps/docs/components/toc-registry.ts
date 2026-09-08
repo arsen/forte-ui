@@ -12,8 +12,12 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
-    { id: "v150", text: "v1.5.0", depth: 2 },
+    { id: "v160", text: "v1.6.0", depth: 2 },
     { id: "colorpicker", text: "ColorPicker", depth: 3 },
+    { id: "combobox", text: "Combobox", depth: 3 },
+    { id: "select", text: "Select", depth: 3 },
+    { id: "v150", text: "v1.5.0", depth: 2 },
+    { id: "colorpicker-1", text: "ColorPicker", depth: 3 },
     { id: "toolbar", text: "Toolbar", depth: 3 },
     { id: "v141", text: "v1.4.1", depth: 2 },
     { id: "resizable", text: "Resizable", depth: 3 },
@@ -21,7 +25,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "appbar", text: "AppBar", depth: 3 },
     { id: "button", text: "Button", depth: 3 },
     { id: "card", text: "Card", depth: 3 },
-    { id: "combobox", text: "Combobox", depth: 3 },
+    { id: "combobox-1", text: "Combobox", depth: 3 },
     { id: "datepicker", text: "DatePicker", depth: 3 },
     { id: "field", text: "Field", depth: 3 },
     { id: "fieldset", text: "Fieldset", depth: 3 },
@@ -29,7 +33,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "numberfield", text: "NumberField", depth: 3 },
     { id: "otpfield", text: "OTPField", depth: 3 },
     { id: "resizable-1", text: "Resizable", depth: 3 },
-    { id: "select", text: "Select", depth: 3 },
+    { id: "select-1", text: "Select", depth: 3 },
     { id: "table", text: "Table", depth: 3 },
     { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
     { id: "v130", text: "v1.3.0", depth: 2 },
@@ -47,8 +51,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "create-forte-ui", text: "create-forte-ui", depth: 3 },
     { id: "v100", text: "v1.0.0", depth: 2 },
     { id: "general", text: "General", depth: 3 },
-    { id: "v100-beta2", text: "v1.0.0-beta.2", depth: 2 },
-    { id: "general-1", text: "General", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [

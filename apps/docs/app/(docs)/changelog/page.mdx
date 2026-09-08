@@ -19,6 +19,25 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.6.0
+
+<ReleaseMeta date="2026-09-07" href="https://github.com/arsen/forte-ui/compare/v1.5.0...v1.6.0" kind="compare" />
+
+### ColorPicker
+
+- Fixed the saturation/brightness canvas and hue/alpha rail gradients bleeding through the translucent hairline border as a second, wrong-colored edge; both are now clipped to the padding box.
+- The canvas's corner radius now follows the active radius preset (via `--forte-radius-control`) instead of a fixed step, clamped so it doesn't round into a stadium under `pill`.
+
+### Combobox
+
+- Fixed the popup's rows (and the search row, in the input-inside-popup pattern) always rendering at the `md` scale regardless of the field's size; row height, padding and font size now follow the size of the `Combobox.InputGroup` or standalone `Combobox.Trigger` they opened from.
+- Added a `size` prop to `Combobox.Popup` to override that link and pin the rows to a scale of their own.
+
+### Select
+
+- Fixed the popup's rows always rendering at the `md` scale regardless of the trigger's size; row height, padding and font size now follow the `Select.Trigger`'s `size`.
+- Added a `size` prop to `Select.Popup` to override that link and pin the rows to a scale of their own.
+
 ## v1.5.0
 
 <ReleaseMeta date="2026-09-07" href="https://github.com/arsen/forte-ui/compare/v1.4.1...v1.5.0" kind="compare" />
@@ -168,14 +187,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Added an MIT `LICENSE` file to each publishable package (`@forte-ui/react`, `forte-ui`, `create-forte-ui`).
 
-## v1.0.0-beta.2
-
-<ReleaseMeta date="2026-09-02" href="https://github.com/arsen/forte-ui/compare/v1.0.0-beta.0...v1.0.0-beta.2" kind="compare" />
-
-### General
-
-- Added `homepage` and `repository` fields to `@forte-ui/react`'s `package.json`.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 7 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 8 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

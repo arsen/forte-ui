@@ -13,6 +13,23 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-09-07
+
+### ColorPicker
+
+- Fixed the saturation/brightness canvas and hue/alpha rail gradients bleeding through the translucent hairline border as a second, wrong-colored edge; both are now clipped to the padding box.
+- The canvas's corner radius now follows the active radius preset (via `--forte-radius-control`) instead of a fixed step, clamped so it doesn't round into a stadium under `pill`.
+
+### Combobox
+
+- Fixed the popup's rows (and the search row, in the input-inside-popup pattern) always rendering at the `md` scale regardless of the field's size; row height, padding and font size now follow the size of the `Combobox.InputGroup` or standalone `Combobox.Trigger` they opened from.
+- Added a `size` prop to `Combobox.Popup` to override that link and pin the rows to a scale of their own.
+
+### Select
+
+- Fixed the popup's rows always rendering at the `md` scale regardless of the trigger's size; row height, padding and font size now follow the `Select.Trigger`'s `size`.
+- Added a `size` prop to `Select.Popup` to override that link and pin the rows to a scale of their own.
+
 ## [1.5.0] - 2026-09-07
 
 ### ColorPicker
@@ -444,7 +461,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/arsen/forte-ui/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/arsen/forte-ui/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/arsen/forte-ui/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0
