@@ -78,6 +78,13 @@ the bar is aligned with — a heading, a text column, the editor below it — an
 row of buttons that does not line up with the thing it acts on reads as a
 mistake.
 
+`elevated` is the floating bar — a formatting strip over an editor, a tool
+palette over a canvas, an action row pinned to the bottom of the viewport. It
+is `outline` with a shadow under it, and it paints that lift and nothing else:
+no positioning, no stacking. Fix or stick the bar where you need it yourself,
+and to follow a text selection, put a `Toolbar` inside a
+[`Popover`](/components/popover) instead.
+
 ### Sizes
 
 `size` on the root is the default size of every `Toolbar.Button`,

@@ -7,7 +7,8 @@
  * the text — look like.
  *
  * Two axes, as everywhere else in the library:
- *   data-variant  how much chrome the BAR carries (plain / panel / outline)
+ *   data-variant  how much chrome the BAR carries (plain / panel / outline /
+ *                 elevated)
  *   data-size     how tight the bar is, and the default size of its items
  *
  * `data-size` is deliberately NOT read by the buttons and inputs inside. Their
@@ -35,8 +36,36 @@
     /** Padding inside the bar. `size` re-points it; `variant="plain"` drops it
      * to `0`. */
     --forte-toolbar-padding: var(--forte-space-2);
-    /** Corner radius. `variant="plain"` drops it to `0`. */
-    --forte-toolbar-radius: var(--forte-radius-surface);
+    /* Height of the items the bar was sized for — `size` re-points it at the
+     * matching `--forte-control-h-*`, which is what the buttons and inputs
+     * inside resolve their own height from, so it follows density too. Only
+     * the radius below reads it. */
+    --forte-toolbar-item-h: var(--forte-control-h-md);
+    /* `--forte-radius-control`, not `--forte-radius-surface`, and the choice
+     * shows only under a radius preset. A toolbar is a strip of controls, the
+     * same shape as Menubar and a row of Buttons, so it follows the token its
+     * items follow. On `surface` it stopped at 1rem under `pill`, and a bar
+     * of fully round buttons in a barely-rounded box read as though the
+     * preset had missed it.
+     *
+     * Capped at the radius CONCENTRIC with the item in the corner — half the
+     * item's height plus the padding and border between it and the edge —
+     * rather than taken raw. On a single row the two agree: 9999px and the
+     * cap both round the bar into a stadium, since half the item plus the
+     * inset IS half the bar. They part on a bar that wraps into two rows, or
+     * a vertical one, where the raw value is half of a much taller box and the
+     * curve cuts in behind the first and last items — a pill button poking out
+     * of its own bar's corner. The cap keeps the curve hugging the item at
+     * every height. Under the default preset the cap never binds. */
+    /** Corner radius, capped so the corner stays concentric with the item in
+     * it. `variant="plain"` drops it to `0`. */
+    --forte-toolbar-radius: min(
+      var(--forte-radius-control),
+      calc(
+        var(--forte-toolbar-item-h) / 2 + var(--forte-toolbar-padding) +
+          var(--forte-toolbar-border-width)
+      )
+    );
     /** Fill behind the bar. `variant` sets it. */
     --forte-toolbar-bg: transparent;
     /* Declared even when there is nothing to draw, and `transparent` rather
@@ -49,8 +78,8 @@
     --forte-toolbar-border-width: 1px;
     /** Border color. `variant` sets it. */
     --forte-toolbar-border-color: transparent;
-    /** Drop shadow. Unset by default — a toolbar is part of the page, not a
-     * surface floating over it. */
+    /** Drop shadow. `none` except on `elevated` — a toolbar is part of the
+     * page unless it says otherwise. */
     --forte-toolbar-shadow: none;
 
     box-sizing: border-box;
@@ -88,20 +117,23 @@
   }
 
   /* Sizes ------------------------------------------------------------------
-   * Only the bar's own two measures. The items are sized through the context
-   * in the TSX, so these stay in step without this file knowing anything about
-   * Button or Input. */
+   * Only the bar's own measures, plus the height its items will resolve to.
+   * The items themselves are sized through the context in the TSX, so these
+   * stay in step without this file knowing anything about Button or Input. */
   .root[data-size="sm"] {
+    --forte-toolbar-item-h: var(--forte-control-h-sm);
     --forte-toolbar-gap: var(--forte-space-1);
     --forte-toolbar-padding: var(--forte-space-1);
   }
 
   .root[data-size="md"] {
+    --forte-toolbar-item-h: var(--forte-control-h-md);
     --forte-toolbar-gap: var(--forte-space-2);
     --forte-toolbar-padding: var(--forte-space-2);
   }
 
   .root[data-size="lg"] {
+    --forte-toolbar-item-h: var(--forte-control-h-lg);
     --forte-toolbar-gap: var(--forte-space-2);
     --forte-toolbar-padding: var(--forte-space-3);
   }
@@ -130,6 +162,25 @@
   .root[data-variant="outline"] {
     --forte-toolbar-bg: var(--forte-color-background);
     --forte-toolbar-border-color: var(--forte-color-border);
+  }
+
+  /* The floating bar — a formatting strip over an editor, a tool palette over
+   * a canvas, an action row pinned to the bottom of a viewport. It paints the
+   * lift and nothing else: no `position`, no `z-index`, no blur. Where the bar
+   * sits is a layout decision the consumer already made, and anchoring it to
+   * a selection is a Popover with a Toolbar inside, not a Toolbar option.
+   *
+   * `overlay`, not `panel`: it is the fill Menu and Popover use, the token for
+   * a surface ABOVE the page rather than a recess in it, so a theme that
+   * re-points overlay moves every floating surface together. A shadow this
+   * size is the one that carries the lift; the hairline is not redundancy
+   * beside it. Dark on a dark background, the shadow all but disappears, and
+   * forced colors strips it entirely — the a11y block below gives this edge a
+   * system color for exactly that case. */
+  .root[data-variant="elevated"] {
+    --forte-toolbar-bg: var(--forte-color-overlay);
+    --forte-toolbar-border-color: var(--forte-color-border);
+    --forte-toolbar-shadow: var(--forte-shadow-3);
   }
 
   /* Group ------------------------------------------------------------------
@@ -389,12 +440,15 @@
  * Top-level `forte.a11y`, ordered after `forte.components`, so
  * everything here beats the rules above by layer alone.
  *
- * Only the bar's own fill needs rescuing. `panel` and `outline` both paint a
- * background, and a background is replaced with a system color here — so a
- * `panel` bar would dissolve into the page and its controls would fall apart
- * into a loose row. The 1px border is already occupying the space (see the
- * knob comment above); this only gives it a color. `plain` is left alone,
- * which is correct: it never claimed to be a surface.
+ * Only the bar's own fill needs rescuing. `panel`, `outline` and `elevated`
+ * all paint a background, and a background is replaced with a system color
+ * here — so a `panel` bar would dissolve into the page and its controls would
+ * fall apart into a loose row, and `elevated` loses its shadow on top of
+ * that. The 1px border is already occupying the space (see the knob comment
+ * above); this only gives it a color — the same rescue `.forte-hc-surface`
+ * performs for the popups, done in-house because the bar already owns its
+ * border. `plain` is left alone, which is correct: it never claimed to be a
+ * surface.
  *
  * The separator needs nothing — it is drawn with a border, which forced
  * colors keeps — and the link inherits `LinkText` from the `.forte-link` rule
@@ -403,7 +457,8 @@
 @layer forte.a11y {
   @media (forced-colors: active) {
     .root[data-variant="panel"],
-    .root[data-variant="outline"] {
+    .root[data-variant="outline"],
+    .root[data-variant="elevated"] {
       --forte-toolbar-border-color: CanvasText;
     }
   }

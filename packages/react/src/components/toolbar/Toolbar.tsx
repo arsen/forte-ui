@@ -8,7 +8,7 @@ import { Input, type InputVariant } from "../input";
 import styles from "./Toolbar.module.css";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
-export type ToolbarVariant = "plain" | "panel" | "outline";
+export type ToolbarVariant = "plain" | "panel" | "outline" | "elevated";
 export type ToolbarSize = "sm" | "md" | "lg";
 
 /* -------------------------------------------------------------------------
@@ -39,7 +39,10 @@ export interface ToolbarRootProps extends Omit<BaseToolbar.Root.Props, "classNam
   /**
    * How much chrome the bar itself carries. `plain` is a bare row with no
    * surface — right when the toolbar sits on a panel that already has one.
-   * `panel` fills; `outline` draws a border on the page background.
+   * `panel` fills; `outline` draws a border on the page background;
+   * `elevated` adds a shadow to that edge, for a bar floating over content
+   * — a canvas, an editor, the bottom of a viewport. It paints the lift and
+   * nothing else: where the bar sits, and what it stacks above, is yours.
    *
    * It says nothing about the controls inside: a `plain` bar can still hold
    * solid buttons, and a `panel` bar quiet ones.
