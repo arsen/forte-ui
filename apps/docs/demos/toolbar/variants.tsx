@@ -37,6 +37,13 @@ export default function ToolbarVariants() {
       <Toolbar.Root variant="outline" aria-label="Document (outline)">
         <Items />
       </Toolbar.Root>
+
+      {/* `elevated` is `outline` plus a shadow: the bar that floats over an
+        * editor or a canvas. It paints the lift only — pin it where you need
+        * it yourself. */}
+      <Toolbar.Root variant="elevated" aria-label="Document (elevated)">
+        <Items />
+      </Toolbar.Root>
     </div>
   );
 }

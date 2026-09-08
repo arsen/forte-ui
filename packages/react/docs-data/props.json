@@ -8931,7 +8931,7 @@
         "type": "ToolbarVariant",
         "required": false,
         "defaultValue": "panel",
-        "description": "How much chrome the bar itself carries. `plain` is a bare row with no\nsurface — right when the toolbar sits on a panel that already has one.\n`panel` fills; `outline` draws a border on the page background.\n\nIt says nothing about the controls inside: a `plain` bar can still hold\nsolid buttons, and a `panel` bar quiet ones."
+        "description": "How much chrome the bar itself carries. `plain` is a bare row with no\nsurface — right when the toolbar sits on a panel that already has one.\n`panel` fills; `outline` draws a border on the page background;\n`elevated` adds a shadow to that edge, for a bar floating over content\n— a canvas, an editor, the bottom of a viewport. It paints the lift and\nnothing else: where the bar sits, and what it stacks above, is yours.\n\nIt says nothing about the controls inside: a `plain` bar can still hold\nsolid buttons, and a `panel` bar quiet ones."
       },
       {
         "name": "wrap",

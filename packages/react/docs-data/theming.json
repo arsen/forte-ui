@@ -11077,8 +11077,8 @@
       },
       {
         "name": "--forte-toolbar-radius",
-        "value": "var(--forte-radius-surface)",
-        "description": "Corner radius. `variant=\"plain\"` drops it to `0`.",
+        "value": "min( var(--forte-radius-control), calc( var(--forte-toolbar-item-h) / 2 + var(--forte-toolbar-padding) + var(--forte-toolbar-border-width) ) )",
+        "description": "Corner radius, capped so the corner stays concentric with the item in it. `variant=\"plain\"` drops it to `0`.",
         "part": "root",
         "overrides": [
           {
@@ -11104,6 +11104,10 @@
           {
             "selector": ".root[data-variant=\"outline\"]",
             "value": "var(--forte-color-background)"
+          },
+          {
+            "selector": ".root[data-variant=\"elevated\"]",
+            "value": "var(--forte-color-overlay)"
           }
         ]
       },
@@ -11133,7 +11137,11 @@
             "value": "var(--forte-color-border)"
           },
           {
-            "selector": ".root[data-variant=\"panel\"], .root[data-variant=\"outline\"]",
+            "selector": ".root[data-variant=\"elevated\"]",
+            "value": "var(--forte-color-border)"
+          },
+          {
+            "selector": ".root[data-variant=\"panel\"], .root[data-variant=\"outline\"], .root[data-variant=\"elevated\"]",
             "value": "CanvasText"
           }
         ]
@@ -11141,9 +11149,14 @@
       {
         "name": "--forte-toolbar-shadow",
         "value": "none",
-        "description": "Drop shadow. Unset by default — a toolbar is part of the page, not a surface floating over it.",
+        "description": "Drop shadow. `none` except on `elevated` — a toolbar is part of the page unless it says otherwise.",
         "part": "root",
-        "overrides": []
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"elevated\"]",
+            "value": "var(--forte-shadow-3)"
+          }
+        ]
       },
       {
         "name": "--forte-toolbar-group-gap",
