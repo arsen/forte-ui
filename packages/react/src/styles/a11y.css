@@ -41,7 +41,7 @@
      * 160ms color-only fade was measured running and still read as a snap,
      * because nothing moved and it was over before the eye settled. One clock
      * for every part, declared here so the ring's pace is one edit. */
-    --forte-focus-ring-duration: var(--forte-duration-normal);
+    --forte-focus-ring-duration: var(--forte-duration-fast);
     --forte-focus-ring-ease: var(--forte-ease-standard);
     --forte-focus-ring-travel: var(--forte-travel-sm);
 
