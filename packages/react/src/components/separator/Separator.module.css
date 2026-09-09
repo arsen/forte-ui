@@ -1,8 +1,11 @@
 /*
  * Separator
  *
- * One element, one line. The interesting part is not the line — it is the two
- * ways an empty box misbehaves, both of which have a fix here.
+ * One element, one line — until `children` puts a label on it, at which point
+ * the line becomes two halves either side of the label and the element a flex
+ * container; see "Labeled" at the bottom. The interesting part is not the
+ * line — it is the two ways an empty box misbehaves, both of which have a fix
+ * here.
  *
  * The line is painted with a BORDER, never `background-color`. Under
  * forced-colors a background is replaced with a system color — for a plain
@@ -59,6 +62,20 @@
      * horizontal rules, which get their length from the container. */
     /** Length floor for a vertical rule with nothing to stretch against */
     --forte-separator-min-length: 1lh;
+    /* The label's knobs live HERE, on the root, not on `.label` — the label
+     * is internal, so the root is the only element a consumer can set them
+     * on, and a declaration on `.label` would beat the inherited value the
+     * way this block's own opening comment describes. */
+    /** Space between the label and the half-line either side of it */
+    --forte-separator-label-gap: var(--forte-space-3);
+    /* Permanently visible text, so SC 1.4.3 applies: `-muted` (5.82:1) rather
+     * than `-subtle`, which the palette documents as non-text only. */
+    /** Label color */
+    --forte-separator-label-color: var(--forte-color-foreground-muted);
+    /** Label font size */
+    --forte-separator-label-font-size: var(--forte-font-size-1);
+    /** Label font weight */
+    --forte-separator-label-font-weight: var(--forte-font-weight-medium);
 
     box-sizing: border-box;
 
@@ -136,5 +153,81 @@
 
   .root[data-variant="dotted"] {
     --forte-separator-style: dotted;
+  }
+
+  /* Labeled ---------------------------------------------------------------
+   * `children` puts a label on the line. The root stops painting an edge of
+   * its own and becomes a flex container; the line is now `::before` and
+   * `::after`, one half either side of the label, each taking an equal share
+   * of whatever the label leaves. They paint the SAME edge the plain rule
+   * does, off the same knobs — a pseudo-element resolves custom properties
+   * against its originating element, so `variant` and a re-pointed color
+   * reach both halves without a second declaration.
+   *
+   * The axis pins come off the root (`auto`): the label now gives it a size
+   * on that axis, and `align-items: center` below already denies the halves
+   * the `stretch` the pins existed to block. These rules sit AFTER the
+   * orientation ones on purpose — `.root[data-labeled]` ties them on
+   * specificity, so source order is the only thing letting it win. */
+  .root[data-labeled] {
+    display: flex;
+    align-items: center;
+    gap: var(--forte-separator-label-gap);
+    block-size: auto;
+    inline-size: auto;
+    border: 0;
+  }
+
+  .root[data-labeled]::before,
+  .root[data-labeled]::after {
+    content: "";
+    /* Basis 0, not `auto`: with negative free space the halves then have no
+     * share to give up, so the LABEL is what shrinks — wrapping at its
+     * longest word — rather than the line vanishing first. */
+    flex: 1 1 0;
+  }
+
+  .root[data-orientation="horizontal"][data-labeled]::before,
+  .root[data-orientation="horizontal"][data-labeled]::after {
+    border-block-start:
+      var(--forte-separator-thickness) var(--forte-separator-style)
+      var(--forte-separator-color);
+  }
+
+  /* `inline-flex` for the same reason the plain vertical rule is
+   * `inline-block`: it can still sit between inline items. */
+  .root[data-orientation="vertical"][data-labeled] {
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  /* No length floor for the halves, and that is a choice. The root's
+   * `min-block-size` still applies but the label alone already exceeds it,
+   * so outside a flex or grid row — where the plain vertical rule falls back
+   * to one line box — a labeled one shows only its label, the halves having
+   * nothing to be. The alternative was tried: a `1lh` basis on each half
+   * gives the rule an intrinsic height of two line boxes plus the label
+   * (~80px), and a flex row is sized from its items' intrinsic contributions,
+   * so a toolbar-height row holding one grew to 80px with the label hanging
+   * below its buttons. A rule that quietly loses its lines in a layout it
+   * was not built for beats one that breaks the layout. */
+  .root[data-orientation="vertical"][data-labeled]::before,
+  .root[data-orientation="vertical"][data-labeled]::after {
+    border-inline-start:
+      var(--forte-separator-thickness) var(--forte-separator-style)
+      var(--forte-separator-color);
+  }
+
+  .label {
+    /* `min-width: auto` is left alone on purpose: it is what lets the label
+     * wrap at its longest word instead of being crushed to nothing once the
+     * halves have given up all of theirs. */
+    flex: 0 1 auto;
+    text-align: center;
+    color: var(--forte-separator-label-color);
+    font-family: var(--forte-font-sans);
+    font-size: var(--forte-separator-label-font-size);
+    font-weight: var(--forte-separator-label-font-weight);
+    line-height: var(--forte-line-height-tight);
   }
 }

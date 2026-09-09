@@ -8823,6 +8823,34 @@
         "description": "Length floor for a vertical rule with nothing to stretch against",
         "part": "root",
         "overrides": []
+      },
+      {
+        "name": "--forte-separator-label-gap",
+        "value": "var(--forte-space-3)",
+        "description": "Space between the label and the half-line either side of it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-separator-label-color",
+        "value": "var(--forte-color-foreground-muted)",
+        "description": "Label color",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-separator-label-font-size",
+        "value": "var(--forte-font-size-1)",
+        "description": "Label font size",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-separator-label-font-weight",
+        "value": "var(--forte-font-weight-medium)",
+        "description": "Label font weight",
+        "part": "root",
+        "overrides": []
       }
     ]
   },

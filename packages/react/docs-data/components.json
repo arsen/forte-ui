@@ -944,7 +944,7 @@
     "name": "Separator",
     "dir": "separator",
     "category": "Content & layout",
-    "summary": "A rule between things, horizontal or vertical, announced to assistive technology unless marked decorative.",
+    "summary": "A rule between things, horizontal or vertical, optionally with a label set into the line; announced to assistive technology unless marked decorative.",
     "partOf": null,
     "compound": false,
     "theming": true,

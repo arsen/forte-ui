@@ -651,6 +651,10 @@ import d_separator_custom from "./separator/custom";
 import d_separator_custom_src from "./separator/custom?raw";
 import d_separator_horizontal from "./separator/horizontal";
 import d_separator_horizontal_src from "./separator/horizontal?raw";
+import d_separator_labeled_vertical from "./separator/labeled-vertical";
+import d_separator_labeled_vertical_src from "./separator/labeled-vertical?raw";
+import d_separator_labeled from "./separator/labeled";
+import d_separator_labeled_src from "./separator/labeled?raw";
 import d_separator_toolbar from "./separator/toolbar";
 import d_separator_toolbar_src from "./separator/toolbar?raw";
 import d_separator_variants from "./separator/variants";
@@ -1224,6 +1228,8 @@ export type DemoId =
   | "select/with-label"
   | "separator/custom"
   | "separator/horizontal"
+  | "separator/labeled-vertical"
+  | "separator/labeled"
   | "separator/toolbar"
   | "separator/variants"
   | "separator/vertical"
@@ -1674,6 +1680,8 @@ const REGISTRY: Record<DemoId, Demo> = {
   "select/with-label": { Component: d_select_with_label, source: d_select_with_label_src, file: "select/with-label.tsx" },
   "separator/custom": { Component: d_separator_custom, source: d_separator_custom_src, file: "separator/custom.tsx" },
   "separator/horizontal": { Component: d_separator_horizontal, source: d_separator_horizontal_src, file: "separator/horizontal.tsx" },
+  "separator/labeled-vertical": { Component: d_separator_labeled_vertical, source: d_separator_labeled_vertical_src, file: "separator/labeled-vertical.tsx" },
+  "separator/labeled": { Component: d_separator_labeled, source: d_separator_labeled_src, file: "separator/labeled.tsx" },
   "separator/toolbar": { Component: d_separator_toolbar, source: d_separator_toolbar_src, file: "separator/toolbar.tsx" },
   "separator/variants": { Component: d_separator_variants, source: d_separator_variants_src, file: "separator/variants.tsx" },
   "separator/vertical": { Component: d_separator_vertical, source: d_separator_vertical_src, file: "separator/vertical.tsx" },

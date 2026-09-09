@@ -65,6 +65,25 @@ export interface SeparatorProps extends Omit<BaseSeparatorProps, "className"> {
    */
   decorative?: boolean;
   /**
+   * A label set into the line — `or` between two ways to sign in, a date
+   * between two runs of messages. The rule splits around it, one half either
+   * side, in both orientations. Text is the usual case, but anything
+   * renders: an icon, a `Badge`, a `Kbd`.
+   *
+   * A labeled rule is also *named* by its label. The root gets
+   * `aria-labelledby` pointing at it, so a screen reader announces the label
+   * as the separator's name instead of passing over it — `separator` is a
+   * role whose children are presentational, so text left loose inside one is
+   * not guaranteed to be exposed at all. Pass an `aria-label` or
+   * `aria-labelledby` of your own to name it differently. Under `decorative`
+   * there is no name to give: the role goes, and the label stays in the tree
+   * as plain text.
+   *
+   * Not with `render={<hr />}` — `<hr>` is a void element and cannot hold
+   * one.
+   */
+  children?: React.ReactNode;
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -77,6 +96,7 @@ export interface SeparatorProps extends Omit<BaseSeparatorProps, "className"> {
  * ```tsx
  * <Separator />
  * <Separator orientation="vertical" />
+ * <Separator>or</Separator>
  * ```
  *
  * A vertical separator has no length of its own — it is an empty box. Inside a
@@ -99,12 +119,14 @@ export interface SeparatorProps extends Omit<BaseSeparatorProps, "className"> {
  * ```
  *
  * Every visual decision is a `--forte-separator-*` custom property, and the
- * orientation is on `data-orientation`, so it can be re-skinned from plain CSS
- * or targeted with Tailwind arbitrary variants
- * (`data-[orientation=vertical]:...`) without wrapping.
+ * orientation is on `data-orientation` — with `data-labeled` beside it when
+ * there is a label — so it can be re-skinned from plain CSS or targeted with
+ * Tailwind arbitrary variants (`data-[orientation=vertical]:...`) without
+ * wrapping.
  *
- * @summary A rule between things, horizontal or vertical, announced to
- *   assistive technology unless marked decorative.
+ * @summary A rule between things, horizontal or vertical, optionally with a
+ *   label set into the line; announced to assistive technology unless marked
+ *   decorative.
  * @category Content & layout
  */
 export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
@@ -114,10 +136,29 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
       variant = "solid",
       decorative = false,
       className,
+      children,
       ...props
     },
     ref,
   ) {
+    const labelId = React.useId();
+
+    /* `false` counts as no label, not only `null`: `{show && "or"}` is the
+     * ordinary way to make one conditional, and a `false` child has to leave
+     * a plain rule rather than an empty label with a gap either side of it. */
+    const labeled = children != null && typeof children !== "boolean";
+
+    /* Name the rule after its label — but only when nothing else does, and
+     * never on the decorative path. `aria-labelledby` outranks `aria-label`
+     * in name computation, so setting it unconditionally would silently
+     * replace a caller's own label; a caller's `aria-labelledby` needs no
+     * check, since the `{...props}` spread below already overrides ours. And
+     * it is a GLOBAL attribute: on a `role="none"` element it triggers
+     * presentational-role conflict resolution, which ignores the `none` and
+     * puts the separator straight back into the tree that `decorative` just
+     * took it out of. */
+    const named = labeled && !decorative && props["aria-label"] == null;
+
     return (
       <BaseSeparator
         ref={ref}
@@ -125,9 +166,17 @@ export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
         className={clsx(styles.root, className)}
         data-forte="separator"
         data-variant={variant}
+        data-labeled={labeled || undefined}
+        aria-labelledby={named ? labelId : undefined}
         {...(decorative ? DECORATIVE_PROPS : null)}
         {...props}
-      />
+      >
+        {labeled ? (
+          <span className={styles.label} data-forte="separator-label" id={labelId}>
+            {children}
+          </span>
+        ) : null}
+      </BaseSeparator>
     );
   },
 );

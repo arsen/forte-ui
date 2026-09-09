@@ -5591,6 +5591,13 @@
     "description": "The dash between two groups of slots — the `123 – 456` shape a six-digit\ncode is usually printed in. Renders the library's `Separator`, so it carries\n`data-forte=\"separator\"` rather than a marker of its own; scope to it with\n`[data-forte=\"otp-field\"] [data-forte=\"separator\"]`.\n\nIt is a **horizontal** rule sized to `--forte-otp-field-separator-length`,\nnot a vertical bar, and it counts against nothing: `length` is the number of\n`Input`s, so a separator can go anywhere between them.\n\n```tsx\n<OTPField.Root length={6}>\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Separator />\n  <OTPField.Input />\n  <OTPField.Input />\n  <OTPField.Input />\n</OTPField.Root>\n```",
     "props": [
       {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "A label set into the line — `or` between two ways to sign in, a date\nbetween two runs of messages. The rule splits around it, one half either\nside, in both orientations. Text is the usual case, but anything\nrenders: an icon, a `Badge`, a `Kbd`.\n\nA labeled rule is also *named* by its label. The root gets\n`aria-labelledby` pointing at it, so a screen reader announces the label\nas the separator's name instead of passing over it — `separator` is a\nrole whose children are presentational, so text left loose inside one is\nnot guaranteed to be exposed at all. Pass an `aria-label` or\n`aria-labelledby` of your own to name it differently. Under `decorative`\nthere is no name to give: the role goes, and the label stays in the tree\nas plain text.\n\nNot with `render={<hr />}` — `<hr>` is a void element and cannot hold\none."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false,
@@ -7466,8 +7473,15 @@
   },
   "Separator": {
     "name": "Separator",
-    "description": "A rule between things, built on Base UI's `Separator` primitive.\n\n```tsx\n<Separator />\n<Separator orientation=\"vertical\" />\n```\n\nA vertical separator has no length of its own — it is an empty box. Inside a\nflex row it stretches to the tallest sibling; anywhere else it falls back to\none line's height, which `--forte-separator-min-length` controls. That is the\none thing worth knowing before reaching for it:\n\n```tsx\n<div style={{ display: \"flex\", alignItems: \"center\", gap: \"var(--forte-space-3)\" }}>\n  <span>Draft</span>\n  <Separator orientation=\"vertical\" />\n  <span>Edited 3m ago</span>\n</div>\n```\n\nIn prose, swap the element for the one HTML already has for this:\n\n```tsx\n<Separator render={<hr />} />\n```\n\nEvery visual decision is a `--forte-separator-*` custom property, and the\norientation is on `data-orientation`, so it can be re-skinned from plain CSS\nor targeted with Tailwind arbitrary variants\n(`data-[orientation=vertical]:...`) without wrapping.",
+    "description": "A rule between things, built on Base UI's `Separator` primitive.\n\n```tsx\n<Separator />\n<Separator orientation=\"vertical\" />\n<Separator>or</Separator>\n```\n\nA vertical separator has no length of its own — it is an empty box. Inside a\nflex row it stretches to the tallest sibling; anywhere else it falls back to\none line's height, which `--forte-separator-min-length` controls. That is the\none thing worth knowing before reaching for it:\n\n```tsx\n<div style={{ display: \"flex\", alignItems: \"center\", gap: \"var(--forte-space-3)\" }}>\n  <span>Draft</span>\n  <Separator orientation=\"vertical\" />\n  <span>Edited 3m ago</span>\n</div>\n```\n\nIn prose, swap the element for the one HTML already has for this:\n\n```tsx\n<Separator render={<hr />} />\n```\n\nEvery visual decision is a `--forte-separator-*` custom property, and the\norientation is on `data-orientation` — with `data-labeled` beside it when\nthere is a label — so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[orientation=vertical]:...`) without\nwrapping.",
     "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "defaultValue": null,
+        "description": "A label set into the line — `or` between two ways to sign in, a date\nbetween two runs of messages. The rule splits around it, one half either\nside, in both orientations. Text is the usual case, but anything\nrenders: an icon, a `Badge`, a `Kbd`.\n\nA labeled rule is also *named* by its label. The root gets\n`aria-labelledby` pointing at it, so a screen reader announces the label\nas the separator's name instead of passing over it — `separator` is a\nrole whose children are presentational, so text left loose inside one is\nnot guaranteed to be exposed at all. Pass an `aria-label` or\n`aria-labelledby` of your own to name it differently. Under `decorative`\nthere is no name to give: the role goes, and the label stays in the tree\nas plain text.\n\nNot with `render={<hr />}` — `<hr>` is a void element and cannot hold\none."
+      },
       {
         "name": "className",
         "type": "string",

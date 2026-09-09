@@ -6,14 +6,15 @@ import { ThemingTable } from "@/components/theming-table";
 export const metadata = {
   title: "Separator",
   description:
-    "A rule between things, in either orientation, exposed to assistive technology unless you say otherwise.",
+    "A rule between things, in either orientation, with an optional label set into the line — exposed to assistive technology unless you say otherwise.",
 };
 
 # Separator
 
 A line that divides content, and — unless you opt out — tells a screen reader
 that it does. It runs either way: `horizontal` across stacked content,
-`vertical` down a row.
+`vertical` down a row. Give it children and it splits around them, a label
+set into the line.
 
 <DemoBlock id="separator/horizontal" />
 
@@ -58,6 +59,35 @@ which is what you want for a drop zone's edge or an optional section.
 
 <DemoBlock id="separator/variants" />
 
+### With a label
+
+Put children on the rule and the line splits around them — one half either
+side, the label between. `or` between two ways in is the canonical case:
+
+<DemoBlock id="separator/labeled" />
+
+It works vertically too. The label stays upright, with a half-line above and
+below it, and in a flex row the halves stretch to the taller sibling exactly
+as the plain rule does:
+
+<DemoBlock id="separator/labeled-vertical" />
+
+One difference from the plain rule: a labeled vertical one has no length
+floor. Outside a flex or grid row its halves have nothing to be, and only the
+label shows. That is deliberate — the floor the halves would need is two line
+boxes plus the label, and a flex row is sized from its items, so a
+toolbar-height row holding one would grow to fit it. Give it a row.
+
+Text is the usual label, but anything renders — an icon, a `Badge`, a `Kbd`.
+The label is deliberately no louder than the rule it sits on: small, muted
+and medium weight, from `--forte-separator-label-font-size`,
+`--forte-separator-label-color` and `--forte-separator-label-font-weight`,
+with `--forte-separator-label-gap` between it and the line. A label on a
+divider is secondary text by definition; if yours needs to be a heading, it
+is a heading, and the rule should sit under it instead.
+
+A labeled rule is named by its label — see [Accessibility](#accessibility).
+
 ### Spacing and inset
 
 Two knobs place the rule, and they are named after the axes rather than after
@@ -88,6 +118,8 @@ The styles follow. The UA gives `<hr>` an inset 3D border and a `0.5em auto`
 margin; both are cleared before this component paints its own single edge, so
 an `<hr>` and a `<div>` separator are pixel-identical.
 
+Not with a label, though: `<hr>` is a void element and cannot hold one.
+
 ## Accessibility
 
 Base UI renders `role="separator"` with an `aria-orientation` matching the
@@ -100,6 +132,25 @@ it visually — a screen reader then reads the page's decoration out loud. Pass
 
 ```tsx
 <Separator decorative />
+```
+
+### Labels
+
+A labeled rule is *named* by its label: the root carries `aria-labelledby`
+pointing at it, so a screen reader announces "or, separator" rather than
+passing over the line. The attribute is doing real work: `separator` is a
+role whose children are presentational, so text left loose inside one is not
+guaranteed to be exposed at all. Your own `aria-label` or `aria-labelledby`
+wins if you pass one.
+
+`decorative` still drops the role, and only the role. There is no name to
+give a `role="none"` element, so the label simply stays in the tree as plain
+text — right for a date between two runs of messages, which a screen reader
+should still hear. Where the label is visual rhetoric and nothing more — `or`
+between two buttons that already say what they do — hide the whole thing:
+
+```tsx
+<Separator decorative aria-hidden>or</Separator>
 ```
 
 <Callout kind="a11y">
@@ -126,9 +177,10 @@ page on a theme switch.
 
 <ThemingTable component="Separator" />
 
-State is on `data-orientation` and `data-variant`, so a consumer can reach both
-from plain CSS or a Tailwind arbitrary variant
-(`data-[orientation=vertical]:...`) without wrapping the component.
+State is on `data-orientation` and `data-variant`, with `data-labeled` beside
+them when there is a label, so a consumer can reach all three from plain CSS
+or a Tailwind arbitrary variant (`data-[orientation=vertical]:...`) without
+wrapping the component. The label itself is `data-forte="separator-label"`.
 
 ## API reference
 
