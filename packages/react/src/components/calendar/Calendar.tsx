@@ -344,18 +344,16 @@ function ChevronIcon(props: React.ComponentProps<"svg">) {
 
 /* Squares the arrows at the calendar's own measure. Hoisted to module scope
  * so it is one frozen object rather than a new one per render, which would
- * make both buttons re-render on every keystroke. The icon padding is zeroed
- * because Button's icon-only sizing treats its height as a floor and grows
- * for `icon + padding` — with the default padding the 16px chevron would
- * outgrow a `sm` calendar's 28px nav square and knock the arrows out of the
- * caption row they overlay. The icon size is pinned for the same reason:
- * Button sizes a dropped-in glyph from its own label, which would shrink the
- * chevron with the button's `size` rather than hold it at the measure the
- * caption row is built around. The calendar's geometry is
+ * make both buttons re-render on every keystroke. The height is the nav
+ * size so the arrows sit inside the caption row they overlay; Button derives
+ * its icon-only padding from that height, so the square lands on it exactly
+ * and nothing here has to zero the padding to stop it growing. The icon size
+ * is pinned because Button sizes a dropped-in glyph from its own label, which
+ * would shrink the chevron with the button's `size` rather than hold it at
+ * the measure the caption row is built around. The calendar's geometry is
  * `--forte-calendar-*`'s to decide, not the button's. */
 const NAV_BUTTON_STYLE = {
   "--forte-button-height": "var(--forte-calendar-nav-size)",
-  "--forte-button-icon-padding": "0px",
   "--forte-button-icon-size": "1rem",
 } as React.CSSProperties;
 

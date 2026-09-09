@@ -52,13 +52,13 @@ export default function ToolbarEditor() {
 
         <ToggleGroup aria-label="Text style" multiple>
           <Toggle iconOnly value="bold" aria-label="Bold">
-            <Bold className={ICON} />
+            <Bold />
           </Toggle>
           <Toggle iconOnly value="italic" aria-label="Italic">
-            <Italic className={ICON} />
+            <Italic />
           </Toggle>
           <Toggle iconOnly value="code" aria-label="Inline code">
-            <Code className={ICON} />
+            <Code />
           </Toggle>
         </ToggleGroup>
 
@@ -66,10 +66,10 @@ export default function ToolbarEditor() {
 
         <ToggleGroup aria-label="List">
           <Toggle iconOnly value="bullet" aria-label="Bulleted list">
-            <List className={ICON} />
+            <List />
           </Toggle>
           <Toggle iconOnly value="ordered" aria-label="Numbered list">
-            <ListOrdered className={ICON} />
+            <ListOrdered />
           </Toggle>
         </ToggleGroup>
 
@@ -77,10 +77,10 @@ export default function ToolbarEditor() {
 
         <Toolbar.Group aria-label="History">
           <Toolbar.Button iconOnly aria-label="Undo">
-            <Undo2 className={ICON} />
+            <Undo2 />
           </Toolbar.Button>
           <Toolbar.Button iconOnly aria-label="Redo">
-            <Redo2 className={ICON} />
+            <Redo2 />
           </Toolbar.Button>
         </Toolbar.Group>
 
@@ -88,7 +88,7 @@ export default function ToolbarEditor() {
           <Menu.Trigger
             render={<Toolbar.Button iconOnly aria-label="More options" className="ms-auto" />}
           >
-            <EllipsisVertical className={ICON} />
+            <EllipsisVertical />
           </Menu.Trigger>
           <Menu.Popup>
             <Menu.Item>

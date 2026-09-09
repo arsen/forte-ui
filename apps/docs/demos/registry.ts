@@ -123,6 +123,8 @@ import d_breadcrumb_variants from "./breadcrumb/variants";
 import d_breadcrumb_variants_src from "./breadcrumb/variants?raw";
 import d_button_as_link from "./button/as-link";
 import d_button_as_link_src from "./button/as-link?raw";
+import d_button_avatar_trigger from "./button/avatar-trigger";
+import d_button_avatar_trigger_src from "./button/avatar-trigger?raw";
 import d_button_icon_only from "./button/icon-only";
 import d_button_icon_only_src from "./button/icon-only?raw";
 import d_button_loading from "./button/loading";
@@ -964,6 +966,7 @@ export type DemoId =
   | "breadcrumb/sizes"
   | "breadcrumb/variants"
   | "button/as-link"
+  | "button/avatar-trigger"
   | "button/icon-only"
   | "button/loading"
   | "button/sizes"
@@ -1416,6 +1419,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "breadcrumb/sizes": { Component: d_breadcrumb_sizes, source: d_breadcrumb_sizes_src, file: "breadcrumb/sizes.tsx" },
   "breadcrumb/variants": { Component: d_breadcrumb_variants, source: d_breadcrumb_variants_src, file: "breadcrumb/variants.tsx" },
   "button/as-link": { Component: d_button_as_link, source: d_button_as_link_src, file: "button/as-link.tsx" },
+  "button/avatar-trigger": { Component: d_button_avatar_trigger, source: d_button_avatar_trigger_src, file: "button/avatar-trigger.tsx" },
   "button/icon-only": { Component: d_button_icon_only, source: d_button_icon_only_src, file: "button/icon-only.tsx" },
   "button/loading": { Component: d_button_loading, source: d_button_loading_src, file: "button/loading.tsx" },
   "button/sizes": { Component: d_button_sizes, source: d_button_sizes_src, file: "button/sizes.tsx" },

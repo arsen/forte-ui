@@ -5,31 +5,17 @@ import { Toolbar as BaseToolbar } from "@base-ui/react/toolbar";
 import { clsx } from "clsx";
 import { Button, type ButtonSize, type ButtonTone, type ButtonVariant } from "../button";
 import { Input, type InputVariant } from "../input";
+import { ToolbarSizeContext, useToolbarSize, type ToolbarSize } from "./size-context";
 import styles from "./Toolbar.module.css";
 
 export type ToolbarOrientation = "horizontal" | "vertical";
 export type ToolbarVariant = "plain" | "panel" | "outline" | "elevated";
-export type ToolbarSize = "sm" | "md" | "lg";
+export type { ToolbarSize };
 
-/* -------------------------------------------------------------------------
- * Shared size
- *
- * A bar whose controls are three different heights does not read as a bar, so
- * `size` set on the root becomes the default for every `Toolbar.Button`,
- * `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it.
- *
- * React context and not CSS inheritance, for the same reason `ToggleGroup`
- * uses context: the size knobs are declared on each control's OWN root rule —
- * which is what lets a consumer re-skin one control, since an element's own
- * declaration beats an inherited one — so a value set on the bar would be
- * inherited and then immediately overwritten. The `data-size` attribute the
- * rules key off has to be resolved in JS and written onto each item.
- *
- * `??` and not `||`: an item's own prop wins, then the bar's, then the
- * component default.
- * ---------------------------------------------------------------------- */
-
-const ToolbarSizeContext = React.createContext<ToolbarSize | undefined>(undefined);
+/* The shared size lives in `size-context.ts`, with the reasoning: it is read
+ * by Toggle, Select and Combobox as well as by the parts below, and this file
+ * imports Button and Input, so the context has to sit in a leaf module to
+ * reach them without a cycle. */
 
 /* -------------------------------------------------------------------------
  * Root
@@ -51,8 +37,9 @@ export interface ToolbarRootProps extends Omit<BaseToolbar.Root.Props, "classNam
   variant?: ToolbarVariant;
   /**
    * Size of the bar, and the default size of every `Toolbar.Button`,
-   * `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it. An item's
-   * own `size` still wins.
+   * `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it — and of a
+   * `Toggle`, `Select.Trigger` or `Combobox` rendered into the bar, which
+   * read the same context. An item's own `size` still wins.
    * @default "md"
    */
   size?: ToolbarSize;
@@ -255,6 +242,9 @@ export interface ToolbarButtonProps
    *
    * The default `Button` styling steps aside when this is present, so the two
    * never fight over the cascade; the rendered component keeps its own look.
+   * It still takes the bar's `size` — a `Toggle`, `Select.Trigger` or
+   * `Combobox.Trigger` reads the same context this button does — so
+   * `render={<Select.Trigger />}` needs no size of its own.
    */
   render?: BaseToolbar.Button.Props["render"];
   /**
@@ -288,7 +278,7 @@ export const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonPr
     },
     ref,
   ) {
-    const toolbarSize = React.useContext(ToolbarSizeContext);
+    const toolbarSize = useToolbarSize();
 
     return (
       <BaseToolbar.Button
@@ -353,7 +343,7 @@ export interface ToolbarLinkProps extends Omit<BaseToolbar.Link.Props, "classNam
  */
 export const ToolbarLink = React.forwardRef<HTMLAnchorElement, ToolbarLinkProps>(
   function ToolbarLink({ size, className, ...props }, ref) {
-    const toolbarSize = React.useContext(ToolbarSizeContext);
+    const toolbarSize = useToolbarSize();
 
     return (
       <BaseToolbar.Link
@@ -426,7 +416,7 @@ export const ToolbarInput = React.forwardRef<HTMLInputElement, ToolbarInputProps
     { size, variant = "outline", fullWidth = false, render, className, ...props },
     ref,
   ) {
-    const toolbarSize = React.useContext(ToolbarSizeContext);
+    const toolbarSize = useToolbarSize();
 
     return (
       <BaseToolbar.Input
@@ -485,7 +475,7 @@ export interface ToolbarTextProps
  */
 export const ToolbarText = React.forwardRef<HTMLSpanElement, ToolbarTextProps>(
   function ToolbarText({ size, className, ...props }, ref) {
-    const toolbarSize = React.useContext(ToolbarSizeContext);
+    const toolbarSize = useToolbarSize();
 
     return (
       <span

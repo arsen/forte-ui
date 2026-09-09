@@ -3,13 +3,11 @@
 import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline } from "lucide-react";
 import { Toggle, ToggleGroup, Toolbar } from "@forte-ui/react";
 
-const ICON = "size-4 shrink-0";
-
 export default function ToolbarBasic() {
   return (
     // `role="toolbar"` is not a labelable element, so the bar cannot take a
     // <label> — it needs `aria-label` or `aria-labelledby` instead.
-    <Toolbar.Root aria-label="Formatting">
+    <Toolbar.Root aria-label="Formatting" variant="outline">
       {/* A ToggleGroup inside a toolbar does NOT open a second keyboard mode.
         * Base UI's ToggleGroup checks for a toolbar above it and, finding one,
         * skips its own roving focus so its toggles join the BAR's arrow-key
@@ -17,13 +15,13 @@ export default function ToolbarBasic() {
         * group straight in. */}
       <ToggleGroup aria-label="Text style" multiple defaultValue={["bold"]}>
         <Toggle iconOnly value="bold" aria-label="Bold">
-          <Bold className={ICON} />
+          <Bold />
         </Toggle>
         <Toggle iconOnly value="italic" aria-label="Italic">
-          <Italic className={ICON} />
+          <Italic />
         </Toggle>
         <Toggle iconOnly value="underline" aria-label="Underline">
-          <Underline className={ICON} />
+          <Underline />
         </Toggle>
       </ToggleGroup>
 
@@ -31,13 +29,13 @@ export default function ToolbarBasic() {
 
       <ToggleGroup aria-label="Alignment" defaultValue={["left"]}>
         <Toggle iconOnly value="left" aria-label="Align left">
-          <AlignLeft className={ICON} />
+          <AlignLeft />
         </Toggle>
         <Toggle iconOnly value="center" aria-label="Align center">
-          <AlignCenter className={ICON} />
+          <AlignCenter />
         </Toggle>
         <Toggle iconOnly value="right" aria-label="Align right">
-          <AlignRight className={ICON} />
+          <AlignRight />
         </Toggle>
       </ToggleGroup>
 

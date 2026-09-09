@@ -89,7 +89,13 @@ and to follow a text selection, put a `Toolbar` inside a
 
 `size` on the root is the default size of every `Toolbar.Button`,
 `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it, so a bar stays one
-height without repeating the prop per control. An item's own `size` still wins.
+height without repeating the prop per control. It reaches the library's other
+controls too: a [`Toggle`](/components/toggle/), a
+[`Select.Trigger`](/components/select/) or a [`Combobox`](/components/combobox/)
+rendered into the bar — `render={<Select.Trigger />}` on a `Toolbar.Button` —
+takes the bar's size with no prop of its own, which is what the editor demo
+above relies on. An item's own `size` still wins, and for a toggle its group's
+comes before the bar's.
 
 <DemoBlock id="toolbar/sizes" />
 

@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Select as BaseSelect } from "@base-ui/react/select";
 import { clsx } from "clsx";
+import { useToolbarSize } from "../toolbar/size-context";
 import styles from "./Select.module.css";
 
 export type SelectSize = "sm" | "md" | "lg";
@@ -220,6 +221,9 @@ export interface SelectTriggerProps extends Omit<BaseTriggerProps, "className"> 
    * Size of the trigger. The popup follows it: item height, padding and
    * font size step with the trigger's, so a `sm` select opens a `sm` list.
    * Actual dimensions also follow the ambient `data-forte-density` setting.
+   * Inherited from an enclosing `Toolbar.Root` when left unset, so
+   * `render={<Select.Trigger />}` on a `Toolbar.Button` needs no size of its
+   * own.
    * @default "md"
    */
   size?: SelectSize;
@@ -248,9 +252,11 @@ export const SelectTrigger = React.forwardRef<
   HTMLButtonElement,
   SelectTriggerProps
 >(function SelectTrigger(
-  { variant = "outline", size = "md", fullWidth = false, className, ...props },
+  { variant = "outline", size: sizeProp, fullWidth = false, className, ...props },
   ref,
 ) {
+  const toolbarSize = useToolbarSize();
+  const size = sizeProp ?? toolbarSize ?? "md";
   const localRef = React.useRef<HTMLButtonElement | null>(null);
 
   const handleRef = React.useCallback(

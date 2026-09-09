@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Combobox as BaseCombobox } from "@base-ui/react/combobox";
 import { clsx } from "clsx";
+import { useToolbarSize } from "../toolbar/size-context";
 import styles from "./Combobox.module.css";
 
 export type ComboboxSize = "sm" | "md" | "lg";
@@ -240,6 +241,7 @@ export interface ComboboxInputGroupProps
    * Matches `Input` and `Select.Trigger`, so the three line up on one row.
    * The popup follows it — row height, padding and font size step with the
    * field's — unless `<Combobox.Popup>` is given a `size` of its own.
+   * Inherited from an enclosing `Toolbar.Root` when left unset.
    * @default "md"
    */
   size?: ComboboxSize;
@@ -267,9 +269,11 @@ export const ComboboxInputGroup = React.forwardRef<
   HTMLDivElement,
   ComboboxInputGroupProps
 >(function ComboboxInputGroup(
-  { variant = "outline", size = "md", fullWidth = false, className, ...props },
+  { variant = "outline", size: sizeProp, fullWidth = false, className, ...props },
   ref,
 ) {
+  const toolbarSize = useToolbarSize();
+  const size = sizeProp ?? toolbarSize ?? "md";
   const setSize = React.useContext(ComboboxSizeContext)?.setSize;
 
   // Layout effect, not a passive one: a popup mounted `open` paints in the
@@ -352,7 +356,9 @@ export interface ComboboxTriggerProps
    * Size of the standalone trigger. Ignored inside an
    * `<Combobox.InputGroup>`, where the group's `size` decides. The popup
    * follows whichever of the two is in charge, unless `<Combobox.Popup>` is
-   * given a `size` of its own.
+   * given a `size` of its own. Inherited from an enclosing `Toolbar.Root`
+   * when left unset, so `render={<Combobox.Trigger />}` on a
+   * `Toolbar.Button` needs no size of its own.
    * @default "md"
    */
   size?: ComboboxSize;
@@ -389,7 +395,7 @@ export const ComboboxTrigger = React.forwardRef<
 >(function ComboboxTrigger(
   {
     variant = "outline",
-    size = "md",
+    size: sizeProp,
     fullWidth = false,
     children,
     className,
@@ -397,6 +403,8 @@ export const ComboboxTrigger = React.forwardRef<
   },
   ref,
 ) {
+  const toolbarSize = useToolbarSize();
+  const size = sizeProp ?? toolbarSize ?? "md";
   const inGroup = React.useContext(ComboboxInGroupContext);
   const setSize = React.useContext(ComboboxSizeContext)?.setSize;
 

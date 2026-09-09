@@ -4,6 +4,7 @@ import * as React from "react";
 import { Toggle as BaseToggle } from "@base-ui/react/toggle";
 import { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
 import { clsx } from "clsx";
+import { useToolbarSize } from "../toolbar/size-context";
 import styles from "./Toggle.module.css";
 
 export type ToggleVariant = "solid" | "soft" | "outline";
@@ -25,8 +26,10 @@ export type ToggleGroupOrientation = "horizontal" | "vertical";
  * the rules key off have to be resolved in JS and written onto each toggle.
  *
  * Undefined rather than absent is the signal: a toggle's own prop wins, then
- * the group's, then the component default. `?? ` and not `||`, so a group can
- * be given values the CSS treats as meaningful without them being swallowed.
+ * the group's, then — for `size` alone — the surrounding toolbar's (see
+ * `toolbar/size-context.ts`), then the component default. `?? ` and not `||`,
+ * so a group can be given values the CSS treats as meaningful without them
+ * being swallowed.
  * ---------------------------------------------------------------------- */
 
 interface ToggleAppearance {
@@ -66,7 +69,9 @@ export interface ToggleProps<Value extends string = string>
   tone?: ToggleTone;
   /**
    * Size of the button. Matches `Button` step for step so the two line up in
-   * one toolbar. Inherited from an enclosing `ToggleGroup` when left unset.
+   * one toolbar. Inherited from an enclosing `ToggleGroup` when left unset,
+   * and failing that from a `Toolbar.Root` around it — a toggle handed to
+   * `Toolbar.Button` through `render` needs no size of its own.
    * @default "md"
    */
   size?: ToggleSize;
@@ -125,6 +130,10 @@ export function Toggle<Value extends string = string>({
   ...props
 }: ToggleProps<Value>): React.JSX.Element {
   const group = React.useContext(ToggleAppearanceContext);
+  // Read here rather than folded into the group's context, so a lone toggle
+  // in a bar — `render={<Toggle iconOnly />}` on a `Toolbar.Button` — takes
+  // the bar's size without a group around it.
+  const toolbarSize = useToolbarSize();
 
   return (
     <BaseToggle
@@ -132,7 +141,7 @@ export function Toggle<Value extends string = string>({
       data-forte="toggle"
       data-variant={variant ?? group?.variant ?? "soft"}
       data-tone={tone ?? group?.tone ?? "primary"}
-      data-size={size ?? group?.size ?? "md"}
+      data-size={size ?? group?.size ?? toolbarSize ?? "md"}
       {/* Spread-when-true, not `iconOnly || undefined`: JSX keeps an
         * `undefined`-valued key in the props object and the render-prop
         * merge copies it verbatim, so the plain attribute would erase the
@@ -164,7 +173,8 @@ export interface ToggleGroupProps<Value extends string = string>
   tone?: ToggleTone;
   /**
    * Default `size` for every `Toggle` inside the group. A toggle's own `size`
-   * still wins.
+   * still wins; left unset inside a `Toolbar.Root`, the toggles take the
+   * bar's.
    * @default "md"
    */
   size?: ToggleSize;

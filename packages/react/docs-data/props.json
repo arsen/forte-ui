@@ -2278,7 +2278,7 @@
         "type": "ComboboxSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the field. Height, inline padding and font size move together,\nand the actual numbers follow the ambient `data-forte-density` setting.\nMatches `Input` and `Select.Trigger`, so the three line up on one row.\nThe popup follows it — row height, padding and font size step with the\nfield's — unless `<Combobox.Popup>` is given a `size` of its own."
+        "description": "Size of the field. Height, inline padding and font size move together,\nand the actual numbers follow the ambient `data-forte-density` setting.\nMatches `Input` and `Select.Trigger`, so the three line up on one row.\nThe popup follows it — row height, padding and font size step with the\nfield's — unless `<Combobox.Popup>` is given a `size` of its own.\nInherited from an enclosing `Toolbar.Root` when left unset."
       },
       {
         "name": "variant",
@@ -2332,7 +2332,7 @@
         "type": "ComboboxSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the standalone trigger. Ignored inside an\n`<Combobox.InputGroup>`, where the group's `size` decides. The popup\nfollows whichever of the two is in charge, unless `<Combobox.Popup>` is\ngiven a `size` of its own."
+        "description": "Size of the standalone trigger. Ignored inside an\n`<Combobox.InputGroup>`, where the group's `size` decides. The popup\nfollows whichever of the two is in charge, unless `<Combobox.Popup>` is\ngiven a `size` of its own. Inherited from an enclosing `Toolbar.Root`\nwhen left unset, so `render={<Combobox.Trigger />}` on a\n`Toolbar.Button` needs no size of its own."
       },
       {
         "name": "variant",
@@ -7229,7 +7229,7 @@
         "type": "SelectSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the trigger. The popup follows it: item height, padding and\nfont size step with the trigger's, so a `sm` select opens a `sm` list.\nActual dimensions also follow the ambient `data-forte-density` setting."
+        "description": "Size of the trigger. The popup follows it: item height, padding and\nfont size step with the trigger's, so a `sm` select opens a `sm` list.\nActual dimensions also follow the ambient `data-forte-density` setting.\nInherited from an enclosing `Toolbar.Root` when left unset, so\n`render={<Select.Trigger />}` on a `Toolbar.Button` needs no size of its\nown."
       },
       {
         "name": "variant",
@@ -8793,7 +8793,7 @@
         "type": "ToggleSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the button. Matches `Button` step for step so the two line up in\none toolbar. Inherited from an enclosing `ToggleGroup` when left unset."
+        "description": "Size of the button. Matches `Button` step for step so the two line up in\none toolbar. Inherited from an enclosing `ToggleGroup` when left unset,\nand failing that from a `Toolbar.Root` around it — a toggle handed to\n`Toolbar.Button` through `render` needs no size of its own."
       },
       {
         "name": "tone",
@@ -8883,7 +8883,7 @@
         "type": "ToggleSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Default `size` for every `Toggle` inside the group. A toggle's own `size`\nstill wins."
+        "description": "Default `size` for every `Toggle` inside the group. A toggle's own `size`\nstill wins; left unset inside a `Toolbar.Root`, the toggles take the\nbar's."
       },
       {
         "name": "tone",
@@ -8938,7 +8938,7 @@
         "type": "ToolbarSize",
         "required": false,
         "defaultValue": "md",
-        "description": "Size of the bar, and the default size of every `Toolbar.Button`,\n`Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it. An item's\nown `size` still wins."
+        "description": "Size of the bar, and the default size of every `Toolbar.Button`,\n`Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` inside it — and of a\n`Toggle`, `Select.Trigger` or `Combobox` rendered into the bar, which\nread the same context. An item's own `size` still wins."
       },
       {
         "name": "variant",
@@ -9020,7 +9020,7 @@
         "type": "ReactElement<unknown, string | JSXElementConstructor<any>> | ComponentRenderFn<HTMLProps, ToolbarButtonState>",
         "required": false,
         "defaultValue": null,
-        "description": "Replaces the rendered button with another element or component. This is\nhow a menu, a select, a dialog or a toggle joins the bar's keyboard\norder — `render={<Toggle iconOnly />}`,\n`render={<Select.Trigger />}`.\n\nThe default `Button` styling steps aside when this is present, so the two\nnever fight over the cascade; the rendered component keeps its own look."
+        "description": "Replaces the rendered button with another element or component. This is\nhow a menu, a select, a dialog or a toggle joins the bar's keyboard\norder — `render={<Toggle iconOnly />}`,\n`render={<Select.Trigger />}`.\n\nThe default `Button` styling steps aside when this is present, so the two\nnever fight over the cascade; the rendered component keeps its own look.\nIt still takes the bar's `size` — a `Toggle`, `Select.Trigger` or\n`Combobox.Trigger` reads the same context this button does — so\n`render={<Select.Trigger />}` needs no size of its own."
       },
       {
         "name": "size",

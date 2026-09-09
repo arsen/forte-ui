@@ -2400,8 +2400,15 @@
       },
       {
         "name": "--forte-button-icon-padding",
-        "value": "var(--forte-space-2)",
-        "description": "Minimum space between the icon and the button's edge (`iconOnly` only)",
+        "value": "max( 0px, calc( (var(--forte-button-height) - var(--forte-button-icon-only-content)) / 2 - var(--forte-button-border-width) ) )",
+        "description": "Space between the icon and the button's edge (`iconOnly` only). Derived from the height and `--forte-button-icon-size` so the square lands on the control height; set a length to pad a larger icon instead.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-button-avatar-size",
+        "value": "calc(var(--forte-button-height) * 2 / 3)",
+        "description": "Diameter of an `Avatar` composed as the icon (`iconOnly` only). Two thirds of the control height, so it follows `size` and density.",
         "part": "root",
         "overrides": []
       }
@@ -10845,6 +10852,26 @@
         "overrides": []
       },
       {
+        "name": "--forte-toggle-icon-size",
+        "value": "var(--forte-font-size-3)",
+        "description": "Size of an `svg` a consumer drops in; reassigned by `size`. Direct children only, so a composed forte-ui component keeps sizing its own glyphs.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-size=\"sm\"]",
+            "value": "var(--forte-font-size-2)"
+          },
+          {
+            "selector": ".root[data-size=\"md\"]",
+            "value": "var(--forte-font-size-3)"
+          },
+          {
+            "selector": ".root[data-size=\"lg\"]",
+            "value": "var(--forte-font-size-4)"
+          }
+        ]
+      },
+      {
         "name": "--forte-toggle-border-width",
         "value": "1px",
         "description": "Border width, drawn in every variant — `outline` is the only one that gives it a color.",
@@ -10987,8 +11014,8 @@
       },
       {
         "name": "--forte-toggle-icon-padding",
-        "value": "var(--forte-space-2)",
-        "description": "Minimum space between the icon and the toggle's edge (`iconOnly` only)",
+        "value": "max( 0px, calc( (var(--forte-toggle-height) - var(--forte-toggle-icon-size)) / 2 - var(--forte-toggle-border-width) ) )",
+        "description": "Space between the icon and the toggle's edge (`iconOnly` only). Derived from the height and `--forte-toggle-icon-size` so the square lands on the control height; set a length to pad a larger icon instead.",
         "part": "root",
         "overrides": []
       },

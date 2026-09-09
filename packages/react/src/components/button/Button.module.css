@@ -205,24 +205,68 @@
     --forte-button-icon-size: var(--forte-font-size-4);
   }
 
-  /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width.
-   * The control height is a floor, not the size: with zero padding a 16px
-   * icon sits 2–3px off a pill's curve at the corners (the diagonal is where
-   * a circle is nearest), so the icon gets a guaranteed padding and the
-   * button grows past the floor — square, because the padding wraps all four
-   * sides and `aspect-ratio` squares off non-square icons — whenever the
-   * icon needs the room. `block-size: auto` is what lets it grow; the two
-   * `min-*` floors keep an undersized icon from shrinking the button below
-   * the control height beside it or the 24px hit target. */
+  /* Icon-only buttons pass SC 2.5.8 on height but not necessarily on width,
+   * so the width is pinned to the height. The control height is the size,
+   * not a floor the padding is allowed to overshoot: the padding is DERIVED
+   * — half of what the height leaves around the icon, less the border — so
+   * the default glyph lands the square exactly on the control height at
+   * every size and density, level with a labeled button, a Toggle or a
+   * ThemeToggle beside it. It used to be a flat `--forte-space-2`, from
+   * before `.content > svg` sized the glyph, when a bare 24px lucide icon
+   * needed holding off a pill's curve; left flat after that, it overshot
+   * wherever the height is small — 14px of icon plus 16px of padding made a
+   * `sm` button 32px, four proud of the 28px control beside it, and a
+   * compact `md` 34px. The square can still grow, kept square by the
+   * four-sided padding and `aspect-ratio`: `block-size: auto` lets anything
+   * bigger than the knob says — a consumer-sized icon, a re-pointed avatar —
+   * push it out with the same padding around it, and the two `min-*` floors
+   * keep an undersized icon from shrinking it below the control height or
+   * the 24px hit target. `max(0px, …)` keeps the padding valid when the
+   * content outgrows the height outright. */
   .root[data-icon-only] {
-    /** Minimum space between the icon and the button's edge (`iconOnly` only) */
-    --forte-button-icon-padding: var(--forte-space-2);
+    /* What sits in the square: the glyph by default, the avatar when one is
+     * composed (below). Private — the two size knobs are the API. */
+    --forte-button-icon-only-content: var(--forte-button-icon-size);
+    /** Space between the icon and the button's edge (`iconOnly` only). Derived
+     * from the height and `--forte-button-icon-size` so the square lands on
+     * the control height; set a length to pad a larger icon instead. */
+    --forte-button-icon-padding: max(
+      0px,
+      calc(
+        (var(--forte-button-height) - var(--forte-button-icon-only-content)) / 2 -
+          var(--forte-button-border-width)
+      )
+    );
+    /** Diameter of an `Avatar` composed as the icon (`iconOnly` only). Two
+     * thirds of the control height, so it follows `size` and density. */
+    --forte-button-avatar-size: calc(var(--forte-button-height) * 2 / 3);
     --forte-button-padding-x: var(--forte-button-icon-padding);
     padding-block: var(--forte-button-icon-padding);
     block-size: auto;
     aspect-ratio: 1;
     min-block-size: max(var(--forte-button-height), var(--forte-target-min));
     min-inline-size: max(var(--forte-button-height), var(--forte-target-min));
+  }
+
+  /* An Avatar composed as the icon — an account menu's trigger, beside a
+   * ThemeToggle in a header. Avatar's steps are a people scale (24px at `xs`,
+   * 32px at `sm`), not a control scale, so no `size` of its own fits a
+   * control; the button sizes the avatar instead, and the padding above
+   * derives from that diameter in place of the glyph's, which is what keeps
+   * the square on the control height rather than growing around the avatar.
+   * A disc needs none of the room a stroked glyph does near a pill's curve —
+   * two concentric circles keep a uniform gap.
+   *
+   * This overrides the avatar's own `size`: `--forte-avatar-size` is declared
+   * on Avatar's root at (0,2,0) and the descendant rule beats it at (0,4,0),
+   * so bundle order between the two files never gets a vote — the same way
+   * InputGroup retunes a Button in its addon. Re-point the knob instead. */
+  .root[data-icon-only]:has(> .content > [data-forte="avatar"]) {
+    --forte-button-icon-only-content: var(--forte-button-avatar-size);
+  }
+
+  .root[data-icon-only] .content > [data-forte="avatar"] {
+    --forte-avatar-size: var(--forte-button-avatar-size);
   }
 
   /* Tones ----------------------------------------------------------------- */
@@ -312,9 +356,9 @@
   /* An icon a consumer drops in. Sized here rather than left to the caller
    * because an icon set's own default is whatever that set picked — lucide
    * draws at 24px — and that default does not just look large, it changes the
-   * button's geometry: `iconOnly` derives its square from the icon, so a bare
-   * lucide glyph makes a 36px `md` button 42px and it no longer lines up with
-   * the controls beside it. The library ships no icon catalog, which is the
+   * button's geometry: `iconOnly` grows its square for anything bigger than
+   * `--forte-button-icon-size`, so a bare lucide glyph pushes a 36px `md`
+   * button out to 44px and it no longer lines up with the controls beside it. The library ships no icon catalog, which is the
    * reason to size whatever arrives rather than a reason not to.
    *
    * DIRECT children of the content span only. A composed forte-ui component

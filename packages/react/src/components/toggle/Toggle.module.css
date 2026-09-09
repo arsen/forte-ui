@@ -42,6 +42,13 @@
     --forte-toggle-font-weight: var(--forte-font-weight-medium);
     /** Gap between an icon and its label. */
     --forte-toggle-gap: var(--forte-control-gap);
+    /* One step above the label on the same scale — the pairing Button draws,
+     * and Toolbar renders the two side by side. Button's file has the case
+     * for a size token over `1em`. */
+    /** Size of an `svg` a consumer drops in; reassigned by `size`. Direct
+     * children only, so a composed forte-ui component keeps sizing its own
+     * glyphs. */
+    --forte-toggle-icon-size: var(--forte-font-size-3);
     /** Border width, drawn in every variant — `outline` is the only one that
      * gives it a color. */
     --forte-toggle-border-width: 1px;
@@ -175,18 +182,21 @@
     --forte-toggle-height: var(--forte-control-h-sm);
     --forte-toggle-padding-x: var(--forte-control-px-sm);
     --forte-toggle-font-size: var(--forte-font-size-1);
+    --forte-toggle-icon-size: var(--forte-font-size-2);
   }
 
   .root[data-size="md"] {
     --forte-toggle-height: var(--forte-control-h-md);
     --forte-toggle-padding-x: var(--forte-control-px-md);
     --forte-toggle-font-size: var(--forte-font-size-2);
+    --forte-toggle-icon-size: var(--forte-font-size-3);
   }
 
   .root[data-size="lg"] {
     --forte-toggle-height: var(--forte-control-h-lg);
     --forte-toggle-padding-x: var(--forte-control-px-lg);
     --forte-toggle-font-size: var(--forte-font-size-3);
+    --forte-toggle-icon-size: var(--forte-font-size-4);
   }
 
   /* Every size clears the 24px SC 2.5.8 floor on height (`sm` is 28px), but an
@@ -195,20 +205,42 @@
    * square instead of being squashed to the minimum.
    *
    * Same shape as Button's icon-only rule, deliberately: Toolbar renders the
-   * two side by side, so if one grew for a large icon and the other clipped
-   * it, a mixed toolbar row would come out ragged. The control height is a
-   * floor — the guaranteed icon padding lets the toggle grow past it, kept
-   * square by the four-sided padding and `aspect-ratio`, whenever the icon
-   * needs the room. */
+   * two side by side, so if one sat on the control height and the other grew
+   * past it, a mixed toolbar row would come out ragged. The padding is
+   * derived — half of what the height leaves around the icon, less the
+   * border — so the default glyph lands the square exactly on the control
+   * height; the flat `--forte-space-2` it replaced made a `sm` toggle 32px
+   * beside a 28px button. Anything bigger than `--forte-toggle-icon-size`
+   * says still grows the square, kept square by the four-sided padding and
+   * `aspect-ratio`; Button's rule has the full account. */
   .root[data-icon-only] {
-    /** Minimum space between the icon and the toggle's edge (`iconOnly` only) */
-    --forte-toggle-icon-padding: var(--forte-space-2);
+    /** Space between the icon and the toggle's edge (`iconOnly` only). Derived
+     * from the height and `--forte-toggle-icon-size` so the square lands on
+     * the control height; set a length to pad a larger icon instead. */
+    --forte-toggle-icon-padding: max(
+      0px,
+      calc(
+        (var(--forte-toggle-height) - var(--forte-toggle-icon-size)) / 2 -
+          var(--forte-toggle-border-width)
+      )
+    );
     --forte-toggle-padding-x: var(--forte-toggle-icon-padding);
     padding-block: var(--forte-toggle-icon-padding);
     block-size: auto;
     aspect-ratio: 1;
     min-block-size: max(var(--forte-toggle-height), var(--forte-target-min));
     min-inline-size: max(var(--forte-toggle-height), var(--forte-target-min));
+  }
+
+  /* An icon a consumer drops in, sized the way Button sizes one and for the
+   * same reason: an icon set's own default — lucide draws at 24px — would
+   * otherwise decide the square rather than the toggle. Direct children only,
+   * so a composed forte-ui component keeps sizing its own glyphs; `flex: none`
+   * stops a long label squeezing the glyph. */
+  .root > svg {
+    flex: none;
+    inline-size: var(--forte-toggle-icon-size);
+    block-size: var(--forte-toggle-icon-size);
   }
 
   /* Tones ----------------------------------------------------------------- */

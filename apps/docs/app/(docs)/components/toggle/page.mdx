@@ -60,16 +60,23 @@ looks the same in all four tones.
 
 The same three steps as `Button` — `1.75rem`, `2.25rem`, `2.75rem` — so a toggle
 dropped into a row of buttons lines up rather than sitting a pixel proud. All
-three follow the ambient `data-forte-density` setting.
+three follow the ambient `data-forte-density` setting. Left unset, `size` comes
+from the enclosing `ToggleGroup`, and failing that from a
+[`Toolbar.Root`](/components/toolbar/) around it, so a toggle in a `sm` bar is
+`sm` without being told.
 
 <DemoBlock id="toggle/sizes" />
 
 ### Icon only
 
-`iconOnly` squares the button, gives the icon `--forte-toggle-icon-padding` of
-space on every side, and pins the square to at least the control height and
-24px, so the hit target still clears WCAG SC 2.5.8 at `size="sm"`. An icon too
-big for that floor grows the button instead of crowding the corners.
+`iconOnly` squares the button and keeps it on the control height: the space
+around the icon, `--forte-toggle-icon-padding`, is derived from the height and
+`--forte-toggle-icon-size`, so a `sm` toggle is 28px beside a 28px button rather
+than growing past it, and the square is still pinned to at least 24px so the
+hit target clears WCAG SC 2.5.8. A direct `svg` child is sized from that same
+knob — 14px, 16px, 18px by `size` — the way [`Button`](/components/button/)
+sizes one, so an icon set's own default does not decide the square. An icon
+bigger than the knob says grows the button instead of crowding the corners.
 
 <DemoBlock id="toggle/icon-only" />
 
