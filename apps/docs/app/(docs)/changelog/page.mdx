@@ -19,6 +19,19 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.7.0
+
+<ReleaseMeta date="2026-09-08" href="https://github.com/arsen/forte-ui/compare/v1.6.0...v1.7.0" kind="compare" />
+
+### Toolbar
+
+- Added an `elevated` variant, for a formatting strip or tool palette floating over content: it paints an overlay fill and a shadow, and adjusts to forced colors and dark themes.
+- Corner radius now follows `--forte-radius-control` (capped to stay concentric with the items inside) instead of `--forte-radius-surface`, so a toolbar of pill-shaped buttons rounds correctly under the `pill` radius preset.
+
+### General
+
+- Sped up the focus ring's fade from `--forte-duration-normal` to `--forte-duration-fast`, so it reads as a snap rather than a slow color-only crossfade.
+
 ## v1.6.0
 
 <ReleaseMeta date="2026-09-07" href="https://github.com/arsen/forte-ui/compare/v1.5.0...v1.6.0" kind="compare" />
@@ -179,14 +192,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Fixed the Next.js + Tailwind starter layout to import `globals.css` before `@forte-ui/react`, preserving the intended cascade-layer order (`theme, base, forte, components, utilities`) so Preflight no longer wins over the library's components.
 
-## v1.0.0
-
-<ReleaseMeta date="2026-09-03" href="https://github.com/arsen/forte-ui/compare/v1.0.0-beta.2...v1.0.0" kind="compare" />
-
-### General
-
-- Added an MIT `LICENSE` file to each publishable package (`@forte-ui/react`, `forte-ui`, `create-forte-ui`).
-
 ## Full history
 
-This page carries the 10 most recent releases. The 8 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 9 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

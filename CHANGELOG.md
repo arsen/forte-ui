@@ -13,6 +13,17 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-09-08
+
+### Toolbar
+
+- Added an `elevated` variant, for a formatting strip or tool palette floating over content: it paints an overlay fill and a shadow, and adjusts to forced colors and dark themes.
+- Corner radius now follows `--forte-radius-control` (capped to stay concentric with the items inside) instead of `--forte-radius-surface`, so a toolbar of pill-shaped buttons rounds correctly under the `pill` radius preset.
+
+### General
+
+- Sped up the focus ring's fade from `--forte-duration-normal` to `--forte-duration-fast`, so it reads as a snap rather than a slow color-only crossfade.
+
 ## [1.6.0] - 2026-09-07
 
 ### ColorPicker
@@ -461,7 +472,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/arsen/forte-ui/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/arsen/forte-ui/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/arsen/forte-ui/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/arsen/forte-ui/compare/v1.4.0...v1.4.1
