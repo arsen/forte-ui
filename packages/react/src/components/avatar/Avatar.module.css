@@ -127,12 +127,45 @@
     vertical-align: middle;
 
     /* Chrome, not a control: nothing here performs an action on click, so it
-     * takes `default` per the cursor table in AGENTS.md. An avatar that IS a
-     * link or a button is composed — `<Avatar.Root render={<a />}>` — and
-     * inherits that element's pointer along with its semantics. */
+     * takes `default` per the cursor table in AGENTS.md. The pair of rules
+     * right after this block is what keeps that honest in both compositions
+     * — the avatar that IS a control, and the one that sits inside one. */
     cursor: default;
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  /* Interactive ----------------------------------------------------------- */
+  /* An avatar composed AS a control — `<Avatar.Root render={<a href />}>` on
+   * a profile link. Matched on the element rather than on a prop, the same
+   * way Badge does it: the `render`ed element brings its own semantics, and
+   * the cursor should follow them with no second prop to forget. `[href]`
+   * rather than `a`, because an anchor without one is inert and
+   * unfocusable, and a `render`ed router link always brings its own. The
+   * rule exists because the UA gives a link `cursor: auto`, which draws the
+   * hand, and `.root`'s `default` above outranks it — without this, a
+   * linked avatar shows an arrow. */
+  .root:is(button, [href], [role="button"], [role="link"]) {
+    cursor: pointer;
+  }
+
+  /* An avatar INSIDE a control — an icon-only Button as an account menu's
+   * trigger, a profile link in a nav list. The avatar is decoration there,
+   * and its own `cursor: default` beats the `pointer` it would inherit: the
+   * hand snaps to an arrow the moment the pointer crosses the picture, in
+   * the middle of a button that is otherwise `pointer`. `inherit` takes
+   * whatever the control decided, which also covers the disabled case — the
+   * button says `not-allowed` and the avatar says it too, without this file
+   * having to know.
+   *
+   * `inherit` rather than the `pointer-events: none` the cursor table
+   * suggests, the call Badge makes for the same reason: that would also stop
+   * the avatar receiving hover, and an avatar inside a control may still be
+   * the thing a tooltip hangs off. Same specificity as the rule above and
+   * later in the file, so a linked avatar nested in a button — invalid
+   * markup anyway — takes the button's cursor rather than its own. */
+  :is(button, [href], [role="button"], [role="link"]) .root {
+    cursor: inherit;
   }
 
   /* The ring — see note 3 in the header.
