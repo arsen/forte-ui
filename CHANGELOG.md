@@ -13,6 +13,39 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-09-11
+
+### Avatar
+
+- Fixed the cursor when `Avatar` is composed as a control (`render={<a href />}`, for instance) or nested inside one (an icon-only `Button` used as an account-menu trigger): it now shows `pointer` when the avatar itself is the interactive element, and inherits the surrounding control's cursor (including `not-allowed` when disabled) when it sits inside one, instead of an arrow appearing in the middle of an otherwise-clickable control.
+
+### Button
+
+- Icon-only buttons now derive `--forte-button-icon-padding` from the button's height and `--forte-button-icon-size` instead of a flat padding, so the square lands exactly on the control height at every size and density — previously the flat padding overshot, making a `sm` button 32px instead of 28px and a compact `md` 34px.
+- Added avatar-trigger support: composing an `Avatar` as an icon-only button's content now sizes it via `--forte-button-avatar-size` (two thirds of the button's height) so it fits the button's square, for an account-menu trigger beside a `ThemeToggle`.
+
+### Combobox
+
+- `Combobox.InputGroup` and `Combobox.Trigger` now inherit `size` from an enclosing `Toolbar.Root` when left unset, so `render={<Combobox.Trigger />}` on a `Toolbar.Button` needs no `size` of its own.
+
+### Select
+
+- `Select.Trigger` now inherits `size` from an enclosing `Toolbar.Root` when left unset, so `render={<Select.Trigger />}` on a `Toolbar.Button` needs no `size` of its own.
+
+### Separator
+
+- Added a labeled form: pass `children` (text, an icon, a `Badge`, a `Kbd`) to set a label into the line, splitting it into two halves either side, in both orientations. The root is automatically named after the label via `aria-labelledby` for assistive technology, unless the separator is `decorative` or already named with its own `aria-label`/`aria-labelledby`.
+
+### Toggle
+
+- `Toggle` and `ToggleGroup` now inherit `size` from an enclosing `Toolbar.Root` when nothing more specific sets it (own prop, then the group's, then the toolbar's).
+- An icon dropped directly into a `Toggle` is now sized automatically via the new `--forte-toggle-icon-size` token, stepping with the toggle's `size`, instead of following the icon set's own default.
+- Icon-only toggles now derive `--forte-toggle-icon-padding` from height and icon size the same way icon-only buttons do, so the square lands on the control height instead of overshooting it.
+
+### Toolbar
+
+- A control rendered into a `Toolbar.Button` via `render` — a `Toggle`, `Select.Trigger`, or `Combobox.Trigger` — now reads the bar's `size`, the same context `Toolbar.Button`, `Toolbar.Input`, `Toolbar.Link` and `Toolbar.Text` already used, so composing one needs no `size` prop of its own.
+
 ## [1.7.0] - 2026-09-08
 
 ### Toolbar
@@ -472,7 +505,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/arsen/forte-ui/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/arsen/forte-ui/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/arsen/forte-ui/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/arsen/forte-ui/compare/v1.4.1...v1.5.0
