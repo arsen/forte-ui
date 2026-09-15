@@ -5532,6 +5532,13 @@
         "overrides": []
       },
       {
+        "name": "--forte-kbd-font-weight",
+        "value": "var(--forte-font-weight-medium)",
+        "description": "Key label weight. A cap is a label rather than prose, and medium is what keeps the glyphs legible at 0.85em over a fill this faint.",
+        "part": "root",
+        "overrides": []
+      },
+      {
         "name": "--forte-kbd-min-inline-size",
         "value": "1.6em",
         "description": "Smallest cap width — what squares up a lone letter instead of leaving a sliver the exact width of an `I`.",
