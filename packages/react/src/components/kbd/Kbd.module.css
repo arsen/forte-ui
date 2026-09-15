@@ -48,6 +48,9 @@
     --forte-kbd-padding-inline: var(--forte-space-1);
     /** Key label size, relative to the surrounding text. */
     --forte-kbd-font-size: 0.85em;
+    /** Key label weight. A cap is a label rather than prose, and medium is
+     * what keeps the glyphs legible at 0.85em over a fill this faint. */
+    --forte-kbd-font-weight: var(--forte-font-weight-medium);
     /** Smallest cap width — what squares up a lone letter instead of leaving
      * a sliver the exact width of an `I`. */
     --forte-kbd-min-inline-size: 1.6em;
@@ -62,7 +65,16 @@
     border-radius: var(--forte-kbd-radius);
     background-color: var(--forte-kbd-bg);
 
+    /* `<kbd>` is one of the elements the UA stylesheet hands
+     * `font-family: monospace`, so a cap that names no family of its own
+     * renders in the browser's mono face — mid-sentence in running prose,
+     * beside a sans label on a menu row. It is also what quietly made the
+     * tabular-figures rule below a no-op, every monospace advance being
+     * uniform already. Naming the token is what every other text-bearing
+     * component in the library does. */
+    font-family: var(--forte-font-sans);
     font-size: var(--forte-kbd-font-size);
+    font-weight: var(--forte-kbd-font-weight);
     /* Keys are read as a group of glyphs, not as prose: tabular figures stop
      * a run of caps jittering between `F1` and `F11`, and normal tracking
      * undoes any tightening the surrounding text applied. */
