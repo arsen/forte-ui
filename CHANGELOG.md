@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-09-15
+
+### Kbd
+
+- Fixed `Kbd` rendering its label in the browser's UA monospace face by default; it now inherits the library's sans font, so a key cap matches the surrounding prose and sits correctly beside a sans label on a menu row.
+- Added the `--forte-kbd-font-weight` theming knob (defaults to medium) to control the key label's weight.
+
 ## [1.8.0] - 2026-09-11
 
 ### Avatar
@@ -505,7 +512,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/arsen/forte-ui/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/arsen/forte-ui/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/arsen/forte-ui/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/arsen/forte-ui/compare/v1.5.0...v1.6.0

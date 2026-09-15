@@ -12,6 +12,8 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v181", text: "v1.8.1", depth: 2 },
+    { id: "kbd", text: "Kbd", depth: 3 },
     { id: "v180", text: "v1.8.0", depth: 2 },
     { id: "avatar", text: "Avatar", depth: 3 },
     { id: "button", text: "Button", depth: 3 },
@@ -56,8 +58,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "v111", text: "v1.1.1", depth: 2 },
     { id: "navlist", text: "NavList", depth: 3 },
     { id: "design-tokens--motion-2", text: "Design tokens & motion", depth: 3 },
-    { id: "v110", text: "v1.1.0", depth: 2 },
-    { id: "shimmer", text: "Shimmer", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
