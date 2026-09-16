@@ -120,7 +120,30 @@ if (capture("git", ["status", "--porcelain"]).stdout.trim()) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. Build the publishable packages (the docs app is private and slow, and
+// 3. Credentials — asked of pnpm, not npm, because the two do not agree.
+//    pnpm keeps its own token store, `auth.ini` in its global config dir
+//    (written by `pnpm login`), and merges it OVER `~/.npmrc` (written by
+//    `npm login`), so a stale token there outranks a fresh login. Expired
+//    is the worst case: the registry answers the publish with 404 — it
+//    hides a package from a caller it cannot authenticate — rather than the
+//    401 that makes pnpm open the browser for 2FA, so the run gets through
+//    the build and the confirmation and then fails with an error that reads
+//    as "package does not exist", while `npm whoami`, which never reads
+//    auth.ini, insists the login is fine. `pnpm whoami` sees exactly the
+//    credential the publish will, and costs a second here, not the build.
+
+const who = capture("pnpm", ["whoami"]);
+const username = who.status === 0 ? who.stdout.trim().split("\n").pop() : "";
+if (!username) {
+  fail(
+    `pnpm cannot authenticate to the registry — \`pnpm whoami\` said:\n    ${(who.stderr || who.stdout).trim()}\n\n` +
+      `  pnpm reads its own auth.ini ahead of ~/.npmrc, so a token from an old \`pnpm login\` outranks a fresh \`npm login\`.\n` +
+      `  Run \`pnpm logout\` to drop that token and fall back to ~/.npmrc, or \`pnpm login\` to replace it; then release again.`,
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 4. Build the publishable packages (the docs app is private and slow, and
 //    nothing in a tarball comes from it).
 
 if (skipBuild) {
@@ -139,7 +162,7 @@ if (skipBuild) {
 }
 
 // ---------------------------------------------------------------------------
-// 4. What the registry has now, per package.
+// 5. What the registry has now, per package.
 
 function registryState(name) {
   const result = capture("npm", ["view", name, "versions", "dist-tags", "--json"]);
@@ -163,7 +186,7 @@ const plan = packages.map((pkg) => {
 
 const toPublish = plan.filter((p) => !p.published);
 
-console.log(`\n${bold("Release")} ${green(version)}  ${dim("dist-tag")} ${bold(distTag)}${dryRun ? yellow("  (dry run)") : ""}\n`);
+console.log(`\n${bold("Release")} ${green(version)}  ${dim("dist-tag")} ${bold(distTag)}  ${dim("as")} ${bold(username)}${dryRun ? yellow("  (dry run)") : ""}\n`);
 const width = Math.max(...plan.map((p) => p.name.length)) + 2;
 console.log(`  ${"package".padEnd(width)} ${`on npm as ${distTag}`.padEnd(18)} action`);
 for (const p of plan) {
@@ -178,7 +201,7 @@ if (toPublish.length === 0) {
 }
 
 // ---------------------------------------------------------------------------
-// 5. Confirm, then publish through pnpm.
+// 6. Confirm, then publish through pnpm.
 
 if (!yes) {
   const rl = createInterface({ input: stdin, output: stdout });
@@ -202,7 +225,7 @@ console.log();
 run("pnpm", publishArgs);
 
 // ---------------------------------------------------------------------------
-// 6. Tag. /release-prep takes the last `v*` tag as the start of the next
+// 7. Tag. /release-prep takes the last `v*` tag as the start of the next
 //    range, so a release without one silently widens the next changelog.
 
 if (dryRun) {

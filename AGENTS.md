@@ -794,9 +794,11 @@ both from `apps/docs/lib/version.ts` — is read from `@forte-ui/react`'s own
 Publishing is `pnpm release` — [`scripts/release.mjs`](scripts/release.mjs),
 a plain script rather than a turbo task because the unit of work is the whole
 set and turbo's TUI cannot ask "publish these?" once. It refuses a dirty tree
-or a branch other than `main`, builds `packages/*` through turbo, refuses
-again if the build's generators changed a tracked file, prints each package's
-local version next to what the registry currently serves under the dist-tag
+or a branch other than `main`, refuses if `pnpm whoami` cannot name the
+account (why pnpm and not npm is the paragraph after this one), builds
+`packages/*` through turbo, refuses again if the build's generators changed a
+tracked file, prints each package's local version next to what the registry
+currently serves under the dist-tag
 (`alpha` for a `-alpha.N` version, `latest` for a stable one), asks, and
 runs `pnpm -r publish`, which skips versions already on npm and orders the
 alias after `@forte-ui/react`. It must stay on `pnpm publish`: `forte-ui`
@@ -807,6 +809,18 @@ range, and pushes `main` and the tag to origin; a failed push prints the
 command to retry rather than failing the run, since the upload has already
 happened. `--dry-run`, `--yes`, `--skip-build`, `--tag <t>` and `--otp <code>`
 (one authenticator code forwarded to every publish) are the flags.
+
+The credential check asks pnpm, not npm, and the difference is the whole
+point. pnpm 11 keeps its own token store — `auth.ini` in its global config
+dir, `~/Library/Preferences/pnpm/` on macOS — which `pnpm login` writes and
+which pnpm reads AHEAD of `~/.npmrc`, so an expired `pnpm login` outranks a
+fresh `npm login`. The registry then answers every publish with
+`E404 Not Found - PUT https://registry.npmjs.org/<pkg>` — it hides a package
+from a caller it cannot authenticate — rather than the 401 that opens the
+browser for 2FA, and the run fails after the build and the confirmation with
+an error that reads as "package does not exist", while `npm whoami`, which
+never reads that file, insists the login is fine. `pnpm logout` drops the
+stale entry and pnpm falls back to `~/.npmrc`; `pnpm login` replaces it.
 
 Within a release, entries are grouped by **component** — `### NavList`, plus
 `### Design tokens & motion`, `### General`, and a section per other
