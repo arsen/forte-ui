@@ -19,6 +19,19 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.8.2
+
+<ReleaseMeta date="2026-09-15" href="https://github.com/arsen/forte-ui/compare/v1.8.1...v1.8.2" kind="compare" />
+
+### Tabs
+
+- The `pill` variant's active indicator now fills one ramp step deeper (`--forte-color-primary-soft-hover` instead of `-soft`), so it reads as clearly on top of its panel in light mode, where the bottom of the accent ramp is far more compressed than dark's — previously the indicator nearly vanished into a `segmented`-style strip.
+
+### Toggle
+
+- The pressed fill for `soft` and `outline` variants now sits one ramp step deeper, both at rest and on hover, so a pressed toggle reads as visibly "on" in light mode instead of blending into an already-tinted surface (such as a `segmented` `ToggleGroup`'s panel). The pressed-hover label deepens with it, to a new high-contrast text tier, so it stays AA-compliant against the darker hover fill instead of holding its resting color. The `solid` variant and the `danger` tone (whose ramp has no step to move to) are unchanged.
+- Added the `--forte-toggle-fg-pressed-hover` theming knob for the label color on hover while pressed.
+
 ## v1.8.1
 
 <ReleaseMeta date="2026-09-15" href="https://github.com/arsen/forte-ui/compare/v1.8.0...v1.8.1" kind="compare" />
@@ -208,18 +221,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Fixed a doubled-looking seam between adjacent slots in the `joined` variant: two overlapping translucent borders summed to a darker line than the strip's outer edge, so a slot now paints only one side of each shared edge.
 
-## v1.1.1
-
-<ReleaseMeta date="2026-09-04" href="https://github.com/arsen/forte-ui/compare/v1.1.0...v1.1.1" kind="compare" />
-
-### NavList
-
-- Added press feedback to `NavList.Link` rows: the same hover lift and press squash as `Button`, via the new shared `.forte-pressable` pattern, so rows and buttons feel like one control set.
-
-### Design tokens & motion
-
-- Extracted Button's press geometry (hover lift, press squash, spring release) into a shared `.forte-pressable` class in `patterns.css` that any interactive part can compose for the same feel. It reads generic `--forte-press-lift` / `-hover-scale` / `-scale` / `-duration` / `-ease` slots, falling back to Button's own defaults when a component maps nothing onto them.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 11 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 12 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
