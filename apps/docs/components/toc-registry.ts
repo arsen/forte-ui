@@ -12,6 +12,9 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v182", text: "v1.8.2", depth: 2 },
+    { id: "tabs", text: "Tabs", depth: 3 },
+    { id: "toggle", text: "Toggle", depth: 3 },
     { id: "v181", text: "v1.8.1", depth: 2 },
     { id: "kbd", text: "Kbd", depth: 3 },
     { id: "v180", text: "v1.8.0", depth: 2 },
@@ -20,7 +23,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "combobox", text: "Combobox", depth: 3 },
     { id: "select", text: "Select", depth: 3 },
     { id: "separator", text: "Separator", depth: 3 },
-    { id: "toggle", text: "Toggle", depth: 3 },
+    { id: "toggle-1", text: "Toggle", depth: 3 },
     { id: "toolbar", text: "Toolbar", depth: 3 },
     { id: "v170", text: "v1.7.0", depth: 2 },
     { id: "toolbar-1", text: "Toolbar", depth: 3 },
@@ -55,9 +58,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "resizable-3", text: "Resizable", depth: 3 },
     { id: "design-tokens--motion-1", text: "Design tokens & motion", depth: 3 },
     { id: "pagination", text: "Pagination", depth: 3 },
-    { id: "v111", text: "v1.1.1", depth: 2 },
-    { id: "navlist", text: "NavList", depth: 3 },
-    { id: "design-tokens--motion-2", text: "Design tokens & motion", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [

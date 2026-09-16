@@ -13,6 +13,17 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.8.2] - 2026-09-15
+
+### Tabs
+
+- The `pill` variant's active indicator now fills one ramp step deeper (`--forte-color-primary-soft-hover` instead of `-soft`), so it reads as clearly on top of its panel in light mode, where the bottom of the accent ramp is far more compressed than dark's — previously the indicator nearly vanished into a `segmented`-style strip.
+
+### Toggle
+
+- The pressed fill for `soft` and `outline` variants now sits one ramp step deeper, both at rest and on hover, so a pressed toggle reads as visibly "on" in light mode instead of blending into an already-tinted surface (such as a `segmented` `ToggleGroup`'s panel). The pressed-hover label deepens with it, to a new high-contrast text tier, so it stays AA-compliant against the darker hover fill instead of holding its resting color. The `solid` variant and the `danger` tone (whose ramp has no step to move to) are unchanged.
+- Added the `--forte-toggle-fg-pressed-hover` theming knob for the label color on hover while pressed.
+
 ## [1.8.1] - 2026-09-15
 
 ### Kbd
@@ -512,7 +523,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.2...HEAD
+[1.8.2]: https://github.com/arsen/forte-ui/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/arsen/forte-ui/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/arsen/forte-ui/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/arsen/forte-ui/compare/v1.6.0...v1.7.0
