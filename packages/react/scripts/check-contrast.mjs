@@ -118,6 +118,20 @@ const CHECKS = [
   { id: "accent-11 vs 1",   min: 4.5, pair: (r) => CR(r[11], r[1]) },
   { id: "accent-11 vs 2",   min: 4.5, pair: (r) => CR(r[11], r[2]) },
   { id: "accent-11 vs 3",   min: 4.5, pair: (r) => CR(r[11], r[3]) },
+  /* Steps 4 and 5 are the pressed fill of a tinted Toggle and the thumb of a
+   * `pill` Tabs strip, resting and hovered. A tint that has to say "on" starts
+   * a step above the soft fills the rest of the library paints, because the
+   * light ramp's bottom is too compressed to carry the usual one — the long
+   * version is in Toggle.module.css.
+   *
+   * The two rows below are what makes that legal, and they are why the hover
+   * deepens the LABEL as well as the fill. Step 11 on step 4 is the tightest
+   * text pair the library paints anywhere (4.56 light, against 4.88 on step 3)
+   * and step 11 on step 5 fails outright at 4.17 — so the hover hands the
+   * label to step 12, which measures 8.33. Loosening the accent-11 cap or
+   * moving steps 4-5 will show up here first. */
+  { id: "accent-11 vs 4",   min: 4.5, pair: (r) => CR(r[11], r[4]) },
+  { id: "accent-12 vs 5",   min: 4.5, pair: (r) => CR(r[12], r[5]) },
   { id: "accent-12 vs 1",   min: 7.0, pair: (r) => CR(r[12], r[1]) },
   { id: "accent-7 vs 1",    min: 1.4, pair: (r) => CR(r[7], r[1]) },
   { id: "gray-11 vs gray-1", min: 4.5, pair: (r, g) => CR(g[11], g[1]) },

@@ -175,19 +175,39 @@ element's own declaration beats an inherited value.
 
 <ThemingTable component="Toggle" part="root" />
 
-`tone` reassigns the seven `--forte-toggle-tone-*` properties the variants read
+`tone` reassigns the nine `--forte-toggle-tone-*` properties the variants read
 from, so overriding one of those re-skins every variant at once, while
 overriding a `-pressed` slot changes only the variant in play.
 
-The three `-hover` values only ever apply on devices that report hover support,
-so a touch device never sticks in a hover color after a tap.
+The `-hover` values only ever apply on devices that report hover support, so a
+touch device never sticks in a hover color after a tap.
 
 <Callout kind="note">
-  `tone="danger"` is the one tone whose pressed fill does not brighten on hover.
-  The danger ramp in `tokens.css` is a sparse hand-written set with no step
-  between `--forte-danger-3` and `--forte-danger-7`, and `7` is far too saturated to
-  carry `--forte-color-danger-text` at AA. `Button` makes the same trade for the
-  same reason. The cursor, the focus ring and the press scale all still respond.
+  A pressed `soft` or `outline` toggle fills with the tone's **step 4**, one
+  above the step 3 a soft `Button` or `Badge` rests on. A soft fill is sized to
+  separate from the page; a pressed toggle also has to say it is on, and in
+  light mode step 3 could not — the light ramp's bottom three steps are packed
+  into a third of the lightness range dark's occupy, so the pressed fill read
+  clearly in dark and washed out in light. It was worst inside a `segmented`
+  group, where the panel behind the strip had already spent one of the two
+  steps. `Tabs`' `pill` indicator takes the same step, so the two strips draw
+  one thumb.
+</Callout>
+
+Hovering a pressed toggle deepens the label along with the fill — the tone's
+`-text-strong` in place of its `-text`. That pairing is not decoration: the
+resting fill already sits at step 4, so its hover moves to step 5, and the
+tone's ordinary text tier does not clear AA there (4.17:1 at the worst seed in
+the contrast sweep, against 8.33:1 for the high-contrast tier). `solid` keeps
+its on-fill label, having no tint to deepen.
+
+<Callout kind="note">
+  `tone="danger"` is the one tone that neither takes that step nor brightens on
+  hover. The danger ramp in `tokens.css` is a sparse hand-written set with no
+  step between `--forte-danger-3` and `--forte-danger-7`, and `7` is far too
+  saturated to carry `--forte-color-danger-text` at AA — nor is there a step 12
+  for the label to deepen into. `Button` makes the same trade for the same
+  reason. The cursor, the focus ring and the press scale all still respond.
 </Callout>
 
 ## API reference

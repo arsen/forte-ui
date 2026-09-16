@@ -69,7 +69,12 @@
     --forte-toggle-tone-on-solid: var(--forte-color-on-primary);
     --forte-toggle-tone-soft: var(--forte-color-primary-soft);
     --forte-toggle-tone-soft-hover: var(--forte-color-primary-soft-hover);
+    --forte-toggle-tone-soft-active: var(--forte-color-primary-soft-active);
     --forte-toggle-tone-text: var(--forte-color-primary-text);
+    /* The high-contrast text tier, and it exists for the pressed hover alone.
+     * See the note on --forte-toggle-fg-pressed-hover below for why deepening
+     * the fill obliges the label to deepen with it. */
+    --forte-toggle-tone-text-strong: var(--forte-accent-12);
     --forte-toggle-tone-border: var(--forte-color-primary-border);
 
     /* Off. Identical in all three variants apart from the border, so it is
@@ -86,13 +91,43 @@
      * `variant="outline"`. */
     --forte-toggle-border-color: transparent;
 
-    /* On. Filled in per variant below; this is the `soft` set. */
+    /* On. Filled in per variant below; this is the `soft` set.
+     *
+     * The tinted variants sit a step higher than the rest of the library's
+     * soft fills, and that is the whole reason this block reads the way it
+     * does. A soft fill is step 3 everywhere else — soft Button, soft Badge,
+     * soft Alert — because step 3 is sized to separate from the PAGE, and it
+     * does: accent-3 on gray-1 measures 1.11:1 light, 1.23:1 dark. A pressed
+     * toggle has to do more than sit on the page, it has to say it is ON, and
+     * in light mode step 3 could not: the light ramp's bottom is 0.994 /
+     * 0.982 / 0.957 in lightness where dark's is 0.178 / 0.213 / 0.252, so the
+     * same nominal step buys half as much, and the effect was worst inside a
+     * `segmented` group, where the panel behind the strip had already spent
+     * one of the two steps and the pressed toggle vanished into its own track.
+     * Step 4 restores it — 1.18:1 on the page, 1.16:1 on the strip — and it is
+     * a step rather than a light-mode special case because there was nothing
+     * wrong with the value in dark, only with how little room the light ramp
+     * has at the bottom. Tabs' `pill` indicator makes the same move for the
+     * same reason: a segmented strip and a pill tab strip are meant to read as
+     * one kind of object, so the thumb they draw has to be one color. */
     /** Fill while pressed. Set by `variant` from the tone. */
-    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft-hover);
     /** Fill on hover while pressed. Set by `variant` from the tone. */
-    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-active);
     /** Label color while pressed. Set by `variant` from the tone. */
     --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
+    /* Pressed is the one state whose hover moves the LABEL as well as the
+     * fill, and it is not decoration — it is what makes the hover legal. The
+     * fill above starts a step higher, so its hover steps to 5, and the tone's
+     * ordinary text tier cannot live there: accent-11 on accent-5 bottoms out
+     * at 4.17:1 across the seed sweep and fails AA, against 4.56:1 on the
+     * step-4 resting fill. Deepening the label to step 12 with it measures
+     * 8.33:1 light and 7.34:1 dark, so the hover keeps its fill change instead
+     * of going flat. check-contrast.mjs asserts both pairs. */
+    /** Label color on hover while pressed — the tone's high-contrast text,
+     * which is what lets the fill deepen a step without the label dropping
+     * below AA. `solid` holds its on-fill color instead. */
+    --forte-toggle-fg-pressed-hover: var(--forte-toggle-tone-text-strong);
     /** Border color while pressed. The tone's border for `variant="outline"`.
  */
     --forte-toggle-border-color-pressed: transparent;
@@ -158,7 +193,7 @@
 
     .root[data-pressed]:hover:not([data-disabled]) {
       background-color: var(--forte-toggle-bg-pressed-hover);
-      color: var(--forte-toggle-fg-pressed);
+      color: var(--forte-toggle-fg-pressed-hover);
     }
   }
 
@@ -250,7 +285,9 @@
     --forte-toggle-tone-on-solid: var(--forte-color-on-secondary);
     --forte-toggle-tone-soft: var(--forte-color-secondary-soft);
     --forte-toggle-tone-soft-hover: var(--forte-color-secondary-soft-hover);
+    --forte-toggle-tone-soft-active: var(--forte-color-secondary-soft-active);
     --forte-toggle-tone-text: var(--forte-color-secondary-text);
+    --forte-toggle-tone-text-strong: var(--forte-secondary-12);
     --forte-toggle-tone-border: var(--forte-color-secondary-border);
   }
 
@@ -258,15 +295,19 @@
     --forte-toggle-tone-solid: var(--forte-color-danger);
     --forte-toggle-tone-solid-hover: var(--forte-color-danger-hover);
     --forte-toggle-tone-on-solid: var(--forte-color-on-danger);
-    --forte-toggle-tone-soft: var(--forte-danger-3);
-    /* Deliberately the same value as the resting fill, which is what Button
-     * does for the same reason: the danger ramp in tokens.css is a sparse
+    /* All three tint slots are the same value, which is what Button does and
+     * for the same reason: the danger ramp in tokens.css is a sparse
      * hand-written set (2, 3, 7, 9, 10, 11) with no step 4 to step up to, and
      * `--forte-danger-7` is far too saturated to carry `--forte-color-danger-text`
-     * at AA. A pressed danger toggle therefore does not brighten on hover; it
-     * still has the cursor, the focus ring and the press scale. */
+     * at AA. So a pressed danger toggle is the one tinted case that neither
+     * takes the step every other tone takes above nor brightens on hover; it
+     * still has the cursor, the focus ring and the press scale. Its label
+     * holds at step 11 for the matching reason — the ramp has no step 12. */
+    --forte-toggle-tone-soft: var(--forte-danger-3);
     --forte-toggle-tone-soft-hover: var(--forte-danger-3);
+    --forte-toggle-tone-soft-active: var(--forte-danger-3);
     --forte-toggle-tone-text: var(--forte-color-danger-text);
+    --forte-toggle-tone-text-strong: var(--forte-color-danger-text);
     --forte-toggle-tone-border: var(--forte-color-danger-border);
   }
 
@@ -276,7 +317,12 @@
     --forte-toggle-tone-on-solid: var(--forte-gray-1);
     --forte-toggle-tone-soft: var(--forte-gray-4);
     --forte-toggle-tone-soft-hover: var(--forte-gray-5);
+    --forte-toggle-tone-soft-active: var(--forte-gray-6);
     --forte-toggle-tone-text: var(--forte-color-foreground);
+    /* The neutral label is already gray-12, so this tone is the one whose
+     * pressed hover moves the fill alone. There is nothing above it to reach
+     * for, and nothing is needed: gray-12 on gray-6 measures 11.77:1. */
+    --forte-toggle-tone-text-strong: var(--forte-color-foreground);
     --forte-toggle-tone-border: var(--forte-color-border);
   }
 
@@ -284,25 +330,31 @@
    * Only the pressed slots change. `outline` is the one variant that also
    * paints while unpressed, because its border is what marks out where the
    * button is when nothing is on. */
+  /* `solid` is the one variant whose pressed hover does not deepen the label:
+   * its fill is the seed, not a tint, so the label is the tone's on-fill color
+   * and steps 11 and 12 have nothing to do with it. */
   .root[data-variant="solid"] {
     --forte-toggle-bg-pressed: var(--forte-toggle-tone-solid);
     --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-solid-hover);
     --forte-toggle-fg-pressed: var(--forte-toggle-tone-on-solid);
+    --forte-toggle-fg-pressed-hover: var(--forte-toggle-tone-on-solid);
     --forte-toggle-border-color-pressed: transparent;
   }
 
   .root[data-variant="soft"] {
-    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
-    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-active);
     --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
+    --forte-toggle-fg-pressed-hover: var(--forte-toggle-tone-text-strong);
     --forte-toggle-border-color-pressed: transparent;
   }
 
   .root[data-variant="outline"] {
     --forte-toggle-border-color: var(--forte-color-border);
-    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft);
-    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-bg-pressed: var(--forte-toggle-tone-soft-hover);
+    --forte-toggle-bg-pressed-hover: var(--forte-toggle-tone-soft-active);
     --forte-toggle-fg-pressed: var(--forte-toggle-tone-text);
+    --forte-toggle-fg-pressed-hover: var(--forte-toggle-tone-text-strong);
     --forte-toggle-border-color-pressed: var(--forte-toggle-tone-border);
   }
 
@@ -364,6 +416,13 @@
     --forte-toggle-group-radius: var(--forte-radius-4);
     --forte-toggle-group-bg: var(--forte-color-panel);
   }
+
+  /* There is deliberately no rule here raising the pressed fill for the strip.
+   * It was the segmented case that exposed the problem — a panel behind the
+   * toggles leaves the tint half a step to work with in light mode — but the
+   * answer belonged to the tinted variants themselves, not to this one
+   * arrangement of them, so it sits on `.root` with the rest of the `On` set.
+   * See the note there. A segmented group needs nothing of its own. */
 
   /* Scoped to direct children on purpose: a consumer who wraps the toggles in
    * their own element gets that wrapper flexed, rather than these rules

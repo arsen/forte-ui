@@ -268,7 +268,23 @@
   .root[data-variant="pill"] {
     --forte-tabs-list-bg: var(--forte-color-panel);
     --forte-tabs-list-padding: var(--forte-space-1);
-    --forte-tabs-indicator-color: var(--forte-color-primary-soft);
+    /* Step 4, not the step 3 a soft fill normally takes. Step 3 is sized to
+     * separate from the PAGE, and the strip puts the thumb on a panel, which
+     * is already a step up — a cost the light ramp cannot absorb, because its
+     * bottom steps are 0.994 / 0.982 / 0.957 in lightness where dark's are
+     * 0.178 / 0.213 / 0.252. Same step, 1.08:1 light against 1.19:1 dark: the
+     * thumb vanished into its own track in light mode and read fine in dark.
+     * Step 4 puts light back at 1.16:1. Toggle's pressed tints take the same
+     * step, deliberately — a `segmented` ToggleGroup and a pill tab strip are
+     * meant to read as one kind of object, so the thumb they draw has to be
+     * one color, and Toggle.module.css carries the long version of this note.
+     *
+     * The label still clears AA on it: accent-11 on accent-4 bottoms out at
+     * 4.56:1 over the seed sweep, which check-contrast.mjs asserts. Step 5
+     * measures 4.17 and is not available to an active tab — nor needed, since
+     * a pill never paints a fill for its own hover (see --forte-tabs-tab-bg-hover
+     * above) and the active one is not hoverable in the first place. */
+    --forte-tabs-indicator-color: var(--forte-color-primary-soft-hover);
     --forte-tabs-indicator-radius: var(--forte-radius-control);
     /* Concentric with the pills it contains, not a fixed step: outer radius =
      * inner radius + the padding between them, or the strip's corners run a
