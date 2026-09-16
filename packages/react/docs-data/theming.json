@@ -10256,7 +10256,7 @@
         "overrides": [
           {
             "selector": ".root[data-variant=\"pill\"]",
-            "value": "var(--forte-color-primary-soft)"
+            "value": "var(--forte-color-primary-soft-hover)"
           }
         ]
       },
@@ -10941,7 +10941,7 @@
       },
       {
         "name": "--forte-toggle-bg-pressed",
-        "value": "var(--forte-toggle-tone-soft)",
+        "value": "var(--forte-toggle-tone-soft-hover)",
         "description": "Fill while pressed. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
@@ -10951,17 +10951,17 @@
           },
           {
             "selector": ".root[data-variant=\"soft\"]",
-            "value": "var(--forte-toggle-tone-soft)"
+            "value": "var(--forte-toggle-tone-soft-hover)"
           },
           {
             "selector": ".root[data-variant=\"outline\"]",
-            "value": "var(--forte-toggle-tone-soft)"
+            "value": "var(--forte-toggle-tone-soft-hover)"
           }
         ]
       },
       {
         "name": "--forte-toggle-bg-pressed-hover",
-        "value": "var(--forte-toggle-tone-soft-hover)",
+        "value": "var(--forte-toggle-tone-soft-active)",
         "description": "Fill on hover while pressed. Set by `variant` from the tone.",
         "part": "root",
         "overrides": [
@@ -10971,11 +10971,11 @@
           },
           {
             "selector": ".root[data-variant=\"soft\"]",
-            "value": "var(--forte-toggle-tone-soft-hover)"
+            "value": "var(--forte-toggle-tone-soft-active)"
           },
           {
             "selector": ".root[data-variant=\"outline\"]",
-            "value": "var(--forte-toggle-tone-soft-hover)"
+            "value": "var(--forte-toggle-tone-soft-active)"
           }
         ]
       },
@@ -10996,6 +10996,26 @@
           {
             "selector": ".root[data-variant=\"outline\"]",
             "value": "var(--forte-toggle-tone-text)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-toggle-fg-pressed-hover",
+        "value": "var(--forte-toggle-tone-text-strong)",
+        "description": "Label color on hover while pressed — the tone's high-contrast text, which is what lets the fill deepen a step without the label dropping below AA. `solid` holds its on-fill color instead.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-variant=\"solid\"]",
+            "value": "var(--forte-toggle-tone-on-solid)"
+          },
+          {
+            "selector": ".root[data-variant=\"soft\"]",
+            "value": "var(--forte-toggle-tone-text-strong)"
+          },
+          {
+            "selector": ".root[data-variant=\"outline\"]",
+            "value": "var(--forte-toggle-tone-text-strong)"
           }
         ]
       },
