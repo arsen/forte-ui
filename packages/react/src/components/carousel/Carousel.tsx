@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { flushSync } from "react-dom";
 import { useRender } from "@base-ui/react/use-render";
 import { clsx } from "clsx";
 import styles from "./Carousel.module.css";
@@ -600,7 +601,11 @@ interface DragState {
   startX: number;
   startY: number;
   startedAt: number;
-  /** Position at the start, in slides. */
+  /** Where the track was when the press became a drag, in slides. */
+  caught: number;
+  /** The position the finger's travel is counted from, in slides: `caught`,
+   * less the travel it took to cross the threshold, so the track does not
+   * jump to catch up with the finger. */
   base: number;
   /** Pixels per slide, measured once at pointerdown. */
   step: number;
@@ -716,27 +721,44 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
 
     const horizontal = orientation === "horizontal";
 
+    /* One slide plus one gap, in pixels, read off where the slides are laid
+     * out rather than computed from the gap: a gap given as a percentage
+     * computes to `5%`, not to pixels, and `parseFloat` took it for 5px.
+     * Layout offsets rather than boxes, so a consumer's `scale` on the
+     * active slide does not stretch the measurement; first to last rather
+     * than between neighbours, so the whole-pixel rounding of an offset is
+     * shared out over every slide. */
     const measureStep = () => {
-      const viewport = viewportRef.current;
       const track = trackRef.current;
-      if (!viewport || !track) return 0;
-      const size = horizontal ? viewport.clientWidth : viewport.clientHeight;
-      const style = getComputedStyle(track);
-      const gap = parseFloat(horizontal ? style.columnGap : style.rowGap) || 0;
-      return (size + gap) / perView;
+      const first = track?.firstElementChild as HTMLElement | null | undefined;
+      const last = track?.lastElementChild as HTMLElement | null | undefined;
+      const gaps = (track?.childElementCount ?? 0) - 1;
+      if (!first || !last || gaps < 1) return 0;
+      const span = horizontal ? last.offsetLeft - first.offsetLeft : last.offsetTop - first.offsetTop;
+      return Math.abs(span) / gaps;
     };
 
-    /* Where the track IS, read off its computed `translate`, rather than
-     * where it was told to go. Grabbing a track that is still traveling
-     * should pick it up mid-flight, not snap it to its destination first. */
+    /* Where the track IS, rather than where it was told to go: grabbing a
+     * track that is still traveling picks it up mid-flight instead of
+     * snapping it to its destination first. Measured off the boxes, never
+     * read off the computed `translate`, which keeps the track's own
+     * percentages — `-200%`, or `calc(-200% - 32px)` with a gap — rather
+     * than resolving them to pixels. `parseFloat` read the first as -200px,
+     * so with `gap={0}` every grab threw the strip back towards the first
+     * slide, or onto the clones of the last when looping; the second was
+     * NaN, and the fallback to the resting slide hid the same bug behind a
+     * snap to the destination. */
     const currentPosition = (step: number, sign: number) => {
+      const viewport = viewportRef.current;
       const track = trackRef.current;
-      if (!track || step === 0) return index + clones;
-      const translate = getComputedStyle(track).translate;
-      if (!translate || translate === "none") return index + clones;
-      const parts = translate.split(" ").map(parseFloat);
-      const px = (horizontal ? parts[0] : parts[1]) ?? 0;
-      if (Number.isNaN(px)) return index + clones;
+      if (!viewport || !track) return index + clones;
+      const view = viewport.getBoundingClientRect();
+      const box = track.getBoundingClientRect();
+      // Untranslated, the track sits at its offset inside the viewport's
+      // padding box; whatever is left over is the translate, in pixels.
+      const px = horizontal
+        ? box.left - view.left - viewport.clientLeft - track.offsetLeft
+        : box.top - view.top - viewport.clientTop - track.offsetTop;
       // The translate carries the alignment offset; the position does not.
       return (-px * sign) / step + offset;
     };
@@ -789,18 +811,21 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
        * until it moves: preventing the default here would stop a button in
        * the slide from focusing, and capturing the pointer would redirect the
        * `click` to this element instead of that button. The gesture is
-       * claimed at the threshold, in the move handler. */
+       * claimed at the threshold, in the move handler — and so is the
+       * track's position, which is still changing until then if the press
+       * landed on a track that was traveling. */
       drag.current = {
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
         startedAt: performance.now(),
-        base: currentPosition(step, sign),
+        caught: 0,
+        base: 0,
         step,
         sign,
         active: false,
         released: false,
-        position: index + clones,
+        position: 0,
         samples: [],
       };
     };
@@ -826,8 +851,17 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
           return;
         }
         state.active = true;
+        state.caught = currentPosition(state.step, state.sign);
+        state.base = state.caught + (along * state.sign) / state.step;
         suppressClick.current = true;
-        context.setDragging(true);
+        /* Committed now rather than with the next render, and the track
+         * pinned where it was caught in the same task. A track still
+         * traveling otherwise runs on for the frame before `data-dragging`
+         * switches its transition off, and the first frame of the drag pulls
+         * it back by that much; and a flick released inside that frame would
+         * reach the loop's pre-jump with the transition still on. */
+        flushSync(() => context.setDragging(true));
+        write(state.caught);
         /* Defensively: `setPointerCapture` throws for a pointer that is no
          * longer active — released between the event being queued and this
          * handler running, and every synthetic event a test dispatches. */
@@ -866,18 +900,26 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
       }
 
       const moved = state.position - state.base;
-      let steps = 0;
+      let target = index;
       if (!canceled) {
         const now = performance.now();
         const oldest = state.samples[0];
         const velocity =
           oldest && now > oldest.at ? (state.position - oldest.position) / (now - oldest.at) : 0;
         if (now - state.startedAt < FLICK_MS) {
-          if (Math.abs(moved) * state.step > DRAG_THRESHOLD) steps = Math.sign(moved);
+          /* One on from the slide the track is headed for, not from where
+           * the drag caught it: two flicks in quick succession move two
+           * slides, though the second catches the track before it arrives. */
+          if (Math.abs(moved) * state.step > DRAG_THRESHOLD) target = index + Math.sign(moved);
         } else {
-          // Where a slowing finger would have come to rest a moment later.
-          steps = Math.round(moved + velocity * 100);
-          if (steps === 0 && Math.abs(moved) > 0.5) steps = Math.sign(moved);
+          /* Where a slowing finger would have come to rest a moment later,
+           * and the slide nearest to THAT — counted from where the track is,
+           * which is not `index` when the drag caught it mid-flight. A drag
+           * of more than half a slide still leaves the slide it started
+           * nearest to, even if the finger pulled back at the end. */
+          const started = Math.round(state.caught) - clones;
+          target = Math.round(state.position + velocity * 100) - clones;
+          if (target === started && Math.abs(moved) > 0.5) target = started + Math.sign(moved);
         }
       }
 
@@ -886,7 +928,7 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
        * browser tweens from the dragged position to the slide. `from` is that
        * dragged position — it is what a loop's pre-jump has to shift. */
       context.setDragging(false);
-      context.goTo(index + steps, "drag", state.position);
+      context.goTo(target, "drag", state.position);
     };
 
     React.useEffect(
