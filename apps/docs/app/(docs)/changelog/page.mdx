@@ -19,6 +19,27 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.9.0
+
+<ReleaseMeta date="2026-09-19" href="https://github.com/arsen/forte-ui/compare/v1.8.3...v1.9.0" kind="compare" />
+
+### Avatar
+
+- Added a `keepMounted` prop to `Avatar.Image`: instead of preloading `src` off-screen and mounting the image only once it loads, the `<img>` renders immediately and ships in the server-rendered HTML — needed for `loading="lazy"` and image optimizers such as `next/image`, which the default preload defeats by requesting the raw URL. While it is loading or has failed, the image stays hidden (via `data-loading` / `data-error`) and the fallback shows in its place.
+
+### Combobox
+
+- Added `Combobox.createItems` (also exported standalone as `createComboboxItems`), which wraps flat or grouped source items into a collection with a derived `value` and `label`, so an object list can select by id without `itemToStringLabel` or `isItemEqualToValue`. `Combobox.Root` (and `ComboboxRootProps`) now carry a third `Item` generic for it.
+- Read-only Comboboxes now open their popup for browsing like any other — only picking an item is refused. The input group and trigger keep their normal cursor instead of `default`, and it is the rows inside a read-only list that now show `default` (a disabled item still shows `not-allowed`).
+
+### NavigationMenu
+
+- Added a `disabled` prop to `NavigationMenu.Trigger`: its panel no longer opens on press, hover or keyboard, and arrow-key navigation skips over it, while the trigger stays focusable and reachable by Tab. It renders at reduced opacity with a `not-allowed` cursor, including under forced colors.
+
+### Select
+
+- Read-only Selects now open their popup for browsing like any other — only picking an item is refused. The trigger keeps its normal (pointer) cursor instead of `default`, and it is the rows inside a read-only list that now show `default` (a disabled item still shows `not-allowed`).
+
 ## v1.8.3
 
 <ReleaseMeta date="2026-09-19" href="https://github.com/arsen/forte-ui/compare/v1.8.2...v1.8.3" kind="compare" />
@@ -198,16 +219,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 - The focus ring now grows outward from just inside a control's edge while it fades in, and shrinks back on blur, instead of snapping into place. Three new tokens drive the pace: `--forte-focus-ring-duration` (`--forte-duration-normal`), `--forte-focus-ring-ease` (`--forte-ease-standard`) and `--forte-focus-ring-travel` (`--forte-travel-sm`, `0px` under reduced motion, where the ring simply fades in place).
 - `--forte-focus-ring-inner` is now brand-colored — the accent ramp's text step (`--forte-color-primary-text`, held to 4.5:1 against the page) — instead of a fixed near-black/near-white pair, so the ring now recomputes per theme scope's seed instead of looking identical everywhere.
 
-## v1.3.0
-
-<ReleaseMeta date="2026-09-05" href="https://github.com/arsen/forte-ui/compare/v1.2.0...v1.3.0" kind="compare" />
-
-### Resizable
-
-- Added `expandOnClick` to `Panel`, default `true`: a click or tap on the handle beside a collapsed panel now reopens it back to its previous size (not `minSize`), with the handle showing a one-way resize cursor pointing the way it will move to say so. Dragging the handle open still works wherever `collapseOnDrag` allows, snapping open at the same threshold point it snaps shut at, so both directions feel like one control. `Enter` now also reopens a shut panel whenever a click or a drag would, matching whichever gesture is enabled; set `expandOnClick` to `false` for a divider that reopens only by drag, or, with `collapseOnDrag` also off, only through the `collapsed` prop.
-- Fixed a shut panel with `collapseOnDrag` off also refusing to be dragged open — the prop now applies the same in both directions, so a divider that cannot be dragged shut behaves the same as one that cannot be dragged open.
-- Fixed a drag that reopens a collapsed panel past its snap point sometimes leaving a neighboring panel's size unaffected when room was actually available: the reopening panel can now borrow from the nearest shrinking panels (down to their own minimums) to fund the snap, rather than only from whatever slack the current drag step already freed.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 13 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 14 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

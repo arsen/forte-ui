@@ -13,6 +13,25 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-09-19
+
+### Avatar
+
+- Added a `keepMounted` prop to `Avatar.Image`: instead of preloading `src` off-screen and mounting the image only once it loads, the `<img>` renders immediately and ships in the server-rendered HTML — needed for `loading="lazy"` and image optimizers such as `next/image`, which the default preload defeats by requesting the raw URL. While it is loading or has failed, the image stays hidden (via `data-loading` / `data-error`) and the fallback shows in its place.
+
+### Combobox
+
+- Added `Combobox.createItems` (also exported standalone as `createComboboxItems`), which wraps flat or grouped source items into a collection with a derived `value` and `label`, so an object list can select by id without `itemToStringLabel` or `isItemEqualToValue`. `Combobox.Root` (and `ComboboxRootProps`) now carry a third `Item` generic for it.
+- Read-only Comboboxes now open their popup for browsing like any other — only picking an item is refused. The input group and trigger keep their normal cursor instead of `default`, and it is the rows inside a read-only list that now show `default` (a disabled item still shows `not-allowed`).
+
+### NavigationMenu
+
+- Added a `disabled` prop to `NavigationMenu.Trigger`: its panel no longer opens on press, hover or keyboard, and arrow-key navigation skips over it, while the trigger stays focusable and reachable by Tab. It renders at reduced opacity with a `not-allowed` cursor, including under forced colors.
+
+### Select
+
+- Read-only Selects now open their popup for browsing like any other — only picking an item is refused. The trigger keeps its normal (pointer) cursor instead of `default`, and it is the rows inside a read-only list that now show `default` (a disabled item still shows `not-allowed`).
+
 ## [1.8.3] - 2026-09-19
 
 ### Carousel
@@ -529,7 +548,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.3...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/arsen/forte-ui/compare/v1.8.3...v1.9.0
 [1.8.3]: https://github.com/arsen/forte-ui/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/arsen/forte-ui/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/arsen/forte-ui/compare/v1.8.0...v1.8.1
