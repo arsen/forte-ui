@@ -2,6 +2,7 @@ export {
   Combobox,
   useComboboxFilter,
   useComboboxFilteredItems,
+  createComboboxItems,
 } from "./Combobox";
 export type {
   ComboboxRootProps,

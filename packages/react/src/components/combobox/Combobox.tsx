@@ -91,11 +91,18 @@ function XIcon(props: React.ComponentProps<"svg">) {
  * Props for {@link ComboboxRoot}. A re-export of Base UI's own root props,
  * kept generic so `<Combobox.Root<Country>>` still infers the value type of
  * `onValueChange`, `defaultValue`, `items` and `itemToStringLabel`.
+ *
+ * `Item` is the type of the SOURCE items, and it only differs from `Value`
+ * when `items` is a `Combobox.createItems()` collection — which derives a
+ * primitive value from each item. Forwarding it is what lets such a
+ * collection type `onValueChange` with that primitive; pinned to `Value`, the
+ * root would type every selection as the whole source object.
  */
 export type ComboboxRootProps<
   Value,
   Multiple extends boolean | undefined = false,
-> = BaseCombobox.Root.Props<Value, Multiple>;
+  Item = Value,
+> = BaseCombobox.Root.Props<Value, Multiple, Item>;
 
 /* -------------------------------------------------------------------------
  * Size context
@@ -132,9 +139,12 @@ const ComboboxInGroupContext = React.createContext(false);
  * state. Renders no DOM element of its own, so it accepts neither `className`
  * nor `ref`.
  *
- * Both generics are forwarded rather than widened to `any`: `Value` is the
- * type of a single item, and `Multiple` flips the value between `Value` and
- * `Value[]`. Passing `multiple` alone is enough for `Multiple` to infer.
+ * All three generics are forwarded rather than widened to `any`: `Value` is
+ * the type of a single item's value, `Multiple` flips the value between
+ * `Value` and `Value[]`, and `Item` is the source item a
+ * `Combobox.createItems()` collection derives that value from. Passing
+ * `multiple` alone is enough for `Multiple` to infer, and passing a
+ * collection is enough for the other two.
  *
  * One behavior is added on top of the primitive: a `multiple` combobox never
  * closes because an item was pressed. Base UI closes it only when a filter had
@@ -148,10 +158,11 @@ const ComboboxInGroupContext = React.createContext(false);
 export function ComboboxRoot<
   Value,
   Multiple extends boolean | undefined = false,
+  Item = Value,
 >({
   onOpenChange,
   ...props
-}: ComboboxRootProps<Value, Multiple>): React.JSX.Element {
+}: ComboboxRootProps<Value, Multiple, Item>): React.JSX.Element {
   const multiple = props.multiple;
 
   const handleOpenChange = React.useCallback(
@@ -1120,6 +1131,23 @@ export const useComboboxFilter = BaseCombobox.useFilter;
 export const useComboboxFilteredItems = BaseCombobox.useFilteredItems;
 
 /* -------------------------------------------------------------------------
+ * Item collections
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Wraps flat or grouped source items in a collection for `items` on
+ * `<Combobox.Root>`, deriving each item's selection value with `getValue`
+ * (a primitive: string, number, bigint or boolean) and its label with
+ * `getLabel`. The value is then what `onValueChange`, `value` and the form
+ * submit, while `<Combobox.List>` still renders the source items — so an
+ * object list selects by id without `itemToStringLabel` or
+ * `isItemEqualToValue`. Create a static collection at module scope and a
+ * dynamic one inside `React.useMemo()`. A direct re-export of Base UI's
+ * `Combobox.createItems`.
+ */
+export const createComboboxItems = BaseCombobox.createItems;
+
+/* -------------------------------------------------------------------------
  * Compound export
  * ---------------------------------------------------------------------- */
 
@@ -1188,4 +1216,5 @@ export const Combobox = {
   Collection: ComboboxCollection,
   useFilter: useComboboxFilter,
   useFilteredItems: useComboboxFilteredItems,
+  createItems: createComboboxItems,
 };

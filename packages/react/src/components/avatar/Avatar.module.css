@@ -112,6 +112,13 @@
     position: relative;
     /* One cell, and both parts sit in it — see note 1 in the header. */
     display: inline-grid;
+    /* The cell IS the box, whatever is in it. An implicit `auto` track sizes
+     * to its items' min-content, and a `keepMounted` image that fails stops
+     * being a replaced element and renders its alt text instead — whose
+     * min-content widened the track past the box, stretched the fallback
+     * sharing it, and pushed the centered initials off-center. `minmax(0, …)`
+     * gives content no say in the track at all. */
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
     inline-size: var(--forte-avatar-size);
     block-size: var(--forte-avatar-size);
     /* Avatars usually live in a flex row of names and metadata, and a squashed
@@ -193,6 +200,20 @@
 
   .image {
     grid-area: 1 / 1;
+    /* Paint over the fallback whatever the source order. Grid items paint in
+     * order-modified document order, and both parts share one cell, so this
+     * is the image's stacking without a `z-index` — which would lift it over
+     * the NEXT avatar in a group, because the root opens no stacking context.
+     * It only shows while both are mounted: an outgoing image fading out over
+     * the fallback that replaced it, and a `keepMounted` image that finished
+     * loading before hydration, which would otherwise sit under the initials
+     * until the fallback unmounts. The mirror case is the price: one that
+     * FAILS before hydration shows its torn glyph on top until hydration marks
+     * it `data-error` — a broken URL, and only that long, where the loaded
+     * picture's wait is on every page view. Placement is explicit, so `order`
+     * moves nothing, and neither part is focusable, so it reorders nothing
+     * either. */
+    order: 1;
     /* An `<img>` is inline by default, and the descender space under an inline
      * box would show as a sliver of `--forte-avatar-bg` along the bottom. */
     display: block;
@@ -218,6 +239,18 @@
   .image[data-starting-style],
   .image[data-ending-style] {
     opacity: 0;
+  }
+
+  /* `keepMounted` only — Base UI sets these two on no other image. The
+   * element is in the DOM before it has anything to show: loading, it may
+   * paint a partial picture or its alt text over the initials, and broken,
+   * the torn-image glyph that preloading exists to prevent. `visibility`, not
+   * `display: none`: an element without a box never intersects the viewport,
+   * so `loading="lazy"` would never fetch it and the avatar would never
+   * leave its fallback. */
+  .image[data-loading],
+  .image[data-error] {
+    visibility: hidden;
   }
 
   .fallback {

@@ -189,10 +189,10 @@ the wrong side of the thing it belongs to.
 
 <KeyboardTable
   rows={[
-    { keys: ["Tab"], description: "Moves focus into the bar, and then out of it. The bar is a single tab stop — the other items are reached with the arrow keys." },
-    { keys: ["Arrow Right", "Arrow Left"], description: "Horizontal orientation: moves between items in the bar. Mirrored under RTL." },
-    { keys: ["Arrow Down", "Arrow Up"], description: "Vertical orientation: moves between items in the bar. With a horizontal bar, Arrow Down on an open trigger moves into its panel." },
-    { keys: ["Enter", "Space"], description: "Opens the focused trigger's panel, or follows the focused link." },
+    { keys: ["Tab"], description: "Moves focus through the items in the bar, and then out of it. From the trigger of an open panel it moves into that panel instead." },
+    { keys: ["Arrow Right", "Arrow Left"], description: "Horizontal orientation: moves between items in the bar, skipping disabled triggers. Mirrored under RTL." },
+    { keys: ["Arrow Down", "Arrow Up"], description: "Vertical orientation: moves between items in the bar. With a horizontal bar, Arrow Down opens the focused trigger's panel and leaves focus on the trigger." },
+    { keys: ["Enter", "Space"], description: "Opens the focused trigger's panel, or follows the focused link. Focus stays on the trigger — Tab is what moves into the panel." },
     { keys: ["Home", "End"], description: "Moves to the first or last item in the bar." },
     { keys: ["Esc"], description: "Closes the panel and returns focus to the trigger that opened it." },
   ]}

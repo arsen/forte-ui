@@ -339,6 +339,14 @@ export interface NavigationMenuTriggerProps
    */
   icon?: React.ReactNode;
   /**
+   * Whether the trigger ignores user interaction. Its panel opens on neither
+   * press, hover nor keyboard. The trigger stays focusable — Base UI marks it
+   * `aria-disabled` rather than `disabled` — so Tab still reaches it and it is
+   * still announced, but the arrow keys step over it. Sets `data-disabled`.
+   * @default false
+   */
+  disabled?: BaseNavigationMenu.Trigger.Props["disabled"];
+  /**
    * Whether the rendered element is a real `<button>`. Set it to `false` when
    * `render` replaces the button with something else, so Base UI supplies the
    * keyboard and role behavior the element does not have natively.

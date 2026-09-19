@@ -145,6 +145,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "shape", text: "Shape", depth: 3 },
     { id: "variants-and-tones", text: "Variants and tones", depth: 3 },
     { id: "when-the-image-is-missing", text: "When the image is missing", depth: 3 },
+    { id: "lazy-loading-and-image-optimizers", text: "Lazy loading and image optimizers", depth: 3 },
     { id: "groups", text: "Groups", depth: 3 },
     { id: "presence-and-badges", text: "Presence and badges", depth: 3 },
     { id: "accessibility", text: "Accessibility", depth: 2 },
@@ -403,6 +404,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "comboboxcollection", text: "Combobox.Collection", depth: 3 },
     { id: "comboboxusefilter", text: "Combobox.useFilter", depth: 3 },
     { id: "comboboxusefiltereditems", text: "Combobox.useFilteredItems", depth: 3 },
+    { id: "comboboxcreateitems", text: "Combobox.createItems", depth: 3 },
   ],
   "/components/context-menu/": [
     { id: "import", text: "Import", depth: 2 },

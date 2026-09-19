@@ -189,6 +189,7 @@ export {
   Combobox,
   useComboboxFilter,
   useComboboxFilteredItems,
+  createComboboxItems,
 } from "./components/combobox";
 export type {
   ComboboxRootProps,

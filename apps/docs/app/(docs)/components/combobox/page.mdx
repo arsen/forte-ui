@@ -24,7 +24,9 @@ Select.
 Pass `items` to `<Combobox.Root>` — filtering, the function-child form of
 `<Combobox.List>` and `<Combobox.Empty>` all depend on it. Items can be plain
 strings, or objects: a `{ value, label }` shape displays its `label` in the
-input automatically, any other shape needs `itemToStringLabel`.
+input automatically, any other shape needs `itemToStringLabel` — or wrap the
+data in [`Combobox.createItems()`](#comboboxcreateitems), which derives each
+item's value and label for you.
 
 ## Import
 
@@ -220,8 +222,14 @@ forwards [Base UI's own `Combobox.Root`](https://base-ui.com/react/components/co
 `multiple`, `filter`, `filteredItems`, `itemToStringLabel`,
 `isItemEqualToValue`, `autoHighlight`, `openOnInputClick`, `limit`, `grid`,
 `inline`, `virtualized`, `name`, `disabled`, `readOnly`, `required` and
-`modal`. Both generics are preserved, so `<Combobox.Root<Country>>` types
-`onValueChange`, `items` and `defaultValue` for you.
+`modal`. All three generics are preserved, so `<Combobox.Root<Country>>` types
+`onValueChange`, `items` and `defaultValue` for you, and a
+`Combobox.createItems()` collection types the value as the primitive it
+derives rather than as the source object.
+
+`readOnly` locks the value, not the popup: the list still opens and can be
+browsed, and only choosing an item is refused. The trigger keeps its pointer
+and the rows drop theirs.
 
 ### Combobox.Label
 
@@ -326,3 +334,37 @@ Returns the items the combobox is currently showing after its internal
 filtering — what a virtualizer should measure. Must be called from a
 component rendered inside `<Combobox.Root>`. Also exported standalone as
 `useComboboxFilteredItems`.
+
+### Combobox.createItems
+
+Wraps flat or grouped source items in a collection for `items`, with a
+`getValue` that derives each item's selection value — a primitive, usually
+an id — and a `getLabel` for the text the input shows and the filter matches.
+The derived value is what `value`, `onValueChange` and the submitted form
+carry, while `<Combobox.List>`'s function child still receives the source
+item, so an object list selects by id without `itemToStringLabel` or
+`isItemEqualToValue`:
+
+```tsx
+const people = Combobox.createItems(team, {
+  getValue: (person) => person.id,
+  getLabel: (person) => person.name,
+});
+
+<Combobox.Root items={people} onValueChange={(id) => setAssignee(id)}>
+  …
+  <Combobox.List>
+    {(person: Person) => (
+      <Combobox.Item key={person.id} value={person.id}>
+        {person.name}
+      </Combobox.Item>
+    )}
+  </Combobox.List>
+</Combobox.Root>
+```
+
+Create a static collection at module scope and a dynamic one inside
+`React.useMemo()`, keyed by its data. Items may not have an `items` array of
+their own — that shape marks a group. Also exported standalone as
+`createComboboxItems`; a direct re-export of Base UI's
+[`Combobox.createItems`](https://base-ui.com/react/components/combobox).

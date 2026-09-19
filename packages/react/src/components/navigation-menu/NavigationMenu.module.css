@@ -201,7 +201,7 @@
   }
 
   @media (hover: hover) {
-    .trigger[data-variant="plain"]:hover:not([data-popup-open]),
+    .trigger[data-variant="plain"]:hover:not([data-popup-open], [data-disabled]),
     .link[data-variant="plain"]:hover:not([data-active]) {
       background-color: var(--forte-navigation-menu-row-bg-hover);
     }
@@ -246,7 +246,7 @@
   }
 
   @media (hover: hover) {
-    .trigger[data-variant="card"]:hover:not([data-popup-open]),
+    .trigger[data-variant="card"]:hover:not([data-popup-open], [data-disabled]),
     .link[data-variant="card"]:hover:not([data-active]) {
       background-color: var(--forte-navigation-menu-card-bg-hover);
     }
@@ -256,6 +256,16 @@
   .link[data-variant="card"][data-active] {
     background-color: var(--forte-navigation-menu-card-bg-active);
     color: var(--forte-navigation-menu-card-fg-active);
+  }
+
+  /* Both variants. Base UI keeps a disabled trigger focusable — Tab still
+   * lands on it, only the arrow keys step over it — and it simply will not
+   * open, so this is the only thing telling a sighted user why nothing
+   * happens. Only the Trigger has the state: a Link is navigation, and Base
+   * UI gives it no `disabled`. */
+  .trigger[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
   }
 
   /* ------------------------------------------------------------------------
@@ -851,12 +861,14 @@
  * not live in the components layer. Layer order outranks specificity
  * completely, so a rule placed earlier could never win.
  *
- * The generic rules in patterns.css cover `[data-disabled]` and
- * `[data-highlighted]`; neither appears in this component. What is left is the
- * two states this file paints with an author color, which forced-colors would
- * otherwise flatten to `Canvas` — losing the only cue saying which item is
- * open and which page you are on — plus the descendant that declares its own
- * color and so does not inherit its row's.
+ * The generic rules in patterns.css cover `[data-disabled]` — a disabled
+ * Trigger turns `GrayText` at full opacity there, which is the only disabled
+ * cue that survives this mode — and `[data-highlighted]`, which never appears
+ * in this component. What is left is the two states this file paints with an
+ * author color, which forced-colors would otherwise flatten to `Canvas` —
+ * losing the only cue saying which item is open and which page you are on —
+ * plus the descendant that declares its own color and so does not inherit its
+ * row's.
  */
 @layer forte.a11y {
   @media (forced-colors: active) {
