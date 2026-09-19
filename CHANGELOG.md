@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.8.3] - 2026-09-19
+
+### Carousel
+
+- Fixed drag gestures with `gap={0}` (and percentage-based gaps generally) throwing the track to the wrong slide, or onto a loop's clones of the last slide, because the drag handler misread the track's `translate` percentage (e.g. `-200%`) as a pixel value; a lazily-rendered slide could also appear empty as a result. Dragging now also catches a track that is still animating exactly where it is instead of snapping it first, and a slow release lands on whichever slide the track was nearest to when let go.
+
 ## [1.8.2] - 2026-09-15
 
 ### Tabs
@@ -523,7 +529,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.8.3...HEAD
+[1.8.3]: https://github.com/arsen/forte-ui/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/arsen/forte-ui/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/arsen/forte-ui/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/arsen/forte-ui/compare/v1.7.0...v1.8.0
