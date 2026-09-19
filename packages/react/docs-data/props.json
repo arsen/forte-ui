@@ -439,7 +439,7 @@
   },
   "AvatarImage": {
     "name": "AvatarImage",
-    "description": "The picture. Base UI preloads `src` off-screen and only mounts this element\nonce the load succeeds, so a broken URL never paints a torn-image glyph —\nthe fallback simply stays.\n\nThe image is cropped to the box with `object-fit: cover`, so a portrait, a\nlandscape and a square all read the same.",
+    "description": "The picture. By default Base UI preloads `src` off-screen and only mounts\nthis element once the load succeeds, so a broken URL never paints a\ntorn-image glyph — the fallback simply stays. With `keepMounted` the\nelement is always there and the stylesheet hides it instead, for as long\nas it is loading or broken.\n\nThe image is cropped to the box with `object-fit: cover`, so a portrait, a\nlandscape and a square all read the same.",
     "props": [
       {
         "name": "alt",
@@ -454,6 +454,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "keepMounted",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Render the `<img>` straight away and let it load in place, instead of\npreloading `src` off-screen and mounting the element only once that\nsucceeds.\n\nThe preload requests the raw `src`, so it defeats `loading=\"lazy\"` and\nany image optimizer that serves a different URL — `next/image` among\nthem, which would then download the picture twice. With this set only\nthe image actually displayed is requested, and it ships in the\nserver-rendered HTML. Until it loads, or when it fails, the element\ncarries `data-loading` / `data-error`, stays hidden and `aria-hidden`,\nand the fallback is shown in its place."
       }
     ]
   },
@@ -2660,7 +2667,7 @@
   },
   "ContextMenuRoot": {
     "name": "ContextMenuRoot",
-    "description": "Groups every part of the context menu and owns its open state. Renders no\nDOM element of its own, so it accepts neither `className` nor `ref`.\n\nForwards Base UI's own root props unchanged — `open`, `defaultOpen`,\n`onOpenChange`, `disabled`, `orientation`, `loopFocus`,\n`highlightItemOnHover`, `closeParentOnEsc` and `actionsRef`. Four of\n`Menu.Root`'s props are deliberately absent, because a context menu has no\ntrigger element to hang them on: `modal` (it is always modal), `openOnHover`\nwith its `delay` / `closeDelay`, and the `handle` / `triggerId` pair.",
+    "description": "Groups every part of the context menu and owns its open state. Renders no\nDOM element of its own, so it accepts neither `className` nor `ref`.\n\nForwards Base UI's own root props unchanged — `open`, `defaultOpen`,\n`onOpenChange`, `disabled`, `orientation`, `loopFocus`,\n`highlightItemOnHover` and `actionsRef`. Four of `Menu.Root`'s props are\ndeliberately absent, because a context menu has no trigger element to hang\nthem on: `modal` (it is always modal), `openOnHover` with its `delay` /\n`closeDelay`, and the `handle` / `triggerId` pair. `closeParentOnEsc` is\nstill accepted but does nothing here — there is no parent menu for Escape\nto close — and belongs on a `ContextMenu.SubmenuRoot`.",
     "props": [
       {
         "name": "children",
@@ -5093,6 +5100,13 @@
         "required": false,
         "defaultValue": null,
         "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether the trigger ignores user interaction. Its panel opens on neither\npress, hover nor keyboard. The trigger stays focusable — Base UI marks it\n`aria-disabled` rather than `disabled` — so Tab still reaches it and it is\nstill announced, but the arrow keys step over it. Sets `data-disabled`."
       },
       {
         "name": "icon",

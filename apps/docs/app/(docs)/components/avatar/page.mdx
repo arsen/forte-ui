@@ -31,7 +31,7 @@ import { Avatar } from "@forte-ui/react";
 </Avatar.Root>
 ```
 
-Both children are optional and neither is ever rendered speculatively: exactly one of them is in the DOM at a time, chosen by the image's loading status. An avatar with no `Avatar.Image` is a perfectly ordinary avatar — the fallback simply never gets replaced.
+Both children are optional and neither is ever rendered speculatively: exactly one of them is in the DOM at a time, chosen by the image's loading status — unless the image is [`keepMounted`](#lazy-loading-and-image-optimizers), which trades that guarantee for lazy loading. An avatar with no `Avatar.Image` is a perfectly ordinary avatar — the fallback simply never gets replaced.
 
 ## Examples
 
@@ -72,6 +72,25 @@ Both only decide what shows while there is **no image**: a loaded photo covers t
 The middle avatar's `src` points at a file that does not exist. Nothing torn ever paints, because the `<img>` element is not mounted until a preload of the same URL has already succeeded.
 
 `delay` on `Avatar.Fallback` holds the fallback back for a number of milliseconds. It defaults to `0`, which is right whenever the fallback *is* the avatar: a non-zero delay also withholds it during server rendering, so an initials-only avatar would ship as an empty disc and pop in a tenth of a second later. Set it to around `120` when there is an `Avatar.Image` beside it — a cached image is not decoded until after hydration, so at `0` the initials paint and are immediately replaced on every load. The cost is an empty disc for the same span on a slow connection, which is the trade the prop exists to let you make.
+
+### Lazy loading and image optimizers
+
+The preload that keeps a torn glyph off the page requests the raw `src` the moment the avatar mounts. That defeats `loading="lazy"` — every avatar in a long member list is fetched up front, on screen or not — and it does not compose with an optimizer that serves a different URL: `next/image` would download each picture twice, once raw for the preload and once resized for display. `keepMounted` on `Avatar.Image` drops the preload and renders the `<img>` straight away, so only the image actually displayed is requested, and it is in the server-rendered HTML.
+
+```tsx
+import Image from "next/image";
+
+<Avatar.Root>
+  <Avatar.Image
+    keepMounted
+    alt=""
+    render={<Image src={user.photo} width={40} height={40} alt="" />}
+  />
+  <Avatar.Fallback label={user.name}>{initials}</Avatar.Fallback>
+</Avatar.Root>
+```
+
+Both children are mounted together while the image loads, and the stylesheet sorts out the overlap. The image carries `data-loading` until it has loaded and `data-error` if it fails, and is hidden in both states — with `visibility` rather than `display: none`, because an element with no box never intersects the viewport and a lazy image would never be fetched. It is `aria-hidden` until it loads, so the fallback's `label` stays the accessible name. And it always paints over the fallback, whatever the source order, so a picture that finishes loading before hydration is on screen as soon as it arrives rather than waiting underneath the initials.
 
 ### Groups
 
@@ -129,11 +148,11 @@ Under forced colors the fallback gains a `CanvasText` border. Backgrounds are re
 
 ### Motion
 
-One transition, on one property. The image fades in over `--forte-duration-fast` once it has loaded, and fades out again if a later `src` fails.
+One transition, on one property. The image fades in over `--forte-duration-fast` once it has loaded, and fades out again if a later `src` fails. A `keepMounted` image that had already loaded by the time the page hydrated is shown without the fade, since it has been on screen all along.
 
 It is a transition rather than a keyframe animation for the usual reason: a `src` that changes twice in quick succession reverses from wherever the fade got to instead of snapping back and restarting. There is no scale and no travel, so there is nothing for reduced motion to collapse — and nothing that needs collapsing. The duration token shortens itself, and a fade is the one enter effect that stays legible when it does. There is no `prefers-reduced-motion` block in this stylesheet.
 
-The root is a one-cell grid with the image and the fallback both placed in that cell. Base UI keeps an outgoing image mounted until its exit transition finishes, and for those frames the fallback is mounted too; in normal flow that would be two boxes side by side, doubling the avatar's width and snapping it back.
+The root is a one-cell grid with the image and the fallback both placed in that cell. Base UI keeps an outgoing image mounted until its exit transition finishes, and for those frames the fallback is mounted too; in normal flow that would be two boxes side by side, doubling the avatar's width and snapping it back. Inside the cell the image is ordered after the fallback, so those frames show the picture fading out over the initials rather than the initials appearing on top of it.
 
 ## Theming
 
@@ -149,11 +168,11 @@ Everything below is declared on `Avatar.Root` itself, which is also why an ances
 
 <ThemingTable component="Avatar" part="badge" />
 
-State is on `data-size`, `data-shape`, `data-variant` and `data-tone`, and on the badge it is `data-tone`, `data-placement` and `data-dot` — the last set only while the badge is empty, which is the flag the forced-colors rule needs and CSS cannot work out for itself. All of it is reachable from plain CSS or a Tailwind arbitrary variant — `data-[shape=square]:...` — without a wrapper element.
+State is on `data-size`, `data-shape`, `data-variant` and `data-tone`, and on the badge it is `data-tone`, `data-placement` and `data-dot` — the last set only while the badge is empty, which is the flag the forced-colors rule needs and CSS cannot work out for itself. A `keepMounted` image adds `data-loading` and `data-error`. All of it is reachable from plain CSS or a Tailwind arbitrary variant — `data-[shape=square]:...` — without a wrapper element.
 
 ## API reference
 
-`Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` forward every prop they do not consume to their [Base UI counterpart](https://base-ui.com/react/components/avatar), and take `render` for changing the underlying element. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS.
+`Avatar.Root`, `Avatar.Image` and `Avatar.Fallback` forward every prop they do not consume to their [Base UI counterpart](https://base-ui.com/react/components/avatar), and take `render` for changing the underlying element. `Avatar.Image` also takes the whole `<img>` surface — `src`, `srcSet`, `sizes`, `loading`, `crossOrigin` — plus `onLoadingStatusChange`, which reports `idle`, `loading`, `loaded` or `error` if you need the state outside CSS. `loading="lazy"` only has an effect alongside `keepMounted`; without it the preload fetches the image regardless.
 
 `Avatar.Badge` and `Avatar.Group` have no Base UI counterpart to forward to. They are `<span>`s and take the whole span surface, `ref` included, but no `render`.
 

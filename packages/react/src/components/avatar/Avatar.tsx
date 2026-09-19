@@ -106,6 +106,21 @@ export interface AvatarImageProps extends Omit<BaseImageProps, "className"> {
    */
   alt: string;
   /**
+   * Render the `<img>` straight away and let it load in place, instead of
+   * preloading `src` off-screen and mounting the element only once that
+   * succeeds.
+   *
+   * The preload requests the raw `src`, so it defeats `loading="lazy"` and
+   * any image optimizer that serves a different URL — `next/image` among
+   * them, which would then download the picture twice. With this set only
+   * the image actually displayed is requested, and it ships in the
+   * server-rendered HTML. Until it loads, or when it fails, the element
+   * carries `data-loading` / `data-error`, stays hidden and `aria-hidden`,
+   * and the fallback is shown in its place.
+   * @default false
+   */
+  keepMounted?: BaseImageProps["keepMounted"];
+  /**
    * Additional class name(s). Applied after the internal styles so consumer
    * utilities (e.g. Tailwind) win without needing `!important`.
    */
@@ -113,9 +128,11 @@ export interface AvatarImageProps extends Omit<BaseImageProps, "className"> {
 }
 
 /**
- * The picture. Base UI preloads `src` off-screen and only mounts this element
- * once the load succeeds, so a broken URL never paints a torn-image glyph —
- * the fallback simply stays.
+ * The picture. By default Base UI preloads `src` off-screen and only mounts
+ * this element once the load succeeds, so a broken URL never paints a
+ * torn-image glyph — the fallback simply stays. With `keepMounted` the
+ * element is always there and the stylesheet hides it instead, for as long
+ * as it is loading or broken.
  *
  * The image is cropped to the box with `object-fit: cover`, so a portrait, a
  * landscape and a square all read the same.

@@ -396,7 +396,14 @@ Three places keep `default` on purpose — they are not oversights, leave them
 alone: `Select`'s `.label` (a label, not a control, even though clicking it
 focuses the trigger), `Select`'s `.scrollArrow` (scrolls on *hover*, is
 `aria-hidden`, and is never the only route to an item), and `[data-readonly]` on
-`Select` and `Switch` (inert, per the table above).
+`Switch` (inert, per the table above).
+
+Read-only is not automatically inert, so check what the primitive still does
+before reaching for `default`. Since Base UI 1.8.0 a read-only `Select` or
+`Combobox` still opens its popup for browsing and only refuses the pick: the
+trigger keeps `pointer` (the input group keeps its `text` caret), and it is the
+items inside the read-only list — `[aria-readonly="true"] .item` — that go
+`default`.
 
 `Tooltip`'s trigger deliberately sets no cursor at all, because it is normally
 composed with a control that has its own — see the comment in

@@ -220,8 +220,10 @@
       box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
   }
 
+  /* Read-only is NOT excluded: pressing the group still opens the popup (see
+   * below), so it answers the pointer like an editable one does. */
   @media (hover: hover) {
-    .inputGroup:hover:not([data-disabled], [data-readonly]) {
+    .inputGroup:hover:not([data-disabled]) {
       background-color: var(--forte-combobox-field-bg-hover);
       border-color: var(--forte-combobox-field-border-color-hover);
     }
@@ -232,11 +234,14 @@
     opacity: 0.55;
   }
 
-  /* Read-only still shows the value and its text is still selectable, so it
-   * must not look disabled — only inert. */
+  /* Read-only locks the value, not the field: Base UI still opens the popup
+   * on a press so the options can be browsed, and only refuses the pick. The
+   * group therefore keeps the caret cursor from the base rule — the gesture
+   * is still the text-field one, and the value's text is still selectable —
+   * and the panel fill is what says the answer cannot be changed. It must
+   * not look disabled. The items are where the inertness lives; see `.item`. */
   .inputGroup[data-readonly] {
     --forte-combobox-field-bg: var(--forte-color-panel);
-    cursor: default;
   }
 
   /* Only the boundary changes. Recoloring the value text as well would make
@@ -433,7 +438,7 @@
   }
 
   @media (hover: hover) {
-    .trigger:hover:not([data-disabled], [data-readonly]) {
+    .trigger:hover:not([data-disabled]) {
       background-color: var(--forte-combobox-trigger-bg-hover);
     }
   }
@@ -449,9 +454,10 @@
     opacity: 0.55;
   }
 
+  /* Same reasoning as `.inputGroup[data-readonly]`: pressing it still opens
+   * the popup, so it keeps its `pointer` and its hover. */
   .trigger[data-readonly] {
     --forte-combobox-trigger-bg: var(--forte-color-panel);
-    cursor: default;
   }
 
   .trigger[data-invalid] {
@@ -1100,6 +1106,16 @@
     color: var(--forte-color-foreground-subtle);
     background-color: transparent;
     cursor: not-allowed;
+  }
+
+  /* A read-only combobox opens and highlights like any other, but pressing an
+   * item chooses nothing — so the rows are inert, and say so. The highlight
+   * stays: it is how the list is browsed. Keyed on `aria-readonly`, which Base
+   * UI puts on the listbox for exactly this state; the items themselves carry
+   * no read-only attribute. A `grid` list gets no `aria-readonly` from Base
+   * UI, so its rows keep `pointer`. A disabled item keeps its `not-allowed`. */
+  .list[aria-readonly="true"] .item:not([data-disabled]) {
+    cursor: default;
   }
 
   /* Item indicator --------------------------------------------------------- */

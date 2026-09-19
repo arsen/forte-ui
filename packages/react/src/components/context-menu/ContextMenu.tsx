@@ -58,10 +58,12 @@ export interface ContextMenuRootProps extends BaseContextMenu.Root.Props {
  *
  * Forwards Base UI's own root props unchanged — `open`, `defaultOpen`,
  * `onOpenChange`, `disabled`, `orientation`, `loopFocus`,
- * `highlightItemOnHover`, `closeParentOnEsc` and `actionsRef`. Four of
- * `Menu.Root`'s props are deliberately absent, because a context menu has no
- * trigger element to hang them on: `modal` (it is always modal), `openOnHover`
- * with its `delay` / `closeDelay`, and the `handle` / `triggerId` pair.
+ * `highlightItemOnHover` and `actionsRef`. Four of `Menu.Root`'s props are
+ * deliberately absent, because a context menu has no trigger element to hang
+ * them on: `modal` (it is always modal), `openOnHover` with its `delay` /
+ * `closeDelay`, and the `handle` / `triggerId` pair. `closeParentOnEsc` is
+ * still accepted but does nothing here — there is no parent menu for Escape
+ * to close — and belongs on a `ContextMenu.SubmenuRoot`.
  */
 export function ContextMenuRoot({
   children,

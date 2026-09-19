@@ -207,6 +207,10 @@ so it takes neither `className` nor `ref`, and it forwards [Base UI's own
 `required`, `modal` and `highlightItemOnHover`. Both generics are preserved, so
 `<Select.Root<Theme>>` types `onValueChange` and `defaultValue` for you.
 
+`readOnly` locks the value, not the popup: the list still opens and can be
+browsed with the pointer, the arrow keys and typeahead, and only choosing an
+item is refused. The trigger keeps its pointer and the rows drop theirs.
+
 ### Select.Label
 
 <PropTable component="SelectLabel" />
