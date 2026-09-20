@@ -637,6 +637,16 @@ import d_resizable_toggle_only from "./resizable/toggle-only";
 import d_resizable_toggle_only_src from "./resizable/toggle-only?raw";
 import d_resizable_vertical from "./resizable/vertical";
 import d_resizable_vertical_src from "./resizable/vertical?raw";
+import d_reveal_basic from "./reveal/basic";
+import d_reveal_basic_src from "./reveal/basic?raw";
+import d_reveal_effects from "./reveal/effects";
+import d_reveal_effects_src from "./reveal/effects?raw";
+import d_reveal_repeat from "./reveal/repeat";
+import d_reveal_repeat_src from "./reveal/repeat?raw";
+import d_reveal_stagger from "./reveal/stagger";
+import d_reveal_stagger_src from "./reveal/stagger?raw";
+import d_reveal_theming from "./reveal/theming";
+import d_reveal_theming_src from "./reveal/theming?raw";
 import d_scroll_area_basic from "./scroll-area/basic";
 import d_scroll_area_basic_src from "./scroll-area/basic?raw";
 import d_scroll_area_both_axes from "./scroll-area/both-axes";
@@ -1235,6 +1245,11 @@ export type DemoId =
   | "resizable/persisted"
   | "resizable/toggle-only"
   | "resizable/vertical"
+  | "reveal/basic"
+  | "reveal/effects"
+  | "reveal/repeat"
+  | "reveal/stagger"
+  | "reveal/theming"
   | "scroll-area/basic"
   | "scroll-area/both-axes"
   | "scroll-area/horizontal"
@@ -1694,6 +1709,11 @@ const REGISTRY: Record<DemoId, Demo> = {
   "resizable/persisted": { Component: d_resizable_persisted, source: d_resizable_persisted_src, file: "resizable/persisted.tsx" },
   "resizable/toggle-only": { Component: d_resizable_toggle_only, source: d_resizable_toggle_only_src, file: "resizable/toggle-only.tsx" },
   "resizable/vertical": { Component: d_resizable_vertical, source: d_resizable_vertical_src, file: "resizable/vertical.tsx" },
+  "reveal/basic": { Component: d_reveal_basic, source: d_reveal_basic_src, file: "reveal/basic.tsx" },
+  "reveal/effects": { Component: d_reveal_effects, source: d_reveal_effects_src, file: "reveal/effects.tsx" },
+  "reveal/repeat": { Component: d_reveal_repeat, source: d_reveal_repeat_src, file: "reveal/repeat.tsx" },
+  "reveal/stagger": { Component: d_reveal_stagger, source: d_reveal_stagger_src, file: "reveal/stagger.tsx" },
+  "reveal/theming": { Component: d_reveal_theming, source: d_reveal_theming_src, file: "reveal/theming.tsx" },
   "scroll-area/basic": { Component: d_scroll_area_basic, source: d_scroll_area_basic_src, file: "scroll-area/basic.tsx" },
   "scroll-area/both-axes": { Component: d_scroll_area_both_axes, source: d_scroll_area_both_axes_src, file: "scroll-area/both-axes.tsx" },
   "scroll-area/horizontal": { Component: d_scroll_area_horizontal, source: d_scroll_area_horizontal_src, file: "scroll-area/horizontal.tsx" },

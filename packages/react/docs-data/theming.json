@@ -8411,6 +8411,46 @@
       }
     ]
   },
+  "Reveal": {
+    "name": "Reveal",
+    "tokens": [
+      {
+        "name": "--forte-reveal-travel",
+        "value": "var(--forte-travel-lg)",
+        "description": "How far the content travels before it settles, for the four directional effects.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reveal-scale",
+        "value": "var(--forte-scale-enter)",
+        "description": "The size the content starts at, for `scale` and `fade-scale`. Below 1 it grows into place; above 1 it settles down into it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reveal-duration",
+        "value": "var(--forte-duration-spring-gentle)",
+        "description": "How long the entrance takes.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reveal-ease",
+        "value": "var(--forte-ease-spring-gentle)",
+        "description": "The curve it runs on.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reveal-delay",
+        "value": "0s",
+        "description": "How long to wait once the content is on screen. Set by the `delay` prop, which is how a mapped list staggers.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "ScrollArea": {
     "name": "ScrollArea",
     "tokens": [

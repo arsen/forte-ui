@@ -496,6 +496,9 @@ export type {
   ResizableHandleProps,
 } from "./components/resizable";
 
+export { Reveal } from "./components/reveal";
+export type { RevealProps, RevealEffect } from "./components/reveal";
+
 export { ScrollArea } from "./components/scroll-area";
 export type {
   ScrollAreaScrollbarVisibility,

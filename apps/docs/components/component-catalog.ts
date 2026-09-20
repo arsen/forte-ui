@@ -80,6 +80,7 @@ export type ComponentName =
   | "Kbd"
   | "KbdGroup"
   | "Resizable"
+  | "Reveal"
   | "ScrollArea"
   | "Separator"
   | "Table"
@@ -161,6 +162,7 @@ export const CATALOG: CatalogEntry[] = [
   { name: "Kbd", title: "Kbd", href: "/components/kbd/", category: "Content & layout", summary: "A keyboard key cap for shortcut hints — works in prose, tooltips, menu items and buttons.", partOf: null },
   { name: "KbdGroup", title: "Kbd Group", href: "/components/kbd/#kbdgroup", category: "Content & layout", summary: "A sequence of Kbds read as one shortcut (⌘ K).", partOf: "Kbd" },
   { name: "Resizable", title: "Resizable", href: "/components/resizable/", category: "Content & layout", summary: "Panels the user re-proportions by dragging the divider between them — keyboard operable, constrainable, and persistable.", partOf: null },
+  { name: "Reveal", title: "Reveal", href: "/components/reveal/", category: "Content & layout", summary: "Plays a one-shot entrance — fade, rise, scale — on whatever it wraps, the first time that content reaches the screen; a popup or panel animates its own enter and needs none of this.", partOf: null },
   { name: "ScrollArea", title: "Scroll Area", href: "/components/scroll-area/", category: "Content & layout", summary: "A scroll container with overlay scrollbars that look the same on every platform, plus scroll-position edge fades.", partOf: null },
   { name: "Separator", title: "Separator", href: "/components/separator/", category: "Content & layout", summary: "A rule between things, horizontal or vertical, optionally with a label set into the line; announced to assistive technology unless marked decorative.", partOf: null },
   { name: "Table", title: "Table", href: "/components/table/", category: "Content & layout", summary: "Rows and columns of data on a real `<table>` — variants, sizes, striping, selection tint, numeric columns, sortable headers and a sticky header; the data, sorting and selection state stay with the consumer.", partOf: null },
@@ -221,6 +223,7 @@ export const COMPONENT_PAGES: { title: string; href: string }[] = [
   { title: "Progress", href: "/components/progress/" },
   { title: "Radio", href: "/components/radio/" },
   { title: "Resizable", href: "/components/resizable/" },
+  { title: "Reveal", href: "/components/reveal/" },
   { title: "Scroll Area", href: "/components/scroll-area/" },
   { title: "Select", href: "/components/select/" },
   { title: "Separator", href: "/components/separator/" },

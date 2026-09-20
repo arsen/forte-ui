@@ -1,0 +1,150 @@
+/*
+ * Reveal
+ *
+ * Two states and one transition. `[data-state="hidden"]` is the before-state
+ * — faded, displaced, shrunk — and `[data-state="shown"]` is the element at
+ * rest. Only the second one declares a `transition`, and that asymmetry is
+ * the whole mechanism rather than an oversight: a transition is started from
+ * the AFTER-change style, so arriving at `hidden` animates nothing and
+ * arriving at `shown` animates everything. Arming is therefore a cut (the
+ * content is hidden between two paints, with no fade-out for the reader to
+ * see) and only the entrance is a transition.
+ *
+ * That also gives `repeat` its behavior for free. Going back to `hidden`
+ * when the content leaves the screen is instant, which is what it should be
+ * — there is nobody there to watch a fade-out, and a half-faded section
+ * caught by a fast scroll back up would be a bug, not a flourish.
+ *
+ * Transitions and not keyframes, per the library's motion rules: a scroll
+ * that reverses mid-entrance under `repeat` reverses the transition instead
+ * of restarting a keyframe from its first frame.
+ *
+ * The element at rest declares NO `translate` and NO `scale`. Both are left
+ * to their initial `none` rather than being written out as identities,
+ * because any value other than `none` makes the element a containing block
+ * for `position: fixed` descendants and a stacking context of its own — a
+ * side effect a wrapper this general has no business leaving behind once its
+ * one job is done. The transition still runs: `none` interpolates as the
+ * identity, so `16px → none` is a real animation to zero.
+ *
+ * Nothing here is `will-change`d. A page with fifty reveals on it would be
+ * fifty promoted layers, all of them held for content that has not been
+ * scrolled to yet; opacity and transform animations are composited anyway
+ * once they are actually running.
+ *
+ * Reduced motion needs no query. `--forte-travel-lg` is already 0px and
+ * `--forte-scale-enter` is already 1 there, and the two `--forte-motion-ok`
+ * gates below carry the same collapse over to a distance or a size a
+ * consumer set by hand. What survives is the fade, on a duration the token
+ * has already shortened — reduced, not removed.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared HERE, on the reveal itself, so a value set
+     * on an ancestor is only INHERITED and loses to these. Re-skin one via
+     * `className` or `style` (an unlayered consumer rule beats this layer at
+     * any specificity); re-skin every reveal by re-pointing the global
+     * tokens on the right-hand side. */
+
+    /** How far the content travels before it settles, for the four
+     * directional effects. */
+    --forte-reveal-travel: var(--forte-travel-lg);
+    /** The size the content starts at, for `scale` and `fade-scale`. Below 1
+     * it grows into place; above 1 it settles down into it. */
+    --forte-reveal-scale: var(--forte-scale-enter);
+    /* Paired with the easing below, per the motion rules: a spring curve cut
+     * short by a smaller duration is a spring stopped mid-bounce, which
+     * reads as a stutter rather than as a settle. Re-point both or neither. */
+    /** How long the entrance takes. */
+    --forte-reveal-duration: var(--forte-duration-spring-gentle);
+    /** The curve it runs on. */
+    --forte-reveal-ease: var(--forte-ease-spring-gentle);
+    /** How long to wait once the content is on screen. Set by the `delay`
+     * prop, which is how a mapped list staggers. */
+    --forte-reveal-delay: 0s;
+
+    /* The two knobs above, with the reduced-motion collapse applied once
+     * rather than at each of the five rules that consume them. A token-valued
+     * knob has already collapsed itself by the time it arrives here; these
+     * gates are for the literal a consumer sets, which has not. Travel goes
+     * to zero, and scale interpolates toward 1 — toward identity, never
+     * toward nothing, or `scale: 0.8` under reduced motion would collapse
+     * the element instead of merely not animating it. */
+    --forte-reveal-shift: calc(var(--forte-reveal-travel) * var(--forte-motion-ok));
+    --forte-reveal-shrink: calc(1 + (var(--forte-reveal-scale) - 1) * var(--forte-motion-ok));
+  }
+
+  /* The before-state -------------------------------------------------------
+   *
+   * Everything below is `[data-state="hidden"]`, which is only ever set by
+   * the component once it is running in a browser. Content that never gets
+   * that far is never hidden — see the note in `Reveal.tsx`.
+   *
+   * `scale` is the one effect that does not fade, which is its reason to
+   * exist: text that grows into place stays readable the whole way in, where
+   * text that fades in is unreadable for the first half of it. */
+  .root[data-state="hidden"]:not([data-effect="scale"]) {
+    opacity: 0;
+  }
+
+  /* The block axis is physical in both directions and needs no sign: `up`
+   * starts below its resting place and rises to it. */
+  .root[data-effect="fade-up"][data-state="hidden"] {
+    translate: 0 var(--forte-reveal-shift);
+  }
+
+  .root[data-effect="fade-down"][data-state="hidden"] {
+    translate: 0 calc(-1 * var(--forte-reveal-shift));
+  }
+
+  /* The inline axis has no logical form — `translate` is physical — so the
+   * distance, which is always positive, takes its sign from
+   * `--forte-direction`: 1 in LTR, -1 in RTL. That is what makes
+   * `fade-start` arrive from the left of an English page and from the right
+   * of an Arabic one without the component knowing which it is in. */
+  .root[data-effect="fade-start"][data-state="hidden"] {
+    translate: calc(-1 * var(--forte-reveal-shift) * var(--forte-direction));
+  }
+
+  .root[data-effect="fade-end"][data-state="hidden"] {
+    translate: calc(var(--forte-reveal-shift) * var(--forte-direction));
+  }
+
+  .root:is([data-effect="scale"], [data-effect="fade-scale"])[data-state="hidden"] {
+    scale: var(--forte-reveal-shrink);
+  }
+
+  /* The after-state --------------------------------------------------------
+   *
+   * The transition lives here and nowhere else — the header says why. The
+   * property list is spelled out rather than left as `all`, so a layout
+   * property the consumer animates on the same element is not swept into the
+   * entrance's duration; `translate` and `scale` are listed as the
+   * independent properties they are, never through the `transform`
+   * shorthand, so a consumer's own transform on the wrapper is untouched. */
+  .root[data-state="shown"] {
+    transition-property: opacity, translate, scale;
+    transition-duration: var(--forte-reveal-duration);
+    transition-timing-function: var(--forte-reveal-ease);
+    transition-delay: var(--forte-reveal-delay);
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer forte.a11y {
+  /* Printing does not scroll, so nothing below the fold is ever observed and
+   * everything below it would print as blank paper — the one way this
+   * component can still lose content after all the care taken not to hide it
+   * until JavaScript is running. There is no entrance to preserve on paper
+   * anyway: a printed page arrives all at once. */
+  @media print {
+    .root[data-state="hidden"] {
+      opacity: 1;
+      translate: none;
+      scale: none;
+    }
+  }
+}
