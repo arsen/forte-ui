@@ -19,6 +19,26 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.10.0
+
+<ReleaseMeta date="2026-09-20" href="https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0" kind="compare" />
+
+### AnimatedBorder
+
+- Added the `AnimatedBorder` component: a decorative light traveling a container's border, with `variant` (`beam`, `shine`, `rotate`), `tone` (`primary`, `secondary`, `danger`, `neutral`, `current`) and `reverse` props. It anchors to the nearest positioned ancestor and inherits the host's corner radius; under reduced motion it settles into a still gradient in the same colors instead of animating.
+
+### Card
+
+- The card surface now establishes a positioning context (`position: relative`), so an `AnimatedBorder` or any other consumer-positioned overlay placed inside a card anchors to the card instead of escaping to whatever is positioned further up the page.
+
+### Reveal
+
+- Added the `Reveal` component: plays a one-shot scroll entrance (`fade`, `fade-up`, `fade-down`, `fade-start`, `fade-end`, `scale`, `fade-scale`) on its content the first time it reaches the screen, with `delay`, `amount` (visibility threshold) and `repeat` props, and a `render` prop to apply the entrance to another element instead of a wrapping `<div>`. Content already on screen at load plays immediately, and nothing is hidden from a reader whose JavaScript never runs.
+
+### Design tokens & motion
+
+- Added `--forte-duration-loop-orbit` (6000ms), a duration for effects that travel a surface's full perimeter rather than one edge, and `--forte-motion-play` (`running`/`paused`), a play-state token that pauses — without hiding — decorative infinite loops under reduced motion; busy indicators such as Spinner do not consume it. Registered `--forte-animated-border-angle` so a conic gradient's rotation can animate instead of snapping.
+
 ## v1.9.0
 
 <ReleaseMeta date="2026-09-19" href="https://github.com/arsen/forte-ui/compare/v1.8.3...v1.9.0" kind="compare" />
@@ -158,67 +178,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 - A saved layout under `autoSaveId` is now drawn from the group's first client render instead of applied a render later, so content that measures its panel in a mount effect (a canvas fitting its pages, for example) measures the restored split rather than the default one.
 - Added an `onReady` callback, fired once when the layout first settles — restored under `autoSaveId` or resolved from `defaultSize`s — for content that mounts hidden or whose panels aren't direct `Resizable.Panel` children and so can't measure at mount.
 
-## v1.4.0
-
-<ReleaseMeta date="2026-09-05" href="https://github.com/arsen/forte-ui/compare/v1.3.0...v1.4.0" kind="compare" />
-
-### AppBar
-
-- **Breaking:** Removed the flat `AppBarRoot`, `AppBarLeading`, `AppBarTitle` and `AppBarTrailing` exports. Use the namespace properties instead — `AppBar.Root`, `AppBar.Leading`, `AppBar.Title`, `AppBar.Trailing`.
-
-### Button
-
-- **Breaking:** `tone` now defaults to `neutral` instead of `primary`, so a plain `<Button>` renders as a gray control rather than the accent color. A view typically has many buttons and one call to action; keep `tone="primary"` for the action you want found, and add it explicitly wherever a button relied on the old default.
-
-### Card
-
-- **Breaking:** Removed the flat `CardRoot`, `CardHeader`, `CardTitle`, `CardDescription`, `CardAction`, `CardContent`, `CardFooter` and `CardMedia` exports — `Card` is now available only as its namespace object (`Card.Root`, `Card.Header`, …). A namespace object crosses a Server Component boundary as an opaque reference whose properties read as `undefined` at runtime, so a card built from server-fetched data now needs its own small Client Component wrapper.
-
-### Combobox
-
-- **Breaking:** Removed the flat `ComboboxRoot`, `ComboboxLabel`, `ComboboxInputGroup`, `ComboboxInput`, `ComboboxTrigger`, `ComboboxValue`, `ComboboxIcon`, `ComboboxClear`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipRemove`, `ComboboxPopup`, `ComboboxList`, `ComboboxEmpty`, `ComboboxStatus`, `ComboboxItem`, `ComboboxGroup`, `ComboboxGroupLabel`, `ComboboxSeparator`, `ComboboxRow` and `ComboboxCollection` exports. Use the `Combobox.*` namespace properties instead; `useComboboxFilter` and `useComboboxFilteredItems` are unaffected.
-
-### DatePicker
-
-- **Breaking:** Removed the flat `DatePickerRoot`, `DatePickerTrigger`, `DatePickerValue`, `DatePickerIcon`, `DatePickerPopup`, `DatePickerCalendar`, `DatePickerFooter` and `DatePickerClear` exports. Use the `DatePicker.*` namespace properties instead.
-
-### Field
-
-- **Breaking:** Removed the flat `FieldRoot`, `FieldLabel`, `FieldDescription`, `FieldError` and `FieldItem` exports. Use the `Field.*` namespace properties instead.
-
-### Fieldset
-
-- **Breaking:** Removed the flat `FieldsetRoot` and `FieldsetLegend` exports. Use `Fieldset.Root` and `Fieldset.Legend`.
-
-### InputGroup
-
-- **Breaking:** Removed the flat `InputGroupRoot`, `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`, `InputGroupText` and `InputGroupButton` exports. Use the `InputGroup.*` namespace properties instead.
-
-### NumberField
-
-- **Breaking:** Removed the flat `NumberFieldRoot`, `NumberFieldGroup`, `NumberFieldInput`, `NumberFieldIncrement`, `NumberFieldDecrement`, `NumberFieldScrubArea` and `NumberFieldScrubAreaCursor` exports. Use the `NumberField.*` namespace properties instead.
-
-### OTPField
-
-- **Breaking:** Removed the flat `OTPFieldRoot`, `OTPFieldInput` and `OTPFieldSeparator` exports. Use the `OTPField.*` namespace properties instead.
-
-### Resizable
-
-- **Breaking:** Removed the flat `ResizableGroup`, `ResizablePanel` and `ResizableHandle` exports. Use `Resizable.Group`, `Resizable.Panel` and `Resizable.Handle`.
-
-### Select
-
-- **Breaking:** Removed the flat `SelectRoot`, `SelectLabel`, `SelectTrigger`, `SelectValue`, `SelectIcon`, `SelectPopup`, `SelectItem`, `SelectGroup`, `SelectGroupLabel` and `SelectSeparator` exports. Use the `Select.*` namespace properties instead.
-
-### Table
-
-- **Breaking:** Removed the flat `TableContainer`, `TableRoot`, `TableCaption`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead` and `TableCell` exports — `Table` is now available only as its namespace object. The same Server Component caveat as `Card` applies: `Table.Root` and friends do not resolve across an RSC boundary, so a table of server-fetched rows now needs a Client Component wrapper.
-
-### Design tokens & motion
-
-- The focus ring now grows outward from just inside a control's edge while it fades in, and shrinks back on blur, instead of snapping into place. Three new tokens drive the pace: `--forte-focus-ring-duration` (`--forte-duration-normal`), `--forte-focus-ring-ease` (`--forte-ease-standard`) and `--forte-focus-ring-travel` (`--forte-travel-sm`, `0px` under reduced motion, where the ring simply fades in place).
-- `--forte-focus-ring-inner` is now brand-colored — the accent ramp's text step (`--forte-color-primary-text`, held to 4.5:1 against the page) — instead of a fixed near-black/near-white pair, so the ring now recomputes per theme scope's seed instead of looking identical everywhere.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 14 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 15 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

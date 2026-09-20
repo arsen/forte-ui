@@ -12,6 +12,11 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v1100", text: "v1.10.0", depth: 2 },
+    { id: "animatedborder", text: "AnimatedBorder", depth: 3 },
+    { id: "card", text: "Card", depth: 3 },
+    { id: "reveal", text: "Reveal", depth: 3 },
+    { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
     { id: "v190", text: "v1.9.0", depth: 2 },
     { id: "avatar", text: "Avatar", depth: 3 },
     { id: "combobox", text: "Combobox", depth: 3 },
@@ -44,21 +49,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "toolbar-2", text: "Toolbar", depth: 3 },
     { id: "v141", text: "v1.4.1", depth: 2 },
     { id: "resizable", text: "Resizable", depth: 3 },
-    { id: "v140", text: "v1.4.0", depth: 2 },
-    { id: "appbar", text: "AppBar", depth: 3 },
-    { id: "button-1", text: "Button", depth: 3 },
-    { id: "card", text: "Card", depth: 3 },
-    { id: "combobox-3", text: "Combobox", depth: 3 },
-    { id: "datepicker", text: "DatePicker", depth: 3 },
-    { id: "field", text: "Field", depth: 3 },
-    { id: "fieldset", text: "Fieldset", depth: 3 },
-    { id: "inputgroup", text: "InputGroup", depth: 3 },
-    { id: "numberfield", text: "NumberField", depth: 3 },
-    { id: "otpfield", text: "OTPField", depth: 3 },
-    { id: "resizable-1", text: "Resizable", depth: 3 },
-    { id: "select-3", text: "Select", depth: 3 },
-    { id: "table", text: "Table", depth: 3 },
-    { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
