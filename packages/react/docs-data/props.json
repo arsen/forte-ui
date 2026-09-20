@@ -226,6 +226,40 @@
       }
     ]
   },
+  "AnimatedBorder": {
+    "name": "AnimatedBorder",
+    "description": "A light traveling the border of whatever contains it.\n\nIt is pure decoration — an accent for the one card on a pricing page that\nshould catch the eye, a panel that is currently generating something, the\nupgrade tile. It renders an `aria-hidden` overlay and nothing else: no\ntext, no role, no focus target. If the border is meant to say \"busy\", the\ncomponent saying so is `Spinner` or `Shimmer`, and this goes beside it.\n\n```tsx\n<Card.Root>\n  <AnimatedBorder />\n  <Card.Title>Pro</Card.Title>\n</Card.Root>\n```\n\nIt positions itself against the nearest positioned ancestor, so **the host\nmust be one** — `Card` and `Button` already are; anything else needs\n`position: relative` (Tailwind's `relative`). Without it the ring\nsilently anchors to whatever *is* positioned further up, which can be the\npage. It takes its corner radius from the host through `border-radius:\ninherit`, so a `data-forte-radius` preset carries without being told, and\nit sits just inside the host's own border — set\n`--forte-animated-border-inset` to a negative length to pull it out onto\nthat border instead, or paint the host's border `transparent` and let this\nbe the edge.\n\nUnder reduced motion nothing travels: the ring becomes a still gradient in\nthe same colors, which is the honest degradation for decoration that\ncarries no information. Styling is driven by `data-*` attributes and\n`--forte-animated-border-*` custom properties, so it can be re-skinned from\nplain CSS or Tailwind arbitrary variants (`data-[variant=beam]:...`)\nwithout wrapping.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "reverse",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Travel the ring the other way round.\n\nUnlike `Shimmer`, this does *not* follow the reading direction, and the\nomission is deliberate: `--forte-direction` exists so that motion with a\nlogical start and end stays correct in RTL, and a light going round and\nround has neither. Flipping it in RTL would spin the decoration on half\nthe world's pages for no reason a reader could name."
+      },
+      {
+        "name": "tone",
+        "type": "AnimatedBorderTone",
+        "required": false,
+        "defaultValue": "primary",
+        "description": "Which colors the light is made of. `primary` and `secondary` span the\nlibrary's two seeds, which is what makes them read as a gradient rather\nthan as a sheen; the rest are one hue with a lighter end derived from it.\n`current` is the composable one — it picks up whatever text color it\nlands in."
+      },
+      {
+        "name": "variant",
+        "type": "AnimatedBorderVariant",
+        "required": false,
+        "defaultValue": "beam",
+        "description": "Which light travels the ring.\n\n- `beam` — one glow riding the outline at constant speed, rounding the\n  corners with it. The only one of the three whose pace does not depend\n  on the shape of the box, and so the right pick for anything far from\n  square.\n- `shine` — a soft glow drifting diagonally across the ring. No leading\n  edge; reads as sheen rather than as a moving object.\n- `rotate` — a conic sweep pivoting about the center. Constant *angular*\n  speed, so on a box far from square the highlight visibly accelerates\n  into the corners — a look in its own right on a card, and the wrong\n  one on a wide banner."
+      }
+    ]
+  },
   "AppBarRoot": {
     "name": "AppBarRoot",
     "description": "The bar across the top of a screen — a title, what leads it and what\nfollows it. Renders a `<header>`.\n\n```tsx\n<AppBar.Root position=\"sticky\" elevateOnScroll>\n  <AppBar.Leading>\n    <Button variant=\"ghost\" iconOnly aria-label=\"Menu\">…</Button>\n  </AppBar.Leading>\n  <AppBar.Title>Inbox</AppBar.Title>\n  <AppBar.Trailing>\n    <ThemeToggle />\n    <Avatar.Root>…</Avatar.Root>\n  </AppBar.Trailing>\n</AppBar.Root>\n```\n\nThere is no Base UI primitive underneath and no keyboard contract of its\nown: a header is a landmark, not a widget, and Tab walks its controls one\nby one the way it walks the rest of the page. For a strip of related\ncontrols that should be one tab stop, put a `Toolbar` inside it.\n\nWhat the component owns is the scroll relationship. `position` decides\nwhether the bar stays, and once it stays the bar measures the page rather\nthan the other way round: `data-scrolled` while content is under it,\n`data-hidden` while a downward scroll has tucked it away. The styles read\nthose two attributes — for the elevation and the hide — and so can yours.\n\nStyling is driven by `data-*` attributes and `--forte-app-bar-*` custom\nproperties, so it can be re-skinned from plain CSS or targeted with\nTailwind arbitrary variants (`data-[scrolled]:...`) without wrapping.",

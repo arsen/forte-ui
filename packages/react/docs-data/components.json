@@ -782,6 +782,19 @@
     "hooks": []
   },
   {
+    "name": "AnimatedBorder",
+    "dir": "animated-border",
+    "category": "Content & layout",
+    "summary": "A decorative light traveling a container's border; for motion that reports progress or a wait, use Spinner or Shimmer instead.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "AnimatedBorder"
+    ],
+    "hooks": []
+  },
+  {
     "name": "AspectRatio",
     "dir": "aspect-ratio",
     "category": "Content & layout",

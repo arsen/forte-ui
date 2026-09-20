@@ -88,3 +88,19 @@
   inherits: false;
   initial-value: 100000px;
 }
+
+/* The conic gradient's start angle, for AnimatedBorder's `rotate` variant. A
+ * conic-gradient's `from` angle is not animatable unless the property feeding
+ * it is REGISTERED — unregistered, it interpolates as a string and the sweep
+ * snaps from 0deg to 360deg in one step instead of rotating. Registered here
+ * rather than in the component's own stylesheet, for the reason given above:
+ * a registration that lives in one component's CSS is a dependency another
+ * component silently loses when only it is imported.
+ *
+ * `inherits: false` — it is declared and consumed on the same element, and
+ * inheriting it would make every nested animated border share one angle. */
+@property --forte-animated-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}

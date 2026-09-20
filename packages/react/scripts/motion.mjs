@@ -35,6 +35,11 @@ export const DURATIONS = [
   // the distance is the page's width rather than a 24px circle, and a sweep
   // fast enough to feel like a spinner reads as a strobe.
   { name: "loop-sweep", base: "1400ms", reduce: "1400ms", off: "1400ms", never: true },
+  // A light traveling the full PERIMETER of a surface. Far longer than a
+  // sweep because the distance is a whole card's outline rather than one
+  // line's width: at sweep speed the same light laps a card roughly four
+  // times a second, which reads as an alarm rather than as an accent.
+  { name: "loop-orbit", base: "6000ms", reduce: "6000ms", off: "6000ms", never: true },
 ];
 
 /** Geometry. Travel collapses to 0; scales interpolate toward 1 (identity),
@@ -53,6 +58,14 @@ export const GEOMETRY = [
   // Fades IN a non-motion cue when motion is suppressed, so state that was
   // carried by movement is still carried by something.
   { name: "pulse-dip",   full: "1",      reduced: "0.45" },
+  // Not geometry — a play state, and the only token here that is a keyword.
+  // It is for DECORATIVE loops only: an ornament that has been faded out
+  // under reduced motion is still repainting a gradient every frame, on
+  // exactly the devices whose owners asked for less of that. A busy
+  // indicator must NOT consume it — a paused spinner is a broken spinner,
+  // which is why Spinner keeps its animations running and collapses their
+  // geometry instead.
+  { name: "motion-play", full: "running", reduced: "paused" },
 ];
 
 /**

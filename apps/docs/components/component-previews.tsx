@@ -18,6 +18,7 @@ import {
 import {
   Accordion,
   Alert,
+  AnimatedBorder,
   AppBar,
   AspectRatio,
   Avatar,
@@ -288,6 +289,18 @@ function Pane({ title }: { title: string }) {
 }
 
 const PREVIEWS: Record<ComponentName, React.ComponentType> = {
+  AnimatedBorder: () => (
+    // The ring is the whole component, so the tile is deliberately empty —
+    // and the card's own hairline is painted away so the light IS the edge,
+    // which is the state the component looks best in.
+    <Card.Root
+      className="h-20 w-44"
+      style={{ "--forte-card-border-color": "transparent" } as CSSProperties}
+    >
+      <AnimatedBorder />
+    </Card.Root>
+  ),
+
   /* Actions ------------------------------------------------------------- */
 
   // The default tone is neutral, so the call to action says `primary` itself

@@ -70,6 +70,7 @@ export type ComponentName =
   | "Tabs"
   | "Accordion"
   | "Alert"
+  | "AnimatedBorder"
   | "AspectRatio"
   | "Avatar"
   | "Badge"
@@ -150,6 +151,7 @@ export const CATALOG: CatalogEntry[] = [
   { name: "Tabs", title: "Tabs", href: "/components/tabs/", category: "Navigation", summary: "Switches between panels of related content in the same place, with a sliding active indicator.", partOf: null },
   { name: "Accordion", title: "Accordion", href: "/components/accordion/", category: "Content & layout", summary: "A stack of headings that each expand a panel, one or several open at a time; for a single independent disclosure, use Collapsible.", partOf: null },
   { name: "Alert", title: "Alert", href: "/components/alert/", category: "Content & layout", summary: "A persistent in-page message about the page's state — the static counterpart to Toast, which is transient and floats above the page.", partOf: null },
+  { name: "AnimatedBorder", title: "Animated Border", href: "/components/animated-border/", category: "Content & layout", summary: "A decorative light traveling a container's border; for motion that reports progress or a wait, use Spinner or Shimmer instead.", partOf: null },
   { name: "AspectRatio", title: "Aspect Ratio", href: "/components/aspect-ratio/", category: "Content & layout", summary: "Reserves a fixed-ratio box from first paint so late-arriving media drops into already-reserved space instead of shifting the layout.", partOf: null },
   { name: "Avatar", title: "Avatar", href: "/components/avatar/", category: "Content & layout", summary: "A picture of a person or thing with a sensible fallback when the image is missing or slow, plus an optional status badge and grouping.", partOf: null },
   { name: "Badge", title: "Badge", href: "/components/badge/", category: "Content & layout", summary: "A small label for status, counts and categories.", partOf: null },
@@ -181,6 +183,7 @@ export const CATALOG: CatalogEntry[] = [
 export const COMPONENT_PAGES: { title: string; href: string }[] = [
   { title: "Accordion", href: "/components/accordion/" },
   { title: "Alert", href: "/components/alert/" },
+  { title: "Animated Border", href: "/components/animated-border/" },
   { title: "App Bar", href: "/components/app-bar/" },
   { title: "Aspect Ratio", href: "/components/aspect-ratio/" },
   { title: "Avatar", href: "/components/avatar/" },

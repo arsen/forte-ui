@@ -28,6 +28,13 @@ export type {
   AlertCloseProps,
 } from "./components/alert";
 
+export { AnimatedBorder } from "./components/animated-border";
+export type {
+  AnimatedBorderVariant,
+  AnimatedBorderTone,
+  AnimatedBorderProps,
+} from "./components/animated-border";
+
 export { AppBar } from "./components/app-bar";
 export type {
   AppBarVariant,

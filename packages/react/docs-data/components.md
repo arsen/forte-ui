@@ -117,6 +117,8 @@ Components.
   compound · parts (props.json): AccordionRoot, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel · knobs: theming.json → Accordion
 - **Alert** — A persistent in-page message about the page's state — the static counterpart to Toast, which is transient and floats above the page.
   compound · parts (props.json): AlertRoot, AlertIcon, AlertTitle, AlertDescription, AlertAction, AlertClose · knobs: theming.json → Alert
+- **AnimatedBorder** — A decorative light traveling a container's border; for motion that reports progress or a wait, use Spinner or Shimmer instead.
+  props.json: AnimatedBorder · knobs: theming.json → AnimatedBorder
 - **AspectRatio** — Reserves a fixed-ratio box from first paint so late-arriving media drops into already-reserved space instead of shifting the layout.
   props.json: AspectRatio · knobs: theming.json → AspectRatio
 - **Avatar** — A picture of a person or thing with a sensible fallback when the image is missing or slow, plus an optional status badge and grouping.
