@@ -546,6 +546,109 @@
       }
     ]
   },
+  "AnimatedBorder": {
+    "name": "AnimatedBorder",
+    "tokens": [
+      {
+        "name": "--forte-animated-border-width",
+        "value": "2px",
+        "description": "Thickness of the ring. This is the mask's padding, so it is the border width in the literal sense — there is no `border` here to disagree with it.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-animated-border-inset",
+        "value": "0px",
+        "description": "How far the ring sits inside the host's padding box. Negative pulls it outward, onto the host's own border.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-animated-border-duration",
+        "value": "var(--forte-duration-loop-orbit)",
+        "description": "One full lap. Speed is this one knob: shorter is faster.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-animated-border-delay",
+        "value": "0s",
+        "description": "Offset into the lap before the light starts.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-animated-border-color",
+        "value": "var(--forte-color-primary)",
+        "description": "Color at the light's core. Set by `tone`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "var(--forte-color-danger)"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "var(--forte-color-foreground-muted)"
+          },
+          {
+            "selector": ".root[data-tone=\"current\"]",
+            "value": "currentColor"
+          }
+        ]
+      },
+      {
+        "name": "--forte-animated-border-color-end",
+        "value": "var(--forte-color-secondary)",
+        "description": "Color it fades out through, on its way to transparent. Set by `tone`.",
+        "part": "root",
+        "overrides": [
+          {
+            "selector": ".root[data-tone=\"primary\"]",
+            "value": "var(--forte-color-secondary)"
+          },
+          {
+            "selector": ".root[data-tone=\"secondary\"]",
+            "value": "var(--forte-color-primary)"
+          },
+          {
+            "selector": ".root[data-tone=\"danger\"]",
+            "value": "oklch( from var(--forte-color-danger) calc(l + 0.18) c h )"
+          },
+          {
+            "selector": ".root[data-tone=\"neutral\"]",
+            "value": "oklch( from var(--forte-color-foreground-muted) calc(l + 0.18) c h )"
+          },
+          {
+            "selector": ".root[data-tone=\"current\"]",
+            "value": "color-mix(in oklab, currentColor 40%, transparent)"
+          }
+        ]
+      },
+      {
+        "name": "--forte-animated-border-beam-size",
+        "value": "6rem",
+        "description": "Diameter of the traveling glow, and so the beam's visible length.",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-animated-border-shine-size",
+        "value": "300%",
+        "description": "Size of the shine's gradient tile, relative to the host.",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "AppBar": {
     "name": "AppBar",
     "tokens": [

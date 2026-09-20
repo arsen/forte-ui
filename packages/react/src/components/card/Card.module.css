@@ -84,6 +84,15 @@
     flex-direction: column;
     gap: var(--forte-card-gap);
 
+    /* The containing block for anything a consumer positions inside a card —
+     * a ribbon, a "new" dot, an `AnimatedBorder`. A card is the surface those
+     * things belong to, and without this they escape to whatever is
+     * positioned further up, which is usually the page. Deliberately NOT
+     * `isolation: isolate`: `position: relative` alone does not open a
+     * stacking context, so a Menu or Tooltip opening from inside a card can
+     * still paint above the cards after it. */
+    position: relative;
+
     padding: var(--forte-card-p);
     border: var(--forte-card-border-width) solid var(--forte-card-border-color);
     border-radius: var(--forte-card-radius);

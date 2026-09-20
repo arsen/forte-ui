@@ -51,6 +51,7 @@
     --forte-duration-loop-spin: 800ms;
     --forte-duration-loop-pulse: 1600ms;
     --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-loop-orbit: 6000ms;
     --forte-duration-spring-gentle: 700ms;
     --forte-duration-spring-snappy: 400ms;
     --forte-duration-spring-bouncy: 730ms;
@@ -66,6 +67,7 @@
     --forte-scale-press: 0.97;
     --forte-spin-turn: 1turn;
     --forte-pulse-dip: 1;
+    --forte-motion-play: running;
   }
 
   /* The OS preference. Geometry off, durations shortened rather than removed. */
@@ -82,6 +84,7 @@
       --forte-duration-loop-spin: 800ms;
       --forte-duration-loop-pulse: 1600ms;
       --forte-duration-loop-sweep: 1400ms;
+      --forte-duration-loop-orbit: 6000ms;
       --forte-duration-spring-gentle: 150ms;
       --forte-duration-spring-snappy: 120ms;
       --forte-duration-spring-bouncy: 150ms;
@@ -97,6 +100,7 @@
       --forte-scale-press: 1;
       --forte-spin-turn: 0turn;
       --forte-pulse-dip: 0.45;
+      --forte-motion-play: paused;
     }
   }
 
@@ -114,6 +118,7 @@
     --forte-duration-loop-spin: 800ms;
     --forte-duration-loop-pulse: 1600ms;
     --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-loop-orbit: 6000ms;
     --forte-duration-spring-gentle: 150ms;
     --forte-duration-spring-snappy: 120ms;
     --forte-duration-spring-bouncy: 150ms;
@@ -129,6 +134,7 @@
     --forte-scale-press: 1;
     --forte-spin-turn: 0turn;
     --forte-pulse-dip: 0.45;
+    --forte-motion-play: paused;
   }
 
   :root[data-forte-motion="off"],
@@ -144,6 +150,7 @@
     --forte-duration-loop-spin: 800ms;
     --forte-duration-loop-pulse: 1600ms;
     --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-loop-orbit: 6000ms;
     --forte-duration-spring-gentle: 1ms;
     --forte-duration-spring-snappy: 1ms;
     --forte-duration-spring-bouncy: 1ms;
@@ -159,6 +166,7 @@
     --forte-scale-press: 1;
     --forte-spin-turn: 0turn;
     --forte-pulse-dip: 0.45;
+    --forte-motion-play: paused;
   }
 
   /* Explicit opt-in — deliberately overrides the OS preference. */
@@ -175,6 +183,7 @@
     --forte-duration-loop-spin: 800ms;
     --forte-duration-loop-pulse: 1600ms;
     --forte-duration-loop-sweep: 1400ms;
+    --forte-duration-loop-orbit: 6000ms;
     --forte-duration-spring-gentle: 700ms;
     --forte-duration-spring-snappy: 400ms;
     --forte-duration-spring-bouncy: 730ms;
@@ -190,5 +199,6 @@
     --forte-scale-press: 0.97;
     --forte-spin-turn: 1turn;
     --forte-pulse-dip: 1;
+    --forte-motion-play: running;
   }
 }

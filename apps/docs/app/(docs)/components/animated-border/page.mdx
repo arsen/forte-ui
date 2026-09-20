@@ -1,0 +1,133 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Animated Border",
+  description:
+    "A decorative light traveling a container's border — a beam, a drifting shine, or a conic sweep.",
+};
+
+# Animated Border
+
+Drop one inside a card, a button or any positioned box and a light travels its
+edge. It is decoration and nothing else: it renders an `aria-hidden` overlay
+with no text, no role and no focus target. Use it on the one card that should
+catch the eye — the recommended plan, the panel that is generating something,
+the upgrade tile. If the motion is meant to *report* a wait, the component
+that says so is [`Spinner`](/components/spinner/) or
+[`Shimmer`](/components/shimmer/), and this goes beside it rather than instead
+of it.
+
+<DemoBlock id="animated-border/basic" />
+
+The ring is a masked overlay rather than a real `border`, because a border can
+only be a flat color per edge — there is no way to run one gradient around
+four of them, and no way to move it. It takes its corner radius from the host
+through `border-radius: inherit`, so a `data-forte-radius` preset carries
+without being told.
+
+## Import
+
+```tsx
+import { AnimatedBorder } from "@forte-ui/react";
+```
+
+## The host has to be positioned
+
+The overlay positions itself against the nearest positioned ancestor.
+`Card.Root` and `Button` already are, so the example above needs nothing. Any
+other host needs `position: relative` — Tailwind's `relative`:
+
+```tsx
+<div className="relative rounded-surface border p-6">
+  <AnimatedBorder />
+</div>
+```
+
+<Callout kind="warn">
+  Without it the ring silently anchors to whatever *is* positioned further up,
+  which is often the page — you get a light traveling the whole viewport
+  rather than the box you meant. Nothing errors; it just looks wrong.
+</Callout>
+
+## Examples
+
+### Variants
+
+Three lights, one ring. `beam` rides `offset-path`, so its speed is constant
+in *distance* along the outline — it is the only one whose pace does not
+depend on the shape of the box. `shine` drifts a soft gradient through the
+ring with no leading edge, which reads as sheen rather than as an object.
+`rotate` is a conic sweep about the center, so it turns at constant *angular*
+speed and visibly accelerates into the corners of anything far from square —
+a look in its own right on a card, and the wrong one on a wide banner.
+
+<DemoBlock id="animated-border/variants" />
+
+### Tones
+
+Colors come from the palette, never from a hex prop, so a border re-colors
+with the seed like everything else. `primary` and `secondary` span the
+library's *two* seeds — that pair is what makes them read as a gradient rather
+than as a sheen, and it is the one place both seeds appear at once. The rest
+are a single hue with a lighter end derived from it.
+
+<DemoBlock id="animated-border/tones" />
+
+There is a fifth, `current`, which takes both stops from `currentColor`. It is
+the composable one: dropped inside a button or a badge it picks up that
+thing's text color and keeps matching it.
+
+### Sitting on the host's own border
+
+An overlay's `inset` resolves against the host's *padding* box, so by default
+the ring lands just inside whatever border the host draws — next to a `Card`'s
+1px hairline, the two read as a doubled edge. Pull the ring outward with
+`--forte-animated-border-inset`, or paint the host's border away and let the
+ring be the edge.
+
+<DemoBlock id="animated-border/on-the-border" />
+
+### Two lights on one ring
+
+Each `AnimatedBorder` is its own overlay, so a second one needs nothing
+special. A **negative** `--forte-animated-border-delay` starts it already part
+way round instead of making it wait for the first lap.
+
+<DemoBlock id="animated-border/stacked" />
+
+### Theming
+
+<DemoBlock id="animated-border/theming" />
+
+## Reduced motion
+
+Nothing travels. The moving light fades out and the ring becomes a still
+gradient in the same colors, so the host keeps the edge it had — it does not
+change shape, and it does not pulse. A border carries no information, so
+breathing at the reader would spend attention and return none. The animations
+are also genuinely paused rather than merely hidden, through
+`--forte-motion-play`, so a faded-out ornament is not still repainting a
+gradient every frame for someone who asked for less of that.
+
+Under forced colors the overlay is removed outright. There is nothing to
+preserve — the component states no information, and a `CanvasText` ring over
+the host's own `CanvasText` border is a doubled edge saying nothing twice.
+
+<Callout kind="note">
+  `beam` uses `offset-path` with a `<coord-box>`, which needs Chrome&nbsp;116,
+  Safari&nbsp;18 or Firefox&nbsp;122. Below that it falls back to `rotate`
+  automatically through `@supports` — a single light still travels the ring,
+  it just picks up the conic speed profile. `shine` and `rotate` need nothing
+  newer than the rest of the library.
+</Callout>
+
+## API
+
+<PropTable component="AnimatedBorder" />
+
+## Theming
+
+<ThemingTable component="AnimatedBorder" />

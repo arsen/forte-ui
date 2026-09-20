@@ -201,6 +201,13 @@ declaration in `src/styles/*.css` with its default, every overriding selector
 one exists. `pnpm --filter @forte-ui/react docgen` rebuilds it. When this
 list and that file disagree, the file is right; fix the list.
 
+**animated-border** (1)
+`--forte-animated-border-angle` — registration only, so the `rotate` variant's
+conic `from` angle can be animated at all; unregistered it would interpolate
+as a string and snap. Not a theming knob. (The other
+`--forte-animated-border-*` names are declared in the component module and are
+deliberately not in this inventory — they are in `theming.json`.)
+
 **accent** (13)
 `--forte-accent-1` · `--forte-accent-10` · `--forte-accent-11` · `--forte-accent-12` · `--forte-accent-2` · `--forte-accent-3` · `--forte-accent-4` · `--forte-accent-5` · `--forte-accent-6` · `--forte-accent-7` · `--forte-accent-8` · `--forte-accent-9` · `--forte-accent-seed`
 
@@ -219,8 +226,8 @@ list and that file disagree, the file is right; fix the list.
 **direction** (1)
 `--forte-direction`
 
-**duration** (12)
-`--forte-duration-fast` · `--forte-duration-instant` · `--forte-duration-loop-pulse` · `--forte-duration-loop-spin` · `--forte-duration-loop-sweep` · `--forte-duration-move` · `--forte-duration-normal` · `--forte-duration-slow` · `--forte-duration-spring-bouncy` · `--forte-duration-spring-gentle` · `--forte-duration-spring-precise` · `--forte-duration-spring-snappy`
+**duration** (13)
+`--forte-duration-fast` · `--forte-duration-instant` · `--forte-duration-loop-orbit` · `--forte-duration-loop-pulse` · `--forte-duration-loop-spin` · `--forte-duration-loop-sweep` · `--forte-duration-move` · `--forte-duration-normal` · `--forte-duration-slow` · `--forte-duration-spring-bouncy` · `--forte-duration-spring-gentle` · `--forte-duration-spring-precise` · `--forte-duration-spring-snappy`
 
 **ease** (8)
 `--forte-ease-emphasized` · `--forte-ease-exit` · `--forte-ease-in-out` · `--forte-ease-spring-bouncy` · `--forte-ease-spring-gentle` · `--forte-ease-spring-precise` · `--forte-ease-spring-snappy` · `--forte-ease-standard`
@@ -249,8 +256,8 @@ list and that file disagree, the file is right; fix the list.
 **list** (1)
 `--forte-list-item-py`
 
-**motion** (2)
-`--forte-motion-off` · `--forte-motion-ok`
+**motion** (3)
+`--forte-motion-off` · `--forte-motion-ok` · `--forte-motion-play`
 
 **neutral** (1)
 `--forte-neutral-tint`

@@ -35,6 +35,18 @@ import d_alert_tones from "./alert/tones";
 import d_alert_tones_src from "./alert/tones?raw";
 import d_alert_variants from "./alert/variants";
 import d_alert_variants_src from "./alert/variants?raw";
+import d_animated_border_basic from "./animated-border/basic";
+import d_animated_border_basic_src from "./animated-border/basic?raw";
+import d_animated_border_on_the_border from "./animated-border/on-the-border";
+import d_animated_border_on_the_border_src from "./animated-border/on-the-border?raw";
+import d_animated_border_stacked from "./animated-border/stacked";
+import d_animated_border_stacked_src from "./animated-border/stacked?raw";
+import d_animated_border_theming from "./animated-border/theming";
+import d_animated_border_theming_src from "./animated-border/theming?raw";
+import d_animated_border_tones from "./animated-border/tones";
+import d_animated_border_tones_src from "./animated-border/tones?raw";
+import d_animated_border_variants from "./animated-border/variants";
+import d_animated_border_variants_src from "./animated-border/variants?raw";
 import d_app_bar_basic from "./app-bar/basic";
 import d_app_bar_basic_src from "./app-bar/basic?raw";
 import d_app_bar_hide_on_scroll from "./app-bar/hide-on-scroll";
@@ -922,6 +934,12 @@ export type DemoId =
   | "alert/parts"
   | "alert/tones"
   | "alert/variants"
+  | "animated-border/basic"
+  | "animated-border/on-the-border"
+  | "animated-border/stacked"
+  | "animated-border/theming"
+  | "animated-border/tones"
+  | "animated-border/variants"
   | "app-bar/basic"
   | "app-bar/hide-on-scroll"
   | "app-bar/sizes"
@@ -1375,6 +1393,12 @@ const REGISTRY: Record<DemoId, Demo> = {
   "alert/parts": { Component: d_alert_parts, source: d_alert_parts_src, file: "alert/parts.tsx" },
   "alert/tones": { Component: d_alert_tones, source: d_alert_tones_src, file: "alert/tones.tsx" },
   "alert/variants": { Component: d_alert_variants, source: d_alert_variants_src, file: "alert/variants.tsx" },
+  "animated-border/basic": { Component: d_animated_border_basic, source: d_animated_border_basic_src, file: "animated-border/basic.tsx" },
+  "animated-border/on-the-border": { Component: d_animated_border_on_the_border, source: d_animated_border_on_the_border_src, file: "animated-border/on-the-border.tsx" },
+  "animated-border/stacked": { Component: d_animated_border_stacked, source: d_animated_border_stacked_src, file: "animated-border/stacked.tsx" },
+  "animated-border/theming": { Component: d_animated_border_theming, source: d_animated_border_theming_src, file: "animated-border/theming.tsx" },
+  "animated-border/tones": { Component: d_animated_border_tones, source: d_animated_border_tones_src, file: "animated-border/tones.tsx" },
+  "animated-border/variants": { Component: d_animated_border_variants, source: d_animated_border_variants_src, file: "animated-border/variants.tsx" },
   "app-bar/basic": { Component: d_app_bar_basic, source: d_app_bar_basic_src, file: "app-bar/basic.tsx" },
   "app-bar/hide-on-scroll": { Component: d_app_bar_hide_on_scroll, source: d_app_bar_hide_on_scroll_src, file: "app-bar/hide-on-scroll.tsx" },
   "app-bar/sizes": { Component: d_app_bar_sizes, source: d_app_bar_sizes_src, file: "app-bar/sizes.tsx" },

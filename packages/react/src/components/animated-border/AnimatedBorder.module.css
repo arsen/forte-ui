@@ -1,0 +1,414 @@
+/*
+ * AnimatedBorder
+ *
+ * Three looks, one mechanism. The root is a ring: two mask layers, one
+ * clipped to the content box and one to the border box, composited with
+ * `exclude` so what survives is the band between them — the padding, whose
+ * width IS the border width. Everything the component paints is inside that
+ * ring, which is why the three variants can differ entirely in what moves and
+ * still need no geometry of their own. `border-radius: inherit` makes the
+ * band follow the host's corners, so a `data-forte-radius` preset carries
+ * without either side knowing about the other.
+ *
+ * Drawn as a masked overlay rather than as a real `border` because a border
+ * can only be a flat color per edge: there is no way to run one gradient
+ * around four of them, and no way to move it. The cost is that the overlay
+ * needs a positioned host, which is documented on the component and is why
+ * `Card` and `Button` set `position: relative`.
+ *
+ * What each variant animates:
+ *
+ *   beam    a round glow rides `offset-path: border-box`, so its speed is
+ *           constant in DISTANCE along the outline — the only one of the
+ *           three whose pace does not depend on the shape of the box. It
+ *           deliberately does not rotate; see `offset-rotate` below.
+ *   shine   the layer's own radial gradient, drifting through the four
+ *           corners of its oversized tile. No leading edge, so it reads as
+ *           sheen rather than as an object.
+ *   rotate  a conic gradient pivoting on a registered `<angle>`. Constant
+ *           ANGULAR speed, which on a box far from square means the
+ *           highlight accelerates into the corners — the look, not a defect,
+ *           and the reason `beam` exists.
+ *
+ * Reduced motion is handled once, on `.layer`, for all three: the moving
+ * paint fades to nothing and the root's own still gradient — invisible at
+ * full motion, because its stops are mixed to zero alpha through
+ * `--forte-motion-off` — fades in behind it. So what is left is a plain
+ * gradient border. Not nothing (the host would visibly change shape), and
+ * not a pulse (the ring carries no information, so breathing at the reader
+ * costs attention and returns none) — the same reasoning Shimmer uses for
+ * refusing Skeleton's fallback.
+ *
+ * Freezing the travel is deliberately NOT how that is done. A beam parked at
+ * `offset-distance: 0%` is a bright square stuck in one corner, which reads
+ * as a rendering defect rather than as stillness. The travel keeps its full
+ * range and the layer carrying it goes transparent; `--forte-motion-play`
+ * then pauses the animations outright, so a faded-out ornament is not still
+ * repainting a gradient every frame on a device whose owner asked for less
+ * motion.
+ *
+ * The loop duration is never shortened: `--forte-duration-loop-orbit` is
+ * 6000ms in every motion state. A repeating animation driven toward 1ms is a
+ * WCAG 2.3.1 flashing hazard, not a courtesy.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared HERE, on the border itself, so a value set
+     * on an ancestor is only INHERITED and loses to these. Re-skin one via
+     * `className` or `style` (an unlayered consumer rule beats this layer at
+     * any specificity); re-skin every animated border by re-pointing the
+     * global tokens on the right-hand side. */
+
+    /** Thickness of the ring. This is the mask's padding, so it is the
+     * border width in the literal sense — there is no `border` here to
+     * disagree with it. */
+    --forte-animated-border-width: 2px;
+    /* An overlay's `inset` resolves against the host's PADDING box, so at 0
+     * the ring lands just inside whatever border the host draws — on a Card
+     * that is its 1px hairline, and the two together read as a doubled edge.
+     * The fix is the host's to choose, so it is a knob rather than a guess:
+     * pull the ring out by the host's border width, or paint that border
+     * `transparent` and let this be the edge. */
+    /** How far the ring sits inside the host's padding box. Negative pulls it
+     * outward, onto the host's own border. */
+    --forte-animated-border-inset: 0px;
+    /** One full lap. Speed is this one knob: shorter is faster. */
+    --forte-animated-border-duration: var(--forte-duration-loop-orbit);
+    /* Negative values start the light already underway, which is how two
+     * borders on one card are staggered rather than synchronized. */
+    /** Offset into the lap before the light starts. */
+    --forte-animated-border-delay: 0s;
+
+    /** Color at the light's core. Set by `tone`. */
+    --forte-animated-border-color: var(--forte-color-primary);
+    /** Color it fades out through, on its way to transparent. Set by `tone`. */
+    --forte-animated-border-color-end: var(--forte-color-secondary);
+
+    /* A length, not a fraction of the perimeter: the beam should look the
+     * same on a small tile and a wide banner, and a percentage would stretch
+     * it into a smear on the second. Only the part overlapping the ring is
+     * ever visible, so this is effectively the beam's LENGTH. */
+    /** Diameter of the traveling glow, and so the beam's visible length. */
+    --forte-animated-border-beam-size: 6rem;
+    /* Three times the box, so the glow is a soft patch crossing it rather
+     * than a wash covering it. */
+    /** Size of the shine's gradient tile, relative to the host. */
+    --forte-animated-border-shine-size: 300%;
+
+    position: absolute;
+    inset: var(--forte-animated-border-inset);
+    box-sizing: border-box;
+    /* Follows the host's corners. Not a knob: matching the host is the only
+     * correct answer often enough that an override belongs in `style`, where
+     * it beats this layer anyway. */
+    border-radius: inherit;
+    /* The ring's width, and the mask's content box in one declaration. */
+    padding: var(--forte-animated-border-width);
+
+    /* Decoration sitting over the whole host, so every pointer event has to
+     * pass through it — without this it would swallow the click on any card
+     * that is itself a link or a button. */
+    pointer-events: none;
+
+    /* Keep the band between the two boxes and drop the middle. The shorthand
+     * resets `mask-composite`, so the longhand MUST follow it, not precede
+     * it. The mask clips descendants too, which is what lets `.layer` and
+     * `.beam` below be plain rectangles and still come out ring-shaped. */
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0) border-box;
+    mask-composite: exclude;
+
+    /* The whole reduced-motion appearance, and invisible until then: at full
+     * motion `--forte-motion-off` is 0, both stops mix to zero alpha, and
+     * this paints nothing at all. Mixed rather than faded with `opacity`
+     * because the moving layer above has to stay at full strength while this
+     * one is hidden. */
+    background-image: linear-gradient(
+      135deg,
+      color-mix(
+        in oklab,
+        var(--forte-animated-border-color) calc(100% * var(--forte-motion-off)),
+        transparent
+      ),
+      color-mix(
+        in oklab,
+        var(--forte-animated-border-color-end) calc(100% * var(--forte-motion-off)),
+        transparent
+      )
+    );
+  }
+
+  /* The moving paint. `inset: 0` against the root's padding box puts this
+   * exactly on the root's border box, which is the rect the ring's outer edge
+   * follows — and, for `beam`, the rect `offset-path: border-box` resolves
+   * to, since this element is the blob's containing block. */
+  .layer {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+
+    /* Retires all three variants at once under reduced motion. One
+     * declaration here beats a `--forte-motion-off` mix on every gradient
+     * stop of every variant, and it cannot be got wrong for one of them. */
+    opacity: var(--forte-motion-ok);
+    /* Faded out is not the same as stopped — see the header. */
+    animation-play-state: var(--forte-motion-play);
+  }
+
+  /* Beam ------------------------------------------------------------------
+   * `offset-path: border-box` is the newest thing in this file (Chrome 116,
+   * Safari 18, Firefox 122). Everything below it degrades — see the
+   * `@supports` block at the foot of this layer. */
+  .beam {
+    position: absolute;
+    width: var(--forte-animated-border-beam-size);
+    aspect-ratio: 1;
+
+    /* The host's own border box, corner radius included, so the beam rounds
+     * the corners instead of cutting them. */
+    offset-path: border-box;
+    /* Centered on the path, so the half of the blob outside the ring is
+     * masked away and the visible beam is the ring's full thickness. */
+    offset-anchor: 50% 50%;
+
+    /* NOT `auto`, which is both the default and the thing that made this
+     * variant look broken. `auto` turns the blob to face along the path — so
+     * at a corner it pivots 90° over the arc of the radius, about 19px at
+     * the default surface radius. Measured on a 158px card: the blob's
+     * painted extent lurched by 10x through each corner while the blob's
+     * CENTRE kept moving at a dead constant rate. The travel was never the
+     * problem; the pivot was. Holding the blob still fixes it outright —
+     * corner-to-corner speed then varies by 1.1x, which is the discrete
+     * sampling of the corner arcs and nothing else.
+     *
+     * Keeping the pivot and accepting it was the other option, and it is
+     * what the effect this is modelled on does. It is a jump on every
+     * corner of every card that has one. */
+    offset-rotate: 0deg;
+
+    /* Radially symmetric, and that follows directly from the line above. A
+     * comet's tail has to point somewhere, and without the pivot there is no
+     * "backwards" to point it: a fixed `to left` gradient would trail
+     * correctly along the top edge, run tail-first along the bottom, and
+     * show no tail at all down the sides, where it lies across the path
+     * rather than along it. A glow has no orientation to get wrong, so it is
+     * the same beam on all four sides. The cost is the tail, and it is the
+     * tail that was buying the artifact. */
+    background-image: radial-gradient(
+      circle at 50% 50%,
+      var(--forte-animated-border-color),
+      var(--forte-animated-border-color-end) 35%,
+      transparent 70%
+    );
+
+    /* Linear, and no rest between laps: constant speed leaving one corner as
+     * it enters the next is what reads as light rather than as a wiper.
+     * Symmetric easings are the only kind safe on a loop anyway (see
+     * motion.mjs), and linear is the most symmetric there is. */
+    animation: forte-animated-border-travel var(--forte-animated-border-duration) linear infinite;
+    animation-delay: var(--forte-animated-border-delay);
+    animation-play-state: var(--forte-motion-play);
+  }
+
+  /* Shine -----------------------------------------------------------------
+   * A glow with no leading edge, drifting diagonally. The stops are placed
+   * so the patch is well clear of the tile's edges — a gradient that reaches
+   * its own boundary shows a seam as it crosses the box. */
+  .root[data-variant="shine"] .layer {
+    background-image: radial-gradient(
+      circle at 50% 50%,
+      transparent,
+      transparent 10%,
+      var(--forte-animated-border-color),
+      var(--forte-animated-border-color-end),
+      transparent 60%,
+      transparent
+    );
+    background-size: var(--forte-animated-border-shine-size)
+      var(--forte-animated-border-shine-size);
+    animation: forte-animated-border-shine var(--forte-animated-border-duration) linear infinite;
+    animation-delay: var(--forte-animated-border-delay);
+    /* The `animation` shorthand above RESETS this to `running`, and this rule
+     * outranks the base `.layer` one, so the pause has to be restated here —
+     * the same shorthand trap as `mask` / `mask-composite` on the root. Miss
+     * it and the variant keeps repainting a gradient every frame for a
+     * reader who asked for less motion, while looking correctly still. */
+    animation-play-state: var(--forte-motion-play);
+  }
+
+  /* Rotate ----------------------------------------------------------------
+   * The angle is a registered `<angle>` (properties.css). Unregistered it
+   * would interpolate as a string and the sweep would snap from 0deg to
+   * 360deg in one step instead of turning. */
+  .root[data-variant="rotate"] .layer {
+    background-image: conic-gradient(
+      from var(--forte-animated-border-angle),
+      transparent 0%,
+      var(--forte-animated-border-color) 10%,
+      var(--forte-animated-border-color-end) 20%,
+      transparent 32%,
+      transparent 100%
+    );
+    animation: forte-animated-border-rotate var(--forte-animated-border-duration) linear infinite;
+    animation-delay: var(--forte-animated-border-delay);
+    /* Restated after the shorthand — see the note on `shine` above. */
+    animation-play-state: var(--forte-motion-play);
+  }
+
+  /* Direction --------------------------------------------------------------
+   * `animation-direction` rather than a `--forte-direction`-style sign, and
+   * for once that is the simpler mechanism rather than the lazier one: it is
+   * one declaration that reverses all three variants, where a sign would
+   * need `offset-distance` to accept a negative percentage, the conic angle
+   * to go negative, and the shine's four-corner circuit to be rewritten
+   * backwards.
+   *
+   * Note this does NOT follow the reading direction, unlike Shimmer's sweep.
+   * `--forte-direction` exists so motion with a logical start and end stays
+   * correct in RTL; a light going round and round has neither, and flipping
+   * it would spin the decoration on half the world's pages for no reason a
+   * reader could name. */
+  .root[data-reverse] .layer,
+  .root[data-reverse] .beam {
+    animation-direction: reverse;
+  }
+
+  /* Tones ------------------------------------------------------------------
+   * `primary` and `secondary` span the library's TWO seeds. That is what
+   * makes the default read as a gradient rather than as a sheen, and it is
+   * the one place in the library where both seeds are visible at once — the
+   * component is decoration, so showing the palette off is the job.
+   *
+   * The single-hue tones derive their second stop instead of naming a token,
+   * because none of the semantic ramps publishes a "same hue, lighter" step
+   * that works on both a light and a dark surface. Relative color syntax
+   * gets one from the tone itself, so it follows the seed. */
+  .root[data-tone="primary"] {
+    --forte-animated-border-color: var(--forte-color-primary);
+    --forte-animated-border-color-end: var(--forte-color-secondary);
+  }
+
+  .root[data-tone="secondary"] {
+    --forte-animated-border-color: var(--forte-color-secondary);
+    --forte-animated-border-color-end: var(--forte-color-primary);
+  }
+
+  .root[data-tone="danger"] {
+    --forte-animated-border-color: var(--forte-color-danger);
+    --forte-animated-border-color-end: oklch(
+      from var(--forte-color-danger) calc(l + 0.18) c h
+    );
+  }
+
+  .root[data-tone="neutral"] {
+    --forte-animated-border-color: var(--forte-color-foreground-muted);
+    --forte-animated-border-color-end: oklch(
+      from var(--forte-color-foreground-muted) calc(l + 0.18) c h
+    );
+  }
+
+  /* The composable one: dropped into a card, a button or a badge it picks up
+   * that thing's text color. Both stops are the same hue on purpose — there
+   * is no second color to derive from `currentColor` that would not fight
+   * whatever it landed in. */
+  .root[data-tone="current"] {
+    --forte-animated-border-color: currentColor;
+    --forte-animated-border-color-end: color-mix(in oklab, currentColor 40%, transparent);
+  }
+
+  /* Keyframes -------------------------------------------------------------- */
+  @keyframes forte-animated-border-travel {
+    from {
+      offset-distance: 0%;
+    }
+
+    to {
+      offset-distance: 100%;
+    }
+  }
+
+  /* A circuit through the four corners of the oversized tile, not a there-
+   * and-back drift. The round trip is what makes it seamless AND what gives
+   * `reverse` something to reverse — a palindrome played backwards is the
+   * same animation. */
+  @keyframes forte-animated-border-shine {
+    0% {
+      background-position: 0% 0%;
+    }
+
+    25% {
+      background-position: 100% 0%;
+    }
+
+    50% {
+      background-position: 100% 100%;
+    }
+
+    75% {
+      background-position: 0% 100%;
+    }
+
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+  @keyframes forte-animated-border-rotate {
+    to {
+      --forte-animated-border-angle: 360deg;
+    }
+  }
+
+  /* Fallback ---------------------------------------------------------------
+   * Without `offset-path` basic shapes the blob has no path to ride and
+   * would sit motionless in the top-left corner. `rotate` is the nearest
+   * neighbour — a single highlight traveling the ring — so the beam becomes
+   * one, at the cost of the corner acceleration. Writing it as a fallback
+   * costs three declarations because the ring, the colors and the timing are
+   * already shared; that sharing is the argument for one component. */
+  @supports not (offset-path: border-box) {
+    .root[data-variant="beam"] .layer {
+      background-image: conic-gradient(
+        from var(--forte-animated-border-angle),
+        transparent 0%,
+        var(--forte-animated-border-color) 10%,
+        var(--forte-animated-border-color-end) 20%,
+        transparent 32%,
+        transparent 100%
+      );
+      animation: forte-animated-border-rotate var(--forte-animated-border-duration) linear infinite;
+      animation-delay: var(--forte-animated-border-delay);
+      /* Restated after the shorthand — see the note on `shine` above. */
+      animation-play-state: var(--forte-motion-play);
+    }
+
+    .root[data-variant="beam"] .beam {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Accessibility overrides — see layers.css for why these cannot live in the
+ * components layer.
+ */
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    /* Forced colors remaps `background-color` and `color` but NOT
+     * `background-image`, so every gradient here would keep its brand hues
+     * on a page whose whole promise is the user's own colors — and the ring
+     * sits directly on top of the host's border, which is the edge the user
+     * actually asked to see.
+     *
+     * Removed outright rather than repainted in a system color. There is
+     * nothing to preserve: the component states no information, and a
+     * `CanvasText` ring over the host's `CanvasText` border is a doubled
+     * edge that says nothing twice. The host keeps its own border and looks
+     * exactly like every other card on the page, which in this mode is the
+     * correct outcome. */
+    .root {
+      display: none;
+    }
+  }
+}
