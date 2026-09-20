@@ -13,6 +13,24 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-09-20
+
+### AnimatedBorder
+
+- Added the `AnimatedBorder` component: a decorative light traveling a container's border, with `variant` (`beam`, `shine`, `rotate`), `tone` (`primary`, `secondary`, `danger`, `neutral`, `current`) and `reverse` props. It anchors to the nearest positioned ancestor and inherits the host's corner radius; under reduced motion it settles into a still gradient in the same colors instead of animating.
+
+### Card
+
+- The card surface now establishes a positioning context (`position: relative`), so an `AnimatedBorder` or any other consumer-positioned overlay placed inside a card anchors to the card instead of escaping to whatever is positioned further up the page.
+
+### Reveal
+
+- Added the `Reveal` component: plays a one-shot scroll entrance (`fade`, `fade-up`, `fade-down`, `fade-start`, `fade-end`, `scale`, `fade-scale`) on its content the first time it reaches the screen, with `delay`, `amount` (visibility threshold) and `repeat` props, and a `render` prop to apply the entrance to another element instead of a wrapping `<div>`. Content already on screen at load plays immediately, and nothing is hidden from a reader whose JavaScript never runs.
+
+### Design tokens & motion
+
+- Added `--forte-duration-loop-orbit` (6000ms), a duration for effects that travel a surface's full perimeter rather than one edge, and `--forte-motion-play` (`running`/`paused`), a play-state token that pauses — without hiding — decorative infinite loops under reduced motion; busy indicators such as Spinner do not consume it. Registered `--forte-animated-border-angle` so a conic gradient's rotation can animate instead of snapping.
+
 ## [1.9.0] - 2026-09-19
 
 ### Avatar
@@ -548,7 +566,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/arsen/forte-ui/compare/v1.8.3...v1.9.0
 [1.8.3]: https://github.com/arsen/forte-ui/compare/v1.8.2...v1.8.3
 [1.8.2]: https://github.com/arsen/forte-ui/compare/v1.8.1...v1.8.2
