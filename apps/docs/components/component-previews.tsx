@@ -58,6 +58,7 @@ import {
   Radio,
   RadioGroup,
   Resizable,
+  Reveal,
   ScrollArea,
   Select,
   Separator,
@@ -1077,6 +1078,26 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
         <Pane title="Content" />
       </Resizable.Panel>
     </Resizable.Group>
+  ),
+
+  // Three rows arriving in order — the component has nothing of its own to
+  // draw, so the picture has to be the arrival. `repeat` because a still of
+  // an entrance that already finished is a picture of nothing: the tile
+  // plays every time its card comes back on screen. `inert` stops focus and
+  // pointers, not observers.
+  Reveal: () => (
+    <div className="grid w-44 gap-2">
+      {["Sections", "Cards", "Rows"].map((label, i) => (
+        <Reveal
+          key={label}
+          repeat
+          delay={i * 90}
+          className="rounded-2 border border-border-muted bg-panel px-3 py-2 text-1"
+        >
+          {label}
+        </Reveal>
+      ))}
+    </div>
   ),
 
   ScrollArea: () => (

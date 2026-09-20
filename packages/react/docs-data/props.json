@@ -7135,6 +7135,54 @@
       }
     ]
   },
+  "Reveal": {
+    "name": "Reveal",
+    "description": "An entrance for whatever it wraps, played when that content reaches the\nscreen.\n\nIt is the scroll reveal, and it is deliberately the whole of it: wrap a\nsection, a card, a row of a list, and it fades — and rises, or grows —\ninto place the first time the reader gets to it. Content already on screen\nwhen the page loads plays the same entrance immediately, so the component\nreads the same whether it is the hero or the fourth section down.\n\n```tsx\n<Reveal>\n  <h2>Built on Base UI</h2>\n</Reveal>\n\n{features.map((feature, i) => (\n  <Reveal key={feature.id} effect=\"fade-scale\" delay={i * 60}>\n    <Card.Root>…</Card.Root>\n  </Reveal>\n))}\n```\n\n**Content is never gated behind the entrance.** Nothing is hidden until\nthe component has mounted in a browser and an observer is watching, so a\npage whose JavaScript fails, or has not arrived yet, shows the content\nrather than an empty column — and a screen reader, which does not depend\non any of this, reads it either way. The cost of that order is one\nblink on a server-rendered page: content already on screen was painted at\nrest before React hydrated, so it is hidden and re-entered at hydration.\nIt is the right trade — the alternative fails by showing nothing — but it\nis why wrapping the first screenful is a decision rather than a default.\n\nUnder reduced motion nothing travels and nothing scales: the tokens behind\nthe knobs collapse their own geometry, so what is left is a short fade,\nwhich is the part of an entrance that helps rather than hinders. Styling\nis driven by `data-*` attributes and `--forte-reveal-*` custom properties,\nso it can be re-skinned from plain CSS or Tailwind arbitrary variants\n(`data-[state=shown]:...`) without wrapping.",
+    "props": [
+      {
+        "name": "amount",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "How much of the content has to be on screen before it counts, from 0 —\nany sliver of it — to 1, all of it. The default starts the entrance as\nthe top edge crosses into view, which is what makes it read as the\ncontent arriving with the scroll rather than as something that happened\nbefore the reader got there.\n\nAnything too big to fit on screen is exempt and starts as soon as it\nappears, since it could never satisfy the fraction."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "delay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "0",
+        "description": "Milliseconds to wait after the content is on screen before it starts.\nSets `--forte-reveal-delay`, and exists as a prop because the reason to\nreach for it is nearly always a stagger: `delay={i * 60}` over a mapped\nlist. Keep the total under a few hundred milliseconds — a list whose\nlast row arrives a second late reads as a page still loading."
+      },
+      {
+        "name": "effect",
+        "type": "RevealEffect",
+        "required": false,
+        "defaultValue": "fade-up",
+        "description": "Which entrance plays.\n\n- `fade` — opacity alone. The only one that moves nothing, so the only\n  one that cannot widen a page (see the note on the inline effects).\n- `fade-up` / `fade-down` — fades while rising from below, or settling\n  from above.\n- `fade-start` / `fade-end` — the same along the inline axis, so\n  `fade-start` arrives from the left in LTR and from the right in RTL.\n  Named for the reading direction rather than for a side because that is\n  what makes them survive `dir=\"rtl\"` unchanged.\n- `scale` — grows into place with no fade, for something that should\n  stay legible the whole way in.\n- `fade-scale` — both: the \"pop\" used for a card or a modal-like panel.\n\nThe distance and the starting size are knobs, not values baked into the\neffect — `--forte-reveal-travel` and `--forte-reveal-scale`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<div>` with another element or component —\n`render={<li />}` inside a list, `render={<section />}` for a landmark,\n`render={<Card.Root />}` to animate the card itself rather than a\nwrapper around it. The entrance is applied to whatever element comes\nback, so nothing about the layout changes."
+      },
+      {
+        "name": "repeat",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Play the entrance again every time the content comes back on screen,\ninstead of once and never again.\n\nOff by default, because the honest reading of a second entrance is \"this\ncontent is new\", and content the reader has already scrolled past is\nnot. Turn it on for a demo of the effect itself, or for a panel whose\ncontents genuinely change while it is away.\n\nThe reset is a cut, not a reverse: it happens once the content is\nentirely off screen, where there is nothing to see. It is also skipped\nwhile focus is inside, so a keyboard user cannot be left on an element\nthat has faded out underneath them."
+      }
+    ]
+  },
   "ScrollAreaRoot": {
     "name": "ScrollAreaRoot",
     "description": "Groups the viewport, the scrollbars and the corner.\n\nGive it the size the scroll area should occupy — a `height`, a `max-height`,\nor a track in whatever layout it sits in. It is a grid with a single\n`minmax(0, 1fr)` cell, so the viewport stays content-sized until the root is\nconstrained and fills it exactly once it is; a scroll area with no height\nanywhere on it simply grows and never scrolls.",

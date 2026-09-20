@@ -1,0 +1,152 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+
+export const metadata = {
+  title: "Reveal",
+  description:
+    "An entrance for whatever it wraps — fade, rise, scale — played when that content reaches the screen.",
+};
+
+# Reveal
+
+Wrap a section, a card or a row and it fades — and rises, or grows — into
+place the first time the reader gets to it. Content that is already on screen
+when the page loads plays the same entrance straight away, so the component
+reads the same whether it is the hero or the fourth section down. It plays
+once; `repeat` is there for the cases where it should not.
+
+<DemoBlock id="reveal/basic" />
+
+It is a wrapper and nothing else: no scroll listener, no animation library,
+no bundle. One `IntersectionObserver` per element decides when, and the
+entrance itself is two states and one CSS transition.
+
+## Import
+
+```tsx
+import { Reveal } from "@forte-ui/react";
+```
+
+## Content is never gated behind the entrance
+
+Nothing is hidden until the component has mounted in a browser and an
+observer is watching. A page whose JavaScript fails, or has not arrived yet,
+shows the content rather than an empty column; a crawler reads the markup it
+was served; a screen reader, which never depended on any of this, reads it
+either way. Printing is covered too — paper does not scroll, so anything
+still waiting for its entrance prints at rest rather than as a blank page.
+
+<Callout kind="note">
+  The cost of that order is one blink on a server-rendered page: content that
+  was already on screen was painted at rest before React hydrated, so it is
+  hidden and re-entered at that moment. It is the right way round — the
+  alternative fails by showing nothing at all — but it is why wrapping the
+  first screenful is worth a thought, and why a reveal below the fold, which
+  nobody has seen yet, never shows it.
+</Callout>
+
+## Examples
+
+### Effects
+
+Seven entrances. `fade` moves nothing; the four directional ones fade while
+travelling `--forte-reveal-travel`; `scale` grows into place *without*
+fading, which is the one to reach for over text that should stay readable the
+whole way in; `fade-scale` does both.
+
+`fade-start` and `fade-end` are named for the reading direction rather than
+for a side — `fade-start` arrives from the left of this page and from the
+right of an Arabic one. Flip the frame to RTL and watch the pair swap.
+
+<DemoBlock id="reveal/effects" />
+
+<Callout kind="warn">
+  A horizontal entrance is drawn outside the element's own box while it
+  plays, and overflow past the *end* edge is scrollable where overflow past
+  the start edge is simply clipped. So on a full-bleed element `fade-end`
+  (and `fade-start` under `dir="rtl"`) widens the page by the travel
+  distance and raises a horizontal scrollbar for as long as the entrance
+  runs, while its opposite costs nothing. `overflow-x: clip` on the
+  container removes it either way, as does reaching for the block-axis
+  effects, which the page already scrolls along.
+</Callout>
+
+### Staggering a list
+
+There is no group component and no orchestration: `delay` is a per-element
+wait, so a mapped list staggers with `delay={i * 70}`. Each row still starts
+its own clock when *it* reaches the screen, which is what keeps a long list
+from dealing out its last rows to an empty viewport.
+
+<DemoBlock id="reveal/stagger" />
+
+The rows above are `<li>`s, not wrappers around `<li>`s. `render` replaces
+the element the component draws, so the entrance is applied to the list item
+itself — the same prop every Base UI-backed component in the library takes,
+and the answer wherever a `<div>` would be invalid or would break a grid:
+
+```tsx
+<Reveal render={<li />}>…</Reveal>
+<Reveal render={<section />}>…</Reveal>
+<Reveal render={<Card.Root />}>…</Reveal>
+```
+
+### Playing again
+
+Off by default, because the honest reading of a second entrance is "this is
+new", and content the reader has already scrolled past is not. Turn `repeat`
+on for a demo of the effect itself, or for a panel whose contents genuinely
+change while it is away.
+
+<DemoBlock id="reveal/repeat" />
+
+The reset is a cut rather than a reverse, and it happens only once the
+content is entirely off screen, where there is nothing to watch. It is also
+skipped while focus is inside, so a keyboard user is never left standing on
+something that has faded out underneath them.
+
+### How much has to be on screen
+
+`amount` is the fraction of the content that has to be visible before it
+counts, from `0` — any sliver, the default — to `1`, all of it. The default
+starts the entrance as the top edge crosses into view, which is what makes it
+read as the content arriving with the scroll.
+
+```tsx
+<Reveal amount={0.6}>…</Reveal>
+```
+
+Anything too big to fit on screen is exempt and plays as soon as it appears:
+a section two screens tall can never be 60% visible, and a component that
+waited for it would leave that section invisible on a phone and look fine on
+the desk it was written at.
+
+### Theming
+
+<DemoBlock id="reveal/theming" />
+
+## Reduced motion
+
+Nothing travels and nothing scales — the geometry tokens behind the knobs are
+already `0px` and `1` there, and the two gates in the component's CSS carry
+the same collapse over to a distance or a size you set by hand. What is left
+is the fade, on a duration the token has already shortened: reduced, not
+removed, so the content still reads as arriving rather than as having always
+been there.
+
+<Callout kind="a11y">
+  The before-state is a transparent element, never a removed one. It keeps
+  its space in the layout — an entrance shifts nothing — and it stays in the
+  accessibility tree the whole time, so a screen reader reads content whose
+  entrance has not played, and never announces the page changing under it.
+</Callout>
+
+## API
+
+<PropTable component="Reveal" />
+
+## Theming
+
+<ThemingTable component="Reveal" />

@@ -936,6 +936,19 @@
     "hooks": []
   },
   {
+    "name": "Reveal",
+    "dir": "reveal",
+    "category": "Content & layout",
+    "summary": "Plays a one-shot entrance — fade, rise, scale — on whatever it wraps, the first time that content reaches the screen; a popup or panel animates its own enter and needs none of this.",
+    "partOf": null,
+    "compound": false,
+    "theming": true,
+    "parts": [
+      "Reveal"
+    ],
+    "hooks": []
+  },
+  {
     "name": "ScrollArea",
     "dir": "scroll-area",
     "category": "Content & layout",

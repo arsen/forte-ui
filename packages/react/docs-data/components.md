@@ -137,6 +137,8 @@ Components.
   documented with Kbd · props.json: KbdGroup
 - **Resizable** — Panels the user re-proportions by dragging the divider between them — keyboard operable, constrainable, and persistable.
   compound · parts (props.json): ResizableGroup, ResizablePanel, ResizableHandle · knobs: theming.json → Resizable
+- **Reveal** — Plays a one-shot entrance — fade, rise, scale — on whatever it wraps, the first time that content reaches the screen; a popup or panel animates its own enter and needs none of this.
+  props.json: Reveal · knobs: theming.json → Reveal
 - **ScrollArea** — A scroll container with overlay scrollbars that look the same on every platform, plus scroll-position edge fades.
   compound · parts (props.json): ScrollAreaRoot, ScrollAreaViewport, ScrollAreaContent, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaCorner · knobs: theming.json → ScrollArea
 - **Separator** — A rule between things, horizontal or vertical, optionally with a label set into the line; announced to assistive technology unless marked decorative.
