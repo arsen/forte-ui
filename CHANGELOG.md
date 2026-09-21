@@ -13,6 +13,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.10.1] - 2026-09-20
+
+### Menu
+
+- Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it directly as the focus trap's entry point — reachable when it opens by pointer before any row is highlighted, or is arrowed into when every row is disabled.
+
+### Select
+
+- Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it as the fallback target — reachable when every item in the list is disabled.
+
 ## [1.10.0] - 2026-09-20
 
 ### AnimatedBorder
@@ -566,7 +576,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.1...HEAD
+[1.10.1]: https://github.com/arsen/forte-ui/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/arsen/forte-ui/compare/v1.8.3...v1.9.0
 [1.8.3]: https://github.com/arsen/forte-ui/compare/v1.8.2...v1.8.3
