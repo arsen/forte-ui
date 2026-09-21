@@ -68,6 +68,32 @@
     outline: none;
   }
 
+  /* The standalone form of the rule above, for a part with no ringing wrapper
+   * to sit inside: an element that TAKES focus without being the thing the
+   * user is operating. Base UI gives its popups `tabindex="-1"` and focuses
+   * one as the focus trap's entry point, or as the fallback when the list
+   * inside has nothing focusable to hand it to — a Menu or Select whose rows
+   * are all disabled, arrowed into from the trigger, lands on the surface
+   * itself. The surface is a container, not a control, so it must not ring,
+   * and must not leave the UA to: Chrome draws its own `auto 1px` in an
+   * unthemed system blue over the themed page, which is what this class was
+   * added to stop.
+   *
+   * Deliberately NOT paired with the resting `transparent` outline that
+   * `.forte-focus-ring` declares. There is no ring to grow, so there is
+   * nothing to transition — and nothing for forced-colors to substitute a
+   * system color into, which is the trap the a11y block at the foot of this
+   * file exists to undo for the ringed classes. One rule covers both modes.
+   *
+   * Only for a part the user does not operate. Something whose indicator is
+   * drawn by an ancestor takes `.forte-focus-ring-within` up there instead,
+   * and a control that merely looks busy with a ring still keeps it — the
+   * ring is the only focus indicator in the library that clears SC 1.4.11 on
+   * its own. */
+  .forte-focus-ring-none:focus-visible {
+    outline: none;
+  }
+
   /* Inside a clipping context — list rows, tab strips, select items — an
    * outward ring would be cut off. Invert it. The offset is the same in both
    * states — an inset ring has no room to travel, and set only on focus it

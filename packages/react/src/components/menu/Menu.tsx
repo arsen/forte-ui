@@ -421,10 +421,25 @@ export const MenuPopup = React.forwardRef<HTMLDivElement, MenuPopupProps>(
           {/* `forte-hc-surface` carries a transparent border that becomes a
             * system-colored boundary in forced-colors mode, where the
             * box-shadow is stripped and the popup would otherwise dissolve
-            * into the page behind it. */}
+            * into the page behind it.
+            *
+            * `forte-focus-ring-none` because Base UI gives this element
+            * `tabindex="-1"` and focuses it as the focus trap's entry point
+            * whenever it has no row to hand focus to — opened by pointer
+            * before any row is highlighted, or arrowed into when every row is
+            * disabled. Unlike `Dialog.Popup` and `Popover.Popup`, which take
+            * `.forte-focus-ring` and draw a real one, a menu always has its
+            * `[data-highlighted]` row to say where the user is, so a ring on
+            * the whole surface would be noise — but left unstated the UA
+            * draws its own unthemed `auto 1px` there instead. */}
           <BaseMenu.Popup
             ref={ref}
-            className={clsx(styles.popup, "forte-hc-surface", className)}
+            className={clsx(
+              styles.popup,
+              "forte-hc-surface",
+              "forte-focus-ring-none",
+              className,
+            )}
             data-forte="menu-popup"
             {...props}
           >

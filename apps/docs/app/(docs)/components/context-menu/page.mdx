@@ -177,6 +177,20 @@ so an ancestor's value is only inherited and loses. Set them on the trigger
 itself through `className` or a `style` object; the popup is portalled to
 `<body>`, so an ancestor of the trigger cannot reach it in any case.
 
+The ring earns its keep when the trigger is one of several comparable regions —
+a card in a grid, a row in a table — because a context menu opens at the pointer
+rather than off an element, and the ring is the only thing saying which of them
+the commands will act on. A trigger that covers a whole *region* has nobody to
+be distinguished from: wrap a canvas, an editor pane or a full-bleed panel and
+the ring becomes a border around most of the viewport, restating what the menu's
+own position already said. Turn it off there:
+
+```tsx
+<ContextMenu.Trigger
+  style={{ "--forte-context-menu-trigger-ring-width": 0 }}
+>
+```
+
 <DemoBlock id="context-menu/theming" />
 
 <ThemingTable component="ContextMenu" />
