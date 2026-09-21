@@ -19,6 +19,18 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.10.1
+
+<ReleaseMeta date="2026-09-20" href="https://github.com/arsen/forte-ui/compare/v1.10.0...v1.10.1" kind="compare" />
+
+### Menu
+
+- Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it directly as the focus trap's entry point — reachable when it opens by pointer before any row is highlighted, or is arrowed into when every row is disabled.
+
+### Select
+
+- Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it as the fallback target — reachable when every item in the list is disabled.
+
 ## v1.10.0
 
 <ReleaseMeta date="2026-09-20" href="https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0" kind="compare" />
@@ -169,15 +181,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Added `Toolbar.Text`, for static text in the bar — a page count, a zoom readout, the word before a control. It matches the height and type scale of the controls beside it, uses a muted color, and (like a separator) takes no focus and is skipped by the arrow keys.
 
-## v1.4.1
-
-<ReleaseMeta date="2026-09-06" href="https://github.com/arsen/forte-ui/compare/v1.4.0...v1.4.1" kind="compare" />
-
-### Resizable
-
-- A saved layout under `autoSaveId` is now drawn from the group's first client render instead of applied a render later, so content that measures its panel in a mount effect (a canvas fitting its pages, for example) measures the restored split rather than the default one.
-- Added an `onReady` callback, fired once when the layout first settles — restored under `autoSaveId` or resolved from `defaultSize`s — for content that mounts hidden or whose panels aren't direct `Resizable.Panel` children and so can't measure at mount.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 15 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 16 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

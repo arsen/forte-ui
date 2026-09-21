@@ -12,6 +12,9 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v1101", text: "v1.10.1", depth: 2 },
+    { id: "menu", text: "Menu", depth: 3 },
+    { id: "select", text: "Select", depth: 3 },
     { id: "v1100", text: "v1.10.0", depth: 2 },
     { id: "animatedborder", text: "AnimatedBorder", depth: 3 },
     { id: "card", text: "Card", depth: 3 },
@@ -21,7 +24,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "avatar", text: "Avatar", depth: 3 },
     { id: "combobox", text: "Combobox", depth: 3 },
     { id: "navigationmenu", text: "NavigationMenu", depth: 3 },
-    { id: "select", text: "Select", depth: 3 },
+    { id: "select-1", text: "Select", depth: 3 },
     { id: "v183", text: "v1.8.3", depth: 2 },
     { id: "carousel", text: "Carousel", depth: 3 },
     { id: "v182", text: "v1.8.2", depth: 2 },
@@ -33,7 +36,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "avatar-1", text: "Avatar", depth: 3 },
     { id: "button", text: "Button", depth: 3 },
     { id: "combobox-1", text: "Combobox", depth: 3 },
-    { id: "select-1", text: "Select", depth: 3 },
+    { id: "select-2", text: "Select", depth: 3 },
     { id: "separator", text: "Separator", depth: 3 },
     { id: "toggle-1", text: "Toggle", depth: 3 },
     { id: "toolbar", text: "Toolbar", depth: 3 },
@@ -43,12 +46,10 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "v160", text: "v1.6.0", depth: 2 },
     { id: "colorpicker", text: "ColorPicker", depth: 3 },
     { id: "combobox-2", text: "Combobox", depth: 3 },
-    { id: "select-2", text: "Select", depth: 3 },
+    { id: "select-3", text: "Select", depth: 3 },
     { id: "v150", text: "v1.5.0", depth: 2 },
     { id: "colorpicker-1", text: "ColorPicker", depth: 3 },
     { id: "toolbar-2", text: "Toolbar", depth: 3 },
-    { id: "v141", text: "v1.4.1", depth: 2 },
-    { id: "resizable", text: "Resizable", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
