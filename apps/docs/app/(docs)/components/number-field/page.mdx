@@ -261,7 +261,14 @@ repainting anything.
   parts a component already rings for itself:
 
 ```css
-:focus-visible:not(:where(.forte-focus-ring-within *)) {
+:focus-visible:not(
+    :where(
+      .forte-focus-ring-within *,
+      [data-focus-inset],
+      [data-forte="combobox-input"],
+      .forte-focus-ring-none
+    )
+  ) {
   outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);
   outline-offset: var(--forte-focus-ring-offset);
   box-shadow: 0 0 0 var(--forte-focus-ring-offset) var(--forte-focus-ring-outer);
@@ -269,7 +276,14 @@ repainting anything.
 ```
 
   This site does exactly that — `Slider` has the same shape, and only got away
-  with it because the element holding its focus is visually hidden.
+  with it because the element holding its focus is visually hidden. The other
+  three exclusions are the same statement made in the library's own markup:
+  `[data-focus-inset]` is a part that rings *inward* because a scroll container
+  would crop an outset ring, and `.forte-focus-ring-none` (with the
+  `combobox-input`, which predates it) is a part that takes focus and must not
+  ring at all — a `Menu` or `Select` popup, which Base UI focuses as its focus
+  trap's entry point. Drop an exclusion and that part wears a ring the
+  component deliberately left off.
 </Callout>
 
 The digits are set in `tabular-nums`. That is not typographic polish: a scrub

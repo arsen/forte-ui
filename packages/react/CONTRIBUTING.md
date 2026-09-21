@@ -71,6 +71,16 @@ class already suppresses the UA ring on the descendant it rings for, so do not
 restate `outline: none` in the component. It does not suppress a nested part
 that rings itself, which is how NumberField's steppers keep their own.
 
+Where the element that takes focus should not look focused at ALL — a popup
+Base UI focuses as its focus trap's entry point, having no row to hand focus
+to — it takes `.forte-focus-ring-none`. `Menu.Popup` and `Select.Popup` are
+the two; both are `tabindex="-1"`, and without the class the UA drew its own
+unthemed `auto 1px` ring around the whole surface. Reach for it only on a part
+the user does not operate: it is not a way to quiet a ring that looks busy,
+because the ring is the only focus indicator in the library that clears
+SC 1.4.11 on its own (the `[data-highlighted]` fill behind it measures 1.11:1
+against the popup at the worst seed, where the ring measures 5.42:1).
+
 Both are still beaten by an app-level global `:focus-visible` rule, since every
 `forte-ui` layer loses to an app's own CSS by design. That is only visible on
 the `-within` components, where it draws a second ring on the inner control; the
@@ -142,7 +152,8 @@ to assistive technology goes in a `.forte-visually-hidden` span.
 
 ## Available pattern classes
 
-`.forte-focus-ring` · `.forte-focus-ring-within` · `.forte-hc-surface` ·
+`.forte-focus-ring` · `.forte-focus-ring-within` · `.forte-focus-ring-none` ·
+`.forte-hc-surface` ·
 `.forte-visually-hidden` · `.forte-target` · `.forte-scrim` · `.forte-icon` ·
 `.forte-link` · `.forte-hc-decorative` · `.forte-preserve-color` ·
 `.forte-pressable` ·

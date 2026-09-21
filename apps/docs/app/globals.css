@@ -114,12 +114,22 @@
    * `outline: none`; this layer is declared after every `forte-ui` layer, so
    * without the exclusion it wins and reintroduces the bar. It is listed by
    * `data-forte` because that marker is public API and the CSS Modules class
-   * beside it is not. */
+   * beside it is not.
+   *
+   * `.forte-focus-ring-none` is the fourth, and it generalises the third the
+   * way `[data-focus-inset]` generalises the second: the class IS the
+   * library's statement that a part takes focus and must not ring — the Menu
+   * and Select popups, which Base UI focuses as the focus trap's entry point.
+   * Without the exclusion this rule ringed the whole popup surface, which is
+   * also why the defect it was added for could not be reproduced on this
+   * site: the docs wore a themed ring where a consumer app wore Chrome's
+   * unthemed one, and neither is wanted. */
   :focus-visible:not(
       :where(
         .forte-focus-ring-within *,
         [data-focus-inset],
-        [data-forte="combobox-input"]
+        [data-forte="combobox-input"],
+        .forte-focus-ring-none
       )
     ) {
     outline: var(--forte-focus-ring-width) solid var(--forte-focus-ring-inner);

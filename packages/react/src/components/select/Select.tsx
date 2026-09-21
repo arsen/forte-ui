@@ -582,10 +582,23 @@ export const SelectPopup = React.forwardRef<HTMLDivElement, SelectPopupProps>(
           {/* `forte-hc-surface` carries a transparent border that becomes a
             * system-colored boundary in forced-colors mode, where the
             * box-shadow below is stripped and the popup would otherwise
-            * dissolve into the page. */}
+            * dissolve into the page.
+            *
+            * `forte-focus-ring-none` for the same reason `Menu.Popup` takes
+            * it: Base UI gives this element `tabindex="-1"` and focuses it
+            * when the list has no item to hand focus to. The reachable case
+            * here is a Select whose items are ALL disabled — arrow down from
+            * the trigger and focus lands on the surface, which then drew the
+            * UA's own unthemed ring. The item carries the ring in every other
+            * state. */}
           <BaseSelect.Popup
             ref={ref}
-            className={clsx(styles.popup, "forte-hc-surface", className)}
+            className={clsx(
+              styles.popup,
+              "forte-hc-surface",
+              "forte-focus-ring-none",
+              className,
+            )}
             data-forte="select-popup"
             data-size={size}
             {...props}
