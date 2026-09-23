@@ -395,6 +395,8 @@ import d_input_group_field from "./input-group/field";
 import d_input_group_field_src from "./input-group/field?raw";
 import d_input_group_loading from "./input-group/loading";
 import d_input_group_loading_src from "./input-group/loading?raw";
+import d_input_group_narrow from "./input-group/narrow";
+import d_input_group_narrow_src from "./input-group/narrow?raw";
 import d_input_group_sizes from "./input-group/sizes";
 import d_input_group_sizes_src from "./input-group/sizes?raw";
 import d_input_group_states from "./input-group/states";
@@ -1124,6 +1126,7 @@ export type DemoId =
   | "input-group/buttons"
   | "input-group/field"
   | "input-group/loading"
+  | "input-group/narrow"
   | "input-group/sizes"
   | "input-group/states"
   | "input-group/text-addons"
@@ -1588,6 +1591,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "input-group/buttons": { Component: d_input_group_buttons, source: d_input_group_buttons_src, file: "input-group/buttons.tsx" },
   "input-group/field": { Component: d_input_group_field, source: d_input_group_field_src, file: "input-group/field.tsx" },
   "input-group/loading": { Component: d_input_group_loading, source: d_input_group_loading_src, file: "input-group/loading.tsx" },
+  "input-group/narrow": { Component: d_input_group_narrow, source: d_input_group_narrow_src, file: "input-group/narrow.tsx" },
   "input-group/sizes": { Component: d_input_group_sizes, source: d_input_group_sizes_src, file: "input-group/sizes.tsx" },
   "input-group/states": { Component: d_input_group_states, source: d_input_group_states_src, file: "input-group/states.tsx" },
   "input-group/text-addons": { Component: d_input_group_text_addons, source: d_input_group_text_addons_src, file: "input-group/text-addons.tsx" },
