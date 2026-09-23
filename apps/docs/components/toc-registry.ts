@@ -577,6 +577,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "buttons", text: "Buttons", depth: 3 },
     { id: "loading", text: "Loading", depth: 3 },
     { id: "multi-line", text: "Multi-line", depth: 3 },
+    { id: "in-a-narrow-space", text: "In a narrow space", depth: 3 },
     { id: "sizes", text: "Sizes", depth: 3 },
     { id: "variants", text: "Variants", depth: 3 },
     { id: "states", text: "States", depth: 3 },

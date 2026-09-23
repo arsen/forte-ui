@@ -15,11 +15,14 @@
  *
  * The parts that are load-bearing and easy to undo:
  *
- *   1. The root is a WRAPPING flex row. Inline addons and the control share
- *      one row; a `block-*` addon is `inline-size: 100%`, which is what makes
- *      it wrap onto a row of its own. Visual placement is CSS `order`, so DOM
- *      order stays free to follow focus order — an addon holding a button can
- *      sit after the control in the source and still draw at the start edge.
+ *   1. The root is a flex row that WRAPS ONLY WHEN A `block-*` ADDON IS
+ *      PRESENT. Inline addons and the control share one row; a `block-*`
+ *      addon is `inline-size: 100%`, which is what makes it wrap onto a row
+ *      of its own. Wrapping unconditionally put a squeezed group's icon on a
+ *      line above its input once the input hit its minimum width. Visual
+ *      placement is CSS `order`, so DOM order stays free to follow focus
+ *      order — an addon holding a button can sit after the control in the
+ *      source and still draw at the start edge.
  *
  *   2. The control carries the field state — `data-disabled`, `data-invalid`,
  *      `[readonly]` — and the root only WATCHES it through `:has()`. There is
@@ -124,7 +127,10 @@
 
     box-sizing: border-box;
     display: inline-flex;
-    flex-wrap: wrap;
+    /* One row until a block addon asks for another — see note 1 and the
+     * `:has()` rule below. A wrap here lets a squeezed group break an
+     * inline-start icon onto a line of its own, above the input it labels. */
+    flex-wrap: nowrap;
     align-items: center;
     /* Column gap only. Block rows meet the control row with no gap because
      * each block addon carries its own `padding-block` — a row gap on top of
@@ -160,6 +166,15 @@
 
   .root[data-full-width] {
     inline-size: 100%;
+  }
+
+  /* The one case that needs a second row: a block addon's `inline-size: 100%`
+   * only claims a row of its own on a WRAPPING line — on a nowrap one it is
+   * a flex basis like any other and would squeeze the control to nothing
+   * beside it. Direct children only, so a group nested inside another's
+   * block addon does not wrap its parent's inline row. */
+  .root:has(> .addon:is([data-align="block-start"], [data-align="block-end"])) {
+    flex-wrap: wrap;
   }
 
   /* States ----------------------------------------------------------------
