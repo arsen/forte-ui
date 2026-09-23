@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.10.2] - 2026-09-22
+
+### InputGroup
+
+- Fixed inline addons wrapping onto a line of their own above the control when a narrow InputGroup squeezed the input to its minimum width; the group now wraps to a second row only when a block-start or block-end addon is present.
+
 ## [1.10.1] - 2026-09-20
 
 ### Menu
@@ -576,7 +582,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.2...HEAD
+[1.10.2]: https://github.com/arsen/forte-ui/compare/v1.10.1...v1.10.2
 [1.10.1]: https://github.com/arsen/forte-ui/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/arsen/forte-ui/compare/v1.8.3...v1.9.0
