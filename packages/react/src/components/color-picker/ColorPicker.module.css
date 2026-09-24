@@ -74,7 +74,17 @@
      *
      * They are declared on the PANEL rather than on the root because the root
      * renders no element — and because the popup is portalled to <body>, so
-     * anything declared further up the React tree would not reach it. */
+     * anything declared further up the React tree would not reach it.
+     *
+     * Every PART rule below that reads one of them repeats its default here as
+     * a `var()` fallback, and those copies must stay equal to these. The parts
+     * also work with no panel around them — a palette beside a text field in
+     * a form — and there an undeclared knob is invalid at computed-value time:
+     * `minmax()` fails and takes the whole `grid-template-columns` with it, and
+     * one missing checker color drops the entire `background-image`, so a
+     * swatch drew neither its size nor its color. A fallback is only read when
+     * nothing is inherited, so a value set on the panel still wins. Change a
+     * default here and change its fallbacks with it. */
     /** Width of the picker. The panel shrinks below it rather than overflowing
      * a narrow container. */
     --forte-color-picker-width: 17rem;
@@ -213,12 +223,15 @@
     position: relative;
     box-sizing: border-box;
     inline-size: 100%;
-    block-size: var(--forte-color-picker-area-height);
+    block-size: var(--forte-color-picker-area-height, 8.5rem);
     /* Every color surface here takes the same hairline: white at saturation
      * zero is indistinguishable from the panel behind it, and the boundary is
      * what says where the control ends. */
     border: 1px solid var(--forte-color-border);
-    border-radius: var(--forte-color-picker-area-radius);
+    border-radius: var(
+      --forte-color-picker-area-radius,
+      min(var(--forte-radius-control), var(--forte-radius-5))
+    );
 
     /* The hairline is translucent, and a background paints UNDER the border by
      * default: sized to the padding box, then tiled outward into the border
@@ -260,9 +273,9 @@
      * canvas does not mirror under RTL. See the note on ColorPicker.Area. */
     translate: -50% -50%;
     box-sizing: border-box;
-    inline-size: var(--forte-color-picker-thumb-size);
-    block-size: var(--forte-color-picker-thumb-size);
-    border: var(--forte-color-picker-thumb-ring) solid
+    inline-size: var(--forte-color-picker-thumb-size, 0.875rem);
+    block-size: var(--forte-color-picker-thumb-size, 0.875rem);
+    border: var(--forte-color-picker-thumb-ring, 2px) solid
       var(--forte-color-picker-on-color, #ffffff);
     border-radius: var(--forte-radius-full);
     /* The color shows THROUGH the handle rather than being painted into it,
@@ -288,9 +301,9 @@
   .areaThumb::before {
     content: "";
     position: absolute;
-    inset: calc(-1 * var(--forte-color-picker-thumb-ring));
+    inset: calc(-1 * var(--forte-color-picker-thumb-ring, 2px));
     border-radius: inherit;
-    box-shadow: 0 0 0 1px var(--forte-color-picker-thumb-outline);
+    box-shadow: 0 0 0 1px var(--forte-color-picker-thumb-outline, rgb(0 0 0 / 0.35));
     pointer-events: none;
   }
 
@@ -340,7 +353,7 @@
      * consumer who thickens the rail past 24px does not get a negative. */
     padding-block: max(
       0px,
-      calc((var(--forte-target-min) - var(--forte-color-picker-rail-thickness)) / 2)
+      calc((var(--forte-target-min) - var(--forte-color-picker-rail-thickness, 0.75rem)) / 2)
     );
     cursor: pointer;
     touch-action: none;
@@ -355,9 +368,9 @@
     position: relative;
     box-sizing: border-box;
     inline-size: 100%;
-    block-size: var(--forte-color-picker-rail-thickness);
+    block-size: var(--forte-color-picker-rail-thickness, 0.75rem);
     border: 1px solid var(--forte-color-border);
-    border-radius: var(--forte-color-picker-rail-radius);
+    border-radius: var(--forte-color-picker-rail-radius, var(--forte-radius-pill));
     /* Same reason as the canvas: the ramp would tile into the translucent
      * hairline and put red at the end where the rail's far side is magenta. */
     background-clip: padding-box;
@@ -406,20 +419,20 @@
         var(--forte-color-picker-solid, #000000) 100%
       ),
       repeating-conic-gradient(
-        var(--forte-color-picker-checker-light) 0% 25%,
-        var(--forte-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light, var(--forte-color-background)) 0% 25%,
+        var(--forte-color-picker-checker-dark, var(--forte-color-border)) 0% 50%
       );
     background-size:
       auto,
-      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
+      var(--forte-color-picker-checker-size, 8px) var(--forte-color-picker-checker-size, 8px);
   }
 
   .railThumb {
     box-sizing: border-box;
-    inline-size: var(--forte-color-picker-rail-thumb-size);
-    block-size: var(--forte-color-picker-rail-thumb-size);
-    border: var(--forte-color-picker-thumb-ring) solid
-      var(--forte-color-picker-thumb-border);
+    inline-size: var(--forte-color-picker-rail-thumb-size, 1.125rem);
+    block-size: var(--forte-color-picker-rail-thumb-size, 1.125rem);
+    border: var(--forte-color-picker-thumb-ring, 2px) solid
+      var(--forte-color-picker-thumb-border, #ffffff);
     border-radius: var(--forte-radius-full);
     cursor: pointer;
     /* Position is written inline by Base UI on every pointermove and is
@@ -436,9 +449,9 @@
   .railThumb::before {
     content: "";
     position: absolute;
-    inset: calc(-1 * var(--forte-color-picker-thumb-ring));
+    inset: calc(-1 * var(--forte-color-picker-thumb-ring, 2px));
     border-radius: inherit;
-    box-shadow: 0 0 0 1px var(--forte-color-picker-thumb-outline);
+    box-shadow: 0 0 0 1px var(--forte-color-picker-thumb-outline, rgb(0 0 0 / 0.35));
     pointer-events: none;
   }
 
@@ -460,12 +473,12 @@
         var(--forte-color-picker-color, #000000)
       ),
       repeating-conic-gradient(
-        var(--forte-color-picker-checker-light) 0% 25%,
-        var(--forte-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light, var(--forte-color-background)) 0% 25%,
+        var(--forte-color-picker-checker-dark, var(--forte-color-border)) 0% 50%
       );
     background-size:
       auto,
-      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
+      var(--forte-color-picker-checker-size, 8px) var(--forte-color-picker-checker-size, 8px);
   }
 
   .railThumb[data-disabled] {
@@ -479,9 +492,9 @@
     display: grid;
     grid-template-columns: repeat(
       var(--forte-color-picker-swatch-columns, 8),
-      minmax(var(--forte-color-picker-swatch-size), 1fr)
+      minmax(var(--forte-color-picker-swatch-size, 1.25rem), 1fr)
     );
-    gap: var(--forte-color-picker-swatch-gap);
+    gap: var(--forte-color-picker-swatch-gap, var(--forte-space-2));
   }
 
   .swatch {
@@ -494,10 +507,10 @@
      * does. */
     aspect-ratio: 1;
     inline-size: 100%;
-    min-inline-size: var(--forte-color-picker-swatch-size);
+    min-inline-size: var(--forte-color-picker-swatch-size, 1.25rem);
     padding: 0;
     border: 1px solid var(--forte-color-border);
-    border-radius: var(--forte-color-picker-swatch-radius);
+    border-radius: var(--forte-color-picker-swatch-radius, var(--forte-radius-1));
 
     /* Color above checkerboard, both as image layers — see the alpha handle. */
     background-image:
@@ -506,12 +519,12 @@
         var(--forte-color-picker-swatch, transparent)
       ),
       repeating-conic-gradient(
-        var(--forte-color-picker-checker-light) 0% 25%,
-        var(--forte-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light, var(--forte-color-background)) 0% 25%,
+        var(--forte-color-picker-checker-dark, var(--forte-color-border)) 0% 50%
       );
     background-size:
       auto,
-      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
+      var(--forte-color-picker-checker-size, 8px) var(--forte-color-picker-checker-size, 8px);
 
     /* Whichever of black or white reads on THIS swatch, computed per swatch by
      * the component — a white tick is invisible on the white swatch every
@@ -528,13 +541,16 @@
     cursor: not-allowed;
   }
 
+  /* A percentage of the swatch once the grid is laid out, and the SVG's own
+   * `width`/`height` attributes while it is being measured — see the note on
+   * the tick in ColorPicker.tsx for what a percentage alone did to the grid. */
   .swatchTick {
     inline-size: 70%;
     block-size: 70%;
     /* The tick takes `color` from the swatch, which is already the readable
      * one; the shadow is for the narrow band where neither black nor white is
      * comfortable and the stroke needs its own edge. */
-    filter: drop-shadow(0 0 1px var(--forte-color-picker-thumb-outline));
+    filter: drop-shadow(0 0 1px var(--forte-color-picker-thumb-outline, rgb(0 0 0 / 0.35)));
   }
 
   /* ------------------------------------------------------------------------
@@ -553,12 +569,12 @@
         var(--forte-color-picker-color, transparent)
       ),
       repeating-conic-gradient(
-        var(--forte-color-picker-checker-light) 0% 25%,
-        var(--forte-color-picker-checker-dark) 0% 50%
+        var(--forte-color-picker-checker-light, var(--forte-color-background)) 0% 25%,
+        var(--forte-color-picker-checker-dark, var(--forte-color-border)) 0% 50%
       );
     background-size:
       auto,
-      var(--forte-color-picker-checker-size) var(--forte-color-picker-checker-size);
+      var(--forte-color-picker-checker-size, 8px) var(--forte-color-picker-checker-size, 8px);
   }
 
   /* ------------------------------------------------------------------------

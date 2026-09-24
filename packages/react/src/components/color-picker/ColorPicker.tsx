@@ -1245,9 +1245,17 @@ export const ColorPickerSwatch = React.forwardRef<
       }}
       {...props}
     >
+      {/* `width` and `height` are load-bearing, not a default the stylesheet
+        * overrides and forgets. The CSS size is a percentage, and while a
+        * content-sized grid (a flex item, `fit-content`) measures itself that
+        * percentage has nothing to resolve against — so an SVG with only a
+        * `viewBox` counts as its 300px default, and the `1fr` tracks spread
+        * across the whole row the moment a swatch is selected. */}
       {selected ? (
         <svg
           className={styles.swatchTick}
+          width="16"
+          height="16"
           viewBox="0 0 16 16"
           fill="none"
           stroke="currentColor"
@@ -1587,7 +1595,12 @@ export const ColorPickerEyeDropper = React.forwardRef<
       }}
       {...props}
     >
+      {/* Sized for the same reason as the swatch tick, though a definite CSS
+        * size means this one cannot inflate anything today: the attributes
+        * keep it 16px if that size ever becomes a percentage. */}
       <svg
+        width="16"
+        height="16"
         viewBox="0 0 16 16"
         fill="currentColor"
         aria-hidden="true"
