@@ -243,6 +243,8 @@ import d_collapsible_disabled from "./collapsible/disabled";
 import d_collapsible_disabled_src from "./collapsible/disabled?raw";
 import d_color_picker_alpha from "./color-picker/alpha";
 import d_color_picker_alpha_src from "./color-picker/alpha?raw";
+import d_color_picker_bare_swatches from "./color-picker/bare-swatches";
+import d_color_picker_bare_swatches_src from "./color-picker/bare-swatches?raw";
 import d_color_picker_basic from "./color-picker/basic";
 import d_color_picker_basic_src from "./color-picker/basic?raw";
 import d_color_picker_controlled from "./color-picker/controlled";
@@ -1050,6 +1052,7 @@ export type DemoId =
   | "collapsible/custom-icon"
   | "collapsible/disabled"
   | "color-picker/alpha"
+  | "color-picker/bare-swatches"
   | "color-picker/basic"
   | "color-picker/controlled"
   | "color-picker/disabled"
@@ -1515,6 +1518,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "collapsible/custom-icon": { Component: d_collapsible_custom_icon, source: d_collapsible_custom_icon_src, file: "collapsible/custom-icon.tsx" },
   "collapsible/disabled": { Component: d_collapsible_disabled, source: d_collapsible_disabled_src, file: "collapsible/disabled.tsx" },
   "color-picker/alpha": { Component: d_color_picker_alpha, source: d_color_picker_alpha_src, file: "color-picker/alpha.tsx" },
+  "color-picker/bare-swatches": { Component: d_color_picker_bare_swatches, source: d_color_picker_bare_swatches_src, file: "color-picker/bare-swatches.tsx" },
   "color-picker/basic": { Component: d_color_picker_basic, source: d_color_picker_basic_src, file: "color-picker/basic.tsx" },
   "color-picker/controlled": { Component: d_color_picker_controlled, source: d_color_picker_controlled_src, file: "color-picker/controlled.tsx" },
   "color-picker/disabled": { Component: d_color_picker_disabled, source: d_color_picker_disabled_src, file: "color-picker/disabled.tsx" },

@@ -118,11 +118,24 @@ that already carries alpha keeps it either way.
 
 ### Swatches only
 
-`ColorPicker.Swatches` on its own is a palette picker — the right shape wherever
-the answer has to stay on brand. `colors` takes any strings `value` accepts, and
-`columns` sets both the grid and the arrow-key stride.
+`ColorPicker.Swatches` with no canvas and no rails is a palette picker — the
+right shape wherever the answer has to stay on brand. It works inside
+`ColorPicker.Popup`, inside `ColorPicker.Panel`, or bare, with neither around
+it. `colors` takes any strings `value` accepts, and `columns` sets both the grid
+and the arrow-key stride. Set the prop, not
+`--forte-color-picker-swatch-columns`: the component writes that variable inline
+from `columns`, so overriding it through `style` redraws the grid but leaves
+Up and Down stepping by the old row length.
 
 <DemoBlock id="color-picker/swatches" />
+
+Bare, the parts go in a layout of your own. Here the palette sits beside a text
+field in a row that wraps — the shape of a color question in a form. A flex row
+sizes the grid by its content, so the swatches stay at their size. Alone in a
+block, the grid stretches to the block's width the way it fills a panel's, and
+its swatches grow with it; give it a width there.
+
+<DemoBlock id="color-picker/bare-swatches" />
 
 The colors come from `colors`; children are not read. That is what lets the
 group know its own order, which is what the single tab stop and the arrow keys
@@ -280,7 +293,9 @@ direction, and the gradients follow them.
 ## Theming
 
 Every measure is a custom property on the panel, so a wider canvas, fatter rails
-and round swatches are five declarations and no fork.
+and round swatches are five declarations and no fork. A part used without a
+panel falls back to the same defaults, and takes a knob set on itself or on any
+element around it.
 
 <DemoBlock id="color-picker/theming" />
 
