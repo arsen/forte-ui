@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.10.3] - 2026-09-24
+
+### ColorPicker
+
+- Fixed the selection tick and eyedropper icons ballooning to their unsized SVG default and stretching the swatch grid's `1fr` columns across the whole row the moment a swatch was selected; both icons now carry explicit pixel dimensions.
+- Fixed the panel-only parts (area, rail, swatches, eyedropper, alpha) losing their size, radius, checkerboard and thumb styling when rendered without `ColorPicker.Panel` around them — each now falls back to its documented default when no panel supplies the corresponding `--forte-color-picker-*` knob.
+
 ## [1.10.2] - 2026-09-22
 
 ### InputGroup
@@ -582,7 +589,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.3...HEAD
+[1.10.3]: https://github.com/arsen/forte-ui/compare/v1.10.2...v1.10.3
 [1.10.2]: https://github.com/arsen/forte-ui/compare/v1.10.1...v1.10.2
 [1.10.1]: https://github.com/arsen/forte-ui/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0
