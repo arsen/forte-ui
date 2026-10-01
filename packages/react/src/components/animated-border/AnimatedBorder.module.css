@@ -119,6 +119,20 @@
       linear-gradient(#000 0 0) border-box;
     mask-composite: exclude;
 
+    /* The mask decides what PAINTS; it has no say in layout. `.beam` is
+     * centered on the outline, so half of it always sits outside this box,
+     * and that half still counted as scrollable overflow. On a phone, a card
+     * flush against the right edge made the page 435px wide on a 412px
+     * screen every time the beam passed — mobile Chrome then widened the
+     * layout viewport to match, cutting a bottom Drawer off at the right and
+     * bottom and leaving every `100vw` background narrower than the page.
+     * `clip` rather than `hidden` because `hidden` makes a scroll container,
+     * which can be scrolled programmatically and would shift the ring. The
+     * clip edge is this box's padding box, which, with no border here, is
+     * the border box — exactly the mask's outer edge, so nothing visible
+     * changes. `scripts/check-overflow.mjs` is the gate. */
+    overflow: clip;
+
     /* The whole reduced-motion appearance, and invisible until then: at full
      * motion `--forte-motion-off` is 0, both stops mix to zero alpha, and
      * this paints nothing at all. Mixed rather than faded with `opacity`

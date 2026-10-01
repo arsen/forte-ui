@@ -184,6 +184,7 @@ applies the class without the mapping silently gets the pattern's fallbacks;
 pnpm --filter @forte-ui/react tokens          # regenerate generated CSS
 pnpm --filter @forte-ui/react check:contrast  # WCAG harness over the ramps
 pnpm --filter @forte-ui/react check:parity    # anchored-popup parity gate
+pnpm --filter @forte-ui/react check:overflow  # narrow-viewport overflow gate (needs Chrome)
 pnpm --filter @forte-ui/react typecheck
 ```
 
@@ -198,6 +199,12 @@ NavigationMenu modulo each one's knob prefix, and every popup that uses a
 shared `.forte-popup-*` pattern must declare its wiring. Run it after editing
 any of those blocks; the header of `scripts/check-popup-parity.mjs` explains
 what to do when it fails.
+
+`check:overflow` renders an `AnimatedBorder` card flush against the edge of a
+412px phone viewport in headless Chrome, steps the light through a full lap,
+and fails if the document ever scrolls sideways. Run it after touching
+anything in `AnimatedBorder` — a mask hides paint, not layout, so a beam that
+looks contained can still widen the page.
 
 ## Token inventory
 
