@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.10.4] - 2026-10-01
+
+### AnimatedBorder
+
+- Fixed the `beam` animation widening the page. The beam is centered on the border, so its outer half sat outside the component's box and still counted as scrollable overflow. On a phone, a card flush against the right edge made the page wider than the screen (412px to 435px on a Pixel 7) whenever the beam passed it, which made mobile Chrome widen the layout viewport. A bottom Drawer was cut off at the right and bottom, and `100vw` backgrounds came out narrower than the page. The root now clips its overflow, so the page width no longer changes. `shine`, `rotate` and reduced motion render identically. `beam` differs only in anti-aliasing on a one-device-pixel arc at the corner the beam is crossing.
+
 ## [1.10.3] - 2026-09-24
 
 ### ColorPicker
@@ -589,7 +595,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.3...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.4...HEAD
+[1.10.4]: https://github.com/arsen/forte-ui/compare/v1.10.3...v1.10.4
 [1.10.3]: https://github.com/arsen/forte-ui/compare/v1.10.2...v1.10.3
 [1.10.2]: https://github.com/arsen/forte-ui/compare/v1.10.1...v1.10.2
 [1.10.1]: https://github.com/arsen/forte-ui/compare/v1.10.0...v1.10.1

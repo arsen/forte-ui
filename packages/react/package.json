@@ -1,6 +1,6 @@
 {
   "name": "@forte-ui/react",
-  "version": "1.10.3",
+  "version": "1.10.4",
   "description": "A React UI component library built on Base UI, styled with CSS Modules and a themeable CSS-variable design system.",
   "license": "MIT",
   "homepage": "https://forte-ui.com",
@@ -49,10 +49,11 @@
     "generate": "pnpm run tokens && pnpm run docgen",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:parity": "node scripts/check-popup-parity.mjs",
+    "check:overflow": "node scripts/check-overflow.mjs",
     "build": "pnpm run generate && vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs",
+    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs && node scripts/check-overflow.mjs",
     "clean": "rm -rf dist .turbo"
   },
   "peerDependencies": {

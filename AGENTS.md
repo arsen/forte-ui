@@ -76,7 +76,7 @@ pnpm dev                                    # docs site at :3000
 pnpm build                                  # everything
 pnpm generate                               # re-run ALL six generators
 pnpm typecheck                              # the real gate — there is no linter
-pnpm test                                   # contrast harness (--fine) + popup parity
+pnpm test                                   # contrast harness (--fine) + popup parity + overflow
 pnpm release                                # build packages/*, preview, confirm, publish
 pnpm deploy:docs                            # build the docs app (and what it depends on), then firebase deploy
 ```
@@ -102,13 +102,14 @@ pnpm --filter @forte-ui/react tokens         # the generated CSS
 pnpm --filter @forte-ui/react docgen         # props.json + theming.json
 pnpm --filter @forte-ui/react check:contrast # the ramp gate
 pnpm --filter @forte-ui/react check:parity   # the popup-parity gate
+pnpm --filter @forte-ui/react check:overflow # the narrow-viewport overflow gate (needs Chrome)
 pnpm --filter @forte-ui/docs registry  # the demo registry
 pnpm --filter @forte-ui/docs changelog # the changelog page
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
 pnpm --filter @forte-ui/docs catalog   # the component index + the sidebar
 ```
 
-`check:contrast` and `check:parity` are deliberately outside `generate` —
+`check:contrast`, `check:parity` and `check:overflow` are deliberately outside `generate` —
 they are gates, not generators, and they write nothing.
 
 Every root script is `turbo run <task>`, never the `turbo <task>` shorthand.
@@ -118,8 +119,8 @@ generator?" prompt instead of running the task. `run` everywhere means the next
 task name to collide does not repeat this.
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
-`typecheck`, `check:contrast` and `check:parity` are the gates that actually
-catch things.
+`typecheck`, `check:contrast`, `check:parity` and `check:overflow` are the gates
+that actually catch things.
 
 ### Generated files — never edit by hand
 
@@ -223,6 +224,17 @@ each popup wires up by mapping its knobs onto generic `--forte-popup-*`
 properties. Run it after touching any of those files; when it fails on a
 change you meant, apply the change to every copy it names (the script header
 has the details).
+
+`check:overflow` pairs with anything that paints outside its own box on
+purpose — today that is `AnimatedBorder`, whose beam rides the outline
+centered ON the edge. A mask hides the outer half but is not layout, so that
+half counted as scrollable overflow and widened the page on a phone whenever
+the beam passed the right edge; `overflow: clip` on the root is the fix. The
+gate serves `scripts/overflow-fixture/` through Vite, opens it in headless
+Chrome as a 412px Pixel 7, steps every animation through a full lap and fails
+if `scrollWidth` ever leaves `clientWidth`. It needs a Chrome or Chromium
+binary (`CHROME_PATH` to point it elsewhere) and FAILS rather than skips
+without one.
 
 ### Introducing a new token
 
