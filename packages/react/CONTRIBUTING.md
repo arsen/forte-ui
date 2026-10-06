@@ -185,6 +185,7 @@ pnpm --filter @forte-ui/react tokens          # regenerate generated CSS
 pnpm --filter @forte-ui/react check:contrast  # WCAG harness over the ramps
 pnpm --filter @forte-ui/react check:parity    # anchored-popup parity gate
 pnpm --filter @forte-ui/react check:overflow  # narrow-viewport overflow gate (needs Chrome)
+pnpm --filter @forte-ui/react check:reorderable  # Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/react typecheck
 ```
 
@@ -205,6 +206,14 @@ what to do when it fails.
 and fails if the document ever scrolls sideways. Run it after touching
 anything in `AnimatedBorder` — a mask hides paint, not layout, so a beam that
 looks contained can still widen the page.
+
+`check:reorderable` drives `Reorderable` with a mouse, a finger and the
+keyboard in headless Chrome — nested lists, a 100-item `ScrollArea`, rows
+holding a `Menu` and a `ContextMenu`, right-to-left rows, items added and
+removed mid-drag — and asserts on what the list reported. Run it after
+touching `Reorderable`, `ContextMenu.Trigger` or `src/internal/claims.ts`: a
+drop that also clicks a row, or a long press that opens a menu under the
+finger, looks fine in every screenshot.
 
 ## Token inventory
 

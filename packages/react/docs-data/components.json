@@ -921,6 +921,22 @@
     "hooks": []
   },
   {
+    "name": "Reorderable",
+    "dir": "reorderable",
+    "category": "Content & layout",
+    "summary": "Reorder one list's items by dragging or with the keyboard — vertical or horizontal, nestable, announced; the order stays in your state. To sort a table by a column, use Table's sortable header instead.",
+    "partOf": null,
+    "compound": true,
+    "theming": true,
+    "parts": [
+      "ReorderablePreview",
+      "ReorderableRoot",
+      "ReorderableItem",
+      "ReorderableHandle"
+    ],
+    "hooks": []
+  },
+  {
     "name": "Resizable",
     "dir": "resizable",
     "category": "Content & layout",

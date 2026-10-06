@@ -57,6 +57,7 @@ import {
   ProgressCircle,
   Radio,
   RadioGroup,
+  Reorderable,
   Resizable,
   Reveal,
   ScrollArea,
@@ -1063,6 +1064,39 @@ const PREVIEWS: Record<ComponentName, React.ComponentType> = {
       <Kbd>⇧</Kbd>
       <Kbd>P</Kbd>
     </KbdGroup>
+  ),
+
+  // One row lifted part way down the list, and the row below it already
+  // stepped up into its place — the moment that says what the component
+  // does. Set by hand: the stage is inert, so nothing here can be picked up,
+  // and the attribute and the offsets are what a real drag would write.
+  Reorderable: () => (
+    <Reorderable.Root
+      value={["brief", "refs", "sketch"]}
+      className="w-44 divide-y divide-border-muted rounded-surface border border-border bg-panel"
+    >
+      <Reorderable.Item value="brief" className="flex items-center gap-1 py-1 ps-1 pe-3 text-1">
+        <Reorderable.Handle />
+        Write the brief
+      </Reorderable.Item>
+      <Reorderable.Item
+        value="refs"
+        data-dragging="mouse"
+        className="flex items-center gap-1 py-1 ps-1 pe-3 text-1"
+        style={{ translate: "0 1.5rem" }}
+      >
+        <Reorderable.Handle data-dragging="mouse" />
+        Collect references
+      </Reorderable.Item>
+      <Reorderable.Item
+        value="sketch"
+        className="flex items-center gap-1 py-1 ps-1 pe-3 text-1"
+        style={{ translate: "0 -2rem" }}
+      >
+        <Reorderable.Handle />
+        Sketch directions
+      </Reorderable.Item>
+    </Reorderable.Root>
   ),
 
   Resizable: () => (

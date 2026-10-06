@@ -8294,6 +8294,123 @@
       }
     ]
   },
+  "Reorderable": {
+    "name": "Reorderable",
+    "tokens": [
+      {
+        "name": "--forte-reorderable-duration",
+        "value": "var(--forte-duration-move)",
+        "description": "How long a neighbor takes to step aside, and the drop to settle",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-ease",
+        "value": "var(--forte-ease-standard)",
+        "description": "Curve a neighbor steps aside on, and the drop settles on",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-cursor",
+        "value": "grab",
+        "description": "Cursor over an item that can be dragged, and over a handle",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-cursor-active",
+        "value": "grabbing",
+        "description": "Cursor while an item is being dragged",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-lift-shadow",
+        "value": "var(--forte-shadow-3)",
+        "description": "Shadow of the lifted item, and of the preview",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-lift-bg",
+        "value": "var(--forte-color-panel)",
+        "description": "Fill of the lifted item, and of the preview — so neighbors sliding under a transparent row do not show through it",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-lift-radius",
+        "value": "var(--forte-radius-control)",
+        "description": "Corner radius of the lifted item, and of the preview",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-lift-scale",
+        "value": "1",
+        "description": "How much the lifted item grows. Above 1 it overflows a scroll container — keep it for the preview, or a list with room around it. Collapses to 1 under reduced motion",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-placeholder-opacity",
+        "value": "0.4",
+        "description": "Opacity of the item a preview is standing in for, holding its place",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-handle-size",
+        "value": "var(--forte-space-5)",
+        "description": "Width and height of the handle",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-grip-size",
+        "value": "var(--forte-space-4)",
+        "description": "Size of the six-dot grip drawn inside the handle",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-handle-radius",
+        "value": "var(--forte-radius-2)",
+        "description": "Corner radius of the handle's hover fill and focus ring",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-handle-color",
+        "value": "var(--forte-color-foreground-subtle)",
+        "description": "Color of the grip",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-handle-color-hover",
+        "value": "var(--forte-color-foreground)",
+        "description": "Color of the grip while hovered or holding an item",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-handle-bg-hover",
+        "value": "var(--forte-color-panel-hover)",
+        "description": "Fill behind the grip while hovered",
+        "part": "root",
+        "overrides": []
+      },
+      {
+        "name": "--forte-reorderable-z-index",
+        "value": "50",
+        "description": "Stacking level of the preview. Above the library's own overlays (Drawer sits at 40), like Resizable's drag sheet",
+        "part": "root",
+        "overrides": []
+      }
+    ]
+  },
   "Resizable": {
     "name": "Resizable",
     "tokens": [

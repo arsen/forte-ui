@@ -50,10 +50,11 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:parity": "node scripts/check-popup-parity.mjs",
     "check:overflow": "node scripts/check-overflow.mjs",
+    "check:reorderable": "node scripts/check-reorderable.mjs",
     "build": "pnpm run generate && vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs && node scripts/check-overflow.mjs",
+    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs && node scripts/check-overflow.mjs && node scripts/check-reorderable.mjs",
     "clean": "rm -rf dist .turbo"
   },
   "peerDependencies": {
