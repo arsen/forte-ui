@@ -18,6 +18,7 @@ import {
   MenuSubmenuTrigger,
   MenuShortcut,
 } from "../menu/Menu";
+import { gestureOwner } from "../../internal/claims";
 import styles from "./ContextMenu.module.css";
 
 /* -------------------------------------------------------------------------
@@ -126,13 +127,28 @@ export interface ContextMenuTriggerProps
 export const ContextMenuTrigger = React.forwardRef<
   HTMLDivElement,
   ContextMenuTriggerProps
->(function ContextMenuTrigger({ children, className, ...props }, ref) {
+>(function ContextMenuTrigger({ children, className, onTouchStart, onContextMenu, ...props }, ref) {
   return (
     <BaseContextMenu.Trigger
       ref={ref}
       className={clsx(styles.trigger, className)}
       data-forte="context-menu-trigger"
       {...props}
+      /* A touch another forte-ui component has claimed is not a long press
+       * on this region: a finger held on a `Reorderable.Handle` inside it is
+       * picking a row up, and the menu opening under it would end the drag
+       * and lock the page. Base UI's own long-press timer starts in its
+       * `touchstart` handler and its menu opens from `contextmenu` (Android
+       * fires one on a long press), so both skip Base UI for a claimed event.
+       * Nothing else changes — only forte-ui's own gestures claim events. */
+      onTouchStart={(event) => {
+        onTouchStart?.(event);
+        if (gestureOwner(event.nativeEvent) !== undefined) event.preventBaseUIHandler();
+      }}
+      onContextMenu={(event) => {
+        onContextMenu?.(event);
+        if (gestureOwner(event.nativeEvent) !== undefined) event.preventBaseUIHandler();
+      }}
     >
       {children}
     </BaseContextMenu.Trigger>

@@ -79,6 +79,7 @@ export type ComponentName =
   | "Collapsible"
   | "Kbd"
   | "KbdGroup"
+  | "Reorderable"
   | "Resizable"
   | "Reveal"
   | "ScrollArea"
@@ -161,6 +162,7 @@ export const CATALOG: CatalogEntry[] = [
   { name: "Collapsible", title: "Collapsible", href: "/components/collapsible/", category: "Content & layout", summary: "A single trigger and the region it reveals; for a stack of exclusive disclosures, use Accordion.", partOf: null },
   { name: "Kbd", title: "Kbd", href: "/components/kbd/", category: "Content & layout", summary: "A keyboard key cap for shortcut hints — works in prose, tooltips, menu items and buttons.", partOf: null },
   { name: "KbdGroup", title: "Kbd Group", href: "/components/kbd/#kbdgroup", category: "Content & layout", summary: "A sequence of Kbds read as one shortcut (⌘ K).", partOf: "Kbd" },
+  { name: "Reorderable", title: "Reorderable", href: "/components/reorderable/", category: "Content & layout", summary: "Reorder one list's items by dragging or with the keyboard — vertical or horizontal, nestable, announced; the order stays in your state. To sort a table by a column, use Table's sortable header instead.", partOf: null },
   { name: "Resizable", title: "Resizable", href: "/components/resizable/", category: "Content & layout", summary: "Panels the user re-proportions by dragging the divider between them — keyboard operable, constrainable, and persistable.", partOf: null },
   { name: "Reveal", title: "Reveal", href: "/components/reveal/", category: "Content & layout", summary: "Plays a one-shot entrance — fade, rise, scale — on whatever it wraps, the first time that content reaches the screen; a popup or panel animates its own enter and needs none of this.", partOf: null },
   { name: "ScrollArea", title: "Scroll Area", href: "/components/scroll-area/", category: "Content & layout", summary: "A scroll container with overlay scrollbars that look the same on every platform, plus scroll-position edge fades.", partOf: null },
@@ -222,6 +224,7 @@ export const COMPONENT_PAGES: { title: string; href: string }[] = [
   { title: "Preview Card", href: "/components/preview-card/" },
   { title: "Progress", href: "/components/progress/" },
   { title: "Radio", href: "/components/radio/" },
+  { title: "Reorderable", href: "/components/reorderable/" },
   { title: "Resizable", href: "/components/resizable/" },
   { title: "Reveal", href: "/components/reveal/" },
   { title: "Scroll Area", href: "/components/scroll-area/" },

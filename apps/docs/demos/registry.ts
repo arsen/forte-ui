@@ -623,6 +623,24 @@ import d_radio_orientation from "./radio/orientation";
 import d_radio_orientation_src from "./radio/orientation?raw";
 import d_radio_sizes from "./radio/sizes";
 import d_radio_sizes_src from "./radio/sizes?raw";
+import d_reorderable_announcements from "./reorderable/announcements";
+import d_reorderable_announcements_src from "./reorderable/announcements?raw";
+import d_reorderable_basic from "./reorderable/basic";
+import d_reorderable_basic_src from "./reorderable/basic?raw";
+import d_reorderable_context_menu from "./reorderable/context-menu";
+import d_reorderable_context_menu_src from "./reorderable/context-menu?raw";
+import d_reorderable_disabled from "./reorderable/disabled";
+import d_reorderable_disabled_src from "./reorderable/disabled?raw";
+import d_reorderable_horizontal from "./reorderable/horizontal";
+import d_reorderable_horizontal_src from "./reorderable/horizontal?raw";
+import d_reorderable_layers from "./reorderable/layers";
+import d_reorderable_layers_src from "./reorderable/layers?raw";
+import d_reorderable_live from "./reorderable/live";
+import d_reorderable_live_src from "./reorderable/live?raw";
+import d_reorderable_nested from "./reorderable/nested";
+import d_reorderable_nested_src from "./reorderable/nested?raw";
+import d_reorderable_scroll_area from "./reorderable/scroll-area";
+import d_reorderable_scroll_area_src from "./reorderable/scroll-area?raw";
 import d_resizable_anchored from "./resizable/anchored";
 import d_resizable_anchored_src from "./resizable/anchored?raw";
 import d_resizable_basic from "./resizable/basic";
@@ -1242,6 +1260,15 @@ export type DemoId =
   | "radio/native-button"
   | "radio/orientation"
   | "radio/sizes"
+  | "reorderable/announcements"
+  | "reorderable/basic"
+  | "reorderable/context-menu"
+  | "reorderable/disabled"
+  | "reorderable/horizontal"
+  | "reorderable/layers"
+  | "reorderable/live"
+  | "reorderable/nested"
+  | "reorderable/scroll-area"
   | "resizable/anchored"
   | "resizable/basic"
   | "resizable/collapsible"
@@ -1708,6 +1735,15 @@ const REGISTRY: Record<DemoId, Demo> = {
   "radio/native-button": { Component: d_radio_native_button, source: d_radio_native_button_src, file: "radio/native-button.tsx" },
   "radio/orientation": { Component: d_radio_orientation, source: d_radio_orientation_src, file: "radio/orientation.tsx" },
   "radio/sizes": { Component: d_radio_sizes, source: d_radio_sizes_src, file: "radio/sizes.tsx" },
+  "reorderable/announcements": { Component: d_reorderable_announcements, source: d_reorderable_announcements_src, file: "reorderable/announcements.tsx" },
+  "reorderable/basic": { Component: d_reorderable_basic, source: d_reorderable_basic_src, file: "reorderable/basic.tsx" },
+  "reorderable/context-menu": { Component: d_reorderable_context_menu, source: d_reorderable_context_menu_src, file: "reorderable/context-menu.tsx" },
+  "reorderable/disabled": { Component: d_reorderable_disabled, source: d_reorderable_disabled_src, file: "reorderable/disabled.tsx" },
+  "reorderable/horizontal": { Component: d_reorderable_horizontal, source: d_reorderable_horizontal_src, file: "reorderable/horizontal.tsx" },
+  "reorderable/layers": { Component: d_reorderable_layers, source: d_reorderable_layers_src, file: "reorderable/layers.tsx" },
+  "reorderable/live": { Component: d_reorderable_live, source: d_reorderable_live_src, file: "reorderable/live.tsx" },
+  "reorderable/nested": { Component: d_reorderable_nested, source: d_reorderable_nested_src, file: "reorderable/nested.tsx" },
+  "reorderable/scroll-area": { Component: d_reorderable_scroll_area, source: d_reorderable_scroll_area_src, file: "reorderable/scroll-area.tsx" },
   "resizable/anchored": { Component: d_resizable_anchored, source: d_resizable_anchored_src, file: "resizable/anchored.tsx" },
   "resizable/basic": { Component: d_resizable_basic, source: d_resizable_basic_src, file: "resizable/basic.tsx" },
   "resizable/collapsible": { Component: d_resizable_collapsible, source: d_resizable_collapsible_src, file: "resizable/collapsible.tsx" },

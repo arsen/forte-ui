@@ -31,6 +31,7 @@ decision in the repo follows from them:
 ```
 packages/react             the library
   src/components/<name>/  <Name>.tsx · <Name>.module.css · index.ts
+  src/internal/           helpers no one component owns — claims.ts (gesture claims, never exported)
   src/styles/             layers · properties · tokens · motion · a11y · patterns
   scripts/                ramp.mjs · motion.mjs (source of truth) + generators
 packages/create-forte-ui   the scaffolding CLI (`pnpm create forte-ui`)
@@ -103,13 +104,14 @@ pnpm --filter @forte-ui/react docgen         # props.json + theming.json
 pnpm --filter @forte-ui/react check:contrast # the ramp gate
 pnpm --filter @forte-ui/react check:parity   # the popup-parity gate
 pnpm --filter @forte-ui/react check:overflow # the narrow-viewport overflow gate (needs Chrome)
+pnpm --filter @forte-ui/react check:reorderable # the Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/docs registry  # the demo registry
 pnpm --filter @forte-ui/docs changelog # the changelog page
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
 pnpm --filter @forte-ui/docs catalog   # the component index + the sidebar
 ```
 
-`check:contrast`, `check:parity` and `check:overflow` are deliberately outside `generate` —
+`check:contrast`, `check:parity`, `check:overflow` and `check:reorderable` are deliberately outside `generate` —
 they are gates, not generators, and they write nothing.
 
 Every root script is `turbo run <task>`, never the `turbo <task>` shorthand.
@@ -119,8 +121,8 @@ generator?" prompt instead of running the task. `run` everywhere means the next
 task name to collide does not repeat this.
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
-`typecheck`, `check:contrast`, `check:parity` and `check:overflow` are the gates
-that actually catch things.
+`typecheck`, `check:contrast`, `check:parity`, `check:overflow` and
+`check:reorderable` are the gates that actually catch things.
 
 ### Generated files — never edit by hand
 
@@ -235,6 +237,19 @@ Chrome as a 412px Pixel 7, steps every animation through a full lap and fails
 if `scrollWidth` ever leaves `clientWidth`. It needs a Chrome or Chromium
 binary (`CHROME_PATH` to point it elsewhere) and FAILS rather than skips
 without one.
+
+`check:reorderable` pairs with `Reorderable` and with anything it leans on —
+`ContextMenu.Trigger`'s gesture-claim check, `src/internal/claims.ts`, the
+`Menu` and `ScrollArea` its rows hold. A drag is the one interaction whose
+failures never show in a screenshot: a drop that also clicks the row it ended
+over, a long press that opens the context menu under the finger, a nested
+list dragging its parent, a keyboard drag whose arrows also reach the app's
+shortcuts. The gate serves `scripts/reorderable-fixture/` the same way and
+drives a mouse, a finger and the keyboard through it over CDP, asserting on
+what the list REPORTED — every callback, row click, announcement and keydown
+the page's own listeners saw. `node scripts/check-reorderable.mjs <prefix>`
+runs only the cases whose name starts with it, and `REORDERABLE_DEBUG=1`
+prints each page's log. Same Chrome requirement as `check:overflow`.
 
 ### Introducing a new token
 

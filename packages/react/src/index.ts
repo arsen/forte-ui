@@ -486,6 +486,24 @@ export type {
   RadioGroupOrientation,
 } from "./components/radio";
 
+export { Reorderable } from "./components/reorderable";
+export type {
+  ReorderableValue,
+  ReorderableOrientation,
+  ReorderablePointerType,
+  ReorderableCancelReason,
+  ReorderableDragStartDetails,
+  ReorderableChangeDetails,
+  ReorderableDragEndDetails,
+  ReorderableDragCancelDetails,
+  ReorderableAnnouncement,
+  ReorderableMessages,
+  ReorderableRootProps,
+  ReorderableItemProps,
+  ReorderableHandleProps,
+  ReorderablePreviewProps,
+} from "./components/reorderable";
+
 export { Resizable } from "./components/resizable";
 export type {
   ResizableOrientation,

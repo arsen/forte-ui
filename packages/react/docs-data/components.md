@@ -135,6 +135,8 @@ Components.
   props.json: Kbd · knobs: theming.json → Kbd
 - **KbdGroup** — A sequence of Kbds read as one shortcut (⌘ K).
   documented with Kbd · props.json: KbdGroup
+- **Reorderable** — Reorder one list's items by dragging or with the keyboard — vertical or horizontal, nestable, announced; the order stays in your state. To sort a table by a column, use Table's sortable header instead.
+  compound · parts (props.json): ReorderablePreview, ReorderableRoot, ReorderableItem, ReorderableHandle · knobs: theming.json → Reorderable
 - **Resizable** — Panels the user re-proportions by dragging the divider between them — keyboard operable, constrainable, and persistable.
   compound · parts (props.json): ResizableGroup, ResizablePanel, ResizableHandle · knobs: theming.json → Resizable
 - **Reveal** — Plays a one-shot entrance — fade, rise, scale — on whatever it wraps, the first time that content reaches the screen; a popup or panel animates its own enter and needs none of this.

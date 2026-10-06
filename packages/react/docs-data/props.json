@@ -6942,6 +6942,198 @@
       }
     ]
   },
+  "ReorderablePreview": {
+    "name": "ReorderablePreview",
+    "description": "A copy of the dragged item that follows the pointer in a portal, so a\n`ScrollArea`, an `overflow: hidden` panel or a card cannot clip it while the\nreal item holds its place in the list. Optional: without it, the item\nitself moves. A keyboard drag never uses it — the focused handle has to\nstay in the item that moves.\n\nPlace it anywhere inside the root; it renders nothing until a pointer drag\nbegins.",
+    "props": [
+      {
+        "name": "children",
+        "type": "(value: ReorderableValue) => ReactNode",
+        "required": true,
+        "defaultValue": null,
+        "description": "Renders the copy that follows the pointer, given the dragged item's\n`value`. Usually the same row component the list renders."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s) for the element that holds the copy. Applied\nafter the internal styles."
+      },
+      {
+        "name": "container",
+        "type": "HTMLElement | null",
+        "required": false,
+        "defaultValue": null,
+        "description": "Where the copy is portalled. Defaults to the nearest `.forte-theme` or\n`[data-forte-theme]` scope around the list — so a scoped theme, `dir`\nand reduced-motion setting still apply to it — and to the body when\nthere is none."
+      }
+    ]
+  },
+  "ReorderableRoot": {
+    "name": "ReorderableRoot",
+    "description": "The list. Owns the drag: which item is moving, where every other item has\nstepped aside to, and the announcements. It renders a `<ul>` — swap it with\n`render` — and is laid out by you: a vertical list stacks as block content,\na horizontal one becomes a flex row.\n\n```tsx\n<Reorderable.Root value={ids} onValueChange={setIds}>\n  {ids.map((id) => (\n    <Reorderable.Item key={id} value={id}>\n      <Reorderable.Handle />\n      {names[id]}\n    </Reorderable.Item>\n  ))}\n</Reorderable.Root>\n```",
+    "props": [
+      {
+        "name": "value",
+        "type": "readonly Value[]",
+        "required": true,
+        "defaultValue": null,
+        "description": "The order on screen, as the items' `value`s. Required, and the only\norder there is: render the items in this order, and update it from\n`onValueChange`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Turns reordering off for the whole list. A drag in progress is canceled."
+      },
+      {
+        "name": "dragThreshold",
+        "type": "number",
+        "required": false,
+        "defaultValue": "4",
+        "description": "How far a mouse must move, in px, before a press becomes a drag. Below\nit, the press is a click."
+      },
+      {
+        "name": "handleOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Whether a mouse needs the handle too. A finger always does when an item\nhas one; with this set, a mouse press anywhere else on the item is\nignored as well. Overridable per item."
+      },
+      {
+        "name": "holdDelay",
+        "type": "number",
+        "required": false,
+        "defaultValue": "250",
+        "description": "How long a finger must rest on an item without a handle, in ms, before\nit picks the item up. A finger that moves sooner scrolls the list."
+      },
+      {
+        "name": "messages",
+        "type": "Partial<ReorderableMessages>",
+        "required": false,
+        "defaultValue": null,
+        "description": "The strings the component speaks — the handle's name, its instructions\nand the live announcements. Pass any subset to translate or reword them."
+      },
+      {
+        "name": "onDragCancel",
+        "type": "((details: ReorderableDragCancelDetails<Value>) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when a drag ends without a drop. Every `onDragStart` is followed\nby exactly one `onDragEnd` or `onDragCancel` — unless the list unmounts\nmid-drag, which ends it silently."
+      },
+      {
+        "name": "onDragEnd",
+        "type": "((details: ReorderableDragEndDetails<Value>) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when an item is dropped, moved or not — after `onValueChange`."
+      },
+      {
+        "name": "onDragStart",
+        "type": "((details: ReorderableDragStartDetails<Value>) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called when an item is picked up."
+      },
+      {
+        "name": "onValueChange",
+        "type": "((value: Value[], details: ReorderableChangeDetails<Value>) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called on drop with the new order — when the order changed; a drop where\nthe drag started calls only `onDragEnd`. Apply it, apply your own version\nof it, or ignore it: the items animate to whatever `value` you render\nnext. Update in the same event, as an optimistic change, and reconcile\nwith a server afterwards; an order that arrives later than the next\nframe is drawn as a second move."
+      },
+      {
+        "name": "orientation",
+        "type": "ReorderableOrientation",
+        "required": false,
+        "defaultValue": "vertical",
+        "description": "The axis the items run along. `\"horizontal\"` also lays the root out as a\nrow; the arrow keys follow the axis, physically, right-to-left included."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<ul>` with another element or component."
+      }
+    ]
+  },
+  "ReorderableItem": {
+    "name": "ReorderableItem",
+    "description": "One item. With a mouse it drags from anywhere on its surface except the\ncontrols inside it — buttons, fields, links, anything with `data-no-drag`.\nWith a finger it drags from its `Handle` when it has one, and otherwise\nafter a short press-and-hold, so a swipe across the list still scrolls it.",
+    "props": [
+      {
+        "name": "value",
+        "type": "ReorderableValue",
+        "required": true,
+        "defaultValue": null,
+        "description": "The item's identity: one of the root's `value`s. Use the same thing as\nits React `key`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "false",
+        "description": "Stops this item being picked up. Other items still move past it — it is\nnot a fixed point; to pin an item in place, refuse the move in\n`onValueChange`."
+      },
+      {
+        "name": "handleOnly",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": null,
+        "description": "Whether a mouse needs the handle too, for this item. Defaults to the\nroot's `handleOnly`."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "The item's name in announcements, and in its handle's accessible name.\nWithout it, announcements use the item's text — skipping any list nested\ninside it — and the handle is called \"Reorder\"."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<li>` with another element or component."
+      }
+    ]
+  },
+  "ReorderableHandle": {
+    "name": "ReorderableHandle",
+    "description": "The grip. Optional, and focusable: it is how a keyboard picks the item up\n— <kbd>Space</kbd> or <kbd>Enter</kbd> — and, on a touch screen, the only\npart of an item a finger can drag, so the rest of the item scrolls the\nlist. A long press on it is a drag, never a context menu.\n\nRenders a `<button>` drawing a six-dot grip; pass children to draw your\nown. Its accessible name is \"Reorder\", or \"Reorder\" and the item's `label`\n— override it with `aria-label`, or for every handle at once through the\nroot's `messages`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      },
+      {
+        "name": "render",
+        "type": "RenderProp<Record<string, unknown>>",
+        "required": false,
+        "defaultValue": null,
+        "description": "Replaces the rendered `<button>` with another element or component."
+      }
+    ]
+  },
   "ResizableGroup": {
     "name": "ResizableGroup",
     "description": "The container. Owns the layout: every panel's size lives here, because\nresizing is a transfer between panels and only the group can see both sides.\n\n```tsx\n<Resizable.Group orientation=\"horizontal\">\n  <Resizable.Panel defaultSize={30} minSize=\"200px\">…</Resizable.Panel>\n  <Resizable.Handle />\n  <Resizable.Panel>…</Resizable.Panel>\n</Resizable.Group>\n```\n\nThe group has no intrinsic size — it fills what it is given, so give it one\n(a height for a horizontal group, a height for a vertical one too).",

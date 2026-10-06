@@ -1,0 +1,186 @@
+import { DemoBlock } from "@/components/demo/demo-block";
+import { PropTable } from "@/components/prop-table";
+import { KeyboardTable } from "@/components/keyboard-table";
+import { Callout } from "@/components/callout";
+import { ThemingTable } from "@/components/theming-table";
+import { Kbd } from "@forte-ui/react";
+
+export const metadata = {
+  title: "Reorderable",
+  description:
+    "Drag-to-reorder for the items of one list — with a mouse, a finger, a pen or the keyboard, announced to screen readers, nestable, with the order kept in your state.",
+};
+
+# Reorderable
+
+The items of one list, put in a new order by dragging them. A mouse drags a row from anywhere on it, a finger drags it by its grip, and the keyboard picks it up, moves it and puts it down — with every step announced to a screen reader. The order is always yours: the list shows the move while it happens and hands you the new order on drop.
+
+<DemoBlock id="reorderable/basic" />
+
+## Import
+
+```tsx
+import { Reorderable } from "@forte-ui/react";
+```
+
+Three parts, plus an optional fourth:
+
+```tsx
+<Reorderable.Root value={ids} onValueChange={setIds}>
+  {ids.map((id) => (
+    <Reorderable.Item key={id} value={id} label={names[id]}>
+      <Reorderable.Handle />
+      {names[id]}
+    </Reorderable.Item>
+  ))}
+  <Reorderable.Preview>{(id) => <Row id={id} />}</Reorderable.Preview>
+</Reorderable.Root>
+```
+
+The root renders a `<ul>` and each item an `<li>`, so a screen reader announces a list and how many items it holds; both take `render` to become something else — `render={<tbody />}` and `render={<tr />}` reorder table rows. The `Handle` is optional for a mouse and is what a finger and the keyboard use. The `Preview` is optional altogether.
+
+## The order is yours
+
+`value` is required, and it is the only order there is. During a drag the component moves nothing in the DOM — it draws the move, sliding the item under the pointer and its neighbors out of the way — and on drop it calls `onValueChange` with the new order. What you render next is what the list shows: the move you were offered, a different one, or no change at all. Whichever it is, every item eases from where it was drawn to where it now belongs, so a refused move slides back rather than snapping.
+
+<Callout kind="note">
+  Update the order in the same event, as an optimistic change, and reconcile with your server afterwards. An order that arrives after the next frame has painted — after a request, say — is drawn as a second move: the items slide back first, then forward when it lands.
+</Callout>
+
+The second argument says exactly what moved. `id` is the item, `from` and `to` are its indexes, and `pointerType` is what moved it. `overId` and `placement` say where it went in terms of a neighbor — "after `overId`" — which is the version to apply when your copy of the list can change underneath a drag: in a shared document, an index counted when the drag began may point somewhere else by the time it ends, and a neighbor still means what the reader meant.
+
+`onDragStart`, `onDragEnd` and `onDragCancel` frame every drag: each start is followed by exactly one end or one cancel, and a cancel carries its `reason`.
+
+## Examples
+
+### Rows with controls
+
+A row is usually more than a label: a thumbnail, a name, a "⋯" menu. With a mouse the whole row drags, except the controls in it — a press on a `button`, an input, a link, `[contenteditable]` or anything marked `data-no-drag` is the control's, so the menu opens on press as it always did. The menu here also carries the same moves as commands, which is not decoration: see [Accessibility](#accessibility).
+
+<DemoBlock id="reorderable/layers" />
+
+### Nested lists
+
+Put a `Reorderable.Root` inside an item and the two lists are independent. A press inside the inner list — on one of its items or between them — belongs to it, so dragging a member never moves the group; the group still drags as one row, members and all, by its own grip. Items can be any height, a whole nested list included.
+
+<DemoBlock id="reorderable/nested" />
+
+### Long lists and the preview
+
+Inside a scroll container — forte-ui's `ScrollArea` or anything with `overflow: auto` — holding a dragged item near the top or bottom edge scrolls the container, faster the closer you get. A wheel works mid-drag too.
+
+A dragged item lives inside the same clipping as its list, so near the edge of a scroll area it is cut off, and in an `overflow: hidden` card it cannot leave the card. `Reorderable.Preview` lifts a copy out instead: it renders your row in a portal, following the pointer above everything, while the real item stays in the list — faded — to show where the drop will land.
+
+<DemoBlock id="reorderable/scroll-area" />
+
+The preview portals into the nearest `.forte-theme` scope around the list, so a scoped theme, `dir` and motion setting reach it, and into the body when there is none; `container` overrides that. It is copied the list's lift knobs at the start of each drag, so an override set on the root reaches the preview too. A keyboard drag never uses it: focus is on the handle, and the handle has to move with its item.
+
+### Context menus
+
+A row can be a `ContextMenu.Trigger` and still drag. With a mouse there is nothing to resolve — a right click is not a drag. On a touch screen both are a long press, so they are kept apart by place: a long press on the grip picks the row up and the menu never opens; a long press anywhere else on the row opens the menu and the list stays put.
+
+<DemoBlock id="reorderable/context-menu" />
+
+<Callout kind="warn">
+  This needs the grip. Without a handle, a finger picks an item up by resting on it, and that rest is the same gesture as the context menu's long press — the two would race. Give items that have a context menu a `Reorderable.Handle`.
+</Callout>
+
+### Horizontal lists
+
+`orientation="horizontal"` lays the root out as a row and turns the keys to <Kbd>←</Kbd> and <Kbd>→</Kbd>. Direction is read off the layout, not assumed: flip the frame to RTL and the first item sits on the right, dragging left moves an item toward the end, and so does <Kbd>←</Kbd>. A row must stay on one line — a wrapped row is a grid, which this component does not reorder.
+
+<DemoBlock id="reorderable/horizontal" />
+
+### Disabled items and the handle
+
+`disabled` on an item stops it being picked up. It does not pin it: other items still move past it, because whether a slot is allowed is a rule about your data — and you get to apply it, by refusing the move in `onValueChange`. Here the trigger stays first because the move that would put a step above it is refused, and the refused row slides back.
+
+`handleOnly` — on the root, or per item — makes a mouse use the grip too, for rows that are mostly for reading or selecting text.
+
+<DemoBlock id="reorderable/disabled" />
+
+### Changes from outside
+
+Another user, an undo, an assistant: the list can change while someone is dragging it. Items added or removed around the dragged one make room or close up with a slide, the dragged item stays under the pointer, and the drop lands where the reader meant. If the dragged item itself is removed, the drag ends quietly — `onDragCancel` with reason `"removed"`, and no change.
+
+<DemoBlock id="reorderable/live" />
+
+## Accessibility
+
+Every item that has a `Reorderable.Handle` can be moved without a pointer. The handle is a real `<button>`, named "Reorder" and the item's `label`, and described by instructions read after its name. An item without one is mouse-and-finger only, so give every item a handle — even in a list a mouse drags by the row.
+
+<KeyboardTable
+  rows={[
+    { keys: ["Space", "Enter"], description: "On a handle: picks the item up. While holding it: drops it where it is." },
+    {
+      keys: ["Arrow keys"],
+      description:
+        "Moves the held item one place. Up/Down in a vertical list, Left/Right in a horizontal one — physically, so in RTL the Left arrow moves toward the end.",
+    },
+    { keys: ["Home", "End"], description: "Moves the held item to the start or the end." },
+    { keys: ["Escape"], description: "Cancels: the item goes back where it was. Also cancels a pointer drag." },
+    { keys: ["Tab"], description: "Leaves the handle, which cancels a keyboard drag." },
+  ]}
+/>
+
+Each step is announced through a live region: picking up ("Picked up Lisbon. Position 1 of 4."), each move, and the drop — with the position the app actually committed, not the one it was offered — or the cancel. The handle reports `aria-pressed` while it holds its item. The demo below writes the same announcements on screen; it also shows `messages`, which is where every string goes to be translated or reworded.
+
+<DemoBlock id="reorderable/announcements" />
+
+<Callout kind="a11y">
+  WCAG 2.5.7 asks for a way to do anything a drag does **with a single pointer and no drag** — a tap, a click — because a drag is a gesture some people cannot make, and the keyboard is not what a switch device or a head pointer sends. The list cannot know what commands suit your rows, so it does not invent them: put "Move up", "Move down" and their kin in the row's menu, as the [layers example](#rows-with-controls) does. Because the order is your state, those are ordinary state changes.
+</Callout>
+
+### The shortcut contract
+
+Keys are handled on the handle itself, before any listener on the page sees them, and every key the list acts on is `preventDefault`ed. While a keyboard drag is in progress that is every key except <Kbd>Tab</Kbd> and anything with <Kbd>Ctrl</Kbd> or <Kbd>⌘</Kbd> held — including keys the list does nothing with. Nothing ever calls `stopPropagation()`. So an app's global shortcuts stay safe with one line:
+
+```tsx
+window.addEventListener("keydown", (event) => {
+  if (event.defaultPrevented) return; // a reorder, a menu, a field — not ours
+  if (event.key === "Delete") deleteSelection();
+  if (event.key.startsWith("Arrow")) nudgeSelection(event.key);
+});
+```
+
+The guarantee holds for every listener that runs in the bubbling phase, on any element, the document or the window. A listener registered for the capture phase runs before the handle does, by definition, and sees the key first.
+
+### Pointers, fingers and clicks
+
+- **A press is a click until it moves.** A mouse picks an item up after 4px of travel (`dragThreshold`); a click without movement still reaches the row, and a drag never ends in a click on whatever row it was released over.
+- **A finger scrolls.** With a handle, only the handle drags — `touch-action: none` on the grip, nothing anywhere else — so a swipe across the list scrolls it. Without one, a finger has to rest on the item for 250ms (`holdDelay`) before it picks the item up, and one that moves sooner is scrolling.
+- **Hit targets.** The handle is 24px by default and its target is never smaller (SC 2.5.8).
+
+Under forced colors, where shadows are stripped and fills repainted, the lifted item and the preview draw a `Highlight` outline instead, and an item a preview stands in for draws a dashed one.
+
+## Theming
+
+Every property below is declared on `Reorderable.Root`, so override it there — through its `className` or an inline `style` — not on an ancestor, where the root's own declaration would beat the inherited value. The lift knobs are copied onto a `Preview` when a drag starts, so the same override reaches the copy outside the list.
+
+<ThemingTable component="Reorderable" />
+
+The parts publish their state as data attributes. On the root: `data-orientation`, `data-disabled`, and `data-reordering` while a drag is in progress, set to what is moving it (`mouse`, `pen`, `touch` or `keyboard`). On an item: `data-dragging` (same values) while it is the one moving, `data-placeholder` while a preview stands in for it, `data-dropping` while it settles after the drop, `data-disabled` and `data-handle-only`. On a handle: `data-dragging`, `data-disabled` and `data-orientation`. So `data-[dragging]:ring-2` styles a lifted row with no wrapper.
+
+<Callout kind="warn">
+  Keep a lifted item's size what it was. A drag measures the list when it starts, and `[data-dragging]` styles that add a border or padding push every row after the lifted one and invalidate the measurement mid-gesture. Shadow, fill, outline and `scale` are paint, and safe.
+</Callout>
+
+`--forte-reorderable-lift-scale` is `1` by default for a related reason: an item scaled past its own width is scrollable overflow, and a list inside a scroll container sprouts a horizontal scrollbar for the length of the drag. Raise it for a `Preview`, or for a list with room around it; it collapses to `1` under reduced motion either way. The slide runs on `--forte-duration-move`, which is near-instant under reduced motion, so neighbors and the drop land in place without traveling.
+
+## API reference
+
+### Reorderable.Root
+
+<PropTable component="ReorderableRoot" />
+
+### Reorderable.Item
+
+<PropTable component="ReorderableItem" />
+
+### Reorderable.Handle
+
+<PropTable component="ReorderableHandle" />
+
+### Reorderable.Preview
+
+<PropTable component="ReorderablePreview" />

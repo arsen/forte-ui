@@ -1,0 +1,271 @@
+/*
+ * Reorderable
+ *
+ * A list whose items can be dragged into a new order. The component draws a
+ * drag entirely with `translate` — the dragged item follows the pointer, its
+ * neighbors step aside — and the DOM order only changes when the app renders
+ * the new `value`. Four decisions carry the file.
+ *
+ * 1 — Positions and their transitions are NOT in here. The engine writes
+ *     `translate` and `transition` inline, per frame, because a stylesheet
+ *     transition on the items loses to any `transition-colors` utility a
+ *     consumer puts on a row — and every neighbor would then jump instead of
+ *     sliding. What this file owns is how a lifted item LOOKS: the shadow,
+ *     the fill, the corner, the scale, the cursor.
+ *
+ * 2 — The lift never changes an item's size in the layout. A drag measures
+ *     the list once, when it starts; a lifted row that grew a border or a
+ *     padding would push every row after it and invalidate the measurement
+ *     mid-gesture. Shadow, fill, radius and `scale` are all paint. So is
+ *     anything you add through `[data-dragging]` — keep it that way.
+ *
+ * 3 — `--forte-reorderable-lift-scale` defaults to 1. A list usually lives in
+ *     a scroll container, and an item scaled past its own width is scrollable
+ *     overflow: the container sprouts a horizontal scrollbar for the length
+ *     of the drag. Raise it for a list of cards with room around them; the
+ *     preview, which floats outside any container, is the safe place for it.
+ *     The scale is multiplied by `--forte-motion-ok`, so it collapses to
+ *     identity under reduced motion like every other piece of geometry.
+ *
+ * 4 — There is no `prefers-reduced-motion` block. The slide runs on
+ *     `--forte-duration-move`, which drops to 1ms under reduced motion, so
+ *     neighbors and the drop land in place without travelling; the lift's
+ *     shadow and fill keep their short fade, which is not motion.
+ */
+@layer forte.components {
+  .root {
+    /* Component tokens. Declared here, on the list, so an ancestor's value is
+     * only ever inherited and never wins. A preview is portalled out of the
+     * list, so the knobs it draws with are copied onto it when a drag starts
+     * — override them here, and the preview follows. */
+
+    /** How long a neighbor takes to step aside, and the drop to settle */
+    --forte-reorderable-duration: var(--forte-duration-move);
+    /** Curve a neighbor steps aside on, and the drop settles on */
+    --forte-reorderable-ease: var(--forte-ease-standard);
+    /** Cursor over an item that can be dragged, and over a handle */
+    --forte-reorderable-cursor: grab;
+    /** Cursor while an item is being dragged */
+    --forte-reorderable-cursor-active: grabbing;
+    /** Shadow of the lifted item, and of the preview */
+    --forte-reorderable-lift-shadow: var(--forte-shadow-3);
+    /** Fill of the lifted item, and of the preview — so neighbors sliding
+     * under a transparent row do not show through it */
+    --forte-reorderable-lift-bg: var(--forte-color-panel);
+    /** Corner radius of the lifted item, and of the preview */
+    --forte-reorderable-lift-radius: var(--forte-radius-control);
+    /** How much the lifted item grows. Above 1 it overflows a scroll
+     * container — keep it for the preview, or a list with room around it.
+     * Collapses to 1 under reduced motion */
+    --forte-reorderable-lift-scale: 1;
+    /** Opacity of the item a preview is standing in for, holding its place */
+    --forte-reorderable-placeholder-opacity: 0.4;
+    /** Width and height of the handle */
+    --forte-reorderable-handle-size: var(--forte-space-5);
+    /** Size of the six-dot grip drawn inside the handle */
+    --forte-reorderable-grip-size: var(--forte-space-4);
+    /** Corner radius of the handle's hover fill and focus ring */
+    --forte-reorderable-handle-radius: var(--forte-radius-2);
+    /** Color of the grip */
+    --forte-reorderable-handle-color: var(--forte-color-foreground-subtle);
+    /** Color of the grip while hovered or holding an item */
+    --forte-reorderable-handle-color-hover: var(--forte-color-foreground);
+    /** Fill behind the grip while hovered */
+    --forte-reorderable-handle-bg-hover: var(--forte-color-panel-hover);
+    /** Stacking level of the preview. Above the library's own overlays
+     * (Drawer sits at 40), like Resizable's drag sheet */
+    --forte-reorderable-z-index: 50;
+
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    /* The lifted item carries a `z-index` to paint over its neighbors.
+     * `isolation` keeps that contest inside the list, where it belongs,
+     * instead of letting it reach a portalled popup or a sticky header. */
+    isolation: isolate;
+  }
+
+  .root[data-orientation="horizontal"] {
+    display: flex;
+    flex-direction: row;
+  }
+
+  /* While anything is being dragged: no text selection across the rows the
+   * pointer sweeps over, and the closed hand over the gaps between them. */
+  .root[data-reordering] {
+    cursor: var(--forte-reorderable-cursor-active);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Item ------------------------------------------------------------------- */
+
+  .item {
+    /* Always positioned, not only while lifted: switching an item from
+     * static to relative mid-drag would hand its absolutely positioned
+     * descendants a new containing block, and they would jump. */
+    position: relative;
+    /* A long press on a link or an image inside a row is a drag here, not
+     * iOS's preview card. */
+    -webkit-touch-callout: none;
+  }
+
+  /* An item a mouse can pick up anywhere looks like it. With `handleOnly`,
+   * only the handle does. */
+  .item:not([data-disabled]):not([data-handle-only]) {
+    cursor: var(--forte-reorderable-cursor);
+  }
+
+  /* After the rule above, which ties with it: during a drag every item shows
+   * the closed hand the list shows, whichever row the pointer is crossing. */
+  .root[data-reordering] .item {
+    cursor: inherit;
+  }
+
+  .item[data-dragging] {
+    z-index: 1;
+  }
+
+  /* Paint only — see decision 2. */
+  .item[data-dragging]:not([data-placeholder]) {
+    box-shadow: var(--forte-reorderable-lift-shadow);
+    background-color: var(--forte-reorderable-lift-bg);
+    border-radius: var(--forte-reorderable-lift-radius);
+    scale: calc(1 + (var(--forte-reorderable-lift-scale) - 1) * var(--forte-motion-ok));
+  }
+
+  /* The item a preview stands in for keeps its place in the list, and shows
+   * where the drop will land. */
+  .item[data-placeholder] {
+    opacity: var(--forte-reorderable-placeholder-opacity);
+  }
+
+  /* Still above its neighbors while it settles into its slot, so it slides
+   * over them rather than under. */
+  .item[data-dropping] {
+    z-index: 1;
+  }
+
+  /* Handle ----------------------------------------------------------------- */
+
+  .handle {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--forte-reorderable-handle-size);
+    block-size: var(--forte-reorderable-handle-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--forte-reorderable-handle-radius);
+    background-color: transparent;
+    color: var(--forte-reorderable-handle-color);
+    font: inherit;
+    /* The grip is what drags, so it says so. Not `pointer`: a click on it does
+     * nothing, and the open hand is the one cursor that means "pull this". */
+    cursor: var(--forte-reorderable-cursor);
+    /* Without this the browser claims a finger's first move for a scroll and
+     * the handle never sees a second event. It is also what makes the handle
+     * the ONLY place a finger can drag from: everywhere else, it scrolls. */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    transition:
+      color var(--forte-duration-fast) var(--forte-ease-standard),
+      background-color var(--forte-duration-fast) var(--forte-ease-standard),
+      outline-color var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      outline-offset var(--forte-focus-ring-duration) var(--forte-focus-ring-ease),
+      box-shadow var(--forte-focus-ring-duration) var(--forte-focus-ring-ease);
+  }
+
+  @media (hover: hover) {
+    .handle:hover:not([data-disabled]) {
+      color: var(--forte-reorderable-handle-color-hover);
+      background-color: var(--forte-reorderable-handle-bg-hover);
+    }
+  }
+
+  .handle[data-dragging] {
+    color: var(--forte-reorderable-handle-color-hover);
+    cursor: var(--forte-reorderable-cursor-active);
+  }
+
+  .handle[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .grip {
+    flex: none;
+    inline-size: var(--forte-reorderable-grip-size);
+    block-size: var(--forte-reorderable-grip-size);
+    fill: currentColor;
+    /* Every press has to land on the handle itself, which is what the item
+     * checks a press against. */
+    pointer-events: none;
+  }
+
+  /* Two columns of three across a vertical list's rows; three of two along a
+   * horizontal one, so the dots run the way the item travels. */
+  .handle[data-orientation="horizontal"] .grip {
+    rotate: 90deg;
+  }
+
+  /* Preview ---------------------------------------------------------------- */
+
+  /* Positioned in the viewport by the engine, through `translate`, from the
+   * top-left corner. Physical on purpose: the engine works in client
+   * coordinates, which have no inline direction. */
+  .preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: var(--forte-reorderable-z-index, 50);
+    box-sizing: border-box;
+    width: var(--forte-reorderable-preview-width);
+    height: var(--forte-reorderable-preview-height);
+    margin: 0;
+    list-style: none;
+    /* Hit-testing has to see straight through it: the row under the pointer
+     * is what a wheel scrolls, and a preview that took the pointer would
+     * scroll the page instead. */
+    pointer-events: none;
+    box-shadow: var(--forte-reorderable-lift-shadow, var(--forte-shadow-3));
+    background-color: var(--forte-reorderable-lift-bg, var(--forte-color-panel));
+    border-radius: var(--forte-reorderable-lift-radius, var(--forte-radius-control));
+    scale: calc(1 + (var(--forte-reorderable-lift-scale, 1) - 1) * var(--forte-motion-ok));
+    color: var(--forte-color-foreground);
+    font-family: var(--forte-font-sans);
+  }
+}
+
+@layer forte.a11y {
+  @media (forced-colors: active) {
+    /* Shadows are stripped and fills repainted, which would leave a lifted
+     * item looking like every other row. A system-colored outline is the
+     * cue that survives — and, for the preview, the floating surface's
+     * boundary, drawn as an outline rather than `.forte-hc-surface`'s border
+     * so it takes no room inside a copy that must line up with its row. */
+    .item[data-dragging]:not([data-placeholder]),
+    .preview {
+      outline: 2px solid Highlight;
+      outline-offset: -2px;
+    }
+
+    /* `opacity` is untouched by forced colors, so the placeholder keeps its
+     * fade; the dashed line says why it is faded. */
+    .item[data-placeholder] {
+      outline: 2px dashed Highlight;
+      outline-offset: -2px;
+    }
+
+    .handle[data-disabled] {
+      opacity: 1;
+      color: GrayText;
+    }
+  }
+}
