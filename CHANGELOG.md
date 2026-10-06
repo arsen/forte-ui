@@ -13,6 +13,25 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-10-06
+
+### ContextMenu
+
+- `ContextMenu.Trigger` now ignores a touch or `contextmenu` event that another forte-ui component has claimed, so a long press on a `Reorderable.Handle` inside a trigger picks the row up instead of opening the menu under the finger. A long press anywhere else on the trigger opens the menu as before. A press that nothing claimed behaves exactly as it did. The trigger also accepts its own `onTouchStart` and `onContextMenu` props and calls them first.
+
+### Reorderable
+
+- New component for putting the items of one list in a new order by dragging. Compose it from `Reorderable.Root`, `Reorderable.Item`, `Reorderable.Handle` and the optional `Reorderable.Preview`. The root renders a `<ul>` and each item an `<li>`, and both take `render` to become something else, such as table rows.
+- The order stays in your state. `value` is the order on screen, and `onValueChange` receives the new order on drop together with `id`, `overId`, `placement`, `from`, `to` and `pointerType`. `onDragStart`, `onDragEnd` and `onDragCancel` frame every drag, and a cancel carries its `reason`. Items slide to their new place, and a move you refuse slides back instead of snapping.
+- Works with a mouse, a pen, a finger and the keyboard. A mouse drags a row from anywhere on it, except from controls inside it (`button`, inputs, links, `[contenteditable]`, anything marked `data-no-drag`). A finger drags by the handle, after holding still. The keyboard picks an item up with Space or Enter, moves it with the arrow keys, drops it with Space or Enter and cancels with Escape. Every key it acts on is `preventDefault`ed, so an app's global shortcut handlers that skip `defaultPrevented` events never fire mid-drag.
+- Every step is announced to screen readers. The `messages` prop translates or rewords any subset of the strings.
+- Supports `orientation="horizontal"`, a `disabled` list or item, nested lists (a press inside the inner list never moves the outer one), items of any height, and right-to-left layouts. Dragging near the edge of a scroll container, such as `ScrollArea`, scrolls it, and `Reorderable.Preview` lifts a copy of the row into a portal so it is not clipped.
+- Theming knobs on the root: `--forte-reorderable-cursor`, `-cursor-active`, `-duration`, `-ease`, `-grip-size`, `-handle-bg-hover`, `-handle-color`, `-handle-color-hover`, `-handle-radius`, `-handle-size`, `-lift-bg`, `-lift-radius`, `-lift-scale`, `-lift-shadow`, `-placeholder-opacity`, `-z-index`. Parts are marked `data-forte="reorderable"`, `reorderable-item`, `reorderable-handle`, `reorderable-preview`, `reorderable-instructions` and `reorderable-announcer`.
+
+### General
+
+- `Reorderable` and its types (`ReorderableValue`, `ReorderableOrientation`, `ReorderablePointerType`, `ReorderableCancelReason`, `ReorderableDragStartDetails`, `ReorderableChangeDetails`, `ReorderableDragEndDetails`, `ReorderableDragCancelDetails`, `ReorderableAnnouncement`, `ReorderableMessages`, `ReorderableRootProps`, `ReorderableItemProps`, `ReorderableHandleProps`, `ReorderablePreviewProps`) are exported from `@forte-ui/react`.
+
 ## [1.10.4] - 2026-10-01
 
 ### AnimatedBorder
@@ -595,7 +614,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.10.4...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/arsen/forte-ui/compare/v1.10.4...v1.11.0
 [1.10.4]: https://github.com/arsen/forte-ui/compare/v1.10.3...v1.10.4
 [1.10.3]: https://github.com/arsen/forte-ui/compare/v1.10.2...v1.10.3
 [1.10.2]: https://github.com/arsen/forte-ui/compare/v1.10.1...v1.10.2
