@@ -63,6 +63,11 @@ holds its last frame off the far edge, so the text ends up plain.
   changes with each run, as in the demo.
 </Callout>
 
+A looping shimmer runs on the page's clock rather than its own, so a
+"Thinking…" line replaced by an identical one carries on mid-sweep instead of
+jumping back to the edge. `once` deliberately does not: a single pass marks
+the moment its text arrived, so every new one starts from the beginning.
+
 ### Direction
 
 The sweep follows the reading direction, multiplying its travel by

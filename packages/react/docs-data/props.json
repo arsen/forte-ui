@@ -7843,7 +7843,7 @@
         "type": "SkeletonAnimation",
         "required": false,
         "defaultValue": "pulse",
-        "description": "How the placeholder signals that it is a placeholder.\n\n`pulse` is a shallow opacity breathe — quiet, and identical whichever way\nit is laid out. `shimmer` sends a band of light across the fill, which\nreads as faster and suits a screenful of placeholders; it follows the\nreading direction, and degrades into `pulse` under reduced motion.\n`none` is a static fill, for a screenshot test or a page where something\nelse already owns the movement.\n\nFalls back to the enclosing `Skeleton.Group`, then to `pulse`."
+        "description": "How the placeholder signals that it is a placeholder.\n\n`pulse` is a shallow opacity breathe — quiet, and identical whichever way\nit is laid out. `shimmer` sends a band of light across the fill, which\nreads as faster and suits a screenful of placeholders; it follows the\nreading direction, and degrades into `pulse` under reduced motion.\n`none` is a static fill, for a screenshot test or a page where something\nelse already owns the movement.\n\nEvery skeleton on the page runs on one clock, so a placeholder that\nreplaces an identical one carries on mid-cycle rather than restarting.\n\nFalls back to the enclosing `Skeleton.Group`, then to `pulse`."
       },
       {
         "name": "children",

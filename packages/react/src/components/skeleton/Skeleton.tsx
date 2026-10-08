@@ -2,7 +2,16 @@
 
 import * as React from "react";
 import { clsx } from "clsx";
+import { pinToDocumentClock } from "../../internal/document-clock";
 import styles from "./Skeleton.module.css";
+
+/**
+ * `useLayoutEffect`, except on the server, where React warns that it does
+ * nothing. The loop has to be pinned before the browser paints the new
+ * skeleton, or one frame shows it at its restart and the next jumps it back
+ * into step — the glitch, only shorter.
+ */
+const useIsoLayoutEffect = typeof window === "undefined" ? React.useEffect : React.useLayoutEffect;
 
 export type SkeletonVariant = "rect" | "text" | "circle";
 export type SkeletonAnimation = "pulse" | "shimmer" | "none";
@@ -63,6 +72,9 @@ export interface SkeletonRootProps
    * reading direction, and degrades into `pulse` under reduced motion.
    * `none` is a static fill, for a screenshot test or a page where something
    * else already owns the movement.
+   *
+   * Every skeleton on the page runs on one clock, so a placeholder that
+   * replaces an identical one carries on mid-cycle rather than restarting.
    *
    * Falls back to the enclosing `Skeleton.Group`, then to `pulse`.
    * @default "pulse"
@@ -135,6 +147,27 @@ const SkeletonRoot = React.forwardRef<HTMLSpanElement, SkeletonRootProps>(functi
   const resolvedAnimation = animation ?? group?.animation ?? "pulse";
   const isLoading = loading ?? group?.loading ?? true;
 
+  const rootRef = React.useRef<HTMLSpanElement | null>(null);
+  const setRefs = React.useCallback(
+    (node: HTMLSpanElement | null) => {
+      rootRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref) ref.current = node;
+    },
+    [ref],
+  );
+
+  // Every skeleton on the page runs on one clock, so one that replaces an
+  // identical one — `loading.tsx` handing over to a `<Suspense fallback>` —
+  // carries on mid-sweep instead of restarting. See `document-clock.ts`.
+  // Both dependencies re-create the CSS animations: `animation` renames them,
+  // and `loading` coming back mounts a new element. A server-rendered skeleton
+  // hydrating in place is pinned too, which moves its loop once, at
+  // hydration — the price of every swap after that being seamless.
+  useIsoLayoutEffect(() => {
+    if (rootRef.current && resolvedAnimation !== "none") pinToDocumentClock(rootRef.current);
+  }, [resolvedAnimation, isLoading]);
+
   // Not a wrapper with `display: contents`, and not a hidden box — nothing at
   // all. Once the content is here the placeholder has no further opinion about
   // layout, and leaving an element behind means a consumer's `className` keeps
@@ -143,7 +176,7 @@ const SkeletonRoot = React.forwardRef<HTMLSpanElement, SkeletonRootProps>(functi
 
   return (
     <span
-      ref={ref}
+      ref={setRefs}
       className={clsx(styles.root, className)}
       data-forte="skeleton"
       data-variant={variant}

@@ -189,6 +189,15 @@ where something else already owns the movement.
   opposite of what a placeholder is for.
 </Callout>
 
+Every skeleton on the page runs on one clock — the document's, not its own —
+so skeletons with the same cycle pulse and sweep in step however late each
+one mounted. That matters most when a skeleton is replaced by an identical
+one: a route's `loading.tsx` handing over to the page's own
+`<Suspense fallback>`, a swap between boundaries, a changed `key`. To the
+browser that is a new element, whose animation would start again from the
+edge; to the reader it is the same wait, so the band carries on from where it
+was.
+
 ### Reduced motion
 
 <DemoBlock id="skeleton/reduced-motion" />
