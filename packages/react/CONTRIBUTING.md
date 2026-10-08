@@ -186,6 +186,7 @@ pnpm --filter @forte-ui/react check:contrast  # WCAG harness over the ramps
 pnpm --filter @forte-ui/react check:parity    # anchored-popup parity gate
 pnpm --filter @forte-ui/react check:overflow  # narrow-viewport overflow gate (needs Chrome)
 pnpm --filter @forte-ui/react check:reorderable  # Reorderable interaction gate (needs Chrome)
+pnpm --filter @forte-ui/react check:clock     # Skeleton/Shimmer loop-continuity gate (needs Chrome)
 pnpm --filter @forte-ui/react typecheck
 ```
 
@@ -214,6 +215,14 @@ removed mid-drag — and asserts on what the list reported. Run it after
 touching `Reorderable`, `ContextMenu.Trigger` or `src/internal/claims.ts`: a
 drop that also clicks a row, or a long press that opens a menu under the
 finger, looks fine in every screenshot.
+
+`check:clock` replaces a `Skeleton` and a `Shimmer` with an identical copy in
+one commit, in headless Chrome, and fails unless every loop carries on from
+the frame before — the copy's sweep one frame further on, not back at the
+edge. It also checks that `src/internal/document-clock.ts` leaves every
+other kind of animation alone. Run it after touching either component's
+animations or the helper: a loop that restarts for a single frame is
+invisible in a screenshot and obvious on a page.
 
 ## Token inventory
 
