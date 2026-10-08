@@ -13,6 +13,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.11.1] - 2026-10-08
+
+### Shimmer
+
+- Fixed a looping `Shimmer` jumping back to the edge when an identical one replaced it, such as a "Thinking…" line swapped for the next one. Looping sweeps now run on the page's shared clock, so the replacement carries on from where the old one was. `once` is unchanged: a single pass still starts when it mounts.
+
+### Skeleton
+
+- Fixed a skeleton restarting its animation mid-cycle when an identical one replaced it, such as a route's `loading.tsx` handing over to a page's own `<Suspense fallback>`, or a `key` change. The sweep jumped back to the edge, which read as a glitch. Every `pulse` and `shimmer` skeleton now runs on one page-wide clock, so a replacement carries on mid-cycle. A server-rendered skeleton that hydrates in place moves its loop once, at hydration; every swap after that is seamless. `animation="none"`, a skeleton you have paused with `animation-play-state`, and any animation inside a skeleton's content are left alone.
+
 ## [1.11.0] - 2026-10-06
 
 ### ContextMenu
@@ -614,7 +624,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.1...HEAD
+[1.11.1]: https://github.com/arsen/forte-ui/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/arsen/forte-ui/compare/v1.10.4...v1.11.0
 [1.10.4]: https://github.com/arsen/forte-ui/compare/v1.10.3...v1.10.4
 [1.10.3]: https://github.com/arsen/forte-ui/compare/v1.10.2...v1.10.3

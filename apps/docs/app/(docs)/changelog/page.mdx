@@ -19,6 +19,18 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.11.1
+
+<ReleaseMeta date="2026-10-08" href="https://github.com/arsen/forte-ui/compare/v1.11.0...v1.11.1" kind="compare" />
+
+### Shimmer
+
+- Fixed a looping `Shimmer` jumping back to the edge when an identical one replaced it, such as a "Thinking…" line swapped for the next one. Looping sweeps now run on the page's shared clock, so the replacement carries on from where the old one was. `once` is unchanged: a single pass still starts when it mounts.
+
+### Skeleton
+
+- Fixed a skeleton restarting its animation mid-cycle when an identical one replaced it, such as a route's `loading.tsx` handing over to a page's own `<Suspense fallback>`, or a `key` change. The sweep jumped back to the edge, which read as a glitch. Every `pulse` and `shimmer` skeleton now runs on one page-wide clock, so a replacement carries on mid-cycle. A server-rendered skeleton that hydrates in place moves its loop once, at hydration; every swap after that is seamless. `animation="none"`, a skeleton you have paused with `animation-play-state`, and any animation inside a skeleton's content are left alone.
+
 ## v1.11.0
 
 <ReleaseMeta date="2026-10-06" href="https://github.com/arsen/forte-ui/compare/v1.10.4...v1.11.0" kind="compare" />
@@ -139,15 +151,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 - The pressed fill for `soft` and `outline` variants now sits one ramp step deeper, both at rest and on hover, so a pressed toggle reads as visibly "on" in light mode instead of blending into an already-tinted surface (such as a `segmented` `ToggleGroup`'s panel). The pressed-hover label deepens with it, to a new high-contrast text tier, so it stays AA-compliant against the darker hover fill instead of holding its resting color. The `solid` variant and the `danger` tone (whose ramp has no step to move to) are unchanged.
 - Added the `--forte-toggle-fg-pressed-hover` theming knob for the label color on hover while pressed.
 
-## v1.8.1
-
-<ReleaseMeta date="2026-09-15" href="https://github.com/arsen/forte-ui/compare/v1.8.0...v1.8.1" kind="compare" />
-
-### Kbd
-
-- Fixed `Kbd` rendering its label in the browser's UA monospace face by default; it now inherits the library's sans font, so a key cap matches the surrounding prose and sits correctly beside a sans label on a menu row.
-- Added the `--forte-kbd-font-weight` theming knob (defaults to medium) to control the key label's weight.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 20 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 21 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
