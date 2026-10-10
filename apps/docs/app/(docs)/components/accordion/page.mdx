@@ -77,7 +77,7 @@ Pass `value` and `onValueChange` to own the state — which is what "expand all"
 
 ### Disabled item
 
-`disabled` on an `Accordion.Item` stops it opening. The trigger stays in the tab order — a control a keyboard user cannot reach is a control they cannot discover the existence of — but pressing it does nothing, and the whole item is dimmed rather than just its heading, so an item that was left open does not show fully-enabled body text under a greyed-out header.
+`disabled` on an `Accordion.Item` stops it opening. The trigger becomes a natively `disabled` button, so it leaves the tab order and ignores presses, the same as a disabled `Button`. A screen reader still finds it when reading through the page and announces it as unavailable. The whole item is dimmed rather than just its heading, so an item that was left open does not show fully-enabled body text under a grayed-out header.
 
 <DemoBlock id="accordion/disabled-item" />
 

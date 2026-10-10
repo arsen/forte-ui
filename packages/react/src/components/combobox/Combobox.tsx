@@ -166,7 +166,7 @@ export function ComboboxRoot<
   const multiple = props.multiple;
 
   const handleOpenChange = React.useCallback(
-    (open: boolean, eventDetails: BaseCombobox.Root.ChangeEventDetails) => {
+    (open: boolean, eventDetails: BaseCombobox.Root.OpenChangeEventDetails) => {
       // Canceled BEFORE the consumer's handler runs, not after: the popup
       // stays open, so there is no open-change to report and calling their
       // handler would tell them about a close that never happened.
