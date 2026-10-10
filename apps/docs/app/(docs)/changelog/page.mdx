@@ -19,6 +19,30 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.11.2
+
+<ReleaseMeta date="2026-10-10" href="https://github.com/arsen/forte-ui/compare/v1.11.1...v1.11.2" kind="compare" />
+
+### Accordion
+
+- A disabled `Accordion.Trigger` is now a native disabled button, so it leaves the tab order instead of being focusable. This comes from the `@base-ui/react` 1.9 upgrade.
+
+### Collapsible
+
+- A disabled `Collapsible.Trigger` is now a native disabled button, so it leaves the tab order instead of being focusable. This comes from the `@base-ui/react` 1.9 upgrade.
+
+### ContextMenu
+
+- `ContextMenu.Root` now forwards Base UI's `onItemHighlighted` prop, and its documentation lists it.
+
+### NavigationMenu
+
+- The `actionsRef` documentation now matches Base UI 1.9. It exposes `close()` to close the open panel. `unmount()` ends the closing phase after an exit animation you drive yourself, and you must call `eventDetails.preventUnmountOnClose()` in `onValueChange` first.
+
+### General
+
+- Upgraded the `@base-ui/react` dependency from `^1.8.0` to `^1.9.0`.
+
 ## v1.11.1
 
 <ReleaseMeta date="2026-10-08" href="https://github.com/arsen/forte-ui/compare/v1.11.0...v1.11.1" kind="compare" />
@@ -138,19 +162,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Fixed drag gestures with `gap={0}` (and percentage-based gaps generally) throwing the track to the wrong slide, or onto a loop's clones of the last slide, because the drag handler misread the track's `translate` percentage (e.g. `-200%`) as a pixel value; a lazily-rendered slide could also appear empty as a result. Dragging now also catches a track that is still animating exactly where it is instead of snapping it first, and a slow release lands on whichever slide the track was nearest to when let go.
 
-## v1.8.2
-
-<ReleaseMeta date="2026-09-15" href="https://github.com/arsen/forte-ui/compare/v1.8.1...v1.8.2" kind="compare" />
-
-### Tabs
-
-- The `pill` variant's active indicator now fills one ramp step deeper (`--forte-color-primary-soft-hover` instead of `-soft`), so it reads as clearly on top of its panel in light mode, where the bottom of the accent ramp is far more compressed than dark's — previously the indicator nearly vanished into a `segmented`-style strip.
-
-### Toggle
-
-- The pressed fill for `soft` and `outline` variants now sits one ramp step deeper, both at rest and on hover, so a pressed toggle reads as visibly "on" in light mode instead of blending into an already-tinted surface (such as a `segmented` `ToggleGroup`'s panel). The pressed-hover label deepens with it, to a new high-contrast text tier, so it stays AA-compliant against the darker hover fill instead of holding its resting color. The `solid` variant and the `danger` tone (whose ramp has no step to move to) are unchanged.
-- Added the `--forte-toggle-fg-pressed-hover` theming knob for the label color on hover while pressed.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 21 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 22 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.

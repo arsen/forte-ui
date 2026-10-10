@@ -13,6 +13,28 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.11.2] - 2026-10-10
+
+### Accordion
+
+- A disabled `Accordion.Trigger` is now a native disabled button, so it leaves the tab order instead of being focusable. This comes from the `@base-ui/react` 1.9 upgrade.
+
+### Collapsible
+
+- A disabled `Collapsible.Trigger` is now a native disabled button, so it leaves the tab order instead of being focusable. This comes from the `@base-ui/react` 1.9 upgrade.
+
+### ContextMenu
+
+- `ContextMenu.Root` now forwards Base UI's `onItemHighlighted` prop, and its documentation lists it.
+
+### NavigationMenu
+
+- The `actionsRef` documentation now matches Base UI 1.9. It exposes `close()` to close the open panel. `unmount()` ends the closing phase after an exit animation you drive yourself, and you must call `eventDetails.preventUnmountOnClose()` in `onValueChange` first.
+
+### General
+
+- Upgraded the `@base-ui/react` dependency from `^1.8.0` to `^1.9.0`.
+
 ## [1.11.1] - 2026-10-08
 
 ### Shimmer
@@ -624,7 +646,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.2...HEAD
+[1.11.2]: https://github.com/arsen/forte-ui/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/arsen/forte-ui/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/arsen/forte-ui/compare/v1.10.4...v1.11.0
 [1.10.4]: https://github.com/arsen/forte-ui/compare/v1.10.3...v1.10.4
