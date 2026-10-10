@@ -2701,7 +2701,7 @@
   },
   "ContextMenuRoot": {
     "name": "ContextMenuRoot",
-    "description": "Groups every part of the context menu and owns its open state. Renders no\nDOM element of its own, so it accepts neither `className` nor `ref`.\n\nForwards Base UI's own root props unchanged — `open`, `defaultOpen`,\n`onOpenChange`, `disabled`, `orientation`, `loopFocus`,\n`highlightItemOnHover` and `actionsRef`. Four of `Menu.Root`'s props are\ndeliberately absent, because a context menu has no trigger element to hang\nthem on: `modal` (it is always modal), `openOnHover` with its `delay` /\n`closeDelay`, and the `handle` / `triggerId` pair. `closeParentOnEsc` is\nstill accepted but does nothing here — there is no parent menu for Escape\nto close — and belongs on a `ContextMenu.SubmenuRoot`.",
+    "description": "Groups every part of the context menu and owns its open state. Renders no\nDOM element of its own, so it accepts neither `className` nor `ref`.\n\nForwards Base UI's own root props unchanged — `open`, `defaultOpen`,\n`onOpenChange`, `disabled`, `orientation`, `loopFocus`,\n`highlightItemOnHover`, `onItemHighlighted` and `actionsRef`. Four of\n`Menu.Root`'s props are deliberately absent, because a context menu has no\ntrigger element to hang them on: `modal` (it is always modal), `openOnHover` with its `delay` /\n`closeDelay`, and the `handle` / `triggerId` pair. `closeParentOnEsc` is\nstill accepted but does nothing here — there is no parent menu for Escape\nto close — and belongs on a `ContextMenu.SubmenuRoot`.",
     "props": [
       {
         "name": "children",
@@ -4983,7 +4983,7 @@
         "type": "RefObject<NavigationMenuRootActions | null>",
         "required": false,
         "defaultValue": null,
-        "description": "A ref to imperative actions. `actionsRef.current.unmount()` removes the\npopup immediately instead of waiting for its exit transition."
+        "description": "A ref to imperative actions. `close()` closes the open panel.\n`unmount()` ends the closing phase once an exit animation you drive\nyourself has finished — call `eventDetails.preventUnmountOnClose()` in\n`onValueChange` first, or the popup finishes closing on its own."
       },
       {
         "name": "children",

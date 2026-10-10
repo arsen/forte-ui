@@ -141,8 +141,10 @@ export interface NavigationMenuRootProps<Value = any>
    */
   closeDelay?: BaseNavigationMenu.Root.Props<Value>["closeDelay"];
   /**
-   * A ref to imperative actions. `actionsRef.current.unmount()` removes the
-   * popup immediately instead of waiting for its exit transition.
+   * A ref to imperative actions. `close()` closes the open panel.
+   * `unmount()` ends the closing phase once an exit animation you drive
+   * yourself has finished — call `eventDetails.preventUnmountOnClose()` in
+   * `onValueChange` first, or the popup finishes closing on its own.
    */
   actionsRef?: BaseNavigationMenu.Root.Props<Value>["actionsRef"];
   /**

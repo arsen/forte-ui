@@ -67,7 +67,7 @@ Pass `open` and `onOpenChange` to own the state, which is what it takes to drive
 
 ### Disabled
 
-`disabled` on `Collapsible.Root` stops the panel opening. The trigger stays in the tab order — a control a keyboard user cannot reach is a control they cannot discover the existence of — but pressing it does nothing, and the whole card is dimmed rather than just its trigger, so one that was left open does not show fully-enabled body text under a greyed-out header.
+`disabled` on `Collapsible.Root` stops the panel opening. The trigger becomes a natively `disabled` button, so it leaves the tab order and ignores presses, the same as a disabled `Button`. A screen reader still finds it when reading through the page and announces it as unavailable. The whole card is dimmed rather than just its trigger, so one that was left open does not show fully-enabled body text under a grayed-out header.
 
 <DemoBlock id="collapsible/disabled" />
 
