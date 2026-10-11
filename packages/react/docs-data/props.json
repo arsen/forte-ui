@@ -1326,6 +1326,13 @@
         "description": "Called with the new index whenever the active slide changes — by a drag,\na control, autoplay, or a clamp after slides were removed. `reason` says\nwhich."
       },
       {
+        "name": "onSettle",
+        "type": "((index: number, reason: CarouselChangeReason) => void)",
+        "required": false,
+        "defaultValue": null,
+        "description": "Called with the index once the track has come to rest on that slide —\nafter the glide a drag, a control, autoplay or a clamp started, or on the\nnext frame when there is none. A glide that a drag catches or another\nmove retargets never settles; only the last one is reported. Work that\nwould stall the glide — mounting something heavy for the new slide —\nbelongs here rather than in `onIndexChange`, which fires on release."
+      },
+      {
         "name": "orientation",
         "type": "CarouselOrientation",
         "required": false,

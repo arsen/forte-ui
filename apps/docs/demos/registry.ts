@@ -201,6 +201,8 @@ import d_carousel_loop from "./carousel/loop";
 import d_carousel_loop_src from "./carousel/loop?raw";
 import d_carousel_per_view from "./carousel/per-view";
 import d_carousel_per_view_src from "./carousel/per-view?raw";
+import d_carousel_settle from "./carousel/settle";
+import d_carousel_settle_src from "./carousel/settle?raw";
 import d_carousel_thumbs from "./carousel/thumbs";
 import d_carousel_thumbs_src from "./carousel/thumbs?raw";
 import d_carousel_vertical from "./carousel/vertical";
@@ -1049,6 +1051,7 @@ export type DemoId =
   | "carousel/lazy"
   | "carousel/loop"
   | "carousel/per-view"
+  | "carousel/settle"
   | "carousel/thumbs"
   | "carousel/vertical"
   | "checkbox/basic"
@@ -1524,6 +1527,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "carousel/lazy": { Component: d_carousel_lazy, source: d_carousel_lazy_src, file: "carousel/lazy.tsx" },
   "carousel/loop": { Component: d_carousel_loop, source: d_carousel_loop_src, file: "carousel/loop.tsx" },
   "carousel/per-view": { Component: d_carousel_per_view, source: d_carousel_per_view_src, file: "carousel/per-view.tsx" },
+  "carousel/settle": { Component: d_carousel_settle, source: d_carousel_settle_src, file: "carousel/settle.tsx" },
   "carousel/thumbs": { Component: d_carousel_thumbs, source: d_carousel_thumbs_src, file: "carousel/thumbs.tsx" },
   "carousel/vertical": { Component: d_carousel_vertical, source: d_carousel_vertical_src, file: "carousel/vertical.tsx" },
   "checkbox/basic": { Component: d_checkbox_basic, source: d_checkbox_basic_src, file: "checkbox/basic.tsx" },

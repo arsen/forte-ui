@@ -40,7 +40,9 @@ import styles from "./Carousel.module.css";
  *     because both positions paint the same pixels, and the track always
  *     comes to rest on a REAL slide, so there is nothing to fix up after the
  *     transition and no `transitionend` to wait for — which matters, because
- *     a transition in a background tab may never end.
+ *     a transition in a background tab may never end. (`onSettle` does wait
+ *     for the end, for the owner's sake, and backs the wait with a timeout
+ *     for exactly that reason; nothing in the engine depends on it.)
  *
  * 4 — A slide learns its index from its position among `Track`'s children,
  *     not from a registry filled in after mount. The index is what decides
@@ -86,6 +88,10 @@ const POSITION = "--forte-carousel-position";
 const HEIGHT = "--forte-carousel-height";
 
 const AUTOPLAY_INTERVAL = 5000;
+/* How long past a glide's own end `onSettle` waits for it before giving up
+ * and reporting anyway: long enough for the frame that ends it to run, and
+ * no longer than a reader would wait for a slide to wake up. */
+const SETTLE_MARGIN = 100;
 
 /* React 18 has no `inert` in its attribute table and drops a boolean for an
  * unknown attribute with a warning, so `inert=""` was the workaround. React 19
@@ -255,6 +261,15 @@ export interface CarouselRootProps
    */
   onIndexChange?: (index: number, reason: CarouselChangeReason) => void;
   /**
+   * Called with the index once the track has come to rest on that slide —
+   * after the glide a drag, a control, autoplay or a clamp started, or on the
+   * next frame when there is none. A glide that a drag catches or another
+   * move retargets never settles; only the last one is reported. Work that
+   * would stall the glide — mounting something heavy for the new slide —
+   * belongs here rather than in `onIndexChange`, which fires on release.
+   */
+  onSettle?: (index: number, reason: CarouselChangeReason) => void;
+  /**
    * Which way the slides are laid out and travel. A vertical carousel needs a
    * definite height on `Carousel.Viewport` — its slides are sized from it —
    * and ignores `autoHeight`.
@@ -341,6 +356,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
     index: indexProp,
     defaultIndex = 0,
     onIndexChange,
+    onSettle,
     orientation = "horizontal",
     loop = false,
     autoplay = false,
@@ -392,6 +408,11 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
   indexRef.current = index;
 
   const [settle, setSettle] = React.useState(0);
+  /* Where the track was last sent, and why: what `onSettle` reports once it
+   * arrives. A ref rather than state, because the previous glide's timer can
+   * fire between a move and its commit, and must already see it replaced. */
+  const destination = React.useRef<{ index: number; reason: CarouselChangeReason } | null>(null);
+  const [traveling, setTraveling] = React.useState(false);
   const [dragging, setDragging] = React.useState(false);
   const [playing, setPlaying] = React.useState(autoplayOn);
   const [hovered, setHovered] = React.useState(false);
@@ -428,18 +449,123 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
       if (!controlled) setUncontrolled(real);
       onIndexChange?.(real, reason);
     }
+    destination.current = { index: real, reason };
+    setTraveling(true);
     setSettle((n) => n + 1);
   });
 
   // Slides removed from under a resting index: report it once, as a clamp.
-  const onIndexChangeEvent = useEvent((next: number, reason: CarouselChangeReason) =>
-    onIndexChange?.(next, reason),
-  );
+  // The track is already gliding to the clamped slide — the render that
+  // clamped wrote its position — so the settle is armed behind it.
+  const clampEvent = useEvent((next: number) => {
+    onIndexChange?.(next, "clamp");
+    destination.current = { index: next, reason: "clamp" };
+    setTraveling(true);
+    setSettle((n) => n + 1);
+  });
   React.useEffect(() => {
     if (count === 0 || raw === index) return;
     if (!controlled) setUncontrolled(index);
-    onIndexChangeEvent(index, "clamp");
-  }, [count, raw, index, controlled, onIndexChangeEvent]);
+    clampEvent(index);
+  }, [count, raw, index, controlled, clampEvent]);
+
+  /* ---- Settle -----------------------------------------------------------
+   * `onIndexChange` fires on release, in the same call that starts the glide,
+   * so anything heavy it sets off runs before the glide's first frame and
+   * freezes the track under the finger. `onSettle` waits for the track to
+   * arrive. Armed in a LAYOUT effect on `settle`, which runs after Track's
+   * own (children first) has written the new position — so the transition
+   * that position starts already exists and `getAnimations()` can hand it
+   * over. Its `finished` promise rather than `transitionend`: the promise
+   * belongs to this one transition, where a `transitionend` still queued
+   * from the glide this one replaced would read as this one ending, and a
+   * `translate` transition inside a slide bubbles one up as well. A
+   * retarget cancels the old transition, which rejects instead of resolving.
+   *
+   * A timeout backs it, set to the transition's own remaining time plus a
+   * margin: a background tab may never run a transition to its end, which
+   * is why looping was built not to wait on one (see 3, above), and a settle
+   * that never comes would leave the owner's heavy work never done. Whichever
+   * comes first wins. With no transition at all — a zero duration, or a move
+   * to the slide the track already rests on — it fires on the next frame.
+   *
+   * Re-armed on every navigation and dropped by a drag: the cleanup cancels
+   * the one in flight, so a glide caught by the finger or retargeted by
+   * another move never reports. */
+  const settleEvent = useEvent((next: number, reason: CarouselChangeReason) =>
+    onSettle?.(next, reason),
+  );
+  useIsoLayoutEffect(() => {
+    const target = destination.current;
+    const track = trackRef.current;
+    if (!target || !track || dragging) return;
+
+    let done = false;
+    let frame = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      cancelAnimationFrame(frame);
+      // A move made since — an autoplay tick or a click whose commit has not
+      // landed yet — has replaced the destination, and it is that one's
+      // settle that counts.
+      if (destination.current !== target) return;
+      destination.current = null;
+      setTraveling(false);
+      settleEvent(target.index, target.reason);
+    };
+
+    const glide = track
+      .getAnimations?.()
+      .find(
+        (animation): animation is CSSTransition =>
+          "transitionProperty" in animation &&
+          (animation as CSSTransition).transitionProperty === "translate" &&
+          animation.playState === "running",
+      );
+
+    /* The fallback, counted from the glide's own clock. A transition that
+     * has not started yet — the owner's `onIndexChange` work is still holding
+     * the thread — has no start time, so the count is taken again once it is
+     * `ready`; counted only from here, a release that blocked for 150ms
+     * reported the settle 50ms before the glide was over. A tab hidden before
+     * that frame never readies, and the first count stands. */
+    const arm = () => {
+      clearTimeout(timer);
+      let remaining = 0;
+      if (glide) {
+        const end = Number(glide.effect?.getComputedTiming().endTime ?? 0);
+        remaining = Math.max(0, end - Number(glide.currentTime ?? 0));
+      }
+      timer = setTimeout(finish, remaining + SETTLE_MARGIN);
+    };
+    arm();
+
+    if (glide) {
+      const canceled = () => {
+        // A drag caught it or another move replaced it, and whichever did
+        // has its own settle coming.
+      };
+      glide.ready.then(() => {
+        if (!done) arm();
+      }, canceled);
+      glide.finished.then(finish, canceled);
+    } else {
+      // Nothing will move, so nothing will paint the change for a reader to
+      // see before the work: `data-settling` goes before this frame paints,
+      // and the callback on the next.
+      setTraveling(false);
+      frame = requestAnimationFrame(finish);
+    }
+
+    return () => {
+      done = true;
+      clearTimeout(timer);
+      cancelAnimationFrame(frame);
+    };
+  }, [settle, dragging, trackRef, settleEvent]);
 
   /* Autoplay is the one thing here that moves without being asked, so it
    * defers to the motion preference: read off the root, not `matchMedia`, so
@@ -545,6 +671,7 @@ const CarouselRoot = React.forwardRef<HTMLDivElement, CarouselRootProps>(functio
         data-align={align}
         data-loop={looping ? "" : undefined}
         data-dragging={dragging ? "" : undefined}
+        data-settling={traveling && !dragging ? "" : undefined}
         data-auto-height={autoHeight && orientation === "horizontal" ? "" : undefined}
         data-autoplay={autoplayOn ? (advancing ? "playing" : "paused") : undefined}
         data-at-start={count > 0 && !looping && index === 0 ? "" : undefined}

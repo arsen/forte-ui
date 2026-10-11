@@ -42,6 +42,14 @@ The demo at the top of the page: five slides, `Prev` and `Next` rendered inside 
 
 <DemoBlock id="carousel/controlled" />
 
+### Settle
+
+`onIndexChange` fires on release, in the same call that starts the glide — so anything expensive it sets off runs before the glide's first frame, and the track freezes under the finger until it is done. `onSettle` fires once the track has come to rest: work for the new slide that would stall the glide — mounting a canvas, building a scene, fetching at full size — belongs there. Here only the settled page gets the "live" view; the dots and the index follow the release, the live page follows the arrival.
+
+<DemoBlock id="carousel/settle" />
+
+It is called with the index and the same `reason` as `onIndexChange`, after the glide a drag, a control, autoplay or a clamp started — or on the next frame when nothing moves, as with a zero `--forte-carousel-duration` or a click on the dot already active. A glide that a drag catches, or that another move retargets, never settles; only the last one is reported. A transition in a background tab may never run to its end, so the wait is backed by a timeout of the glide's own length, and `onSettle` arrives either way. While the track is on its way, the root carries `data-settling` — the demo's caption dims on it with `group-data-[settling]:opacity-50`.
+
 ### Loop
 
 `loop` wraps the last slide around to the first. The track carries copies of the slides at each end — enough to fill the view, plus one — and a move across the boundary is one step through a copy, not a sweep back across the whole strip. The copies are hidden from assistive technology and made inert, so a screen reader still counts four slides, not eight; but an element `id` inside a slide will occur more than once in the document.
@@ -138,7 +146,7 @@ The percentage is the track's own width, so the resting positions never need mea
 
 The move is a transition, so pressing Next while the track is still traveling retargets from wherever it is. During a drag the transition is off and the same variable is written straight to the DOM every frame; letting go is one state update that puts the transition back and sets the target, and the browser tweens from under the finger to the slide.
 
-Looping never waits for a transition to end. A move that would cross the boundary first jumps the track — instantly, with the transition suppressed for that one write — to the copy of the slide that paints the identical picture, and then animates one step onto the real slide. The track always comes to rest on a real slide, so there is nothing to fix up afterwards and nothing that can go wrong when a background tab's transitions never run.
+Looping never waits for a transition to end. A move that would cross the boundary first jumps the track — instantly, with the transition suppressed for that one write — to the copy of the slide that paints the identical picture, and then animates one step onto the real slide. The track always comes to rest on a real slide, so there is nothing to fix up afterwards and nothing that can go wrong when a background tab's transitions never run. `onSettle` is the one thing that does wait for the end, on the owner's behalf, and it backs that wait with a timeout for the same reason.
 
 Under `prefers-reduced-motion` there is no separate path and no reduced-motion block in the stylesheet. `--forte-duration-spring-precise` shortens to its floor, so the track cuts to the next slide instead of sliding; the viewport's height change and the dot's stretch shorten the same way; and autoplay does not start.
 
@@ -150,7 +158,7 @@ Every property below is declared on `Carousel.Root`, so override them there — 
 
 `gap` on the root is `--forte-carousel-gap` as a prop; the two are the same declaration, and the prop wins when both are set because it is written inline.
 
-The parts also expose their state as data attributes — `data-orientation`, `data-align`, `data-loop`, `data-dragging`, `data-auto-height`, `data-autoplay` (`playing` or `paused`), `data-at-start` and `data-at-end` on the root; `data-active`, `data-in-view` and `data-clone` on a slide; `data-disabled` on the controls; `data-active` on a dot or thumb — so a Tailwind arbitrary variant such as `data-[dragging]:...` can target them without a wrapper.
+The parts also expose their state as data attributes — `data-orientation`, `data-align`, `data-loop`, `data-dragging`, `data-settling`, `data-auto-height`, `data-autoplay` (`playing` or `paused`), `data-at-start` and `data-at-end` on the root; `data-active`, `data-in-view` and `data-clone` on a slide; `data-disabled` on the controls; `data-active` on a dot or thumb — so a Tailwind arbitrary variant such as `data-[dragging]:...` can target them without a wrapper.
 
 ## API reference
 
