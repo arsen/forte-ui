@@ -797,6 +797,13 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
     };
 
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+      /* A new press is a new gesture: whatever click the last drag was owed
+       * has come (a mouse, whose drag ends in one) or never will (a touch
+       * swipe, which moved past the tap slop). Cleared only when that click
+       * arrived, the flag outlived a swipe and ate the next tap — a button
+       * in a slide took two. Before the early returns, so a press that
+       * starts no drag still clears it. */
+      suppressClick.current = false;
       onPointerDown?.(event);
       if (event.defaultPrevented || !draggable || count < 2 || event.button !== 0) return;
       if (drag.current) return;
@@ -957,7 +964,10 @@ const CarouselViewport = React.forwardRef<HTMLDivElement, CarouselViewportProps>
         }}
         onClickCapture={(event) => {
           onClickCapture?.(event);
-          if (!suppressClick.current) return;
+          // `detail` is 0 for a click no pointer made — Enter or Space on a
+          // button, `element.click()` — which no drag can be owed, even with
+          // the flag still armed by a swipe and no press since to clear it.
+          if (!suppressClick.current || event.detail === 0) return;
           suppressClick.current = false;
           event.preventDefault();
           event.stopPropagation();
