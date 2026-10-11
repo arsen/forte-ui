@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.11.3] - 2026-10-10
+
+### Carousel
+
+- Fixed a touch swipe swallowing the next tap. After a swipe, the tap that followed on a button inside a slide was cancelled, so the button took two taps. A new press now clears the pending click suppression, and a keyboard-activated click (Enter or Space on a button, or `element.click()`) is never suppressed.
+
 ## [1.11.2] - 2026-10-10
 
 ### Accordion
@@ -646,7 +652,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.3...HEAD
+[1.11.3]: https://github.com/arsen/forte-ui/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/arsen/forte-ui/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/arsen/forte-ui/compare/v1.11.0...v1.11.1
 [1.11.0]: https://github.com/arsen/forte-ui/compare/v1.10.4...v1.11.0

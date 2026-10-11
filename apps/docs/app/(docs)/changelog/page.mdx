@@ -19,6 +19,14 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.11.3
+
+<ReleaseMeta date="2026-10-10" href="https://github.com/arsen/forte-ui/compare/v1.11.2...v1.11.3" kind="compare" />
+
+### Carousel
+
+- Fixed a touch swipe swallowing the next tap. After a swipe, the tap that followed on a button inside a slide was cancelled, so the button took two taps. A new press now clears the pending click suppression, and a keyboard-activated click (Enter or Space on a button, or `element.click()`) is never suppressed.
+
 ## v1.11.2
 
 <ReleaseMeta date="2026-10-10" href="https://github.com/arsen/forte-ui/compare/v1.11.1...v1.11.2" kind="compare" />
@@ -154,14 +162,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Read-only Selects now open their popup for browsing like any other — only picking an item is refused. The trigger keeps its normal (pointer) cursor instead of `default`, and it is the rows inside a read-only list that now show `default` (a disabled item still shows `not-allowed`).
 
-## v1.8.3
-
-<ReleaseMeta date="2026-09-19" href="https://github.com/arsen/forte-ui/compare/v1.8.2...v1.8.3" kind="compare" />
-
-### Carousel
-
-- Fixed drag gestures with `gap={0}` (and percentage-based gaps generally) throwing the track to the wrong slide, or onto a loop's clones of the last slide, because the drag handler misread the track's `translate` percentage (e.g. `-200%`) as a pixel value; a lazily-rendered slide could also appear empty as a result. Dragging now also catches a track that is still animating exactly where it is instead of snapping it first, and a slow release lands on whichever slide the track was nearest to when let go.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 22 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 23 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
