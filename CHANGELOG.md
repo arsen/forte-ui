@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-10-10
+
+### Carousel
+
+- Added `onSettle` to `Carousel.Root`. It is called with the index and the change reason once the track has come to rest on a slide, after the glide that a drag, a control, autoplay or a clamp started, or on the next frame when there is no glide. A glide that a drag catches or another move retargets never settles, and only the last one is reported. Use it for work that would stall the glide, such as mounting something heavy for the new slide, instead of `onIndexChange`, which fires on release.
+- Added a `data-settling` attribute on the carousel root. It is present from the moment a move starts until the track has settled, and is absent while dragging. It lets plain CSS style the in-between state.
+
 ## [1.11.3] - 2026-10-10
 
 ### Carousel
@@ -652,7 +659,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.11.3...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/arsen/forte-ui/compare/v1.11.3...v1.12.0
 [1.11.3]: https://github.com/arsen/forte-ui/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/arsen/forte-ui/compare/v1.11.1...v1.11.2
 [1.11.1]: https://github.com/arsen/forte-ui/compare/v1.11.0...v1.11.1
