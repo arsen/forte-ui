@@ -145,6 +145,23 @@
     --forte-drawer-backdrop-floor: 0.4;
   }
 
+  /* A non-modal drawer — `modal={false}` or `"trap-focus"` — promises the
+   * page stays usable, and a full-screen fixed layer at z-index 39 breaks
+   * that promise whatever its opacity: every press lands on the scrim, which
+   * either closes the drawer or swallows it, and never reaches the page. At
+   * the lowest snap point the scrim is fully transparent, so the page LOOKS
+   * live and is not. Base UI only switches the backdrop's events off while
+   * the drawer is closed; it never looks at `modal`. So here the scrim is
+   * paint and nothing else, and an outside press reaches the page and Base
+   * UI's own outside-press dismissal alike.
+   *
+   * The attribute is live. A sheet that turns modal as it is raised takes
+   * presses again from that render on, so an outside press dismisses it as
+   * it would any modal drawer. */
+  .backdrop[data-non-modal] {
+    pointer-events: none;
+  }
+
   /* `.forte-scrim` puts these on `[data-starting-style]` / `[data-ending-style]`
    * already, but `patterns` is an EARLIER layer than `components` and layer
    * order outranks specificity completely — so the plain `.backdrop` opacity
@@ -1052,12 +1069,22 @@
     transform-origin: 50% 0%;
     /* The return, declared on the base rule because a transition is taken
      * from the state being ENTERED. Same length and curve as the scrim
-     * clearing, so the page comes forward as the dimness lifts. */
+     * clearing, so the page comes forward as the dimness lifts.
+     *
+     * `overflow` rides along as a discrete transition DELAYED by the whole
+     * return: `data-active` drops the moment the drawer starts to close, and
+     * releasing the clip then would square the corners off while the radius
+     * is still easing out from under them. Held, the clip lets go only once
+     * the radius is back at zero, where it no longer cuts anything. A browser
+     * without `allow-discrete` just releases it at the start, which costs
+     * those corners for one return and nothing else. */
     transition:
       transform var(--forte-drawer-indent-exit)
         var(--forte-drawer-indent-exit-ease),
       border-radius var(--forte-drawer-indent-exit)
-        var(--forte-drawer-indent-exit-ease);
+        var(--forte-drawer-indent-exit-ease),
+      overflow 1ms step-end var(--forte-drawer-indent-exit);
+    transition-behavior: allow-discrete;
   }
 
   /* The scale and the radius are literal geometry and gated on
@@ -1094,6 +1121,22 @@
       var(--forte-drawer-indent-radius) * var(--forte-motion-ok) *
         (1 - var(--drawer-swipe-progress, 0))
     );
+    /* A border radius rounds the box's own background and nothing it holds;
+     * only a box that clips its overflow cuts its children to the curve. An
+     * app shell's first child is usually flush with the top and painted —
+     * an app bar — and without this it covers both rounded corners, so the
+     * receded page shows square ones against the frame.
+     *
+     * `clip`, not `hidden`. `hidden` makes the indent a scroll container,
+     * which would re-anchor every `position: sticky` inside it to a box that
+     * never scrolls, and it opens a block formatting context, so a child's
+     * top margin that collapsed through the indent would stop collapsing and
+     * the page would shift as the drawer opens. `clip` does neither. Scoped
+     * to `[data-active]` like the transform, so at rest nothing about the
+     * page changes; while active, anything drawing past the indent's box
+     * without a portal — a shadow, an unportalled popover — is cut at its
+     * edge, which a page stepped back behind a sheet can afford. */
+    overflow: clip;
     transition:
       transform var(--forte-drawer-indent-enter) var(--forte-drawer-indent-ease),
       border-radius var(--forte-drawer-indent-enter)

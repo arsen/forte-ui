@@ -130,7 +130,7 @@ Snap points are ignored on `left` and `right` drawers, which have no snap axis.
 
 The scrim behaves differently here, and it has to. Base UI publishes one variable, `--drawer-swipe-progress`, for two different quantities: without snap points it is how far a dismissing drag has travelled, and clearing the scrim as the drawer leaves is the whole point of it. With snap points it is instead the sheet's position within its snap range, and it reaches exactly `1` at the *lowest* snap — so a peeking sheet would sit over a completely undimmed page that is nonetheless still inert.
 
-So when snap points and modality are combined, the scrim stops at `--forte-drawer-backdrop-floor` instead of vanishing. It still tracks the sheet in between, darkening as it is raised and lightening as it is lowered. A drawer with `modal={false}` gets no floor, because there the undimmed page really is usable.
+So when snap points and modality are combined, the scrim stops at `--forte-drawer-backdrop-floor` instead of vanishing. It still tracks the sheet in between, darkening as it is raised and lightening as it is lowered. A non-modal drawer — `modal={false}` or `modal="trap-focus"` — gets no floor, because there the undimmed page really is usable. Its scrim is purely visual: presses pass through it to the page, so it can dim the page as the sheet rises without ever blocking it. The `modal` prop can change while the drawer is open, which makes the common phone layout possible — a sheet that is non-modal at its low snap point, with the page above it still live, and modal once it is raised toward the top.
 
 ### Swipe to open
 
@@ -164,6 +164,8 @@ The page scales from its own top center, so it suits an indent that wraps a scre
 <Callout kind="warn">
 Keep `position: fixed` chrome — a fixed header, a floating action button — outside `Drawer.Indent`. While a drawer is open the page is transformed, and a transformed element becomes the containing block for its fixed descendants, so they let go of the viewport and travel with the page. `position: sticky` is unaffected. At rest the indent carries no transform and no `will-change`, so it changes nothing about the page until a drawer opens.
 </Callout>
+
+While a drawer is open the indent clips its contents to its own rounded corners, so an app bar flush with the top of the page rounds off with it instead of painting square corners over the curve. The clip is `overflow: clip`, which leaves `position: sticky` working, and it only applies while the page is stepped back: then, anything that draws past the indent's edge without a portal — a shadow, an unportalled popover — is cut off at it.
 
 With [snap points](#snap-points), Base UI measures that progress between the top two of them only, so a sheet resting at any lower snap point leaves the page at full size, and the page steps back as the sheet rises toward the top one.
 

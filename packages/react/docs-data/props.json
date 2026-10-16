@@ -4026,7 +4026,7 @@
         "type": "boolean",
         "required": false,
         "defaultValue": "true",
-        "description": "Render the scrim behind the drawer. Turn it off for a non-modal drawer\nthat should leave the page visibly usable. A drawer without one marks its\npopup `data-no-backdrop`, a hook for styling scrimless drawers."
+        "description": "Render the scrim behind the drawer. Turn it off for a non-modal drawer\nthat should leave the page visibly usable. A drawer without one marks its\npopup `data-no-backdrop`, a hook for styling scrimless drawers.\n\nWhen `modal` on `Drawer.Root` is `false` or `\"trap-focus\"`, the scrim is\npurely visual: it is marked `data-non-modal` and lets presses through to\nthe page beneath it."
       },
       {
         "name": "backdropClassName",
