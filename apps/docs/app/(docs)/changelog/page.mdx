@@ -19,6 +19,15 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.12.1
+
+<ReleaseMeta date="2026-10-15" href="https://github.com/arsen/forte-ui/compare/v1.12.0...v1.12.1" kind="compare" />
+
+### Drawer
+
+- Every drawer now draws a hairline border, not just one with `backdrop={false}`. An `edge` drawer draws it only on the side that faces into the page. The other three sides stay transparent, so an overdrag does not expose a seam against the bezel. A `floating` drawer draws all four sides. A drawer with another drawer open over it still has its whole ring painted in the scrim color, so a receding parent gets no bright outline. `--forte-drawer-border-width` and `--forte-drawer-border-color` now apply to every drawer.
+- `data-no-backdrop` is still set on the popup when `backdrop={false}`. Nothing in the stylesheet reads it any more, so it is now only a hook for styling scrimless drawers.
+
 ## v1.12.0
 
 <ReleaseMeta date="2026-10-10" href="https://github.com/arsen/forte-ui/compare/v1.11.3...v1.12.0" kind="compare" />
@@ -130,26 +139,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it as the fallback target — reachable when every item in the list is disabled.
 
-## v1.10.0
-
-<ReleaseMeta date="2026-09-20" href="https://github.com/arsen/forte-ui/compare/v1.9.0...v1.10.0" kind="compare" />
-
-### AnimatedBorder
-
-- Added the `AnimatedBorder` component: a decorative light traveling a container's border, with `variant` (`beam`, `shine`, `rotate`), `tone` (`primary`, `secondary`, `danger`, `neutral`, `current`) and `reverse` props. It anchors to the nearest positioned ancestor and inherits the host's corner radius; under reduced motion it settles into a still gradient in the same colors instead of animating.
-
-### Card
-
-- The card surface now establishes a positioning context (`position: relative`), so an `AnimatedBorder` or any other consumer-positioned overlay placed inside a card anchors to the card instead of escaping to whatever is positioned further up the page.
-
-### Reveal
-
-- Added the `Reveal` component: plays a one-shot scroll entrance (`fade`, `fade-up`, `fade-down`, `fade-start`, `fade-end`, `scale`, `fade-scale`) on its content the first time it reaches the screen, with `delay`, `amount` (visibility threshold) and `repeat` props, and a `render` prop to apply the entrance to another element instead of a wrapping `<div>`. Content already on screen at load plays immediately, and nothing is hidden from a reader whose JavaScript never runs.
-
-### Design tokens & motion
-
-- Added `--forte-duration-loop-orbit` (6000ms), a duration for effects that travel a surface's full perimeter rather than one edge, and `--forte-motion-play` (`running`/`paused`), a play-state token that pauses — without hiding — decorative infinite loops under reduced motion; busy indicators such as Spinner do not consume it. Registered `--forte-animated-border-angle` so a conic gradient's rotation can animate instead of snapping.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 24 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 25 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
