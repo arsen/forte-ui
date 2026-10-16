@@ -80,7 +80,7 @@ Components.
 - **Dialog** — A modal surface that takes focus until dismissed; for confirmations that must be answered use AlertDialog, for edge-anchored panels use Drawer.
   compound · parts (props.json): DialogProvider, DialogTrigger, DialogPopup, DialogSurface, DialogTitle, DialogDescription, DialogClose, DialogFooter · knobs: theming.json → Dialog · hooks: useDialog
 - **Drawer** — A panel that slides in from any screen edge, with drag-to-dismiss and snap points; for a centered modal use Dialog.
-  compound · parts (props.json): DrawerRoot, DrawerTrigger, DrawerPopup, DrawerHandle, DrawerContent, DrawerTitle, DrawerDescription, DrawerClose, DrawerFooter, DrawerSwipeArea · knobs: theming.json → Drawer
+  compound · parts (props.json): DrawerRoot, DrawerTrigger, DrawerPopup, DrawerHandle, DrawerContent, DrawerTitle, DrawerDescription, DrawerClose, DrawerFooter, DrawerSwipeArea, DrawerIndent, DrawerIndentBackground · knobs: theming.json → Drawer
 - **Menu** — A button-opened list of commands with checkable items, submenus and shortcut hints; for choosing a form value use Select instead.
   compound · parts (props.json): MenuSubmenuRoot, MenuTrigger, MenuPopup, MenuItem, MenuLinkItem, MenuCheckboxItem, MenuRadioGroup, MenuRadioItem, MenuGroup, MenuGroupLabel, MenuSeparator, MenuSubmenuTrigger, MenuShortcut · knobs: theming.json → Menu
 - **Menubar** — A row of Menus that behave as one strip — the application menu bar.

@@ -13,6 +13,9 @@ import type {
   DrawerCloseProps as BaseDrawerCloseProps,
   DrawerSwipeAreaProps as BaseDrawerSwipeAreaProps,
   DrawerVirtualKeyboardProviderProps as BaseDrawerVirtualKeyboardProviderProps,
+  DrawerProviderProps as BaseDrawerProviderProps,
+  DrawerIndentProps as BaseDrawerIndentProps,
+  DrawerIndentBackgroundProps as BaseDrawerIndentBackgroundProps,
 } from "@base-ui/react/drawer";
 import { clsx } from "clsx";
 import { ScrollArea } from "../scroll-area";
@@ -247,6 +250,14 @@ export interface DrawerPopupProps
    */
   backdrop?: boolean;
   /**
+   * Draw the hairline border around the drawer, on all four sides. Turn it
+   * off for a surface separated by its shadow and the scrim alone; the
+   * popup is then marked `data-no-hairline`. In forced-colors mode the
+   * drawer keeps a system-colored border either way.
+   * @default true
+   */
+  hairline?: boolean;
+  /**
    * Render the backdrop even when this drawer is nested inside another one.
    * Base UI suppresses nested backdrops by default — the parent recedes and
    * dims itself instead — so only set this when a nested drawer genuinely
@@ -299,6 +310,7 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
       keepMounted = false,
       container,
       backdrop = true,
+      hairline = true,
       forceBackdrop = false,
       backdropClassName,
       viewportClassName,
@@ -347,6 +359,7 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
             // draws its hairline now — but it is documented, so it stays as
             // a consumer's hook for styling a scrimless drawer.
             data-no-backdrop={backdrop ? undefined : ""}
+            data-no-hairline={hairline ? undefined : ""}
             // Base UI resolves swipe eligibility with `closest()` from the
             // element under the pointer, so marking the popup opts out every
             // target inside it — for touch and for pointer alike — without
@@ -741,6 +754,95 @@ export function DrawerVirtualKeyboardProvider(
 }
 
 /* -------------------------------------------------------------------------
+ * Provider / Indent / IndentBackground
+ * ---------------------------------------------------------------------- */
+
+export type DrawerProviderProps = BaseDrawerProviderProps;
+
+/**
+ * Tells `Drawer.Indent` and `Drawer.IndentBackground` whether any drawer is
+ * open.
+ *
+ * Renders no DOM element. Wrap it around the whole app, or around whatever
+ * region holds both the indent parts and the drawers that should move them:
+ * every `Drawer.Root` inside it reports its open state here, wherever in the
+ * tree it is rendered.
+ */
+export function DrawerProvider(props: DrawerProviderProps): React.JSX.Element {
+  return <BaseDrawer.Provider {...props} />;
+}
+
+export interface DrawerIndentProps
+  extends Omit<BaseDrawerIndentProps, "className"> {
+  /**
+   * Additional class name(s). Applied after the internal styles so consumer
+   * utilities (e.g. Tailwind) win without needing `!important`.
+   */
+  className?: string;
+}
+
+/**
+ * The wrapper around the app's main UI that recedes while a drawer is open —
+ * scaled back, lowered a step and rounded at the top, the way a native sheet
+ * pushes the screen behind it into the distance.
+ *
+ * Renders a `<div>` and needs a `Drawer.Provider` above it; without one it is
+ * never active. Base UI marks it `data-active` while any drawer in that
+ * provider is open and publishes `--drawer-swipe-progress` on it, so the page
+ * comes forward in step with a dismissing drag.
+ *
+ * Keep `position: fixed` chrome — a fixed header, a floating action button —
+ * outside it. While it is active it is transformed, and a transformed element
+ * is the containing block for its fixed descendants, so they would let go of
+ * the viewport and ride along with the page. `position: sticky` is unaffected.
+ */
+export const DrawerIndent = React.forwardRef<HTMLDivElement, DrawerIndentProps>(
+  function DrawerIndent({ className, ...props }, ref) {
+    return (
+      <BaseDrawer.Indent
+        ref={ref}
+        className={clsx(styles.indent, className)}
+        data-forte="drawer-indent"
+        {...props}
+      />
+    );
+  },
+);
+
+export interface DrawerIndentBackgroundProps
+  extends Omit<BaseDrawerIndentBackgroundProps, "className"> {
+  /**
+   * Additional class name(s). Applied after the internal styles so consumer
+   * utilities (e.g. Tailwind) win without needing `!important`.
+   */
+  className?: string;
+}
+
+/**
+ * The color revealed around `Drawer.Indent` while it is receded.
+ *
+ * Renders a decorative `<div>`, `position: fixed` over the whole viewport and
+ * transparent until a drawer opens. Place it directly before `Drawer.Indent`,
+ * inside the same `Drawer.Provider`; the indent paints over it by DOM order.
+ * For an indent scoped to one region of a page rather than the whole app,
+ * give that region `position: relative` and this part `absolute`.
+ */
+export const DrawerIndentBackground = React.forwardRef<
+  HTMLDivElement,
+  DrawerIndentBackgroundProps
+>(function DrawerIndentBackground({ className, ...props }, ref) {
+  return (
+    <BaseDrawer.IndentBackground
+      ref={ref}
+      aria-hidden="true"
+      className={clsx(styles.indentBackground, className)}
+      data-forte="drawer-indent-background"
+      {...props}
+    />
+  );
+});
+
+/* -------------------------------------------------------------------------
  * Namespace
  * ---------------------------------------------------------------------- */
 
@@ -784,6 +886,9 @@ export const Drawer = {
   Footer: DrawerFooter,
   SwipeArea: DrawerSwipeArea,
   VirtualKeyboardProvider: DrawerVirtualKeyboardProvider,
+  Provider: DrawerProvider,
+  Indent: DrawerIndent,
+  IndentBackground: DrawerIndentBackground,
   /** Creates a handle that connects a `Drawer.Root` to detached triggers. */
   createHandle: BaseDrawer.createHandle,
 };

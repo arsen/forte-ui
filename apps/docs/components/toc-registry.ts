@@ -495,6 +495,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "nested-drawers", text: "Nested drawers", depth: 3 },
     { id: "snap-points", text: "Snap points", depth: 3 },
     { id: "swipe-to-open", text: "Swipe to open", depth: 3 },
+    { id: "indent-effect", text: "Indent effect", depth: 3 },
     { id: "turning-the-gesture-off", text: "Turning the gesture off", depth: 3 },
     { id: "selecting-text", text: "Selecting text", depth: 3 },
     { id: "accessibility", text: "Accessibility", depth: 2 },
@@ -518,6 +519,9 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "drawerfooter", text: "Drawer.Footer", depth: 3 },
     { id: "drawerswipearea", text: "Drawer.SwipeArea", depth: 3 },
     { id: "drawervirtualkeyboardprovider", text: "Drawer.VirtualKeyboardProvider", depth: 3 },
+    { id: "drawerprovider", text: "Drawer.Provider", depth: 3 },
+    { id: "drawerindent", text: "Drawer.Indent", depth: 3 },
+    { id: "drawerindentbackground", text: "Drawer.IndentBackground", depth: 3 },
     { id: "drawercreatehandle", text: "Drawer.createHandle", depth: 3 },
   ],
   "/components/field/": [

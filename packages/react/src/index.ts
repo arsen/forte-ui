@@ -301,6 +301,9 @@ export type {
   DrawerFooterProps,
   DrawerSwipeAreaProps,
   DrawerVirtualKeyboardProviderProps,
+  DrawerProviderProps,
+  DrawerIndentProps,
+  DrawerIndentBackgroundProps,
 } from "./components/drawer";
 
 export { Field } from "./components/field";

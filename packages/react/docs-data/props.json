@@ -4057,6 +4057,13 @@
         "description": "Render the backdrop even when this drawer is nested inside another one.\nBase UI suppresses nested backdrops by default — the parent recedes and\ndims itself instead — so only set this when a nested drawer genuinely\nneeds its own scrim."
       },
       {
+        "name": "hairline",
+        "type": "boolean",
+        "required": false,
+        "defaultValue": "true",
+        "description": "Draw the hairline border around the drawer, on all four sides. Turn it\noff for a surface separated by its shadow and the scrim alone; the\npopup is then marked `data-no-hairline`. In forced-colors mode the\ndrawer keeps a system-colored border either way."
+      },
+      {
         "name": "keepMounted",
         "type": "boolean",
         "required": false,
@@ -4188,6 +4195,32 @@
   "DrawerSwipeArea": {
     "name": "DrawerSwipeArea",
     "description": "An invisible strip along the drawer's own edge that opens it when swiped\ninward.\n\nRenders a `<div>`, pinned with `position: fixed` and sized by\n`--forte-drawer-swipe-area-size`. It sits *outside* the portal — it has to\nexist while the drawer is closed — so it is the one part that lives beside\n`Drawer.Trigger` rather than inside `Drawer.Popup`.\n\nIt covers that strip of the page for pointer purposes, so anything the app\nputs hard against that edge becomes unreachable. Pair it with a real\ntrigger; a gesture with no visible control is undiscoverable, and it is not\navailable to a keyboard or screen-reader user at all.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerIndent": {
+    "name": "DrawerIndent",
+    "description": "The wrapper around the app's main UI that recedes while a drawer is open —\nscaled back, lowered a step and rounded at the top, the way a native sheet\npushes the screen behind it into the distance.\n\nRenders a `<div>` and needs a `Drawer.Provider` above it; without one it is\nnever active. Base UI marks it `data-active` while any drawer in that\nprovider is open and publishes `--drawer-swipe-progress` on it, so the page\ncomes forward in step with a dismissing drag.\n\nKeep `position: fixed` chrome — a fixed header, a floating action button —\noutside it. While it is active it is transformed, and a transformed element\nis the containing block for its fixed descendants, so they would let go of\nthe viewport and ride along with the page. `position: sticky` is unaffected.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerIndentBackground": {
+    "name": "DrawerIndentBackground",
+    "description": "The color revealed around `Drawer.Indent` while it is receded.\n\nRenders a decorative `<div>`, `position: fixed` over the whole viewport and\ntransparent until a drawer opens. Place it directly before `Drawer.Indent`,\ninside the same `Drawer.Provider`; the indent paints over it by DOM order.\nFor an indent scoped to one region of a page rather than the whole app,\ngive that region `position: relative` and this part `absolute`.",
     "props": [
       {
         "name": "className",

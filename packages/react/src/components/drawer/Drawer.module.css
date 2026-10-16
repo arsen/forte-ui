@@ -8,6 +8,12 @@
  *                                                →  Title / Description
  *                                                →  Footer / Close
  *
+ * Beside it, and nowhere near it in the tree, the optional indent effect:
+ *   Provider  →  IndentBackground  (the color behind the receded page)
+ *             →  Indent            (the app's own UI, which recedes)
+ * The two only ever read the provider's open state and Base UI's swipe
+ * progress, never a drawer's side or size — see the Indent section below.
+ *
  * Under the default `scrollArea`, Content holds a composed forte-ui
  * `ScrollArea` rather than scrolling itself:
  *   Content  →  .scroller (ScrollArea.Root)
@@ -269,8 +275,9 @@
      * on the gray ramp, so without it the edge simply vanishes in dark mode.
      * `.forte-hc-surface` already reserves a 1px transparent border on this
      * element, so painting it costs no layout. */
-    /** Width of the popup's hairline — the inward side only for `edge`, all
-     * four sides for `floating` */
+    /** Width of the popup's hairline, drawn on all four sides. Turn the line
+     * off with `hairline={false}` rather than `0px`, which would also remove
+     * the forced-colors boundary. */
     --forte-drawer-border-width: 1px;
     /** Color of that hairline */
     --forte-drawer-border-color: var(--forte-color-border);
@@ -457,48 +464,32 @@
     pointer-events: none;
   }
 
-  /* Every drawer draws its own boundary, in the space `.forte-hc-surface`
-   * already reserved. A scrimless one needs it outright — on an undimmed page
-   * in its own surface color the shadow is all that is left, which in dark
-   * mode is nearly nothing — and drawing it with a backdrop too keeps the
-   * surface's edge the same whether or not the page behind is dimmed. */
+  /* Every drawer draws its own boundary, on all four sides, in the space
+   * `.forte-hc-surface` already reserved. A scrimless one needs it outright —
+   * on an undimmed page in its own surface color the shadow is all that is
+   * left, which in dark mode is nearly nothing — and drawing it with a
+   * backdrop too keeps the surface's edge the same whether or not the page
+   * behind is dimmed. All four on an `edge` drawer as well, so the two
+   * variants are one silhouette rather than two rules; the price is that an
+   * overdrag shows the outer side as a line between the surface and the
+   * skirt beyond it. */
   .popup {
     border: var(--forte-drawer-border-width) solid
       var(--forte-drawer-border-color);
   }
 
-  /* An `edge` drawer keeps only the side that faces into the page. The other
-   * three lie on or run into the bezel, where a line buys nothing, and the
-   * outer one would be exposed by an overdrag — the skirt, the drawer's own
-   * background painted past that edge, would leave it floating mid-surface
-   * as a seam. Transparent rather than zero-width, so the box does not shift
-   * and the background paints on under it, continuous with the skirt. The
-   * floating variant keeps all four: it has a visible gap on every side and
-   * no skirt to disagree with.
+  /* `hairline={false}`. Transparent rather than zero-width, for two reasons:
+   * the box keeps its size, so turning the line off moves nothing, and
+   * forced-colors mode replaces `transparent` with a system color — the
+   * boundary `.forte-hc-surface` exists to provide survives the opt-out.
+   * A zero `--forte-drawer-border-width` would take that boundary with it.
    *
-   * The transparent base sits at the nested rule's own specificity and ahead
-   * of it, so a parent with a drawer open over it still has its whole ring
-   * painted in the scrim color — left transparent, the three sides would show
-   * the undimmed background as a bright outline round a receding parent. The
-   * inward hairline steps aside for the same reason. */
-  .popup[data-variant="edge"] {
+   * Ahead of the nested rule below at the same specificity, so a parent
+   * with a drawer open over it still has its ring painted in the scrim
+   * color; left transparent, the border box would show the undimmed
+   * background as a bright outline round a receding parent. */
+  .popup[data-no-hairline] {
     border-color: transparent;
-  }
-
-  .popup[data-variant="edge"][data-side="left"]:not([data-nested-drawer-open]) {
-    border-right-color: var(--forte-drawer-border-color);
-  }
-
-  .popup[data-variant="edge"][data-side="right"]:not([data-nested-drawer-open]) {
-    border-left-color: var(--forte-drawer-border-color);
-  }
-
-  .popup[data-variant="edge"][data-side="top"]:not([data-nested-drawer-open]) {
-    border-bottom-color: var(--forte-drawer-border-color);
-  }
-
-  .popup[data-variant="edge"][data-side="bottom"]:not([data-nested-drawer-open]) {
-    border-top-color: var(--forte-drawer-border-color);
   }
 
   /* Sides ------------------------------------------------------------------
@@ -997,6 +988,145 @@
   .swipeArea[data-side="bottom"] {
     inset: auto 0 0 0;
     block-size: var(--forte-drawer-swipe-area-size);
+  }
+
+  /* Indent -----------------------------------------------------------------
+   * The app's own UI, receding while any drawer in the provider is open:
+   * smaller, a step lower, and rounded across its top edge, so the page
+   * reads as a card pushed back behind the sheet. Base UI's own recipe —
+   * scaled from the top center, following `--drawer-swipe-progress` back to
+   * rest as a drawer is dragged away — with the numbers moved onto tokens.
+   *
+   * Two decisions in here are load-bearing.
+   *
+   *  - Nothing is `transform`ed or `will-change`d at rest. Either one makes
+   *    this element the containing block for every `position: fixed`
+   *    descendant, and this element IS the whole app. Base UI's example
+   *    hints `will-change` permanently; here the gesture runs from `none`
+   *    and returns to `none`, so the cost is paid only while a drawer is
+   *    open.
+   *
+   *  - The transition switches itself off mid-drag, the same trick Base
+   *    UI's example uses. Base UI writes `--drawer-swipe-progress` on every
+   *    pointermove, and a 400ms spring restarted from each of them trails
+   *    the finger like elastic. The tracking flag below is 1 only while the
+   *    progress sits strictly between 0 and 1 — mid-drag — and collapses the
+   *    duration to the 1ms floor; at rest, open or closed, it is 0 and the
+   *    full curve is back.
+   * ---------------------------------------------------------------------- */
+  .indent {
+    /** Surface painted behind the app inside the indent — it has to be
+     * opaque, or the background part shows through the page. */
+    --forte-drawer-indent-bg: var(--forte-color-background);
+    /** How small the page gets while a drawer is open */
+    --forte-drawer-indent-scale: 0.96;
+    /** How far the page drops while a drawer is open */
+    --forte-drawer-indent-travel: var(--forte-travel-md);
+    /** Radius of the receded page's top corners */
+    --forte-drawer-indent-radius: var(--forte-radius-surface);
+    /** Length of the recede; matches the drawer's own entrance */
+    --forte-drawer-indent-duration: var(--forte-duration-spring-precise);
+    /** Curve of the recede */
+    --forte-drawer-indent-ease: var(--forte-ease-spring-precise);
+    /** Length of the return; matches the scrim clearing */
+    --forte-drawer-indent-exit-duration: var(--forte-duration-normal);
+    /** Curve of the return */
+    --forte-drawer-indent-exit-ease: var(--forte-ease-standard);
+
+    --forte-drawer-indent-tracking: calc(
+      clamp(0, var(--drawer-swipe-progress, 0) * 100000, 1) *
+        clamp(0, (1 - var(--drawer-swipe-progress, 0)) * 100000, 1)
+    );
+    --forte-drawer-indent-exit: max(
+      1ms,
+      calc(
+        var(--forte-drawer-indent-exit-duration) *
+          (1 - var(--forte-drawer-indent-tracking))
+      )
+    );
+
+    /* Positioned so it paints above the background part, which is fixed and
+     * comes first in the DOM. */
+    position: relative;
+    background-color: var(--forte-drawer-indent-bg);
+    transform-origin: 50% 0%;
+    /* The return, declared on the base rule because a transition is taken
+     * from the state being ENTERED. Same length and curve as the scrim
+     * clearing, so the page comes forward as the dimness lifts. */
+    transition:
+      transform var(--forte-drawer-indent-exit)
+        var(--forte-drawer-indent-exit-ease),
+      border-radius var(--forte-drawer-indent-exit)
+        var(--forte-drawer-indent-exit-ease);
+  }
+
+  /* The scale and the radius are literal geometry and gated on
+   * `--forte-motion-ok`; the travel is a token and collapses on its own.
+   * Under reduced motion the page simply stays where it is — the scrim over
+   * it already says a drawer is open, and that cue never moved anything. All
+   * three ease back toward rest as a dismissing drag progresses. */
+  .indent[data-active] {
+    --forte-drawer-indent-enter: max(
+      1ms,
+      calc(
+        var(--forte-drawer-indent-duration) *
+          (1 - var(--forte-drawer-indent-tracking))
+      )
+    );
+
+    transform: translateY(
+        calc(
+          var(--forte-drawer-indent-travel) *
+            (1 - var(--drawer-swipe-progress, 0))
+        )
+      )
+      scale(
+        calc(
+          1 - (1 - var(--forte-drawer-indent-scale)) * var(--forte-motion-ok) *
+            (1 - var(--drawer-swipe-progress, 0))
+        )
+      );
+    border-start-start-radius: calc(
+      var(--forte-drawer-indent-radius) * var(--forte-motion-ok) *
+        (1 - var(--drawer-swipe-progress, 0))
+    );
+    border-start-end-radius: calc(
+      var(--forte-drawer-indent-radius) * var(--forte-motion-ok) *
+        (1 - var(--drawer-swipe-progress, 0))
+    );
+    transition:
+      transform var(--forte-drawer-indent-enter) var(--forte-drawer-indent-ease),
+      border-radius var(--forte-drawer-indent-enter)
+        var(--forte-drawer-indent-ease);
+  }
+
+  /* Indent background ------------------------------------------------------
+   * Fixed over the whole viewport, because the indent's natural home is the
+   * whole app and an `absolute` box would scroll away with the document's
+   * first screen. Transparent at rest: an app shorter than the viewport would
+   * otherwise sit on a slab of this color all the time.
+   *
+   * The default is the foreground color, the one token guaranteed to sit at
+   * the far end of the ramp from the page. A dark frame round a light page
+   * and a light frame round a dark one both read as depth; the page's own
+   * background color would leave nothing to see. The scrim dims it along
+   * with everything else.
+   * ---------------------------------------------------------------------- */
+  .indentBackground {
+    /** Color revealed around the receded page */
+    --forte-drawer-indent-background-color: var(--forte-color-foreground);
+
+    position: fixed;
+    inset: 0;
+    background-color: var(--forte-drawer-indent-background-color);
+    opacity: 0;
+    /* Decorative, and full-screen. */
+    pointer-events: none;
+    transition: opacity var(--forte-duration-normal) var(--forte-ease-standard);
+  }
+
+  .indentBackground[data-active] {
+    opacity: 1;
   }
 
   /* Trigger and Close ------------------------------------------------------

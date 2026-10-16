@@ -142,6 +142,31 @@ So when snap points and modality are combined, the scrim stops at `--forte-drawe
 A swipe area is an addition to a trigger, never a replacement for one. The gesture is invisible, so most people never discover it, and it is not available at all to someone using a keyboard, a switch device or a screen reader. It also covers that strip of the page for pointer purposes, so anything the app puts hard against that edge stops being clickable.
 </Callout>
 
+### Indent effect
+
+Wrap the app in `Drawer.Provider` and its main UI in `Drawer.Indent`, with a `Drawer.IndentBackground` directly before it, and the page steps back whenever a drawer opens: a little smaller, a little lower, its top corners rounded off, against a frame of contrasting color. It is the native sheet's way of saying the page is still there, just not the thing in front. Every `Drawer.Root` inside the provider moves it, wherever it is rendered, and a dismissing drag brings the page forward in step with the finger.
+
+```tsx
+<Drawer.Provider>
+  <Drawer.IndentBackground />
+  <Drawer.Indent>
+    <App />
+  </Drawer.Indent>
+</Drawer.Provider>
+```
+
+The demo scopes all of it to one box, so the drawer portals into that box and the background is `absolute` rather than its default `fixed`. An app-wide indent needs neither change.
+
+<DemoBlock id="drawer/indent" />
+
+The page scales from its own top center, so it suits an indent that wraps a screen-tall app shell. `Drawer.Indent` is marked `data-active` while any drawer in the provider is open, and Base UI writes `--drawer-swipe-progress` on it, which is what lets the page follow a drag.
+
+<Callout kind="warn">
+Keep `position: fixed` chrome — a fixed header, a floating action button — outside `Drawer.Indent`. While a drawer is open the page is transformed, and a transformed element becomes the containing block for its fixed descendants, so they let go of the viewport and travel with the page. `position: sticky` is unaffected. At rest the indent carries no transform and no `will-change`, so it changes nothing about the page until a drawer opens.
+</Callout>
+
+With [snap points](#snap-points), Base UI measures that progress between the top two of them only, so a sheet resting at any lower snap point leaves the page at full size, and the page steps back as the sheet rises toward the top one.
+
 ### Turning the gesture off
 
 `swipe={false}` on `Drawer.Root` removes drag-to-dismiss and leaves everything else — trigger, Escape, outside press, `Drawer.Close` — working. Use it for a drawer whose content is itself draggable, where the two gestures would compete.
@@ -192,15 +217,17 @@ Wrap a bottom sheet that contains text fields in `Drawer.VirtualKeyboardProvider
 
 Every property below is declared on the element it styles. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect — and the drawer is portalled to `<body>` in any case, so an ancestor of the trigger is not even in the tree.
 
-Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`.
+Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`. The indent parts are ordinary elements in your own tree, so their knobs go through their own `className`.
 
 The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
 
 <ThemingTable component="Drawer" />
 
-Every drawer draws a hairline along the edge that faces into the page — the left edge of a `right` drawer, the top of a bottom sheet. A dimmed page sets the surface apart well enough in light mode, but the overlay color sits within a step of the page on the gray ramp, so in dark mode, or with `backdrop={false}`, the shadow alone barely marks where the drawer ends. The three sides that run into the screen edge stay borderless: a line there buys nothing, and the outer one would show as a seam across the surface during an overdrag. A `floating` drawer has a gap on every side, so it draws all four. Restyle it with `--forte-drawer-border-width` and `--forte-drawer-border-color`; set the width to `0px` to remove it.
+Every drawer draws a hairline on all four sides, `edge` and `floating` alike. A dimmed page sets the surface apart well enough in light mode, but the overlay color sits within a step of the page on the gray ramp, so in dark mode, or with `backdrop={false}`, the shadow alone barely marks where the drawer ends. Restyle it with `--forte-drawer-border-width` and `--forte-drawer-border-color`.
 
-A drawer rendered with `backdrop={false}` also carries `data-no-backdrop` on its popup, so your own CSS can treat scrimless drawers differently.
+To go without it, pass `hairline={false}` to `Drawer.Popup`. Prefer that to a `0px` width: the prop leaves the border in place and only makes it transparent, so the drawer does not shift, and in forced-colors mode — where `transparent` is replaced by a system color — the drawer still gets the boundary it needs once its shadow has been stripped.
+
+A drawer rendered with `backdrop={false}` carries `data-no-backdrop` on its popup, and one rendered with `hairline={false}` carries `data-no-hairline`, so your own CSS can single either out.
 
 `--forte-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
 
@@ -217,6 +244,8 @@ The exit accelerates on `--forte-ease-exit`, which is where a drawer parts compa
 The slide is 100% of the drawer's own size, which no travel token can express, so it is literal geometry — gated on `--forte-motion-ok` and collapsing to nothing on its own. What takes its place is a fade, faded *in* by `--forte-motion-off` so it costs nothing when motion is allowed. A drawer that slides has no business also dissolving; a drawer that cannot slide would otherwise just be switched on.
 
 Neither behavior needs a `prefers-reduced-motion` query in this component, and there isn't one.
+
+`Drawer.Indent` follows the same rule. Its scale and corner radius are gated on `--forte-motion-ok` and its drop is a travel token, so under reduced motion the page stays exactly where it is. Nothing replaces the movement, because nothing needs to: the scrim over the page already says a drawer is open, and that cue never moved anything.
 
 ### One rule set, four sides
 
@@ -307,6 +336,22 @@ A decorative `<div>`, so it takes every ordinary `<div>` prop. It orients itself
 ### Drawer.VirtualKeyboardProvider
 
 Renders no DOM element and takes only `children`, so it has no generated table. Wrap a bottom sheet containing text fields in it — see [Software keyboards](#software-keyboards).
+
+### Drawer.Provider
+
+Renders no DOM element and takes only `children`, so it has no generated table. Every `Drawer.Root` inside it reports its open state to the indent parts — see [Indent effect](#indent-effect).
+
+### Drawer.Indent
+
+<PropTable component="DrawerIndent" />
+
+A `<div>` around the app's main UI. It needs a `Drawer.Provider` above it, or it is never active.
+
+### Drawer.IndentBackground
+
+<PropTable component="DrawerIndentBackground" />
+
+A decorative `<div>`, fixed over the viewport and transparent until a drawer opens. Place it directly before `Drawer.Indent`.
 
 ### Drawer.createHandle
 

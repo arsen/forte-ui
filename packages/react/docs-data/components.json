@@ -489,7 +489,9 @@
       "DrawerDescription",
       "DrawerClose",
       "DrawerFooter",
-      "DrawerSwipeArea"
+      "DrawerSwipeArea",
+      "DrawerIndent",
+      "DrawerIndentBackground"
     ],
     "hooks": []
   },
