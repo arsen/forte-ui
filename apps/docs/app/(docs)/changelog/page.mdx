@@ -19,6 +19,18 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.13.0
+
+<ReleaseMeta date="2026-10-16" href="https://github.com/arsen/forte-ui/compare/v1.12.1...v1.13.0" kind="compare" />
+
+### Drawer
+
+- Added the indent effect, which pushes the app back while a drawer is open, the way a native sheet does. `Drawer.Provider` renders no element and reports whether any drawer inside it is open. `Drawer.Indent` wraps the app's UI and recedes: it scales down, drops a step and rounds its top corners, easing back to rest in step with a dismissing drag. `Drawer.IndentBackground` is the decorative fixed layer, transparent until a drawer opens, that shows around the receded page. Put the background directly before the indent inside the same provider. The exports are `DrawerProvider`, `DrawerIndent` and `DrawerIndentBackground`, with `DrawerProviderProps`, `DrawerIndentProps` and `DrawerIndentBackgroundProps` as types.
+- Keep `position: fixed` chrome, such as a fixed header, outside `Drawer.Indent`. While a drawer is open the indent is transformed, so its fixed descendants stop following the viewport. At rest nothing is transformed, so the indent has no effect on fixed elements.
+- Added theming knobs for the indent: `--forte-drawer-indent-bg`, `--forte-drawer-indent-scale`, `--forte-drawer-indent-travel`, `--forte-drawer-indent-radius`, `--forte-drawer-indent-duration`, `--forte-drawer-indent-ease`, `--forte-drawer-indent-exit-duration` and `--forte-drawer-indent-exit-ease`. The background part has `--forte-drawer-indent-background-color`. The page does not scale or round under reduced motion, because the scale and radius are gated on motion. The new parts carry `data-forte="drawer-indent"` and `data-forte="drawer-indent-background"`.
+- Changed the hairline border so it is drawn on all four sides of every drawer. An `edge` drawer previously drew it only on the side facing into the page. During an overdrag the outer side now shows as a line between the surface and the skirt beyond it. A drawer with another drawer open over it still has its whole ring painted in the scrim color. `--forte-drawer-border-width` now applies to all four sides.
+- Added `hairline` to `Drawer.Popup` (default `true`). Pass `hairline={false}` to drop the line, for a surface separated by its shadow and the scrim alone. The popup is then marked `data-no-hairline`. The border is made transparent rather than zero-width, so nothing shifts and forced-colors mode keeps its system-colored boundary. Use this instead of setting `--forte-drawer-border-width` to `0px`, which would remove that boundary too.
+
 ## v1.12.1
 
 <ReleaseMeta date="2026-10-15" href="https://github.com/arsen/forte-ui/compare/v1.12.0...v1.12.1" kind="compare" />
@@ -127,18 +139,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Fixed inline addons wrapping onto a line of their own above the control when a narrow InputGroup squeezed the input to its minimum width; the group now wraps to a second row only when a block-start or block-end addon is present.
 
-## v1.10.1
-
-<ReleaseMeta date="2026-09-20" href="https://github.com/arsen/forte-ui/compare/v1.10.0...v1.10.1" kind="compare" />
-
-### Menu
-
-- Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it directly as the focus trap's entry point — reachable when it opens by pointer before any row is highlighted, or is arrowed into when every row is disabled.
-
-### Select
-
-- Fixed the popup showing an unthemed browser focus ring around its whole surface when Base UI focuses it as the fallback target — reachable when every item in the list is disabled.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 25 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 26 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
