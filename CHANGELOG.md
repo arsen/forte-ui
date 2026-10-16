@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.12.1] - 2026-10-15
+
+### Drawer
+
+- Every drawer now draws a hairline border, not just one with `backdrop={false}`. An `edge` drawer draws it only on the side that faces into the page. The other three sides stay transparent, so an overdrag does not expose a seam against the bezel. A `floating` drawer draws all four sides. A drawer with another drawer open over it still has its whole ring painted in the scrim color, so a receding parent gets no bright outline. `--forte-drawer-border-width` and `--forte-drawer-border-color` now apply to every drawer.
+- `data-no-backdrop` is still set on the popup when `backdrop={false}`. Nothing in the stylesheet reads it any more, so it is now only a hook for styling scrimless drawers.
+
 ## [1.12.0] - 2026-10-10
 
 ### Carousel
@@ -659,7 +666,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.12.1...HEAD
+[1.12.1]: https://github.com/arsen/forte-ui/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/arsen/forte-ui/compare/v1.11.3...v1.12.0
 [1.11.3]: https://github.com/arsen/forte-ui/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/arsen/forte-ui/compare/v1.11.1...v1.11.2
