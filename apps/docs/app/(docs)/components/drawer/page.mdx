@@ -159,17 +159,13 @@ The demo scopes all of it to one box, so the drawer portals into that box and th
 
 <DemoBlock id="drawer/indent" />
 
-The page recedes toward the top of the part of it that is on screen, not toward its own top edge, so a long document scrolled far down steps back where the user is looking instead of being pulled up and out of view. The rounded edge is cut at the same line, which is why it is a `clip-path` and not a `border-radius`: the element's own corners can be thousands of pixels above the screen.
+The page scales from its own top center, so it suits an indent that wraps a screen-tall app shell. `Drawer.Indent` is marked `data-active` while any drawer in the provider is open, and Base UI writes `--drawer-swipe-progress` on it, which is what lets the page follow a drag.
 
 <Callout kind="warn">
-Keep `position: fixed` chrome — a fixed header, a floating action button — outside `Drawer.Indent`. While the page is receded it is transformed, and a transformed element becomes the containing block for its fixed descendants, so they let go of the viewport and travel with the page. `position: sticky` is unaffected. At rest the indent carries no transform, no clip and no `will-change`, so it changes nothing about the page until a drawer opens.
+Keep `position: fixed` chrome — a fixed header, a floating action button — outside `Drawer.Indent`. While a drawer is open the page is transformed, and a transformed element becomes the containing block for its fixed descendants, so they let go of the viewport and travel with the page. `position: sticky` is unaffected. At rest the indent carries no transform and no `will-change`, so it changes nothing about the page until a drawer opens.
 </Callout>
 
-With [snap points](#snap-points), the page follows the sheet between the top two of them only. A sheet resting at any lower snap point leaves the page exactly as it was, and the page starts to step back as the sheet rises past that point toward the top one. The usual pairing for a sheet that should stay out of the way until it is raised is to drive `modal` from the current snap point, so the page is dimmed and locked only while the sheet is at the top.
-
-`Drawer.Indent` is marked `data-active` while any drawer in the provider is open, and `data-receded` while the page is actually stepped back — from the moment it starts to recede until it has come all the way back. The two differ at a lower snap point, where the drawer is open but the page is untouched. Style against `data-receded` when you want something to last the whole round trip.
-
-The page also follows a scroll while it is stepped back, since behind a non-modal drawer it can still be scrolled.
+With [snap points](#snap-points), Base UI measures that progress between the top two of them only, so a sheet resting at any lower snap point leaves the page at full size, and the page steps back as the sheet rises toward the top one.
 
 ### Turning the gesture off
 
@@ -227,9 +223,11 @@ The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `-
 
 <ThemingTable component="Drawer" />
 
-Every drawer draws a hairline along the edge that faces into the page — the left edge of a `right` drawer, the top of a bottom sheet. A dimmed page sets the surface apart well enough in light mode, but the overlay color sits within a step of the page on the gray ramp, so in dark mode, or with `backdrop={false}`, the shadow alone barely marks where the drawer ends. The three sides that run into the screen edge stay borderless: a line there buys nothing, and the outer one would show as a seam across the surface during an overdrag. A `floating` drawer has a gap on every side, so it draws all four. Restyle it with `--forte-drawer-border-width` and `--forte-drawer-border-color`; set the width to `0px` to remove it.
+Every drawer draws a hairline on all four sides, `edge` and `floating` alike. A dimmed page sets the surface apart well enough in light mode, but the overlay color sits within a step of the page on the gray ramp, so in dark mode, or with `backdrop={false}`, the shadow alone barely marks where the drawer ends. Restyle it with `--forte-drawer-border-width` and `--forte-drawer-border-color`.
 
-A drawer rendered with `backdrop={false}` also carries `data-no-backdrop` on its popup, so your own CSS can treat scrimless drawers differently.
+To go without it, pass `hairline={false}` to `Drawer.Popup`. Prefer that to a `0px` width: the prop leaves the border in place and only makes it transparent, so the drawer does not shift, and in forced-colors mode — where `transparent` is replaced by a system color — the drawer still gets the boundary it needs once its shadow has been stripped.
+
+A drawer rendered with `backdrop={false}` carries `data-no-backdrop` on its popup, and one rendered with `hairline={false}` carries `data-no-hairline`, so your own CSS can single either out.
 
 `--forte-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
 

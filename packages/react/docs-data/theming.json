@@ -4903,7 +4903,7 @@
       {
         "name": "--forte-drawer-border-width",
         "value": "1px",
-        "description": "Width of the popup's hairline — the inward side only for `edge`, all four sides for `floating`",
+        "description": "Width of the popup's hairline, drawn on all four sides. Turn the line off with `hairline={false}` rather than `0px`, which would also remove the forced-colors boundary.",
         "part": "popup",
         "overrides": []
       },
