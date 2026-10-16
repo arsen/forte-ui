@@ -13,6 +13,16 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-10-16
+
+### Drawer
+
+- Added the indent effect, which pushes the app back while a drawer is open, the way a native sheet does. `Drawer.Provider` renders no element and reports whether any drawer inside it is open. `Drawer.Indent` wraps the app's UI and recedes: it scales down, drops a step and rounds its top corners, easing back to rest in step with a dismissing drag. `Drawer.IndentBackground` is the decorative fixed layer, transparent until a drawer opens, that shows around the receded page. Put the background directly before the indent inside the same provider. The exports are `DrawerProvider`, `DrawerIndent` and `DrawerIndentBackground`, with `DrawerProviderProps`, `DrawerIndentProps` and `DrawerIndentBackgroundProps` as types.
+- Keep `position: fixed` chrome, such as a fixed header, outside `Drawer.Indent`. While a drawer is open the indent is transformed, so its fixed descendants stop following the viewport. At rest nothing is transformed, so the indent has no effect on fixed elements.
+- Added theming knobs for the indent: `--forte-drawer-indent-bg`, `--forte-drawer-indent-scale`, `--forte-drawer-indent-travel`, `--forte-drawer-indent-radius`, `--forte-drawer-indent-duration`, `--forte-drawer-indent-ease`, `--forte-drawer-indent-exit-duration` and `--forte-drawer-indent-exit-ease`. The background part has `--forte-drawer-indent-background-color`. The page does not scale or round under reduced motion, because the scale and radius are gated on motion. The new parts carry `data-forte="drawer-indent"` and `data-forte="drawer-indent-background"`.
+- Changed the hairline border so it is drawn on all four sides of every drawer. An `edge` drawer previously drew it only on the side facing into the page. During an overdrag the outer side now shows as a line between the surface and the skirt beyond it. A drawer with another drawer open over it still has its whole ring painted in the scrim color. `--forte-drawer-border-width` now applies to all four sides.
+- Added `hairline` to `Drawer.Popup` (default `true`). Pass `hairline={false}` to drop the line, for a surface separated by its shadow and the scrim alone. The popup is then marked `data-no-hairline`. The border is made transparent rather than zero-width, so nothing shifts and forced-colors mode keeps its system-colored boundary. Use this instead of setting `--forte-drawer-border-width` to `0px`, which would remove that boundary too.
+
 ## [1.12.1] - 2026-10-15
 
 ### Drawer
@@ -666,7 +676,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.12.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/arsen/forte-ui/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/arsen/forte-ui/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/arsen/forte-ui/compare/v1.11.3...v1.12.0
 [1.11.3]: https://github.com/arsen/forte-ui/compare/v1.11.2...v1.11.3
