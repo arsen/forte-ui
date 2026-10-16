@@ -142,6 +142,35 @@ So when snap points and modality are combined, the scrim stops at `--forte-drawe
 A swipe area is an addition to a trigger, never a replacement for one. The gesture is invisible, so most people never discover it, and it is not available at all to someone using a keyboard, a switch device or a screen reader. It also covers that strip of the page for pointer purposes, so anything the app puts hard against that edge stops being clickable.
 </Callout>
 
+### Indent effect
+
+Wrap the app in `Drawer.Provider` and its main UI in `Drawer.Indent`, with a `Drawer.IndentBackground` directly before it, and the page steps back whenever a drawer opens: a little smaller, a little lower, its top corners rounded off, against a frame of contrasting color. It is the native sheet's way of saying the page is still there, just not the thing in front. Every `Drawer.Root` inside the provider moves it, wherever it is rendered, and a dismissing drag brings the page forward in step with the finger.
+
+```tsx
+<Drawer.Provider>
+  <Drawer.IndentBackground />
+  <Drawer.Indent>
+    <App />
+  </Drawer.Indent>
+</Drawer.Provider>
+```
+
+The demo scopes all of it to one box, so the drawer portals into that box and the background is `absolute` rather than its default `fixed`. An app-wide indent needs neither change.
+
+<DemoBlock id="drawer/indent" />
+
+The page recedes toward the top of the part of it that is on screen, not toward its own top edge, so a long document scrolled far down steps back where the user is looking instead of being pulled up and out of view. The rounded edge is cut at the same line, which is why it is a `clip-path` and not a `border-radius`: the element's own corners can be thousands of pixels above the screen.
+
+<Callout kind="warn">
+Keep `position: fixed` chrome — a fixed header, a floating action button — outside `Drawer.Indent`. While the page is receded it is transformed, and a transformed element becomes the containing block for its fixed descendants, so they let go of the viewport and travel with the page. `position: sticky` is unaffected. At rest the indent carries no transform, no clip and no `will-change`, so it changes nothing about the page until a drawer opens.
+</Callout>
+
+With [snap points](#snap-points), the page follows the sheet between the top two of them only. A sheet resting at any lower snap point leaves the page exactly as it was, and the page starts to step back as the sheet rises past that point toward the top one. The usual pairing for a sheet that should stay out of the way until it is raised is to drive `modal` from the current snap point, so the page is dimmed and locked only while the sheet is at the top.
+
+`Drawer.Indent` is marked `data-active` while any drawer in the provider is open, and `data-receded` while the page is actually stepped back — from the moment it starts to recede until it has come all the way back. The two differ at a lower snap point, where the drawer is open but the page is untouched. Style against `data-receded` when you want something to last the whole round trip.
+
+The page also follows a scroll while it is stepped back, since behind a non-modal drawer it can still be scrolled.
+
 ### Turning the gesture off
 
 `swipe={false}` on `Drawer.Root` removes drag-to-dismiss and leaves everything else — trigger, Escape, outside press, `Drawer.Close` — working. Use it for a drawer whose content is itself draggable, where the two gestures would compete.
@@ -192,7 +221,7 @@ Wrap a bottom sheet that contains text fields in `Drawer.VirtualKeyboardProvider
 
 Every property below is declared on the element it styles. An element's own declaration beats an inherited value, so setting one on `:root`, on a theme class or on a wrapper has no effect — and the drawer is portalled to `<body>` in any case, so an ancestor of the trigger is not even in the tree.
 
-Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`.
+Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule beats the library's `@layer forte.components`, whatever its specificity) or an inline `style`. The viewport's go through `viewportClassName`, and the backdrop's through `backdropClassName`. The indent parts are ordinary elements in your own tree, so their knobs go through their own `className`.
 
 The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
 
@@ -217,6 +246,8 @@ The exit accelerates on `--forte-ease-exit`, which is where a drawer parts compa
 The slide is 100% of the drawer's own size, which no travel token can express, so it is literal geometry — gated on `--forte-motion-ok` and collapsing to nothing on its own. What takes its place is a fade, faded *in* by `--forte-motion-off` so it costs nothing when motion is allowed. A drawer that slides has no business also dissolving; a drawer that cannot slide would otherwise just be switched on.
 
 Neither behavior needs a `prefers-reduced-motion` query in this component, and there isn't one.
+
+`Drawer.Indent` follows the same rule. Its scale and corner radius are gated on `--forte-motion-ok` and its drop is a travel token, so under reduced motion the page stays exactly where it is. Nothing replaces the movement, because nothing needs to: the scrim over the page already says a drawer is open, and that cue never moved anything.
 
 ### One rule set, four sides
 
@@ -307,6 +338,22 @@ A decorative `<div>`, so it takes every ordinary `<div>` prop. It orients itself
 ### Drawer.VirtualKeyboardProvider
 
 Renders no DOM element and takes only `children`, so it has no generated table. Wrap a bottom sheet containing text fields in it — see [Software keyboards](#software-keyboards).
+
+### Drawer.Provider
+
+Renders no DOM element and takes only `children`, so it has no generated table. Every `Drawer.Root` inside it reports its open state to the indent parts — see [Indent effect](#indent-effect).
+
+### Drawer.Indent
+
+<PropTable component="DrawerIndent" />
+
+A `<div>` around the app's main UI. It needs a `Drawer.Provider` above it, or it is never active.
+
+### Drawer.IndentBackground
+
+<PropTable component="DrawerIndentBackground" />
+
+A decorative `<div>`, fixed over the viewport and transparent until a drawer opens. Place it directly before `Drawer.Indent`.
 
 ### Drawer.createHandle
 

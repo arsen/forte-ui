@@ -104,3 +104,19 @@
   inherits: false;
   initial-value: 0deg;
 }
+
+/* How far `Drawer.Indent` has receded, 0 at rest and 1 with a drawer open.
+ * It exists for the one value that cannot ride the indent's own `transform`
+ * transition: the corner radius inside its `clip-path`. That clip appears
+ * and disappears with `data-receded`, and an `inset()` cannot interpolate
+ * from `none` — so the radius has to grow out of something that does
+ * interpolate, or the corners would pop square-to-round in one frame at the
+ * very moment the page starts to move. Unregistered, this would step from 0
+ * to 1 instead of transitioning, and the pop would be back.
+ *
+ * `inherits: false` — declared and consumed on the indent itself. */
+@property --forte-drawer-indent-amount {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}

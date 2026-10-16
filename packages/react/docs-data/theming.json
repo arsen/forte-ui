@@ -5066,6 +5066,69 @@
         "description": "Stacking band for that strip",
         "part": "swipeArea",
         "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-bg",
+        "value": "var(--forte-color-background)",
+        "description": "Surface painted behind the app inside the indent — it has to be opaque, or the background part shows through the page.",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-scale",
+        "value": "0.96",
+        "description": "How small the page gets while a drawer is open",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-travel",
+        "value": "var(--forte-travel-md)",
+        "description": "How far the page drops while a drawer is open",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-radius",
+        "value": "var(--forte-radius-surface)",
+        "description": "Radius of the receded page's top corners",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-duration",
+        "value": "var(--forte-duration-spring-precise)",
+        "description": "Length of the recede; matches the drawer's own entrance",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-ease",
+        "value": "var(--forte-ease-spring-precise)",
+        "description": "Curve of the recede",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-exit-duration",
+        "value": "var(--forte-duration-normal)",
+        "description": "Length of the return; matches the scrim clearing",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-exit-ease",
+        "value": "var(--forte-ease-standard)",
+        "description": "Curve of the return",
+        "part": "indent",
+        "overrides": []
+      },
+      {
+        "name": "--forte-drawer-indent-background-color",
+        "value": "var(--forte-color-foreground)",
+        "description": "Color revealed around the receded page",
+        "part": "indentBackground",
+        "overrides": []
       }
     ]
   },

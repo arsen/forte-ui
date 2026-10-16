@@ -8,6 +8,12 @@
  *                                                →  Title / Description
  *                                                →  Footer / Close
  *
+ * Beside it, and nowhere near it in the tree, the optional indent effect:
+ *   Provider  →  IndentBackground  (the color behind the receded page)
+ *             →  Indent            (the app's own UI, which recedes)
+ * The two only ever read the provider's open state and Base UI's swipe
+ * progress, never a drawer's side or size — see the Indent section below.
+ *
  * Under the default `scrollArea`, Content holds a composed forte-ui
  * `ScrollArea` rather than scrolling itself:
  *   Content  →  .scroller (ScrollArea.Root)
@@ -997,6 +1003,186 @@
   .swipeArea[data-side="bottom"] {
     inset: auto 0 0 0;
     block-size: var(--forte-drawer-swipe-area-size);
+  }
+
+  /* Indent -----------------------------------------------------------------
+   * The app's own UI, receding while any drawer in the provider is open:
+   * smaller, a step lower, and rounded across its top edge, so the page
+   * reads as a card pushed back behind the sheet rather than as a page with
+   * something on top of it.
+   *
+   * Four decisions in here are load-bearing.
+   *
+   *  - It recedes toward the top of what is ON SCREEN, not toward its own
+   *    top edge. `Drawer.Indent` measures where the viewport's top falls
+   *    inside it and publishes that as `--forte-drawer-indent-anchor`; the
+   *    transform origin and the clip both hang off it. Scaled from its own
+   *    top, a long page scrolled 3000px down would be dragged 120px upward
+   *    by a 4% shrink. The TSX has the measurement.
+   *
+   *  - The rounded top edge is a `clip-path`, not `border-radius`. A radius
+   *    rounds the element's own corners, which on a scrolled page are
+   *    thousands of pixels above the screen. The clip cuts a new top edge at
+   *    the anchor instead — and it is what stops the content just above the
+   *    screen from sliding into the gap the lowering opens. It sits on
+   *    `data-receded`, which the TSX holds until the page is all the way
+   *    back: `data-active` drops the moment the drawer starts to leave, and a
+   *    clip removed then would expose that strip, and square the corners,
+   *    while the page is still visibly small.
+   *
+   *  - Nothing is `transform`ed, `will-change`d or clipped at rest. Each of
+   *    those makes this element the containing block for every
+   *    `position: fixed` descendant or a stacking context for the whole app,
+   *    and this element IS the whole app. So the gesture runs from `none` and
+   *    returns to `none`, and the cost is paid only while the page is
+   *    actually receded. "At rest" includes a sheet resting at a snap point
+   *    below the top one: the drawer is open, but the page is full size, so
+   *    the transform waits for `data-receded` as well as `data-active`.
+   *
+   *  - The transition switches itself off mid-drag. Base UI writes
+   *    `--drawer-swipe-progress` on every pointermove, and a 400ms spring
+   *    restarted from each of them trails the finger like elastic. The
+   *    tracking flag below is 1 only while the progress sits strictly
+   *    between 0 and 1 — mid-drag — and collapses the duration to the 1ms
+   *    floor; at rest, open or closed, it is 0 and the full curve is back.
+   *    Strictly between, so a sheet resting at a lower snap point (progress
+   *    exactly 1) still animates when it is raised.
+   * ---------------------------------------------------------------------- */
+  .indent {
+    /** Surface painted behind the app inside the indent — it has to be
+     * opaque, or the background part shows through the page. */
+    --forte-drawer-indent-bg: var(--forte-color-background);
+    /** How small the page gets while a drawer is open */
+    --forte-drawer-indent-scale: 0.96;
+    /** How far the page drops while a drawer is open */
+    --forte-drawer-indent-travel: var(--forte-travel-md);
+    /** Radius of the receded page's top corners */
+    --forte-drawer-indent-radius: var(--forte-radius-surface);
+    /** Length of the recede; matches the drawer's own entrance */
+    --forte-drawer-indent-duration: var(--forte-duration-spring-precise);
+    /** Curve of the recede */
+    --forte-drawer-indent-ease: var(--forte-ease-spring-precise);
+    /** Length of the return; matches the scrim clearing */
+    --forte-drawer-indent-exit-duration: var(--forte-duration-normal);
+    /** Curve of the return */
+    --forte-drawer-indent-exit-ease: var(--forte-ease-standard);
+
+    --forte-drawer-indent-tracking: calc(
+      clamp(0, var(--drawer-swipe-progress, 0) * 100000, 1) *
+        clamp(0, (1 - var(--drawer-swipe-progress, 0)) * 100000, 1)
+    );
+
+    /* Positioned so it paints above the background part, which is fixed and
+     * comes first in the DOM. */
+    position: relative;
+    background-color: var(--forte-drawer-indent-bg);
+    transform-origin: 50% var(--forte-drawer-indent-anchor, 0px);
+    /* The return, declared on the base rule because a transition is taken
+     * from the state being ENTERED. Same length and curve as the scrim
+     * clearing above, so the page comes forward as the dimness lifts. */
+    transition:
+      transform
+        max(
+          1ms,
+          calc(
+            var(--forte-drawer-indent-exit-duration) *
+              (1 - var(--forte-drawer-indent-tracking))
+          )
+        )
+        var(--forte-drawer-indent-exit-ease),
+      --forte-drawer-indent-amount var(--forte-drawer-indent-exit-duration)
+        var(--forte-drawer-indent-exit-ease);
+  }
+
+  /* The scale is literal geometry and gated on `--forte-motion-ok`; the travel
+   * is a token and collapses on its own. Under reduced motion the page simply
+   * stays where it is — the scrim over it already says a drawer is open, and
+   * that cue never moved anything. Both scale back toward rest as a
+   * dismissing drag progresses.
+   *
+   * The transition and the amount key off `data-active` alone, so they are
+   * already in place on a sheet resting at a lower snap point; the transform
+   * waits for `data-receded` too, which arrives the moment the sheet rises. */
+  .indent[data-active] {
+    --forte-drawer-indent-amount: 1;
+
+    transition:
+      transform
+        max(
+          1ms,
+          calc(
+            var(--forte-drawer-indent-duration) *
+              (1 - var(--forte-drawer-indent-tracking))
+          )
+        )
+        var(--forte-drawer-indent-ease),
+      --forte-drawer-indent-amount var(--forte-drawer-indent-duration)
+        var(--forte-drawer-indent-ease);
+  }
+
+  .indent[data-active][data-receded] {
+    transform: translateY(
+        calc(
+          var(--forte-drawer-indent-travel) *
+            (1 - var(--drawer-swipe-progress, 0))
+        )
+      )
+      scale(
+        calc(
+          1 - (1 - var(--forte-drawer-indent-scale)) * var(--forte-motion-ok) *
+            (1 - var(--drawer-swipe-progress, 0))
+        )
+      );
+  }
+
+  /* The bottom inset is a large negative rather than 0: the far end of a
+   * long page is off the screen, and a clip there would only add work. The
+   * sides are 0 because that is where the rounded corners have to land.
+   *
+   * The radius follows the swipe progress like the scale does. The clip
+   * outlives the transform by the length of the return, so a sheet lowered
+   * back to a snap point below the top one brings the page to full size with
+   * the clip still on — and full-size corners rounded off against the top of
+   * the screen would be two notches with nothing to explain them. */
+  .indent[data-receded] {
+    --forte-drawer-indent-corner: calc(
+      var(--forte-drawer-indent-radius) * var(--forte-drawer-indent-amount) *
+        var(--forte-motion-ok) * (1 - var(--drawer-swipe-progress, 0))
+    );
+
+    clip-path: inset(
+      var(--forte-drawer-indent-anchor, 0px) 0 -100000px 0 round
+        var(--forte-drawer-indent-corner) var(--forte-drawer-indent-corner) 0 0
+    );
+  }
+
+  /* Indent background ------------------------------------------------------
+   * Fixed over the whole viewport, because the indent's natural home is the
+   * whole app and an `absolute` box would scroll away with the document's
+   * first screen. Transparent at rest: an app shorter than the viewport would
+   * otherwise sit on a slab of this color all the time.
+   *
+   * The default is the foreground color, the one token guaranteed to sit at
+   * the far end of the ramp from the page. A dark frame round a light page
+   * and a light frame round a dark one both read as depth; the page's own
+   * background color would leave nothing to see. The scrim dims it along
+   * with everything else.
+   * ---------------------------------------------------------------------- */
+  .indentBackground {
+    /** Color revealed around the receded page */
+    --forte-drawer-indent-background-color: var(--forte-color-foreground);
+
+    position: fixed;
+    inset: 0;
+    background-color: var(--forte-drawer-indent-background-color);
+    opacity: 0;
+    /* Decorative, and full-screen. */
+    pointer-events: none;
+    transition: opacity var(--forte-duration-normal) var(--forte-ease-standard);
+  }
+
+  .indentBackground[data-active] {
+    opacity: 1;
   }
 
   /* Trigger and Close ------------------------------------------------------

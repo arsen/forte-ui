@@ -16,4 +16,7 @@ export type {
   DrawerFooterProps,
   DrawerSwipeAreaProps,
   DrawerVirtualKeyboardProviderProps,
+  DrawerProviderProps,
+  DrawerIndentProps,
+  DrawerIndentBackgroundProps,
 } from "./Drawer";

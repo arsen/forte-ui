@@ -4198,6 +4198,32 @@
       }
     ]
   },
+  "DrawerIndent": {
+    "name": "DrawerIndent",
+    "description": "The wrapper around the app's main UI that recedes while a drawer is open —\nscaled back, lowered a step and rounded at the top, the way a native sheet\npushes the screen behind it into the distance.\n\nRenders a `<div>` and needs a `Drawer.Provider` above it; without one it is\nnever active. Base UI marks it `data-active` while any drawer in that\nprovider is open and publishes `--drawer-swipe-progress` on it, so the page\ncomes forward in step with a dismissing drag.\n\nIt also carries `data-receded` from the moment it starts to recede until it\nhas come all the way back. It differs from `data-active` in two ways. The\nreturn trip: the clip that rounds the page's top corners has to outlive the\ndrawer, or it would vanish while the page is still small. And snap points:\nBase UI measures the recede between the top two only, so a sheet resting\nat any lower one leaves the page at full size — active there but not\nreceded, with nothing transformed or clipped until the sheet rises toward\nthe top snap point.\n\nKeep `position: fixed` chrome — a fixed header, a floating action button —\noutside it. While it is receded it is transformed, and a transformed element\nis the containing block for its fixed descendants, so they would let go of\nthe viewport and ride along with the page. `position: sticky` is unaffected.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
+  "DrawerIndentBackground": {
+    "name": "DrawerIndentBackground",
+    "description": "The color revealed around `Drawer.Indent` while it is receded.\n\nRenders a decorative `<div>`, `position: fixed` over the whole viewport and\ntransparent until a drawer opens. Place it directly before `Drawer.Indent`,\ninside the same `Drawer.Provider`; the indent paints over it by DOM order.\nFor an indent scoped to one region of a page rather than the whole app,\ngive that region `position: relative` and this part `absolute`.",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false,
+        "defaultValue": null,
+        "description": "Additional class name(s). Applied after the internal styles so consumer\nutilities (e.g. Tailwind) win without needing `!important`."
+      }
+    ]
+  },
   "FieldRoot": {
     "name": "FieldRoot",
     "description": "Groups one control with its label, description and error message, and owns\nthe validation state they all read. Renders a `<div>` laid out as a column.\n\nThe control is any Base UI form component — `Input`, `Checkbox`, `Switch`,\n`Select` — and none of them need wiring: the field supplies the id the label\npoints at, the `aria-describedby` linking description and error, and the\n`name` used on submit. Give `name` to the field rather than to the control,\nso `<Form onFormSubmit>` and server-returned `errors` can find it.\n\nThe column stretches its children, which is why an `Input` inside a field is\nfull width without `fullWidth`.",
