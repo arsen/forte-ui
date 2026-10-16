@@ -269,7 +269,8 @@
      * on the gray ramp, so without it the edge simply vanishes in dark mode.
      * `.forte-hc-surface` already reserves a 1px transparent border on this
      * element, so painting it costs no layout. */
-    /** Width of the hairline around the popup */
+    /** Width of the popup's hairline — the inward side only for `edge`, all
+     * four sides for `floating` */
     --forte-drawer-border-width: 1px;
     /** Color of that hairline */
     --forte-drawer-border-color: var(--forte-color-border);

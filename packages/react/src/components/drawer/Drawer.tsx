@@ -242,8 +242,7 @@ export interface DrawerPopupProps
   /**
    * Render the scrim behind the drawer. Turn it off for a non-modal drawer
    * that should leave the page visibly usable. A drawer without one marks its
-   * popup `data-no-backdrop` and draws a hairline border in the scrim's
-   * place, so the surface still ends somewhere visible.
+   * popup `data-no-backdrop`, a hook for styling scrimless drawers.
    * @default true
    */
   backdrop?: boolean;
@@ -344,9 +343,9 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
             data-side={side}
             data-variant={variant}
             data-size={size}
-            // A scrimless drawer draws a hairline boundary in the scrim's
-            // place — the stylesheet keys it on this attribute rather than on
-            // `modal`, because the missing dim is the visibility problem.
+            // Nothing in the stylesheet reads this any more — every drawer
+            // draws its hairline now — but it is documented, so it stays as
+            // a consumer's hook for styling a scrimless drawer.
             data-no-backdrop={backdrop ? undefined : ""}
             // Base UI resolves swipe eligibility with `closest()` from the
             // element under the pointer, so marking the popup opts out every

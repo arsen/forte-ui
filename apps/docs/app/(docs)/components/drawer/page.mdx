@@ -58,8 +58,6 @@ Floating also switches off the bleed, because it has nothing left to cover — s
 
 It takes two more props to finish the thought. `backdrop={false}` on `Drawer.Popup` removes the scrim, because a dimmed page that still works reads as a page that is broken. And `disablePointerDismissal` on `Drawer.Root` keeps the panel up while the page is used — without it, the first click on that supposedly usable page dismisses the drawer, and in a non-modal drawer so does focus merely moving outside it. Escape, `Drawer.Close` and the swipe remain as the deliberate ways out.
 
-A scrimless drawer also draws a hairline border on its own. With a backdrop, the dimmed page is what tells the surface and the content behind it apart; take the scrim away and the shadow is all that is left, which in dark mode is nearly nothing. The hairline is keyed on `backdrop={false}` — the popup carries `data-no-backdrop` — and themed by `--forte-drawer-border-width` and `--forte-drawer-border-color`. On an `edge` drawer the side resting against the screen edge stays borderless, so an overdrag does not expose it as a seam across the surface.
-
 Both variants work non-modally, and they say different things: `edge` reads as a panel docked to the workspace, `floating` as a palette hovering over it.
 
 <DemoBlock id="drawer/non-modal" />
@@ -199,6 +197,10 @@ Set the popup's knobs through `className` on `Drawer.Popup` (an unlayered rule b
 The global tokens these resolve to — `--forte-color-*`, `--forte-radius-*`, `--forte-space-*`, `--forte-shadow-*` — are the exception: the component only reads those and never redeclares them, so re-pointing them on `:root` or on a theme scope does re-skin every drawer.
 
 <ThemingTable component="Drawer" />
+
+Every drawer draws a hairline along the edge that faces into the page — the left edge of a `right` drawer, the top of a bottom sheet. A dimmed page sets the surface apart well enough in light mode, but the overlay color sits within a step of the page on the gray ramp, so in dark mode, or with `backdrop={false}`, the shadow alone barely marks where the drawer ends. The three sides that run into the screen edge stay borderless: a line there buys nothing, and the outer one would show as a seam across the surface during an overdrag. A `floating` drawer has a gap on every side, so it draws all four. Restyle it with `--forte-drawer-border-width` and `--forte-drawer-border-color`; set the width to `0px` to remove it.
+
+A drawer rendered with `backdrop={false}` also carries `data-no-backdrop` on its popup, so your own CSS can treat scrimless drawers differently.
 
 `--forte-drawer-inset` is the one knob that lives on the viewport rather than on the popup it affects, and that placement is deliberate. The inset is two facts that have to agree: the gap the viewport leaves around the surface, and the extra distance the surface must travel to clear the screen. The popup is the viewport's child, so leaving it undeclared there lets it *inherit* the value — one declaration, both facts, and no way to set one and forget the other.
 
