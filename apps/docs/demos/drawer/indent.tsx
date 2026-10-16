@@ -30,8 +30,10 @@ export default function DrawerIndent() {
       >
         {/* Fixed by default, for an indent that wraps the whole app. */}
         <Drawer.IndentBackground className="absolute" />
-        <Drawer.Indent className="flex min-h-[20rem] flex-col gap-3 p-surface">
-          <div className="flex items-center justify-between gap-3">
+        <Drawer.Indent className="flex min-h-[20rem] flex-col">
+          {/* Flush with the top and painted, like an app bar: the indent
+              clips it to its rounded corners while the page steps back. */}
+          <div className="flex items-center justify-between gap-3 border-b border-border-muted bg-panel px-surface py-3">
             <span className="text-3 font-semibold">Orders</span>
             <Drawer.Root side="bottom">
               <Drawer.Trigger render={<Button />}>Track order</Drawer.Trigger>
@@ -57,12 +59,14 @@ export default function DrawerIndent() {
               </Drawer.Popup>
             </Drawer.Root>
           </div>
-          {ORDERS.map(([order, status]) => (
-            <div key={order} className={row}>
-              <span>{order}</span>
-              <span className="text-2 text-foreground-muted">{status}</span>
-            </div>
-          ))}
+          <div className="flex flex-col gap-3 p-surface">
+            {ORDERS.map(([order, status]) => (
+              <div key={order} className={row}>
+                <span>{order}</span>
+                <span className="text-2 text-foreground-muted">{status}</span>
+              </div>
+            ))}
+          </div>
         </Drawer.Indent>
       </div>
     </Drawer.Provider>

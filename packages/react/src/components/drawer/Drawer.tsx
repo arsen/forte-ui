@@ -71,12 +71,14 @@ type DrawerContextValue = {
   side: DrawerSide;
   swipe: boolean;
   scrimFloor: boolean;
+  nonModal: boolean;
 };
 
 const DrawerContext = React.createContext<DrawerContextValue>({
   side: "right",
   swipe: true,
   scrimFloor: false,
+  nonModal: false,
 });
 
 export interface DrawerRootProps<Payload = unknown>
@@ -139,12 +141,19 @@ export function DrawerRoot<Payload>({
   // completely while the page behind it is still inert. The stylesheet holds a
   // floor when that combination is in play; a non-modal drawer wants no floor,
   // because there the undimmed page really is usable.
+  //
+  // "Non-modal" here is about the POINTER, so it takes in `"trap-focus"` as
+  // well as `false`: Base UI leaves outside presses enabled for both, and only
+  // `true` (the default) makes the page inert. The backdrop reads the same
+  // flag to stop taking presses — a scrim over a page that is promised to
+  // stay usable must not be the thing that catches every tap aimed at it.
+  const nonModal = modal === false || modal === "trap-focus";
   const scrimFloor =
-    modal !== false && snapPoints !== undefined && snapPoints.length > 0;
+    !nonModal && snapPoints !== undefined && snapPoints.length > 0;
 
   const context = React.useMemo<DrawerContextValue>(
-    () => ({ side, swipe, scrimFloor }),
-    [side, swipe, scrimFloor],
+    () => ({ side, swipe, scrimFloor, nonModal }),
+    [side, swipe, scrimFloor, nonModal],
   );
 
   return (
@@ -246,6 +255,10 @@ export interface DrawerPopupProps
    * Render the scrim behind the drawer. Turn it off for a non-modal drawer
    * that should leave the page visibly usable. A drawer without one marks its
    * popup `data-no-backdrop`, a hook for styling scrimless drawers.
+   *
+   * When `modal` on `Drawer.Root` is `false` or `"trap-focus"`, the scrim is
+   * purely visual: it is marked `data-non-modal` and lets presses through to
+   * the page beneath it.
    * @default true
    */
   backdrop?: boolean;
@@ -320,7 +333,8 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
     },
     ref,
   ) {
-    const { side, swipe, scrimFloor } = React.useContext(DrawerContext);
+    const { side, swipe, scrimFloor, nonModal } =
+      React.useContext(DrawerContext);
 
     return (
       <BaseDrawer.Portal keepMounted={keepMounted} container={container}>
@@ -328,6 +342,7 @@ export const DrawerPopup = React.forwardRef<HTMLDivElement, DrawerPopupProps>(
           <BaseDrawer.Backdrop
             forceRender={forceBackdrop}
             data-scrim-floor={scrimFloor ? "" : undefined}
+            data-non-modal={nonModal ? "" : undefined}
             className={clsx(styles.backdrop, "forte-scrim", backdropClassName)}
             data-forte="drawer-backdrop"
           />
