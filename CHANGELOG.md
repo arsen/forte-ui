@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.13.1] - 2026-10-16
+
+### Drawer
+
+- Fixed a non-modal drawer (`modal={false}` or `modal="trap-focus"`) blocking the page behind it. The scrim used to catch every press aimed at the page, even at the lowest snap point where it is fully transparent and the page looks usable. In these modes the scrim is now purely visual and lets presses through, so they reach the page and Base UI's outside-press dismissal alike. The backdrop is marked `data-non-modal` while this applies. A drawer that turns modal as it is raised takes presses again from that render on.
+- Fixed the receded page showing square corners behind `Drawer.Indent`. An app shell's first child, usually a painted app bar flush with the top, covered the rounded corners. The active indent now clips its contents to the radius. The clip is held until the return transition finishes, so the corners do not square off while the radius is still easing out. Nothing changes at rest. While a drawer is open, anything that draws past the indent's box without a portal, such as a shadow or an unportalled popover, is cut at its edge.
+
 ## [1.13.0] - 2026-10-16
 
 ### Drawer
@@ -676,7 +683,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.13.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.13.1...HEAD
+[1.13.1]: https://github.com/arsen/forte-ui/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/arsen/forte-ui/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/arsen/forte-ui/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/arsen/forte-ui/compare/v1.11.3...v1.12.0
