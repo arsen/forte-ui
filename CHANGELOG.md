@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.13.2] - 2026-10-17
+
+### ToggleGroup
+
+- Fixed a `segmented` ToggleGroup strip whose corners did not match the toggles inside it. The strip's radius was a fixed `--forte-radius-4`, so under the `soft`, `pill` and `none` radius presets the toggles sat in a track of the wrong curvature, and even at the default the strip was off by the padding. The radius is now derived from the toggles' radius (`--forte-radius-control`) plus the padding and border around them, so the two stay concentric under every preset. The `none` preset keeps a square strip. `--forte-toggle-group-radius` now defaults to that derived value when `segmented`. If you re-point the toggles' radius on the toggles themselves, set this knob alongside it, because the group cannot see a knob declared on each toggle.
+
 ## [1.13.1] - 2026-10-16
 
 ### Drawer
@@ -683,7 +689,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.13.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.13.2...HEAD
+[1.13.2]: https://github.com/arsen/forte-ui/compare/v1.13.1...v1.13.2
 [1.13.1]: https://github.com/arsen/forte-ui/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/arsen/forte-ui/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/arsen/forte-ui/compare/v1.12.0...v1.12.1
