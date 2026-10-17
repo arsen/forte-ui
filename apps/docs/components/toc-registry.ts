@@ -12,6 +12,9 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v1140", text: "v1.14.0", depth: 2 },
+    { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
+    { id: "general", text: "General", depth: 3 },
     { id: "v1132", text: "v1.13.2", depth: 2 },
     { id: "togglegroup", text: "ToggleGroup", depth: 3 },
     { id: "v1131", text: "v1.13.1", depth: 2 },
@@ -29,16 +32,14 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "collapsible", text: "Collapsible", depth: 3 },
     { id: "contextmenu", text: "ContextMenu", depth: 3 },
     { id: "navigationmenu", text: "NavigationMenu", depth: 3 },
-    { id: "general", text: "General", depth: 3 },
+    { id: "general-1", text: "General", depth: 3 },
     { id: "v1111", text: "v1.11.1", depth: 2 },
     { id: "shimmer", text: "Shimmer", depth: 3 },
     { id: "skeleton", text: "Skeleton", depth: 3 },
     { id: "v1110", text: "v1.11.0", depth: 2 },
     { id: "contextmenu-1", text: "ContextMenu", depth: 3 },
     { id: "reorderable", text: "Reorderable", depth: 3 },
-    { id: "general-1", text: "General", depth: 3 },
-    { id: "v1104", text: "v1.10.4", depth: 2 },
-    { id: "animatedborder", text: "AnimatedBorder", depth: 3 },
+    { id: "general-2", text: "General", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [

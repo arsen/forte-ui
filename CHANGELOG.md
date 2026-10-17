@@ -13,6 +13,17 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-10-17
+
+### Design tokens & motion
+
+- Added `--forte-color-selection` (accent step 6) and `--forte-color-on-selection` (accent step 12), the pair every field paints its selected text in. Step 12 on step 6 is asserted by the contrast harness at 4.5:1 (worst case 7.48:1 light, 5.66:1 dark).
+
+### General
+
+- Fixed selected text being nearly invisible in `Input`, `Textarea`, `InputGroup`, `NumberField`, `OTPField` and `Combobox`. The selection was painted on the soft accent step, which sat as little as 1.11:1 off the page in light mode and 1.23:1 in dark, so a selection read as the value changing color rather than as a highlight. It now paints on `--forte-color-selection` with `--forte-color-on-selection` text. This matters most in `OTPField`, where every slot selects its character on focus. The selection knobs default to the new tokens: `--forte-input-selection-bg` / `-fg`, `--forte-textarea-selection-bg` / `-fg`, `--forte-input-group-selection-bg` / `-fg`, `--forte-number-field-input-selection-bg` / `-fg` and `--forte-otp-field-selection-bg` / `-fg` (`Combobox` has none).
+- Added `bg-selection` and `text-on-selection` to the `@forte-ui/react/tailwind.css` bridge (`--color-selection`, `--color-on-selection`), so a field of your own can match the library's: `selection:bg-selection selection:text-on-selection`.
+
 ## [1.13.2] - 2026-10-17
 
 ### ToggleGroup
@@ -689,7 +700,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.13.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.14.0...HEAD
+[1.14.0]: https://github.com/arsen/forte-ui/compare/v1.13.2...v1.14.0
 [1.13.2]: https://github.com/arsen/forte-ui/compare/v1.13.1...v1.13.2
 [1.13.1]: https://github.com/arsen/forte-ui/compare/v1.13.0...v1.13.1
 [1.13.0]: https://github.com/arsen/forte-ui/compare/v1.12.1...v1.13.0
