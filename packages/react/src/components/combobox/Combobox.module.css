@@ -363,8 +363,8 @@
   }
 
   .input::selection {
-    background-color: var(--forte-color-primary-soft);
-    color: var(--forte-color-primary-text);
+    background-color: var(--forte-color-selection);
+    color: var(--forte-color-on-selection);
   }
 
   .inputGroup[data-disabled] .input {

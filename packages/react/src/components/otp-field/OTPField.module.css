@@ -71,9 +71,9 @@
     --forte-otp-field-caret-color: var(--forte-color-primary);
     /** Selection background — visible on every focus, because Base UI selects
      * a slot's character when you land on it so the next keypress replaces it */
-    --forte-otp-field-selection-bg: var(--forte-color-primary-soft);
+    --forte-otp-field-selection-bg: var(--forte-color-selection);
     /** Selection text color */
-    --forte-otp-field-selection-fg: var(--forte-color-primary-text);
+    --forte-otp-field-selection-fg: var(--forte-color-on-selection);
     /** Color of the dash `OTPField.Separator` draws */
     --forte-otp-field-separator-color: var(--forte-color-border-strong);
 

@@ -132,6 +132,10 @@ const CHECKS = [
    * moving steps 4-5 will show up here first. */
   { id: "accent-11 vs 4",   min: 4.5, pair: (r) => CR(r[11], r[4]) },
   { id: "accent-12 vs 5",   min: 4.5, pair: (r) => CR(r[12], r[5]) },
+  /* `--forte-color-on-selection` on `--forte-color-selection`: the selected
+   * text in every field. Step 7 was the louder fill and is NOT this pair's
+   * fallback — it measured 4.02 in dark mode. */
+  { id: "accent-12 vs 6",   min: 4.5, pair: (r) => CR(r[12], r[6]) },
   { id: "accent-12 vs 1",   min: 7.0, pair: (r) => CR(r[12], r[1]) },
   { id: "accent-7 vs 1",    min: 1.4, pair: (r) => CR(r[7], r[1]) },
   { id: "gray-11 vs gray-1", min: 4.5, pair: (r, g) => CR(g[11], g[1]) },

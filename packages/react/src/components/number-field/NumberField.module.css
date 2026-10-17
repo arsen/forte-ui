@@ -242,9 +242,9 @@
     /** Caret color */
     --forte-number-field-input-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --forte-number-field-input-selection-bg: var(--forte-color-primary-soft);
+    --forte-number-field-input-selection-bg: var(--forte-color-selection);
     /** Selection text color */
-    --forte-number-field-input-selection-fg: var(--forte-color-primary-text);
+    --forte-number-field-input-selection-fg: var(--forte-color-on-selection);
 
     box-sizing: border-box;
     /* `inline-size`, and NOT `flex-basis`, is what gives the field its resting
