@@ -11396,12 +11396,12 @@
       {
         "name": "--forte-toggle-group-radius",
         "value": "0px",
-        "description": "Corner radius of the strip. `var(--forte-radius-4)` when `segmented`.",
+        "description": "Corner radius of the strip. When `segmented`, the toggles' radius (`--forte-radius-control`) plus the padding and border around them, so the two stay concentric under every radius preset.",
         "part": "group",
         "overrides": [
           {
             "selector": ".group[data-segmented]",
-            "value": "var(--forte-radius-4)"
+            "value": "calc( var(--forte-radius-control) + min( var(--forte-radius-control), var(--forte-toggle-group-padding) + var(--forte-toggle-group-border-width) ) )"
           }
         ]
       },
