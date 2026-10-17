@@ -19,6 +19,14 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.13.2
+
+<ReleaseMeta date="2026-10-17" href="https://github.com/arsen/forte-ui/compare/v1.13.1...v1.13.2" kind="compare" />
+
+### ToggleGroup
+
+- Fixed a `segmented` ToggleGroup strip whose corners did not match the toggles inside it. The strip's radius was a fixed `--forte-radius-4`, so under the `soft`, `pill` and `none` radius presets the toggles sat in a track of the wrong curvature, and even at the default the strip was off by the padding. The radius is now derived from the toggles' radius (`--forte-radius-control`) plus the padding and border around them, so the two stay concentric under every preset. The `none` preset keeps a square strip. `--forte-toggle-group-radius` now defaults to that derived value when `segmented`. If you re-point the toggles' radius on the toggles themselves, set this knob alongside it, because the group cannot see a knob declared on each toggle.
+
 ## v1.13.1
 
 <ReleaseMeta date="2026-10-16" href="https://github.com/arsen/forte-ui/compare/v1.13.0...v1.13.1" kind="compare" />
@@ -131,15 +139,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 
 - Fixed the `beam` animation widening the page. The beam is centered on the border, so its outer half sat outside the component's box and still counted as scrollable overflow. On a phone, a card flush against the right edge made the page wider than the screen (412px to 435px on a Pixel 7) whenever the beam passed it, which made mobile Chrome widen the layout viewport. A bottom Drawer was cut off at the right and bottom, and `100vw` backgrounds came out narrower than the page. The root now clips its overflow, so the page width no longer changes. `shine`, `rotate` and reduced motion render identically. `beam` differs only in anti-aliasing on a one-device-pixel arc at the corner the beam is crossing.
 
-## v1.10.3
-
-<ReleaseMeta date="2026-09-24" href="https://github.com/arsen/forte-ui/compare/v1.10.2...v1.10.3" kind="compare" />
-
-### ColorPicker
-
-- Fixed the selection tick and eyedropper icons ballooning to their unsized SVG default and stretching the swatch grid's `1fr` columns across the whole row the moment a swatch was selected; both icons now carry explicit pixel dimensions.
-- Fixed the panel-only parts (area, rail, swatches, eyedropper, alpha) losing their size, radius, checkerboard and thumb styling when rendered without `ColorPicker.Panel` around them — each now falls back to its documented default when no panel supplies the corresponding `--forte-color-picker-*` knob.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 27 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 28 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
