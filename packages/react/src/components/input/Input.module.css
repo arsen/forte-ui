@@ -53,9 +53,9 @@
     /** Caret color */
     --forte-input-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --forte-input-selection-bg: var(--forte-color-primary-soft);
+    --forte-input-selection-bg: var(--forte-color-selection);
     /** Selection text color */
-    --forte-input-selection-fg: var(--forte-color-primary-text);
+    --forte-input-selection-fg: var(--forte-color-on-selection);
 
     box-sizing: border-box;
     display: block;

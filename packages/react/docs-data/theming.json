@@ -5424,14 +5424,14 @@
       },
       {
         "name": "--forte-input-selection-bg",
-        "value": "var(--forte-color-primary-soft)",
+        "value": "var(--forte-color-selection)",
         "description": "Selection background",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-selection-fg",
-        "value": "var(--forte-color-primary-text)",
+        "value": "var(--forte-color-on-selection)",
         "description": "Selection text color",
         "part": "root",
         "overrides": []
@@ -5645,14 +5645,14 @@
       },
       {
         "name": "--forte-input-group-selection-bg",
-        "value": "var(--forte-color-primary-soft)",
+        "value": "var(--forte-color-selection)",
         "description": "Selection background",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-input-group-selection-fg",
-        "value": "var(--forte-color-primary-text)",
+        "value": "var(--forte-color-on-selection)",
         "description": "Selection text color",
         "part": "root",
         "overrides": []
@@ -6834,14 +6834,14 @@
       },
       {
         "name": "--forte-number-field-input-selection-bg",
-        "value": "var(--forte-color-primary-soft)",
+        "value": "var(--forte-color-selection)",
         "description": "Selection background",
         "part": "input",
         "overrides": []
       },
       {
         "name": "--forte-number-field-input-selection-fg",
-        "value": "var(--forte-color-primary-text)",
+        "value": "var(--forte-color-on-selection)",
         "description": "Selection text color",
         "part": "input",
         "overrides": []
@@ -7183,14 +7183,14 @@
       },
       {
         "name": "--forte-otp-field-selection-bg",
-        "value": "var(--forte-color-primary-soft)",
+        "value": "var(--forte-color-selection)",
         "description": "Selection background — visible on every focus, because Base UI selects a slot's character when you land on it so the next keypress replaces it",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-otp-field-selection-fg",
-        "value": "var(--forte-color-primary-text)",
+        "value": "var(--forte-color-on-selection)",
         "description": "Selection text color",
         "part": "root",
         "overrides": []
@@ -10791,14 +10791,14 @@
       },
       {
         "name": "--forte-textarea-selection-bg",
-        "value": "var(--forte-color-primary-soft)",
+        "value": "var(--forte-color-selection)",
         "description": "Selection background",
         "part": "root",
         "overrides": []
       },
       {
         "name": "--forte-textarea-selection-fg",
-        "value": "var(--forte-color-primary-text)",
+        "value": "var(--forte-color-on-selection)",
         "description": "Selection text color",
         "part": "root",
         "overrides": []

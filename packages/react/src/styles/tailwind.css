@@ -130,6 +130,12 @@
   --color-warning: var(--forte-color-warning);
   --color-warning-text: var(--forte-color-warning-text);
 
+  /* The pair every forte-ui field paints its selected text in, so a field
+   * of the app's own matches them: `selection:bg-selection
+   * selection:text-on-selection`. */
+  --color-selection: var(--forte-color-selection);
+  --color-on-selection: var(--forte-color-on-selection);
+
   /* Auto-contrast text for a solid fill. `text-white` is deliberately gone;
    * this is the token that stays readable when the seed moves. */
   --color-on-primary: var(--forte-color-on-primary);

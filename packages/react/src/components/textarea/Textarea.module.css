@@ -105,9 +105,9 @@
     /** Caret color */
     --forte-textarea-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --forte-textarea-selection-bg: var(--forte-color-primary-soft);
+    --forte-textarea-selection-bg: var(--forte-color-selection);
     /** Selection text color */
-    --forte-textarea-selection-fg: var(--forte-color-primary-text);
+    --forte-textarea-selection-fg: var(--forte-color-on-selection);
 
     box-sizing: border-box;
     display: block;

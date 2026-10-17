@@ -234,6 +234,17 @@
     --forte-color-secondary-text: var(--forte-secondary-11);
     --forte-color-secondary-border: var(--forte-secondary-7);
 
+    /* Selected text inside a field. Step 6, not the `-soft` step 3 the
+     * fields used to paint: step 3 sits 1.11:1 off the page for a saturated
+     * light seed and 1.23:1 in dark, so a selection read as no selection at
+     * all — just the value changing color. Step 6 is at least 1.45:1 light
+     * and 2.15:1 dark. The text moves up to step 12 with it, because step
+     * 11 on step 6 is not a pair anything guarantees; 12 on 6 is asserted
+     * in check-contrast.mjs. Step 7 would read louder still and fails that
+     * check in dark mode (4.02:1), which is why the fill stops here. */
+    --forte-color-selection: var(--forte-accent-6);
+    --forte-color-on-selection: var(--forte-accent-12);
+
     /* Status */
     --forte-color-danger: var(--forte-danger-9);
     --forte-color-danger-hover: var(--forte-danger-10);

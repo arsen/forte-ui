@@ -121,9 +121,9 @@
     /** Caret color */
     --forte-input-group-caret-color: var(--forte-color-primary);
     /** Selection background */
-    --forte-input-group-selection-bg: var(--forte-color-primary-soft);
+    --forte-input-group-selection-bg: var(--forte-color-selection);
     /** Selection text color */
-    --forte-input-group-selection-fg: var(--forte-color-primary-text);
+    --forte-input-group-selection-fg: var(--forte-color-on-selection);
 
     box-sizing: border-box;
     display: inline-flex;
