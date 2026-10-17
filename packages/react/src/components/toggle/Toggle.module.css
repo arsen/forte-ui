@@ -367,7 +367,9 @@
     --forte-toggle-group-gap: var(--forte-space-2);
     /** Padding inside the strip. `var(--forte-space-1)` when `segmented`. */
     --forte-toggle-group-padding: 0px;
-    /** Corner radius of the strip. `var(--forte-radius-4)` when `segmented`. */
+    /** Corner radius of the strip. When `segmented`, the toggles' radius
+     * (`--forte-radius-control`) plus the padding and border around them, so
+     * the two stay concentric under every radius preset. */
     --forte-toggle-group-radius: 0px;
     /** Fill behind the strip. `var(--forte-color-panel)` when `segmented`. */
     --forte-toggle-group-bg: transparent;
@@ -413,7 +415,32 @@
   .group[data-segmented] {
     --forte-toggle-group-gap: var(--forte-space-1);
     --forte-toggle-group-padding: var(--forte-space-1);
-    --forte-toggle-group-radius: var(--forte-radius-4);
+    /* Concentric with the toggles it holds, the rule Tabs' pill strip uses:
+     * outer radius = inner radius + the distance between them, min()-capped
+     * by the inner radius so the `none` preset keeps a square strip instead
+     * of picking the gap up as a stray rounding. A fixed `--forte-radius-4`
+     * stood here, and every radius preset broke it — `soft` put 12px toggles
+     * in an 8px track, `pill` full-round toggles in one, `none` square
+     * toggles in a rounded one — and even the default preset was off by the
+     * gap, 8px inside 8px.
+     *
+     * The distance counts the border as well as the padding, which is the
+     * one way this differs from Tabs. Tabs' strip has no border; this one
+     * always carries a 1px transparent one (see the note on the knob), and
+     * the panel fill paints under it, so the visible edge sits that much
+     * further out.
+     *
+     * The inner radius is read off `--forte-radius-control`, not
+     * `--forte-toggle-radius`: that knob is declared on each toggle, so the
+     * group cannot see it. A consumer who re-points the toggles' radius on
+     * the toggles themselves sets this one alongside it. */
+    --forte-toggle-group-radius: calc(
+      var(--forte-radius-control) +
+        min(
+          var(--forte-radius-control),
+          var(--forte-toggle-group-padding) + var(--forte-toggle-group-border-width)
+        )
+    );
     --forte-toggle-group-bg: var(--forte-color-panel);
   }
 
