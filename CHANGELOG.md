@@ -13,6 +13,13 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.14.1] - 2026-10-20
+
+### InputGroup
+
+- Fixed an `sm` group growing past its control height when an icon-only button sat in an addon. A search field with a clear button went from 28px to 34px the moment the button appeared, because Button's `iconOnly` rule floors its box at the 24px target on both axes and the group only reset the width floor. The height floor now comes down to the field too; the button's hit area stays at the 24px `--forte-target-min`. `md` and `lg` were not affected.
+- Fixed a `compact` `sm` group (24px) growing for every kind of addon content, including text, icons and icon-only buttons. `--forte-input-group-py` now defaults to `--forte-space-1` capped to what leaves room for an icon-only button: 2px at `compact` `sm`, and unchanged (`--forte-space-1`) at every other size and density.
+
 ## [1.14.0] - 2026-10-17
 
 ### Design tokens & motion
@@ -700,7 +707,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.14.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.14.1...HEAD
+[1.14.1]: https://github.com/arsen/forte-ui/compare/v1.14.0...v1.14.1
 [1.14.0]: https://github.com/arsen/forte-ui/compare/v1.13.2...v1.14.0
 [1.13.2]: https://github.com/arsen/forte-ui/compare/v1.13.1...v1.13.2
 [1.13.1]: https://github.com/arsen/forte-ui/compare/v1.13.0...v1.13.1
