@@ -13,6 +13,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.14.2] - 2026-10-20
+
+### Combobox
+
+- Fixed a `multiple` field growing past its control height when it held a chip. At `sm` the field is 18px inside, but a chip was 24px at every size (block padding around its 16px remove button), so one chip took the field from 28px to 34px. A chip now has a height instead of padding: 24px where the field has room, and the field's inner height where it does not.
+- Fixed Clear and Trigger moving to a row of their own when chips wrapped. The chips container sized itself from its max-content width, which counts the input at its default width (about 156px), so two short chips outgrew the room beside the buttons. It now takes only the room the buttons leave and wraps inside itself, and the buttons are pinned to the first row, so a field whose chips wrap keeps its caret where a one-row field has it. At a narrow `sm` width (256px) the input can still take a second row, because the two chips plus the input's 64px minimum need more room than the buttons leave. The buttons stay on the first row.
+- Fixed every `compact` `sm` field (24px) rendering a fraction taller than its control height, and a chip growing it by 10px.
+- Added the `--forte-combobox-field-py` theming knob, the field's block padding. It defaults to `--forte-space-1`, capped so the inside still holds a 16px glyph: 3px at `compact` `sm`, and the full `--forte-space-1` at every other size and density. The button size, button radius and chip radius read it.
+
 ## [1.14.1] - 2026-10-20
 
 ### InputGroup
@@ -707,7 +716,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.14.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.14.2...HEAD
+[1.14.2]: https://github.com/arsen/forte-ui/compare/v1.14.1...v1.14.2
 [1.14.1]: https://github.com/arsen/forte-ui/compare/v1.14.0...v1.14.1
 [1.14.0]: https://github.com/arsen/forte-ui/compare/v1.13.2...v1.14.0
 [1.13.2]: https://github.com/arsen/forte-ui/compare/v1.13.1...v1.13.2
