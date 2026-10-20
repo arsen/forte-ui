@@ -77,7 +77,7 @@ pnpm dev                                    # docs site at :3000
 pnpm build                                  # everything
 pnpm generate                               # re-run ALL six generators
 pnpm typecheck                              # the real gate — there is no linter
-pnpm test                                   # contrast harness (--fine) + popup parity + overflow + reorderable + clock
+pnpm test                                   # contrast harness (--fine) + popup parity + overflow + reorderable + clock + fit
 pnpm release                                # build packages/*, preview, confirm, publish
 pnpm deploy:docs                            # build the docs app (and what it depends on), then firebase deploy
 ```
@@ -106,14 +106,15 @@ pnpm --filter @forte-ui/react check:parity   # the popup-parity gate
 pnpm --filter @forte-ui/react check:overflow # the narrow-viewport overflow gate (needs Chrome)
 pnpm --filter @forte-ui/react check:reorderable # the Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/react check:clock    # the Skeleton/Shimmer loop-continuity gate (needs Chrome)
+pnpm --filter @forte-ui/react check:fit      # the InputGroup control-height gate (needs Chrome)
 pnpm --filter @forte-ui/docs registry  # the demo registry
 pnpm --filter @forte-ui/docs changelog # the changelog page
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
 pnpm --filter @forte-ui/docs catalog   # the component index + the sidebar
 ```
 
-`check:contrast`, `check:parity`, `check:overflow`, `check:reorderable` and
-`check:clock` are deliberately outside `generate` — they are gates, not
+`check:contrast`, `check:parity`, `check:overflow`, `check:reorderable`,
+`check:clock` and `check:fit` are deliberately outside `generate` — they are gates, not
 generators, and they write nothing.
 
 Every root script is `turbo run <task>`, never the `turbo <task>` shorthand.
@@ -124,7 +125,8 @@ task name to collide does not repeat this.
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
 `typecheck`, `check:contrast`, `check:parity`, `check:overflow`,
-`check:reorderable` and `check:clock` are the gates that actually catch things.
+`check:reorderable`, `check:clock` and `check:fit` are the gates that actually
+catch things.
 
 ### Generated files — never edit by hand
 
@@ -269,6 +271,19 @@ either component's animations or the helper. It needs a FOREGROUND
 document: a hidden one produces no frames and its timeline stands still, so
 the Browser pane and a background tab cannot stand in for it. Same Chrome
 requirement as `check:overflow`.
+
+`check:fit` pairs with `InputGroup` and with what it composes — Button's
+`iconOnly` sizing, `.forte-target`, the `data-forte-density` presets. A group
+promises the height of the `Input` beside it, while the buttons in its addons
+fill an inner height that at `sm` is under the 24px target: Button's own
+`iconOnly` floor once won there, and an `sm` search field grew from 28px to
+34px the moment its clear button appeared (#161). `md` and `lg` have room to
+spare, so it only ever showed at the one size nobody checked. The gate serves
+`scripts/fit-fixture/` the same way, renders every density × size × variant
+with each kind of addon content, and fails unless each group is exactly its
+`--forte-control-h-*` — read off a probe in the same scope, never a pixel
+literal — and every addon button's hit area still reaches
+`--forte-target-min`. Same Chrome requirement as `check:overflow`.
 
 ### Introducing a new token
 

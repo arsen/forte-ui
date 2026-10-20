@@ -187,6 +187,7 @@ pnpm --filter @forte-ui/react check:parity    # anchored-popup parity gate
 pnpm --filter @forte-ui/react check:overflow  # narrow-viewport overflow gate (needs Chrome)
 pnpm --filter @forte-ui/react check:reorderable  # Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/react check:clock     # Skeleton/Shimmer loop-continuity gate (needs Chrome)
+pnpm --filter @forte-ui/react check:fit       # InputGroup control-height gate (needs Chrome)
 pnpm --filter @forte-ui/react typecheck
 ```
 
@@ -223,6 +224,14 @@ edge. It also checks that `src/internal/document-clock.ts` leaves every
 other kind of animation alone. Run it after touching either component's
 animations or the helper: a loop that restarts for a single frame is
 invisible in a screenshot and obvious on a page.
+
+`check:fit` renders every `InputGroup` size, variant and density, in headless
+Chrome, with each kind of addon content (text, an icon, a labelled button, an
+icon-only button at one end or both), and fails unless the group is exactly
+its `--forte-control-h-*` and every addon button's hit area still reaches
+`--forte-target-min`. Run it after touching `InputGroup`, Button's `iconOnly`
+sizing, or the density presets: an `sm` field that grows 6px when its clear
+button appears only shows at `sm`, since `md` and `lg` have room to spare.
 
 ## Token inventory
 

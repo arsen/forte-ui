@@ -5483,8 +5483,8 @@
       },
       {
         "name": "--forte-input-group-py",
-        "value": "var(--forte-space-1)",
-        "description": "Block padding; also the inset buttons keep from the border",
+        "value": "max( 0px, min( var(--forte-space-1), calc( (var(--forte-input-group-height) - var(--forte-input-group-icon-size)) / 2 - 2 * var(--forte-input-group-border-width) ) ) )",
+        "description": "Block padding; also the inset buttons keep from the border. Up to `--forte-space-1`, less when the height leaves too little room for an icon-only button.",
         "part": "root",
         "overrides": []
       },

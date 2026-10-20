@@ -52,10 +52,11 @@
     "check:overflow": "node scripts/check-overflow.mjs",
     "check:reorderable": "node scripts/check-reorderable.mjs",
     "check:clock": "node scripts/check-clock.mjs",
+    "check:fit": "node scripts/check-fit.mjs",
     "build": "pnpm run generate && vite build",
     "dev": "vite build --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs && node scripts/check-overflow.mjs && node scripts/check-reorderable.mjs && node scripts/check-clock.mjs",
+    "test": "node scripts/check-contrast.mjs --fine && node scripts/check-popup-parity.mjs && node scripts/check-overflow.mjs && node scripts/check-reorderable.mjs && node scripts/check-clock.mjs && node scripts/check-fit.mjs",
     "clean": "rm -rf dist .turbo"
   },
   "peerDependencies": {

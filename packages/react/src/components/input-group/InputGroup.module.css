@@ -59,8 +59,27 @@
     --forte-input-group-height: var(--forte-control-h-md);
     /** Inline padding between the border and the content (reset per `size`) */
     --forte-input-group-px: var(--forte-control-px-md);
-    /** Block padding; also the inset buttons keep from the border */
-    --forte-input-group-py: var(--forte-space-1);
+    /* A flat `--forte-space-1` left a `compact` `sm` group (24px) 14px
+     * inside, which holds none of its content: a 16px icon, a 14.4px line of
+     * text, an icon-only button at its icon plus a hairline either side.
+     * Every one of them grew the group past its control height. The cap is
+     * that button: the icon, plus 2 × the border width standing in for the
+     * button's own hairline either side, centered in what the group's
+     * borders leave. It only bites at `compact` `sm` (2px); every other
+     * size and density has room for the full `--forte-space-1`. */
+    /** Block padding; also the inset buttons keep from the border. Up to
+     * `--forte-space-1`, less when the height leaves too little room for an
+     * icon-only button. */
+    --forte-input-group-py: max(
+      0px,
+      min(
+        var(--forte-space-1),
+        calc(
+          (var(--forte-input-group-height) - var(--forte-input-group-icon-size)) / 2 -
+            2 * var(--forte-input-group-border-width)
+        )
+      )
+    );
     /** Font size of the control and the addons (reset per `size`) */
     --forte-input-group-font-size: var(--forte-font-size-2);
     /** Gap between the control and each addon, and between an addon's items */
@@ -465,12 +484,17 @@
     );
   }
 
-  /* Button's own `iconOnly` floors `min-inline-size` at the 24px target,
-   * which inside an `sm` field would make the button wider than it is tall.
-   * The visual box tracks the field; `.forte-target` keeps the hit area legal. */
+  /* Button's own `iconOnly` floors BOTH axes at the 24px target. Inside an
+   * `sm` field (18px inside) the width floor made the button wider than it
+   * is tall, and the height floor made it taller than the field: the group
+   * grew from 28px to 34px the moment a clear button appeared beside the
+   * text. `md` and `lg` hid it, their inner height is 24px or more already.
+   * Both floors come down to the field; `.forte-target` keeps the HIT area
+   * legal, and `check:fit` holds the group to its control height. */
   .root .addon [data-forte="button"][data-icon-only] {
     inline-size: var(--forte-input-group-button-size);
     min-inline-size: var(--forte-input-group-button-size);
+    min-block-size: var(--forte-input-group-button-size);
   }
 
   /* The icon buttons carry their own padding, so the field's end padding on
