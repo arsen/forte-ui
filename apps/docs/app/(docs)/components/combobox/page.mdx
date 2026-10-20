@@ -68,7 +68,10 @@ Render the selection as chips: `<Combobox.Chips>`
 wraps a `<Combobox.Value>` function child that maps the values to
 `<Combobox.Chip>`s, with the input rendered last so it shares a line with the
 final chip. Backspace in the empty input removes the last chip; ArrowLeft
-walks into the chips, where Delete removes the highlighted one.
+walks into the chips, where Delete removes the highlighted one. A
+`<Combobox.Clear>` and `<Combobox.Trigger>` after the chips keep to the end
+of the field's first row, and the chips wrap beside them, so the field only
+grows when the chips need another row.
 
 <DemoBlock id="combobox/multiple" />
 

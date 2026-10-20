@@ -13,15 +13,24 @@
  * it shipped, and why it is a gate rather than a thing to remember to look
  * at.
  *
+ * `Combobox.InputGroup` makes the same promise and broke it the same way
+ * twice over: a chip was 24px at every size, so one chip grew an `sm` field
+ * to 34px (issue #162); and its chips container based itself on the input's
+ * 20-character intrinsic width, so two short chips pushed Clear and Trigger
+ * onto a row of their own beneath them (issue #163).
+ *
  * What it does: serve `fit-fixture/` through Vite (the real component, its
  * real CSS Module, the real theme), open it in headless Chrome, and for every
- * case — density × size × variant × what the addons hold — check that
+ * case — field × density × size × variant × what it holds — check that
  *
- * - the group's border box is exactly the `--forte-control-h-*` of its size,
- *   read off a probe in the same density scope rather than hard-coded;
- * - every addon button's hit area (`.forte-target`'s `::after`) is at least
+ * - the field's border box is exactly the `--forte-control-h-*` of its size,
+ *   read off a probe in the same density scope rather than hard-coded —
+ *   except in a case built to wrap, which must actually wrap;
+ * - every button in it — addon buttons, Trigger, Clear, a chip's remove —
+ *   keeps a hit area (`.forte-target`'s `::after`) of at least
  *   `--forte-target-min` on both axes, so the fix cannot be "make the
- *   button 24px again and let the field grow".
+ *   button 24px again and let the field grow";
+ * - the field's own buttons sit on its FIRST row, wrapping or not.
  *
  * It also requires at least one button to be visually SMALLER than the
  * target minimum. Without that the check passes vacuously the day the `sm`
@@ -142,21 +151,33 @@ function connect(url) {
 function measure() {
   return [...document.querySelectorAll("[data-case]")].map((cell) => {
     const height = (el) => el.getBoundingClientRect().height;
-    const root = cell.querySelector('[data-forte="input-group"]');
-    const buttons = [...cell.querySelectorAll('[data-forte="button"]')].map((button) => {
+    const root = cell.querySelector('[data-forte="input-group"], [data-forte="combobox-input-group"]');
+    const top = root?.getBoundingClientRect().top ?? 0;
+    const buttons = [
+      ...cell.querySelectorAll(
+        '[data-forte="button"], [data-forte="combobox-trigger"], [data-forte="combobox-clear"], [data-forte="combobox-chip-remove"]',
+      ),
+    ].map((button) => {
       const hit = getComputedStyle(button, "::after");
+      const box = button.getBoundingClientRect();
       return {
         label: button.getAttribute("aria-label") ?? button.textContent,
-        height: height(button),
+        // A chip's remove button rides with its chip, onto whichever row
+        // that wraps to; only the field's own buttons owe the first row.
+        field: button.dataset.forte !== "combobox-chip-remove",
+        height: box.height,
+        bottom: box.bottom - top,
         hitWidth: parseFloat(hit.width),
         hitHeight: parseFloat(hit.height),
       };
     });
     return {
       name: cell.dataset.case,
+      wraps: cell.hasAttribute("data-wraps"),
       control: height(cell.querySelector('[data-probe="control"]')),
       target: height(cell.querySelector('[data-probe="target"]')),
       root: root ? height(root) : null,
+      chips: cell.querySelectorAll('[data-forte="combobox-chip"]').length,
       buttons,
     };
   });
@@ -236,11 +257,20 @@ async function main() {
   for (const c of cases) {
     const problems = [];
     if (c.root === null) {
-      problems.push("no InputGroup rendered");
+      problems.push("no field rendered");
+    } else if (c.wraps) {
+      // Vacuity: a case meant to wrap that fits on one row tests nothing.
+      if (c.root <= c.control + EPSILON) problems.push("meant to wrap, but stayed on one row");
     } else if (Math.abs(c.root - c.control) > EPSILON) {
-      problems.push(`group is ${c.root}px, its control height is ${c.control}px`);
+      problems.push(`field is ${c.root}px, its control height is ${c.control}px`);
+    }
+    if (c.name.includes("chip") && !c.name.endsWith("no-chips") && c.chips === 0) {
+      problems.push("no chips rendered");
     }
     for (const b of c.buttons) {
+      if (b.field && b.bottom > c.control + EPSILON) {
+        problems.push(`"${b.label}" sits below the first row (bottom at ${b.bottom}px)`);
+      }
       if (b.height < c.target - EPSILON) undersized++;
       if (b.hitWidth < c.target - EPSILON || b.hitHeight < c.target - EPSILON) {
         problems.push(
@@ -259,14 +289,14 @@ async function main() {
   if (failures.length > 0) {
     for (const f of failures) console.error(`✗ ${f}`);
     console.error(
-      `\n${failures.length} problem(s) — an InputGroup outgrew its control height or lost its ` +
-        "hit area. See the header of this script.",
+      `\n${failures.length} problem(s) — a field outgrew its control height, dropped a button ` +
+        "below its first row, or lost a hit area. See the header of this script.",
     );
     process.exit(1);
   }
   console.log(
-    `✓ ${cases.length} InputGroups at their control height; ${undersized} addon buttons under ` +
-      "the target minimum, every hit area at it or above.",
+    `✓ ${cases.length} fields at their control height or wrapping as built; ${undersized} ` +
+      "buttons under the target minimum, every hit area at it or above.",
   );
 }
 
