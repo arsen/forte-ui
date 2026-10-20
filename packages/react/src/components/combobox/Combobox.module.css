@@ -122,6 +122,28 @@
      * its own line instead. */
     /** Smallest width the inline input keeps before wrapping under the chips */
     --forte-combobox-input-min-width: var(--forte-space-8);
+    /* The block padding, derived rather than a flat `--forte-space-1`. The
+     * field's inside has to hold a 16px glyph — the
+     * Trigger's caret, a chip's remove button — and a flat 4px left a
+     * `compact` `sm` field (24px) only 14px, so every field there grew past
+     * its control height, and a chip grew it by 10px. The cap centers that
+     * 16px (`--forte-space-4`) in what the borders leave; it bites only at
+     * `compact` `sm` (3px), and every other size and density keeps the full
+     * `--forte-space-1`. Everything nested inside the field — the buttons'
+     * size and radius, a chip's radius — reads this, so they move with it. */
+    /** Field block padding; also the inset the buttons and chips keep from
+     * the border. Up to `--forte-space-1`, less when the height leaves too
+     * little room for a 16px glyph */
+    --forte-combobox-field-py: max(
+      0px,
+      min(
+        var(--forte-space-1),
+        calc(
+          (var(--forte-combobox-field-height) - var(--forte-space-4)) / 2 -
+            var(--forte-combobox-field-border-width)
+        )
+      )
+    );
     /* The field's INNER height: its own height less the block padding and the
      * two borders. Square, so the glyph gets the same air above and below as
      * it does either side. The borders were the term missing here — without
@@ -132,12 +154,11 @@
      * on the buttons grows the HIT area to 24x24 without touching the visual
      * one, the same split `.chipRemove` uses.
      *
-     * `--forte-space-1` here is the group's `padding-block` below, restated
-     * because a custom property cannot read a longhand. Change one, change
-     * both. */
+     * `--forte-combobox-field-py` is the group's `padding-block` below too:
+     * a custom property cannot read a longhand, so both read the property. */
     /** Size of the icon buttons (Trigger, Clear) inside the field */
     --forte-combobox-button-size: calc(
-      var(--forte-combobox-field-height) - var(--forte-space-1) * 2 -
+      var(--forte-combobox-field-height) - var(--forte-combobox-field-py) * 2 -
         var(--forte-combobox-field-border-width) * 2
     );
 
@@ -159,7 +180,7 @@
     /** Corner radius of the icon buttons (Trigger, Clear) inside the field */
     --forte-combobox-button-radius: max(
       0px,
-      calc(var(--forte-combobox-field-radius-painted) - var(--forte-space-1))
+      calc(var(--forte-combobox-field-radius-painted) - var(--forte-combobox-field-py))
     );
 
     /* Declared on the GROUP rather than on `.chip`, which is the part that
@@ -192,7 +213,7 @@
     inline-size: var(--forte-combobox-field-width);
     max-inline-size: 100%;
     min-block-size: var(--forte-combobox-field-height);
-    padding-block: var(--forte-space-1);
+    padding-block: var(--forte-combobox-field-py);
     padding-inline: var(--forte-combobox-field-px);
     border: var(--forte-combobox-field-border-width) solid
       var(--forte-combobox-field-border-color);
@@ -592,6 +613,12 @@
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
+    /* Pinned to the FIRST row. Beside chips that wrap, the group's
+     * `align-items: center` would ride them down to the middle of the stack,
+     * so the caret a reader found at the top of a one-row field moved with
+     * every chip added. On one row it changes nothing: the buttons fill the
+     * row's height, so its start is its center. */
+    align-self: flex-start;
     inline-size: var(--forte-combobox-button-size);
     /* `block-size` is the LAST word on the height here, and it has to be.
      * `block-size` and `height` are one property, so the `height: auto` that
@@ -627,10 +654,19 @@
 
   /* Chips ------------------------------------------------------------------
    * The multi-select value, living inline in the field. The container owns
-   * the flexible column so chips and the input share the group's wrap. */
+   * the flexible column, and its chips and input wrap INSIDE it.
+   *
+   * The basis is 0, not `auto`, for the reason `.input` bases itself on its
+   * floor, one level up. With `auto` the container's hypothetical size was
+   * its max-content width, which counts the input at its ~156px `size=20`
+   * width, so two short chips were enough to outgrow the room beside Clear
+   * and Trigger — and the group, which wraps, moved the BUTTONS to a row of
+   * their own under the chips. At 0 the container takes whatever the
+   * buttons leave, the buttons stay at the end of the first row, and the
+   * field grows only when the chips themselves need another row. */
   .chips {
     display: flex;
-    flex: 1 1 auto;
+    flex: 1 1 0;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--forte-combobox-field-gap, var(--forte-space-1));
@@ -648,13 +684,13 @@
     --forte-combobox-chip-fg-highlighted: var(--forte-color-primary-text);
     /* Nested inside the field the same way the icon buttons are, and for the
      * same reason: a chip is a filled box parked in the field's corner, so a
-     * square one crosses a curved border. The subtrahend is the chip's
-     * smaller inset — its block padding, not its inline one — because the
-     * corner is where both run out at once. */
+     * square one crosses a curved border. The subtrahend is the gap between
+     * the chip and the field's border — the field's block padding, since the
+     * chip fills the row it sits on. */
     /** Chip corner radius */
     --forte-combobox-chip-radius: max(
       0px,
-      calc(var(--forte-combobox-field-radius-painted) - var(--forte-space-1))
+      calc(var(--forte-combobox-field-radius-painted) - var(--forte-combobox-field-py))
     );
     /** Chip font size */
     --forte-combobox-chip-font-size: var(--forte-font-size-1);
@@ -664,7 +700,17 @@
     align-items: center;
     gap: var(--forte-space-1);
     max-inline-size: 100%;
-    padding-block: var(--forte-space-1);
+    /* A height, not block padding around the remove button. Padded, a chip
+     * was 24px at every size, and an `sm` field is 18px inside: one chip
+     * grew the field to 34px and moved the row it sat in (issue 162). The
+     * chip keeps its 24px where the field has room and shrinks to the
+     * field's inner height where it does not — the same height the Trigger
+     * and Clear beside it take — and `align-items` centers the label. */
+    block-size: min(
+      calc(var(--forte-space-4) + var(--forte-space-1) * 2),
+      var(--forte-combobox-button-size, 100vh)
+    );
+    padding-block: 0;
     padding-inline-start: var(--forte-combobox-chip-inset, var(--forte-space-2));
     padding-inline-end: var(--forte-space-1);
     border-radius: var(--forte-combobox-chip-radius);

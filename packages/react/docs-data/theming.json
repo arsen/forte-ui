@@ -3834,15 +3834,22 @@
         "overrides": []
       },
       {
+        "name": "--forte-combobox-field-py",
+        "value": "max( 0px, min( var(--forte-space-1), calc( (var(--forte-combobox-field-height) - var(--forte-space-4)) / 2 - var(--forte-combobox-field-border-width) ) ) )",
+        "description": "Field block padding; also the inset the buttons and chips keep from the border. Up to `--forte-space-1`, less when the height leaves too little room for a 16px glyph",
+        "part": "inputGroup",
+        "overrides": []
+      },
+      {
         "name": "--forte-combobox-button-size",
-        "value": "calc( var(--forte-combobox-field-height) - var(--forte-space-1) * 2 - var(--forte-combobox-field-border-width) * 2 )",
+        "value": "calc( var(--forte-combobox-field-height) - var(--forte-combobox-field-py) * 2 - var(--forte-combobox-field-border-width) * 2 )",
         "description": "Size of the icon buttons (Trigger, Clear) inside the field",
         "part": "inputGroup",
         "overrides": []
       },
       {
         "name": "--forte-combobox-button-radius",
-        "value": "max( 0px, calc(var(--forte-combobox-field-radius-painted) - var(--forte-space-1)) )",
+        "value": "max( 0px, calc(var(--forte-combobox-field-radius-painted) - var(--forte-combobox-field-py)) )",
         "description": "Corner radius of the icon buttons (Trigger, Clear) inside the field",
         "part": "inputGroup",
         "overrides": []
@@ -4108,7 +4115,7 @@
       },
       {
         "name": "--forte-combobox-chip-radius",
-        "value": "max( 0px, calc(var(--forte-combobox-field-radius-painted) - var(--forte-space-1)) )",
+        "value": "max( 0px, calc(var(--forte-combobox-field-radius-painted) - var(--forte-combobox-field-py)) )",
         "description": "Chip corner radius",
         "part": "chip",
         "overrides": []

@@ -24,7 +24,7 @@ export default function ComboboxMultiple() {
   const id = React.useId();
 
   return (
-    <Combobox.Root items={languages} multiple defaultValue={["TypeScript"]}>
+    <Combobox.Root items={languages} multiple defaultValue={["Go", "TypeScript"]}>
       <div className="w-[22rem] max-w-full">
         <label htmlFor={id} className="mb-1 block text-2 font-medium">
           Programming languages
@@ -53,6 +53,10 @@ export default function ComboboxMultiple() {
               )}
             </Combobox.Value>
           </Combobox.Chips>
+          {/* After the chips, so they stay at the end of the first row
+              however many rows the chips wrap onto. */}
+          <Combobox.Clear aria-label="Clear languages" />
+          <Combobox.Trigger aria-label="Show languages" />
         </Combobox.InputGroup>
       </div>
       <Combobox.Popup>

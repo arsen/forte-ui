@@ -187,7 +187,7 @@ pnpm --filter @forte-ui/react check:parity    # anchored-popup parity gate
 pnpm --filter @forte-ui/react check:overflow  # narrow-viewport overflow gate (needs Chrome)
 pnpm --filter @forte-ui/react check:reorderable  # Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/react check:clock     # Skeleton/Shimmer loop-continuity gate (needs Chrome)
-pnpm --filter @forte-ui/react check:fit       # InputGroup control-height gate (needs Chrome)
+pnpm --filter @forte-ui/react check:fit       # InputGroup/Combobox control-height gate (needs Chrome)
 pnpm --filter @forte-ui/react typecheck
 ```
 
@@ -225,13 +225,15 @@ other kind of animation alone. Run it after touching either component's
 animations or the helper: a loop that restarts for a single frame is
 invisible in a screenshot and obvious on a page.
 
-`check:fit` renders every `InputGroup` size, variant and density, in headless
-Chrome, with each kind of addon content (text, an icon, a labelled button, an
-icon-only button at one end or both), and fails unless the group is exactly
-its `--forte-control-h-*` and every addon button's hit area still reaches
-`--forte-target-min`. Run it after touching `InputGroup`, Button's `iconOnly`
-sizing, or the density presets: an `sm` field that grows 6px when its clear
-button appears only shows at `sm`, since `md` and `lg` have room to spare.
+`check:fit` renders every `InputGroup` and `Combobox.InputGroup` size,
+variant and density, in headless Chrome, with each kind of content (text, an
+icon, a labelled button, icon-only buttons; for the combobox, Clear and
+Trigger beside no chips, one, two, or enough to wrap), and fails unless the
+field is exactly its `--forte-control-h-*`, its own buttons sit on its first
+row, and every button's hit area still reaches `--forte-target-min`. Run it
+after touching either field, Button's `iconOnly` sizing, the chips, or the
+density presets: an `sm` field that grows 6px when its clear button or first
+chip appears only shows at `sm`, since `md` and `lg` have room to spare.
 
 ## Token inventory
 
