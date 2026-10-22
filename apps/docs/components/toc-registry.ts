@@ -333,6 +333,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "the-value", text: "The value", depth: 2 },
     { id: "formats", text: "Formats", depth: 3 },
     { id: "opacity", text: "Opacity", depth: 3 },
+    { id: "no-color", text: "No color", depth: 3 },
     { id: "examples", text: "Examples", depth: 2 },
     { id: "swatches-only", text: "Swatches only", depth: 3 },
     { id: "controlled", text: "Controlled", depth: 3 },

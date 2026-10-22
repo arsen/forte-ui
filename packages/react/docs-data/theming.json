@@ -3699,6 +3699,13 @@
         ]
       },
       {
+        "name": "--forte-color-picker-empty-mark",
+        "value": "var(--forte-color-danger)",
+        "description": "The slash drawn in the preview and the trigger's swatch while no color is set",
+        "part": "panel",
+        "overrides": []
+      },
+      {
         "name": "--forte-color-picker-trigger-swatch-size",
         "value": "1rem",
         "description": "Size of the swatch inside the trigger",

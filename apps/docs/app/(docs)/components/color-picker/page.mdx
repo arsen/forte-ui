@@ -114,6 +114,30 @@ that already carries alpha keeps it either way.
 
 <DemoBlock id="color-picker/alpha" />
 
+### No color
+
+An optional color — an outline, a border, a text background — needs a way to
+say it is not set. Pass `value={null}` and the picker stays controlled but shows
+nothing as picked: no swatch is ticked, `ColorPicker.Input` is blank with
+`emptyLabel` as its placeholder, the handles are hidden, and the trigger's
+swatch and `ColorPicker.Preview` draw a slash instead of a color. `undefined`
+still means uncontrolled, and `defaultValue={null}` starts an uncontrolled
+picker empty.
+
+The first pick emits a color through `onValueChange` and `onValueCommitted` as
+usual, and the picker is no longer empty. Emptying it again is yours to do:
+set your state back to `null`.
+
+<DemoBlock id="color-picker/empty" />
+
+The picker remembers the color it last held while it is empty, so the canvas
+keeps its hue and a hue drag starts from that hue rather than red. Where that
+color is a black, a gray or fully transparent, the first pick starts at full
+saturation, brightness and opacity instead — a hue drag from black would move
+the rail and emit black. Switching format while empty changes the format and
+emits nothing; there is no color to rewrite, and an emitted one would fill the
+property in. `ColorPicker.HiddenInput` submits an empty string.
+
 ## Examples
 
 ### Swatches only
