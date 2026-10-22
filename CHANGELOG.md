@@ -13,6 +13,15 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.15.0] - 2026-10-22
+
+### ColorPicker
+
+- Added "no color" support: `value={null}` keeps the picker controlled and empty, and `defaultValue={null}` starts an uncontrolled picker empty. Before, `undefined` was the only way to say a value was unset, and it makes the picker uncontrolled, so an optional color (an outline, a border, a text background) needed a stand-in like `#000000`, and the picker then showed black as picked. While empty, no swatch is ticked, the `ColorPicker.Input` is blank with the empty label as its placeholder, the area and rail handles are hidden until they take keyboard focus, `ColorPicker.Value` shows the empty label, and the trigger swatch and `ColorPicker.Preview` draw a slash instead of a color. `ColorPicker.HiddenInput` submits an empty string, not the last color worked in. The first pick emits a color as usual. Switching the format while empty emits nothing, and a remembered black, gray or transparent seeds the first pick at full color so a hue drag is visible. `value` and `defaultValue` are now typed `string | null`.
+- Added the `emptyLabel` prop on `ColorPicker.Root` (default `"None"`): the text that stands in for a color while `value` is `null`. It is the input's placeholder, `ColorPicker.Value`'s text, and what the trigger and the handles announce to assistive technology.
+- Added the `data-empty` attribute, set while no color is picked, on the trigger, the trigger swatch, the popup panel, `ColorPicker.Panel`, the area, the hue and alpha sliders, `ColorPicker.Preview`, `ColorPicker.Value` and `ColorPicker.Input`, so an empty picker can be styled from plain CSS.
+- Added the `--forte-color-picker-empty-mark` theming knob, the color of the slash drawn in the preview and the trigger swatch while no color is set. It defaults to `--forte-color-danger`.
+
 ## [1.14.2] - 2026-10-20
 
 ### Combobox
@@ -716,7 +725,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.14.2...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.15.0...HEAD
+[1.15.0]: https://github.com/arsen/forte-ui/compare/v1.14.2...v1.15.0
 [1.14.2]: https://github.com/arsen/forte-ui/compare/v1.14.1...v1.14.2
 [1.14.1]: https://github.com/arsen/forte-ui/compare/v1.14.0...v1.14.1
 [1.14.0]: https://github.com/arsen/forte-ui/compare/v1.13.2...v1.14.0
