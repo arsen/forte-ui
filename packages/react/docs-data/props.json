@@ -1732,10 +1732,10 @@
       },
       {
         "name": "defaultValue",
-        "type": "string",
+        "type": "string | null",
         "required": false,
         "defaultValue": "#000000",
-        "description": "The color the picker starts on when it is uncontrolled."
+        "description": "The color the picker starts on when it is uncontrolled. `null` starts it\nwith no color."
       },
       {
         "name": "disabled",
@@ -1743,6 +1743,13 @@
         "required": false,
         "defaultValue": "false",
         "description": "Whether every part ignores interaction."
+      },
+      {
+        "name": "emptyLabel",
+        "type": "string",
+        "required": false,
+        "defaultValue": "None",
+        "description": "What the picker says in place of a color while `value` is `null`: the\ninput's placeholder, `ColorPicker.Value`'s text, and what the trigger and\nthe handles announce."
       },
       {
         "name": "format",
@@ -1802,10 +1809,10 @@
       },
       {
         "name": "value",
-        "type": "string",
+        "type": "string | null",
         "required": false,
         "defaultValue": null,
-        "description": "The selected color, as a CSS color string. Pass it with\n`onValueChange` to control the picker.\n\nAccepts `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`, `oklch()`,\n`oklab()` and `transparent`, in both the legacy comma form and the modern\nspace form. A string that cannot be read is ignored rather than throwing,\nso a half-typed value in your own state never blanks the picker. Named\ncolors (`rebeccapurple`) are not accepted — see the docs page."
+        "description": "The selected color, as a CSS color string. Pass it with\n`onValueChange` to control the picker.\n\nAccepts `#hex` (3, 4, 6 or 8 digits), `rgb()`, `hsl()`, `oklch()`,\n`oklab()` and `transparent`, in both the legacy comma form and the modern\nspace form. A string that cannot be read is ignored rather than throwing,\nso a half-typed value in your own state never blanks the picker. Named\ncolors (`rebeccapurple`) are not accepted — see the docs page.\n\n`null` means \"no color\": the picker stays controlled but shows nothing as\npicked — no swatch ticked, a blank input, no handles — until the first\npick emits a color. `undefined` still means uncontrolled."
       }
     ]
   },

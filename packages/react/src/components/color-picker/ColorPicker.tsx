@@ -50,6 +50,19 @@ export interface ColorPickerChangeDetails {
 const clamp = (n: number, min: number, max: number) =>
   n < min ? min : n > max ? max : n;
 
+/* The model an EMPTY picker holds, so that its first pick lands on a color
+ * the user can see. A remembered black or gray has no saturation or no
+ * brightness for a hue drag to act on — the rail would move and the emitted
+ * color would stay black — and a remembered `transparent` would make every
+ * first pick invisible. The hue survives either way; a chromatic color last
+ * worked in is kept whole. */
+const seedEmpty = (hsva: Hsva): Hsva => ({
+  h: hsva.h,
+  s: hsva.s === 0 || hsva.v === 0 ? 1 : hsva.s,
+  v: hsva.s === 0 || hsva.v === 0 ? 1 : hsva.v,
+  a: hsva.a === 0 ? 1 : hsva.a,
+});
+
 const ALL_FORMATS: readonly ColorPickerFormat[] = ["hex", "rgb", "hsl", "oklch"];
 
 const FORMAT_LABELS: Record<ColorPickerFormat, string> = {
@@ -80,6 +93,12 @@ interface ColorPickerContextValue {
   update: (patch: Partial<Hsva>, reason: ColorPickerChangeReason) => void;
   commit: (reason: ColorPickerChangeReason) => void;
   disabled: boolean;
+  /** No color is set. `hsva` still holds the color last worked in, so the
+   * canvas keeps its hue and the first pick starts from somewhere visible —
+   * but no part may present it as the current value. */
+  empty: boolean;
+  /** What the picker says in place of a color while it is empty. */
+  emptyLabel: string;
 }
 
 const ColorPickerContext = React.createContext<ColorPickerContextValue | null>(
@@ -142,13 +161,18 @@ export interface ColorPickerRootProps {
    * space form. A string that cannot be read is ignored rather than throwing,
    * so a half-typed value in your own state never blanks the picker. Named
    * colors (`rebeccapurple`) are not accepted — see the docs page.
+   *
+   * `null` means "no color": the picker stays controlled but shows nothing as
+   * picked — no swatch ticked, a blank input, no handles — until the first
+   * pick emits a color. `undefined` still means uncontrolled.
    */
-  value?: string;
+  value?: string | null;
   /**
-   * The color the picker starts on when it is uncontrolled.
+   * The color the picker starts on when it is uncontrolled. `null` starts it
+   * with no color.
    * @default "#000000"
    */
-  defaultValue?: string;
+  defaultValue?: string | null;
   /**
    * Called on every change, including each frame of a drag. `value` is
    * written in the current `format`; `details` carries the same color as
@@ -184,6 +208,13 @@ export interface ColorPickerRootProps {
    * @default ["hex", "rgb", "hsl", "oklch"]
    */
   formats?: readonly ColorPickerFormat[];
+  /**
+   * What the picker says in place of a color while `value` is `null`: the
+   * input's placeholder, `ColorPicker.Value`'s text, and what the trigger and
+   * the handles announce.
+   * @default "None"
+   */
+  emptyLabel?: string;
   /**
    * Whether every part ignores interaction.
    * @default false
@@ -248,6 +279,7 @@ export function ColorPickerRoot({
   defaultFormat = "hex",
   onFormatChange,
   formats = ALL_FORMATS,
+  emptyLabel = "None",
   disabled = false,
   defaultOpen,
   open,
@@ -255,9 +287,18 @@ export function ColorPickerRoot({
   modal,
   children,
 }: ColorPickerRootProps) {
-  const [hsva, setHsva] = React.useState<Hsva>(
-    () => parseColor(value ?? defaultValue) ?? { h: 0, s: 0, v: 0, a: 1 },
-  );
+  const startsEmpty = value === null || (value === undefined && defaultValue === null);
+  const [hsva, setHsva] = React.useState<Hsva>(() => {
+    const parsed = parseColor(value ?? defaultValue ?? "") ?? { h: 0, s: 0, v: 0, a: 1 };
+    return startsEmpty ? seedEmpty(parsed) : parsed;
+  });
+  /* State rather than `value === null` read straight off the props, for the
+   * same reason the color itself is: a controlled picker's model moves the
+   * moment the user picks, whether or not the consumer has passed the color
+   * back yet. One that persists only from `onValueCommitted` holds `null`
+   * for the whole of the first drag, and reading the prop would keep the
+   * handles hidden under the pointer until it let go. */
+  const [empty, setEmpty] = React.useState(startsEmpty);
   const [uncontrolledFormat, setUncontrolledFormat] =
     React.useState<ColorPickerFormat>(defaultFormat);
   const format = formatProp ?? uncontrolledFormat;
@@ -280,7 +321,16 @@ export function ColorPickerRoot({
   const [previousValue, setPreviousValue] = React.useState(value);
   if (value !== previousValue) {
     setPreviousValue(value);
-    if (value !== undefined && value !== emittedRef.current) {
+    if (value === null) {
+      setEmpty(true);
+      setHsva(seedEmpty);
+    } else if (value !== undefined) {
+      /* Any string ends the empty state, including one equal to the last
+       * string emitted: a consumer that clears a color and then undoes the
+       * clear passes back exactly what the picker last said. */
+      setEmpty(false);
+    }
+    if (typeof value === "string" && value !== emittedRef.current) {
       const parsed = parseColor(value);
       if (parsed) {
         setHsva((current) => ({
@@ -306,8 +356,8 @@ export function ColorPickerRoot({
    * closure would hand each of those the color from the last committed
    * paint — so a fast drag would emit stale colors and `commit` would report
    * the second-to-last one. */
-  const stateRef = React.useRef({ hsva, format });
-  stateRef.current = { hsva, format };
+  const stateRef = React.useRef({ hsva, format, empty });
+  stateRef.current = { hsva, format, empty };
 
   const emit = React.useCallback(
     (
@@ -332,8 +382,9 @@ export function ColorPickerRoot({
   const update = React.useCallback(
     (patch: Partial<Hsva>, reason: ColorPickerChangeReason) => {
       const next = { ...stateRef.current.hsva, ...patch };
-      stateRef.current = { ...stateRef.current, hsva: next };
+      stateRef.current = { ...stateRef.current, hsva: next, empty: false };
       setHsva(next);
+      setEmpty(false);
       emit(next, stateRef.current.format, reason, onValueChange);
     },
     [emit, onValueChange],
@@ -341,10 +392,16 @@ export function ColorPickerRoot({
 
   const commit = React.useCallback(
     (reason: ColorPickerChangeReason) => {
+      /* A commit with no change before it is still a pick when the picker is
+       * empty — a click on a rail exactly where its hidden handle already
+       * sits moves nothing, and Base UI reports only the commit. Routing it
+       * through `update` keeps the pair in order: the color is announced as
+       * changed before it is announced as committed. */
+      if (stateRef.current.empty) update({}, reason);
       const { hsva: current, format: currentFormat } = stateRef.current;
       emit(current, currentFormat, reason, onValueCommitted);
     },
-    [emit, onValueCommitted],
+    [emit, update, onValueCommitted],
   );
 
   const setFormat = React.useCallback(
@@ -353,6 +410,10 @@ export function ColorPickerRoot({
       stateRef.current = { ...stateRef.current, format: next };
       if (formatProp === undefined) setUncontrolledFormat(next);
       onFormatChange?.(next);
+      /* Nothing to rewrite. Re-emitting here would hand the consumer a color
+       * nobody picked, and an empty property would fill itself in because
+       * someone looked at the format menu. */
+      if (stateRef.current.empty) return;
       /* The color did not move, but the string that describes it did. A
        * controlled `value` left in the old notation would be parsed back on
        * the next render and shown in the old one, so the format switch would
@@ -386,8 +447,24 @@ export function ColorPickerRoot({
       update,
       commit,
       disabled,
+      empty,
+      emptyLabel,
     }),
-    [hsva, rgba, css, solid, text, format, formats, setFormat, update, commit, disabled],
+    [
+      hsva,
+      rgba,
+      css,
+      solid,
+      text,
+      format,
+      formats,
+      setFormat,
+      update,
+      commit,
+      disabled,
+      empty,
+      emptyLabel,
+    ],
   );
 
   return (
@@ -483,13 +560,20 @@ export const ColorPickerTrigger = React.forwardRef<
        * custom properties every gradient in it reads. Same everywhere below. */
       style={{ ...vars, ...style }}
       data-forte="color-picker-trigger"
+      data-empty={context.empty || undefined}
       {...props}
     >
       {hideSwatch ? null : (
-        <span className={styles.triggerSwatch} data-forte="color-picker-trigger-swatch" />
+        <span
+          className={styles.triggerSwatch}
+          data-forte="color-picker-trigger-swatch"
+          data-empty={context.empty || undefined}
+        />
       )}
       {children}
-      <span className="forte-visually-hidden">{context.text}</span>
+      <span className="forte-visually-hidden">
+        {context.empty ? context.emptyLabel : context.text}
+      </span>
     </Popover.Trigger>
   );
 });
@@ -541,7 +625,7 @@ export const ColorPickerPopup = React.forwardRef<
   { arrow = true, className, panelClassName, children, ...props },
   ref,
 ) {
-  const { disabled } = useColorPicker("Popup");
+  const { disabled, empty } = useColorPicker("Popup");
 
   return (
     <Popover.Popup ref={ref} className={clsx(styles.popup, className)} {...props}>
@@ -553,6 +637,7 @@ export const ColorPickerPopup = React.forwardRef<
         className={clsx(styles.panel, panelClassName)}
         data-forte="color-picker-panel"
         data-disabled={disabled || undefined}
+        data-empty={empty || undefined}
       >
         {children}
       </div>
@@ -583,7 +668,7 @@ export const ColorPickerPanel = React.forwardRef<
   HTMLDivElement,
   ColorPickerPanelProps
 >(function ColorPickerPanel({ className, ...props }, ref) {
-  const { disabled } = useColorPicker("Panel");
+  const { disabled, empty } = useColorPicker("Panel");
 
   return (
     <div
@@ -591,6 +676,7 @@ export const ColorPickerPanel = React.forwardRef<
       className={clsx(styles.panel, styles.standalonePanel, className)}
       data-forte="color-picker-panel"
       data-disabled={disabled || undefined}
+      data-empty={empty || undefined}
       {...props}
     />
   );
@@ -700,7 +786,7 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
     ref,
   ) {
     const context = useColorPicker("Area");
-    const { hsva, disabled, update, commit } = context;
+    const { hsva, disabled, update, commit, empty, emptyLabel } = context;
     const vars = useColorVars(context);
 
     const areaRef = React.useRef<HTMLDivElement | null>(null);
@@ -811,6 +897,7 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
         data-forte="color-picker-area"
         data-disabled={disabled || undefined}
         data-dragging={dragging || undefined}
+        data-empty={empty || undefined}
         style={{ ...vars, ...style }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -837,7 +924,11 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
             value={exact(hsva.s)}
             disabled={disabled}
             aria-label={saturationLabel}
-            aria-valuetext={`${percent(hsva.s)}%`}
+            /* A range input cannot be blank, so while the picker is empty it
+              * still holds a number — the seeded one its first step starts
+              * from. The text is what keeps that number from being announced
+              * as the color's saturation. */
+            aria-valuetext={empty ? emptyLabel : `${percent(hsva.s)}%`}
             onChange={(event) => {
               update({ s: Number(event.target.value) / 100 }, "area");
               commit("area");
@@ -857,7 +948,7 @@ export const ColorPickerArea = React.forwardRef<HTMLDivElement, ColorPickerAreaP
             /* The input is horizontal; the axis it drives is not. Without this
               * the pair is announced as two identical horizontal sliders. */
             aria-orientation="vertical"
-            aria-valuetext={`${percent(hsva.v)}%`}
+            aria-valuetext={empty ? emptyLabel : `${percent(hsva.v)}%`}
             onChange={(event) => {
               update({ v: Number(event.target.value) / 100 }, "area");
               commit("area");
@@ -892,7 +983,7 @@ interface RailProps {
  */
 function Rail({ channel, label, className, style, rest }: RailProps) {
   const context = useColorPicker(channel === "hue" ? "HueSlider" : "AlphaSlider");
-  const { hsva, disabled, update, commit } = context;
+  const { hsva, disabled, update, commit, empty, emptyLabel } = context;
   const vars = useColorVars(context);
 
   const hue = channel === "hue";
@@ -918,6 +1009,7 @@ function Rail({ channel, label, className, style, rest }: RailProps) {
       onValueCommitted={() => commit(hue ? "hue" : "alpha")}
       className={clsx(styles.rail, className)}
       data-forte={`color-picker-${channel}-slider`}
+      data-empty={empty || undefined}
       style={{ ...vars, ...style }}
       {...rest}
     >
@@ -931,7 +1023,7 @@ function Rail({ channel, label, className, style, rest }: RailProps) {
             data-forte={`color-picker-${channel}-thumb`}
             aria-label={label}
             getAriaValueText={(_formatted, raw) =>
-              hue ? `${Math.round(raw)}°` : `${Math.round(raw)}%`
+              empty ? emptyLabel : hue ? `${Math.round(raw)}°` : `${Math.round(raw)}%`
             }
           />
         </BaseSlider.Track>
@@ -1073,19 +1165,21 @@ export const ColorPickerSwatches = React.forwardRef<
   },
   ref,
 ) {
-  const { rgba, disabled } = useColorPicker("Swatches");
+  const { rgba, disabled, empty } = useColorPicker("Swatches");
 
   /* The tab stop belongs to the selected swatch, and to the first one when
    * nothing matches — the roving-tabindex rule, which is what stops Tab from
    * landing on a swatch the user has never seen while the selected one is
-   * three rows up. */
+   * three rows up. An empty picker matches nothing, whatever its model holds. */
   const roving = React.useMemo(() => {
-    const selected = colors.find((color) => {
-      const parsed = parseColor(color);
-      return parsed ? sameColor(hsvaToRgba(parsed), rgba) : false;
-    });
+    const selected = empty
+      ? undefined
+      : colors.find((color) => {
+          const parsed = parseColor(color);
+          return parsed ? sameColor(hsvaToRgba(parsed), rgba) : false;
+        });
     return selected ?? colors[0] ?? null;
-  }, [colors, rgba]);
+  }, [colors, rgba, empty]);
 
   const context = React.useMemo(() => ({ roving }), [roving]);
 
@@ -1205,11 +1299,11 @@ export const ColorPickerSwatch = React.forwardRef<
   { value, label, disabled: disabledProp, className, style, onClick, ...props },
   ref,
 ) {
-  const { rgba, disabled, update, commit } = useColorPicker("Swatch");
+  const { rgba, disabled, update, commit, empty } = useColorPicker("Swatch");
   const group = React.useContext(SwatchesContext);
 
   const parsed = React.useMemo(() => parseColor(value), [value]);
-  const selected = parsed ? sameColor(hsvaToRgba(parsed), rgba) : false;
+  const selected = !empty && parsed ? sameColor(hsvaToRgba(parsed), rgba) : false;
 
   const select = () => {
     if (!parsed) return;
@@ -1306,6 +1400,7 @@ export const ColorPickerPreview = React.forwardRef<
       aria-hidden="true"
       className={clsx(styles.preview, className)}
       data-forte="color-picker-preview"
+      data-empty={context.empty || undefined}
       style={{ ...vars, ...style }}
       {...props}
     />
@@ -1330,16 +1425,17 @@ export const ColorPickerValue = React.forwardRef<
   HTMLSpanElement,
   ColorPickerValueProps
 >(function ColorPickerValue({ className, ...props }, ref) {
-  const { text } = useColorPicker("Value");
+  const { text, empty, emptyLabel } = useColorPicker("Value");
 
   return (
     <span
       ref={ref}
       className={clsx(styles.value, className)}
       data-forte="color-picker-value"
+      data-empty={empty || undefined}
       {...props}
     >
-      {text}
+      {empty ? emptyLabel : text}
     </span>
   );
 });
@@ -1454,9 +1550,13 @@ export const ColorPickerInput = React.forwardRef<
   { label = "Color value", className, onKeyDown, onBlur, ...props },
   ref,
 ) {
-  const { text, disabled, update, commit } = useColorPicker("Input");
+  const { text, disabled, update, commit, empty, emptyLabel } = useColorPicker("Input");
   const [draft, setDraft] = React.useState<string | null>(null);
-  const invalid = draft !== null && parseColor(draft) === null;
+  /* A cleared field is only an error when there is a color it failed to
+   * replace. On an empty picker it is simply the state the field started
+   * in, typed back into. */
+  const invalid =
+    draft !== null && parseColor(draft) === null && !(empty && draft.trim() === "");
 
   return (
     <input
@@ -1473,10 +1573,15 @@ export const ColorPickerInput = React.forwardRef<
       disabled={disabled}
       aria-label={label}
       aria-invalid={invalid || undefined}
-      value={draft ?? text}
+      value={draft ?? (empty ? "" : text)}
+      /* Only while empty: a field cleared on a picker that HAS a color is a
+        * failed edit, and "None" under it would claim the color was removed.
+        * Before the spread, so a `placeholder` of the caller's own wins. */
+      placeholder={empty ? emptyLabel : undefined}
       className={clsx(styles.input, "forte-focus-ring", className)}
       data-forte="color-picker-input"
       data-invalid={invalid || undefined}
+      data-empty={empty || undefined}
       onChange={(event) => {
         const next = event.target.value;
         setDraft(next);
@@ -1638,14 +1743,17 @@ export const ColorPickerHiddenInput = React.forwardRef<
   HTMLInputElement,
   ColorPickerHiddenInputProps
 >(function ColorPickerHiddenInput({ name, ...props }, ref) {
-  const { text } = useColorPicker("HiddenInput");
+  const { text, empty } = useColorPicker("HiddenInput");
 
   return (
     <input
       ref={ref}
       type="hidden"
       name={name}
-      value={text}
+      /* Submitted as an empty string, the way an empty text field is, rather
+       * than left out: a server reading the form can tell "cleared" from
+       * "not on this form". */
+      value={empty ? "" : text}
       readOnly
       data-forte="color-picker-hidden-input"
       {...props}

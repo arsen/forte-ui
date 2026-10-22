@@ -253,6 +253,8 @@ import d_color_picker_controlled from "./color-picker/controlled";
 import d_color_picker_controlled_src from "./color-picker/controlled?raw";
 import d_color_picker_disabled from "./color-picker/disabled";
 import d_color_picker_disabled_src from "./color-picker/disabled?raw";
+import d_color_picker_empty from "./color-picker/empty";
+import d_color_picker_empty_src from "./color-picker/empty?raw";
 import d_color_picker_eyedropper from "./color-picker/eyedropper";
 import d_color_picker_eyedropper_src from "./color-picker/eyedropper?raw";
 import d_color_picker_form from "./color-picker/form";
@@ -1079,6 +1081,7 @@ export type DemoId =
   | "color-picker/basic"
   | "color-picker/controlled"
   | "color-picker/disabled"
+  | "color-picker/empty"
   | "color-picker/eyedropper"
   | "color-picker/form"
   | "color-picker/formats"
@@ -1556,6 +1559,7 @@ const REGISTRY: Record<DemoId, Demo> = {
   "color-picker/basic": { Component: d_color_picker_basic, source: d_color_picker_basic_src, file: "color-picker/basic.tsx" },
   "color-picker/controlled": { Component: d_color_picker_controlled, source: d_color_picker_controlled_src, file: "color-picker/controlled.tsx" },
   "color-picker/disabled": { Component: d_color_picker_disabled, source: d_color_picker_disabled_src, file: "color-picker/disabled.tsx" },
+  "color-picker/empty": { Component: d_color_picker_empty, source: d_color_picker_empty_src, file: "color-picker/empty.tsx" },
   "color-picker/eyedropper": { Component: d_color_picker_eyedropper, source: d_color_picker_eyedropper_src, file: "color-picker/eyedropper.tsx" },
   "color-picker/form": { Component: d_color_picker_form, source: d_color_picker_form_src, file: "color-picker/form.tsx" },
   "color-picker/formats": { Component: d_color_picker_formats, source: d_color_picker_formats_src, file: "color-picker/formats.tsx" },

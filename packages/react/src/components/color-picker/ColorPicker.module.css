@@ -142,6 +142,13 @@
     --forte-color-picker-checker-light: var(--forte-color-background);
     /** The checkerboard's dark square */
     --forte-color-picker-checker-dark: var(--forte-color-border);
+    /* Not the checkerboard: that already means `transparent`, which is a color
+     * someone picked. The slash is the convention design tools use for "no
+     * paint", and it is the one mark here that is a design decision rather
+     * than the color space, so it is a token. */
+    /** The slash drawn in the preview and the trigger's swatch while no color
+     * is set */
+    --forte-color-picker-empty-mark: var(--forte-color-danger);
 
     /* Written as inline styles by the component, and listed here so a reader
      * of this file knows where they come from:
@@ -311,6 +318,23 @@
    * motion and the handle simply does not grow. */
   .area[data-dragging] .areaThumb {
     scale: calc(1 + 0.18 * var(--forte-motion-ok));
+  }
+
+  /* No color is set, so no handle may point at one. The model still holds a
+   * position — the color last worked in — and a handle drawn there would say
+   * that color is current, which is the whole bug this state exists to fix.
+   *
+   * `opacity`, not `visibility` or `display`: the range inputs inside these
+   * handles are the keyboard's way in, and a hidden element cannot take
+   * focus. A handle with a VISIBLE focus comes back, because the focus ring is
+   * drawn by the handle and a keyboard user needs to see where the first arrow
+   * press will start from. `:focus-visible` and not `:focus-within`, which is
+   * the condition `.forte-focus-ring-within` rings on too: the popover moves
+   * focus into the canvas the moment it opens, and `:focus-within` showed the
+   * handle on every open, pointing at a color nobody had picked. */
+  .area[data-empty] .areaThumb:not(:has(:focus-visible)),
+  .rail[data-empty] .railThumb:not(:has(:focus-visible)) {
+    opacity: 0;
   }
 
   /* The two range inputs behind the canvas handle.
@@ -795,6 +819,28 @@
     background-size:
       auto,
       var(--forte-color-picker-checker-size, 6px) var(--forte-color-picker-checker-size, 6px);
+  }
+
+  /* ------------------------------------------------------------------------
+   * No color
+   *
+   * The two parts that show the current color as a chip show its absence as a
+   * slash on the page color. Corner to corner, so it reads at the trigger's
+   * 16px as well as at the preview's size; the hard stops are what make it a
+   * line rather than a gradient. One slash for both writing directions — it is
+   * a sign, not text.
+   * --------------------------------------------------------------------- */
+  .preview[data-empty],
+  .triggerSwatch[data-empty] {
+    background-color: var(--forte-color-background);
+    background-image: linear-gradient(
+      to top right,
+      transparent calc(50% - 0.75px),
+      var(--forte-color-picker-empty-mark, var(--forte-color-danger)) calc(50% - 0.75px)
+        calc(50% + 0.75px),
+      transparent calc(50% + 0.75px)
+    );
+    background-size: auto;
   }
 }
 
