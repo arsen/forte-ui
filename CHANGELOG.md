@@ -13,6 +13,21 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.15.1] - 2026-10-26
+
+### ThemeToggle
+
+- Fixed `ThemeScript` shipping as a client component. It renders a constant and needs nothing from the client, so the `"use client"` directive is gone. In a Next.js App Router layout it is now a plain server component that sends no JS, and `themeInitScript` reaches server code as the string itself instead of a client reference.
+
+### General
+
+- Fixed the `@forte-ui/react` barrel being one client entry (#165). It no longer carries `"use client"`. The boundary is each component's own module, so `import { Button } from "@forte-ui/react"` in a React Server Component still works. A server layout that imported only `ThemeScript` used to send every component's JS and stylesheet to every page of a Next.js app. Per-page JS in those apps now roughly halves, and server-safe values such as `DEFAULT_SWATCHES` reach server code as values rather than client references.
+- Changed how component CSS ships. All component styles are now one `dist/styles/components.css`, pulled in by the published `@forte-ui/react/theme.css`, and the per-component CSS the JS used to inject is gone (`vite-plugin-lib-inject-css` is dropped). Apps that already import `@forte-ui/react/theme.css` need no change. In Next.js App Router apps, per-page stylesheets go from one per component to a small constant set, and the "import `globals.css` before `@forte-ui/react`" ordering requirement no longer applies. Vite apps lose per-component CSS tree-shaking: about 48 KB gzipped of component CSS now ships whatever a page renders.
+
+### create-forte-ui
+
+- Changed the Next.js + Tailwind layout template to stop emitting the "globals.css first" warning comment above its imports. The ordering it warned about no longer matters now that component CSS arrives through `theme.css`.
+
 ## [1.15.0] - 2026-10-22
 
 ### ColorPicker
@@ -725,7 +740,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.15.0...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.15.1...HEAD
+[1.15.1]: https://github.com/arsen/forte-ui/compare/v1.15.0...v1.15.1
 [1.15.0]: https://github.com/arsen/forte-ui/compare/v1.14.2...v1.15.0
 [1.14.2]: https://github.com/arsen/forte-ui/compare/v1.14.1...v1.14.2
 [1.14.1]: https://github.com/arsen/forte-ui/compare/v1.14.0...v1.14.1

@@ -12,6 +12,10 @@ export type TocHeading = { id: string; text: string; depth: 2 | 3 };
 
 export const TOC: Record<string, TocHeading[]> = {
   "/changelog/": [
+    { id: "v1151", text: "v1.15.1", depth: 2 },
+    { id: "themetoggle", text: "ThemeToggle", depth: 3 },
+    { id: "general", text: "General", depth: 3 },
+    { id: "create-forte-ui", text: "create-forte-ui", depth: 3 },
     { id: "v1150", text: "v1.15.0", depth: 2 },
     { id: "colorpicker", text: "ColorPicker", depth: 3 },
     { id: "v1142", text: "v1.14.2", depth: 2 },
@@ -20,7 +24,7 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "inputgroup", text: "InputGroup", depth: 3 },
     { id: "v1140", text: "v1.14.0", depth: 2 },
     { id: "design-tokens--motion", text: "Design tokens & motion", depth: 3 },
-    { id: "general", text: "General", depth: 3 },
+    { id: "general-1", text: "General", depth: 3 },
     { id: "v1132", text: "v1.13.2", depth: 2 },
     { id: "togglegroup", text: "ToggleGroup", depth: 3 },
     { id: "v1131", text: "v1.13.1", depth: 2 },
@@ -31,8 +35,6 @@ export const TOC: Record<string, TocHeading[]> = {
     { id: "drawer-2", text: "Drawer", depth: 3 },
     { id: "v1120", text: "v1.12.0", depth: 2 },
     { id: "carousel", text: "Carousel", depth: 3 },
-    { id: "v1113", text: "v1.11.3", depth: 2 },
-    { id: "carousel-1", text: "Carousel", depth: 3 },
     { id: "full-history", text: "Full history", depth: 2 },
   ],
   "/components/": [
