@@ -11,7 +11,7 @@
  *   reset       optional box-sizing normalization
  *   tokens      design tokens, and the media queries that retune them
  *   patterns    reusable global classes (.forte-focus-ring, .forte-hc-surface, ...)
- *   components  per-component CSS Modules
+ *   components  every component's CSS Module, bundled into components.css
  *   a11y        accessibility overrides that must beat component CSS
  *   overrides   reserved for the consumer, last among our layers
  *

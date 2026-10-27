@@ -31,7 +31,7 @@
  * statement wins the race instead — `forte-ui` then lands after `utilities`,
  * which is the second failure above. Keeping this import first costs nothing
  * and settles the order for every stylesheet loaded later, including the
- * per-component CSS the library's JS injects.
+ * component CSS that arrives through theme.css.
  *
  * ---------------------------------------------------------------------------
  * Why `@theme inline` and not plain `@theme`

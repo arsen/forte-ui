@@ -1,8 +1,13 @@
-"use client";
-
 import * as React from "react";
 
 /*
+ * Deliberately NOT "use client": it renders a constant, so it needs nothing
+ * from the client, and the directive would make `themeInitScript` reach server
+ * code as a client reference rather than the string — useless to a framework
+ * that injects head markup as text, which is the export's whole reason to
+ * exist. Without it, `ThemeScript` is a plain server component in a Next.js
+ * layout and ships no JS at all.
+ *
  * The pre-paint half of theme persistence.
  *
  * With no `data-theme` attribute the stylesheet already follows the OS through

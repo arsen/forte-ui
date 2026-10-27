@@ -1,9 +1,12 @@
-"use client";
-
-// Every export in this barrel is a client component, so the barrel itself is a
-// client boundary. Marking it here means a consumer can `import { Button } from
-// "@forte-ui/react"` directly inside a React Server Component without
-// having to wrap it — which is the import everyone writes first.
+// No "use client" here, on purpose. The client boundary is each component's
+// own module — every one that touches hooks, context or Base UI carries the
+// directive, and `preserveUseClient()` in vite.config.ts keeps it on the chunk —
+// so `import { Button } from "@forte-ui/react"` in a React Server Component
+// still works. Marking the barrel as well (as it once was) made the whole of it
+// one client entry: a server layout importing nothing but `ThemeScript` sent
+// every component's JS and stylesheet to every page of a Next.js app (#165),
+// and server-safe values like `DEFAULT_SWATCHES` reached server code as client
+// references instead of the values themselves.
 
 export { Accordion } from "./components/accordion";
 export type {

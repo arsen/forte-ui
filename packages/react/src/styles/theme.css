@@ -6,7 +6,11 @@
  * Import it ONCE, at the root of your app, before any component. It brings in
  * the cascade-layer declaration, the registered custom properties, the color
  * ramps, the semantic tokens, the motion system, the accessibility responses,
- * and the shared pattern classes.
+ * the shared pattern classes, and every component's styles.
+ *
+ * That last one is not in this file: the published copy gains an
+ * `@import "./components.css";` at build time (see copyGlobalStyles() in
+ * vite.config.ts), because the bundled component CSS exists only in dist.
  *
  * ---------------------------------------------------------------------------
  * Theming
