@@ -935,20 +935,32 @@ drafts a section in exactly this shape.
   change `packages/create-forte-ui/src/templates.ts` in the same PR (and vice
   versa); `pnpm --filter create-forte-ui smoke` builds all four paths and is
   the check.
+- Component CSS ships as ONE file, `dist/styles/components.css`, and reaches
+  an app only through the published `theme.css`, which `copyGlobalStyles()`
+  in `vite.config.ts` appends an `@import` of it to. No JS chunk imports a
+  stylesheet (`build.cssCodeSplit: false`; `vite-plugin-lib-inject-css` is
+  gone). One `.css` import per client chunk made the Next.js App Router emit
+  a render-blocking stylesheet per component a page reached — 20 to 34 a page
+  on boom.design (#165). Do not reintroduce per-chunk CSS, and do not add the
+  `@import` to `src/styles/theme.css`: `components.css` does not exist in
+  `src/`, and the `check:*` fixtures that serve the source would break on it.
+  Consequences worth knowing: a Vite app ships every component's CSS (about
+  48 KB gzipped) whether it renders one component or sixty, and cross-component
+  rules — InputGroup into Button, Button into Avatar — must keep winning on
+  specificity, since the concatenation order is the build's, not a
+  promise.
 - Vite's CSS pipeline rewrites `@layer` statements (Tailwind's compiler
   re-slots them, the minifier merges them), so the bridge's own layer-order
   statement does not survive a stock Vite + Tailwind app — Preflight ends up
   beating the components and buttons render as bare text. The fix is a
   document-level pin: `<style>@layer theme, base, forte, components,
   utilities;</style>` in `index.html`'s head. The Vite guide documents it and
-  the scaffolder writes it. Next.js keeps the statement intact but has its own
-  version of the race: it emits CSS in import order, and the library's
-  component CSS arrives with the library's JS. A layout that imports
-  `@forte-ui/react` (for `ThemeToggle`) *above* `./globals.css` ships a
-  stylesheet that opens with `@layer forte.components { … }`, which pins
-  `forte` first and hands Preflight the same win. `./globals.css` must be the
-  root layout's first import; the Next.js guide and `nextLayoutTsx` in the
-  scaffolder both say so, and the scaffolder used to get it wrong.
+  the scaffolder writes it. Next.js keeps the statement intact, and since
+  #165 it has no race of its own either: no JS chunk imports a stylesheet.
+  Before that, each component's CSS arrived with its JS, so a layout that
+  imported `@forte-ui/react` *above* `./globals.css` shipped a stylesheet
+  opening with `@layer forte.components { … }`, pinned `forte` first and
+  handed Preflight the same win.
 - Do not put a `transition` on the registered seeds to cross-fade a palette.
   The home page did, and in the desktop app's Chromium (148) every
   `border: 1px solid var(--…)` shorthand on the page — Card, the outline
