@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- A phone, because touch-action only decides anything for a finger:
+         without this the page lays out at 980px and is zoomed out. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carousel touch-pan fixture</title>
+  </head>
+  <!-- The document itself never scrolls: the one scroller is the fixture's
+       own, so a pan that leaks to the page cannot pass for one it took. -->
+  <body style="margin: 0; overflow: hidden">
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

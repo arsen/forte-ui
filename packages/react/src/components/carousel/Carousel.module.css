@@ -149,11 +149,8 @@
     overflow: clip;
     border-radius: var(--forte-carousel-radius);
     min-inline-size: 0;
-    /* Claim the inline axis for the drag and leave the block axis to the
-     * page: a thumb sweeping down over the carousel scrolls the page, a thumb
-     * sweeping across moves the slides, and the browser decides which on the
-     * first movement. `none` would trap the page under every carousel. */
-    touch-action: pan-y pinch-zoom;
+    /* No `touch-action` here: a viewport that cannot be dragged leaves every
+     * pan to the browser, and the claim below is made only by one that can. */
     /* Measured off the slides in view by the component under `autoHeight`
      * and transitioned here — `auto` cannot be. Unset, the viewport is as
      * tall as its tallest slide, which is what a plain flex row gives. */
@@ -161,12 +158,25 @@
     transition: block-size var(--forte-carousel-height-duration) var(--forte-ease-standard);
   }
 
-  .viewport[data-orientation="vertical"] {
-    touch-action: pan-x pinch-zoom;
-  }
-
+  /* Claim the drag's axis and leave the other to the page: a thumb sweeping
+   * down over the carousel scrolls the page, a thumb sweeping across moves
+   * the slides, and the browser decides which on the first movement. `none`
+   * would trap the page under every carousel.
+   *
+   * Only under [data-draggable], which is `draggable` AND more than one
+   * slide. The claim used to sit on every viewport, so a carousel turned
+   * only by its arrows — or holding a single slide — still told the browser
+   * not to pan across it, nobody else took the gesture either, and a
+   * sideways swipe that began on it was thrown away. A row of such cards in
+   * a horizontal scroller scrolled from a card's text and not from its
+   * carousel (#167). `check:pan` holds both halves of this. */
   .viewport[data-draggable] {
     cursor: grab;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  .viewport[data-draggable][data-orientation="vertical"] {
+    touch-action: pan-x pinch-zoom;
   }
 
   .root[data-dragging] .viewport {

@@ -188,6 +188,7 @@ pnpm --filter @forte-ui/react check:overflow  # narrow-viewport overflow gate (n
 pnpm --filter @forte-ui/react check:reorderable  # Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/react check:clock     # Skeleton/Shimmer loop-continuity gate (needs Chrome)
 pnpm --filter @forte-ui/react check:fit       # InputGroup/Combobox control-height gate (needs Chrome)
+pnpm --filter @forte-ui/react check:pan       # Carousel touch-pan gate (needs Chrome)
 pnpm --filter @forte-ui/react typecheck
 ```
 
@@ -234,6 +235,15 @@ row, and every button's hit area still reaches `--forte-target-min`. Run it
 after touching either field, Button's `iconOnly` sizing, the chips, or the
 density presets: an `sm` field that grows 6px when its clear button or first
 chip appears only shows at `sm`, since `md` and `lg` have room to spare.
+
+`check:pan` puts one `Carousel` in a scroller that scrolls both ways and
+swipes it with a synthesized touch gesture in headless Chrome, draggable and
+not, horizontal and vertical, one slide and three. It fails unless a carousel
+that cannot be dragged lets the swipe scroll the scroller, and one that can
+turns its slide on its own axis and still lets the other axis through. Run
+it after touching the viewport's `touch-action` or the `data-draggable`
+condition: a `touch-action` that claims a pan nobody takes throws the swipe
+away, and only a finger ever shows it.
 
 ## Token inventory
 

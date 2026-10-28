@@ -77,7 +77,7 @@ pnpm dev                                    # docs site at :3000
 pnpm build                                  # everything
 pnpm generate                               # re-run ALL six generators
 pnpm typecheck                              # the real gate — there is no linter
-pnpm test                                   # contrast harness (--fine) + popup parity + overflow + reorderable + clock + fit
+pnpm test                                   # contrast harness (--fine) + popup parity + overflow + reorderable + clock + fit + pan
 pnpm release                                # build packages/*, preview, confirm, publish
 pnpm deploy:docs                            # build the docs app (and what it depends on), then firebase deploy
 ```
@@ -107,6 +107,7 @@ pnpm --filter @forte-ui/react check:overflow # the narrow-viewport overflow gate
 pnpm --filter @forte-ui/react check:reorderable # the Reorderable interaction gate (needs Chrome)
 pnpm --filter @forte-ui/react check:clock    # the Skeleton/Shimmer loop-continuity gate (needs Chrome)
 pnpm --filter @forte-ui/react check:fit      # the InputGroup/Combobox control-height gate (needs Chrome)
+pnpm --filter @forte-ui/react check:pan      # the Carousel touch-pan gate (needs Chrome)
 pnpm --filter @forte-ui/docs registry  # the demo registry
 pnpm --filter @forte-ui/docs changelog # the changelog page
 pnpm --filter @forte-ui/docs toc       # the "On this page" seed
@@ -114,8 +115,8 @@ pnpm --filter @forte-ui/docs catalog   # the component index + the sidebar
 ```
 
 `check:contrast`, `check:parity`, `check:overflow`, `check:reorderable`,
-`check:clock` and `check:fit` are deliberately outside `generate` — they are gates, not
-generators, and they write nothing.
+`check:clock`, `check:fit` and `check:pan` are deliberately outside `generate` — they
+are gates, not generators, and they write nothing.
 
 Every root script is `turbo run <task>`, never the `turbo <task>` shorthand.
 `generate` is *also* a built-in turbo command (the plop-based code generator)
@@ -125,8 +126,8 @@ task name to collide does not repeat this.
 
 `pnpm lint` is currently a no-op — neither package defines a `lint` script.
 `typecheck`, `check:contrast`, `check:parity`, `check:overflow`,
-`check:reorderable`, `check:clock` and `check:fit` are the gates that actually
-catch things.
+`check:reorderable`, `check:clock`, `check:fit` and `check:pan` are the gates that
+actually catch things.
 
 ### Generated files — never edit by hand
 
@@ -288,6 +289,22 @@ field is exactly its `--forte-control-h-*` — read off a probe in the same
 scope, never a pixel literal — its own buttons sit on its first row, and
 every button's hit area still reaches `--forte-target-min`. Same Chrome
 requirement as `check:overflow`.
+
+`check:pan` pairs with `Carousel`'s viewport and its `touch-action`. The
+property is a promise the browser keeps to the letter: an axis an element
+claims is never panned from a touch that starts on it, by the element or by
+any scroller around it. The viewport once claimed the inline axis whether or
+not it could be dragged, so a carousel turned only by its arrows, or holding
+one slide, swallowed every sideways swipe that began on it — a row of such
+cards scrolled from a card's text and not from its carousel (#167). Only a
+finger shows it. The gate serves `scripts/pan-fixture/` the same way, puts
+one carousel in a scroller that scrolls both ways, and swipes it with
+`Input.synthesizeScrollGesture` on a touch Pixel 7: a carousel that cannot
+be dragged must let its axis through to the scroller, and one that can must
+keep that axis (the slide turns, the scroller stays) while still passing the
+other one. A swipe beside the carousel comes first, so a harness whose
+scroller never moves fails instead of passing every let-it-through case.
+Same Chrome requirement as `check:overflow`.
 
 ### Introducing a new token
 
