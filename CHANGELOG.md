@@ -13,6 +13,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.15.2] - 2026-10-28
+
+### Carousel
+
+- Fixed a sideways swipe being thrown away when it began on a carousel that cannot be dragged (#167). The viewport claimed the touch axis (`touch-action: pan-y pinch-zoom`, or `pan-x` when vertical) on every carousel, including one with `draggable={false}` or holding a single slide. Nothing took that gesture, so a non-draggable carousel inside a horizontal scroller blocked the scroller. The claim now applies only to a carousel that can actually be dragged (`[data-draggable]`). A draggable carousel behaves as before: it turns its slide on its own axis and still lets the cross axis through to the page.
+
 ## [1.15.1] - 2026-10-26
 
 ### ThemeToggle
@@ -740,7 +746,8 @@ Initial release.
 - Documentation site with runnable demos, generated prop and theming tables,
   and a token inventory.
 
-[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.15.1...HEAD
+[Unreleased]: https://github.com/arsen/forte-ui/compare/v1.15.2...HEAD
+[1.15.2]: https://github.com/arsen/forte-ui/compare/v1.15.1...v1.15.2
 [1.15.1]: https://github.com/arsen/forte-ui/compare/v1.15.0...v1.15.1
 [1.15.0]: https://github.com/arsen/forte-ui/compare/v1.14.2...v1.15.0
 [1.14.2]: https://github.com/arsen/forte-ui/compare/v1.14.1...v1.14.2

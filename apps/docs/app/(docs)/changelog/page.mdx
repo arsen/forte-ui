@@ -19,6 +19,14 @@ export const metadata = {
 
 What changed in each release, newest first. Breaking changes are marked **Breaking**.
 
+## v1.15.2
+
+<ReleaseMeta date="2026-10-28" href="https://github.com/arsen/forte-ui/compare/v1.15.1...v1.15.2" kind="compare" />
+
+### Carousel
+
+- Fixed a sideways swipe being thrown away when it began on a carousel that cannot be dragged (#167). The viewport claimed the touch axis (`touch-action: pan-y pinch-zoom`, or `pan-x` when vertical) on every carousel, including one with `draggable={false}` or holding a single slide. Nothing took that gesture, so a non-draggable carousel inside a horizontal scroller blocked the scroller. The claim now applies only to a carousel that can actually be dragged (`[data-draggable]`). A draggable carousel behaves as before: it turns its slide on its own axis and still lets the cross axis through to the page.
+
 ## v1.15.1
 
 <ReleaseMeta date="2026-10-26" href="https://github.com/arsen/forte-ui/compare/v1.15.0...v1.15.1" kind="compare" />
@@ -118,15 +126,6 @@ What changed in each release, newest first. Breaking changes are marked **Breaki
 - Every drawer now draws a hairline border, not just one with `backdrop={false}`. An `edge` drawer draws it only on the side that faces into the page. The other three sides stay transparent, so an overdrag does not expose a seam against the bezel. A `floating` drawer draws all four sides. A drawer with another drawer open over it still has its whole ring painted in the scrim color, so a receding parent gets no bright outline. `--forte-drawer-border-width` and `--forte-drawer-border-color` now apply to every drawer.
 - `data-no-backdrop` is still set on the popup when `backdrop={false}`. Nothing in the stylesheet reads it any more, so it is now only a hook for styling scrimless drawers.
 
-## v1.12.0
-
-<ReleaseMeta date="2026-10-10" href="https://github.com/arsen/forte-ui/compare/v1.11.3...v1.12.0" kind="compare" />
-
-### Carousel
-
-- Added `onSettle` to `Carousel.Root`. It is called with the index and the change reason once the track has come to rest on a slide, after the glide that a drag, a control, autoplay or a clamp started, or on the next frame when there is no glide. A glide that a drag catches or another move retargets never settles, and only the last one is reported. Use it for work that would stall the glide, such as mounting something heavy for the new slide, instead of `onIndexChange`, which fires on release.
-- Added a `data-settling` attribute on the carousel root. It is present from the moment a move starts until the track has settled, and is absent while dragging. It lets plain CSS style the in-between state.
-
 ## Full history
 
-This page carries the 10 most recent releases. The 33 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
+This page carries the 10 most recent releases. The 34 releases before them — back to v1.0.0-alpha.1 on August 30, 2026 — are in [CHANGELOG.md](https://github.com/arsen/forte-ui/blob/main/CHANGELOG.md) on GitHub, along with everything above.
